@@ -45,6 +45,10 @@ dist
 # Exception: shared permission/sandbox rules are tracked so every worktree
 # inherits them on checkout. Machine-local churn stays in settings.local.json.
 !.claude/settings.json
+# Path rules, generated subagents and skills are part of the toolkit (docs/index.md).
+!.claude/rules/
+!.claude/agents/
+!.claude/skills/
 CLAUDE.local.md
 
 # Debug

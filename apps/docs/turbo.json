@@ -1,13 +1,17 @@
 {
   "$schema": "https://turborepo.com/schema.json",
-  "extends": ["//"],
+  "extends": [
+    "//"
+  ],
   "tasks": {
     "build": {
       "inputs": [
         "$TURBO_DEFAULT$",
         ".env*",
         "$TURBO_ROOT$/docs/**",
-        "$TURBO_ROOT$/AGENTS.md"
+        "$TURBO_ROOT$/AGENTS.md",
+        "$TURBO_ROOT$/apps/web/docs/**",
+        "$TURBO_ROOT$/apps/web/specs/**"
       ]
     }
   }

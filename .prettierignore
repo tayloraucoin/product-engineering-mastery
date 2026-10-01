@@ -1,0 +1,24 @@
+# Filed verbatim: bodies are byte-preserved (docs/decisions/records/0006-file-naming-and-filing.md).
+docs/research/
+docs/references/_meta/
+docs/roles/
+docs/index.md
+docs/design/canon.md
+docs/decisions/ledger.md
+docs/decisions/conflicts.md
+docs/decisions/only-you.md
+docs/product/brief.template.md
+docs/product/package.template.md
+docs/product/cycle-charter.template.md
+docs/runbooks/variant-testing-runbook.md
+docs/prompts/0[1-9]-*.md
+docs/prompts/1[0-4]-*.md
+docs/prompts/pa-*.md
+docs/prompts/pb-*.md
+docs/prompts/pc-*.md
+docs/prompts/pd-*.md
+docs/prompts/pe-*.md
+
+# Generated.
+docs/_generated/
+.claude/agents/

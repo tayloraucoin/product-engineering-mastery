@@ -12,3 +12,23 @@
     @apply bg-background text-foreground antialiased;
   }
 }
+
+/* Wide tables (the ledger, the research reports) scroll inside the article
+   instead of widening the page. */
+.prose table {
+  display: block;
+  overflow-x: auto;
+}
+
+/* Blockquotes carry instruction blocks ("Who fills / When / …"), one label per
+   source line. Keep those line breaks, and drop typography's quote styling. */
+.prose blockquote {
+  font-style: normal;
+}
+.prose blockquote p {
+  white-space: pre-line;
+}
+.prose blockquote p::before,
+.prose blockquote p::after {
+  content: none;
+}

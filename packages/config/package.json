@@ -12,7 +12,8 @@
     "./tailwind/preset.css": "./tailwind/preset.css",
     "./tsconfig/base.json": "./tsconfig/base.json",
     "./tsconfig/nextjs.json": "./tsconfig/nextjs.json",
-    "./tsconfig/react-library.json": "./tsconfig/react-library.json"
+    "./tsconfig/react-library.json": "./tsconfig/react-library.json",
+    "./eslint/tokens": "./eslint/tokens.js"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

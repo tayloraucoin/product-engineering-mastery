@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   verify:
-    name: format · lint · boundaries · types · build
+    name: format · docs · budget · agents · lint · boundaries · types · build
     runs-on: ubuntu-latest
     env:
       # Vercel Remote Cache — set TURBO_TOKEN (secret) and TURBO_TEAM (variable) in GitHub repo settings.
@@ -38,6 +38,15 @@ jobs:
       - name: Format
         run: yarn format:check
 
+      - name: Docs (frontmatter and names)
+        run: yarn lint:docs
+
+      - name: Context budget
+        run: yarn budget
+
+      - name: Generated agents up to date
+        run: yarn gen:agents --check
+
       - name: Lint (code quality)
         run: yarn lint
 
@@ -46,6 +55,9 @@ jobs:
 
       - name: Typecheck
         run: yarn check-types
+
+      - name: Typecheck (tooling)
+        run: yarn check-types:tooling
 
       - name: Build
         run: yarn build

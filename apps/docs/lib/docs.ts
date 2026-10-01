@@ -3,18 +3,19 @@ import "server-only";
 import fs from "node:fs";
 import path from "node:path";
 import { cache } from "react";
+import YAML from "yaml";
 
 /**
- * The docs app renders markdown that lives OUTSIDE it: the root `AGENTS.md`
- * and everything under the root `docs/`. Those files are the source of truth
- * (agents and GitHub read them raw); this app is only a reader.
+ * The docs app renders markdown that lives OUTSIDE it: the root `AGENTS.md`,
+ * everything under the root `docs/`, and the demo app's filled examples. Those
+ * files are the source of truth (agents and GitHub read them raw); this app is
+ * only a reader (records 0004, 0007).
  *
  * `next dev` and `next build` run with the app directory as the working
  * directory (turbo runs each task in its package), so the repo root is two
  * levels up.
  */
 const REPO_ROOT = path.resolve(process.cwd(), "../..");
-const DOCS_DIR = "docs";
 
 /**
  * Every page is prerendered (`dynamicParams = false`), so these reads happen
@@ -25,35 +26,92 @@ function fromRepoRoot(relativePath: string) {
   return path.join(/* turbopackIgnore: true */ REPO_ROOT, relativePath);
 }
 
+/** Directories rendered, and the route prefix each one mounts at. */
+const CONTENT_ROOTS = [
+  { dir: "docs", prefix: [] as string[] },
+  { dir: "apps/web/docs", prefix: ["demo"] },
+  { dir: "apps/web/specs", prefix: ["demo", "specs"] },
+];
+const SPINE_PATH = "AGENTS.md";
+const INDEX_PATH = "docs/index.md";
+
+/** Sidebar groups, in order. Keys are `layer` values (docs/index.md, CF-16). */
+const GROUPS: { key: string; label: string }[] = [
+  { key: "start", label: "Start" },
+  { key: "decisions", label: "Decisions" },
+  { key: "design", label: "Design" },
+  { key: "product", label: "Product" },
+  { key: "metrics", label: "Metrics" },
+  { key: "evals", label: "Evals" },
+  { key: "runbooks", label: "Runbooks" },
+  { key: "roles", label: "Roles" },
+  { key: "prompts", label: "Prompts" },
+  { key: "references", label: "References" },
+  { key: "engineering", label: "Engineering" },
+  { key: "demo", label: "Demo app (filled examples)" },
+  { key: "research", label: "Research (archived)" },
+];
+
+/** Never listed in the sidebar; still rendered and searchable (P-B; CF-05). */
+const HIDDEN_GROUPS = new Set(["research", "generated"]);
+
+export type Frontmatter = Record<string, unknown>;
+
 export type Doc = {
-  /** Route segments; `[]` is the index (`docs/README.md`). */
+  /** Route segments; `[]` is the map (`docs/index.md`). */
   slug: string[];
   href: string;
   title: string;
-  /** Repo-root-relative POSIX path, e.g. `docs/architecture/tech-stack.md`. */
+  description: string | null;
+  /** Repo-root-relative POSIX path, e.g. `docs/design/canon.md`. */
   relativePath: string;
-  /** Sidebar group: "Start", or the folder under `docs/`. */
-  section: string;
+  /** Sidebar group key (a `layer` value, or start / demo / generated). */
+  group: string;
+  /** Subfolder below the group's folder, for sub-headings (e.g. `templates`). */
+  folder: string;
+  status: string | null;
+  hidden: boolean;
+  frontmatter: Frontmatter | null;
   body: string;
 };
 
-const INDEX_PATH = `${DOCS_DIR}/README.md`;
-const SPINE_PATH = "AGENTS.md";
+export type Group = { key: string; label: string; docs: Doc[] };
 
-/**
- * The index, then the agent spine, then every other doc. Read once per
- * render; `next dev` re-reads on every request.
- */
+/** Read once per render; `next dev` re-reads on every request. */
 export const getAllDocs = cache((): Doc[] => {
-  const rest = listMarkdownFiles(DOCS_DIR)
-    .filter((relativePath) => relativePath !== INDEX_PATH)
-    .sort(compareDocPaths);
-  return [INDEX_PATH, SPINE_PATH, ...rest].map(readDoc);
+  const files = [
+    INDEX_PATH,
+    SPINE_PATH,
+    ...CONTENT_ROOTS.flatMap(({ dir }) => listMarkdownFiles(dir)).filter(
+      (f) => f !== INDEX_PATH,
+    ),
+  ];
+  return files.map(readDoc).sort(compareDocs);
 });
 
 export function getDocBySlug(slug: string[]): Doc | undefined {
   const href = toHref(slug);
   return getAllDocs().find((doc) => doc.href === href);
+}
+
+/** Visible sidebar groups, in order, with their documents. */
+export function getGroups(): Group[] {
+  const docs = getAllDocs();
+  return GROUPS.filter(({ key }) => !HIDDEN_GROUPS.has(key))
+    .map(({ key, label }) => ({
+      key,
+      label,
+      docs: docs.filter((d) => d.group === key),
+    }))
+    .filter((group) => group.docs.length > 0);
+}
+
+export function getHiddenCount() {
+  return getAllDocs().filter((doc) => doc.hidden).length;
+}
+
+export function groupLabel(key: string) {
+  return GROUPS.find((group) => group.key === key)?.label ?? "Generated";
 }
 
 /**
@@ -76,54 +134,133 @@ export function resolveDocLink(
 }
 
 function listMarkdownFiles(relativeDir: string): string[] {
-  const entries = fs.readdirSync(fromRepoRoot(relativeDir), {
-    withFileTypes: true,
-  });
-  return entries.flatMap((entry) => {
+  const absolute = fromRepoRoot(relativeDir);
+  if (!fs.existsSync(absolute)) return [];
+  return fs.readdirSync(absolute, { withFileTypes: true }).flatMap((entry) => {
     const relativePath = path.posix.join(relativeDir, entry.name);
     if (entry.isDirectory()) return listMarkdownFiles(relativePath);
     return entry.name.endsWith(".md") ? [relativePath] : [];
   });
 }
 
-/** READMEs first within a folder, then alphabetical. */
-function compareDocPaths(a: string, b: string) {
-  const rank = (p: string) =>
-    `${path.posix.dirname(p)}/${path.posix.basename(p) === "README.md" ? "" : path.posix.basename(p)}`;
-  return rank(a).localeCompare(rank(b));
+function splitFrontmatter(text: string): {
+  frontmatter: Frontmatter | null;
+  body: string;
+} {
+  if (!text.startsWith("---\n")) return { frontmatter: null, body: text };
+  const end = text.indexOf("\n---\n", 4);
+  if (end === -1) return { frontmatter: null, body: text };
+  try {
+    const parsed: unknown = YAML.parse(text.slice(4, end));
+    return {
+      frontmatter:
+        parsed && typeof parsed === "object" ? (parsed as Frontmatter) : {},
+      body: text.slice(end + 5),
+    };
+  } catch {
+    return { frontmatter: null, body: text };
+  }
 }
 
 function readDoc(relativePath: string): Doc {
-  const body = fs.readFileSync(fromRepoRoot(relativePath), "utf8");
+  const { frontmatter, body } = splitFrontmatter(
+    fs.readFileSync(fromRepoRoot(relativePath), "utf8"),
+  );
   const slug = toSlug(relativePath);
+  const group = toGroup(relativePath, frontmatter);
+  const str = (key: string) => {
+    const value = frontmatter?.[key];
+    return typeof value === "string" && value.length > 0 ? value : null;
+  };
   return {
     slug,
     href: toHref(slug),
-    title:
+    // Titles are plain text in the sidebar, the tab and search; drop inline-code backticks.
+    title: (
+      str("title") ??
       body.match(/^#\s+(.+)$/m)?.[1]?.trim() ??
-      path.posix.basename(relativePath, ".md"),
+      path.posix.basename(relativePath, ".md")
+    ).replace(/`/g, ""),
+    description: str("description"),
     relativePath,
-    section: toSection(relativePath),
+    group,
+    folder: toFolder(relativePath, group),
+    status: str("status"),
+    hidden: HIDDEN_GROUPS.has(group),
+    frontmatter,
     body,
   };
 }
 
 function toSlug(relativePath: string): string[] {
   if (relativePath === SPINE_PATH) return ["agents"];
+  if (relativePath === INDEX_PATH) return [];
+  const root = CONTENT_ROOTS.find(({ dir }) =>
+    relativePath.startsWith(`${dir}/`),
+  )!;
   const segments = relativePath
-    .slice(DOCS_DIR.length + 1, -".md".length)
+    .slice(root.dir.length + 1, -".md".length)
+    .replace(/\.template$/, "-template")
     .toLowerCase()
     .split("/");
-  return segments.at(-1) === "readme" ? segments.slice(0, -1) : segments;
+  const slug = segments.at(-1) === "index" ? segments.slice(0, -1) : segments;
+  return [...root.prefix, ...slug];
 }
 
 function toHref(slug: string[]) {
   return `/${slug.join("/")}`;
 }
 
-function toSection(relativePath: string) {
-  const segments = relativePath.split("/");
-  if (segments[0] !== DOCS_DIR || segments.length < 3) return "Start";
-  const folder = segments[1] ?? "";
-  return folder.charAt(0).toUpperCase() + folder.slice(1).replaceAll("-", " ");
+function toGroup(
+  relativePath: string,
+  frontmatter: Frontmatter | null,
+): string {
+  if (relativePath === SPINE_PATH || relativePath === INDEX_PATH)
+    return "start";
+  if (relativePath.startsWith("apps/web/")) return "demo";
+  if (relativePath.startsWith("docs/_generated/")) return "generated";
+  const layer = frontmatter?.layer;
+  return typeof layer === "string" && GROUPS.some((g) => g.key === layer)
+    ? layer
+    : "engineering";
+}
+
+/** The folder path between the group's own folder and the file, e.g. `templates/refs`. */
+function toFolder(relativePath: string, group: string): string {
+  if (group === "start") return "";
+  const segments = relativePath.split("/").slice(0, -1);
+  const rootDepth = relativePath.startsWith("apps/web/") ? 3 : 2;
+  return segments.slice(rootDepth).join("/");
+}
+
+/** Group order, then folder, then a folder's index first, then path. */
+function compareDocs(a: Doc, b: Doc) {
+  const order = (doc: Doc) => GROUPS.findIndex((g) => g.key === doc.group);
+  if (order(a) !== order(b)) return order(a) - order(b);
+  if (a.group === "start") return a.relativePath === INDEX_PATH ? -1 : 1;
+  if (a.folder !== b.folder) {
+    if (a.folder === "") return -1;
+    if (b.folder === "") return 1;
+    return a.folder.localeCompare(b.folder);
+  }
+  const isIndex = (doc: Doc) => doc.relativePath.endsWith("/index.md");
+  if (isIndex(a) !== isIndex(b)) return isIndex(a) ? -1 : 1;
+  return a.relativePath.localeCompare(b.relativePath);
+}
+
+/** Plain text for the search index: markdown syntax stripped, words kept. */
+export function toSearchText(body: string) {
+  return body
+    .replace(/```\w*/g, " ")
+    .replace(/!?\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .replace(/[#>*_`|]/g, " ")
+    .replace(/-{3,}/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export function toHeadings(body: string) {
+  return [...body.matchAll(/^#{1,4}\s+(.+)$/gm)]
+    .map((m) => m[1]!.trim())
+    .join(" · ");
 }

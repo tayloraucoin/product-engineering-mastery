@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { getAllDocs, getDocBySlug } from "@/lib/docs";
 
+import { FrontmatterPanel } from "../_components/frontmatter-panel";
 import { Markdown } from "../_components/markdown";
 
 // Every doc is known at build time; anything else is a 404.
@@ -17,7 +18,9 @@ export async function generateMetadata({
 }: PageProps<"/[[...slug]]">): Promise<Metadata> {
   const { slug = [] } = await params;
   const doc = getDocBySlug(slug);
-  return doc ? { title: doc.title } : {};
+  return doc
+    ? { title: doc.title, description: doc.description ?? undefined }
+    : {};
 }
 
 export default async function DocPage({ params }: PageProps<"/[[...slug]]">) {
@@ -26,10 +29,14 @@ export default async function DocPage({ params }: PageProps<"/[[...slug]]">) {
   if (!doc) notFound();
 
   return (
-    <article className="prose max-w-none prose-neutral dark:prose-invert prose-code:before:content-none prose-code:after:content-none">
-      <p className="not-prose mb-6 font-mono text-xs text-muted-foreground">
-        {doc.relativePath}
-      </p>
+    <article className="prose max-w-none prose-neutral dark:prose-invert prose-code:before:content-none prose-code:after:content-none prose-table:text-sm">
+      <FrontmatterPanel doc={doc} />
+      {doc.hidden && (
+        <p className="not-prose mb-6 rounded-md bg-muted px-3 py-2 text-sm text-muted-foreground">
+          Archived: read only to trace a ruling. Never loaded by agents
+          (docs/index.md).
+        </p>
+      )}
       <Markdown body={doc.body} fromPath={doc.relativePath} />
     </article>
   );
