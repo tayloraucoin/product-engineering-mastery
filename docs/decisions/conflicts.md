@@ -158,7 +158,7 @@ Each entry gives the ruling, the rule it rests on, and what the losing side had 
 **CF-20 — Roles, agents, critic.**
 
 - **Ruling:** `gen-agents.ts` generates `.claude/agents/` from `docs/roles/`.
-  - The rubric lives in `canon.md` §3.
+  - The rubric lives in `canon.md` §3. **Amended 2026-10-01 ([record 0009](records/0009-canon-split.md)):** the rubric moved to `docs/design/canon-rubric.md`.
   - `tk-ui-critic` holds the procedure and reads the canon.
   - The Assay role holds the judgment and points to both.
 - **Rule:** one source per thing; hand-written wrappers drift.

@@ -1,6 +1,6 @@
 ---
 title: Design canon — the universal floor
-description: Read before designing, building or critiquing any UI. Holds the twelve principles, twenty anti-patterns and fifteen critic rubric lines every product inherits; a product's DESIGN.md may tighten these, never loosen them.
+description: Read before designing, building or critiquing any UI. Holds the twelve principles and twenty anti-patterns every product inherits; a product's DESIGN.md may tighten these, never loosen them.
 layer: design
 status: ruling
 thread: P-A
@@ -17,6 +17,7 @@ This is the universal floor of design law. A product's `DESIGN.md`, `tokens.md`,
 
 - **Examples** use the demo app: records table, record detail, form, settings, destructive dialog, empty state, three-beat onboarding.
 - **Source tags** use the ledger's codes. CF-numbers point to `conflicts.md`.
+- **The critic's rubric** (C-R01–C-R15) is [`canon-rubric.md`](canon-rubric.md), loaded by the critic, never by builders. Rule IDs are unchanged. What the v0.1 merge cut, and why, is in [record 0009](../decisions/records/0009-canon-split.md).
 
 ## 1. Principles
 
@@ -184,51 +185,7 @@ Each entry gives the tell as people will see it, why it reads as generic, the on
 | A-19 | Manufactured urgency (countdowns, "only 2 left", guilt copy on dismiss, streaks)                                            | Trades trust for a click                                  | Plain status and real dates                                          | R04; R09; R02        |
 | A-20 | Fabricated system behavior (added latency, "analysing" theatre, progress counting unfinished work)                          | Lies about the system                                     | Acknowledge within 400ms, show real stages, count only finished work | R13 (generalized)    |
 
-## 3. Critic rubric
-
-**Procedure (not a rubric line).**
-
-- **Input.** The critic receives the brief, the package, this rubric, and screenshots at 390, 834 and 1440, in light and dark, with reduced motion, for every `?state=`. It receives nothing from the builder's summary.
-- **Review order.** Purpose and clarity; then hierarchy, layout and interaction; then color and state; then polish.
-- **Output.**
-  - The top 3 priorities.
-  - Each line marked PASS, N issues, N/A or UNVERIFIED.
-  - Each finding cites a screenshot region or `file:line` and a rule ID.
-  - A round verdict.
-- **Severity.** Blocking / Should-fix / Consider.
-- **Limits.** At most 3 rounds, and at most 3 calibration exemplars in context.
-- **Sources:** R04; R06b; R09 C-4; R14; CF-40.
-
-| ID    | Check                                                                                                                                                                                   | Default severity                                      | Rules        | Sources        |
-| ----- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- | ------------ | -------------- |
-| C-R01 | Evidence: every finding cites a region or `file:line`; uncaptured states are UNVERIFIED, never passed; concrete language ("4 radii", not "inconsistent")                                | procedural (a finding without evidence is withdrawn)  | all          | R04; R06b (SK) |
-| C-R02 | Greyscale test: desaturated, the screen has one focal point and secondary information recedes by weight and color                                                                       | Should-fix                                            | C-P01, C-P02 | R08            |
-| C-R03 | At most one primary-styled action per view; destructive primary only inside its confirmation                                                                                            | Blocking                                              | C-P02        | R08            |
-| C-R04 | At most 4 type sizes; reading text ≥16px; tabular text ≥ the declared minimum                                                                                                           | Should-fix (Blocking below the minimum)               | C-P01        | R06a; R06b     |
-| C-R05 | Structure and labels: numbering or eyebrows that encode nothing; a key–value pair that should be a phrase; an input without a visible label; action labels that aren't the outcome verb | Should-fix (unlabeled input: Blocking)                | C-P03, C-P09 | R08; R04       |
-| C-R06 | Spacing: an off-scale value; space between groups not greater than space within                                                                                                         | Should-fix                                            | C-P04        | R08; R06a      |
-| C-R07 | Separation: a border where space would do; a shadow outside its named level; nested cards                                                                                               | Should-fix                                            | C-P04, C-P06 | R08; R04       |
-| C-R08 | Tokens only: raw color, spacing, radius, shadow, font or duration                                                                                                                       | Blocking                                              | C-P06        | R04; R07b M5   |
-| C-R09 | Color role: accent used decoratively; one shade with two meanings; meaning by color alone; contrast below AA                                                                            | Blocking (contrast, color alone); Should-fix (others) | C-P05        | R06a; R08      |
-| C-R10 | States: every state in `states.md` captured; hover, focus and active above rest; focus visible; empty state designed                                                                    | Blocking (missing state, invisible focus)             | C-P07, C-P08 | R06a; R04      |
-| C-R11 | Numbers: tabular, right-aligned, unit placed, baseline shared                                                                                                                           | Should-fix                                            | C-P10        | R08            |
-| C-R12 | Motion: the `tk-motion` review checks M1–M12, reported as one line                                                                                                                      | per M#                                                | C-P11        | R07b           |
-| C-R13 | Removal test: an element or asset with no stated job                                                                                                                                    | Consider (Should-fix on the focal path)               | C-P12        | R09            |
-| C-R14 | Slop tells, checked by ID (A-01 to A-20)                                                                                                                                                | Should-fix (A-19, A-20: Blocking)                     | §2           | R04; R08; R06a |
-| C-R15 | Laws of UX: findings cite LUX rule IDs loaded through `docs/references/index.md` (at most 3 files). A finding with no rule ID of any kind (C-, A-, LUX-, M) is Consider at most         | per LUX rule                                          | references   | R13            |
-
-## 4. Cut, and why
-
-- **Product-bound, cut.** Field-mode target size and thumb-zone tokens; the DealReady/Fybr motion decisions; provenance and measurement lines; R07b M11 (camera).
-- **Merged.** Shift Nudge's "cut repeated units" goes into C-P03's counter-example. Interactive-states candidates merge into C-P07. Neutrals, radius and elevation merge into C-P06. Copy lines merge into C-P09.
-- **Routed.**
-  - Rebuilt native controls (R08 B5) → the accessibility auditor's criteria.
-  - Hover scale on cards and rows → `tk-motion` catalog.
-  - Model-defaults note (R09 #5) → a section of the anti-patterns template, not an entry.
-  - Prompting-checklist amendments (R09) → `docs/design/workflow.md`.
-- **Marketing register, cut until a marketing layer exists.** Clone modes; Framer template tells; the "10x Conversion" claim; spectacle packs beyond A-12.
-- **Displaced.** About 34 candidate principles became 12; 25 anti-pattern groups became 20; about 45 rubric candidates became 15. The losing lines stay in `_candidates.md` (filed under `docs/research/` as archived) as provenance.
-
 ## Changelog
 
 - 2026-10-01: v0.1, merged from `_candidates.md` (P-A). Retires R04's motion line (CF-34). Tabular type minimum pending sign-off (CF-38).
+- 2026-10-01: v0.2, split for the context budget (record 0009). §3 (the critic rubric) moves to `canon-rubric.md` unchanged; §4 (cut, and why) moves to record 0009. §1 and §2 unchanged. Amends CF-20.

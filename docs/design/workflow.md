@@ -99,7 +99,7 @@ Each line is a rule a prompt can be checked against.
 7. **Constrain the vocabulary:** only `@pem/ui` components, only tokens, no raw values.
 8. **Ask for divergence on one axis** (`tk-ui-diverge`), and reset context between directions.
 9. **Iterate with annotated screenshots, not prose.**
-10. **Separate generate and critique into different roles**, and withhold the builder's rationale from the critic (canon §3). (R09 #7)
+10. **Separate generate and critique into different roles**, and withhold the builder's rationale from the critic (`canon-rubric.md`, procedure). (R09 #7)
 11. **One media-role line per section; review generated batches as a contact sheet** before placing any. (R09 #6)
 12. **Timebox the lottery:** after three failed prompts, hand-edit or log the design-system gap.
 13. **Extract a skill only after a problem is solved**, from the evidence of what worked. (R09 #8)

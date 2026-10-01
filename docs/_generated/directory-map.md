@@ -1,6 +1,6 @@
 # Directory map (generated)
 
-Every markdown file under `docs/` (130), written by `yarn directory-map`. Do not edit by hand. The map of the practice is `docs/index.md`.
+Every markdown file under `docs/` (132), written by `yarn directory-map`. Do not edit by hand. The map of the practice is `docs/index.md`.
 
 ## docs/decisions/
 
@@ -9,7 +9,7 @@ Every markdown file under `docs/` (130), written by `yarn directory-map`. Do not
 | `changelog.md` | Changelog — amendments to the practice | decisions | adopted |
 | `conflicts.md` | Conflicts — resolved | decisions | ruling |
 | `decision.template.md` | Decision record (template) | decisions | adopted |
-| `ledger.md` | Decisions ledger — every ruling across threads 01–14 | decisions | draft |
+| `ledger.md` | Decisions ledger — every ruling, one line each | decisions | adopted |
 | `only-you.md` | Calls only Taylor can make | decisions | draft |
 
 ## docs/decisions/records/
@@ -24,11 +24,13 @@ Every markdown file under `docs/` (130), written by `yarn directory-map`. Do not
 | `0006-file-naming-and-filing.md` | 0006 — Files are named in ASCII kebab-case, and filing preserves every body byte for byte | decisions | ruling |
 | `0007-docs-app-extends-its-renderer.md` | 0007 — The docs app keeps its own renderer, extended with frontmatter, layer grouping and search, instead of moving to Fumadocs | decisions | ruling |
 | `0008-subagents-are-generated-opt-in.md` | 0008 — Subagents are generated from roles that opt in, with tools set in the role's frontmatter | decisions | ruling |
+| `0009-canon-split.md` | 0009 — The canon splits in two, the builder's law in canon.md and the critic's rubric in canon-rubric.md | decisions | ruling |
 
 ## docs/design/
 
 | File | Title | Layer | Status |
 | --- | --- | --- | --- |
+| `canon-rubric.md` | Design canon — the critic rubric | design | ruling |
 | `canon.md` | Design canon — the universal floor | design | ruling |
 | `index.md` | The design layer — loops, Recipe A, and where verification sits | design | ruling |
 | `skills.md` | Skills — adoption rulings, load order, and the review procedure | design | ruling |

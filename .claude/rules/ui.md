@@ -10,7 +10,7 @@ paths:
 
 Before writing or reviewing UI, read, in order:
 
-1. `docs/design/canon.md` — the universal floor (principles, the A-01–A-20 tells, the rubric).
+1. `docs/design/canon.md` — the universal floor (principles and the A-01–A-20 tells). The critic's rubric is `canon-rubric.md`; builders don't load it.
 2. The product's design layer. In this repo that is `apps/web/docs/design/` (Phase 3); in a product repo, `docs/design/`.
 3. The package for the feature (`specs/<feature>/package.md`), if one exists.
 

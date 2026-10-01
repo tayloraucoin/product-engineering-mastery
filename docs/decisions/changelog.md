@@ -15,6 +15,13 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-01 — Canon split and ledger updates (owner approved)
+
+- **Canon v0.2 ([record 0009](records/0009-canon-split.md)).** `canon.md` keeps §1 (principles) and §2 (anti-patterns) for builders. The rubric moves unchanged to [`canon-rubric.md`](../design/canon-rubric.md), except that C-R14 names canon §2. The v0.1 cut list moves into record 0009. Rule IDs are unchanged. Amends CF-20 (with a note on CF-20 in `conflicts.md`) and the critic row of the budget in `docs/index.md`. References updated in `CLAUDE.md`, `.claude/rules/ui.md`, `docs/design/{index,workflow,skills}.md`, the `DESIGN` template, `docs/product/index.md`, prompt P-C and `tooling/budget.ts`.
+- **Ledger.** The twelve held status updates are applied. Each keeps its earlier value after "Was:", with the date and the ruling. New sections cover §8 (practice, PR-01 to PR-11) and §9 (engineering records 0001 to 0005, EN-01 to EN-05), plus the source codes CF and REC. The ledger is now `adopted`, owned by Plumb; Alembic's status and role are kept as `source_*`.
+- **Filing rule clarified (record 0009, PR-05).** Archived reports stay byte for byte. Live files that came through the dump change only through their changelog with the owner's sign-off. The filing manifest records their state at filing; git history has every change since.
+- **Budget gap, smaller but still open.** Builder canon measures about 3,860 tokens, leaving about 1,140 of the design layer's 5,000 for a product layer, against the 1,700 `docs/index.md` allots. `yarn budget` warns and passes. `[PROPOSED — needs sign-off]` Amend the index's UI-build row to design layer 5,500 and one skill body 2,000 (total unchanged at 15,000; the largest planned skill body, `tk-motion`, is well under 2,000). Cost of being wrong: a skill body over 2,000 tokens would have to be split.
+
 ## 2026-10-01 — Phase 2: the practice layer (P-B), practice v0.1
 
 Written by Plumb in Claude Code from the Phase 1 outputs. The checklist it followed is archived at [`pa-phase-2-checklist-plumb.md`](../research/pa-phase-2-checklist-plumb.md); every item is done unless listed under "Open" below.
@@ -49,6 +56,8 @@ Written by Plumb in Claude Code from the Phase 1 outputs. The checklist it follo
 - **Turborepo's managed agent block turned off** (`"agentGuidance": false` in `turbo.json`); its warning is one line in `AGENTS.md`, as Next's is (`agentRules: false`).
 
 ### Ledger amendments held for sign-off
+
+> **Applied 2026-10-01** after owner approval; see the entry above.
 
 `ledger.md` is filed byte-for-byte as Alembic wrote it, because the owner asked that no dump file change in this pass. Checklist item 9 asks for these status updates; they apply the rulings in `conflicts.md` and go into the ledger when the owner approves:
 
@@ -88,7 +97,7 @@ Fresh sessions were given only `CLAUDE.md` and its imports, and a one-line brief
 
 ### Open
 
-- **The canon and the budget disagree.** `canon.md` estimates at about 4,900 tokens; `docs/index.md` gives the whole design layer 5,000, of which a product's own layer should get about 1,700. `yarn budget` passes today with no product layer, prints the shortfall as a warning, and will fail when the demo's design layer lands in Phase 3. A builder needs canon §1–§2 (about 3,500); §3 (rubric, about 870) and §4 (cut list, about 270) serve the critic and the maintainer. `[PROPOSED — needs sign-off]` Split the canon: `canon.md` keeps §1–§2 for builders, and the rubric moves to a critic-only file the critic skill loads (amends CF-20 and the index's load table). Cost of being wrong: one more file to keep in step, and the rubric is no longer beside the principles it scores.
+- **Resolved in part 2026-10-01 by the canon split (entry above).** **The canon and the budget disagree.** `canon.md` estimates at about 4,900 tokens; `docs/index.md` gives the whole design layer 5,000, of which a product's own layer should get about 1,700. `yarn budget` passes today with no product layer, prints the shortfall as a warning, and will fail when the demo's design layer lands in Phase 3. A builder needs canon §1–§2 (about 3,500); §3 (rubric, about 870) and §4 (cut list, about 270) serve the critic and the maintainer. `[PROPOSED — needs sign-off]` Split the canon: `canon.md` keeps §1–§2 for builders, and the rubric moves to a critic-only file the critic skill loads (amends CF-20 and the index's load table). Cost of being wrong: one more file to keep in step, and the rubric is no longer beside the principles it scores.
 - **Role bodies are not all universal yet.** The coverage report (`product-design/index.md`) still names DealReady and Fybr; Drummer is bound to one client's sales funnel; Compass, Tribune and Envoy keep their "fill §7" sockets. CF-21 says every toolkit role is universal, so these need a universalization pass (a new thread, or Phase 4).
 - **Brief template critic line.** The P-B ask wants every template to say what the critic checks it against; `brief.template.md` (filed unchanged) does not. `docs/product/index.md` carries the answer (nothing directly; the critic scores the package). Add the line to the template when the owner allows edits to filed files.
 - **Owner calls still open:** the tabular type minimum (CF-38, with the accessibility auditor), the Onlook trial (WT-07), whether the repo may go public (CF-48; it decides whether `06a`, `07a` and `13` stay in `docs/research/`), and the rest of [`only-you.md`](only-you.md).

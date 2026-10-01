@@ -16,9 +16,9 @@ load_when: ui-build, critique, spec
 > **Who fills:** Plumb (design director) with the founder for anything touching brand identity; Gloss (content designer) owns the Voice section.
 > **When:** before the first UI build in a product repo; amended only through the changelog at the bottom, never by exception in a PR.
 > **Lives at:** `docs/design/DESIGN.md` in the product repo. Delete this instruction block when you fill it.
-> **What the critic checks:** every principle below is scored by the rubric line named in its "Enforced by" field, alongside `canon.md` C-R01–C-R15.
+> **What the critic checks:** every principle below is scored by the rubric line named in its "Enforced by" field, alongside `canon-rubric.md` C-R01–C-R15.
 > **Filled example:** `apps/web/docs/design/DESIGN.md` (the demo app; written in Phase 3).
-> **Inherits:** `docs/design/canon.md` v0.1 — principles C-P01–C-P12, anti-patterns A-01–A-20, rubric C-R01–C-R15. **Do not restate a canon line.** Cite its ID, and write only what this product tightens or adds. A line here may tighten the canon; loosening one needs an amendment to the canon.
+> **Inherits:** `docs/design/canon.md` v0.2 — principles C-P01–C-P12, anti-patterns A-01–A-20 — and the rubric C-R01–C-R15 in `canon-rubric.md`. **Do not restate a canon line.** Cite its ID, and write only what this product tightens or adds. A line here may tighten the canon; loosening one needs an amendment to the canon.
 > **Budget:** the whole product layer (this file plus tokens, components, anti-patterns, states) gets about 1,700 tokens (`docs/index.md`). If this file passes about 600, it is documenting the product instead of governing it.
 
 ## The product in one sentence

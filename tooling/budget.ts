@@ -86,12 +86,15 @@ function listingTokens(): { tokens: number; skills: number; agents: number } {
   return { tokens, skills: skills.length, agents: agents.length };
 }
 
-/** The canon section a forked critic loads: §2 (anti-patterns) and §3 (rubric). */
-function canonCriticSlice(): number {
+/** What a forked critic loads from the canon: canon-rubric.md plus canon §2, the tells C-R14 checks (record 0009). */
+function criticCanon(): number {
   const { body } = splitFrontmatter(readText("docs/design/canon.md"));
   const start = body.indexOf("\n## 2.");
-  const end = body.indexOf("\n## 4.");
-  return estimate(body.slice(start, end === -1 ? undefined : end));
+  const end = body.indexOf("\n## Changelog");
+  return (
+    estimate(body.slice(start, end === -1 ? undefined : end)) +
+    tokensOf("docs/design/canon-rubric.md")
+  );
 }
 
 function largest(files: string[]) {
@@ -187,8 +190,8 @@ line(
 );
 line("non-UI build", always + nonUiRules + briefAndPackage, nonUi.cap);
 line(
-  "critic pass (canon §2–§3 + brief/package)",
-  canonCriticSlice() + briefAndPackage,
+  "critic pass (rubric + canon §2 + brief/package)",
+  criticCanon() + briefAndPackage,
   critic.cap,
 );
 
