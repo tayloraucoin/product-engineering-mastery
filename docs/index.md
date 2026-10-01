@@ -33,6 +33,8 @@ The rules people and agents build by, a library loaded on demand, and a demo app
 | Research      | `docs/research/`                           | Archived thread outputs                                                                  | never                            |
 | Demo          | `apps/web/`                                | The filled example of every template; the critic's target                                | when working in the demo         |
 
+Every file, one line each: [`_generated/directory-map.md`](_generated/directory-map.md), generated from frontmatter by `yarn directory-map`; for people, not loaded by agents.
+
 ## Precedence (highest first)
 
 1. **Enforced checks.** Lint, types, tests, the critic gate in CI.

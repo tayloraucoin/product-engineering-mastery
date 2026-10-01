@@ -47,6 +47,9 @@ jobs:
       - name: Generated agents up to date
         run: yarn gen:agents --check
 
+      - name: Directory map up to date
+        run: yarn directory-map --check
+
       - name: Lint (code quality)
         run: yarn lint
 

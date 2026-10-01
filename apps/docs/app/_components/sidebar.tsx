@@ -57,7 +57,7 @@ function toTree(docs: Doc[]): NavItem[] {
       }
       level = folder.items;
     }
-    level.push({ kind: "doc", href: doc.href, title: doc.title });
+    level.push({ kind: "doc", href: doc.href, title: doc.navTitle });
   }
   return root;
 }

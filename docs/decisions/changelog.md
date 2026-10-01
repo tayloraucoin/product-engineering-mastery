@@ -15,6 +15,12 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-01 — Directory map, file by file (owner requested)
+
+- **`docs/_generated/directory-map.md`** now gives every file under `docs/` its one line, its frontmatter `description`, grouped by folder. Each folder carries its purpose, taken from the Layers table in `docs/index.md` or from the folder's own `index.md`. Rows link to the files. It is generated, never hand-written, so each definition lives once, in the file's own frontmatter. `yarn directory-map --check` fails CI when the map is stale.
+- **Not in `docs/index.md`**, which loads in every session (at most 80 lines and part of the 4,000-token always-on budget). A 118-row matrix there would break both caps and keep a second copy of every description in always-on context. The index gains one pointer line after the Layers table; the docs app lists the map under Start.
+- **Docs app:** Start entries show their file name (`The practice — map (index.md)`), and nav links are set at 13px.
+
 ## 2026-10-01 — Investigation primers removed; docs sidebar
 
 - **Primers 01–14 removed** from `docs/prompts/` at the owner's request: they ran the investigation threads, and their outputs live in `docs/research/` and the practice files built from them. `docs/prompts/index.md` keeps the thread-to-output table, without links. The originals are in git history (`19fc480`) and the owner's prompts folder. `00-shared-context.md` and P-A to P-I stay, because the Phase 3 and 4 threads attach them.

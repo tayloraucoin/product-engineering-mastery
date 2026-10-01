@@ -10,7 +10,7 @@
     "check-types:tooling": "tsc -p tooling",
     "format": "prettier --write \"**/*.{ts,tsx,md,mjs,css}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,md,mjs,css}\"",
-    "verify": "yarn format:check && yarn lint:docs && yarn budget && yarn gen:agents --check && yarn lint && yarn lint:boundaries && yarn check-types && yarn check-types:tooling && yarn build",
+    "verify": "yarn format:check && yarn lint:docs && yarn budget && yarn gen:agents --check && yarn directory-map --check && yarn lint && yarn lint:boundaries && yarn check-types && yarn check-types:tooling && yarn build",
     "web:dev": "turbo run dev --filter=web",
     "web:build": "turbo run build --filter=web",
     "docs:dev": "turbo run dev --filter=docs",

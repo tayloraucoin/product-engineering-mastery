@@ -75,7 +75,7 @@ function Item({ item, pathname }: { item: NavItem; pathname: string }) {
         aria-current={isActive ? "page" : undefined}
         className={cn(
           buttonVariants({ variant: "ghost", size: "sm" }),
-          "h-auto w-full justify-start py-1.5 text-left font-normal whitespace-normal",
+          "h-auto w-full justify-start py-1 text-left text-[13px] leading-5 font-normal whitespace-normal",
           // The panel sits on the muted surface, where accent is invisible; links lift to the page surface instead.
           "hover:bg-background hover:text-foreground",
           isActive &&

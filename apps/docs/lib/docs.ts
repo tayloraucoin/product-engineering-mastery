@@ -34,6 +34,9 @@ const CONTENT_ROOTS = [
 ];
 const SPINE_PATH = "AGENTS.md";
 const INDEX_PATH = "docs/index.md";
+const MAP_PATH = "docs/_generated/directory-map.md";
+/** The Start group, in this order; each is labelled with its file name. */
+const START_PATHS = [INDEX_PATH, SPINE_PATH, MAP_PATH];
 
 /** Sidebar groups, in order. Keys are `layer` values (docs/index.md, CF-16). */
 const GROUPS: { key: string; label: string }[] = [
@@ -62,6 +65,8 @@ export type Doc = {
   slug: string[];
   href: string;
   title: string;
+  /** The sidebar label: the title, plus the file name for Start entries. */
+  navTitle: string;
   description: string | null;
   /** Repo-root-relative POSIX path, e.g. `docs/design/canon.md`. */
   relativePath: string;
@@ -172,15 +177,20 @@ function readDoc(relativePath: string): Doc {
     const value = frontmatter?.[key];
     return typeof value === "string" && value.length > 0 ? value : null;
   };
+  // Titles are plain text in the sidebar, the tab and search; drop inline-code backticks.
+  const title = (
+    str("title") ??
+    body.match(/^#\s+(.+)$/m)?.[1]?.trim() ??
+    path.posix.basename(relativePath, ".md")
+  ).replace(/`/g, "");
   return {
     slug,
     href: toHref(slug),
-    // Titles are plain text in the sidebar, the tab and search; drop inline-code backticks.
-    title: (
-      str("title") ??
-      body.match(/^#\s+(.+)$/m)?.[1]?.trim() ??
-      path.posix.basename(relativePath, ".md")
-    ).replace(/`/g, ""),
+    title,
+    navTitle:
+      group === "start"
+        ? `${title} (${path.posix.basename(relativePath)})`
+        : title,
     description: str("description"),
     relativePath,
     group,
@@ -215,8 +225,7 @@ function toGroup(
   relativePath: string,
   frontmatter: Frontmatter | null,
 ): string {
-  if (relativePath === SPINE_PATH || relativePath === INDEX_PATH)
-    return "start";
+  if (START_PATHS.includes(relativePath)) return "start";
   if (relativePath.startsWith("apps/web/")) return "demo";
   if (relativePath.startsWith("docs/_generated/")) return "generated";
   const layer = frontmatter?.layer;
@@ -237,7 +246,11 @@ function toFolder(relativePath: string, group: string): string {
 function compareDocs(a: Doc, b: Doc) {
   const order = (doc: Doc) => GROUPS.findIndex((g) => g.key === doc.group);
   if (order(a) !== order(b)) return order(a) - order(b);
-  if (a.group === "start") return a.relativePath === INDEX_PATH ? -1 : 1;
+  if (a.group === "start") {
+    return (
+      START_PATHS.indexOf(a.relativePath) - START_PATHS.indexOf(b.relativePath)
+    );
+  }
   if (a.folder !== b.folder) {
     if (a.folder === "") return -1;
     if (b.folder === "") return 1;
