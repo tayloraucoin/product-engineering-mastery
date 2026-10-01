@@ -99,7 +99,7 @@ No app reads an environment variable yet. When the first one arrives:
 
 ## 6. Components and styling
 
-- **Server Components are the default.** A client component is a leaf: `"use client"` on line 1, as small as the interactivity it owns. Example: `apps/docs/app/_components/nav-link.tsx` is client-side only because it reads the current path.
+- **Server Components are the default.** A client component is a leaf: `"use client"` on line 1, as small as the interactivity it owns. Example: `apps/docs/app/_components/docs-nav.tsx` is client-side only because it reads the current path; the sidebar that builds its tree stays a Server Component.
 - **Tokens by name.** Colours, radii, and other design values are custom properties in `packages/config/tailwind/preset.css`, exposed as Tailwind utilities (`bg-background`, `text-muted-foreground`). Raw values anywhere else are a defect.
 - **Variants with `cva`, merging with `cn`.** A component that has visual variants exports its `cva` definition alongside it (`buttonVariants`) so a link can wear the style without becoming a button.
 - **Each app's `app/globals.css`** imports, in order: `tailwindcss`, `@pem/config/tailwind/preset.css`, `@pem/ui/styles/globals.css` (which registers `@pem/ui` as a Tailwind source).
@@ -115,7 +115,7 @@ No app reads an environment variable yet. When the first one arrives:
 
 | Kind               | Convention                                                                  | Example                                   |
 | ------------------ | --------------------------------------------------------------------------- | ----------------------------------------- |
-| Files and folders  | kebab-case                                                                  | `nav-link.tsx`, `codebase-conventions.md` |
+| Files and folders  | kebab-case                                                                  | `docs-nav.tsx`, `codebase-conventions.md` |
 | Components         | PascalCase, named export                                                    | `export function NavLink`                 |
 | Default exports    | Only where Next requires them (`page`, `layout`, `not-found`, config files) | `export default function DocPage`         |
 | Functions          | verb-first camelCase                                                        | `getAllDocs`, `resolveDocLink`            |

@@ -15,6 +15,14 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-01 — Investigation primers removed; docs sidebar
+
+- **Primers 01–14 removed** from `docs/prompts/` at the owner's request: they ran the investigation threads, and their outputs live in `docs/research/` and the practice files built from them. `docs/prompts/index.md` keeps the thread-to-output table, without links. The originals are in git history (`19fc480`) and the owner's prompts folder. `00-shared-context.md` and P-A to P-I stay, because the Phase 3 and 4 threads attach them.
+- **Docs app sidebar.**
+  - It is a full-height panel: sticky, scrolling on its own, with the muted surface, a right border and search pinned at the top.
+  - Every layer group and sub-folder is a native `<details>` accordion. The ones that hold the current page open; the reader's toggles are otherwise kept.
+  - shadcn's Sidebar was considered and not used. It is an app shell (a provider, cookie state, a mobile sheet), more than collapsible folders need. Phase 3 decides where shadcn lives (`@pem/ui`, per `docs/design/skills.md`).
+
 ## 2026-10-01 — Canon split and ledger updates (owner approved)
 
 - **Canon v0.2 ([record 0009](records/0009-canon-split.md)).** `canon.md` keeps §1 (principles) and §2 (anti-patterns) for builders. The rubric moves unchanged to [`canon-rubric.md`](../design/canon-rubric.md), except that C-R14 names canon §2. The v0.1 cut list moves into record 0009. Rule IDs are unchanged. Amends CF-20 (with a note on CF-20 in `conflicts.md`) and the critic row of the budget in `docs/index.md`. References updated in `CLAUDE.md`, `.claude/rules/ui.md`, `docs/design/{index,workflow,skills}.md`, the `DESIGN` template, `docs/product/index.md`, prompt P-C and `tooling/budget.ts`.

@@ -32,3 +32,8 @@
 .prose blockquote p::after {
   content: none;
 }
+
+/* Safari still draws the disclosure triangle on <summary>; the nav draws its own. */
+summary::-webkit-details-marker {
+  display: none;
+}

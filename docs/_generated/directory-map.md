@@ -1,6 +1,6 @@
 # Directory map (generated)
 
-Every markdown file under `docs/` (132), written by `yarn directory-map`. Do not edit by hand. The map of the practice is `docs/index.md`.
+Every markdown file under `docs/` (118), written by `yarn directory-map`. Do not edit by hand. The map of the practice is `docs/index.md`.
 
 ## docs/decisions/
 
@@ -108,20 +108,6 @@ Every markdown file under `docs/` (132), written by `yarn directory-map`. Do not
 | File | Title | Layer | Status |
 | --- | --- | --- | --- |
 | `00-shared-context.md` | Shared context — attach to every thread alongside the role prompt | prompts | adopted |
-| `01-paper-vs-figma-vs-alternatives-and-cursor-design-mode.md` | Prompt 01 — Paper vs. Figma vs. alternatives, and where Cursor Design Mode fits | prompts | adopted |
-| `02-why-framer-ai-for-marketing.md` | Prompt 02 — Why Framer AI is (or isn't) ideal for marketing sites | prompts | adopted |
-| `03-staging-branches-for-customer-testing-and-ab.md` | Prompt 03 — Staging branches for customers to test interfaces, and honest A/B at seed scale | prompts | adopted |
-| `04-the-world-of-design-skills.md` | Prompt 04 — The world of design skills for coding agents | prompts | adopted |
-| `05-shape-up.md` | Prompt 05 — Shape Up, read for a seed-stage product engineer in 2026 | prompts | adopted |
-| `06-shift-nudge-and-matt-d-smith-two-phase.md` | Prompt 06 — Shift Nudge and Matt D. Smith: the "we actually know this" layer, then the best-answer curriculum | prompts | adopted |
-| `07-animations-dev-and-a-motion-skill-two-phase.md` | Prompt 07 — animations.dev and Emil Kowalski: the known layer, then a motion and micro-interaction skill | prompts | adopted |
-| `08-refactoring-ui-does-it-hold-up.md` | Prompt 08 — Refactoring UI: does it hold up in 2026, and is it worth doing in the era of AI? | prompts | adopted |
-| `09-design-plus-code-meng-to-review.md` | Prompt 09 — Design+Code (Meng To): worth it in 2026, and how much is teaching? | prompts | adopted |
-| `10-product-talk-academy-review.md` | Prompt 10 — Product Talk Academy (Teresa Torres): is the program alive, current, and worth it? | prompts | adopted |
-| `11-newsletters-podcasts-and-people-extraction-plan.md` | Prompt 11 — Newsletters, podcasts, and people: what to extract into `.md` for training prompts | prompts | adopted |
-| `12-books-what-is-online-and-which-to-read.md` | Prompt 12 — The books: what can be distilled from what's online, and which I should actually read | prompts | adopted |
-| `13-laws-of-ux-reference-artifacts.md` | Prompt 13 — Laws of UX as reference artifacts for AI threads and Claude Code, plus the input checklist | prompts | adopted |
-| `14-md-asset-toolkit-for-the-one-percent.md` | Prompt 14 — The `.md` asset toolkit of the 1% of 1%: what belongs in the repo, and the checklist to build it | prompts | adopted |
 | `index.md` | Primer prompts — index and run order | prompts | adopted |
 | `pa-consolidation-and-the-map.md` | P-A — Consolidation and the map (general Claude thread, Opus) | prompts | adopted |
 | `pb-practice-layer-and-docs-app.md` | P-B — The practice layer and the docs app (Claude Code, in the repo, Opus) | prompts | adopted |

@@ -14,15 +14,18 @@ export const metadata: Metadata = {
     "The practice — roles, design canon, templates, decisions, prompts — rendered from docs/ for reading.",
 };
 
+/** Two columns: a full-height sidebar panel that scrolls on its own, and the page body. */
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
-        <div className="mx-auto flex max-w-7xl flex-col gap-8 px-4 py-8 md:flex-row md:px-8">
-          <aside className="md:sticky md:top-8 md:h-[calc(100dvh-4rem)] md:w-72 md:shrink-0 md:overflow-y-auto">
+        <div className="md:flex">
+          <aside className="border-b border-border bg-muted md:sticky md:top-0 md:h-dvh md:w-80 md:shrink-0 md:overflow-y-auto md:border-r md:border-b-0">
             <Sidebar />
           </aside>
-          <main className="min-w-0 flex-1">{children}</main>
+          <main className="min-w-0 flex-1 px-4 py-8 md:px-12 md:py-10">
+            <div className="mx-auto max-w-5xl">{children}</div>
+          </main>
         </div>
       </body>
     </html>

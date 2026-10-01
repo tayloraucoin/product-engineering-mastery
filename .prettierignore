@@ -11,8 +11,6 @@ docs/product/brief.template.md
 docs/product/package.template.md
 docs/product/cycle-charter.template.md
 docs/runbooks/variant-testing-runbook.md
-docs/prompts/0[1-9]-*.md
-docs/prompts/1[0-4]-*.md
 docs/prompts/pa-*.md
 docs/prompts/pb-*.md
 docs/prompts/pc-*.md
