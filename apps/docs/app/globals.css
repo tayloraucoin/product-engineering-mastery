@@ -1,0 +1,14 @@
+@import "tailwindcss";
+@import "@pem/config/tailwind/preset.css";
+@import "@pem/ui/styles/globals.css";
+
+@plugin "@tailwindcss/typography";
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}

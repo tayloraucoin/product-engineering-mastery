@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: format · lint · boundaries · types · build
+    runs-on: ubuntu-latest
+    env:
+      # Vercel Remote Cache — set TURBO_TOKEN (secret) and TURBO_TEAM (variable) in GitHub repo settings.
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Format
+        run: yarn format:check
+
+      - name: Lint (code quality)
+        run: yarn lint
+
+      - name: Lint (import boundaries)
+        run: yarn lint:boundaries
+
+      - name: Typecheck
+        run: yarn check-types
+
+      - name: Build
+        run: yarn build
