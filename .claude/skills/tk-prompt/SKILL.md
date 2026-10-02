@@ -1,6 +1,6 @@
 ---
 name: tk-prompt
-description: Turn a brain dump into the first prompt for a new thread, routed as a one-off or an epic, with the cast, the files and the venue, checked against the prompt standard. Manual: run it as /tk-prompt.
+description: "Turn a brain dump into the first prompt for a new thread, routed as a one-off or an epic, with the cast, the files and the venue, checked against the prompt standard. Manual: run it as /tk-prompt."
 disable-model-invocation: true
 argument-hint: <what you want built or changed, in your own words>
 ---

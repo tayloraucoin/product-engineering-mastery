@@ -35,6 +35,7 @@ type FixtureContext = {
   epicPrefixes?: string[];
   asBuiltOnMain?: string[];
   aliases?: Record<string, string>;
+  protectedBranch?: string;
 };
 const fixture: FixtureContext | null = process.env.PEM_HOOK_FIXTURE_CONTEXT
   ? (JSON.parse(process.env.PEM_HOOK_FIXTURE_CONTEXT) as FixtureContext)
@@ -44,7 +45,12 @@ type Denial = { rule: string; message: string };
 
 // ---------------------------------------------------------------- layout
 
-const readGuardLayout = (): Layout => readLayout(ROOT, fixture?.epicPrefixes);
+function readGuardLayout(): Layout {
+  const layout = readLayout(ROOT, fixture?.epicPrefixes);
+  return fixture?.protectedBranch
+    ? { ...layout, protectedBranch: fixture.protectedBranch }
+    : layout;
+}
 
 /**
  * A commit is judged by the layout of the repo it lands in: a worktree or
@@ -78,19 +84,21 @@ const aliasOf = (cwd: string, name: string) =>
     ? (fixture.aliases?.[name] ?? null)
     : git(cwd, ["config", "--get", `alias.${name}`]);
 
-function existsOnMain(rel: string): boolean {
+function existsOnProtected(rel: string, layout: Layout): boolean {
   if (fixture) return (fixture.asBuiltOnMain ?? []).includes(rel);
-  return git(ROOT, ["cat-file", "-e", `main:${rel}`]) !== null;
+  return (
+    git(ROOT, ["cat-file", "-e", `${layout.protectedBranch}:${rel}`]) !== null
+  );
 }
 
-function anyAsBuiltOnMain(specsRoot: string): boolean {
+function anyAsBuiltOnProtected(layout: Layout): boolean {
   if (fixture) return (fixture.asBuiltOnMain ?? []).length > 0;
   const listing = git(ROOT, [
     "ls-tree",
     "-r",
     "--name-only",
-    "main",
-    specsRoot,
+    layout.protectedBranch,
+    layout.specsRoot,
   ]);
   return (listing ?? "")
     .split("\n")
@@ -543,11 +551,11 @@ function gitRules(
     };
   if (sub !== "commit") return null;
 
-  if (currentBranch(dir) === "main")
+  layout = commitLayout(dir, layout);
+  if (currentBranch(dir) === layout.protectedBranch)
     return {
       rule: "commit-on-main",
-      message:
-        "Agents do not commit on main. Run: git switch -c agent/<work-id>   then commit there. Your staged changes come with you.",
+      message: `Agents do not commit on ${layout.protectedBranch}. Run: git switch -c ${layout.branchPattern.replace("{id}", "<work-id>")}   then commit there. Your staged changes come with you.`,
     };
 
   const message = commitMessage(
@@ -556,7 +564,6 @@ function gitRules(
     dir,
   );
   if (message.kind === "reused") return null;
-  layout = commitLayout(dir, layout);
   const example = `git commit -m "${layout.prefixes[0] ?? "PEM"}: <outcome>"`;
   if (message.kind === "editor")
     return {
@@ -616,8 +623,8 @@ function protectedFile(
   if (matches("as-built.md"))
     return (
       HAS_GLOB.test(rel)
-        ? anyAsBuiltOnMain(layout.specsRoot)
-        : existsOnMain(rel)
+        ? anyAsBuiltOnProtected(layout)
+        : existsOnProtected(rel, layout)
     )
       ? "as-built"
       : null;
@@ -683,7 +690,7 @@ function writeRules(
       return {
         rule: "as-built-write",
         message:
-          "This as-built.md is on main and immutable. To set applied:, edit that one field with the Edit tool. " +
+          `This as-built.md is on ${layout.protectedBranch} and immutable. To set applied:, edit that one field with the Edit tool. ` +
           "A new result goes through yarn contract:run or yarn contract:record on a new item.",
       };
   }

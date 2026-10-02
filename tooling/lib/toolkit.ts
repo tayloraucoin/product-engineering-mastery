@@ -47,6 +47,8 @@ export type Toolkit = {
   verify: { full: string; fast: string };
   migrationsDir: string | null;
   branchPattern: string;
+  /** The branch agents never commit on and merged work lives on, as in "main". */
+  protectedBranch: string;
   reviewers: ToolkitReviewer[];
 };
 
@@ -58,6 +60,7 @@ const KEYS = [
   "verify",
   "migrationsDir",
   "branchPattern",
+  "protectedBranch",
   "reviewers",
 ] as const;
 
@@ -168,6 +171,11 @@ export function validateToolkit(
   if ("branchPattern" in data) {
     if (!isText(data.branchPattern) || !data.branchPattern.includes("{id}"))
       bad("branchPattern", 'must contain {id}, as in "agent/{id}"');
+  }
+
+  if ("protectedBranch" in data) {
+    if (!isText(data.protectedBranch) || /\s|\{id\}/.test(data.protectedBranch))
+      bad("protectedBranch", 'must be a branch name, such as "main"');
   }
 
   if ("reviewers" in data) {

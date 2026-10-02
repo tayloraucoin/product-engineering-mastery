@@ -20,6 +20,7 @@
   },
   "migrationsDir": null,
   "branchPattern": "agent/{id}",
+  "protectedBranch": "main",
   "reviewers": [
     {
       "glob": "**/migrations/**",

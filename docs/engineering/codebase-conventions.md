@@ -106,8 +106,8 @@ No app reads an environment variable yet. When the first one arrives:
 
 ## 7. Docs and decisions
 
-- **Markdown under `docs/` is the source of truth.** One folder per layer (`decisions/`, `design/`, `engineering/`, …), each file carrying the frontmatter `yarn lint:docs` enforces. The map is [`docs/index.md`](../index.md); there is no `docs/README.md` (CF-05).
-- **Names** follow [record 0006](../decisions/records/0006-file-naming-and-filing.md): ASCII kebab-case, `index.md` for folder landings.
+- **Markdown under `docs/` is the source of truth.** One folder per layer (`decisions/`, `design/`, `engineering/`, …), each file carrying the frontmatter `yarn lint:docs` enforces. The map agents read is [`docs/index.md`](../index.md); the front door for people is [`docs/README.md`](../README.md), and every folder has a `README.md` landing page (PR-12).
+- **Names** follow [record 0006](../decisions/records/0006-file-naming-and-filing.md): ASCII kebab-case; a folder's landing page is its `README.md`, and `docs/index.md` is the one `index.md`.
 - **Links are relative paths to `.md` files.** They must work raw; the docs app adapts to them, never the reverse.
 - **Decisions** (CF-06): one line in [`ledger.md`](../decisions/ledger.md); a [record](../decisions/records/) from [`decision.template.md`](../decisions/decision.template.md) when the reason needs more than a line, immutable once accepted, reversed only by a new record that names it in `supersedes`; amendments to files in [`changelog.md`](../decisions/changelog.md).
 

@@ -13,6 +13,7 @@ export type Layout = {
   specsRoot: string;
   prefixes: string[];
   branchPattern: string;
+  protectedBranch: string;
   readable: boolean;
 };
 
@@ -42,6 +43,7 @@ export function readLayout(root: string, epicPrefixes?: string[]): Layout {
       toolkitPrefixes: string[];
       apps: Record<string, { prefix: string }>;
       branchPattern: string;
+      protectedBranch?: string;
     };
     return {
       specsRoot: toolkit.specsRoot,
@@ -51,6 +53,7 @@ export function readLayout(root: string, epicPrefixes?: string[]): Layout {
         ...(epicPrefixes ?? findEpicPrefixes(root, toolkit.specsRoot)),
       ],
       branchPattern: toolkit.branchPattern,
+      protectedBranch: toolkit.protectedBranch ?? "main",
       readable: true,
     };
   } catch {
@@ -58,6 +61,7 @@ export function readLayout(root: string, epicPrefixes?: string[]): Layout {
       specsRoot: "specs",
       prefixes: [],
       branchPattern: "agent/{id}",
+      protectedBranch: "main",
       readable: false,
     };
   }

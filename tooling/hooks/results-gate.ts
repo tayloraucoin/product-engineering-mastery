@@ -6,7 +6,7 @@
  *   - a results.json under the specs root (only tooling writes results);
  *   - a review-<role>.md or tickets/_preflight.md (written by review:run);
  *   - the generated _status.md;
- *   - an as-built.md that is on main, unless the edit changes only its
+ *   - an as-built.md on the protected branch (toolkit.json), unless the edit changes only its
  *     `applied:` value.
  *
  * The shell's route to the same files is bash-guard's; the boundary behind
@@ -32,22 +32,26 @@ const fixture: FixtureContext | null = process.env.PEM_HOOK_FIXTURE_CONTEXT
   ? (JSON.parse(process.env.PEM_HOOK_FIXTURE_CONTEXT) as FixtureContext)
   : null;
 
-function specsRoot(): string {
+/** Where specs live and which branch holds merged work (toolkit.json). */
+function readLayout(): { specsRoot: string; protectedBranch: string } {
   try {
-    return (
-      JSON.parse(readFileSync(path.join(ROOT, "toolkit.json"), "utf8")) as {
-        specsRoot: string;
-      }
-    ).specsRoot;
+    const toolkit = JSON.parse(
+      readFileSync(path.join(ROOT, "toolkit.json"), "utf8"),
+    ) as { specsRoot: string; protectedBranch?: string };
+    return {
+      specsRoot: toolkit.specsRoot,
+      protectedBranch: toolkit.protectedBranch ?? "main",
+    };
   } catch {
-    return "specs";
+    return { specsRoot: "specs", protectedBranch: "main" };
   }
 }
+const layout = readLayout();
 
 function onMain(rel: string): string | null {
   if (fixture) return fixture.onMain?.[rel] ?? null;
   try {
-    return execFileSync("git", ["show", `main:${rel}`], {
+    return execFileSync("git", ["show", `${layout.protectedBranch}:${rel}`], {
       cwd: ROOT,
       encoding: "utf8",
       stdio: ["ignore", "pipe", "ignore"],
@@ -92,7 +96,7 @@ const rel = path
   .relative(ROOT, path.resolve(ROOT, target))
   .split(path.sep)
   .join("/");
-const root = specsRoot();
+const root = layout.specsRoot;
 if (rel.startsWith("..") || !rel.startsWith(`${root}/`)) process.exit(0);
 
 const deny = (rule: string, message: string): never => {
@@ -140,7 +144,7 @@ if (base === "as-built.md") {
   if (withoutApplied(next) !== withoutApplied(merged))
     deny(
       "as-built",
-      "This as-built.md is merged and immutable except its applied: value. Change only that line; a new result belongs to a new item.",
+      `This as-built.md is on ${layout.protectedBranch} and immutable except its applied: value. Change only that line; a new result belongs to a new item.`,
     );
 }
 process.exit(0);

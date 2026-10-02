@@ -5,18 +5,19 @@ The canonical instructions for every agent (Claude Code, Cursor, Codex). `CLAUDE
 ## Start here
 
 1. **What this is:** a universal product-engineering toolkit and the repo that proves it. The practice (roles, design canon, templates, decisions, workflows, prompts) lives in `docs/`; `apps/web` is the demo app that holds every template's filled example and is the critic's target; `apps/docs` renders `docs/` in a browser. No product lives here.
-2. **Current phase:** PJ, the engineering layer (`docs/prompts/phases/engineering-layer.md`), on `agent/PJ`. Phase 3 (`demo-app-and-skills.md`) follows and builds the demo through the work loop. Until then `apps/web` is a single page and `.claude/skills/` holds no skills; the map's skill row describes the target.
+2. **Current phase:** PJ, the engineering layer (`docs/prompts/phases/engineering-layer.md`), on `agent/PJ`; Phase 3 (`demo-app-and-skills.md`) then builds the demo through the work loop. Until then `apps/web` is a single page.
 3. **Read [`docs/index.md`](docs/index.md) first, every session.** It is the map: the layers, the precedence ladder, what loads always, by path, by trigger and never, and the token budget.
 4. **Before any UI work, read [`docs/design/canon.md`](docs/design/canon.md)** and the product's design layer: `DESIGN.md`, `tokens.md`, `components.md`, `anti-patterns.md`, `states.md`, `coverage-gaps.md` (in the demo: `apps/web/docs/design/`). In Claude Code, `.claude/rules/ui.md` also fires on UI files.
 5. **State the exact file paths before implementing.** Placement is decided by one question, who imports this ([`docs/engineering/codebase-conventions.md`](docs/engineering/codebase-conventions.md) §1).
-6. **Verify the way CI does:** `yarn verify`. There is no test suite yet; Phase 3 adds Playwright captures.
+6. **Verify the way CI does:** `yarn verify`.
 
 ## Work loop
 
-- **Every change is a ticket with a contract** (`specs/<app>/one-offs/<APP-n>-<slug>/contract.md`, or an epic's `tickets/`): testable criteria, each with an evidence type; the planned paths; the one UX surface it cites. The default ticket is under half a day.
+- **Every change is a ticket with a contract**, started by `yarn contract:init`: testable criteria, each with an evidence type; the planned paths; the one UX surface it cites. The default ticket is under half a day.
 - **One-off or epic is decided by the routing rule in [`docs/workflows/README.md`](docs/workflows/README.md), never by size:** more than one ticket, a new surface, no living UX file, or an unsettled problem makes an epic.
-- **Done is `results.json` plus `as-built.md`, never a claim in chat.** Results are written only by `yarn contract:run` and `yarn contract:record`; a merged as-built is immutable.
+- **Done is `results.json` plus `as-built.md`, never a claim in chat.** Only `yarn contract:run`, `contract:record` and `review:run` write results. `review:run` proves a review ran against the contract, not that it was independent: Taylor reads `review-<role>.md` before merge.
 - **`specs/<app>/ux/` is the living truth** of how the app works now. An epic proposes changes in its own `ux/`; shipping promotes them. Every epic ticket is judged by `vigil`, an evaluator in fresh context.
+- **Built as of 2026-10-02:** the contract loop and `status` (J5). **Lands later:** the Stop and SessionStart hooks (J6), `/tk-contract`, `/tk-kickoff`, `/tk-close` and `vigil` (J7), `yarn pr:body` (J8), the map's other skills (P-C). Delete this line at J8.
 
 ## Commands
 
@@ -40,7 +41,7 @@ Node 22, Yarn 4.13.0 (`corepack enable && yarn install`).
 ## Roles, subagents, skills
 
 - **Roles:** `docs/roles/<department>/<name>-<title>.md`. Inject one per thread. Department seat maps are each folder's `README.md`.
-- **Subagents:** `.claude/agents/` is **generated** by `yarn gen:agents` from roles whose frontmatter says `subagent: true` ([record 0008](docs/decisions/records/0008-subagents-are-generated-opt-in.md)). Never edit it by hand; CI fails on drift.
+- **Subagents:** `.claude/agents/` is **generated** by `yarn gen:agents` from roles whose frontmatter says `subagent: true` ([record 0008](docs/decisions/records/0008-subagents-are-generated-opt-in.md)).
 - **Skills:** `.claude/skills/<name>/`; house skills are prefixed `tk-`. Rulings and load order: [`docs/design/skills.md`](docs/design/skills.md). Provenance: `.claude/skills/REGISTRY.md`.
 
 ## Engineering boundaries

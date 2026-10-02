@@ -8,12 +8,10 @@
 import { execFileSync } from "node:child_process";
 
 import { REPO_ROOT } from "./docs.ts";
+import { readLayout } from "./work-ids.ts";
 
 /** Where the native git hooks live; `yarn hooks:install` points core.hooksPath here (A9). */
 export const NATIVE_HOOKS_PATH = "tooling/git-hooks";
-
-/** The branch that holds merged work; immutability and staleness are measured against it. */
-export const BASE_BRANCH = "main";
 
 /** Runs git and returns trimmed stdout, or null when git exits non-zero. */
 export function runGit(
@@ -50,8 +48,10 @@ export function getBaseRef(root: string = REPO_ROOT): string | null {
   baseRefs.set(root, findBaseRef(root));
   return baseRefs.get(root)!;
 }
+/** The protected branch (toolkit.json), local or as its remote copy: where merged work lives. */
 function findBaseRef(root: string): string | null {
-  for (const ref of [BASE_BRANCH, `origin/${BASE_BRANCH}`])
+  const { protectedBranch } = readLayout(root);
+  for (const ref of [protectedBranch, `origin/${protectedBranch}`])
     if (runGit(["rev-parse", "--verify", "--quiet", `${ref}^{commit}`], root))
       return ref;
   return null;

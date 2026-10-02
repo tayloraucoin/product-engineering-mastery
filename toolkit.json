@@ -13,16 +13,14 @@
       "designLayer": null
     }
   },
-  "toolkitPrefixes": [
-    "PEM",
-    "PJ"
-  ],
+  "toolkitPrefixes": ["PEM", "PJ"],
   "verify": {
     "full": "yarn verify",
     "fast": "yarn verify:fast"
   },
   "migrationsDir": null,
   "branchPattern": "agent/{id}",
+  "protectedBranch": "main",
   "reviewers": [
     {
       "glob": "**/migrations/**",

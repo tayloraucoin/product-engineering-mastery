@@ -15,6 +15,8 @@ load_when: on request
 
 > **The whole thing in one breath.** You brain dump. The prompt builder turns it into a proper prompt with the right role and the right files. From then on, every stage runs in its own thread and ends at a gate you pass. Agents do the work, scripts decide when it is done, and the app's living UX spec always says how the app works now.
 
+> **Built as of 2026-10-02 (amendment, A13.1).** Running today: the prompt builder and `/tk-prompt`; `yarn spec:init`, `contract:init`, `contract:run`, `contract:record`, `contract:add`, `review:run`, `status` and `truth:promote` (J5). **Lands later:** the session-start line and the stop check (J6); `/tk-contract`, `/tk-kickoff` and `/tk-close` (J7); `yarn pr:body` and the risk tier (J8). Until a command lands, do its step by hand as this page describes it.
+
 ## The game you're playing
 
 Think of the repo as a game world with five systems.

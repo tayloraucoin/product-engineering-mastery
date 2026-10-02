@@ -3,8 +3,12 @@
   "note": "Synthetic hook inputs. `context` replaces the checkout's own state, so a case never depends on the current branch.",
   "defaultContext": {
     "branch": "agent/PJ",
-    "epicPrefixes": ["ONB"],
-    "asBuiltOnMain": ["specs/web/one-offs/WEB-7-export-csv/as-built.md"],
+    "epicPrefixes": [
+      "ONB"
+    ],
+    "asBuiltOnMain": [
+      "specs/web/one-offs/WEB-7-export-csv/as-built.md"
+    ],
     "aliases": {}
   },
   "cases": [
@@ -290,6 +294,27 @@
       "command": "git status && git diff",
       "context": {
         "branch": "main"
+      }
+    },
+    {
+      "rule": "commit-on-main",
+      "expect": "deny",
+      "name": "commit on the protected branch named in toolkit.json, not main",
+      "command": "git commit -m \"PJ: on trunk\"",
+      "context": {
+        "branch": "trunk",
+        "protectedBranch": "trunk"
+      },
+      "message": "do not commit on trunk"
+    },
+    {
+      "rule": "commit-on-main",
+      "expect": "allow",
+      "name": "main is an ordinary branch when another is protected",
+      "command": "git commit -m \"PJ: on main\"",
+      "context": {
+        "branch": "main",
+        "protectedBranch": "trunk"
       }
     },
     {

@@ -48,7 +48,7 @@ Every file, one line each: [`_generated/directory-map.md`](_generated/directory-
 
 ## What loads when
 
-- **Always** (≤4,000 tokens): `AGENTS.md` (≤100 lines), `CLAUDE.md` (shim, ≤20 lines), this file (≤80 lines), the skill and subagent listings (≤12 model-invocable skills, descriptions ≤400 characters), and SessionStart hook output (≤150).
+- **Always**, the repo's share of each session (≤4,000 tokens; the tool's own prompt, tools and built-in skills come on top): `AGENTS.md` (≤100 lines), `CLAUDE.md` (shim, ≤20 lines), this file (≤80 lines), the skill and subagent listings (≤12 model-invocable skills, descriptions ≤400 characters), and SessionStart hook output (≤150).
 - **By path:**
   - `.claude/rules/ui.md` on UI files loads `canon.md` and the product design layer; `ts.md`, `testing.md`, `next.md`, `turbo.md`, `docs.md`, `specs.md` and `deps.md` load on their globs.
   - Nested `AGENTS.md` files load in `apps/` and `packages/`.
