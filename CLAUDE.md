@@ -3,7 +3,8 @@
 
 ## Claude Code only
 
-- Path rules in `.claude/rules/` load on matching files: `ui.md` (UI files, the design layer), `ts.md`, `testing.md`.
+- Path rules in `.claude/rules/` load on matching files: `ui.md` (UI files, the design layer), `ts.md`, `testing.md`, `next.md`, `turbo.md`, `docs.md`, `specs.md`, `deps.md`.
+- Hooks registered in `.claude/settings.json` enforce the shell rules. A denial message is an instruction: do what it says, and never pursue the same outcome through another form of the command.
 - Subagents in `.claude/agents/` are generated from `docs/roles/`, each in its own context:
   - `assay` scores rendered UI against `docs/design/canon-rubric.md`, read-only. Hand it the package and the evidence, never the builder's summary.
   - `tally` defines events and metrics, plans rollouts, writes readouts (`docs/measurement/metrics/`).

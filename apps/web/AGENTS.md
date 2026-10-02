@@ -8,12 +8,12 @@ A small, deliberately generic records product that exists to prove the toolkit: 
 
 ## The filled examples live here
 
-Every template in `docs/` has its filled example in this app, so the pair sits side by side in the docs app:
+Every template in `docs/` has its filled example for this app, so the pair sits side by side in the docs app:
 
 | Template                                                | Filled example                                                                                                                    |
 | ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | `docs/design/templates/*.template.md`                   | `apps/web/docs/design/` (`DESIGN.md`, `tokens.md`, `components.md`, `anti-patterns.md`, `states.md`, `coverage-gaps.md`, `refs/`) |
-| `docs/product/brief.template.md`, `package.template.md` | `apps/web/specs/_example/`                                                                                                        |
+| `docs/product/brief.template.md`, `package.template.md` | `specs/web/epics/<EPIC>-<slug>/brief.md`; a ticket's contract in `specs/web/one-offs/` or the epic's `tickets/` (A4 layout)       |
 
 For UI work in this app, the design layer is `docs/design/canon.md` plus `apps/web/docs/design/`. Until Phase 3 writes the latter, the canon alone governs.
 

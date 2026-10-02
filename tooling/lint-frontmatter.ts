@@ -227,6 +227,46 @@ function lintLawBody(file: string, body: string) {
   }
 }
 
+/**
+ * Path rules (E-13): `.claude/rules/*.md` may carry only `paths`, the one key
+ * Claude Code reads (verified against the memory docs, 2026-10-02). Any other
+ * key implies loading that never happens.
+ */
+function lintRule(file: string): string | null {
+  const md = readMarkdown(file);
+  if (md.rawFrontmatter === null)
+    return `${file}: no frontmatter; a rule opens with a paths list`;
+  if (md.frontmatterError)
+    return `${file}: frontmatter is not valid YAML: ${md.frontmatterError}`;
+  const keys = Object.keys(md.frontmatter ?? {});
+  const extra = keys.filter((key) => key !== "paths");
+  if (extra.length > 0)
+    return (
+      `${file}: rules carry only \`paths\`; Claude Code reads nothing else. ` +
+      `Move ${extra.map((k) => `"${k}"`).join(", ")} into the body, or delete it.`
+    );
+  const paths = md.frontmatter?.paths;
+  if (
+    !Array.isArray(paths) ||
+    paths.length === 0 ||
+    !paths.every((p) => typeof p === "string")
+  )
+    return `${file}: paths must be a non-empty list of globs`;
+  return null;
+}
+
+// The fixture must fail, or the rule lint is not checking anything.
+const RULE_FIXTURE = "tooling/fixtures/rules/with-description.md";
+if (lintRule(RULE_FIXTURE) === null)
+  fail(
+    RULE_FIXTURE,
+    "the fixture with a description key passed; the rule lint is broken",
+  );
+for (const file of listMarkdown(".claude/rules")) {
+  const problem = lintRule(file);
+  if (problem) errors.push(problem);
+}
+
 // docs/_generated/ is written by tooling and never loaded (docs/index.md); it is exempt.
 const files = listMarkdown(DOCS).filter(
   (file) => !file.startsWith("docs/_generated/"),
@@ -253,4 +293,6 @@ if (errors.length > 0) {
   );
   process.exit(1);
 }
-console.log(`lint:docs — ${files.length} files, names and frontmatter clean.`);
+console.log(
+  `lint:docs — ${files.length} files, names and frontmatter clean; ${listMarkdown(".claude/rules").length} path rules carry only paths.`,
+);
