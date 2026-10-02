@@ -13,11 +13,13 @@ import { existsSync, readdirSync } from "node:fs";
 import path from "node:path";
 
 import {
+  listFiles,
   readMarkdown,
   readText,
   REPO_ROOT,
   splitFrontmatter,
 } from "./lib/docs.ts";
+import { loadToolkit } from "./lib/toolkit.ts";
 
 const INDEX = "docs/index.md";
 const LINE_CAPS: Record<string, number> = {
@@ -25,6 +27,10 @@ const LINE_CAPS: Record<string, number> = {
   "CLAUDE.md": 20,
   [INDEX]: 80,
 };
+
+// Where the apps, their design layers and the specs live (toolkit.json).
+const toolkit = loadToolkit();
+const apps = Object.values(toolkit.apps);
 
 const exists = (rel: string) => existsSync(path.join(REPO_ROOT, rel));
 const estimate = (text: string) =>
@@ -101,6 +107,25 @@ function largest(files: string[]) {
   return files.reduce((max, f) => Math.max(max, tokensOf(f)), 0);
 }
 
+const sum = (files: string[]) => files.reduce((s, f) => s + tokensOf(f), 0);
+
+/** The heaviest of several file sets: a build loads one app's, never all of them. */
+function heaviest(sets: string[][]): string[] {
+  return sets.reduce((max, set) => (sum(set) > sum(max) ? set : max), []);
+}
+
+/** Every folder under the specs root that holds a brief or a package, as its pair. */
+function briefAndPackagePairs(): string[][] {
+  if (!exists(toolkit.specsRoot)) return [];
+  const folders = new Map<string, string[]>();
+  for (const file of listFiles(toolkit.specsRoot)) {
+    if (!/\/(brief|package)\.md$/.test(file)) continue;
+    const dir = path.posix.dirname(file);
+    folders.set(dir, [...(folders.get(dir) ?? []), file]);
+  }
+  return [...folders.values()];
+}
+
 const { rows } = parseCaps();
 const errors: string[] = [];
 const report: string[] = [];
@@ -123,11 +148,12 @@ for (const [rel, cap] of Object.entries(LINE_CAPS)) {
 }
 
 // What each build loads. Missing files (Phase 3 and later) count as zero and are named.
-const productLayer = listIn("apps/web/docs/design", (n) => n.endsWith(".md"));
-const example = [
-  "apps/web/specs/_example/brief.md",
-  "apps/web/specs/_example/package.md",
-];
+const productLayer = heaviest(
+  apps.flatMap((app) =>
+    app.designLayer ? [listIn(app.designLayer, (n) => n.endsWith(".md"))] : [],
+  ),
+);
+const example = heaviest(briefAndPackagePairs());
 const skillBodies = listIn(".claude/skills", (n) => !n.endsWith(".md"))
   .map((d) => `${d}/SKILL.md`)
   .filter(exists);
@@ -140,13 +166,13 @@ const always =
   listing.tokens;
 const canon = tokensOf("docs/design/canon.md");
 const uiRule = tokensOf(".claude/rules/ui.md");
-const design = canon + productLayer.reduce((s, f) => s + tokensOf(f), 0);
-const briefAndPackage = example.reduce((s, f) => s + tokensOf(f), 0);
+const design = canon + sum(productLayer);
+const briefAndPackage = sum(example);
 const skillBody = largest(skillBodies);
 const nonUiRules =
   tokensOf(".claude/rules/ts.md") +
   tokensOf(".claude/rules/testing.md") +
-  tokensOf("apps/web/AGENTS.md");
+  largest(apps.map((app) => `${app.path}/AGENTS.md`));
 
 const ui = rows.get("ui build");
 const nonUi = rows.get("non-ui build");
@@ -155,9 +181,6 @@ if (!ui || !nonUi || !critic)
   throw new Error(
     "docs/index.md budget table is missing a row this script reads",
   );
-
-const pending = (files: string[]) =>
-  files.some(exists) ? "" : "(not written yet)";
 
 line(
   "always-on",
@@ -172,10 +195,10 @@ line(
   productLayer.length ? "" : "(product layer not written yet)",
 );
 line(
-  "brief and package (demo example)",
+  "brief and package (largest example)",
   briefAndPackage,
   ui.parts.get("brief and package"),
-  pending(example),
+  example.length ? "" : "(not written yet)",
 );
 line(
   "one skill body (largest)",

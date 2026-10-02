@@ -9,6 +9,13 @@
 import path from "node:path";
 
 import { listMarkdown, readMarkdown, type Frontmatter } from "./lib/docs.ts";
+import { loadToolkit } from "./lib/toolkit.ts";
+
+// An overlay leaves the host repo's docs alone (report §1, adoption tiers).
+if (loadToolkit().tier !== "starter") {
+  console.log("lint:docs — skipped: the overlay tiers do not lint host docs.");
+  process.exit(0);
+}
 
 const DOCS = "docs";
 

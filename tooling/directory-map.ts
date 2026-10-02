@@ -16,6 +16,15 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 import { listMarkdown, readMarkdown, readText, REPO_ROOT } from "./lib/docs.ts";
+import { loadToolkit } from "./lib/toolkit.ts";
+
+// An overlay leaves the host repo's docs alone (report §1, adoption tiers).
+if (loadToolkit().tier !== "starter") {
+  console.log(
+    "directory-map — skipped: the overlay tiers do not map host docs.",
+  );
+  process.exit(0);
+}
 
 const OUT = "docs/_generated/directory-map.md";
 const check = process.argv.includes("--check");
