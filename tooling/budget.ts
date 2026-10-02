@@ -166,11 +166,26 @@ const skillBodies = listIn(".claude/skills", (n) => !n.endsWith(".md"))
   .filter(exists);
 const listing = listingTokens();
 
+/**
+ * SessionStart output is counted at its declared allowance (E-19), read from
+ * the map's Always line, since what it prints varies by session; the hook
+ * truncates its line in code.
+ */
+const sessionStart = Number(
+  readText(INDEX)
+    .match(/SessionStart hook output \(≤([\d,]+)\)/)?.[1]
+    ?.replace(/,/g, "") ?? Number.NaN,
+);
+if (Number.isNaN(sessionStart))
+  errors.push(
+    `${INDEX}: the Always line no longer declares "SessionStart hook output (≤<tokens>)"; budget.ts counts that allowance`,
+  );
 const always =
   tokensOf("AGENTS.md") +
   tokensOf("CLAUDE.md") +
   tokensOf(INDEX) +
-  listing.tokens;
+  listing.tokens +
+  (sessionStart || 0);
 const canon = tokensOf("docs/design/canon.md");
 const uiRule = tokensOf(".claude/rules/ui.md");
 const design = canon + sum(productLayer);
@@ -278,7 +293,7 @@ function checkAgainst(
     "always-on",
     always,
     part(ui, "always"),
-    `skills ${listing.skills}, agents ${listing.agents}`,
+    `skills ${listing.skills}, agents ${listing.agents}, SessionStart ${sessionStart || 0}`,
   );
   line(
     "design layer (canon + product layer)",

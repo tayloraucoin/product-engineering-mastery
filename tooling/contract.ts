@@ -416,12 +416,10 @@ function start(item: Item, tree: SpecsTree) {
  * runner skip its files and report to that parent, so the key is removed.
  */
 function criterionEnv(): NodeJS.ProcessEnv {
-  const env: NodeJS.ProcessEnv = {
-    ...process.env,
-    FORCE_COLOR: "0",
-    NO_COLOR: "1",
-  };
+  const env: NodeJS.ProcessEnv = { ...process.env, NO_COLOR: "1" };
   delete env.NODE_TEST_CONTEXT;
+  // picocolors turns colour on whenever FORCE_COLOR is present, even as "0".
+  delete env.FORCE_COLOR;
   return env;
 }
 

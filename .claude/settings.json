@@ -115,6 +115,28 @@
           }
         ]
       }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/tooling/hooks/session-start.ts\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/tooling/hooks/stop-gate.ts\"",
+            "timeout": 120
+          }
+        ]
+      }
     ]
   }
 }

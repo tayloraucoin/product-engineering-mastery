@@ -54,6 +54,12 @@ const REQUIRED_HOOKS = [
     matcher: "Edit|Write|NotebookEdit",
     script: "tooling/hooks/results-gate.ts",
   },
+  {
+    event: "SessionStart",
+    matcher: undefined,
+    script: "tooling/hooks/session-start.ts",
+  },
+  { event: "Stop", matcher: undefined, script: "tooling/hooks/stop-gate.ts" },
 ];
 /** Shell reads the Read tool's deny cannot be trusted to cover on its own. */
 const REQUIRED_DENY_READ = ["~/.ssh", "~/.aws"];
@@ -105,14 +111,14 @@ export function checkSettings(settings: unknown): string[] {
     const registered = entries.some(
       (entry) =>
         isObject(entry) &&
-        entry.matcher === matcher &&
+        (entry.matcher ?? "") === (matcher ?? "") &&
         JSON.stringify(entry.hooks ?? []).includes(
           `\${CLAUDE_PROJECT_DIR}/${script}`,
         ),
     );
     if (!registered)
       problems.push(
-        `hooks.${event} does not register ${script} for "${matcher}"; restore the entry from ${TEMPLATE}`,
+        `hooks.${event} does not register ${script}${matcher ? ` for "${matcher}"` : ""}; restore the entry from ${TEMPLATE}`,
       );
   }
 
