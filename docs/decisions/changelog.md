@@ -62,6 +62,19 @@ Installed: Claude Code 2.1.232 (`claude --version`), macOS, this machine. Source
 - **Reading.** 32 of 40 is 80%, above the report's 70% line even if all eight unknowns were large. But 30 of the 40 carry an epic's prefix (`DAY`, `RUN`, `PIPE`, `FIN`, `REV`): the small items are tickets inside epics, not standalone fixes. Under A4 and A12, small does not mean one-off.
 - **Consequence for J4.** The work loop names a ticket of under half a day as the default size, and routes between one-off and epic by the A12 rule, never by size. The exact lines go through the J4 plan.
 
+### J0 follow-ups (owner's review, 2026-10-02)
+
+- **Outside the primer's scope, on Taylor's explicit instruction.** The ten engineering role files and Mason's role revision in `3e58eae` were added by Taylor and filed at Taylor's instruction. The primer names none of them; no PJ step authored or changed a role body.
+- **Phase 1 deviation.** The primer asks for one filing commit. Phase 1 took two: `3e58eae` (intake as received) and `d614076` (filing). The intake commit is red under `yarn verify` by design, because the dump's names and the unfiled Mason output fail the docs lint until they are filed. History is not rewritten.
+- **The dump is gone from the index.** `git ls-files docs/_files_dump` prints nothing, and the folder does not exist on disk.
+- **Tools observed in Claude Code 2.1.232** (the `init` event of a headless session, this machine, 2026-10-02): `Edit`, `Write` and `NotebookEdit` exist; `MultiEdit` does not. `results-gate` (J5) matches `Edit|Write|NotebookEdit`.
+- **Primer Phase 0 step 3: amendments that change the report without saying so.** Five, none blocking, each with the default this thread proceeds on:
+  1. _The thread's law sits in the Never tier._ The report and the conventions file live in `docs/research/`, and A11's own exception excludes build threads. Default: read on the owner's instruction (precedence rung 2), named above.
+  2. _Review criteria are `manual` yet gate closure._ Ruling (h) reports `manual` criteria as not verified; A7 makes `review:*` criteria `manual` and fails closure while one is FAIL. Default: a recorded verdict with a run record counts as verified; settled in the pre-J5 plan.
+  3. _A4 moves P-C's filled examples to root `specs/`_, and nothing amends the P-C prompt or the `apps/web/specs` wording in `AGENTS.md`, `.claude/rules/ui.md` and `apps/web/AGENTS.md`. Default, now instructed: the J4 plan shows those diffs, and the close adds an amendment note to the P-C prompt.
+  4. _A9 makes `yarn doctor` fail when the git hooks are not installed_, but `doctor` lands in J2 and the hooks later; A9 does not list J2. Default: `doctor` gains that check in the step that lands the hooks (A2's rule).
+  5. _`docs/index.md` has one line of headroom_ (79 of 80). The report's edits net zero lines; A12's Workflows row takes the last one, and the A11 exception must fit inside an existing line. The J4 plan shows the arithmetic.
+
 ## 2026-10-01 — Directory map, file by file (owner requested)
 
 - **`docs/_generated/directory-map.md`** now gives every file under `docs/` its one line, its frontmatter `description`, grouped by folder. Each folder carries its purpose, taken from the Layers table in `docs/index.md` or from the folder's own `index.md`. Rows link to the files. It is generated, never hand-written, so each definition lives once, in the file's own frontmatter. `yarn directory-map --check` fails CI when the map is stale.
