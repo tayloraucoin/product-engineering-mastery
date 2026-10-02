@@ -339,6 +339,13 @@ function start(item: Item, tree: SpecsTree) {
       refusals.push(
         `the pre-flight failed ${item.id}; read ${pre}, fix the contract, and run the gate again`,
       );
+    else if (
+      /^- runner: fixture/m.test(readRepoText(pre)) &&
+      process.env.PEM_SPECS_FIXTURE !== "1"
+    )
+      refusals.push(
+        `${pre} was written by a fixture reviewer, not Claude; run yarn review:run vigil ${item.epic.prefix}`,
+      );
     else if (line[2] !== contractHash.slice(0, 12))
       refusals.push(
         `${item.id}'s contract changed after its pre-flight; run yarn review:run vigil ${item.epic.prefix} again`,

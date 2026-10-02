@@ -18,7 +18,11 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { saveSnapshot, treeFingerprint } from "./session-state.ts";
+import {
+  readSnapshot,
+  saveSnapshot,
+  treeFingerprint,
+} from "./session-state.ts";
 
 const ROOT =
   process.env.CLAUDE_PROJECT_DIR ??
@@ -58,7 +62,10 @@ const brief =
   run(process.execPath, [path.join(ROOT, "tooling/status.ts"), "--brief"]) ??
   "Status unavailable: run yarn status.";
 
-if (!fixture && input.session_id)
+// Recorded once per session: a resume, clear or compaction keeps the first
+// fingerprint, so the stop gate never reports "nothing changed" for a check
+// that did not run (Crucible, J7 stop).
+if (!fixture && input.session_id && readSnapshot(input.session_id) === null)
   saveSnapshot(input.session_id, treeFingerprint(ROOT));
 
 const line = `Spine (AGENTS.md, CLAUDE.md, docs/index.md) as of ${spine}. ${brief}`;

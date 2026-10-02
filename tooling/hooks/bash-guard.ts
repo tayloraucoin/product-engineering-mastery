@@ -599,12 +599,12 @@ const globToRegExp = (glob: string) =>
       .replace(/\?/g, ".")}$`,
   );
 
-/** "results", "as-built", or null: what a shell write to this path would overwrite. */
+/** "results", "review", "as-built", or null: what a shell write to this path would overwrite. */
 function protectedFile(
   target: string,
   cwd: string,
   layout: Layout,
-): "results" | "as-built" | null {
+): "results" | "review" | "as-built" | null {
   if (target.includes("$")) return null;
   const rel = path
     .relative(ROOT, path.resolve(cwd, target))
@@ -620,6 +620,12 @@ function protectedFile(
   const matches = (name: string) =>
     HAS_GLOB.test(base) ? globToRegExp(base).test(name) : base === name;
   if (matches("results.json")) return "results";
+  // Written by review:run: a review in a ticket folder, and an epic's pre-flight.
+  if (
+    /^review-[a-z*?]+\.md$/.test(base) ||
+    (matches("_preflight.md") && rel.includes("/tickets/"))
+  )
+    return "review";
   if (matches("as-built.md"))
     return (
       HAS_GLOB.test(rel)
@@ -685,6 +691,13 @@ function writeRules(
         message:
           "results.json is written only by tooling, so the builder cannot grade itself. " +
           "Run: yarn contract:run <id>   or   yarn contract:record <id> <criterion> --evidence <path>",
+      };
+    if (kind === "review")
+      return {
+        rule: "review-write",
+        message:
+          "Reviews and the pre-flight are written only by their run. " +
+          "Run: yarn review:run <role> <id>   or, for the Tickets gate, yarn review:run vigil <EPIC>",
       };
     if (kind === "as-built")
       return {

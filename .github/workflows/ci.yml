@@ -21,7 +21,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          # Full history: check-specs and check-test-weakening compare against the
+          # protected branch, and a run record's commit must be reachable.
+          fetch-depth: 0
 
       - name: Enable Corepack
         run: corepack enable

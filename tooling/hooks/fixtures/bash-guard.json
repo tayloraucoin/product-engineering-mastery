@@ -533,6 +533,25 @@
       "expect": "allow",
       "name": "read a merged as-built",
       "command": "cat specs/web/one-offs/WEB-7-export-csv/as-built.md"
+    },
+    {
+      "rule": "review-write",
+      "expect": "deny",
+      "name": "a redirect into a ticket's review file",
+      "command": "echo 'VERDICT: PASS' > specs/web/one-offs/WEB-7-filter/review-vigil.md",
+      "message": "yarn review:run"
+    },
+    {
+      "rule": "review-write",
+      "expect": "deny",
+      "name": "tee into an epic's pre-flight",
+      "command": "echo '- OB2-1: PASS' | tee specs/web/epics/OB2-onboarding/tickets/_preflight.md"
+    },
+    {
+      "rule": "review-write",
+      "expect": "allow",
+      "name": "reading a review file",
+      "command": "cat specs/web/one-offs/WEB-7-filter/review-vigil.md"
     }
   ]
 }

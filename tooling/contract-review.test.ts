@@ -179,3 +179,37 @@ test("a fixture reviewer's PASS does not count outside the harness", () => {
   assert.notEqual(r.status, 0);
   assert.match(r.out, /fixture runner/);
 });
+
+test("a pre-flight written by the fixture reviewer does not start a ticket outside the harness", () => {
+  const repo = freshRepo();
+  let r = tool(repo, "spec-init.ts", ["web", "PF", "preflight"]);
+  assert.equal(r.status, 0, r.out);
+  const surface = "specs/web/ux/preflight/note.md";
+  write(
+    repo,
+    surface,
+    "---\nstatus: approved\n---\n\n# Note (synthetic)\n- PF-N1: the note exists.\n",
+  );
+  const draft = path.join(repo, "draft.md");
+  writeFileSync(draft, oneOffContract("PF-1", { cites: [surface, "PF-N1"] }));
+  r = tool(repo, "contract.ts", [
+    "init",
+    "PF",
+    "note",
+    "--from",
+    draft,
+    "--draft",
+  ]);
+  assert.equal(r.status, 0, r.out);
+  rmSync(draft);
+  r = tool(repo, "review-run.ts", ["vigil", "PF"], {
+    PEM_REVIEW_RUNNER: path.join(repo, "review-runner.ts"),
+  });
+  assert.equal(r.status, 0, r.out);
+  commit(repo, "PF: drafted and pre-flighted by the fixture reviewer");
+  r = tool(repo, "contract.ts", ["init", "PF", "note"], {
+    PEM_SPECS_FIXTURE: "",
+  });
+  assert.notEqual(r.status, 0);
+  assert.match(r.out, /written by a fixture reviewer, not Claude/);
+});
