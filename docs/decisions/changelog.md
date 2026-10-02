@@ -83,6 +83,26 @@ Installed: Claude Code 2.1.232 (`claude --version`), macOS, this machine. Source
 - **Scripts read it.** `budget.ts` takes the design layer, the nested `AGENTS.md` and the brief-and-package example from it, sized by the heaviest app; its output is unchanged. `lint-frontmatter.ts` and `directory-map.ts` held no app path; they now load the file, and skip themselves in the overlay tiers, which leave a host's docs alone.
 - **Exit, both met.** `apps/web` appears nowhere under `tooling/`. With `specsRoot` removed, `yarn verify` fails at the docs lint with `"specsRoot" is missing; copy it from docs/engineering/templates/toolkit.template.json and fill it in`.
 
+### J2 — settings, their check, and doctor (E-14, E-15, E-21)
+
+- **`.claude/settings.json`**, tracked, equal to [`settings.template.json`](../engineering/templates/settings.template.json). Permissions and the sandbox only; no hook is registered until its script lands (A2).
+  - _Deny:_ push; `reset --hard`; `clean`; `branch -D`; `filter-branch`; npm publish and login (also through yarn); `rm -rf` of `/` and `~`; destructive database commands; reads of `.env*`, `secrets/`, `*.pem`, `~/.ssh`, `~/.aws`.
+  - _Ask:_ `gh pr create` and `merge`; `vercel`; database migrate, push and seed; `yarn dlx`.
+  - _Allow:_ yarn scripts, corepack, `node tooling/*`, local git.
+  - _Sandbox:_ on, with unsandboxed retries left to ask. Network: localhost, the npm and Yarn registries, GitHub. Writes outside the repo: the Yarn caches only.
+- **Built differently from the report, with reasons.**
+  - `git clean` is denied in every form, not only `-fdx`; flag order makes the narrow rule miss.
+  - `yarn dlx` asks. `Bash(yarn *)` would otherwise auto-approve running a remote package.
+  - `sandbox.network.allowLocalBinding` is true. Without it the dev servers in the Commands table cannot bind `:3000` and `:3001` from a sandboxed shell (observed: `EPERM`).
+  - `turbo.json` passes `TMPDIR` through (`globalPassThroughEnv`). The sandbox points `TMPDIR` at its writable directory; Turborepo's strict mode stripped it, so Yarn inside a task fell back to `/tmp` and `yarn verify` failed on `docs:build` (observed). Read in the installed Turborepo 2.11.6 docs before the change.
+- **The limit on V5, stated.** The sandbox restricts shell commands and the processes they start, and nothing else. The Read, Edit and Write tools, WebFetch, MCP servers and hooks run outside it and answer to permission rules. The network allowlist does not limit WebFetch. A Bash deny rule matches command text and is not a boundary. GitHub is on the allowlist, so a push that slips every rule is stopped only by the absence of a remote and credentials; that gap is accepted and named here.
+- **Correction to J0.** J0 said a secret needs two entries. The settings reference says `Read` deny rules are added to the sandbox's lists, so one rule reaches both, and the session's own sandbox report showed them merged. The explicit `denyRead` for `~/.ssh` and `~/.aws` stays as a second layer, and `check-settings` requires both.
+- **V3 observed: as assumed.** In this session (Claude desktop app, Code tab, auto mode), after the settings went live, on 2026-10-02: `git status && git push` was denied, and `git log --oneline -1; git push` was denied. Also denied: `echo "$(git push)"` and `git -C . push`. The construct bans stay dropped. Two limits on this observation: the denial message does not name the rule or the file it came from, and a control compound with no push in it was refused by the auto-mode classifier, a separate layer, so the control rests on the many `&&` commands this session ran before and after.
+- **Found by running under the new settings, for later steps.** The sandbox write-protects `.claude/settings.json`, `.claude/skills/` and `.git/config` and `.git/hooks` from the shell. So settings and skills are edited through the Edit tool, never a script, and `yarn hooks:install` (A9, `core.hooksPath`) is a step for a person or an approved unsandboxed command. The pre-J5 plan carries this.
+- **`tooling/check-settings.ts`**, in `yarn verify`. Fails on a missing required deny, an allow rule that admits every shell command, a machine path, the sandbox off, a hook registered to a missing script, or a tracked `settings.local.json`. It runs its six fixtures first.
+- **`tooling/doctor.ts`** (`yarn doctor`): Node, Yarn, corepack, `toolkit.json`, hook scripts present, local-settings credential shapes and rule count, dev ports. A busy or blocked port warns; it does not fail.
+- **Exit, all met.** `yarn verify` runs `check-settings` and passes inside the sandbox. The fixture with the push denies removed fails with `permissions.deny is missing Bash(git push)`. `yarn doctor` exits 0 on this machine, and exits 1 on the fixture local-settings file that holds a synthetic key-shaped string.
+
 ## 2026-10-01 — Directory map, file by file (owner requested)
 
 - **`docs/_generated/directory-map.md`** now gives every file under `docs/` its one line, its frontmatter `description`, grouped by folder. Each folder carries its purpose, taken from the Layers table in `docs/index.md` or from the folder's own `index.md`. Rows link to the files. It is generated, never hand-written, so each definition lives once, in the file's own frontmatter. `yarn directory-map --check` fails CI when the map is stale.

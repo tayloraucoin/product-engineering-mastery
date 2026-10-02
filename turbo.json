@@ -8,6 +8,9 @@
   "globalEnv": [
     "NODE_ENV"
   ],
+  "globalPassThroughEnv": [
+    "TMPDIR"
+  ],
   "ui": "tui",
   "tasks": {
     "build": {
