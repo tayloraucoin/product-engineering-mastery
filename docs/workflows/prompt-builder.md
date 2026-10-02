@@ -17,7 +17,7 @@ load_when: on request
 
 **How it runs.** Type `/tk-prompt` in any Claude Code thread, or attach this file and say "build the prompt for: …". The agent reading this file is the builder for that one reply. It writes nothing except, for an epic that already has a folder, the prompt file under that epic's `prompts/`.
 
-**Built as of 2026-10-02, lands later.** The routing, the cast, the load lists, the standard and `/tk-prompt` are in force, and so are `yarn spec:init`, `yarn contract:init` and `yarn status` (J5). `/tk-close` lands in J7. Until a command lands, treat it as the step it describes.
+**Built as of 2026-10-02, lands later.** The routing, the cast, the load lists, the standard and `/tk-prompt` are in force, and so are `yarn spec:init`, `yarn contract:init` and `yarn status` (J5), and `/tk-close` (J7). `yarn pr:body` lands in J8; until a command lands, treat it as the step it describes.
 
 ---
 

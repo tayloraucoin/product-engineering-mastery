@@ -17,7 +17,7 @@ The canonical instructions for every agent (Claude Code, Cursor, Codex). `CLAUDE
 - **One-off or epic is decided by the routing rule in [`docs/workflows/README.md`](docs/workflows/README.md), never by size:** more than one ticket, a new surface, no living UX file, or an unsettled problem makes an epic.
 - **Done is `results.json` plus `as-built.md`, never a claim in chat.** Only `yarn contract:run`, `contract:record` and `review:run` write results. `review:run` proves a review ran against the contract, not that it was independent: Taylor reads `review-<role>.md` before merge.
 - **`specs/<app>/ux/` is the living truth** of how the app works now. An epic proposes changes in its own `ux/`; shipping promotes them. Every epic ticket is judged by `vigil`, an evaluator in fresh context.
-- **Built as of 2026-10-02:** the contract loop and `status` (J5); the Stop check (`verify:fast`) and the SessionStart line (J6). **Lands later:** `/tk-contract`, `/tk-kickoff`, `/tk-close` and `vigil` (J7), `yarn pr:body` (J8), the map's other skills (P-C). Delete this line at J8.
+- **Built as of 2026-10-02:** the contract loop and `status` (J5); the Stop check and the SessionStart line (J6); `/tk-contract`, `/tk-kickoff`, `/tk-close` and `vigil` (J7). **Lands later:** `yarn pr:body` (J8), the map's other skills (P-C). Delete this line at J8.
 
 ## Commands
 

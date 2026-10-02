@@ -341,6 +341,13 @@ function checkAgainst(
     evaluator.cap,
     evaluatorBody ? "" : "(vigil not generated yet)",
   );
+  // The body part warns rather than fails: vigil's body is its role verbatim
+  // until refinement 22c (held for Taylor), and a role body is never cut here.
+  const bodyPart = part(evaluator, "evaluator body");
+  if (bodyPart !== undefined && evaluatorBody > bodyPart)
+    report.push(
+      `WARN vigil's body is ${evaluatorBody} tokens, over the ${bodyPart} the evaluator row allots it; the row total holds. Refinement 22c (held) cuts it.`,
+    );
   return { errors, report };
 }
 
