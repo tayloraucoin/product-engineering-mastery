@@ -2,7 +2,7 @@
 
 A universal product-engineering toolkit: the practice that people and coding agents build by (roles, a design canon, templates, decisions, primer prompts), a library loaded on demand, and a demo app that proves both. No product lives here. Clone it, run it, and copy what a product needs.
 
-**What it is and how the layers relate:** [`docs/index.md`](docs/index.md). This README only gets you running.
+**Start here, as a person:** [`docs/README.md`](docs/README.md), organised by the question you arrive with. **How the layers relate:** [`docs/index.md`](docs/index.md), the map agents read. This README only gets you running.
 
 **For AI agents:** [`AGENTS.md`](AGENTS.md) is the contract; `CLAUDE.md` imports it and `docs/index.md`.
 
@@ -15,6 +15,7 @@ A universal product-engineering toolkit: the practice that people and coding age
 
 ```sh
 yarn install
+yarn doctor       # is this machine ready? names the fix for anything broken
 yarn docs:dev     # the practice as a site, at http://localhost:3001
 yarn web:dev      # the demo app, at http://localhost:3000
 yarn verify       # everything CI runs
@@ -31,7 +32,7 @@ The docs app reads the markdown in `docs/` directly: the sidebar groups files by
 | `apps/docs`       | Renders `docs/` in the browser.                                                               |
 | `packages/config` | `@pem/config` — ESLint (code, boundaries, tokens), Prettier, Tailwind tokens, tsconfig bases. |
 | `packages/ui`     | `@pem/ui` — shared components.                                                                |
-| `tooling/`        | `yarn lint:docs`, `yarn budget`, `yarn gen:agents`, `yarn directory-map`.                     |
+| `tooling/`        | The checks `yarn verify` runs, the hooks in `.claude/settings.json`, and `yarn doctor`.       |
 | `.claude/`        | Path rules, generated subagents (`agents/`, never edited by hand), skills.                    |
 
 ## Porting into a product

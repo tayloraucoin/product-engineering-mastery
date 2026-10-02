@@ -5,8 +5,9 @@
  *   yarn check-settings <file>     one settings file, no fixtures
  *
  * Fails when: a required deny is missing, an allow rule admits every shell
- * command, a value holds a machine path, the sandbox is off, a registered hook
- * points at a script that does not exist, or settings.local.json is tracked.
+ * command, a value holds a machine path, the sandbox is off, a required hook is
+ * not registered, a registered hook points at a script that does not exist, or
+ * settings.local.json is tracked.
  */
 
 import { execFileSync } from "node:child_process";
@@ -36,6 +37,18 @@ const REQUIRED_DENIES = [
   "Read(**/*.pem)",
   "Read(~/.ssh/**)",
   "Read(~/.aws/**)",
+];
+/**
+ * Hooks that must stay registered (A13.1). Deleting a hook block would
+ * otherwise pass every check. A hook joins this list in the step that lands
+ * its script (A2).
+ */
+const REQUIRED_HOOKS = [
+  {
+    event: "PreToolUse",
+    matcher: "Bash",
+    script: "tooling/hooks/bash-guard.ts",
+  },
 ];
 /** Shell reads the Read tool's deny cannot be trusted to cover on its own. */
 const REQUIRED_DENY_READ = ["~/.ssh", "~/.aws"];
@@ -78,6 +91,23 @@ export function checkSettings(settings: unknown): string[] {
       problems.push(
         `permissions.allow holds ${rule}, which admits every shell command; ` +
           "replace it with the specific commands, as in the template",
+      );
+  }
+
+  const hooks = isObject(settings.hooks) ? settings.hooks : {};
+  for (const { event, matcher, script } of REQUIRED_HOOKS) {
+    const entries = Array.isArray(hooks[event]) ? hooks[event] : [];
+    const registered = entries.some(
+      (entry) =>
+        isObject(entry) &&
+        entry.matcher === matcher &&
+        JSON.stringify(entry.hooks ?? []).includes(
+          `\${CLAUDE_PROJECT_DIR}/${script}`,
+        ),
+    );
+    if (!registered)
+      problems.push(
+        `hooks.${event} does not register ${script} for "${matcher}"; restore the entry from ${TEMPLATE}`,
       );
   }
 

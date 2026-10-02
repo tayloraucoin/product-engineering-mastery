@@ -54,7 +54,7 @@ Every file, one line each: [`_generated/directory-map.md`](_generated/directory-
   - Nested `AGENTS.md` files load in `apps/` and `packages/`.
 - **By trigger:** `tk-motion` on motion work; `shadcn` on component work; references through `docs/references/README.md`, at most 3 files per task.
 - **On request:** roles, templates (when filling one), runbooks, decisions (grep the ledger), prompts, workflows.
-- **Never:** `docs/research/` (A11: a Frame, Research or UX prompt may attach one file as `[research: <why>]` when nothing distilled covers it; never a build thread); `docs/references/_meta/` outside a library batch; `PROVENANCE.md` outside a disputed finding; `docs/_generated/`; every `README.md` under `docs/`.
+- **Never:** `docs/research/` (A11: a Frame, Research or UX prompt may attach one file as `[research: <why>]` when nothing distilled covers it; never a build thread); `docs/references/_meta/` outside a library batch; `PROVENANCE.md` outside a disputed finding; `docs/_generated/`; every `README.md` under `docs/` except the references router and `docs/workflows/README.md`.
 
 ## Budget per build
 

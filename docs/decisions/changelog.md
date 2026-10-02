@@ -248,6 +248,14 @@ Taylor asked for a directory structure a person can follow: no numbers or thread
 
 - The sidebar lists everything alphabetically. Groups come in label order after Start. Inside a group, the folder's landing page is first, then documents by the title shown, then sub-folders by name. Start keeps its reading order: the map, the contract, the listing. Before, groups followed a fixed list and documents followed their file paths, which did not match the titles on screen.
 
+### A13.1, first commit: the guards on the guards (2026-10-02)
+
+- **CI runs `yarn verify` as one step.** `.github/workflows/ci.yml` restated twelve steps and had dropped `check-settings` and `test:hooks`; it now runs the one script, so CI and the local gate cannot drift again.
+- **`check-settings` requires the registered hooks** (`REQUIRED_HOOKS`). Deleting the `PreToolUse` block used to pass every check; a fixture with the block removed (`fail-hook-unregistered.json`) now fails with `hooks.PreToolUse does not register tooling/hooks/bash-guard.ts`. The list grows in the step that lands each hook (A2).
+- **`tech-stack.md`** Tests row reads "during the item, per evidence type", which ruling (h) says; the old row ("a separate pass") contradicted it (Touchstone's Blocking finding).
+- **The map's Never tier exempts** the references router and `docs/workflows/README.md`, which `AGENTS.md` and the router send agents to. Always-on 3,374 → 3,389 tokens; the map stays at 77 lines. **Rule named (precedence rung 2):** `CLAUDE.md` asks for plan mode before a `docs/index.md` change. The plan for this line is A13.1 itself, approved on audit day; the session instruction is to execute it, so no second plan was shown.
+- **Root `README.md`** links `docs/README.md` as the person's start, lists `yarn doctor` in "Run it", and its tooling row names the checks, hooks and doctor (Usher's stumble 1).
+
 ## 2026-10-01 — Directory map, file by file (owner requested)
 
 - **`docs/_generated/directory-map.md`** now gives every file under `docs/` its one line, its frontmatter `description`, grouped by folder. Each folder carries its purpose, taken from the Layers table in `docs/index.md` or from the folder's own `index.md`. Rows link to the files. It is generated, never hand-written, so each definition lives once, in the file's own frontmatter. `yarn directory-map --check` fails CI when the map is stale.

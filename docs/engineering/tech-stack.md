@@ -51,4 +51,4 @@ None of these exist yet. Each arrives with its first real consumer and a decisio
 | Validation         | Zod — one schema shared by forms and procedures                                                          |
 | Env                | `@t3-oss/env-nextjs`, one `env.ts` per app                                                               |
 | Component workshop | Storybook for `@pem/ui`                                                                                  |
-| Tests              | Added as a separate pass, not during feature work                                                        |
+| Tests              | During the item, per evidence type (ruling (h); `.claude/rules/testing.md`)                              |
