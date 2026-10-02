@@ -63,7 +63,7 @@ One line per term, grouped by system. If a term needs more than a line, it links
 | **Subagent** | A role run in its own fresh context with limited tools (Vigil, Assay). |
 | **Settings and sandbox** | `.claude/settings.json`: what the agent may never do, must ask about, or may do freely. |
 | **`toolkit.json`** | The one file that says where things live in this repo: apps, prefixes, specs root, reviewer map. |
-| **Always-on** | What loads in every session (`AGENTS.md`, `CLAUDE.md`, `docs/index.md`, listings, the status line), kept under about 3,400 tokens. |
+| **Always-on** | What loads in every session (`AGENTS.md`, `CLAUDE.md`, `docs/README.md`, listings, the status line), kept under about 3,400 tokens. |
 | **Budget** | The token caps for each kind of thread, held by `yarn budget`. |
 | **Status** | Generated views of every item's state: `yarn status`, `specs/_status.md`. |
 | **Left to go** | The generated list of what remains on the active ticket, printed when a session stops. |

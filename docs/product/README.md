@@ -13,7 +13,7 @@ load_when: spec, discovery
 
 # The product layer
 
-Templates only; the toolkit carries no product (CF-07, CF-13). A product repo fills them at the paths below. The demo app's filled example of the brief lands at `apps/web/specs/_example/` in Phase 3.
+Templates only; the toolkit carries no product (CF-07, CF-13). A product repo fills them at the paths below. The demo app's filled example of the brief lands under `specs/web/epics/` in Phase 3 (A4 layout).
 
 | Template                                                 | Fills into                      | Who fills                                                                     | When                                     | Gate       | What the critic checks                                                                                             |
 | -------------------------------------------------------- | ------------------------------- | ----------------------------------------------------------------------------- | ---------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------ |

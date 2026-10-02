@@ -25,5 +25,8 @@ load_when:
 
 | File | What it is for |
 | --- | --- |
+| [`as-built.template.md`](as-built.template.md) | Fill when a ticket's criteria are proven and before its reviewers run: what shipped against the contract, every deviation with its reason, migrations, test changes and what is not verified. |
+| [`contract.template.md`](contract.template.md) | Fill when any change starts, one-off or epic ticket: the testable criteria with their evidence types, the planned paths and the one surface it cites. yarn contract:init writes it from this file. |
 | [`settings.template.json`](settings.template.json) | A `json` file; see the notes above. |
+| [`technical.template.md`](technical.template.md) | Fill at the Technical stage of an epic, after the UX files are approved: where the code goes and why, the data contract, the one-way doors with their records, the calls routed to Taylor, and the test shape per risk. |
 | [`toolkit.template.json`](toolkit.template.json) | A `json` file; see the notes above. |

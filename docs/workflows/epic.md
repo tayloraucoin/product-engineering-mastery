@@ -15,7 +15,7 @@ load_when: on request
 
 > **In one line:** an epic is a folder of tickets sharing one problem, one UX proposal and one set of technical notes. It's played in levels, each in its own thread, each ending at a gate you pass. Then every ticket gets its own build thread, and shipping updates the living UX truth.
 
-New to the terms? See [`glossary.md`](glossary.md). The big picture and the map are in [`index.md`](index.md).
+New to the terms? See [`glossary.md`](glossary.md). The big picture and the map are in [`README.md`](README.md).
 
 ## The levels at a glance
 
