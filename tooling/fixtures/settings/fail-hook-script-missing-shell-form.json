@@ -1,5 +1,5 @@
 {
-  "expect": "pass",
+  "expect": "fail",
   "settings": {
     "$schema": "https://json.schemastore.org/claude-code-settings.json",
     "permissions": {
@@ -109,12 +109,13 @@
           "hooks": [
             {
               "type": "command",
-              "command": "node \"${CLAUDE_PROJECT_DIR}/tooling/hooks/bash-guard.ts\"",
+              "command": "node \"${CLAUDE_PROJECT_DIR}/tooling/hooks/not-landed-yet.ts\"",
               "timeout": 10
             }
           ]
         }
       ]
     }
-  }
+  },
+  "message": "does not exist"
 }

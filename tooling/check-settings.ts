@@ -102,7 +102,7 @@ export function checkSettings(settings: unknown): string[] {
           "or ${CLAUDE_PROJECT_DIR}",
       );
     // A hook is never registered to a script that does not exist (A2).
-    const script = value.match(/^\$\{CLAUDE_PROJECT_DIR\}\/(.+)$/);
+    const script = value.match(/\$\{CLAUDE_PROJECT_DIR\}\/([^"'\s]+)/);
     if (
       at.startsWith("hooks.") &&
       script &&

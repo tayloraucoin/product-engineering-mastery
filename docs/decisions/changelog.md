@@ -103,6 +103,23 @@ Installed: Claude Code 2.1.232 (`claude --version`), macOS, this machine. Source
 - **`tooling/doctor.ts`** (`yarn doctor`): Node, Yarn, corepack, `toolkit.json`, hook scripts present, local-settings credential shapes and rule count, dev ports. A busy or blocked port warns; it does not fail.
 - **Exit, all met.** `yarn verify` runs `check-settings` and passes inside the sandbox. The fixture with the push denies removed fails with `permissions.deny is missing Bash(git push)`. `yarn doctor` exits 0 on this machine, and exits 1 on the fixture local-settings file that holds a synthetic key-shaped string.
 
+### J3 — bash guard (E-16, E-32, E-33)
+
+- **`tooling/hooks/bash-guard.ts`**, registered as a PreToolUse hook on `Bash` after its fixtures passed (A2). It blocks, with a message that says what to run instead:
+  - `npm`, `npx` and `pnpm`;
+  - any `git push`;
+  - a commit on `main`;
+  - a commit whose message does not open with a work-id (`<PREFIX>: ` or `<PREFIX>-<n>: `) whose prefix is a toolkit prefix, an app prefix, or an epic folder on disk (A4). An editor commit and a message piped on stdin are blocked too, because the guard cannot read them;
+  - a shell write to a `results.json` under the specs root, or to an `as-built.md` that exists on `main`.
+- **Gap closed beyond E-17 (owner's instruction).** E-17's `results-gate` sees only the Edit and Write tools. A shell redirect would have let the builder grade itself. The guard now denies redirection (`>`, `>>`, `>|`, `&>`), `tee`, `sed -i`, `cp`, `mv` and `truncate` (and `dd of=`) onto those files, naming `yarn contract:run` and `yarn contract:record`. **Still open, and named:** a path held in a shell variable, or a write made by a script the command runs, is invisible to text analysis. The boundary for results is A9's run record and evidence hash in `check-specs` (J5), not this guard.
+- **It tokenizes; it does not prefix-match.** It splits on `&&`, `||`, `;`, `|`, `&` and newlines, and looks inside `$(…)`, backticks, subshells, loop bodies, `sh -c`, `eval`, wrappers such as `env` and `sudo`, and heredocs that expand. It skips git's global options to reach the subcommand, resolves a configured alias, and refuses an inline one. A command it cannot parse is refused only when it plainly names a blocked action.
+- **Not built: the construct bans.** `$(`, backticks and heredocs are allowed (V3, observed in J2; ruling (d)'s removal condition).
+- **Built differently from J0's note.** The hook is registered in shell form, `node "${CLAUDE_PROJECT_DIR}/tooling/hooks/bash-guard.ts"`, not exec form. The docs give no version for `args`; on a build without it, a bare `node` would read the hook input as a script, fail, and enforce nothing, silently.
+- **Fixtures and runner.** `tooling/hooks/fixtures/bash-guard.json` holds 78 synthetic cases across six rules, including J2's compound forms (`git status && git push`, `git log; git push`) and the bypass forms the permissions page lists (`git -C . push`, `git -c … push`, a quoted subcommand, a full path, `sh -c`). `yarn test:hooks` runs them in `yarn verify`. It fails if a case misbehaves, if any rule lacks an allow or a deny case, if a denial exceeds 60 tokens, or if the median call exceeds 200 ms.
+- **Latency, measured** on this machine inside the sandbox, 2026-10-02, with every rule above included: median 56 ms and max 59 ms per call across the 78 fixture cases; median 94 ms and max 97 ms over ten runs of the slowest live path (`git add -A && git commit`, one git lookup for the branch). The limit is 200 ms. The longest denial is about 53 tokens.
+- **Observed live.** With the hook registered, `npm --version` in this session returned `bash-guard [package-manager]: This repo uses Yarn 4; npm is blocked. Run: yarn --version`. This also observes V6 (the project-directory variable resolves in a hook command) and V1's exit-2 path for PreToolUse (stderr reaches the agent).
+- **Messages that name a later step.** The results and as-built denials name `yarn contract:run` and `yarn contract:record`, which land in J5. The commit-on-main denial names `git switch -c agent/<work-id>` until `contract:init` exists.
+
 ## 2026-10-01 — Directory map, file by file (owner requested)
 
 - **`docs/_generated/directory-map.md`** now gives every file under `docs/` its one line, its frontmatter `description`, grouped by folder. Each folder carries its purpose, taken from the Layers table in `docs/index.md` or from the folder's own `index.md`. Rows link to the files. It is generated, never hand-written, so each definition lives once, in the file's own frontmatter. `yarn directory-map --check` fails CI when the map is stale.

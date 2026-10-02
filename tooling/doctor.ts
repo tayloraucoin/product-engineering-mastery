@@ -114,7 +114,7 @@ ok(
 if (existsSync(path.join(REPO_ROOT, SETTINGS))) {
   const text = readFileSync(path.join(REPO_ROOT, SETTINGS), "utf8");
   const scripts = [
-    ...text.matchAll(/\$\{CLAUDE_PROJECT_DIR\}\/([^"\s]+)/g),
+    ...text.matchAll(/\$\{CLAUDE_PROJECT_DIR\}\/([^"'\s\\]+)/g),
   ].map((match) => match[1]!);
   const missing = scripts.filter(
     (rel) => !existsSync(path.join(REPO_ROOT, rel)),
