@@ -45,6 +45,7 @@ The fourteen primers that ran these threads were removed on 2026-10-01: their wo
 | [P-C](pc-demo-app-and-skills.md)         | 3 — The demo app and the skills         | Claude Code                  | Vesper → Plumb → Assay | next                                                                        |
 | [P-D](pd-library-batches.md)             | 4 — Library batches (retargeting note)  | general threads              | Alembic                | after P-C; Laws of UX first                                                 |
 | [P-E](pe-port-dry-run.md)                | 5 — Port dry-run                        | Claude Code, fresh directory | procedure              | after P-C                                                                   |
+| [P-J](pj-engineering-layer.md)           | The engineering layer and the workflows | Claude Code, on `agent/PJ`   | Lorimer                | running; started by [`pj-primer.md`](pj-primer.md); runs before P-C         |
 
 ## Threads to commission (stubs; CF-29)
 

@@ -1,3 +1,15 @@
+---
+title: "Mason, revised: research, deltas, role file and diff (2026-10-01)"
+description: "Read only to trace why Mason's role file changed on 2026-10-01: the dated research, the deltas against the previous file, the diff summary and the ship-checklist verification."
+layer: research
+status: archived
+thread: eng-roles
+role:
+date: 2026-10-01
+last_reviewed: 2026-10-02
+supersedes:
+load_when:
+---
 # Mason, revised: research, deltas, role file and diff (2026-10-01)
 
 Verdict: Mason holds up. Two of his convictions, mechanical enforcement and docs as the management layer, are now standard published practice. What changes is his edges, not his core: he moves to the index-aligned ladder, hands stack and pins to the stack owner, hands the delivery machinery to the harness owner, hands surface craft to the frontend-craft owner, and adds two things the 2026 sources support: technical shaping with a contract step, and review tiered by blast radius. The revised file below is 144 body lines, the same as the current file. Every addition is paid for by a cut.

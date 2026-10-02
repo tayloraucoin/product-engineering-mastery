@@ -1,3 +1,15 @@
+---
+title: "PJ primer v2: file the engineering layer and workflows, then build it"
+description: "Run in Claude Code (Lorimer) to start the PJ thread: preflight, file the PJ inputs, then execute pj-engineering-layer.md from J0 with amendments A1 to A12 and the owner's stop points."
+layer: prompts
+status: draft
+thread: P-J
+role: Lorimer
+date: 2026-10-02
+last_reviewed: 2026-10-02
+supersedes:
+load_when: on request
+---
 # PJ primer v2: file the engineering layer and workflows, then build it
 
 **Venue:** Claude Code, on the deepest available model, in `~/lighthouse/product-engineering-mastery`.

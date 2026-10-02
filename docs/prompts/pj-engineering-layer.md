@@ -13,7 +13,12 @@ load_when: on request
 
 # PJ — Engineering layer (Claude Code, Lorimer)
 
-> **Amendments in force:** none yet.
+> **Amendments in force (2026-10-02, primer v2):**
+> - **A1. Branch and commits.** This thread runs on branch `agent/PJ`, not `main`. Its work-id is `PJ`. Commit messages are `PJ: <step> <outcome>`, for example `PJ: J3 bash guard with fixtures`. `toolkit.json` carries `toolkitPrefixes: ["PEM", "PJ"]` (A4), so bash-guard admits this thread's own commits. Done criterion 7 reads: every commit starts with `PJ:`, the tree is clean, nothing is pushed, and `agent/PJ` is ready for Taylor to merge.
+> - **A2. Hooks register when their script lands.** J2 writes `.claude/settings.json` with permissions and the sandbox only. Each hook is registered in the step that lands its script, after its fixtures pass: bash-guard in J3, results-gate in J5, stop-gate and session-start in J6. A hook is never registered to a script that does not exist. The native git hooks (A9) follow the same rule.
+> - **A3. Verification sources.** For V1 to V7, use the installed version (`claude --version`) and the docs at code.claude.com, fetched now. Record each URL and the fetch date. Where the docs and observed behavior disagree, observed behavior wins; record both.
+> - **A4 to A12** are in force as written in `docs/research/pj-conventions-locked.md` §2: specs layout and work-ids, contract fields, gates as checks, reviewers by risk, living UX truth, laws outside Claude Code, budget rows, the research exception, and the workflow layer (new step J14).
+>
 > Later rulings are added here as a blockquote, newest first. Each one is dated and names the ruling it applies. The body below is never rewritten.
 
 **Venue.** Claude Code, deepest available model, in `~/lighthouse/product-engineering-mastery` on `main`, on a clean tree.

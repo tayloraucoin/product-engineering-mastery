@@ -223,6 +223,49 @@
       "to": "docs/research/07c-motion-skill-files-vesper/references/product-fybr.md",
       "body_sha256": "0373e19d8581dfa14f1912da0850c6a7fa57a830e72a0541057aff11cfa4063f",
       "frontmatter": "added"
+    },
+    {
+      "from": "docs/_files_dump/pj-engineering-layer-lorimer.md",
+      "to": "docs/research/pj-engineering-layer-lorimer.md",
+      "body_sha256": "06fe4a6814d9832538ce3176e13a0f4b01c620c786e85eae398521f5e1fe04d2",
+      "frontmatter": "kept",
+      "source_commit": "3e58eae"
+    },
+    {
+      "from": "docs/_files_dump/pj-conventions-locked.md",
+      "to": "docs/research/pj-conventions-locked.md",
+      "body_sha256": "caaefa2a6d7494774e09e98197d9f47b021bee50ced4356e65e9b2e9d2517037",
+      "frontmatter": "kept",
+      "source_commit": "3e58eae"
+    },
+    {
+      "from": "docs/_files_dump/pj-engineering-layer.md",
+      "to": "docs/prompts/pj-engineering-layer.md",
+      "body_sha256": "572d451069bf0f4026e323bae3f6b67e75a0a0d34be2818cac4dda154cfdb79e",
+      "frontmatter": "kept",
+      "source_commit": "3e58eae",
+      "note": "live file: the amendments blockquote was replaced after filing (primer v2, Phase 1 step 4); the hash is the body as received"
+    },
+    {
+      "from": "docs/_files_dump/pj-primer.md",
+      "to": "docs/prompts/pj-primer.md",
+      "body_sha256": "3db84639ee4f98b8e5d78f3a0530a69f0f2cb00e0bfc3ae87bf3a133edc61115",
+      "frontmatter": "added",
+      "source_commit": "3e58eae"
+    },
+    {
+      "from": "docs/roles/engineering/mason-cto-principle-dev_2026-10-01.md",
+      "to": "docs/research/eng-roles-mason-role-revision.md",
+      "body_sha256": "3ba69722544d2f3f7cc436dd6f36a93b5cd3fb109533c556f348912b3637857e",
+      "frontmatter": "added",
+      "source_commit": "3e58eae"
+    },
+    {
+      "from": "docs/roles/engineering/mason-cto-principle-dev_2026-10-01.md (Part 3, the fenced role file)",
+      "to": "docs/roles/engineering/mason-cto-principal-dev.md",
+      "body_sha256": "23931ebdf91ff8d4300cb85e63b828efa82eab2925a8a817ac1cd380ed2bc6da",
+      "frontmatter": "kept",
+      "source_commit": "3e58eae"
     }
   ]
 }

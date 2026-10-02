@@ -15,6 +15,21 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-02 — PJ: the engineering layer (Lorimer), in progress on `agent/PJ`
+
+One entry for the whole thread, added to step by step. Baseline before any change (`yarn budget`, commit `eef5b86`): always-on 3,320 of 4,000 tokens; `AGENTS.md` 64 lines, `CLAUDE.md` 13, `docs/index.md` 79; UI build 7,399 of 15,000; non-UI build 4,234 of 7,000; critic pass 2,043 of 6,000.
+
+### Filed (Phase 1)
+
+- **Intake.** The inputs arrived in `docs/_files_dump/` and are committed as received in `3e58eae`, with the engineering role files from the eng-roles thread. Every move below is in `docs/_generated/filing-manifest.json`, which now carries a `source_commit` per entry; bodies are verified by hash.
+- **Archived, byte for byte:** the PJ report ([`pj-engineering-layer-lorimer.md`](../research/pj-engineering-layer-lorimer.md)) and the owner's conventions with amendments A4 to A12 ([`pj-conventions-locked.md`](../research/pj-conventions-locked.md)). `docs/research/` is already ignored by Prettier as a folder, so neither needed its own ignore line.
+- **Prompts:** the build prompt ([`pj-engineering-layer.md`](../prompts/pj-engineering-layer.md)), whose "Amendments in force" blockquote now carries A1 to A3 and the pointer to A4 to A12 (its only body change), and the primer ([`pj-primer.md`](../prompts/pj-primer.md)), frontmatter prepended. The primer named no home for itself; `docs/prompts/` is judgment. `docs/prompts/pj-*.md` is added to `.prettierignore`.
+- **Mason.** The revised role arrived as a thread output holding research, deltas, the role file in a fence, and a diff. The output is archived whole at [`eng-roles-mason-role-revision.md`](../research/eng-roles-mason-role-revision.md) (authoring role not recorded in the source, so `role` is empty). Its Part 3 fence, byte for byte, replaces [`mason-cto-principal-dev.md`](../roles/engineering/mason-cto-principal-dev.md); the file name is unchanged, and the status moves from `adopted` to `draft` as authored.
+- **Ten engineering roles added** as received (Atlas, Lorimer, Millwright, Quartermaster, Scribe, Sexton, Touchstone, Turner, Usher, Wainwright), all `draft`, none a subagent.
+- **Not filed yet:** the four workflow docs. They use the layer value `workflows`, which lands in J4 after plan-mode approval (A12). They stay in `3e58eae` and are filed from there.
+- **Optional inputs absent, skipped:** message 1 (research), message 2 (Crucible's review), and `spec-system-guide.md`. The tickets stage file (J14) will be written without the spec guide.
+- **Rule named (precedence rung 2).** The report and the conventions file are this thread's law and live in `docs/research/`, the Never tier. They are read here on the owner's explicit instruction. The same instruction covers writing this entry without plan mode; the records, ledger and conflicts changes at close go through plan mode.
+
 ## 2026-10-01 — Directory map, file by file (owner requested)
 
 - **`docs/_generated/directory-map.md`** now gives every file under `docs/` its one line, its frontmatter `description`, grouped by folder. Each folder carries its purpose, taken from the Layers table in `docs/index.md` or from the folder's own `index.md`. Rows link to the files. It is generated, never hand-written, so each definition lives once, in the file's own frontmatter. `yarn directory-map --check` fails CI when the map is stale.
