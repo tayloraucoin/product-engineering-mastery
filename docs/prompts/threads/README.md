@@ -27,5 +27,7 @@ load_when:
 | --- | --- |
 | [`agent-context-architecture.md`](agent-context-architecture.md) | Commission after Phase 3 and before the port dry-run, to settle multi-tool loading, the budget method and toolkit vendoring. |
 | [`ai-evals.md`](ai-evals.md) | Commission when a product ships an AI surface that makes claims to users, to fill the eval templates with real failure modes, judges and a CI gate. |
+| [`branding-insertion.md`](branding-insertion.md) | Commission after P-C's first surface exists, to settle where brand primitives, semantic roles, fonts, assets and the marketing register live, so a product repo ports its brand in one ordered pass. |
+| [`cold-trial.md`](cold-trial.md) | Commission after J14 lands (the stage files and the prompt builder), to measure the human path from clone to a first merged change with someone who has not seen the repo, and turn each stumble into a mechanism or a line. |
 | [`measurement-layer.md`](measurement-layer.md) | Commission when the first product instruments a feature, to turn the metrics templates into an enforced taxonomy with versioned definitions. |
 | [`product-operating-artifacts.md`](product-operating-artifacts.md) | Commission when a product needs its charter, roadmap pins, positioning, opportunity tree or discovery ledger as files rather than inside role prompts. |

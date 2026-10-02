@@ -55,6 +55,10 @@ The fourteen primers that ran these threads were removed on 2026-10-01: their wo
 | [P-G](threads/measurement-layer.md)           | Measurement layer           | Tally        | when a product first instruments a feature                  |
 | [P-H](threads/product-operating-artifacts.md) | Product operating artifacts | Compass      | when a product needs charter, positioning, opportunity tree |
 | [P-I](threads/ai-evals.md)                    | AI evals                    | Tally        | when a product ships an AI surface                          |
+| [P-K](threads/branding-insertion.md)          | Branding insertion          | Plumb, Turner builds | after P-C's first surface exists                    |
+| [P-L](threads/cold-trial.md)                  | Cold trial of the human path | Usher, a stranger times it | after J14 lands                             |
+
+**The letters.** Each toolkit thread is a primer, lettered in the order it was commissioned: P-A to P-L. The thread id in frontmatter is `P-X`; the work-id on its branch and in its commit messages is `PX` (so `PJ` is the engineering layer, Primer J, nothing more).
 
 ## Conventions used in every prompt
 
