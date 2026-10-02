@@ -43,7 +43,7 @@ Adapted from the owner's earlier ticket system; the spec-system guide is filed w
 
 ## 5. Writes
 
-One `tickets/<EPIC>-<n>-<slug>/contract.md` per ticket through `yarn contract:init <EPIC> <slug>` (J5), which allocates the number and writes results at FAIL; `tickets/_preflight.md`, Vigil's pre-flight with one PASS or FAIL line per ticket; and one kickoff prompt per ticket in `prompts/NN-build-<id>.md`, ending with the standard's kickoff block.
+One `tickets/<EPIC>-<n>-<slug>/contract.md` per ticket through `yarn contract:init <EPIC> <slug> --from <draft> --draft`, which allocates the number and starts nothing (the build thread starts it); `tickets/_preflight.md`, written by `yarn review:run vigil <EPIC>` with one PASS or FAIL line per ticket, bound to that contract's hash; and one kickoff prompt per ticket in `prompts/NN-build-<id>.md`, ending with the standard's kickoff block.
 
 ## 6. Gate
 

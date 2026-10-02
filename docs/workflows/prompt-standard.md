@@ -45,7 +45,7 @@ A ticket's kickoff prompt ends with this block, filled in:
 ```
 Kickoff
 - Ticket: <id>, in <folder>; contract at contract.md (read it first; it is the oracle)
-- Branch: agent/<id>; first move: yarn contract:init <APP|EPIC> <slug> if the folder does not exist
+- Branch: agent/<id>; first move: yarn contract:init <APP|EPIC> <slug> (run twice when no contract is drafted yet: write, fill, start)
 - Cites: <one surface file>; truth files: <paths or none: reason>
 - Reviewers: <computed list>; your close runs /tk-close
 - Do not: edit results.json; commit on main; push; widen settings; start a second ticket on this branch

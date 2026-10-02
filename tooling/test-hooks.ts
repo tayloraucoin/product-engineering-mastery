@@ -52,12 +52,14 @@ for (const name of readdirSync(path.join(REPO_ROOT, FIXTURES)).sort()) {
   let longest = 0;
 
   for (const item of file.cases) {
-    const input = item.input ?? {
-      hook_event_name: "PreToolUse",
-      tool_name: "Bash",
-      tool_input: { command: item.command },
-      cwd: (item.cwd ?? "$ROOT").replace("$ROOT", REPO_ROOT),
-    };
+    const input = item.input
+      ? JSON.parse(JSON.stringify(item.input).replaceAll("$ROOT", REPO_ROOT))
+      : {
+          hook_event_name: "PreToolUse",
+          tool_name: "Bash",
+          tool_input: { command: item.command },
+          cwd: (item.cwd ?? "$ROOT").replace("$ROOT", REPO_ROOT),
+        };
     const env = { ...process.env };
     delete env.CLAUDE_PROJECT_DIR;
     env.PEM_HOOK_FIXTURE_CONTEXT = JSON.stringify({

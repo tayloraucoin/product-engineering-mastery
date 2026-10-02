@@ -13,6 +13,7 @@ import { existsSync, readdirSync } from "node:fs";
 import path, { matchesGlob } from "node:path";
 
 import {
+  estimateTokens,
   listFiles,
   readMarkdown,
   readText,
@@ -33,8 +34,7 @@ const toolkit = loadToolkit();
 const apps = Object.values(toolkit.apps);
 
 const exists = (rel: string) => existsSync(path.join(REPO_ROOT, rel));
-const estimate = (text: string) =>
-  Math.ceil(text.replace(/\s+/g, " ").length / 4);
+const estimate = estimateTokens;
 const tokensOf = (rel: string) => (exists(rel) ? estimate(readText(rel)) : 0);
 
 function listIn(relDir: string, filter: (name: string) => boolean): string[] {

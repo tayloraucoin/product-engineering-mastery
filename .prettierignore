@@ -23,3 +23,7 @@ docs/**/README.md
 # Generated.
 docs/_generated/
 .claude/agents/
+specs/_status.md
+
+# Synthetic fixtures: check-specs hashes their bytes, so a formatter must not touch them.
+tooling/fixtures/

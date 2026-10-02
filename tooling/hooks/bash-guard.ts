@@ -14,14 +14,16 @@
  * boundary: a path held in a variable is invisible to it. The boundary for
  * results is the run record that check-specs verifies (A9).
  *
- * Kept free of workspace imports so it starts fast. Fixtures:
+ * Imports only node built-ins and tooling/lib/work-ids.ts, so it starts fast. Fixtures:
  * tooling/hooks/fixtures/bash-guard.json, run by `yarn test:hooks`.
  */
 
 import { execFileSync } from "node:child_process";
-import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+
+import { hasWorkId, readLayout, type Layout } from "../lib/work-ids.ts";
 
 const ROOT =
   process.env.CLAUDE_PROJECT_DIR ??
@@ -42,43 +44,7 @@ type Denial = { rule: string; message: string };
 
 // ---------------------------------------------------------------- layout
 
-type Layout = { specsRoot: string; prefixes: string[]; readable: boolean };
-
-function readLayout(): Layout {
-  try {
-    const toolkit = JSON.parse(
-      readFileSync(path.join(ROOT, "toolkit.json"), "utf8"),
-    ) as {
-      specsRoot: string;
-      toolkitPrefixes: string[];
-      apps: Record<string, { prefix: string }>;
-    };
-    const prefixes = [
-      ...toolkit.toolkitPrefixes,
-      ...Object.values(toolkit.apps).map((app) => app.prefix),
-      ...(fixture?.epicPrefixes ?? epicPrefixes(toolkit.specsRoot)),
-    ];
-    return { specsRoot: toolkit.specsRoot, prefixes, readable: true };
-  } catch {
-    return { specsRoot: "specs", prefixes: [], readable: false };
-  }
-}
-
-/** An epic's prefix exists once its folder does: <specsRoot>/<app>/epics/<EPIC>-<slug>/ (A4). */
-function epicPrefixes(specsRoot: string): string[] {
-  const found: string[] = [];
-  const root = path.join(ROOT, specsRoot);
-  if (!existsSync(root)) return found;
-  for (const app of readdirSync(root)) {
-    const epics = path.join(root, app, "epics");
-    if (!existsSync(epics) || !statSync(epics).isDirectory()) continue;
-    for (const name of readdirSync(epics)) {
-      const prefix = name.match(/^([A-Z][A-Z0-9]{1,4})-/)?.[1];
-      if (prefix) found.push(prefix);
-    }
-  }
-  return found;
-}
+const readGuardLayout = (): Layout => readLayout(ROOT, fixture?.epicPrefixes);
 
 function git(cwd: string, args: string[]): string | null {
   try {
@@ -595,8 +561,7 @@ function gitRules(
       message:
         "toolkit.json is missing or unreadable, so no work-id can be checked. Run: yarn doctor",
     };
-  const workId = new RegExp(`^(${layout.prefixes.join("|")})(-\\d+)?: \\S`);
-  if (workId.test(message.subject)) return null;
+  if (hasWorkId(message.subject, layout.prefixes)) return null;
   return {
     rule: "commit-work-id",
     message:
@@ -801,7 +766,7 @@ if (input.tool_name !== "Bash" || typeof command !== "string") process.exit(0);
 const cwd = input.cwd ?? ROOT;
 let denial: Denial | null;
 try {
-  denial = evaluate(command, cwd, readLayout());
+  denial = evaluate(command, cwd, readGuardLayout());
 } catch {
   denial = fallback(command);
 }

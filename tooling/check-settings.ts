@@ -49,6 +49,11 @@ const REQUIRED_HOOKS = [
     matcher: "Bash",
     script: "tooling/hooks/bash-guard.ts",
   },
+  {
+    event: "PreToolUse",
+    matcher: "Edit|Write|NotebookEdit",
+    script: "tooling/hooks/results-gate.ts",
+  },
 ];
 /** Shell reads the Read tool's deny cannot be trusted to cover on its own. */
 const REQUIRED_DENY_READ = ["~/.ssh", "~/.aws"];

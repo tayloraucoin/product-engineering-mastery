@@ -89,11 +89,7 @@
       ]
     },
     "filesystem": {
-      "allowWrite": [
-        "~/.yarn",
-        "~/.cache/yarn",
-        "~/Library/Caches/Yarn"
-      ],
+      "allowWrite": ["~/.yarn", "~/.cache/yarn", "~/Library/Caches/Yarn"],
       "denyRead": [
         "~/.ssh",
         "~/.aws",
@@ -112,6 +108,16 @@
           {
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}/tooling/hooks/bash-guard.ts\"",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/tooling/hooks/results-gate.ts\"",
             "timeout": 10
           }
         ]

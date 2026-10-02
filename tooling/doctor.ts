@@ -14,6 +14,7 @@ import net from "node:net";
 import path from "node:path";
 
 import { REPO_ROOT } from "./lib/docs.ts";
+import { NATIVE_HOOKS_PATH } from "./lib/git.ts";
 import { loadToolkit } from "./lib/toolkit.ts";
 
 const LOCAL = ".claude/settings.local.json";
@@ -131,6 +132,17 @@ if (existsSync(path.join(REPO_ROOT, SETTINGS))) {
     "copy docs/engineering/templates/settings.template.json to it",
   );
 }
+
+// Native git hooks (A9). A warning, not a failure, until Taylor has run the
+// install once: the sandbox keeps an agent from writing .git/config.
+const hooksPath = run("git", ["config", "--get", "core.hooksPath"]);
+if (hooksPath === NATIVE_HOOKS_PATH)
+  ok(`git hooks: core.hooksPath is ${NATIVE_HOOKS_PATH}`);
+else
+  warn(
+    `git hooks are not installed (core.hooksPath is ${hooksPath ?? "unset"})`,
+    "yarn hooks:install, in your own terminal",
+  );
 
 // Local settings: secrets and rule growth.
 const flag = process.argv.indexOf("--local-settings");

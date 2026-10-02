@@ -1,0 +1,661 @@
+/**
+ * The contract loop (E-23; A4 to A9, A13.2). Results are written only here
+ * and by review-run.ts, never by hand.
+ *
+ *   yarn contract:init <APP | app | EPIC> <slug> [--from <file>] [--draft]
+ *       First call: allocates the next id and writes contract.md from the
+ *       template (or from --from). Run it again once the contract is filled:
+ *       it checks the gates (A6, the pre-flight, dependencies), adds the
+ *       review criteria, freezes the criteria, writes every result at FAIL
+ *       and creates the branch agent/<id>. --draft stops before starting.
+ *   yarn contract:run <id> [criterion…]
+ *       Runs the test and check criteria on a committed tree and records a
+ *       run record per criterion: command, exit, time, HEAD, evidence log
+ *       and its hash, and for a test the number of tests the runner reported.
+ *   yarn contract:record <id> <criterion> --evidence <path> [--verdict pass|fail]
+ *       Records a capture or manual criterion against an evidence file.
+ *   yarn contract:add <id> <criterion> --evidence <type> --statement <text> [--command | --path | --reason <text>]
+ *   yarn contract:add <id> review:<role>
+ *       Adds a criterion at FAIL: the only way the frozen set grows.
+ */
+
+import { spawnSync } from "node:child_process";
+import { readFileSync } from "node:fs";
+import path from "node:path";
+import YAML from "yaml";
+
+import { REPO_ROOT, splitFrontmatter } from "./lib/docs.ts";
+import {
+  getCurrentBranch,
+  getHead,
+  listBranches,
+  listDirty,
+  listOnRef,
+  switchToNewBranch,
+} from "./lib/git.ts";
+import {
+  asBuiltPath,
+  branchFor,
+  checkCommand,
+  checkContract,
+  computeReviewers,
+  CONTRACT_TEMPLATE,
+  contractPath,
+  EVIDENCE_TYPES,
+  evidenceDir,
+  fileExists,
+  findItem,
+  formatResults,
+  hashCriteria,
+  hashFile,
+  hashText,
+  isMerged,
+  isReview,
+  now,
+  openDecisions,
+  preflightPath,
+  readContract,
+  readItemState,
+  readRepoText,
+  readResults,
+  readSpecsTree,
+  refreshStatusFile,
+  resultsPath,
+  reviewCriterion,
+  SLUG,
+  splitCommand,
+  statusPath,
+  writeRepoText,
+  type Contract,
+  type Criterion,
+  type EvidenceType,
+  type Item,
+  type Results,
+  type RunRecord,
+  type SpecsTree,
+} from "./lib/specs.ts";
+import { loadToolkit, type Toolkit } from "./lib/toolkit.ts";
+
+const toolkit = loadToolkit();
+const [command, ...argv] = process.argv.slice(2);
+
+function stop(message: string): never {
+  console.error(`contract:${command} — ${message}`);
+  process.exit(1);
+}
+
+function option(name: string): string | undefined {
+  const i = argv.indexOf(name);
+  if (i === -1) return undefined;
+  const value = argv[i + 1];
+  if (value === undefined || value.startsWith("--"))
+    stop(`${name} needs a value`);
+  argv.splice(i, 2);
+  return value;
+}
+function flag(name: string): boolean {
+  const i = argv.indexOf(name);
+  if (i !== -1) argv.splice(i, 1);
+  return i !== -1;
+}
+
+/** Repo-relative path from a path the person typed, from wherever they ran yarn. */
+const toRepoPath = (typed: string) =>
+  path
+    .relative(
+      REPO_ROOT,
+      path.resolve(process.env.INIT_CWD ?? process.cwd(), typed),
+    )
+    .split(path.sep)
+    .join("/");
+
+function requireItem(tree: SpecsTree, id: string | undefined): Item {
+  if (!id) stop("name the work-id, as in WEB-41");
+  const item = findItem(tree, id);
+  if (!item)
+    stop(
+      `no ticket ${id} under ${toolkit.specsRoot}/; start one with yarn contract:init`,
+    );
+  return item;
+}
+
+function requireResults(item: Item): Results {
+  const { results, problems } = readResults(item);
+  if (problems.length) stop(problems.join("\n  "));
+  if (!results)
+    stop(
+      `${item.id} has not started: run yarn contract:init with its app or epic and slug again`,
+    );
+  return results;
+}
+
+/** contract:run and contract:record prove a commit, so they run on the ticket's branch with the code committed. */
+function requireProvable(item: Item, extra: string[] = []) {
+  const branch = getCurrentBranch();
+  const wanted = branchFor(toolkit, item.id);
+  if (branch !== wanted)
+    stop(
+      `${item.id} is proven on ${wanted}, and this is ${branch}. Run: git switch ${wanted}`,
+    );
+  const dirty = listDirty().filter(
+    (file) =>
+      !file.startsWith(`${item.dir}/`) &&
+      file !== statusPath(toolkit.specsRoot) &&
+      !extra.includes(file),
+  );
+  if (dirty.length > 0)
+    stop(
+      `a run records the commit it proves, so commit first: ${dirty.slice(0, 5).join(", ")}${dirty.length > 5 ? " …" : ""}. Run: git add -A && git commit -m "${item.id}: <outcome>"`,
+    );
+}
+
+function requireFrozen(item: Item, contract: Contract, results: Results) {
+  if (hashCriteria(contract.criteria) !== results.criteria_sha256)
+    stop(
+      `${contractPath(item)}: the criteria changed after init. Restore them (git restore), and add a criterion only with yarn contract:add ${item.id}`,
+    );
+}
+
+function writeResults(item: Item, results: Results) {
+  results.updated_at = now();
+  writeRepoText(resultsPath(item), formatResults(results));
+  refreshStatusFile(toolkit);
+}
+
+function printLeft(item: Item) {
+  const state = readItemState(item, toolkit.specsRoot);
+  const left = state.criteria.filter((c) => c.status !== "PASS");
+  console.log(
+    left.length === 0
+      ? `${item.id}: every criterion PASS (${state.stage}).`
+      : `${item.id} left to go: ${left.map((c) => `${c.id} ${c.evidence}${c.reason ? ` (${c.reason})` : ""}`).join("; ")}`,
+  );
+}
+
+// ---------------------------------------------------------------- init
+
+/** The next free number for a prefix, counting every local branch, so parallel tickets never collide. */
+function nextNumber(prefix: string, tree: SpecsTree): number {
+  const pattern = new RegExp(`/${prefix}-([1-9][0-9]*)-[a-z0-9-]+/`);
+  const used = tree.items
+    .filter((i) => i.prefix === prefix)
+    .map((i) => i.number);
+  for (const branch of listBranches())
+    for (const file of listOnRef(branch, toolkit.specsRoot)) {
+      const n = `/${file}`.match(pattern)?.[1];
+      if (n) used.push(Number(n));
+    }
+  return Math.max(0, ...used) + 1;
+}
+
+/** The contract file text from the template: its yaml block becomes the frontmatter. */
+function contractFromTemplate(id: string, slug: string): string {
+  const { body } = splitFrontmatter(readRepoText(CONTRACT_TEMPLATE));
+  const yaml = body.match(/```yaml\n([\s\S]*?)```/)?.[1];
+  if (!yaml) stop(`${CONTRACT_TEMPLATE} has no yaml block to copy`);
+  const notes = body.slice(body.indexOf("## Notes"));
+  return `---\n${yaml.replace(/^id: .*$/m, `id: ${id}`)}---\n\n# Contract — ${id} ${slug}\n\n${notes}`;
+}
+
+function setFrontmatter(rel: string, edit: (doc: YAML.Document) => void): void {
+  const { raw, body } = splitFrontmatter(readRepoText(rel));
+  if (raw === null) stop(`${rel} has no frontmatter`);
+  const doc = YAML.parseDocument(raw);
+  edit(doc);
+  writeRepoText(rel, `---\n${doc.toString({ lineWidth: 0 })}---\n${body}`);
+}
+
+function init() {
+  const fromFile = option("--from");
+  const draftOnly = flag("--draft");
+  const [target, slug] = argv;
+  if (!target || !slug)
+    stop(
+      "usage: yarn contract:init <APP | app | EPIC> <slug> [--from <file>] [--draft]",
+    );
+  if (!SLUG.test(slug)) stop(`"${slug}" is not a kebab-case slug`);
+
+  const tree = readSpecsTree(toolkit);
+  const appEntry =
+    Object.entries(toolkit.apps).find(
+      ([name, app]) => name === target || app.prefix === target,
+    ) ?? null;
+  const epic = appEntry ? null : tree.epics.find((e) => e.prefix === target);
+  if (!appEntry && !epic)
+    stop(
+      `${target} is neither an app in toolkit.json (${Object.entries(
+        toolkit.apps,
+      )
+        .map(([n, a]) => `${n} or ${a.prefix}`)
+        .join(
+          ", ",
+        )}) nor an epic on disk. Start an epic with yarn spec:init <app> <EPIC> <slug>`,
+    );
+  const prefix = appEntry ? appEntry[1].prefix : epic!.prefix;
+  const container = appEntry
+    ? `${toolkit.specsRoot}/${appEntry[0]}/one-offs`
+    : `${epic!.dir}/tickets`;
+
+  let item =
+    tree.items.find(
+      (i) => i.slug === slug && path.posix.dirname(i.dir) === container,
+    ) ?? null;
+  if (item && fileExists(resultsPath(item)))
+    stop(`${item.id} has already started. Run: yarn status ${item.id}`);
+
+  if (!item) {
+    const n = nextNumber(prefix, tree);
+    const id = `${prefix}-${n}`;
+    const dir = `${container}/${id}-${slug}`;
+    let text = contractFromTemplate(id, slug);
+    if (fromFile) {
+      const source = readFileSync(
+        path.resolve(process.env.INIT_CWD ?? process.cwd(), fromFile),
+        "utf8",
+      );
+      const { raw, body } = splitFrontmatter(source);
+      if (raw === null)
+        stop(`${fromFile} has no frontmatter; start from ${CONTRACT_TEMPLATE}`);
+      const doc = YAML.parseDocument(raw);
+      doc.set("id", id);
+      text = `---\n${doc.toString({ lineWidth: 0 })}---\n${body}`;
+    }
+    writeRepoText(`${dir}/contract.md`, text);
+    refreshStatusFile(toolkit);
+    item = findItem(readSpecsTree(toolkit), id)!;
+    if (!fromFile) {
+      console.log(
+        `contract:init — wrote ${dir}/contract.md for ${id}. Fill every [FILL], then run the same command again to start it.`,
+      );
+      return;
+    }
+  }
+  if (draftOnly) {
+    const problems = checkContract(item, readContract(item), toolkit, {
+      started: false,
+    });
+    if (problems.length)
+      stop(`${item.id} is drafted, with problems:\n  ${problems.join("\n  ")}`);
+    console.log(
+      `contract:init — ${item.id} drafted at ${item.dir}/; nothing started (--draft).`,
+    );
+    return;
+  }
+  start(item, tree);
+}
+
+function start(item: Item, tree: SpecsTree) {
+  const file = readContract(item);
+  const draftProblems = checkContract(item, file, toolkit, { started: false });
+  if (/\[FILL/.test(file.text))
+    stop(
+      `${contractPath(item)} still holds [FILL] markers; fill every one, then run this again`,
+    );
+  if (draftProblems.length)
+    stop(`${item.id} cannot start:\n  ${draftProblems.join("\n  ")}`);
+  const contract = file.contract!;
+
+  // A6: gates are checks.
+  const refusals: string[] = [];
+  for (const cited of contract.cites.filter(
+    (c) => c.includes("/") && c.endsWith(".md"),
+  )) {
+    const status = YAML.parse(
+      splitFrontmatter(readRepoText(cited)).raw ?? "",
+    )?.status;
+    if (status !== "approved")
+      refusals.push(
+        `${cited} is status: ${status ?? "(none)"}; the UX gate approves it first (status: approved)`,
+      );
+  }
+  const decisions = openDecisions(contract);
+  for (const cited of decisions.blocking)
+    refusals.push(
+      `${cited} holds [NEEDS DECISION — BLOCKING]; decide it in the file, then start`,
+    );
+
+  // A13.2: an epic ticket starts only with its pre-flight PASS, against this contract.
+  if (item.epic) {
+    const pre = preflightPath(item.epic);
+    const contractHash = hashText(file.text);
+    const line = fileExists(pre)
+      ? readRepoText(pre).match(
+          new RegExp(
+            `^- ${item.id}: (PASS|FAIL) \\(contract ([0-9a-f]{12})\\)`,
+            "m",
+          ),
+        )
+      : null;
+    if (!line)
+      refusals.push(
+        `${pre} has no pre-flight line for ${item.id}; run yarn review:run vigil ${item.epic.prefix} (the Tickets gate)`,
+      );
+    else if (line[1] !== "PASS")
+      refusals.push(
+        `the pre-flight failed ${item.id}; read ${pre}, fix the contract, and run the gate again`,
+      );
+    else if (line[2] !== contractHash.slice(0, 12))
+      refusals.push(
+        `${item.id}'s contract changed after its pre-flight; run yarn review:run vigil ${item.epic.prefix} again`,
+      );
+  }
+
+  // A dependent ticket starts only after its predecessor merges (convention 5).
+  for (const dep of contract.depends_on) {
+    const other = findItem(tree, dep);
+    if (!other || !fileExists(asBuiltPath(other)) || !isMerged(other))
+      refusals.push(
+        `depends on ${dep}, which has not merged; start ${item.id} after it does`,
+      );
+  }
+
+  // One active item per branch.
+  const branch = getCurrentBranch() ?? "";
+  const active = tree.items.find(
+    (other) => branchFor(toolkit, other.id) === branch && other.id !== item.id,
+  );
+  if (active && fileExists(resultsPath(active))) {
+    const stage = readItemState(active, toolkit.specsRoot).stage;
+    if (stage !== "closed" && stage !== "migration pending")
+      refusals.push(
+        `${branch} holds ${active.id}, still ${stage}; finish it (yarn status ${active.id}) or git switch main first`,
+      );
+  }
+  if (refusals.length)
+    stop(`${item.id} cannot start:\n  ${refusals.join("\n  ")}`);
+
+  const wanted = branchFor(toolkit, item.id);
+  if (branch !== wanted && !switchToNewBranch(wanted))
+    stop(
+      `could not create ${wanted}; does it exist already? Run: git branch --list "${wanted}"`,
+    );
+
+  // Reviewers by risk (A7), then freeze.
+  const roles = [...computeReviewers(contract, item, toolkit).keys()].sort();
+  setFrontmatter(contractPath(item), (doc) => {
+    doc.set("reviewers", roles);
+    const criteria = doc.get("criteria") as YAML.YAMLSeq;
+    const have = new Set(contract.criteria.map((c) => c.id));
+    for (const role of roles)
+      if (!have.has(`review:${role}`))
+        criteria.add(doc.createNode(reviewCriterion(role)));
+  });
+  const frozen = readContract(item).contract!;
+  const results: Results = {
+    id: item.id,
+    criteria_sha256: hashCriteria(frozen.criteria),
+    criteria: Object.fromEntries(
+      frozen.criteria.map((c) => [
+        c.id,
+        { status: "FAIL", evidence: c.evidence, run: null },
+      ]),
+    ),
+    updated_at: now(),
+  };
+  writeResults(item, results);
+  console.log(
+    `contract:init — ${item.id} started on ${wanted}: ${frozen.criteria.length} criteria at FAIL` +
+      (roles.length ? `; reviewers ${roles.join(", ")}` : "") +
+      (decisions.open.length
+        ? `. Open decisions (not blocking): ${decisions.open.join(", ")}`
+        : "") +
+      `. Next: build, commit as "${item.id}: <outcome>", then yarn contract:run ${item.id}`,
+  );
+}
+
+// ---------------------------------------------------------------- run
+
+/**
+ * The environment a criterion runs in. It runs as its own top-level run:
+ * NODE_TEST_CONTEXT from an enclosing node --test (even empty) makes a child
+ * runner skip its files and report to that parent, so the key is removed.
+ */
+function criterionEnv(): NodeJS.ProcessEnv {
+  const env: NodeJS.ProcessEnv = {
+    ...process.env,
+    FORCE_COLOR: "0",
+    NO_COLOR: "1",
+  };
+  delete env.NODE_TEST_CONTEXT;
+  return env;
+}
+
+/**
+ * How many tests a runner reported passing: Node's test runner (TAP, as it
+ * prints when piped), Vitest or Playwright. Null when it printed no count.
+ *
+ * Node wraps each test file in a subtest of its own, and that wrapper passes
+ * even when a name pattern matched nothing inside it ("ok 1 - x.test.ts" with
+ * a plan of 1..0; observed on Node 22.22.2, 2026-10-02). So the summary's
+ * "pass" is not a test count: count the passing entries that are not files.
+ */
+function countTests(output: string): number | null {
+  if (/^TAP version \d+/m.test(output))
+    return [...output.matchAll(/^\s*ok \d+ - (.+?)(\s+#.*)?$/gm)].filter(
+      (m) =>
+        !/\.[cm]?[jt]sx?$/.test(m[1]!.trim()) && !/#\s*SKIP/i.test(m[2] ?? ""),
+    ).length;
+  const vitest = output.match(/^\s*Tests\s+(\d+) passed/m);
+  if (vitest) return Number(vitest[1]);
+  const playwright = output.match(/^\s*(\d+) passed\b/m);
+  if (playwright) return Number(playwright[1]);
+  return null;
+}
+
+function run() {
+  const tree = readSpecsTree(toolkit);
+  const [id, ...only] = argv;
+  const item = requireItem(tree, id);
+  const results = requireResults(item);
+  const contract = readContract(item).contract;
+  if (!contract)
+    stop(
+      `${contractPath(item)} is not a valid contract; yarn check-specs names the problem`,
+    );
+  requireFrozen(item, contract, results);
+  for (const name of only) {
+    const criterion = contract.criteria.find((c) => c.id === name);
+    if (!criterion) stop(`${item.id} has no criterion ${name}`);
+    if (criterion.evidence !== "test" && criterion.evidence !== "check")
+      stop(
+        isReview(criterion)
+          ? `${name} is recorded by yarn review:run ${name.slice(7)} ${item.id}`
+          : `${name} is ${criterion.evidence} evidence; record it with yarn contract:record ${item.id} ${name} --evidence <path>`,
+      );
+  }
+  requireProvable(item);
+  const head = getHead()!;
+  const selected = contract.criteria.filter(
+    (c) =>
+      (c.evidence === "test" || c.evidence === "check") &&
+      (only.length === 0 || only.includes(c.id)),
+  );
+  if (selected.length === 0)
+    stop(`${item.id} has no test or check criteria to run`);
+
+  let failed = 0;
+  for (const criterion of selected) {
+    const problem = checkCommand(criterion.command ?? "");
+    if (problem) stop(`${criterion.id}: ${problem}`);
+    const words = splitCommand(criterion.command!);
+    const at = now();
+    const started = Date.now();
+    const result = spawnSync(words[0]!, words.slice(1), {
+      cwd: REPO_ROOT,
+      encoding: "utf8",
+      maxBuffer: 64 * 1024 * 1024,
+      env: criterionEnv(),
+    });
+    const output = `${result.stdout ?? ""}${result.stderr ?? ""}`
+      .split(REPO_ROOT)
+      .join(".");
+    const exit = result.status ?? 1;
+    const tests =
+      criterion.evidence === "test" ? (countTests(output) ?? 0) : undefined;
+    const log = `${evidenceDir(item)}/${criterion.id}.log`;
+    writeRepoText(
+      log,
+      `command: ${criterion.command}\nexit: ${exit}\nat: ${at}\nhead: ${head}\n` +
+        (tests !== undefined ? `tests: ${tests}\n` : "") +
+        `---\n${output}`,
+    );
+    const pass = exit === 0 && (tests === undefined || tests > 0);
+    const record: RunRecord = {
+      command: criterion.command!,
+      exit,
+      at,
+      head,
+      evidence_path: log,
+      evidence_sha256: hashFile(log),
+      ...(tests !== undefined && { tests }),
+    };
+    results.criteria[criterion.id] = {
+      status: pass ? "PASS" : "FAIL",
+      evidence: criterion.evidence,
+      run: record,
+    };
+    if (!pass) failed++;
+    const seconds = ((Date.now() - started) / 1000).toFixed(1);
+    console.log(
+      `${pass ? "PASS" : "FAIL"} ${criterion.id} ${criterion.evidence}  ${criterion.command}  (${seconds} s` +
+        (tests !== undefined ? `, ${tests} tests` : "") +
+        `)${!pass && tests === 0 && exit === 0 ? "  the runner matched zero tests: name a test after the criterion" : ""}`,
+    );
+  }
+  writeResults(item, results);
+  printLeft(item);
+  if (failed) process.exit(1);
+}
+
+// ---------------------------------------------------------------- record
+
+function record() {
+  const evidence = option("--evidence");
+  const verdict = option("--verdict") ?? "pass";
+  const tree = readSpecsTree(toolkit);
+  const [id, name] = argv;
+  const item = requireItem(tree, id);
+  const results = requireResults(item);
+  const contract = readContract(item).contract;
+  if (!contract) stop(`${contractPath(item)} is not a valid contract`);
+  requireFrozen(item, contract, results);
+  const criterion = contract.criteria.find((c) => c.id === name);
+  if (!name || !criterion)
+    stop(`${item.id} has no criterion ${name ?? "(none named)"}`);
+  if (isReview(criterion))
+    stop(
+      `a review is recorded only by its run, never by pointing at a file (B1). Run: yarn review:run ${name.slice(7)} ${item.id}`,
+    );
+  if (criterion.evidence === "test" || criterion.evidence === "check")
+    stop(
+      `${name} is ${criterion.evidence} evidence; run it: yarn contract:run ${item.id} ${name}`,
+    );
+  if (!evidence) stop(`name the evidence file: --evidence <path>`);
+  if (verdict !== "pass" && verdict !== "fail")
+    stop("--verdict is pass or fail");
+  const rel = toRepoPath(evidence);
+  if (rel.startsWith(".."))
+    stop(
+      `${evidence} is outside the repo; evidence lives in the repo, ideally in ${evidenceDir(item)}/`,
+    );
+  if (!fileExists(rel) || readFileSync(path.join(REPO_ROOT, rel)).length === 0)
+    stop(`${rel} does not exist or is empty; write the evidence first`);
+  if (
+    criterion.evidence === "capture" &&
+    criterion.path &&
+    criterion.path !== rel
+  )
+    stop(
+      `${name}'s contract names ${criterion.path} as its evidence, not ${rel}`,
+    );
+  requireProvable(item);
+  const at = now();
+  results.criteria[criterion.id] = {
+    status: verdict === "pass" ? "PASS" : "FAIL",
+    evidence: criterion.evidence,
+    run: {
+      command: `yarn contract:record ${item.id} ${name} --evidence ${rel}${verdict === "fail" ? " --verdict fail" : ""}`,
+      exit: 0,
+      at,
+      head: getHead()!,
+      evidence_path: rel,
+      evidence_sha256: hashFile(rel),
+    },
+  };
+  writeResults(item, results);
+  console.log(
+    `contract:record — ${name} ${verdict.toUpperCase()} against ${rel}.`,
+  );
+  printLeft(item);
+}
+
+// ---------------------------------------------------------------- add
+
+function add() {
+  const evidence = option("--evidence") as EvidenceType | undefined;
+  const statement = option("--statement");
+  const commandText = option("--command");
+  const evidencePath = option("--path");
+  const reason = option("--reason");
+  const tree = readSpecsTree(toolkit);
+  const [id, name] = argv;
+  const item = requireItem(tree, id);
+  const results = requireResults(item);
+  if (isMerged(item))
+    stop(`${item.id} has merged; its contract is a record now`);
+  const contract = readContract(item).contract;
+  if (!contract) stop(`${contractPath(item)} is not a valid contract`);
+  requireFrozen(item, contract, results);
+  if (!name) stop("name the criterion: C<n>, or review:<role>");
+  if (contract.criteria.some((c) => c.id === name))
+    stop(`${item.id} already has ${name}`);
+
+  let criterion: Criterion;
+  if (name.startsWith("review:")) {
+    criterion = reviewCriterion(name.slice(7));
+  } else {
+    if (!/^C[1-9][0-9]*$/.test(name))
+      stop(`${name} is not a criterion id; use C<n> or review:<role>`);
+    if (!evidence || !(EVIDENCE_TYPES as readonly string[]).includes(evidence))
+      stop(`--evidence is one of ${EVIDENCE_TYPES.join(", ")}`);
+    if (!statement) stop("--statement says what is true when this is done");
+    criterion = { id: name, statement, evidence };
+    if (commandText) criterion.command = commandText;
+    if (evidencePath) criterion.path = evidencePath;
+    if (reason) criterion.reason = reason;
+    if (evidence === "test" || evidence === "check") {
+      const problem = checkCommand(commandText ?? "");
+      if (problem) stop(problem);
+    }
+  }
+  setFrontmatter(contractPath(item), (doc) => {
+    (doc.get("criteria") as YAML.YAMLSeq).add(doc.createNode(criterion));
+    if (name.startsWith("review:")) {
+      const roles = new Set(contract.reviewers);
+      roles.add(name.slice(7));
+      doc.set("reviewers", [...roles].sort());
+    }
+  });
+  const updated = readContract(item);
+  const problems = checkContract(item, updated, toolkit, { started: false });
+  if (problems.length)
+    stop(
+      `the added criterion breaks the contract:\n  ${problems.join("\n  ")}`,
+    );
+  results.criteria_sha256 = hashCriteria(updated.contract!.criteria);
+  results.criteria[name] = {
+    status: "FAIL",
+    evidence: criterion.evidence,
+    run: null,
+  };
+  writeResults(item, results);
+  console.log(`contract:add — ${item.id} gains ${name} at FAIL.`);
+}
+
+// ---------------------------------------------------------------- main
+
+if (command === "init") init();
+else if (command === "run") run();
+else if (command === "record") record();
+else if (command === "add") add();
+else stop("usage: node tooling/contract.ts <init | run | record | add> …");

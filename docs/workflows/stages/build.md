@@ -35,7 +35,7 @@ No interview. A question the contract cannot answer is an `[ASSUMPTION]` in the 
 
 ## 4. The loop
 
-1. `yarn contract:init <APP|EPIC> <slug>` if the folder does not exist; state the planned paths before writing code.
+1. `yarn contract:init <APP|EPIC> <slug>`: it starts a contract drafted at the Tickets stage, or writes one from the template to fill and start with a second run; state the planned paths before writing code.
 2. Build inside the rails. A one-off that changes behaviour edits the truth file named in `truth_files` in the same branch.
 3. `yarn contract:run <id>` for `test` and `check` criteria; `yarn contract:record <id> <criterion> --evidence <path>` for `capture` and `manual`.
 4. `/tk-close`: drafts `as-built.md`, forks the reviewers through `yarn review:run <role> <id>`, records their verdicts, runs `yarn status <id>`.

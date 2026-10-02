@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "contract.schema.json",
+  "title": "contract.md frontmatter: the unit of work",
+  "description": "The fields of a ticket's contract (E-22, A5, A7). check-specs validates every contract's frontmatter against this file; the rules no schema can carry (one surface, reviewers by path, the 1,000-token cap, yarn scripts) are in tooling/lib/specs.ts.",
+  "type": "object",
+  "required": [
+    "id",
+    "size",
+    "objective",
+    "slice_type",
+    "non_negotiables",
+    "devs_call",
+    "cites",
+    "truth_files",
+    "reviewers",
+    "planned_paths",
+    "depends_on",
+    "out_of_scope",
+    "criteria"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^[A-Z][A-Z0-9]{1,4}-[1-9][0-9]*$" },
+    "size": {
+      "description": "small: under half a day, the default. medium: half a day to two days. large: over two days; split it.",
+      "enum": ["small", "medium", "large"]
+    },
+    "objective": { "$ref": "#/$defs/line" },
+    "slice_type": { "$ref": "#/$defs/line" },
+    "non_negotiables": { "type": "array", "items": { "$ref": "#/$defs/line" } },
+    "devs_call": { "$ref": "#/$defs/line" },
+    "cites": {
+      "description": "Surface files (paths), decision IDs and criterion IDs from those files.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/line" }
+    },
+    "waiver": {
+      "description": "Why this ticket cites more than one surface file.",
+      "$ref": "#/$defs/line"
+    },
+    "truth_files": {
+      "oneOf": [
+        { "type": "array", "items": { "$ref": "#/$defs/line" } },
+        { "type": "string", "pattern": "^none: \\S" }
+      ]
+    },
+    "reviewers": {
+      "description": "Computed by contract:init from planned_paths and toolkit.json; each has a review:<role> criterion.",
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z]+$" }
+    },
+    "planned_paths": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/line" }
+    },
+    "depends_on": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z][A-Z0-9]{1,4}-[1-9][0-9]*$"
+      }
+    },
+    "out_of_scope": { "type": "array", "items": { "$ref": "#/$defs/line" } },
+    "criteria": { "type": "array", "items": { "$ref": "#/$defs/criterion" } }
+  },
+  "$defs": {
+    "line": { "type": "string", "minLength": 1 },
+    "criterion": {
+      "type": "object",
+      "required": ["id", "statement", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^(C[1-9][0-9]*|review:[a-z]+)$"
+        },
+        "statement": { "$ref": "#/$defs/line" },
+        "evidence": { "enum": ["test", "check", "capture", "manual"] },
+        "command": {
+          "description": "test and check: a yarn script, as in `yarn test:tooling --test-name-pattern C2`.",
+          "$ref": "#/$defs/line"
+        },
+        "path": {
+          "description": "capture: where the evidence file will be.",
+          "$ref": "#/$defs/line"
+        },
+        "reason": {
+          "description": "manual: why no script can prove it.",
+          "$ref": "#/$defs/line"
+        }
+      }
+    }
+  }
+}
