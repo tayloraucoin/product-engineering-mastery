@@ -13,7 +13,7 @@ load_when: ui-build, critique
 
 # Skills
 
-Lifted from Plumb's adoption ruling ([`04-design-skills-adoption-plumb.md`](../research/04-design-skills-adoption-plumb.md), read 2026-09-30) and the motion adoption note ([`07b-motion-skill-vesper.md`](../research/07b-motion-skill-vesper.md) §5), with `conflicts.md` CF-18, CF-19, CF-22 and CF-30–33 applied. Provenance for every installed skill is in [`.claude/skills/REGISTRY.md`](../../.claude/skills/REGISTRY.md).
+Lifted from Plumb's adoption ruling ([`design-skills-adoption.md`](../research/design-tools/design-skills-adoption.md), read 2026-09-30) and the motion adoption note ([`motion-skill.md`](../research/courses/motion-skill.md) §5), with `conflicts.md` CF-18, CF-19, CF-22 and CF-30–33 applied. Provenance for every installed skill is in [`.claude/skills/REGISTRY.md`](../../.claude/skills/REGISTRY.md).
 
 ## The ruling
 
@@ -24,8 +24,8 @@ Third-party design skills are untrusted code. Two enter the repo, both only afte
 | `shadcn` (shadcn-ui/ui)                | **Adopt after edits** (A1–A6 below)                               | Installed in Phase 3 at `.claude/skills/shadcn/`, keeping its name                                                                                                |
 | Vercel Web Interface Guidelines        | **Adopt after edits** (B1–B5 below)                               | Becomes the house skill `tk-ui-code-lint`, with a provenance header                                                                                               |
 | `tk-ui-critic`                         | **House**                                                         | Procedure only; the rubric is `canon-rubric.md` (CF-20, record 0009)                                                                                              |
-| `tk-ui-diverge`                        | **House**                                                         | Three directions on one named axis; reads `docs/references/index.md` for the layout step (CF-31)                                                                  |
-| `tk-motion`                            | **House**, from thread 07                                         | Model-invocable on a narrow trigger, conditional on its trigger test (CF-30); bundle archived at `docs/research/07c-motion-skill-files-vesper/`                   |
+| `tk-ui-diverge`                        | **House**                                                         | Three directions on one named axis; reads `docs/references/README.md` for the layout step (CF-31)                                                                 |
+| `tk-motion`                            | **House**, from thread 07                                         | Model-invocable on a narrow trigger, conditional on its trigger test (CF-30); bundle archived at `docs/research/courses/motion-skill-files/`                      |
 | Anthropic `frontend-design`            | **Mined, not installed**                                          | Its plan step writes new hex values; its trigger fires on existing-UI work; it reads memory                                                                       |
 | `impeccable`                           | **Rejected; bans mined**                                          | Downloaded binary, approval-independent hooks in a gitignored file, reported telemetry, root design-file writes                                                   |
 | `taste-skill`                          | **Rejected; four lines mined**                                    | Excludes dashboards and tables in its own first lines; 85 KB; conflicts on icons and tokens                                                                       |

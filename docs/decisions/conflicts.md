@@ -73,19 +73,19 @@ Each entry gives the ruling, the rule it rests on, and what the losing side had 
 
 **CF-09 — Metrics.**
 
-- **Ruling:** `docs/metrics/` is its own layer: events, versioned definitions (both series kept), readout and experiment templates. The package's event plan cites event IDs. Definitions never live in a brief. PL's two product-layer templates move here.
+- **Ruling:** `docs/measurement/metrics/` is its own layer: events, versioned definitions (both series kept), readout and experiment templates. The package's event plan cites event IDs. Definitions never live in a brief. PL's two product-layer templates move here.
 - **Rule:** "metric definitions are a public API" (Tally, via R14). A brief retires when its feature ships.
 - **Losing:** R03's definition-in-the-brief, which is convenient once and lost the next time.
 
 **CF-10 — Evals.**
 
-- **Ruling:** `docs/evals/` ships three templates (surface card, failure-mode catalog, binary judge) and nothing filled, because the demo has no AI surface. Skill trigger tests live with each skill, at `.claude/skills/<name>/tests/triggers.md`, so they vendor with it.
+- **Ruling:** `docs/measurement/evals/` ships three templates (surface card, failure-mode catalog, binary judge) and nothing filled, because the demo has no AI surface. Skill trigger tests live with each skill, at `.claude/skills/<name>/tests/triggers.md`, so they vendor with it.
 - **Rule:** universal assets go in the toolkit and cases go in products (R14's own §2 split).
 - **Losing:** R14 step 5's urgency. It is real, but it is product work.
 
 **CF-11 — Runbooks.**
 
-- **Ruling:** `docs/runbooks/` holds four files: `onboard-agent.md`, `variant-testing-runbook.md`, `release.template.md`, `postmortem.template.md`. Weekly rituals are cut, because the charter's cool-down already covers them. Human onboarding goes into README's port runbook.
+- **Ruling:** `docs/runbooks/` holds four files: `onboard-agent.md`, `variant-testing.md`, `release.template.md`, `postmortem.template.md`. Weekly rituals are cut, because the charter's cool-down already covers them. Human onboarding goes into README's port runbook.
 - **Rule:** displacement.
 - **Losing:** R14's five runbooks.
 
@@ -116,11 +116,11 @@ Each entry gives the ruling, the rule it rests on, and what the losing side had 
 
 **CF-15 — Routers.**
 
-- **Ruling:** one router, `docs/references/index.md`, maps each task type to at most 3 files across all reference folders.
+- **Ruling:** one router, `docs/references/README.md`, maps each task type to at most 3 files across all reference folders.
   - The `laws-of-ux/index.md` table becomes the router's laws rows.
   - Every folder's landing page is `index.md`, per Fumadocs.
   - No `_meta/INDEX.md`; status lives in frontmatter.
-  - The critic's R13 line now points at `docs/references/index.md`.
+  - The critic's R13 line now points at `docs/references/README.md`.
 - **Rule:** one place. R13's own cap already counts across sources.
 - **Losing:** R13's self-contained folder, which is portable but drifts as a second router.
 
@@ -139,7 +139,7 @@ Each entry gives the ruling, the rule it rests on, and what the losing side had 
 
 **CF-17 — Filenames.**
 
-- **Ruling:** ASCII kebab-case for every path, roles included (`alembic-research-synthesizer.md`, `01-tools-per-loop-plumb.md`). The em-dash title moves into `title`.
+- **Ruling:** ASCII kebab-case for every path, roles included (`alembic-research-synthesizer.md`, `tools-per-loop.md`). The em-dash title moves into `title`.
 - **Rule:** enforceability. `gen-agents.ts` and the primer prompts construct these paths, and shells and grep break on the em dash.
 - **Losing:** RG's convention and its visual distinction. This overrides a convention you set; your veto stands.
 
@@ -232,7 +232,7 @@ Each entry gives the ruling, the rule it rests on, and what the losing side had 
 
 **CF-31 — frontend-design.**
 
-- **Ruling:** R04 stands; it is not installed. R13's line becomes "`tk-ui-diverge` reads `docs/references/index.md` for the layout step."
+- **Ruling:** R04 stands; it is not installed. R13's line becomes "`tk-ui-diverge` reads `docs/references/README.md` for the layout step."
 - **Losing:** R13, which was written before R04's rejection was applied.
 
 **CF-32 — GSAP.**

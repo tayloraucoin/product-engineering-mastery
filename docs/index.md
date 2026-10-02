@@ -22,15 +22,14 @@ The rules people and agents build by, a library loaded on demand, and a demo app
 | Agent context | `AGENTS.md`, `CLAUDE.md`, `.claude/rules/` | Commands, boundaries, path rules                                                         | always / by path                 |
 | Decisions     | `docs/decisions/`                          | `ledger.md` (index), `records/`, `conflicts.md`, `changelog.md`                          | grep on demand                   |
 | Roles         | `docs/roles/<department>/`                 | Role prompts; `.claude/agents/` is generated from them                                   | injected, or as a subagent       |
-| Design        | `docs/design/`                             | Loops and Recipe A (`index.md`), `workflow.md`, `skills.md`, `canon.md`, `canon-rubric.md`, `templates/` | by path on UI files              |
+| Design        | `docs/design/`                             | Loops and Recipe A (`README.md`), `workflow.md`, `skills.md`, `canon.md`, `canon-rubric.md`, `templates/` | by path on UI files              |
 | Product       | `docs/product/`                            | Cycle-charter, brief, package, glossary templates                                        | when shaping                     |
-| Metrics       | `docs/metrics/`                            | Events, definitions, readout, experiment templates                                       | when instrumenting               |
-| Evals         | `docs/evals/`                              | Surface, failure-mode, judge templates                                                   | when a product has an AI surface |
+| Measurement   | `docs/measurement/`                      | `metrics/`: events, definitions, readout, experiment templates; `evals/`: surface, failure-mode, judge templates | when instrumenting; evals when a product has an AI surface |
 | Runbooks      | `docs/runbooks/`                           | Onboard-agent, variant testing, release, postmortem                                      | on request                       |
-| References    | `docs/references/`                         | `index.md` router; laws-of-ux, canons, practitioners, books; `_meta/` procedures         | by router, at most 3 files       |
+| References    | `docs/references/`                         | `README.md` router; laws-of-ux, canons, practitioners, books; `_meta/` procedures         | by router, at most 3 files       |
 | Skills        | `.claude/skills/`                          | `tk-ui-critic`, `tk-ui-diverge`, `tk-motion`, `tk-ui-code-lint`, `shadcn`; `REGISTRY.md` | listing always; body on trigger  |
 | Prompts       | `docs/prompts/`                            | Shared context and primer prompts                                                        | injected by you                  |
-| Research      | `docs/research/`                           | Archived thread outputs                                                                  | never                            |
+| Research      | `docs/research/`                           | Thread outputs, byte for byte, by topic                                                                  | never                            |
 | Demo          | `apps/web/`                                | The filled example of every template; the critic's target                                | when working in the demo         |
 
 Every file, one line each: [`_generated/directory-map.md`](_generated/directory-map.md), generated from frontmatter by `yarn directory-map`; for people, not loaded by agents.
@@ -54,7 +53,7 @@ Every file, one line each: [`_generated/directory-map.md`](_generated/directory-
   - Nested `AGENTS.md` files load in `apps/` and `packages/`.
 - **By trigger:**
   - `tk-motion` on motion work; `shadcn` on component work.
-  - References through `docs/references/index.md`, at most 3 files per task.
+  - References through `docs/references/README.md`, at most 3 files per task.
 - **On request:** roles, templates (when filling one), runbooks, decisions (grep the ledger), prompts.
 - **Never:** `docs/research/`; `docs/references/_meta/` outside a library batch; `PROVENANCE.md` outside a disputed finding; `docs/_generated/`.
 

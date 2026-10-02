@@ -13,7 +13,7 @@ export type NavGroup = { key: string; label: string; items: NavItem[] };
 
 type DocsNavProps = {
   groups: NavGroup[];
-  /** Archived and generated files: searchable, never listed. */
+  /** Generated files: searchable, never listed. */
   hidden: number;
 };
 
@@ -60,7 +60,7 @@ export function DocsNav({ groups, hidden }: DocsNavProps) {
         ),
       )}
       <p className="mt-4 px-3 text-xs text-muted-foreground">
-        {hidden} archived and generated files are searchable but not listed.
+        {hidden} generated files are searchable but not listed.
       </p>
     </nav>
   );

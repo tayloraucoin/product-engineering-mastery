@@ -11,7 +11,7 @@ import { Search } from "./search";
 /**
  * The full-height left panel: search pinned at the top, then every visible
  * document grouped by its `layer`, with sub-folders nested inside each group.
- * Research is searchable, not listed.
+ * Generated files are searchable, not listed.
  */
 export function Sidebar() {
   const groups: NavGroup[] = getGroups().map((group) => ({
@@ -79,7 +79,7 @@ function sortLevel(items: NavItem[], landing: Set<string>): NavItem[] {
 function toTree(docs: Doc[]): NavItem[] {
   const landing = new Set(
     docs
-      .filter((doc) => doc.relativePath.endsWith("/index.md"))
+      .filter((doc) => doc.relativePath.endsWith("/README.md"))
       .map((doc) => doc.href),
   );
   const root: NavItem[] = [];

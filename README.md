@@ -36,4 +36,4 @@ The docs app reads the markdown in `docs/` directly: the sidebar groups files by
 
 ## Porting into a product
 
-Written in Phase 5 (prompt [`pe-port-dry-run.md`](docs/prompts/pe-port-dry-run.md)) from a timed cold run. Until then, the rule: a product repo copies the templates, skills, roles, `AGENTS.md` and `CLAUDE.md`; fills its own design layer and product files from the templates; and never copies the demo app or `docs/research/`.
+Written in Phase 5 (prompt [`port-dry-run.md`](docs/prompts/phases/port-dry-run.md)) from a timed cold run. Until then, the rule: a product repo copies the templates, skills, roles, `AGENTS.md` and `CLAUDE.md`; fills its own design layer and product files from the templates; and never copies the demo app or `docs/research/`.

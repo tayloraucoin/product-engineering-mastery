@@ -52,9 +52,10 @@
     },
     {
       "from": "docs/_file-dump/variant-testing-runbook.md",
-      "to": "docs/runbooks/variant-testing-runbook.md",
+      "to": "docs/runbooks/variant-testing.md",
       "body_sha256": "3bbe66194a8774bf6e33113cddaad425ea22e7afe5ed849949c63f78ccf6a207",
-      "frontmatter": "quoted"
+      "frontmatter": "quoted",
+      "previously": "docs/runbooks/variant-testing-runbook.md"
     },
     {
       "from": "docs/_file-dump/extraction-guide.md",
@@ -70,200 +71,260 @@
     },
     {
       "from": "docs/_file-dump/conflicts.md",
-      "to": "docs/research/pa-conflicts-unresolved-alembic.md",
+      "to": "docs/research/toolkit/conflicts-unresolved.md",
       "body_sha256": "b2dde55ccbb36f6fc789c470abf3db09dce564a294bf5cb6d16e5210f1adae8d",
-      "frontmatter": "merged"
+      "frontmatter": "merged",
+      "previously": "docs/research/pa-conflicts-unresolved-alembic.md"
     },
     {
       "from": "docs/_file-dump/_candidates.md",
-      "to": "docs/research/pa-design-candidates-alembic.md",
+      "to": "docs/research/toolkit/design-candidates.md",
       "body_sha256": "03208c1d836963188d03ceb900a12c1b493b0a6bec07bbeccd248789f5953ecb",
-      "frontmatter": "merged"
+      "frontmatter": "merged",
+      "previously": "docs/research/pa-design-candidates-alembic.md"
     },
     {
       "from": "docs/_file-dump/_filing-plan.md",
-      "to": "docs/research/pa-filing-plan-alembic.md",
+      "to": "docs/research/toolkit/filing-plan.md",
       "body_sha256": "c81019b680ef9b61042055db5a381f23e47081a4a2c687cc3ea00b4d17f54f25",
-      "frontmatter": "merged"
+      "frontmatter": "merged",
+      "previously": "docs/research/pa-filing-plan-alembic.md"
     },
     {
       "from": "docs/_file-dump/phase-2-checklist.md",
-      "to": "docs/research/pa-phase-2-checklist-plumb.md",
+      "to": "docs/research/toolkit/phase-2-checklist.md",
       "body_sha256": "16fdb998bbc0030ba955c546a8ef827f86378a009cb67c8b4c89e271a7b05888",
-      "frontmatter": "merged"
+      "frontmatter": "merged",
+      "previously": "docs/research/pa-phase-2-checklist-plumb.md"
     },
     {
       "from": "docs/_file-dump/plumb-ruling-01-design-tools-per-loop.md",
-      "to": "docs/research/01-tools-per-loop-plumb.md",
+      "to": "docs/research/design-tools/tools-per-loop.md",
       "body_sha256": "805a3b64f76a9c25b5519527933d635e98c3a409d413e1e83d08f5c4b5c37a75",
-      "frontmatter": "merged"
+      "frontmatter": "merged",
+      "previously": "docs/research/01-tools-per-loop-plumb.md"
     },
     {
       "from": "docs/_file-dump/framer-marketing-sites-investigation.md",
-      "to": "docs/research/02-framer-marketing-sites-vitrine.md",
+      "to": "docs/research/design-tools/framer-marketing-sites.md",
       "body_sha256": "16d6dca3769b89a442753619e9808763d84087c9a99ad9825e9f528241ab8cbb",
-      "frontmatter": "added"
+      "frontmatter": "added",
+      "previously": "docs/research/02-framer-marketing-sites-vitrine.md"
     },
     {
       "from": "docs/_file-dump/03-staging-branches-customer-testing-tally-report.md",
-      "to": "docs/research/03-staging-branches-customer-testing-tally.md",
+      "to": "docs/research/process/staging-branches-customer-testing.md",
       "body_sha256": "648fe7ca1018a2b31580098fb3d88faea9254b2cd40870199ba4b117e7929130",
-      "frontmatter": "added"
+      "frontmatter": "added",
+      "previously": "docs/research/03-staging-branches-customer-testing-tally.md"
     },
     {
       "from": "docs/_file-dump/Design Skills for Coding Agents- Plumb's Adoption Ruling (September 2026).md",
-      "to": "docs/research/04-design-skills-adoption-plumb.md",
+      "to": "docs/research/design-tools/design-skills-adoption.md",
       "body_sha256": "fec21832d4e578d5474e66613a0bb25d98bc706ec9ab9fa048040a9d74f31957",
-      "frontmatter": "added"
+      "frontmatter": "added",
+      "previously": "docs/research/04-design-skills-adoption-plumb.md"
     },
     {
       "from": "docs/_file-dump/05-shape-up_compass-report.md",
-      "to": "docs/research/05-shape-up-compass.md",
+      "to": "docs/research/process/shape-up.md",
       "body_sha256": "f2eb88cc596478f5ae43081b9a5f68715f5c836ee2a881039e02e441e4dce832",
-      "frontmatter": "added"
+      "frontmatter": "added",
+      "previously": "docs/research/05-shape-up-compass.md"
     },
     {
       "from": "docs/_file-dump/Shift Nudge Free-Layer Inventory- What Matt D. Smith Teaches in Public, and Where the Wall Is (checked September 30, 2026).md",
-      "to": "docs/research/06a-shift-nudge-free-layer-alembic.md",
+      "to": "docs/research/courses/shift-nudge-free-layer.md",
       "body_sha256": "d8014d7e9e9e47808861e1ea0b02cfb1b0d3b2b0fee766f77caae1e77e04b711",
-      "frontmatter": "added"
+      "frontmatter": "added",
+      "previously": "docs/research/06a-shift-nudge-free-layer-alembic.md"
     },
     {
       "from": "docs/_file-dump/shift-nudge-phase2-curriculum.md",
-      "to": "docs/research/06b-shift-nudge-curriculum-vesper.md",
+      "to": "docs/research/courses/shift-nudge-curriculum.md",
       "body_sha256": "d37fca1a12a2bb61f01dda248ed119eee7ca75e8a5060b36d37d09f56b32d86d",
-      "frontmatter": "added"
+      "frontmatter": "added",
+      "previously": "docs/research/06b-shift-nudge-curriculum-vesper.md"
     },
     {
       "from": "docs/_file-dump/sn-ui-checklist-skill.md",
-      "to": "docs/research/06c-sn-ui-checklist-shift-nudge.md",
+      "to": "docs/research/courses/shift-nudge-ui-checklist.md",
       "body_sha256": "cb00a6dca165537479aa577ae09b0ce727c6ccec0b78611d612c59386bce986c",
-      "frontmatter": "merged"
+      "frontmatter": "merged",
+      "previously": "docs/research/06c-sn-ui-checklist-shift-nudge.md"
     },
     {
       "from": "docs/_file-dump/Emil Kowalski's public motion work- a source-faithful inventory (phase 1 of the motion skill).md",
-      "to": "docs/research/07a-kowalski-motion-inventory-alembic.md",
+      "to": "docs/research/courses/kowalski-motion-inventory.md",
       "body_sha256": "76cbd56002ff10343120dcf0eda1faac0b79c856aed4fb0bc871652093ceba17",
-      "frontmatter": "added"
+      "frontmatter": "added",
+      "previously": "docs/research/07a-kowalski-motion-inventory-alembic.md"
     },
     {
       "from": "docs/_file-dump/motion-skill-phase2-vesper.md",
-      "to": "docs/research/07b-motion-skill-vesper.md",
+      "to": "docs/research/courses/motion-skill.md",
       "body_sha256": "5e398e4efbaa0213634e1593f79f52cd15ecfef9e295ac2f38553853b02f058b",
-      "frontmatter": "added"
+      "frontmatter": "added",
+      "previously": "docs/research/07b-motion-skill-vesper.md"
     },
     {
       "from": "docs/_file-dump/refactoring-ui-review—vesper-for-plumb.md",
-      "to": "docs/research/08-refactoring-ui-review-vesper.md",
+      "to": "docs/research/courses/refactoring-ui-review.md",
       "body_sha256": "99843fd4a0b8318781e7eb193619a832225e8ccbba545aed90ffa7b6091918c4",
-      "frontmatter": "merged"
+      "frontmatter": "merged",
+      "previously": "docs/research/08-refactoring-ui-review-vesper.md"
     },
     {
       "from": "docs/_file-dump/09-design-plus-code-meng-to-review.md",
-      "to": "docs/research/09-design-plus-code-review-vesper.md",
+      "to": "docs/research/courses/design-plus-code-review.md",
       "body_sha256": "fa5b967d1b8b7e53345bb3b554da2ed96b966061849867315289423bfe4446ce",
-      "frontmatter": "added"
+      "frontmatter": "added",
+      "previously": "docs/research/09-design-plus-code-review-vesper.md"
     },
     {
       "from": "docs/_file-dump/product-talk-academy-review—envoy.md",
-      "to": "docs/research/10-product-talk-academy-review-envoy.md",
+      "to": "docs/research/courses/product-talk-academy-review.md",
       "body_sha256": "a3c7c92daebc53a6012686707aaa699f7e152b09ba449494d19e9025c4c599bd",
-      "frontmatter": "added"
+      "frontmatter": "added",
+      "previously": "docs/research/10-product-talk-academy-review-envoy.md"
     },
     {
       "from": "docs/_file-dump/Laws of UX as a Reference Layer- Extraction, Segmentation, Plug-in, and Input Checklist (Plumb, Prompt 13).md",
-      "to": "docs/research/13-laws-of-ux-reference-layer-plumb.md",
+      "to": "docs/research/toolkit/laws-of-ux-reference-layer.md",
       "body_sha256": "b5017801d932cd064b5de13351839dc8e056c2d79102a1f136eb8e063112c005",
-      "frontmatter": "added"
+      "frontmatter": "added",
+      "previously": "docs/research/13-laws-of-ux-reference-layer-plumb.md"
     },
     {
       "from": "docs/_file-dump/The Toolkit Map- What an AI-Native Product Repo Carries in Markdown, and What to Build Next (Plumb, Sept 30, 2026).md",
-      "to": "docs/research/14-toolkit-map-plumb.md",
+      "to": "docs/research/toolkit/toolkit-map.md",
       "body_sha256": "a32d761fa10df233973b6cdf7b9b2ddcaae81df7614ba5ec3043b13efd43a903",
-      "frontmatter": "added"
+      "frontmatter": "added",
+      "previously": "docs/research/14-toolkit-map-plumb.md"
     },
     {
       "from": "docs/_file-dump/motion-skill/SKILL.md",
-      "to": "docs/research/07c-motion-skill-files-vesper/SKILL.md",
+      "to": "docs/research/courses/motion-skill-files/SKILL.md",
       "body_sha256": "e226228c7f0e6d2d5e0409fa306ef3a0b9c1744cfaad5889c4ea565c3ca3828d",
-      "frontmatter": "merged"
+      "frontmatter": "merged",
+      "previously": "docs/research/07c-motion-skill-files-vesper/SKILL.md"
     },
     {
       "from": "docs/_file-dump/motion-skill/references/catalog.md",
-      "to": "docs/research/07c-motion-skill-files-vesper/references/catalog.md",
+      "to": "docs/research/courses/motion-skill-files/references/catalog.md",
       "body_sha256": "6758502b6ed90bb47d6bc333296b89d27b1ace847732f4fa27775d72aace6fc6",
-      "frontmatter": "added"
+      "frontmatter": "added",
+      "previously": "docs/research/07c-motion-skill-files-vesper/references/catalog.md"
     },
     {
       "from": "docs/_file-dump/motion-skill/references/law.md",
-      "to": "docs/research/07c-motion-skill-files-vesper/references/law.md",
+      "to": "docs/research/courses/motion-skill-files/references/law.md",
       "body_sha256": "cdba5f8b8650d962c7aab0220ec337b643880e85cc27d1d2d5f01dfbe868d9ab",
-      "frontmatter": "added"
+      "frontmatter": "added",
+      "previously": "docs/research/07c-motion-skill-files-vesper/references/law.md"
     },
     {
       "from": "docs/_file-dump/motion-skill/references/review.md",
-      "to": "docs/research/07c-motion-skill-files-vesper/references/review.md",
+      "to": "docs/research/courses/motion-skill-files/references/review.md",
       "body_sha256": "3ce3d875968543b6574c2ee7527f8f6afe6953db9e261cad993f945016ce6027",
-      "frontmatter": "added"
+      "frontmatter": "added",
+      "previously": "docs/research/07c-motion-skill-files-vesper/references/review.md"
     },
     {
       "from": "docs/_file-dump/motion-skill/references/values.md",
-      "to": "docs/research/07c-motion-skill-files-vesper/references/values.md",
+      "to": "docs/research/courses/motion-skill-files/references/values.md",
       "body_sha256": "5feb2a4c03bbfa897091391c2a592e0a89559f5940cb1e4dc134ec9546774166",
-      "frontmatter": "added"
+      "frontmatter": "added",
+      "previously": "docs/research/07c-motion-skill-files-vesper/references/values.md"
     },
     {
       "from": "docs/_file-dump/motion-skill/references/product-dealready.md",
-      "to": "docs/research/07c-motion-skill-files-vesper/references/product-dealready.md",
+      "to": "docs/research/courses/motion-skill-files/references/product-dealready.md",
       "body_sha256": "26fa409b9335f6beda37bb99f460b71fc4ae0831d29d29909436b6b356089012",
-      "frontmatter": "added"
+      "frontmatter": "added",
+      "previously": "docs/research/07c-motion-skill-files-vesper/references/product-dealready.md"
     },
     {
       "from": "docs/_file-dump/motion-skill/references/product-fybr.md",
-      "to": "docs/research/07c-motion-skill-files-vesper/references/product-fybr.md",
+      "to": "docs/research/courses/motion-skill-files/references/product-fybr.md",
       "body_sha256": "0373e19d8581dfa14f1912da0850c6a7fa57a830e72a0541057aff11cfa4063f",
-      "frontmatter": "added"
+      "frontmatter": "added",
+      "previously": "docs/research/07c-motion-skill-files-vesper/references/product-fybr.md"
     },
     {
       "from": "docs/_files_dump/pj-engineering-layer-lorimer.md",
-      "to": "docs/research/pj-engineering-layer-lorimer.md",
+      "to": "docs/research/engineering/engineering-layer-report.md",
       "body_sha256": "06fe4a6814d9832538ce3176e13a0f4b01c620c786e85eae398521f5e1fe04d2",
       "frontmatter": "kept",
-      "source_commit": "3e58eae"
+      "source_commit": "3e58eae",
+      "previously": "docs/research/pj-engineering-layer-lorimer.md"
     },
     {
       "from": "docs/_files_dump/pj-conventions-locked.md",
-      "to": "docs/research/pj-conventions-locked.md",
+      "to": "docs/research/engineering/conventions-and-amendments.md",
       "body_sha256": "caaefa2a6d7494774e09e98197d9f47b021bee50ced4356e65e9b2e9d2517037",
       "frontmatter": "kept",
-      "source_commit": "3e58eae"
+      "source_commit": "3e58eae",
+      "previously": "docs/research/pj-conventions-locked.md"
     },
     {
       "from": "docs/_files_dump/pj-engineering-layer.md",
-      "to": "docs/prompts/pj-engineering-layer.md",
+      "to": "docs/prompts/phases/engineering-layer.md",
       "body_sha256": "572d451069bf0f4026e323bae3f6b67e75a0a0d34be2818cac4dda154cfdb79e",
       "frontmatter": "kept",
       "source_commit": "3e58eae",
-      "note": "live file: the amendments blockquote was replaced after filing (primer v2, Phase 1 step 4); the hash is the body as received"
+      "note": "live file: the amendments blockquote was replaced after filing (primer v2, Phase 1 step 4); the hash is the body as received",
+      "previously": "docs/prompts/pj-engineering-layer.md"
     },
     {
       "from": "docs/_files_dump/pj-primer.md",
-      "to": "docs/prompts/pj-primer.md",
+      "to": "docs/prompts/phases/engineering-layer-primer.md",
       "body_sha256": "3db84639ee4f98b8e5d78f3a0530a69f0f2cb00e0bfc3ae87bf3a133edc61115",
       "frontmatter": "added",
-      "source_commit": "3e58eae"
+      "source_commit": "3e58eae",
+      "previously": "docs/prompts/pj-primer.md"
     },
     {
       "from": "docs/roles/engineering/mason-cto-principle-dev_2026-10-01.md",
-      "to": "docs/research/eng-roles-mason-role-revision.md",
+      "to": "docs/research/engineering/mason-role-revision.md",
       "body_sha256": "3ba69722544d2f3f7cc436dd6f36a93b5cd3fb109533c556f348912b3637857e",
       "frontmatter": "added",
-      "source_commit": "3e58eae"
+      "source_commit": "3e58eae",
+      "previously": "docs/research/eng-roles-mason-role-revision.md"
     },
     {
       "from": "docs/roles/engineering/mason-cto-principle-dev_2026-10-01.md (Part 3, the fenced role file)",
       "to": "docs/roles/engineering/mason-cto-principal-dev.md",
       "body_sha256": "23931ebdf91ff8d4300cb85e63b828efa82eab2925a8a817ac1cd380ed2bc6da",
+      "frontmatter": "kept",
+      "source_commit": "3e58eae"
+    },
+    {
+      "from": "docs/_files_dump/workflows-index.md",
+      "to": "docs/workflows/README.md",
+      "body_sha256": "aa622258b7946e8767a5a9a138d3d02b339e1d461c7a22918bc1ad929474c59c",
+      "frontmatter": "kept",
+      "source_commit": "3e58eae",
+      "note": "live landing page: yarn directory-map appends the folder table below the body; the hash is the body as received"
+    },
+    {
+      "from": "docs/_files_dump/workflows-one-off.md",
+      "to": "docs/workflows/one-off.md",
+      "body_sha256": "0561e5540192dc8aca344e1a261d3ff07aa8ed2db909a90eedb9c6c4c751d1af",
+      "frontmatter": "kept",
+      "source_commit": "3e58eae"
+    },
+    {
+      "from": "docs/_files_dump/workflows-epic.md",
+      "to": "docs/workflows/epic.md",
+      "body_sha256": "a4261655d200bb1190eb83bc7587c235e05a7efb0250741d2e0c70d63953fb37",
+      "frontmatter": "kept",
+      "source_commit": "3e58eae"
+    },
+    {
+      "from": "docs/_files_dump/workflows-glossary.md",
+      "to": "docs/workflows/glossary.md",
+      "body_sha256": "8f38f5e65680870e52e7a7ca3022af07ea3905d7037050c0493b96a72183d0b8",
       "frontmatter": "kept",
       "source_commit": "3e58eae"
     }

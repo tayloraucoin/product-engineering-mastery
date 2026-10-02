@@ -46,7 +46,7 @@ Split from [`canon.md`](canon.md) §3 on 2026-10-01 ([record 0009](../decisions/
 | C-R12 | Motion: the `tk-motion` review checks M1–M12, reported as one line                                                                                                                      | per M#                                                | C-P11        | R07b           |
 | C-R13 | Removal test: an element or asset with no stated job                                                                                                                                    | Consider (Should-fix on the focal path)               | C-P12        | R09            |
 | C-R14 | Slop tells, checked by ID (canon §2, A-01 to A-20)                                                                                                                                      | Should-fix (A-19, A-20: Blocking)                     | canon §2     | R04; R08; R06a |
-| C-R15 | Laws of UX: findings cite LUX rule IDs loaded through `docs/references/index.md` (at most 3 files). A finding with no rule ID of any kind (C-, A-, LUX-, M) is Consider at most         | per LUX rule                                          | references   | R13            |
+| C-R15 | Laws of UX: findings cite LUX rule IDs loaded through `docs/references/README.md` (at most 3 files). A finding with no rule ID of any kind (C-, A-, LUX-, M) is Consider at most        | per LUX rule                                          | references   | R13            |
 
 ## Changelog
 

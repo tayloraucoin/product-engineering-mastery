@@ -10,13 +10,15 @@ docs/decisions/only-you.md
 docs/product/brief.template.md
 docs/product/package.template.md
 docs/product/cycle-charter.template.md
-docs/runbooks/variant-testing-runbook.md
-docs/prompts/pa-*.md
-docs/prompts/pb-*.md
-docs/prompts/pc-*.md
-docs/prompts/pd-*.md
-docs/prompts/pe-*.md
-docs/prompts/pj-*.md
+docs/runbooks/variant-testing.md
+docs/prompts/phases/
+docs/workflows/one-off.md
+docs/workflows/epic.md
+docs/workflows/glossary.md
+
+# Landing pages: a hand-written top and a generated table (yarn directory-map).
+docs/README.md
+docs/**/README.md
 
 # Generated.
 docs/_generated/

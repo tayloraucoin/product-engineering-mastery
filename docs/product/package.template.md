@@ -73,4 +73,4 @@ load_when: spec, ui-build, critique
 | `[FILL]`                    | `[FILL]` | `[FILL]`   | metric ID or guardrail |
 
 - **Flag:** `[FILL: key]`; exposure event `[FILL]`.
-- **Pre-registered rule:** see `docs/runbooks/variant-testing-runbook.md` §5.
+- **Pre-registered rule:** see `docs/runbooks/variant-testing.md` §5.

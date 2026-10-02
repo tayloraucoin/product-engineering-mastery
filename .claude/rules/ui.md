@@ -14,6 +14,6 @@ Before writing or reviewing UI, read, in order:
 2. The product's design layer. In this repo that is `apps/web/docs/design/` (Phase 3); in a product repo, `docs/design/`.
 3. The package for the feature (`specs/<feature>/package.md`), if one exists.
 
-Then work only in the vocabulary in `AGENTS.md`: `@pem/ui` components, tokens, every state reachable by `?state=`. Motion follows canon C-P11. Need a reference? Go through `docs/references/index.md`, at most three files.
+Then work only in the vocabulary in `AGENTS.md`: `@pem/ui` components, tokens, every state reachable by `?state=`. Motion follows canon C-P11. Need a reference? Go through `docs/references/README.md`, at most three files.
 
 `apps/docs` is the toolkit's reader, not a product surface: it uses the tokens and `@pem/ui`, and the canon's product rules (states matrix, one primary action) do not bind it.

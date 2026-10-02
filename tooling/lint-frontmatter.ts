@@ -19,7 +19,11 @@ if (loadToolkit().tier !== "starter") {
 
 const DOCS = "docs";
 
-/** CF-16 base enum, plus `engineering` (changelog 2026-10-01). */
+/**
+ * One value per top-level folder under docs/. CF-16's enum, plus `engineering`
+ * (changelog 2026-10-01), `measurement` (metrics and evals, 2026-10-02) and
+ * `workflows` (A12).
+ */
 const LAYERS = [
   "decisions",
   "roles",
@@ -28,10 +32,10 @@ const LAYERS = [
   "references",
   "prompts",
   "research",
-  "metrics",
-  "evals",
+  "measurement",
   "runbooks",
   "engineering",
+  "workflows",
 ] as const;
 
 const STATUSES = [
@@ -69,6 +73,7 @@ const LAW_KEYS = ["family", "laws", "budget"];
 
 const DESCRIPTION_MAX = 400;
 const UPPERCASE_STEMS = [
+  "README",
   "DESIGN",
   "SKILL",
   "PROVENANCE",
@@ -105,8 +110,11 @@ function lintName(file: string) {
       `upper-case name "${name}" is not on the conventional list (record 0006)`,
     );
   }
-  if (name === "README.md")
-    fail(file, "folder landing pages are index.md inside docs/ (CF-05)");
+  if (name === "index.md" && file !== "docs/index.md")
+    fail(
+      file,
+      "folder landing pages are README.md inside docs/ (record 0006, amended 2026-10-02); docs/index.md is the one exception",
+    );
 }
 
 function isEmpty(value: unknown) {
@@ -147,7 +155,8 @@ function lintFrontmatter(file: string, fm: Frontmatter) {
   ) {
     fail(file, `status "${status}" is not one of ${STATUSES.join(", ")}`);
   }
-  if (layer === "research" && status !== "archived") {
+  const isLanding = path.posix.basename(file) === "README.md";
+  if (layer === "research" && status !== "archived" && !isLanding) {
     fail(file, `research files are status: archived (plan §2.6)`);
   }
   if (typeof description === "string") {
@@ -192,7 +201,7 @@ function lintFrontmatter(file: string, fm: Frontmatter) {
   const isReferenceSource =
     file.startsWith("docs/references/") &&
     !file.startsWith("docs/references/_meta/") &&
-    path.posix.basename(file) !== "index.md";
+    !isLanding;
   if (isReferenceSource) {
     for (const key of REFERENCE_KEYS)
       if (!(key in fm)) fail(file, `references add "${key}" (CF-16)`);

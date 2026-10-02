@@ -34,9 +34,12 @@ const CONTENT_ROOTS = [
 ];
 const SPINE_PATH = "AGENTS.md";
 const INDEX_PATH = "docs/index.md";
+const START_PATH = "docs/README.md";
 const MAP_PATH = "docs/_generated/directory-map.md";
 /** The Start group, in this order; each is labelled with its file name. */
-const START_PATHS = [INDEX_PATH, SPINE_PATH, MAP_PATH];
+const START_PATHS = [START_PATH, INDEX_PATH, SPINE_PATH, MAP_PATH];
+/** A folder's landing page: README.md, or docs/index.md at the root (record 0006). */
+const LANDING = "README.md";
 
 /**
  * Sidebar groups and their labels. Keys are `layer` values (docs/index.md,
@@ -48,19 +51,19 @@ const GROUPS: { key: string; label: string }[] = [
   { key: "decisions", label: "Decisions" },
   { key: "design", label: "Design" },
   { key: "product", label: "Product" },
-  { key: "metrics", label: "Metrics" },
-  { key: "evals", label: "Evals" },
+  { key: "measurement", label: "Measurement" },
   { key: "runbooks", label: "Runbooks" },
   { key: "roles", label: "Roles" },
   { key: "prompts", label: "Prompts" },
   { key: "references", label: "References" },
   { key: "engineering", label: "Engineering" },
+  { key: "workflows", label: "Workflows" },
   { key: "demo", label: "Demo app (filled examples)" },
-  { key: "research", label: "Research (archived)" },
+  { key: "research", label: "Research" },
 ];
 
 /** Never listed in the sidebar; still rendered and searchable (P-B; CF-05). */
-const HIDDEN_GROUPS = new Set(["research", "generated"]);
+const HIDDEN_GROUPS = new Set(["generated"]);
 
 export type Frontmatter = Record<string, unknown>;
 
@@ -224,7 +227,12 @@ function toSlug(relativePath: string): string[] {
     .replace(/\.template$/, "-template")
     .toLowerCase()
     .split("/");
-  const slug = segments.at(-1) === "index" ? segments.slice(0, -1) : segments;
+  // A folder's README.md is its route; the docs root keeps index.md as the map.
+  const last = segments.at(-1);
+  const slug =
+    last === "readme" && relativePath !== START_PATH
+      ? segments.slice(0, -1)
+      : segments;
   return [...root.prefix, ...slug];
 }
 
@@ -267,8 +275,9 @@ function compareDocs(a: Doc, b: Doc) {
     if (b.folder === "") return 1;
     return a.folder.localeCompare(b.folder);
   }
-  const isIndex = (doc: Doc) => doc.relativePath.endsWith("/index.md");
-  if (isIndex(a) !== isIndex(b)) return isIndex(a) ? -1 : 1;
+  const isLanding = (doc: Doc) =>
+    path.posix.basename(doc.relativePath) === LANDING;
+  if (isLanding(a) !== isLanding(b)) return isLanding(a) ? -1 : 1;
   return a.relativePath.localeCompare(b.relativePath);
 }
 

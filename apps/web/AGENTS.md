@@ -4,7 +4,7 @@ App-local rules only. The root `AGENTS.md` and `docs/index.md` govern everything
 
 ## What this app is
 
-A small, deliberately generic records product that exists to prove the toolkit: a dense table with sort and filter, a record detail with a diffable document, a form with validation, settings, a destructive-action dialog, and a three-beat onboarding (`docs/prompts/pc-demo-app-and-skills.md`). Built in Phase 3; today it is the scaffold's single page. It is never a mock of a real client, and it holds no real customer data.
+A small, deliberately generic records product that exists to prove the toolkit: a dense table with sort and filter, a record detail with a diffable document, a form with validation, settings, a destructive-action dialog, and a three-beat onboarding (`docs/prompts/phases/demo-app-and-skills.md`). Built in Phase 3; today it is the scaffold's single page. It is never a mock of a real client, and it holds no real customer data.
 
 ## The filled examples live here
 

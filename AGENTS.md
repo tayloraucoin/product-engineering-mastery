@@ -5,7 +5,7 @@ The canonical instructions for every agent (Claude Code, Cursor, Codex). `CLAUDE
 ## Start here
 
 1. **What this is:** a universal product-engineering toolkit and the repo that proves it. The practice (roles, design canon, templates, decisions, prompts) lives in `docs/`; `apps/web` is the demo app that holds every template's filled example and is the critic's target; `apps/docs` renders `docs/` in a browser. No product lives here.
-2. **Current phase:** Phase 2 (the practice layer) is done; Phase 3 ([`pc-demo-app-and-skills.md`](docs/prompts/pc-demo-app-and-skills.md)) builds the demo's records app, the filled examples and the `tk-*` skills. Until it lands, `apps/web` is a single page, `.claude/skills/` holds no skills, and `docs/index.md`'s skill row describes the target, not the present.
+2. **Current phase:** Phase 2 (the practice layer) is done; Phase 3 ([`demo-app-and-skills.md`](docs/prompts/phases/demo-app-and-skills.md)) builds the demo's records app, the filled examples and the `tk-*` skills. Until it lands, `apps/web` is a single page, `.claude/skills/` holds no skills, and `docs/index.md`'s skill row describes the target, not the present.
 3. **Read [`docs/index.md`](docs/index.md) first, every session.** It is the map: the layers, the precedence ladder, what loads always, by path, by trigger and never, and the token budget.
 4. **Before any UI work, read [`docs/design/canon.md`](docs/design/canon.md)** and the product's design layer: `DESIGN.md`, `tokens.md`, `components.md`, `anti-patterns.md`, `states.md`, `coverage-gaps.md` (in the demo: `apps/web/docs/design/`). In Claude Code, `.claude/rules/ui.md` also fires on UI files.
 5. **Feature work starts from a brief and a package** (`specs/<feature>/brief.md` and `package.md`, from the `docs/product/` templates; not to be confused with a workspace package). A one-line request for a feature gets a package first, or an explicit waiver from the person asking. Filled copies never go in `docs/`: in the demo they live in `apps/web/specs/<feature>/`, and filled layer files in `apps/web/docs/<layer>/`.
@@ -41,7 +41,7 @@ Node 22, Yarn 4.13.0 (`corepack enable && yarn install`). Use `yarn`, never `npm
 
 ## Roles, subagents, skills
 
-- **Roles:** `docs/roles/<department>/<name>-<title>.md`. Inject one per thread. Department seat maps are each folder's `index.md`.
+- **Roles:** `docs/roles/<department>/<name>-<title>.md`. Inject one per thread. Department seat maps are each folder's `README.md`.
 - **Subagents:** `.claude/agents/` is **generated** by `yarn gen:agents` from roles whose frontmatter says `subagent: true` ([record 0008](docs/decisions/records/0008-subagents-are-generated-opt-in.md)). Never edit it by hand; CI fails on drift.
 - **Skills:** `.claude/skills/<name>/`; house skills are prefixed `tk-`. Rulings and load order: [`docs/design/skills.md`](docs/design/skills.md). Provenance: `.claude/skills/REGISTRY.md`.
 
