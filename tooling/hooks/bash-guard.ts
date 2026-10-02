@@ -46,6 +46,18 @@ type Denial = { rule: string; message: string };
 
 const readGuardLayout = (): Layout => readLayout(ROOT, fixture?.epicPrefixes);
 
+/**
+ * A commit is judged by the layout of the repo it lands in: a worktree or
+ * another checkout holds its own epics, which this checkout cannot see.
+ */
+function commitLayout(dir: string, fallback: Layout): Layout {
+  if (fixture) return fallback;
+  const top = git(dir, ["rev-parse", "--show-toplevel"]);
+  return top && path.resolve(top) !== path.resolve(ROOT)
+    ? readLayout(top)
+    : fallback;
+}
+
 function git(cwd: string, args: string[]): string | null {
   try {
     return execFileSync("git", args, {
@@ -544,6 +556,7 @@ function gitRules(
     dir,
   );
   if (message.kind === "reused") return null;
+  layout = commitLayout(dir, layout);
   const example = `git commit -m "${layout.prefixes[0] ?? "PEM"}: <outcome>"`;
   if (message.kind === "editor")
     return {

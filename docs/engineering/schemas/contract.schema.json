@@ -78,7 +78,7 @@
         "statement": { "$ref": "#/$defs/line" },
         "evidence": { "enum": ["test", "check", "capture", "manual"] },
         "command": {
-          "description": "test and check: a yarn script, as in `yarn test:tooling --test-name-pattern C2`.",
+          "description": "test and check: a package.json script run through yarn, as in `yarn test:tooling`.",
           "$ref": "#/$defs/line"
         },
         "path": {

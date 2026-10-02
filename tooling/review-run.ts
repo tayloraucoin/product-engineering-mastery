@@ -73,7 +73,14 @@ function stop(message: string): never {
   process.exit(1);
 }
 
-type Verdict = { text: string; model: string; runner: string; exit: number };
+type Verdict = {
+  text: string;
+  model: string;
+  runner: string;
+  exit: number;
+  /** Why the reviewer produced no review, when it did not. */
+  error: string | null;
+};
 
 /** Runs the reviewer on a prompt; returns its raw final text. */
 function runReviewer(prompt: string): Verdict {
@@ -92,6 +99,7 @@ function runReviewer(prompt: string): Verdict {
       model: parsed.model ?? "fixture",
       runner: `fixture: ${path.basename(fixture)}`,
       exit: result.status ?? 1,
+      error: parsed.result ? null : "the fixture runner printed no result",
     };
   }
   const args = [
@@ -127,22 +135,27 @@ function runReviewer(prompt: string): Verdict {
   });
   let text = "";
   let model = "unknown";
+  let error: string | null = null;
   try {
     const parsed = JSON.parse(result.stdout) as {
       result?: string;
       is_error?: boolean;
       modelUsage?: Record<string, unknown>;
     };
-    text = parsed.is_error ? "" : (parsed.result ?? "");
+    if (parsed.is_error) error = parsed.result ?? "the run reported an error";
+    else text = parsed.result ?? "";
     model = Object.keys(parsed.modelUsage ?? {})[0] ?? model;
   } catch {
-    text = "";
+    error =
+      result.error?.message ??
+      (result.stderr?.trim().split("\n").at(-1) || "no JSON on stdout");
   }
   return {
     text,
     model,
     runner: `claude ${version} (${how}; tools ${TOOLS})`,
     exit: text ? (result.status ?? 1) : 1,
+    error: text ? null : (error ?? "no output"),
   };
 }
 
@@ -261,7 +274,7 @@ function reviewTicket(item: Item) {
       "",
       "## Review",
       "",
-      review.text || "(no output)",
+      review.text || `(no review: ${review.error})`,
       "",
     ].join("\n"),
   );
@@ -285,7 +298,7 @@ function reviewTicket(item: Item) {
   refreshStatusFile(toolkit);
   if (!verdict)
     stop(
-      `${role} gave no verdict (${review.exit === 0 ? "no VERDICT line" : "the run failed; from the sandbox, re-run unsandboxed, or Taylor runs: " + command}). ${criterionId} stays FAIL; see ${rel}`,
+      `${role} gave no verdict (${review.error ? `the run failed: ${review.error}; from the sandbox, re-run unsandboxed, or Taylor runs: ${command}` : "no VERDICT line"}). ${criterionId} stays FAIL; see ${rel}`,
     );
   console.log(
     `review:run — ${criterionId} ${verdict}. Read ${rel} before merge.`,
@@ -360,11 +373,15 @@ function preflight(epic: Epic, items: Item[]) {
       "",
       "## Review",
       "",
-      review.text || "(no output)",
+      review.text || `(no review: ${review.error})`,
       "",
     ].join("\n"),
   );
   console.log(`review:run — wrote ${rel}:\n  ${lines.join("\n  ")}`);
+  if (review.error)
+    stop(
+      `vigil did not run (${review.error}). Every line is FAIL until it does. From the sandbox, re-run unsandboxed, or Taylor runs: ${command}`,
+    );
   if (lines.some((line) => line.includes(": FAIL"))) process.exit(1);
 }
 

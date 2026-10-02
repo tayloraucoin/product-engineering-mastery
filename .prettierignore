@@ -24,6 +24,9 @@ docs/**/README.md
 docs/_generated/
 .claude/agents/
 specs/_status.md
+# Written by yarn review:run and hashed into results.json: a reformat would break the hash.
+specs/**/review-*.md
+specs/**/tickets/_preflight.md
 
 # Synthetic fixtures: check-specs hashes their bytes, so a formatter must not touch them.
 tooling/fixtures/

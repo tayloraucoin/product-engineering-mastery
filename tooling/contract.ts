@@ -20,7 +20,7 @@
  */
 
 import { spawnSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import YAML from "yaml";
 
@@ -249,10 +249,15 @@ function init() {
     const dir = `${container}/${id}-${slug}`;
     let text = contractFromTemplate(id, slug);
     if (fromFile) {
-      const source = readFileSync(
-        path.resolve(process.env.INIT_CWD ?? process.cwd(), fromFile),
-        "utf8",
+      const sourcePath = path.resolve(
+        process.env.INIT_CWD ?? process.cwd(),
+        fromFile,
       );
+      if (!existsSync(sourcePath))
+        stop(
+          `--from ${fromFile} does not exist; write the drafted contract there first`,
+        );
+      const source = readFileSync(sourcePath, "utf8");
       const { raw, body } = splitFrontmatter(source);
       if (raw === null)
         stop(`${fromFile} has no frontmatter; start from ${CONTRACT_TEMPLATE}`);

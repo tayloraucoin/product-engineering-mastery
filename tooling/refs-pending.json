@@ -42,5 +42,7 @@
   "docs/roles/_extensions/": "stale ruling text in conflicts.md; extensions sit beside their role (record 0006); held for Taylor (PR-05)",
   "docs/design/tool-rulings.md": "stale ledger text; the rulings live in docs/design/workflow.md; held for Taylor (PR-05)",
   "docs/design/_candidates.md": "stale ledger text; filed as docs/research/toolkit/design-candidates.md; held for Taylor (PR-05)",
-  "docs/research/ledger.md": "stale ledger text; the ledger is docs/decisions/ledger.md; held for Taylor (PR-05)"
+  "docs/research/ledger.md": "stale ledger text; the ledger is docs/decisions/ledger.md; held for Taylor (PR-05)",
+  "docs/metrics/": "stale ledger text; the folder is docs/measurement/metrics/ (PR-12); held for Taylor (PR-05)",
+  "docs/evals/": "stale ledger text; the folder is docs/measurement/evals/ (PR-12); held for Taylor (PR-05)"
 }
