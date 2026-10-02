@@ -38,7 +38,11 @@ const MAP_PATH = "docs/_generated/directory-map.md";
 /** The Start group, in this order; each is labelled with its file name. */
 const START_PATHS = [INDEX_PATH, SPINE_PATH, MAP_PATH];
 
-/** Sidebar groups, in order. Keys are `layer` values (docs/index.md, CF-16). */
+/**
+ * Sidebar groups and their labels. Keys are `layer` values (docs/index.md,
+ * CF-16). The sidebar lists them by label (`getGroups`); this order only
+ * breaks ties in search and static generation.
+ */
 const GROUPS: { key: string; label: string }[] = [
   { key: "start", label: "Start" },
   { key: "decisions", label: "Decisions" },
@@ -99,7 +103,7 @@ export function getDocBySlug(slug: string[]): Doc | undefined {
   return getAllDocs().find((doc) => doc.href === href);
 }
 
-/** Visible sidebar groups, in order, with their documents. */
+/** Visible sidebar groups with their documents: Start first, the rest by label. */
 export function getGroups(): Group[] {
   const docs = getAllDocs();
   return GROUPS.filter(({ key }) => !HIDDEN_GROUPS.has(key))
@@ -108,7 +112,14 @@ export function getGroups(): Group[] {
       label,
       docs: docs.filter((d) => d.group === key),
     }))
-    .filter((group) => group.docs.length > 0);
+    .filter((group) => group.docs.length > 0)
+    .sort((a, b) =>
+      a.key === "start"
+        ? -1
+        : b.key === "start"
+          ? 1
+          : a.label.localeCompare(b.label, "en", { sensitivity: "base" }),
+    );
 }
 
 export function getHiddenCount() {

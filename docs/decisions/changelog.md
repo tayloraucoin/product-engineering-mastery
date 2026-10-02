@@ -120,6 +120,10 @@ Installed: Claude Code 2.1.232 (`claude --version`), macOS, this machine. Source
 - **Observed live.** With the hook registered, `npm --version` in this session returned `bash-guard [package-manager]: This repo uses Yarn 4; npm is blocked. Run: yarn --version`. This also observes V6 (the project-directory variable resolves in a hook command) and V1's exit-2 path for PreToolUse (stderr reaches the agent).
 - **Messages that name a later step.** The results and as-built denials name `yarn contract:run` and `yarn contract:record`, which land in J5. The commit-on-main denial names `git switch -c agent/<work-id>` until `contract:init` exists.
 
+### Docs app sidebar (owner's request, outside the primer)
+
+- The sidebar lists everything alphabetically. Groups come in label order after Start. Inside a group, the folder's landing page is first, then documents by the title shown, then sub-folders by name. Start keeps its reading order: the map, the contract, the listing. Before, groups followed a fixed list and documents followed their file paths, which did not match the titles on screen.
+
 ## 2026-10-01 — Directory map, file by file (owner requested)
 
 - **`docs/_generated/directory-map.md`** now gives every file under `docs/` its one line, its frontmatter `description`, grouped by folder. Each folder carries its purpose, taken from the Layers table in `docs/index.md` or from the folder's own `index.md`. Rows link to the files. It is generated, never hand-written, so each definition lives once, in the file's own frontmatter. `yarn directory-map --check` fails CI when the map is stale.

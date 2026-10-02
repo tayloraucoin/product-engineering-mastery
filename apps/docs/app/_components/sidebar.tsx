@@ -17,7 +17,15 @@ export function Sidebar() {
   const groups: NavGroup[] = getGroups().map((group) => ({
     key: group.key,
     label: group.label,
-    items: toTree(group.docs),
+    // Start keeps its own reading order: the map, the contract, the listing.
+    items:
+      group.key === "start"
+        ? group.docs.map((doc) => ({
+            kind: "doc" as const,
+            href: doc.href,
+            title: doc.navTitle,
+          }))
+        : toTree(group.docs),
   }));
   const hidden = getHiddenCount();
 
@@ -41,8 +49,39 @@ export function Sidebar() {
   );
 }
 
+const byName = (a: string, b: string) =>
+  a.localeCompare(b, "en", { numeric: true, sensitivity: "base" });
+
+/**
+ * Orders one level the way a reader scans it: the folder's landing page, then
+ * documents by the title shown, then sub-folders by name.
+ */
+function sortLevel(items: NavItem[], landing: Set<string>): NavItem[] {
+  const rank = (item: NavItem) =>
+    item.kind === "folder" ? 2 : landing.has(item.href) ? 0 : 1;
+  return items
+    .map((item) =>
+      item.kind === "folder"
+        ? { ...item, items: sortLevel(item.items, landing) }
+        : item,
+    )
+    .sort((a, b) =>
+      rank(a) !== rank(b)
+        ? rank(a) - rank(b)
+        : byName(
+            a.kind === "folder" ? a.name : a.title,
+            b.kind === "folder" ? b.name : b.title,
+          ),
+    );
+}
+
 /** Nests a group's documents by their folder path (`templates/refs` → templates → refs). */
 function toTree(docs: Doc[]): NavItem[] {
+  const landing = new Set(
+    docs
+      .filter((doc) => doc.relativePath.endsWith("/index.md"))
+      .map((doc) => doc.href),
+  );
   const root: NavItem[] = [];
   for (const doc of docs) {
     let level = root;
@@ -59,5 +98,5 @@ function toTree(docs: Doc[]): NavItem[] {
     }
     level.push({ kind: "doc", href: doc.href, title: doc.navTitle });
   }
-  return root;
+  return sortLevel(root, landing);
 }
