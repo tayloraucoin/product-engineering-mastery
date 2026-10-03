@@ -13,7 +13,7 @@ load_when: ui-build, spec
 
 # Workflow — tools per loop
 
-Lifted from Plumb ruling 01 ([`01-tools-per-loop-plumb.md`](../research/01-tools-per-loop-plumb.md), evidence as of 2026-09-30) with product references generalized; prompting checklist from SC and R09 §6. Tool facts are dated; re-verify before relying on a price or capability.
+Lifted from Plumb ruling 01 ([`tools-per-loop.md`](../research/design-tools/tools-per-loop.md), evidence as of 2026-09-30) with product references generalized; prompting checklist from SC and R09 §6. Tool facts are dated; re-verify before relying on a price or capability.
 
 ## The ruling
 

@@ -31,20 +31,22 @@ Chosen: option 2 for names, with a filing rule that never touches a body, becaus
 
 ### Names
 
-| Kind                                        | Pattern                                                                                           | Example                                      |
-| ------------------------------------------- | ------------------------------------------------------------------------------------------------- | -------------------------------------------- |
-| Every path                                  | lowercase ASCII, kebab-case, `.md`                                                                | `codebase-conventions.md`                    |
-| Conventional upper-case files (closed list) | `README`, `AGENTS`, `CLAUDE`, `CHANGELOG`, `SKILL`, `DESIGN`, `REGISTRY`, `PROVENANCE`, `LICENSE` | `.claude/skills/REGISTRY.md`                 |
-| Folder landing page                         | `index.md` (never `README.md` inside `docs/`)                                                     | `docs/roles/product-design/index.md`         |
-| Role                                        | `<name>-<role-title>.md`, name first                                                              | `plumb-design-director.md`                   |
-| Role extension                              | `<name>-ext-<mode>.md`, beside its role                                                           | `cantor-ext-human-hand-mode.md`              |
-| Template                                    | `<artifact>.template.md`                                                                          | `brief.template.md`                          |
-| Research archive                            | `<thread>-<slug>[-<author-role>].md`; thread is `NN`, `NNa`, `pa`, `pl`                           | `01-tools-per-loop-plumb.md`                 |
-| Primer prompt                               | `<NN or pX>-<slug>.md`                                                                            | `pc-demo-app-and-skills.md`                  |
-| Decision record                             | `NNNN-<slug>.md`, never renumbered                                                                | `0006-file-naming-and-filing.md`             |
-| Generated or meta                           | leading underscore                                                                                | `docs/_generated/`, `docs/references/_meta/` |
+| Kind                                        | Pattern                                                                                            | Example                                      |
+| ------------------------------------------- | -------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| Every path                                  | lowercase ASCII, kebab-case, `.md`                                                                 | `codebase-conventions.md`                    |
+| Conventional upper-case files (closed list) | `README`, `AGENTS`, `CLAUDE`, `CHANGELOG`, `SKILL`, `DESIGN`, `REGISTRY`, `PROVENANCE`, `LICENSE`  | `.claude/skills/REGISTRY.md`                 |
+| Folder landing page                         | `README.md` in every folder under `docs/`; `docs/index.md` is the one exception, the agent map     | `docs/roles/product-design/README.md`        |
+| Role                                        | `<name>-<role-title>.md`, name first                                                               | `plumb-design-director.md`                   |
+| Role extension                              | `<name>-ext-<mode>.md`, beside its role                                                            | `cantor-ext-human-hand-mode.md`              |
+| Template                                    | `<artifact>.template.md`                                                                           | `brief.template.md`                          |
+| Research output                             | `<topic>/<slug>.md`; the thread and author live in frontmatter, never in the name                  | `design-tools/tools-per-loop.md`             |
+| Primer prompt                               | `phases/<slug>.md` or `threads/<slug>.md`; the phase id lives in frontmatter and the prompts table | `phases/demo-app-and-skills.md`              |
+| Decision record                             | `NNNN-<slug>.md`, never renumbered                                                                 | `0006-file-naming-and-filing.md`             |
+| Generated or meta                           | leading underscore                                                                                 | `docs/_generated/`, `docs/references/_meta/` |
 
 The human title, em dashes and all, lives in `title`. No emoji anywhere in a path.
+
+**Amended 2026-10-02 (owner's instruction; changelog, PR-12).** Landing pages are `README.md`, because GitHub renders that name in a folder view and the docs app routes it to the folder; `docs/index.md` keeps its name because it is the agent map, cited everywhere and loaded in every session. Numbers and thread prefixes left file names: a name says what a file is, and the thread id, phase id and author already sit in frontmatter. Research outputs sit in topic folders. The first-filing names are kept in `docs/_generated/filing-manifest.json` under `previously`.
 
 ### Frontmatter
 

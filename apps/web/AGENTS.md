@@ -4,16 +4,16 @@ App-local rules only. The root `AGENTS.md` and `docs/index.md` govern everything
 
 ## What this app is
 
-A small, deliberately generic records product that exists to prove the toolkit: a dense table with sort and filter, a record detail with a diffable document, a form with validation, settings, a destructive-action dialog, and a three-beat onboarding (`docs/prompts/pc-demo-app-and-skills.md`). Built in Phase 3; today it is the scaffold's single page. It is never a mock of a real client, and it holds no real customer data.
+A small, deliberately generic records product that exists to prove the toolkit: a dense table with sort and filter, a record detail with a diffable document, a form with validation, settings, a destructive-action dialog, and a three-beat onboarding (`docs/prompts/phases/demo-app-and-skills.md`). Built in Phase 3; today it is the scaffold's single page. It is never a mock of a real client, and it holds no real customer data.
 
 ## The filled examples live here
 
-Every template in `docs/` has its filled example in this app, so the pair sits side by side in the docs app:
+Every template in `docs/` has its filled example for this app, so the pair sits side by side in the docs app:
 
 | Template                                                | Filled example                                                                                                                    |
 | ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | `docs/design/templates/*.template.md`                   | `apps/web/docs/design/` (`DESIGN.md`, `tokens.md`, `components.md`, `anti-patterns.md`, `states.md`, `coverage-gaps.md`, `refs/`) |
-| `docs/product/brief.template.md`, `package.template.md` | `apps/web/specs/_example/`                                                                                                        |
+| `docs/product/brief.template.md`, `package.template.md` | `specs/web/epics/<EPIC>-<slug>/brief.md`; a ticket's contract in `specs/web/one-offs/` or the epic's `tickets/` (A4 layout)       |
 
 For UI work in this app, the design layer is `docs/design/canon.md` plus `apps/web/docs/design/`. Until Phase 3 writes the latter, the canon alone governs.
 

@@ -10,7 +10,7 @@
  */
 
 import { existsSync, readdirSync } from "node:fs";
-import path from "node:path";
+import path, { matchesGlob } from "node:path";
 
 import {
   listFiles,
@@ -55,7 +55,7 @@ function parseCaps(): {
     if (cells.length < 5 || !/^[\d,]+$/.test(cells[3] ?? "")) continue;
     const parts = new Map<string, number>();
     for (const m of cells[2]!.matchAll(
-      /([a-z`/][a-z`/ ,()'-]*?)\s+([\d,]{3,})/gi,
+      /([a-z`/][a-z`/. ,()'-]*?)\s+([\d,]{3,})/gi,
     )) {
       parts.set(
         m[1]!.replace(/[`]/g, "").trim().toLowerCase(),
@@ -169,15 +169,71 @@ const uiRule = tokensOf(".claude/rules/ui.md");
 const design = canon + sum(productLayer);
 const briefAndPackage = sum(example);
 const skillBody = largest(skillBodies);
-const nonUiRules =
-  tokensOf(".claude/rules/ts.md") +
-  tokensOf(".claude/rules/testing.md") +
-  largest(apps.map((app) => `${app.path}/AGENTS.md`));
+/**
+ * Path rules load per file, so the cost is the heaviest set one file can fire,
+ * not the sum of every rule. One probe path per glob family; add one when a
+ * new rule's globs match none of these.
+ */
+const PROBES = [
+  "apps/web/lib/records.test.ts",
+  "apps/web/app/page.tsx",
+  "apps/web/package.json",
+  "turbo.json",
+  ".yarnrc.yml",
+  "docs/design/canon.md",
+  `${toolkit.specsRoot}/web/one-offs/WEB-1-filter/contract.md`,
+  "packages/ui/src/button.tsx",
+];
+const rules = listIn(
+  ".claude/rules",
+  (n) => n.endsWith(".md") && n !== "ui.md",
+);
+const globsOf = (rel: string) => {
+  const paths = readMarkdown(rel).frontmatter?.paths;
+  return Array.isArray(paths)
+    ? paths.filter((p): p is string => typeof p === "string")
+    : [];
+};
+const pathRules = Math.max(
+  0,
+  ...PROBES.map((probe) =>
+    rules
+      .filter((rel) => globsOf(rel).some((glob) => matchesGlob(probe, glob)))
+      .reduce((s, rel) => s + tokensOf(rel), 0),
+  ),
+);
+const nestedAgents = largest(apps.map((app) => `${app.path}/AGENTS.md`));
+const nonUiRules = pathRules + nestedAgents;
+
+/** The largest contract under the specs root, with the one surface file it cites. */
+function contractAndCitedSpec(): string[] {
+  if (!exists(toolkit.specsRoot)) return [];
+  const contracts = listFiles(toolkit.specsRoot).filter((f) =>
+    f.endsWith("/contract.md"),
+  );
+  return heaviest(
+    contracts.map((contract) => {
+      const cited = readMarkdown(contract).frontmatter?.cites;
+      const surface = Array.isArray(cited)
+        ? cited.map(String).find((c) => c.endsWith(".md") && exists(c))
+        : undefined;
+      return surface ? [contract, surface] : [contract];
+    }),
+  );
+}
+const contractSpec = contractAndCitedSpec();
+const contractAndSpec = sum(contractSpec);
+const surfaces = exists(toolkit.specsRoot)
+  ? listFiles(toolkit.specsRoot).filter((f) => /\/ux\/.+\.md$/.test(f))
+  : [];
+const citedSurface = largest(surfaces);
+const evaluatorBody = tokensOf(".claude/agents/vigil.md");
 
 const ui = rows.get("ui build");
 const nonUi = rows.get("non-ui build");
 const critic = rows.get("critic pass (forked)");
-if (!ui || !nonUi || !critic)
+const evaluator = rows.get("evaluator pass (forked)");
+if (!ui || !nonUi || !critic || !evaluator)
   throw new Error(
     "docs/index.md budget table is missing a row this script reads",
   );
@@ -211,11 +267,28 @@ line(
   always + design + uiRule + briefAndPackage + skillBody,
   ui.cap,
 );
-line("non-UI build", always + nonUiRules + briefAndPackage, nonUi.cap);
 line(
-  "critic pass (rubric + canon §2 + brief/package)",
-  criticCanon() + briefAndPackage,
+  "path rules and nested AGENTS.md (heaviest file)",
+  nonUiRules,
+  nonUi.parts.get("path rules and nested agents.md"),
+);
+line(
+  "contract and cited spec (largest)",
+  contractAndSpec,
+  nonUi.parts.get("contract and cited spec"),
+  contractSpec.length ? "" : "(no contract yet)",
+);
+line("non-UI build", always + nonUiRules + contractAndSpec, nonUi.cap);
+line(
+  "critic pass (rubric + canon §2 + cited surface)",
+  criticCanon() + citedSurface,
   critic.cap,
+);
+line(
+  "evaluator pass (vigil + contract and spec + evidence index)",
+  evaluatorBody + contractAndSpec,
+  evaluator.cap,
+  evaluatorBody ? "" : "(vigil not generated yet)",
 );
 
 // The index allots a product's own design layer about 1,700 of the design-layer cap.

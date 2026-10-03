@@ -22,9 +22,9 @@ One entry for the whole thread, added to step by step. Baseline before any chang
 ### Filed (Phase 1)
 
 - **Intake.** The inputs arrived in `docs/_files_dump/` and are committed as received in `3e58eae`, with the engineering role files from the eng-roles thread. Every move below is in `docs/_generated/filing-manifest.json`, which now carries a `source_commit` per entry; bodies are verified by hash.
-- **Archived, byte for byte:** the PJ report ([`pj-engineering-layer-lorimer.md`](../research/pj-engineering-layer-lorimer.md)) and the owner's conventions with amendments A4 to A12 ([`pj-conventions-locked.md`](../research/pj-conventions-locked.md)). `docs/research/` is already ignored by Prettier as a folder, so neither needed its own ignore line.
-- **Prompts:** the build prompt ([`pj-engineering-layer.md`](../prompts/pj-engineering-layer.md)), whose "Amendments in force" blockquote now carries A1 to A3 and the pointer to A4 to A12 (its only body change), and the primer ([`pj-primer.md`](../prompts/pj-primer.md)), frontmatter prepended. The primer named no home for itself; `docs/prompts/` is judgment. `docs/prompts/pj-*.md` is added to `.prettierignore`.
-- **Mason.** The revised role arrived as a thread output holding research, deltas, the role file in a fence, and a diff. The output is archived whole at [`eng-roles-mason-role-revision.md`](../research/eng-roles-mason-role-revision.md) (authoring role not recorded in the source, so `role` is empty). Its Part 3 fence, byte for byte, replaces [`mason-cto-principal-dev.md`](../roles/engineering/mason-cto-principal-dev.md); the file name is unchanged, and the status moves from `adopted` to `draft` as authored.
+- **Archived, byte for byte:** the PJ report ([`pj-engineering-layer-lorimer.md`](../research/engineering/engineering-layer-report.md)) and the owner's conventions with amendments A4 to A12 ([`pj-conventions-locked.md`](../research/engineering/conventions-and-amendments.md)). `docs/research/` is already ignored by Prettier as a folder, so neither needed its own ignore line.
+- **Prompts:** the build prompt ([`pj-engineering-layer.md`](../prompts/phases/engineering-layer.md)), whose "Amendments in force" blockquote now carries A1 to A3 and the pointer to A4 to A12 (its only body change), and the primer ([`pj-primer.md`](../prompts/phases/engineering-layer-primer.md)), frontmatter prepended. The primer named no home for itself; `docs/prompts/` is judgment. `docs/prompts/pj-*.md` is added to `.prettierignore`.
+- **Mason.** The revised role arrived as a thread output holding research, deltas, the role file in a fence, and a diff. The output is archived whole at [`eng-roles-mason-role-revision.md`](../research/engineering/mason-role-revision.md) (authoring role not recorded in the source, so `role` is empty). Its Part 3 fence, byte for byte, replaces [`mason-cto-principal-dev.md`](../roles/engineering/mason-cto-principal-dev.md); the file name is unchanged, and the status moves from `adopted` to `draft` as authored.
 - **Ten engineering roles added** as received (Atlas, Lorimer, Millwright, Quartermaster, Scribe, Sexton, Touchstone, Turner, Usher, Wainwright), all `draft`, none a subagent.
 - **Not filed yet:** the four workflow docs. They use the layer value `workflows`, which lands in J4 after plan-mode approval (A12). They stay in `3e58eae` and are filed from there.
 - **Optional inputs absent, skipped:** message 1 (research), message 2 (Crucible's review), and `spec-system-guide.md`. The tickets stage file (J14) will be written without the spec guide.
@@ -120,6 +120,105 @@ Installed: Claude Code 2.1.232 (`claude --version`), macOS, this machine. Source
 - **Observed live.** With the hook registered, `npm --version` in this session returned `bash-guard [package-manager]: This repo uses Yarn 4; npm is blocked. Run: yarn --version`. This also observes V6 (the project-directory variable resolves in a hook command) and V1's exit-2 path for PreToolUse (stderr reaches the agent).
 - **Messages that name a later step.** The results and as-built denials name `yarn contract:run` and `yarn contract:record`, which land in J5. The commit-on-main denial names `git switch -c agent/<work-id>` until `contract:init` exists.
 
+### J4 — spine moves, work loop, path rules, map amendments (E-01 to E-04, E-06 to E-11, E-13; plan approved 2026-10-02)
+
+- **Measured.** Always-on 3,329 → 3,374 tokens (J4 exit ≤ 3,400; the map's cap is 4,000). `AGENTS.md` 1,586 → 1,272 tokens and 64 → 55 lines; `CLAUDE.md` 238 → 301 tokens, 13 → 14 lines; `docs/index.md` 1,276 → 1,572 tokens, 78 → 77 lines. Line arithmetic for the map: Layers +2 (Engineering, Workflows), "By path" −1, "By trigger" −2, budget rows −1 +1. Path rules: `next.md` 97, `turbo.md` 101, `docs.md` 134, `specs.md` 298, `deps.md` 106, `testing.md` 175 → 277, `ui.md` 223 → 232 tokens.
+- **`AGENTS.md`.** Start-here item 5 (brief and package) is replaced by a four-line Work loop: every change is a ticket with a contract, the default ticket under half a day (J0); one-off or epic by the A12 routing rule, never by size; done is `results.json` plus `as-built.md`; `specs/<app>/ux/` is the living truth and epic tickets are judged by `vigil`. "Use yarn, never npm or pnpm", the Docs rules section, the Tooling notes section and the line-cap sentence are gone (deletion test below). The current-phase line names PJ.
+- **`CLAUDE.md`** names the five new path rules and carries the hook line (E-03, judgment): a denial message is an instruction. `vigil` joins its subagent list in J7, when it exists.
+- **`docs/index.md`.** The Layers table's "Holds" column is "What it is", in plain words (Taylor's report that the column did not say what a folder is for); Workflows and Engineering rows added (A12, E-04); precedence rung 5 is "the brief, the UX spec and the contract", with stage files at rung 2 as part of the session's instruction (Taylor's proposal); the Always line counts the subagent listing and SessionStart output (≤150, J6); the A11 research exception sits inside the Never bullet, which now also names every `README.md` under `docs/`; the budget table takes A10's non-UI (9,000) and evaluator (7,000) rows and loses the Library batch row. The UI row is unchanged until Plumb signs (held list).
+- **A4 wording (a):** `ui.md` reads the ticket's contract and the one surface it cites; `apps/web/AGENTS.md` points its filled examples at `specs/web/`.
+- **Path rules.** `next.md` (`apps/*/**`, `next.config.*`) and `turbo.md` (`turbo.json`, with the J2 `TMPDIR` finding) hold the moved tooling notes; `deps.md` (`package.json`, `.yarnrc.yml`) holds the TypeScript pin and the tech-stack-row rule; `docs.md` (`docs/**`) holds the three docs rules no lint carries; `specs.md` (`specs/**`) holds the A5 contract fields, the results and as-built rules, and the living-truth frontmatter; `testing.md` gains the evidence types and the "Test changes" rule. Each carries only `paths`.
+- **E-13.** `lint-frontmatter.ts` fails any `.claude/rules/*.md` key other than `paths`, with the fix in the message, and first proves itself on `tooling/fixtures/rules/with-description.md`, which must fail.
+- **`budget.ts`** reads the new rows. Path rules are measured as the heaviest set one file can fire (probe paths matched against each rule's globs with `path.matchesGlob`) plus the heaviest nested `AGENTS.md`: 1,139 of 1,500 today (`apps/web/lib/x.test.ts`: `ts`, `testing`, `next`, `apps/web/AGENTS.md`). The report's 1,150 estimate left out the nested file. Contract and cited spec, the cited surface and the evaluator body read 0 until J5 and J7 land, and the report says so.
+- **Over the report's per-rule allowances, accepted:** `testing.md` 277 against 250, `turbo.md` 101 against 80. Cutting the evidence-type bullet or the `TMPDIR` sentence would remove what each rule exists to say; the CI cap is the non-UI row, within.
+- **Observed, 2026-10-02, this session:** reading `apps/web/app/page.tsx` after the change loaded `apps/web/AGENTS.md`, `apps/web/CLAUDE.md` and `.claude/rules/next.md` (V-by-path, as the map predicts).
+- **Deletion test, every always-on line touched:**
+
+| Line                                                    | Verdict                                   | Named mistake if deleted                                                                                                             |
+| ------------------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Work loop: every change is a ticket with a contract     | keep                                      | the agent codes from a one-liner and declares done in prose (CC, taylor-aucoin)                                                      |
+| Work loop: routing by the A12 rule, never size          | keep                                      | small work treated as a one-off though it adds a surface (J0: 30 of 40 small items were epic tickets)                                |
+| Work loop: done is results plus as-built                | keep                                      | done declared in chat; the Stop hook catches red checks, not missing criteria                                                        |
+| Work loop: living truth; epic tickets judged by `vigil` | keep                                      | the agent edits truth files directly, or never delegates and grades itself                                                           |
+| Start-here 5, brief and package                         | deleted                                   | replaced by the work loop; a brief now belongs to an epic                                                                            |
+| "Use yarn, never npm or pnpm"                           | deleted                                   | `bash-guard` teaches it in one round-trip (observed in J3)                                                                           |
+| Docs rules: frontmatter, names                          | deleted                                   | `lint:docs` fails with the fix in the message                                                                                        |
+| Docs rules: never load research                         | deleted                                   | the map's Never tier says it, and both files are always loaded                                                                       |
+| Docs rules: blank templates; change the practice        | moved to `docs.md`                        | mistakes only on docs work; loads only there                                                                                         |
+| Byte-for-byte bodies                                    | moved to `docs.md`                        | a filed body edited in place; no check until E-46 (J10)                                                                              |
+| Tooling notes: TypeScript pin, Next, Turbo              | moved to `deps.md`, `next.md`, `turbo.md` | no mistake possible on docs, spec or tooling work                                                                                    |
+| "This file stays at or under 100 lines"                 | deleted                                   | `yarn budget` fails with the cap in the message                                                                                      |
+| `CLAUDE.md` hook line                                   | keep, judgment                            | the agent retries a denied command in another form; the classifier text seen in this session shows the pattern is real; tested in AB |
+| Map: "What it is" column                                | keep                                      | a person cannot tell from "Holds" what a folder is for; +296 tokens on the map, inside the cap                                       |
+
+### Docs regrouped for people (owner's instruction, 2026-10-02; PR-12)
+
+Taylor asked for a directory structure a person can follow: no numbers or thread prefixes in names, research by topic, a landing page in every folder, workflows as their own folder, and the thin `metrics/` and `evals/` folders folded together. Done on `agent/PJ`, outside the primer's steps, before J4.
+
+- **Every folder under `docs/` has a `README.md`**: a hand-written top (what this is, come here when, start with) and a generated "In this folder" table that `yarn directory-map` rewrites and `--check` enforces. The five authored `index.md` landing pages became `README.md`; `docs/index.md` keeps its name, because it is the agent map. GitHub renders a README in its folder view, which an `index.md` never gets. [`docs/README.md`](../README.md) is the human front door, organised by the question a person arrives with; agents still start from `index.md`.
+- **Names say what a file is.** The thread id, phase id and author were already in frontmatter, so `01-tools-per-loop-plumb.md` became `design-tools/tools-per-loop.md` and `pc-demo-app-and-skills.md` became `phases/demo-app-and-skills.md`. Decision records keep their numbers: the number is how a record is cited. Record 0006's Names table is amended in place.
+- **`research/` stays `research/`**, in five topic folders (`courses`, `design-tools`, `engineering`, `process`, `toolkit`), and is now listed in the docs app sidebar. Taylor's framing: a bookshelf to pull from when the context calls for it, not an archive. The Never tier for agents is unchanged; A11's labelled exception lands in J4. Open: every research file still carries `status: archived`, which the lint requires and the docs app shows as a badge. If that word is wrong too, it is a one-line lint change plus a frontmatter pass; held for Taylor.
+- **`measurement/`** holds `metrics/` and `evals/`; their files' `layer` is `measurement`, and the map's two rows are one (`docs/index.md` is 78 lines). `docs/prompts/` has `shared-context.md` at the top, `phases/` and `threads/` below. `docs/workflows/` holds the four workflow docs from `3e58eae`, byte for byte (`README.md`, `one-off.md`, `epic.md`, `glossary.md`); the layer value `workflows` is in the lint. The "first step" prompt Taylor asked about is the prompt builder, which J14 writes there.
+- **References rewritten in 30 live files** (108 links and path mentions), by script, resolving each link from the file's own location. Byte-preserved bodies (research, roles, the verbatim prompts, the variant-testing runbook) were moved, never edited: 30 of them verified by hash against the manifest after the move, 0 mismatched. Their prose still names the old paths; the manifest's `previously` field and the table below trace them. Live files that came through the dump (`docs/index.md`, canon, ledger, conflicts, the product templates) had only paths changed, per PR-05, on this instruction.
+- **Docs app:** README landing pages route to their folder; groups Measurement and Workflows replace Metrics and Evals; Research is listed. **Lint:** README is a conventional upper-case name; `index.md` is refused anywhere but the root; layers `measurement` and `workflows` added, `metrics` and `evals` removed. **Prettier:** landing pages and the verbatim files are ignored by path.
+- **Not done here, on purpose:** `mental-models.md` (one page, at most seven models) waits for J14, when the contract loop and living truth it would describe exist. Usage-grouped sections in the sidebar are proposed in the J4 plan, not built.
+- **Rename map** (paths under `docs/`):
+
+| Was                                                             | Is                                                      |
+| --------------------------------------------------------------- | ------------------------------------------------------- |
+| `design/index.md`                                               | `design/README.md`                                      |
+| `design/templates/refs/index.md`                                | `design/templates/refs/README.md`                       |
+| `evals/failure-modes.template.md`                               | `measurement/evals/failure-modes.template.md`           |
+| `evals/judge.template.md`                                       | `measurement/evals/judge.template.md`                   |
+| `evals/surface.template.md`                                     | `measurement/evals/surface.template.md`                 |
+| `metrics/definitions.template.md`                               | `measurement/metrics/definitions.template.md`           |
+| `metrics/events.template.md`                                    | `measurement/metrics/events.template.md`                |
+| `metrics/experiment.template.md`                                | `measurement/metrics/experiment.template.md`            |
+| `metrics/readout.template.md`                                   | `measurement/metrics/readout.template.md`               |
+| `product/index.md`                                              | `product/README.md`                                     |
+| `prompts/00-shared-context.md`                                  | `prompts/shared-context.md`                             |
+| `prompts/index.md`                                              | `prompts/README.md`                                     |
+| `prompts/pa-consolidation-and-the-map.md`                       | `prompts/phases/consolidation-and-the-map.md`           |
+| `prompts/pb-practice-layer-and-docs-app.md`                     | `prompts/phases/practice-layer-and-docs-app.md`         |
+| `prompts/pc-demo-app-and-skills.md`                             | `prompts/phases/demo-app-and-skills.md`                 |
+| `prompts/pd-library-batches.md`                                 | `prompts/phases/library-batches.md`                     |
+| `prompts/pe-port-dry-run.md`                                    | `prompts/phases/port-dry-run.md`                        |
+| `prompts/pf-agent-context-architecture.md`                      | `prompts/threads/agent-context-architecture.md`         |
+| `prompts/pg-measurement-layer.md`                               | `prompts/threads/measurement-layer.md`                  |
+| `prompts/ph-product-operating-artifacts.md`                     | `prompts/threads/product-operating-artifacts.md`        |
+| `prompts/pi-ai-evals.md`                                        | `prompts/threads/ai-evals.md`                           |
+| `prompts/pj-engineering-layer.md`                               | `prompts/phases/engineering-layer.md`                   |
+| `prompts/pj-primer.md`                                          | `prompts/phases/engineering-layer-primer.md`            |
+| `references/index.md`                                           | `references/README.md`                                  |
+| `research/00-shared-context-original.md`                        | `research/toolkit/shared-context-original.md`           |
+| `research/01-tools-per-loop-plumb.md`                           | `research/design-tools/tools-per-loop.md`               |
+| `research/02-framer-marketing-sites-vitrine.md`                 | `research/design-tools/framer-marketing-sites.md`       |
+| `research/03-staging-branches-customer-testing-tally.md`        | `research/process/staging-branches-customer-testing.md` |
+| `research/04-design-skills-adoption-plumb.md`                   | `research/design-tools/design-skills-adoption.md`       |
+| `research/05-shape-up-compass.md`                               | `research/process/shape-up.md`                          |
+| `research/06a-shift-nudge-free-layer-alembic.md`                | `research/courses/shift-nudge-free-layer.md`            |
+| `research/06b-shift-nudge-curriculum-vesper.md`                 | `research/courses/shift-nudge-curriculum.md`            |
+| `research/06c-sn-ui-checklist-shift-nudge.md`                   | `research/courses/shift-nudge-ui-checklist.md`          |
+| `research/07a-kowalski-motion-inventory-alembic.md`             | `research/courses/kowalski-motion-inventory.md`         |
+| `research/07b-motion-skill-vesper.md`                           | `research/courses/motion-skill.md`                      |
+| `research/07c-motion-skill-files-vesper/SKILL.md`               | `research/courses/motion-skill-files/SKILL.md`          |
+| `research/08-refactoring-ui-review-vesper.md`                   | `research/courses/refactoring-ui-review.md`             |
+| `research/09-design-plus-code-review-vesper.md`                 | `research/courses/design-plus-code-review.md`           |
+| `research/10-product-talk-academy-review-envoy.md`              | `research/courses/product-talk-academy-review.md`       |
+| `research/13-laws-of-ux-reference-layer-plumb.md`               | `research/toolkit/laws-of-ux-reference-layer.md`        |
+| `research/14-toolkit-map-plumb.md`                              | `research/toolkit/toolkit-map.md`                       |
+| `research/eng-roles-mason-role-revision.md`                     | `research/engineering/mason-role-revision.md`           |
+| `research/pa-conflicts-unresolved-alembic.md`                   | `research/toolkit/conflicts-unresolved.md`              |
+| `research/pa-design-candidates-alembic.md`                      | `research/toolkit/design-candidates.md`                 |
+| `research/pa-filing-plan-alembic.md`                            | `research/toolkit/filing-plan.md`                       |
+| `research/pa-phase-2-checklist-plumb.md`                        | `research/toolkit/phase-2-checklist.md`                 |
+| `research/pj-conventions-locked.md`                             | `research/engineering/conventions-and-amendments.md`    |
+| `research/pj-engineering-layer-lorimer.md`                      | `research/engineering/engineering-layer-report.md`      |
+| `research/pl-toolkit-plan.md`                                   | `research/toolkit/toolkit-plan.md`                      |
+| `roles/product-design/index.md`                                 | `roles/product-design/README.md`                        |
+| `runbooks/variant-testing-runbook.md`                           | `runbooks/variant-testing.md`                           |
+| `research/07c-motion-skill-files-vesper/` (the bundle, 9 files) | `research/courses/motion-skill-files/`                  |
+
 ### Docs app sidebar (owner's request, outside the primer)
 
 - The sidebar lists everything alphabetically. Groups come in label order after Start. Inside a group, the folder's landing page is first, then documents by the title shown, then sub-folders by name. Start keeps its reading order: the map, the contract, the listing. Before, groups followed a fixed list and documents followed their file paths, which did not match the titles on screen.
@@ -147,7 +246,7 @@ Installed: Claude Code 2.1.232 (`claude --version`), macOS, this machine. Source
 
 ## 2026-10-01 — Phase 2: the practice layer (P-B), practice v0.1
 
-Written by Plumb in Claude Code from the Phase 1 outputs. The checklist it followed is archived at [`pa-phase-2-checklist-plumb.md`](../research/pa-phase-2-checklist-plumb.md); every item is done unless listed under "Open" below.
+Written by Plumb in Claude Code from the Phase 1 outputs. The checklist it followed is archived at [`pa-phase-2-checklist-plumb.md`](../research/toolkit/phase-2-checklist.md); every item is done unless listed under "Open" below.
 
 ### Filed
 

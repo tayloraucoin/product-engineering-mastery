@@ -58,7 +58,7 @@ load_when: spec, discovery
     - One extension of up to 2 days (it eats cool-down) is allowed only if every remaining scope is downhill and a must-have, and only once per bet.
     - Otherwise the bet is killed, a one-paragraph lesson is logged, and it returns only as a newly framed pitch.
 11. **Cool-down, in this order:**
-    - (a) A written 30-minute readout of flags and replays, using `docs/metrics/readout.template.md`.
+    - (a) A written 30-minute readout of flags and replays, using `docs/measurement/metrics/readout.template.md`.
     - (b) Harness maintenance: update `AGENTS.md`, `DESIGN.md`, `anti-patterns.md` and the critic rubric from every failure this cycle.
     - (c) Non-critical bugs and small reactive items.
     - (d) The technical shaping session.

@@ -22,10 +22,10 @@ load_when: metrics
 
 - [ ] Package linked: `specs/[FILL]/package.md`
 - [ ] Critic pass clean: round `[FILL]`, report `[FILL: link]`
-- [ ] Flag `[FILL: key]` created; description carries the rollback trigger (`variant-testing-runbook.md` §9)
+- [ ] Flag `[FILL: key]` created; description carries the rollback trigger (`variant-testing.md` §9)
 - [ ] Every event in the package's instrumentation table verified in staging with seeded data (runbook step 4)
 - [ ] Replay masking verified on one recording; no customer content visible
-- [ ] Pre-registered rule dated before the flag flips: [`experiment.md`](../metrics/experiment.template.md)
+- [ ] Pre-registered rule dated before the flag flips: [`experiment.md`](../measurement/metrics/experiment.template.md)
 
 ## Rollout
 
@@ -41,6 +41,6 @@ load_when: metrics
 
 ## Close
 
-- [ ] Readout written ([`readout.template.md`](../metrics/readout.template.md)); outcome recorded against the pre-registered rule
+- [ ] Readout written ([`readout.template.md`](../measurement/metrics/readout.template.md)); outcome recorded against the pre-registered rule
 - [ ] Ship: flag at 100%, then flag and dead code removed within 2 weeks. Kill: flag off, code removed. Iterate: new package, flag `-v2`.
 - [ ] Changelog entry in the product's `CHANGELOG.md`

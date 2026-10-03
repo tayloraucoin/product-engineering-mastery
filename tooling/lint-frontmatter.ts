@@ -19,7 +19,11 @@ if (loadToolkit().tier !== "starter") {
 
 const DOCS = "docs";
 
-/** CF-16 base enum, plus `engineering` (changelog 2026-10-01). */
+/**
+ * One value per top-level folder under docs/. CF-16's enum, plus `engineering`
+ * (changelog 2026-10-01), `measurement` (metrics and evals, 2026-10-02) and
+ * `workflows` (A12).
+ */
 const LAYERS = [
   "decisions",
   "roles",
@@ -28,10 +32,10 @@ const LAYERS = [
   "references",
   "prompts",
   "research",
-  "metrics",
-  "evals",
+  "measurement",
   "runbooks",
   "engineering",
+  "workflows",
 ] as const;
 
 const STATUSES = [
@@ -69,6 +73,7 @@ const LAW_KEYS = ["family", "laws", "budget"];
 
 const DESCRIPTION_MAX = 400;
 const UPPERCASE_STEMS = [
+  "README",
   "DESIGN",
   "SKILL",
   "PROVENANCE",
@@ -105,8 +110,11 @@ function lintName(file: string) {
       `upper-case name "${name}" is not on the conventional list (record 0006)`,
     );
   }
-  if (name === "README.md")
-    fail(file, "folder landing pages are index.md inside docs/ (CF-05)");
+  if (name === "index.md" && file !== "docs/index.md")
+    fail(
+      file,
+      "folder landing pages are README.md inside docs/ (record 0006, amended 2026-10-02); docs/index.md is the one exception",
+    );
 }
 
 function isEmpty(value: unknown) {
@@ -147,7 +155,8 @@ function lintFrontmatter(file: string, fm: Frontmatter) {
   ) {
     fail(file, `status "${status}" is not one of ${STATUSES.join(", ")}`);
   }
-  if (layer === "research" && status !== "archived") {
+  const isLanding = path.posix.basename(file) === "README.md";
+  if (layer === "research" && status !== "archived" && !isLanding) {
     fail(file, `research files are status: archived (plan §2.6)`);
   }
   if (typeof description === "string") {
@@ -192,7 +201,7 @@ function lintFrontmatter(file: string, fm: Frontmatter) {
   const isReferenceSource =
     file.startsWith("docs/references/") &&
     !file.startsWith("docs/references/_meta/") &&
-    path.posix.basename(file) !== "index.md";
+    !isLanding;
   if (isReferenceSource) {
     for (const key of REFERENCE_KEYS)
       if (!(key in fm)) fail(file, `references add "${key}" (CF-16)`);
@@ -216,6 +225,46 @@ function lintLawBody(file: string, body: string) {
       "law files have both an Example and a Counter-example section (CF-49)",
     );
   }
+}
+
+/**
+ * Path rules (E-13): `.claude/rules/*.md` may carry only `paths`, the one key
+ * Claude Code reads (verified against the memory docs, 2026-10-02). Any other
+ * key implies loading that never happens.
+ */
+function lintRule(file: string): string | null {
+  const md = readMarkdown(file);
+  if (md.rawFrontmatter === null)
+    return `${file}: no frontmatter; a rule opens with a paths list`;
+  if (md.frontmatterError)
+    return `${file}: frontmatter is not valid YAML: ${md.frontmatterError}`;
+  const keys = Object.keys(md.frontmatter ?? {});
+  const extra = keys.filter((key) => key !== "paths");
+  if (extra.length > 0)
+    return (
+      `${file}: rules carry only \`paths\`; Claude Code reads nothing else. ` +
+      `Move ${extra.map((k) => `"${k}"`).join(", ")} into the body, or delete it.`
+    );
+  const paths = md.frontmatter?.paths;
+  if (
+    !Array.isArray(paths) ||
+    paths.length === 0 ||
+    !paths.every((p) => typeof p === "string")
+  )
+    return `${file}: paths must be a non-empty list of globs`;
+  return null;
+}
+
+// The fixture must fail, or the rule lint is not checking anything.
+const RULE_FIXTURE = "tooling/fixtures/rules/with-description.md";
+if (lintRule(RULE_FIXTURE) === null)
+  fail(
+    RULE_FIXTURE,
+    "the fixture with a description key passed; the rule lint is broken",
+  );
+for (const file of listMarkdown(".claude/rules")) {
+  const problem = lintRule(file);
+  if (problem) errors.push(problem);
 }
 
 // docs/_generated/ is written by tooling and never loaded (docs/index.md); it is exempt.
@@ -244,4 +293,6 @@ if (errors.length > 0) {
   );
   process.exit(1);
 }
-console.log(`lint:docs — ${files.length} files, names and frontmatter clean.`);
+console.log(
+  `lint:docs — ${files.length} files, names and frontmatter clean; ${listMarkdown(".claude/rules").length} path rules carry only paths.`,
+);
