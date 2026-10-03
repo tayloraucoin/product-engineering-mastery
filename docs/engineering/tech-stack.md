@@ -41,14 +41,14 @@ Next.js, React, and TypeScript are pinned exactly because a minor version of eac
 
 ## Deliberately absent
 
-None of these exist yet. Each arrives with its first real consumer and a decision entry. The Synapse and Conscious Connections repos are the reference for how each is built here.
+None of these exist yet. Every row but Tests is part of the default stack ([record 0010](../decisions/records/0010-starter-ships-default-stack.md)), and the ticket that lands one deletes its row and moves its pins into the tables above. The Synapse and Conscious Connections repos are the reference for how each is built here.
 
-| Concern            | House choice when it arrives                                                                             |
-| ------------------ | -------------------------------------------------------------------------------------------------------- |
-| Database           | Postgres (Supabase) + Drizzle (`drizzle-orm` 0.45.2 / `drizzle-kit` 0.31.10, exact), RLS deny-by-default |
-| Auth               | Supabase Auth, session refresh in `proxy.ts`                                                             |
-| API                | tRPC, thin procedures over services                                                                      |
-| Validation         | Zod — one schema shared by forms and procedures                                                          |
-| Env                | `@t3-oss/env-nextjs`, one `env.ts` per app                                                               |
-| Component workshop | Storybook for `@pem/ui`                                                                                  |
-| Tests              | During the item, per evidence type (ruling (h); `.claude/rules/testing.md`)                              |
+| Concern            | House choice when it arrives                                                                             | Ticket |
+| ------------------ | -------------------------------------------------------------------------------------------------------- | ------ |
+| Database           | Postgres (Supabase) + Drizzle (`drizzle-orm` 0.45.2 / `drizzle-kit` 0.31.10, exact), RLS deny-by-default | STK-9  |
+| Auth               | Supabase Auth, session refresh in `proxy.ts`                                                             | STK-12 |
+| API                | tRPC, thin procedures over services                                                                      | STK-14 |
+| Validation         | Zod — one schema shared by forms and procedures                                                          | STK-13 |
+| Env                | `@t3-oss/env-nextjs`: one `env.ts` per app and one `scripts/env.ts` per package (conventions §5)         | STK-4  |
+| Component workshop | Storybook for `@pem/ui`                                                                                  | STK-8  |
+| Tests              | During the item, per evidence type (ruling (h); `.claude/rules/testing.md`)                              | —      |

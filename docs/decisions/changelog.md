@@ -15,6 +15,16 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-03 — STK-1: the default-stack rulings on record
+
+Taylor's rulings of 2026-10-03 (the STK epic's `prompts/03-technical.md`, rulings 1 to 3), decided in its `technical.md` as D-STK-1 to D-STK-3, are written into [record 0010](records/0010-starter-ships-default-stack.md), which supersedes [record 0005](records/0005-two-packages-and-boundaries-lint.md). Record 0005 is not edited. One entry per changed rule:
+
+- **Package graph (EN-06; EN-05 superseded).** [`codebase-conventions.md`](../engineering/codebase-conventions.md) §4 states the D-STK-1 graph. Each package is marked built or by the ticket that builds it; `services` is marked undecided (routed call 3). §1 says the default stack's packages are placed by record 0010, and the "who imports this?" count still places a product's own code.
+- **Seams (EN-07).** Conventions rule 9, "No empty seams", becomes "a seam ships with a default consumer or a README that states its convention".
+- **Tier switch and readers (EN-08).** Conventions rule 6 and §5 state D-STK-3: `DATABASE_ENVIRONMENT`, the suffix grammar, the derived runtime location, and the two kinds of reader. No reader exists until STK-4. `AGENTS.md` still describes one reader per app; STK-4 amends it.
+- **"Deliberately absent" retired per module (EN-09).** [`tech-stack.md`](../engineering/tech-stack.md) names the ticket that lands each row, and that ticket deletes its row. The Env row names both readers (EN-08).
+- **Porting rule (EN-10).** "Duplicate, then remove" is recorded in record 0010 and the ledger. `README.md` and the porting line in `docs/index.md` still state the old rule. STK-3 rewrites the README with the new-project guide.
+
 ## 2026-10-02 — PJ: the engineering layer (Lorimer), in progress on `agent/PJ`
 
 One entry for the whole thread, added to step by step. Baseline before any change (`yarn budget`, commit `eef5b86`): always-on 3,320 of 4,000 tokens; `AGENTS.md` 64 lines, `CLAUDE.md` 13, `docs/index.md` 79; UI build 7,399 of 15,000; non-UI build 4,234 of 7,000; critic pass 2,043 of 6,000.

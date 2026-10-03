@@ -24,10 +24,10 @@ Distilled from the Synapse and Conscious Connections conventions and scaled down
 3. **Never suppress a boundaries error.** An upward import means the boundary is wrong.
 4. **Server Components by default.** A client component is a deliberate leaf with `"use client"` on line 1. (§6)
 5. **Tokens by name.** No colour literal outside `packages/config/tailwind/preset.css`. (§6)
-6. **One `env.ts` per app is the only `process.env` reader** — created by the first variable, not before. (§5)
+6. **Environment is read in one place per workspace:** each app's `env.ts` and each package's `scripts/env.ts`. One tier switch picks every tiered key. None exists until STK-4. (§5)
 7. **Docs are markdown under `docs/`.** The docs app renders them and owns none. (§7)
 8. **Decisions with real alternatives get a ledger line, and a record when the reason needs more than a line.** Records are immutable. (§7)
-9. **No empty seams.** A package, folder, or module is created by its first real consumer.
+9. **A seam ships with a default consumer or a README that states its convention.** (record 0010)
 10. **Verify before calling it done:** `yarn verify`.
 
 ## 1. Placement: who imports this?
@@ -35,6 +35,7 @@ Distilled from the Synapse and Conscious Connections conventions and scaled down
 - **One consumer → co-locate** it next to that consumer. A component used by one route lives in that route's `_components/`; a helper used by one app lives in that app's `lib/`.
 - **Two or more consumers → extract** to a package. A component both apps render goes to `@pem/ui`.
 - **Moving later is a one-time cost; packaging early is a cost paid on every change.** When unsure, co-locate.
+- **The default stack is the exception.** Its packages (§4) are placed by [record 0010](../decisions/records/0010-starter-ships-default-stack.md), not by this count. A product's own code is still placed by it.
 
 Worked example from this repo: `buttonVariants` is used by `apps/web` (the home page link) and `apps/docs` (the sidebar and the 404 page), so it lives in `@pem/ui`. The markdown renderer is used only by `apps/docs`, so it lives in `apps/docs/app/_components/markdown.tsx`.
 
@@ -71,31 +72,52 @@ Route-level components that grow beyond one route move up to `app/_components/`;
 
 ## 4. Packages and the import graph
 
-| Package       | Role                                                                                                       | May import     |
-| ------------- | ---------------------------------------------------------------------------------------------------------- | -------------- |
-| `@pem/config` | ESLint (code quality + boundaries), Prettier, Tailwind tokens, tsconfig bases — exposed as subpath exports | nothing        |
-| `@pem/ui`     | Shared web components                                                                                      | `config`       |
-| `apps/*`      | Deployable apps                                                                                            | `config`, `ui` |
+The default stack ([record 0010](../decisions/records/0010-starter-ships-default-stack.md)). Layer order, low → high:
 
-Layer order, low → high: `config` → `ui` → `apps`. Every edge not in this table is disallowed by default in `packages/config/eslint/boundaries.js`.
+`config → constants, env, brand, observability → validators → db → auth → email, ai → services → api → ui → apps`
+
+A package imports only packages below it, and only along the edges in `packages/config/eslint/boundaries.js`. Every edge not listed there is disallowed. A package that is not built yet has no edges; the ticket that builds it adds them and turns its row to built.
+
+| Package              | Role                                                                                                       | May import        | Status                                                            |
+| -------------------- | ---------------------------------------------------------------------------------------------------------- | ----------------- | ----------------------------------------------------------------- |
+| `@pem/config`        | ESLint (code quality + boundaries), Prettier, Tailwind tokens, tsconfig bases — exposed as subpath exports | nothing           | built                                                             |
+| `@pem/constants`     | Shared constants                                                                                           | set by its ticket | STK-5                                                             |
+| `@pem/env`           | The pure per-tier picker (§5)                                                                              | set by its ticket | STK-4                                                             |
+| `@pem/brand`         | The brand source                                                                                           | set by its ticket | STK-7                                                             |
+| `@pem/observability` | Logger and error reporter                                                                                  | set by its ticket | STK-5                                                             |
+| `@pem/validators`    | Shared schemas                                                                                             | set by its ticket | STK-13                                                            |
+| `@pem/db`            | Schema, migrations, policies                                                                               | set by its ticket | STK-9                                                             |
+| `@pem/auth`          | Auth clients and the request seam                                                                          | set by its ticket | STK-12                                                            |
+| `@pem/email`         | Email sending and the default template                                                                     | set by its ticket | STK-15                                                            |
+| `@pem/ai`            | The AI layer                                                                                               | set by its ticket | STK-17                                                            |
+| `@pem/services`      | Server logic called by the API layer                                                                       | set by its ticket | undecided: a package, or folders inside `api` (STK routed call 3) |
+| `@pem/api`           | Transport only                                                                                             | set by its ticket | STK-14                                                            |
+| `@pem/ui`            | Shared web components                                                                                      | `config`          | built                                                             |
+| `apps/*`             | Deployable apps                                                                                            | `config`, `ui`    | built                                                             |
+
+**README seams.** `utils`, `types` and `hooks` ship as folders holding only a README that states their convention (STK-5). Each becomes a package with its first module and takes its place in the order then. There is no `lib` or `helpers` package (§8).
 
 **Packages ship TypeScript source.** No build step: each package's `exports` points at `src/`, and each app compiles them through `transpilePackages` in `next.config.ts`.
 
 **Subpath exports, not barrels.** `@pem/ui` exposes one entry per component (`@pem/ui/button`, `@pem/ui/cn`). A new component adds its own `exports` entry.
 
-**Adding a package** (only when §1 says so):
+**Adding a package** (only when §1 says so, or a ticket builds a row of the table above):
 
 1. Create `packages/<name>/` with `package.json` (`"name": "@pem/<name>"`), `tsconfig.json` extending a `@pem/config` base, and `eslint.config.mjs`.
 2. Add it to `ELEMENTS` and `PACKAGE_IMPORTS` in `packages/config/eslint/boundaries.js`, and to the importing apps' `transpilePackages`.
-3. Add a row to the table above, a ledger line, and a record in `docs/decisions/records/` (the package boundary is a one-way door).
+3. Add a row to the table above, or turn its row to built. A package outside the default stack also needs a ledger line and a record in `docs/decisions/records/`, because the package boundary is a one-way door. The default stack's packages are already recorded in record 0010.
 
 ## 5. Environment variables
 
-No app reads an environment variable yet. When the first one arrives:
+No app or package reads an environment variable yet; STK-4 builds the first reader. The contract it builds to (record 0010):
 
-- That app gets an `env.ts` at its root — the **only** module in the app that reads `process.env`, validated with a schema. Everything else imports `env`.
+- **One tier switch:** `DATABASE_ENVIRONMENT`, one of `local | staging | production`, default `local`. It never defaults to production. It says which backing services this process talks to: the database, the Supabase project, the Stripe keys and the site URLs all follow it.
+- **Suffix grammar:** a tiered variable ends in `_LOCAL` or `_STAGING`; unsuffixed is production. For example, `EXAMPLE_API_URL_STAGING` is read when the switch is `staging`.
+- **Where the code runs is derived, never set.** Running on localhost fixes the site URL to localhost and picks the local Stripe webhook secret, whatever the tier.
+- **The picker is pure.** `@pem/env` (STK-4) will hold the per-tier picker, and it never reads `process.env`.
+- **The readers.** Each app's `env.ts` (t3-env, zod) and each package's `scripts/env.ts` are the only modules that read `process.env`, validated with a schema. Everything else imports the resolved `env`.
 - Client code reads only `NEXT_PUBLIC_*` names. Secrets never reach a browser bundle.
-- The variable is listed in `turbo.json` (`globalEnv` or the task's `env`) so it is part of the cache key, and in a root `.env.example`.
+- Every variable is listed in `turbo.json` (`globalEnv` or the task's `env`) so it is part of the cache key, and in a root `.env.example`.
 
 ## 6. Components and styling
 
