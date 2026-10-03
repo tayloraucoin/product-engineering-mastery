@@ -8,10 +8,10 @@
       "run": {
         "command": "yarn lint:docs",
         "exit": 0,
-        "at": "2026-10-03T23:23:19Z",
-        "head": "3aa3af85b9ec69e6e934d736b9cb216332ac483a",
+        "at": "2026-10-03T23:23:33Z",
+        "head": "0dcce4cc20c284a4c012f2eb17269d19d5f7a246",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C1.log",
-        "evidence_sha256": "0ebbb41536c72604dc6ae1b2cafe8657ed1dc1039958afc1b768b6b981466c64"
+        "evidence_sha256": "0bf40348c6d9ec3206c0328ca32896083cfc784cae2e10a8562746310599022a"
       }
     },
     "C2": {
@@ -20,10 +20,10 @@
       "run": {
         "command": "yarn check-refs",
         "exit": 0,
-        "at": "2026-10-03T23:23:20Z",
-        "head": "3aa3af85b9ec69e6e934d736b9cb216332ac483a",
+        "at": "2026-10-03T23:23:34Z",
+        "head": "0dcce4cc20c284a4c012f2eb17269d19d5f7a246",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C2.log",
-        "evidence_sha256": "6db82b0a24ce4d2406fe65f8de7c09d56d5b99340ac5f00bd9d436721051e256"
+        "evidence_sha256": "15e0688c8634a54ff3dbe2b38a54537017518ebdab427911aa71d8d6baed0c42"
       }
     },
     "C3": {
@@ -32,16 +32,23 @@
       "run": {
         "command": "yarn directory-map --check",
         "exit": 0,
-        "at": "2026-10-03T23:23:20Z",
-        "head": "3aa3af85b9ec69e6e934d736b9cb216332ac483a",
+        "at": "2026-10-03T23:23:34Z",
+        "head": "0dcce4cc20c284a4c012f2eb17269d19d5f7a246",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C3.log",
-        "evidence_sha256": "5bf6b91a2ea0736e9aa538c7522a6799a8890a8593604673c9dfe169462700c6"
+        "evidence_sha256": "af9e92845de423e104b967a6acff922b8017734553cb335e9ce2e14a68e7f9d4"
       }
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn contract:record STK-1 C4 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C4.md",
+        "exit": 0,
+        "at": "2026-10-03T23:24:24Z",
+        "head": "0dcce4cc20c284a4c012f2eb17269d19d5f7a246",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C4.md",
+        "evidence_sha256": "1a821bc9a31b9249f9ee98258232a5e2457ae25fbd8738123818aade03edaa17"
+      }
     },
     "review:vigil": {
       "status": "FAIL",
@@ -49,5 +56,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-03T23:23:21Z"
+  "updated_at": "2026-10-03T23:24:24Z"
 }
