@@ -113,7 +113,7 @@ No app or package reads an environment variable yet; STK-4 builds the first read
 
 - **One tier switch:** `DATABASE_ENVIRONMENT`, one of `local | staging | production`, default `local`. It never defaults to production. It says which backing services this process talks to: the database, the Supabase project, the Stripe keys and the site URLs all follow it.
 - **Suffix grammar:** a tiered variable ends in `_LOCAL` or `_STAGING`; unsuffixed is production. For example, `EXAMPLE_API_URL_STAGING` is read when the switch is `staging`.
-- **Where the code runs is derived, never set.** Running on localhost fixes the site URL to localhost and picks the local Stripe webhook secret, whatever the tier.
+- **Where the code runs is derived, never set.** Running on localhost fixes the site URL to localhost and picks the local Stripe webhook secret.
 - **The picker is pure.** `@pem/env` (STK-4) will hold the per-tier picker, and it never reads `process.env`.
 - **The readers.** Each app's `env.ts` (t3-env, zod) and each package's `scripts/env.ts` are the only modules that read `process.env`, validated with a schema. Everything else imports the resolved `env`.
 - Client code reads only `NEXT_PUBLIC_*` names. Secrets never reach a browser bundle.

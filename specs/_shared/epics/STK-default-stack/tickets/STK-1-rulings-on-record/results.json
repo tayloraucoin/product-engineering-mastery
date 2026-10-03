@@ -3,19 +3,40 @@
   "criteria_sha256": "1efa487b0b8536068535e61ecc9b88fa562bff8c9b70c882034cc3838b49f03f",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn lint:docs",
+        "exit": 0,
+        "at": "2026-10-03T23:23:19Z",
+        "head": "3aa3af85b9ec69e6e934d736b9cb216332ac483a",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C1.log",
+        "evidence_sha256": "0ebbb41536c72604dc6ae1b2cafe8657ed1dc1039958afc1b768b6b981466c64"
+      }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn check-refs",
+        "exit": 0,
+        "at": "2026-10-03T23:23:20Z",
+        "head": "3aa3af85b9ec69e6e934d736b9cb216332ac483a",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C2.log",
+        "evidence_sha256": "6db82b0a24ce4d2406fe65f8de7c09d56d5b99340ac5f00bd9d436721051e256"
+      }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn directory-map --check",
+        "exit": 0,
+        "at": "2026-10-03T23:23:20Z",
+        "head": "3aa3af85b9ec69e6e934d736b9cb216332ac483a",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C3.log",
+        "evidence_sha256": "5bf6b91a2ea0736e9aa538c7522a6799a8890a8593604673c9dfe169462700c6"
+      }
     },
     "C4": {
       "status": "FAIL",
@@ -28,5 +49,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-03T23:18:23Z"
+  "updated_at": "2026-10-03T23:23:21Z"
 }
