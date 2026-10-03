@@ -51,10 +51,20 @@
       }
     },
     "review:vigil": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run vigil STK-1",
+        "exit": 0,
+        "at": "2026-10-03T23:34:34Z",
+        "head": "0aa89aa80e98f732873370054eb88aabd2e440bb",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/review-vigil.md",
+        "evidence_sha256": "9f343f901e2f9f8565287259923903ca409f4cbf195b6e81460469e7f6b52995",
+        "contract_sha256": "f54b96df289bcb30de4e6f080127a29b09100cb2c79708926cc8865c6c48e006",
+        "as_built_sha256": "60ec470a94bffd87f7810cca809356501c36812d7294832caee39950df7b4f6e",
+        "runner": "claude 2.1.232 (Claude Code) (agent vigil; tools Read,Grep,Glob)"
+      }
     }
   },
-  "updated_at": "2026-10-03T23:24:24Z"
+  "updated_at": "2026-10-03T23:39:47Z"
 }
