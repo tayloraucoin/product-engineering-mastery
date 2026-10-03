@@ -15,7 +15,8 @@ cites:
   - D-STK-2
   - D-STK-3
 truth_files: "none: no living UX file covers the practice's own rules"
-reviewers: []
+reviewers:
+  - vigil
 planned_paths:
   - docs/decisions/records/0010-starter-ships-default-stack.md
   - docs/decisions/ledger.md
@@ -46,6 +47,10 @@ criteria:
     statement: Record 0010 states the decision, the options weighed and a revisit trigger; conventions rule 9, section 4 and section 5 agree with D-STK-1 and D-STK-3; and ledger.md and changelog.md each gain one entry per changed rule.
     evidence: manual
     reason: agreement between prose documents is a reading judgment
+  - id: review:vigil
+    statement: Vigil reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run vigil <id>
 ---
 
 # Contract — STK-1 rulings-on-record

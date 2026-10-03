@@ -40,6 +40,7 @@ load_when:
 | PL   | plans/toolkit-plan-2026-10-01.md (read from the Project, not attached)        | —                                | —      |
 | CF   | docs/decisions/conflicts.md (P-A message 2)                                   | Plumb                            | P-A    |
 | REC  | docs/decisions/records/NNNN-*.md                                              | per record                       | —      |
+| STK  | specs/_shared/epics/STK-default-stack/technical.md (D-STK-n)                  | Mason (Taylor ratified)          | STK    |
 
 ## How to read this file
 
@@ -324,4 +325,14 @@ load_when:
 | EN-02 | "Packages use the `@pem/*` scope"                                                                                | REC 0002 | Mason | ruled  | `@repo/*`                                 | —   |
 | EN-03 | "The toolchain is pinned to the house set — TypeScript 5.9.2, Node 22, ESLint 9"                                 | REC 0003 | Mason | ruled  | create-turbo's TS 7 / Node 24 / ESLint 10 | —   |
 | EN-04 | "Docs stay as markdown in the root `docs/`; `apps/docs` is a renderer over them"                                 | REC 0004 | Mason | ruled  | create-turbo's example docs app           | —   |
-| EN-05 | "Start with two packages — `@pem/config` and `@pem/ui` — and the boundaries lint wired from day one"             | REC 0005 | Mason | ruled  | the full Synapse layer set                | —   |
+| EN-05 | "Start with two packages — `@pem/config` and `@pem/ui` — and the boundaries lint wired from day one"             | REC 0005 | Mason | superseded by EN-06 (REC 0010), 2026-10-03. Was: ruled | the full Synapse layer set                | —   |
+
+## 10. Engineering (default stack)
+
+| ID    | Decision (record's words)                                                                                                                                                                                                                  | Src §                  | Role  | Status                       | Displaces                                                    | Tag |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------- | ----- | ---------------------------- | ------------------------------------------------------------ | --- |
+| EN-06 | "The starter ships the default stack"; package graph, low to high: "`config → constants, env, brand, observability → validators → db → auth → email, ai → services → api → ui → apps`"; `services` as a package is undecided (STK call 3) | REC 0010; STK D-STK-1  | Mason | ruled (owner ruled 2026-10-03) | EN-05                                                        | —   |
+| EN-07 | Conventions rule 9: "a seam ships with a default consumer or a README that states its convention"                                                                                                                                          | REC 0010; STK D-STK-2  | Mason | ruled (owner ruled 2026-10-03) | "No empty seams" (conventions rule 9)                        | —   |
+| EN-08 | One tier switch, `DATABASE_ENVIRONMENT` (`local \| staging \| production`, default `local`); suffixes `_LOCAL`, `_STAGING`, unsuffixed is production; each app's `env.ts` and each package's `scripts/env.ts` are the only readers            | REC 0010; STK D-STK-3  | Mason | ruled (owner ruled 2026-10-03) | one `env.ts` per app as the only reader (conventions rule 6) | —   |
+| EN-09 | The tech stack's "Deliberately absent" table "is retired as each module lands"                                                                                                                                                             | REC 0010; STK D-STK-2  | Mason | ruled (owner ruled 2026-10-03) | "Each arrives with its first real consumer"                  | —   |
+| EN-10 | The README's porting rule "becomes 'duplicate, then remove'"                                                                                                                                                                               | REC 0010; STK D-STK-2  | Mason | ruled (owner ruled 2026-10-03); README.md amended by STK-3 | "copies selected pieces, never the demo app"                 | —   |
