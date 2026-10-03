@@ -26,6 +26,7 @@
     "check-specs": "node tooling/check-specs.ts",
     "check-test-weakening": "node tooling/check-test-weakening.ts",
     "test:tooling": "node --test \"tooling/**/*.test.ts\"",
+    "test": "turbo run test",
     "spec:init": "node tooling/spec-init.ts",
     "contract:init": "node tooling/contract.ts init",
     "contract:run": "node tooling/contract.ts run",
