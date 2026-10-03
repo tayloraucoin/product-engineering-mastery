@@ -21,7 +21,6 @@ planned_paths:
   - "docs/runbooks/remove-supabase-auth.md"
   - "docs/runbooks/remove-billing.md"
   - "docs/runbooks/remove-ai.md"
-  - "docs/runbooks/remove-api.md"
   - "README.md"
   - "docs/prompts/phases/port-dry-run.md"
 depends_on:
@@ -29,7 +28,8 @@ depends_on:
   - STK-8
   - STK-11
   - STK-14
-  - STK-16
+  - STK-15
+  - STK-21
   - STK-17
   - STK-18
   - STK-19
@@ -46,17 +46,17 @@ criteria:
     evidence: check
     command: "yarn check-refs"
   - id: C3
-    statement: "The duplicate passes verify and check-stack after the removals, with grep for each removed vendor empty."
-    evidence: manual
-    reason: "runs in a separate clone outside this repo's checks"
+    statement: "The duplicate passes verify and check-stack after the removals; the log holds each stop with its cause and fix, the per-step timings and the empty grep for each removed vendor."
+    evidence: capture
+    path: "specs/_shared/epics/STK-default-stack/tickets/STK-20-removal-dry-run/evidence/dry-run-1.txt"
   - id: C4
-    statement: "A second cold run after the fixes completes with no stop."
-    evidence: manual
-    reason: "a timed cold run by an agent is read by a person"
+    statement: "A second cold run after the fixes completes with no stop; the log holds its per-step timings."
+    evidence: capture
+    path: "specs/_shared/epics/STK-default-stack/tickets/STK-20-removal-dry-run/evidence/dry-run-2.txt"
 ---
 
-# Contract — STK-0 removal-dry-run
+# Contract — STK-20 removal-dry-run
 
 ## Notes
 
-This ticket retires the Phase 5 port-dry-run prompt; say so in that file.
+This ticket retires the Phase 5 port-dry-run prompt; say so in that file by a dated amendment block, never in place.

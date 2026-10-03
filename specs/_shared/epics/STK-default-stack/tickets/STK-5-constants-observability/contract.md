@@ -47,16 +47,16 @@ criteria:
     evidence: check
     command: "yarn lint:boundaries"
   - id: C4
-    statement: "The three README seams state the convention and pass the docs lint."
-    evidence: check
-    command: "yarn lint:docs"
+    statement: "Each of the three README seams states its folder's convention and the module that turns it into a package."
+    evidence: manual
+    reason: "a convention statement is a reading judgment, and no docs lint scans packages/"
   - id: C5
     statement: "Types and build pass."
     evidence: check
     command: "yarn verify"
 ---
 
-# Contract — STK-0 constants-observability
+# Contract — STK-5 constants-observability
 
 ## Notes
 

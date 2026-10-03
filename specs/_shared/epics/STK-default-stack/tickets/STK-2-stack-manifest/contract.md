@@ -8,6 +8,7 @@ non_negotiables:
   - A module entry carries files, env, dependencies, boundaries, locked and runbook.
   - check-stack fails on a present module with a missing file, and on a removed module with any file, variable or dependency still present.
   - A locked module cannot be marked removed.
+  - A locked module's runbook is null; C5 checks only non-null runbook paths.
   - yarn verify runs check-stack.
   - The manifest lists only modules that exist today; later tickets add their own.
 devs_call: The entry's exact field names and how a module is marked removed.
@@ -59,8 +60,9 @@ criteria:
     command: yarn verify
 ---
 
-# Contract — STK-0 stack-manifest
+# Contract — STK-2 stack-manifest
 
 ## Notes
 
 Name each test after its criterion (C1 to C5). Follow the fixture pattern of tooling/check-specs.ts. Today's modules are config and ui only.
+check-stack treats a missing .env.example as no variables present; STK-4 creates it.

@@ -10,6 +10,7 @@ non_negotiables:
   - "A Stripe key whose prefix does not match the tier fails validation."
   - "The site URL is localhost whenever the code runs outside a deployment."
   - ".env.example lists every variable with a comment saying what breaks without it; turbo.json lists the same names."
+  - "yarn verify runs yarn test and yarn check-client-bundle."
 devs_call: "File layout inside packages/env and the exact zod shapes."
 cites:
   - "specs/_shared/epics/STK-default-stack/technical.md"
@@ -30,10 +31,13 @@ planned_paths:
   - "toolkit.json"
   - "AGENTS.md"
   - "docs/engineering/codebase-conventions.md"
+  - "tooling/check-client-bundle.ts"
+  - "tooling/check-client-bundle.test.ts"
+  - "tooling/fixtures/client-bundle/**"
 depends_on:
   - STK-2
 out_of_scope:
-  - "Any vendor key beyond the tier picker's generic shape; Stripe, Supabase and Sentry variables arrive with their tickets."
+  - "Vendor keys beyond the picker's generic shape; Stripe, Supabase and Sentry variables arrive with their tickets."
   - "Env pull or sync tooling."
 criteria:
   - id: C1
@@ -53,13 +57,17 @@ criteria:
     evidence: check
     command: "yarn check-types"
   - id: C5
-    statement: "A deployed-looking build with NEXT_PUBLIC_* only in the env block passes the full chain."
+    statement: "check-client-bundle fails a fixture client chunk holding a server-only sentinel, and fails when no build output exists."
+    evidence: test
+    command: "yarn test:tooling"
+  - id: C6
+    statement: "The full chain passes; its bundle check builds apps/web with each server-only variable set to a unique sentinel and finds none in a client chunk."
     evidence: check
     command: "yarn verify"
 ---
 
-# Contract — STK-0 env-module
+# Contract — STK-4 env-module
 
 ## Notes
 
-Carry the generic picker from the audited repos' connection-env.ts, re-scoped. This ticket also owns the root `yarn test` script (turbo run test) added at the Tickets stage and adds it to `yarn verify`. Update the AGENTS.md line that says no app reads environment variables.
+Carry the generic picker from the audited repos' connection-env.ts, re-scoped. The root `yarn test` script exists; this ticket adds it to verify. Update the AGENTS.md line that says no app reads environment variables.

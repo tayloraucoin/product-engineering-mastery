@@ -24,6 +24,7 @@ planned_paths:
   - "packages/db/supabase/config.toml"
   - "packages/db/supabase/.gitignore"
   - "packages/db/package.json"
+  - "toolkit.json"
   - "package.json"
   - ".env.example"
   - "turbo.json"
@@ -37,9 +38,9 @@ out_of_scope:
   - "Replaying staging sign-ups, deletions or hooks locally."
 criteria:
   - id: C1
-    statement: "The mirror inserts id and email only, upserts on email change, and inserts zero rows when auth.identities exists or the marker is absent."
-    evidence: test
-    command: "yarn test"
+    statement: "yarn test:db against the local image shows the mirror inserting id and email only, upserting on email change, and inserting zero rows when auth.identities exists or the marker is absent; none skipped."
+    evidence: capture
+    path: "specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/test-db.txt"
   - id: C2
     statement: "applyLocalAuthMirror and db:seed-users refuse a non-loopback target before connecting."
     evidence: test
@@ -52,10 +53,14 @@ criteria:
     statement: "A fresh db:reset in mode A ends with a signed-in staging user's row in the local public.users."
     evidence: manual
     reason: "needs a staging sign-in by a person"
+  - id: C5
+    statement: "Following remove-supabase-database.md on a scratch copy leaves grep for drizzle and supabase empty and verify green."
+    evidence: manual
+    reason: "a removal rehearsal on a copy is done by a person"
 ---
 
-# Contract — STK-0 local-auth-mirror
+# Contract — STK-11 local-auth-mirror
 
 ## Notes
 
-The design is settled in technical.md D-STK-6; the research behind it is not attached to a build thread. Both removal runbooks get their Supabase file lists here.
+The design is settled in technical.md D-STK-6; the research behind it is not attached to a build thread. Both removal runbooks get their Supabase file lists here, and the manifest entries list this ticket's files.

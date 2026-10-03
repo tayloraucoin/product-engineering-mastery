@@ -8,7 +8,8 @@ non_negotiables:
   - Each of the six removal runbooks has the same sections; files to delete, files to edit, variables, dependencies, boundaries entries, vendor-side steps, verify.
   - A runbook for a module not yet built says so and lists nothing invented; its file list is filled by the ticket that builds the module.
   - There is one runbook for Supabase Auth and one for the Supabase database, and each says what changes when both are removed.
-  - The README porting rule becomes duplicate, then remove, and points to the guide; new-project.md replaces the planned port.md (J12), whose pending entry is removed.
+  - The README porting rule becomes duplicate, then remove, and points to the guide; new-project.md replaces the planned port.md (J12), whose pending entry stays, reworded to "superseded by docs/runbooks/new-project.md (STK-3)", because byte-preserved prompts still name it.
+  - port-dry-run.md and engineering-layer.md change only by a dated amendment block, never in place.
 devs_call: Wording and the order of steps inside a runbook.
 cites:
   - specs/_shared/epics/STK-default-stack/technical.md
@@ -35,7 +36,7 @@ depends_on:
   - STK-2
 out_of_scope:
   - Any module's code.
-  - Running a port; ticket 17 does the dry-run.
+  - Running a port; STK-20 does the dry-run.
 criteria:
   - id: C1
     statement: Frontmatter and file names pass for the seven new runbooks.
@@ -55,7 +56,7 @@ criteria:
     reason: followability by a cold reader is a reading judgment until the dry-run ticket times it
 ---
 
-# Contract — STK-0 new-project-guide
+# Contract — STK-3 new-project-guide
 
 ## Notes
 

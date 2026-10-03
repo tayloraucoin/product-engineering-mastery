@@ -51,7 +51,7 @@ criteria:
     path: "specs/_shared/epics/STK-default-stack/tickets/STK-7-brand-source/evidence/og.png"
 ---
 
-# Contract — STK-0 brand-source
+# Contract — STK-7 brand-source
 
 ## Notes
 

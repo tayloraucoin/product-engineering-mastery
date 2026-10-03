@@ -35,7 +35,7 @@ out_of_scope:
   - "Agent loops and tool use beyond one example."
 criteria:
   - id: C1
-    statement: "Structured extraction returns the Zod-validated shape from a recorded fixture."
+    statement: "Each of the three standard cases returns its expected shape from its recorded fixture; extraction's is Zod-validated."
     evidence: test
     command: "yarn test"
   - id: C2
@@ -43,7 +43,7 @@ criteria:
     evidence: test
     command: "yarn test"
   - id: C3
-    statement: "Boundaries fail on an ai import from apps or ui."
+    statement: "The boundaries matrix declares no edge to ai from ui or from any apps/web file outside app/api/ai, and lint passes with the streaming route."
     evidence: check
     command: "yarn lint:boundaries"
   - id: C4
@@ -52,7 +52,7 @@ criteria:
     command: "yarn verify"
 ---
 
-# Contract — STK-0 ai-package
+# Contract — STK-17 ai-package
 
 ## Notes
 

@@ -62,9 +62,13 @@ criteria:
     statement: "A thrown error on staging appears in the staging project with the commit release."
     evidence: manual
     reason: "needs the hosted project"
+  - id: C6
+    statement: "Following remove-error-monitoring.md on a scratch copy leaves grep for sentry empty and verify green."
+    evidence: manual
+    reason: "a removal rehearsal on a copy is done by a person"
 ---
 
-# Contract — STK-0 error-monitoring
+# Contract — STK-18 error-monitoring
 
 ## Notes
 

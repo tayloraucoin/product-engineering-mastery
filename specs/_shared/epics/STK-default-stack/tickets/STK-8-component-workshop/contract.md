@@ -24,7 +24,6 @@ planned_paths:
   - "turbo.json"
   - ".gitignore"
   - "docs/engineering/tech-stack.md"
-  - "docs/design/**/components.md"
 depends_on:
   - STK-7
 out_of_scope:
@@ -47,9 +46,13 @@ criteria:
     statement: "yarn ui:storybook opens on localhost:6006 within a minute on a warm cache."
     evidence: manual
     reason: "a dev server start is timed by a person"
+  - id: C5
+    statement: "A fixture @pem/ui component with no story fails the story-coverage check, naming the component."
+    evidence: test
+    command: "yarn test"
 ---
 
-# Contract — STK-0 component-workshop
+# Contract — STK-8 component-workshop
 
 ## Notes
 

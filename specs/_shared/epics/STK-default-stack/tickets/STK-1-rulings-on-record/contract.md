@@ -35,7 +35,7 @@ criteria:
     evidence: check
     command: yarn lint:docs
   - id: C2
-    statement: Every reference in ledger.md, codebase-conventions.md and tech-stack.md resolves (check-refs does not scan records or the changelog; C5 reads those).
+    statement: Every reference in ledger.md, codebase-conventions.md and tech-stack.md resolves (check-refs does not scan records or the changelog; C4 reads those).
     evidence: check
     command: yarn check-refs
   - id: C3
@@ -43,17 +43,14 @@ criteria:
     evidence: check
     command: yarn directory-map --check
   - id: C4
-    statement: The token budget still holds after the conventions grow.
-    evidence: check
-    command: yarn budget
-  - id: C5
-    statement: Record 0010 states the decision, the options weighed and a revisit trigger, and conventions rule 9, section 4 and section 5 agree with D-STK-1 and D-STK-3.
+    statement: Record 0010 states the decision, the options weighed and a revisit trigger; conventions rule 9, section 4 and section 5 agree with D-STK-1 and D-STK-3; and ledger.md and changelog.md each gain one entry per changed rule.
     evidence: manual
     reason: agreement between prose documents is a reading judgment
 ---
 
-# Contract — STK-0 rulings-on-record
+# Contract — STK-1 rulings-on-record
 
 ## Notes
 
 The rulings are Taylor's, listed in the epic's prompts/03-technical.md and decided in technical.md. Section 5 of the conventions gains the tier switch and the per-package scripts/env.ts reader. Name a package a later ticket builds by its ticket number only, never as present. `services` is still undecided as a package (technical.md, routed call 3): write it as undecided, not planned.
+Leave the frontmatter description of codebase-conventions.md and tech-stack.md unchanged, so docs/engineering/README.md stays current.

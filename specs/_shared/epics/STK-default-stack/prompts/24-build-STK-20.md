@@ -19,7 +19,7 @@ Venue: Claude Code, in product-engineering-mastery, branch agent/STK
 
 **The ask.**
 
-1. Run `/tk-kickoff STK removal-dry-run`; a refusal is the next instruction. Depends on: STK-3, STK-8, STK-11, STK-14, STK-16, STK-17, STK-18, STK-19.
+1. Run `/tk-kickoff STK removal-dry-run`; a refusal is the next instruction. Depends on: STK-3, STK-8, STK-11, STK-14, STK-15, STK-17, STK-18, STK-19, STK-21.
 2. State the planned paths and what each will hold before writing anything. Use plan mode before touching a package boundary, `docs/decisions/` or `.claude/settings.json`.
 3. Build in small commits, each `STK-20: <outcome>`, until `yarn status STK-20` shows nothing left but reviews.
 4. Add this module's manifest entry to `toolkit.json` and its boundaries rows, if the contract lists them.

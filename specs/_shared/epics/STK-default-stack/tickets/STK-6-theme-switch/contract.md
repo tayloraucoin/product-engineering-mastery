@@ -4,10 +4,11 @@ size: small
 objective: "Light and dark mode switch by class with three token layers, and a toggle in @pem/ui."
 slice_type: "Design tokens; the risk is a raw colour outside the preset or a flash of the wrong theme."
 non_negotiables:
+  - "Precondition: Taylor ratifies D-STK-17 (technical.md, routed call 1) before this ticket starts; declined, the ticket is withdrawn."
   - "preset.css has three layers: raw scale, semantic names, shadcn bridge; dark overrides under .dark."
   - "No hex or oklch literal outside preset.css; the tokens lint still passes."
   - "next-themes unpatched, class strategy, system as an option, no flash on load."
-  - "The toggle is a @pem/ui component with a story for each state."
+  - "The toggle is a @pem/ui component; its stories land in STK-8, whose non-negotiable 4 requires one per state."
   - "Both apps keep rendering with no visual regression beyond the dark class."
 devs_call: "Toggle placement and the raw scale's naming."
 cites:
@@ -26,7 +27,6 @@ planned_paths:
   - "apps/web/app/globals.css"
   - "apps/docs/app/layout.tsx"
   - "apps/docs/app/globals.css"
-  - "docs/design/**/tokens.md"
 depends_on:
   - STK-1
 out_of_scope:
@@ -53,10 +53,14 @@ criteria:
     statement: "No flash of the wrong theme on a hard reload in dark mode."
     evidence: manual
     reason: "a load-time flash is not captured by a still image"
+  - id: C6
+    statement: "The toggle offers light, dark and system and shows a visible focus ring, captured on the demo home."
+    evidence: capture
+    path: "specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/toggle-states.png"
 ---
 
-# Contract — STK-0 theme-switch
+# Contract — STK-6 theme-switch
 
 ## Notes
 
-The audited repos' preset shows the three-layer shape; carry the shape, not their palettes. Check whether the product design layer's tokens.md must change and list it if so.
+The audited repos' preset shows the three-layer shape; carry the shape, not their palettes. The product design layer (apps/web/docs/design/) lands in P-C; no design-layer file changes here.

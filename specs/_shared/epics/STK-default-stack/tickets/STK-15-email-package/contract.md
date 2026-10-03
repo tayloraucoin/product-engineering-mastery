@@ -25,6 +25,7 @@ planned_paths:
   - "apps/web/env.ts"
   - "docs/engineering/tech-stack.md"
 depends_on:
+  - STK-4
   - STK-5
   - STK-7
 out_of_scope:
@@ -49,7 +50,7 @@ criteria:
     command: "yarn verify"
 ---
 
-# Contract — STK-0 email-package
+# Contract — STK-15 email-package
 
 ## Notes
 

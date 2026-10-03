@@ -48,7 +48,7 @@ criteria:
     evidence: check
     command: "yarn lint:boundaries"
   - id: C4
-    statement: "Build passes with no server secret in the client bundle."
+    statement: "The full chain passes with the Supabase service-role key among the server-only variables check-client-bundle seeds, and no sentinel in a client chunk."
     evidence: check
     command: "yarn verify"
   - id: C5
@@ -57,7 +57,7 @@ criteria:
     reason: "needs the hosted staging project"
 ---
 
-# Contract — STK-0 auth-package
+# Contract — STK-12 auth-package
 
 ## Notes
 

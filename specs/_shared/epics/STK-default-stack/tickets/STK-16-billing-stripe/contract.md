@@ -1,17 +1,17 @@
 ---
 id: STK-16
 size: small
-objective: "Stripe billing in apps/web with one file per webhook event, keys by tier, removable by runbook."
-slice_type: "Money; the risk is a wrong-mode key, a replayed event or an unverified webhook."
+objective: "The Stripe webhook spine in apps/web: keys by tier, a verified and idempotent route, and a dispatcher whose unhappy paths are safe."
+slice_type: "Money; the risk is a wrong-mode key, a replayed event, an unverified webhook or an endless retry."
 non_negotiables:
   - "stripe owned by apps/web in the boundaries lint."
   - "Keys and price ids resolve by tier (D-STK-3); the local webhook secret is picked when the code runs on localhost."
-  - "The webhook route verifies the signature on the raw body, records the event id for idempotency, then dispatches."
-  - "One handler file per event under lib/billing/webhook/handlers; the dispatcher is a map, not a switch."
-  - "Entitlement changes are a service; the route never writes the database directly."
+  - "The webhook route verifies the signature on the raw body, records the event id for idempotency, then dispatches; it writes nothing else to the database."
+  - "The event id is recorded as processed only after its handler succeeds."
+  - "The dispatcher is a map from event type to a handler file under lib/billing/webhook/handlers, not a switch."
   - "yarn stripe:listen forwards to the local route."
-  - "remove-billing.md and the manifest entry are complete."
-devs_call: "Which three events the starter handles by default."
+  - "The manifest entry lists this ticket's files; STK-21 completes it with remove-billing.md."
+devs_call: "The processed-event table's columns and the retryable status code."
 cites:
   - "specs/_shared/epics/STK-default-stack/technical.md"
   - "D-STK-11"
@@ -21,10 +21,9 @@ truth_files: "none: no living UX file covers the starter's own stack"
 reviewers: []
 planned_paths:
   - "apps/web/app/api/webhooks/stripe/**"
-  - "apps/web/lib/billing/**"
+  - "apps/web/lib/billing/webhook/**"
   - "apps/web/env.ts"
   - "apps/web/package.json"
-  - "packages/services/src/billing/**"
   - "packages/db/src/schema/billing/**"
   - "packages/db/migrations/**"
   - ".env.example"
@@ -32,11 +31,10 @@ planned_paths:
   - "package.json"
   - "packages/config/eslint/boundaries.js"
   - "toolkit.json"
-  - "docs/runbooks/remove-billing.md"
 depends_on:
   - STK-13
-  - STK-15
 out_of_scope:
+  - "The default event handlers and the entitlement service (STK-21)."
   - "Checkout and portal UI beyond redirect links."
   - "Stripe Connect, affiliates, tax."
 criteria:
@@ -45,25 +43,29 @@ criteria:
     evidence: test
     command: "yarn test"
   - id: C2
-    statement: "Each default event reaches its handler file and the entitlement service with a signed synthetic event."
+    statement: "A signed synthetic event reaches the handler its type maps to, through a fixture map."
     evidence: test
     command: "yarn test"
   - id: C3
+    statement: "An event type with no handler is acknowledged with a 2xx and dispatched nowhere."
+    evidence: test
+    command: "yarn test"
+  - id: C4
+    statement: "A handler that throws gets a retryable 5xx, and its event id is not recorded as processed."
+    evidence: test
+    command: "yarn test"
+  - id: C5
     statement: "Boundaries pass with stripe owned by apps/web."
     evidence: check
     command: "yarn lint:boundaries"
-  - id: C4
-    statement: "Types, migrations check and build pass."
+  - id: C6
+    statement: "Types, build and the full chain pass, including check-migrations on the processed-event migration."
     evidence: check
     command: "yarn verify"
-  - id: C5
-    statement: "stripe listen delivers a test event to the local route end to end."
-    evidence: manual
-    reason: "needs the Stripe CLI and a test account"
 ---
 
-# Contract — STK-0 billing-stripe
+# Contract — STK-16 billing-stripe
 
 ## Notes
 
-The audited repo's dispatcher, handlers, idempotency and entitlement shape is the reference; carry the shape, not its products.
+Split from the original billing ticket at the Tickets gate; STK-21 carries the handlers and entitlements. The audited repo's dispatcher and idempotency shape is the reference; carry the shape, not its products.

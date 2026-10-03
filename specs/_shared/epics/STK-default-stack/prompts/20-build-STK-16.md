@@ -2,7 +2,7 @@ Venue: Claude Code, in product-engineering-mastery, branch agent/STK
 
 # STK-16 build — billing-stripe
 
-**Model:** Opus 5.5. A smaller model tends to handle events in one switch and skip the idempotency record.
+**Model:** Opus 5.5. A smaller model tends to dispatch through one switch and mark an event processed before its handler succeeds.
 
 **Role.** None: a build thread has no lead role. The contract is the oracle.
 
@@ -15,11 +15,11 @@ Venue: Claude Code, in product-engineering-mastery, branch agent/STK
 | `docs/engineering/codebase-conventions.md`                                        | Placement and the package graph                |
 | `docs/engineering/tech-stack.md`                                                  | Pins; update the line this ticket makes untrue |
 
-**Decision served.** STK-16 merged: Stripe billing in apps/web with one file per webhook event, keys by tier, removable by runbook. Taylor merges.
+**Decision served.** STK-16 merged: The Stripe webhook spine in apps/web: keys by tier, a verified and idempotent route, and a dispatcher whose unhappy paths are safe. Taylor merges.
 
 **The ask.**
 
-1. Run `/tk-kickoff STK billing-stripe`; a refusal is the next instruction. Depends on: STK-13, STK-15.
+1. Run `/tk-kickoff STK billing-stripe`; a refusal is the next instruction. Depends on: STK-13.
 2. State the planned paths and what each will hold before writing anything. Use plan mode before touching a package boundary, `docs/decisions/` or `.claude/settings.json`.
 3. Build in small commits, each `STK-16: <outcome>`, until `yarn status STK-16` shows nothing left but reviews.
 4. Add this module's manifest entry to `toolkit.json` and its boundaries rows, if the contract lists them.
@@ -29,7 +29,7 @@ Venue: Claude Code, in product-engineering-mastery, branch agent/STK
 
 **Gate.** `yarn contract:run STK-16` all PASS, the reviews recorded by `yarn review:run`, then Taylor.
 
-**Handoff.** Print the merge instruction and the next prompt's path: `prompts/21-build-STK-17.md`.
+**Handoff.** Print the merge instruction and the next prompt's path: `prompts/26-build-STK-21.md`.
 
 **Evidence rules.** A claim about a tool's behaviour carries the version and date verified. Not found is marked, never filled.
 

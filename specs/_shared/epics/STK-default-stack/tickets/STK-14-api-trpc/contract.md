@@ -35,7 +35,7 @@ out_of_scope:
   - "A React Native client."
 criteria:
   - id: C1
-    statement: "A protected procedure refuses an anonymous caller and an admin procedure refuses a non-admin."
+    statement: "A cookie session and a bearer token resolve to the same ctx.user; a protected procedure refuses an anonymous caller and an admin procedure a non-admin."
     evidence: test
     command: "yarn test"
   - id: C2
@@ -43,7 +43,7 @@ criteria:
     evidence: test
     command: "yarn test"
   - id: C3
-    statement: "Boundaries fail on an api import from hooks and pass otherwise."
+    statement: "The boundaries matrix declares no edge from hooks to api, and lint passes."
     evidence: check
     command: "yarn lint:boundaries"
   - id: C4
@@ -56,7 +56,7 @@ criteria:
     reason: "a removal rehearsal on a copy is done by a person"
 ---
 
-# Contract — STK-0 api-trpc
+# Contract — STK-14 api-trpc
 
 ## Notes
 

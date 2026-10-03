@@ -4,6 +4,8 @@ size: small
 objective: "Agents cannot reset or drop a database and must ask before changing one."
 slice_type: "Agent permissions; the risk is a destructive command on a hosted tier."
 non_negotiables:
+  - "Precondition: Taylor ratifies D-STK-18 (technical.md, routed call 1) before this ticket starts."
+  - "The builder drafts the .claude/settings.json change and Taylor applies it before C2 and C3 run; the as-built records it."
   - ".claude/settings.json denies db:reset, db:drop, drizzle-kit drop, supabase db reset, DROP SCHEMA and DROP DATABASE."
   - "It asks before db:migrate, db:push, db:seed, db:setup and raw drizzle-kit migrate or push."
   - "reset-local-db refuses any tier but local before reading a URL."
@@ -47,8 +49,8 @@ criteria:
     command: "yarn test:tooling"
 ---
 
-# Contract — STK-0 db-guardrails
+# Contract — STK-10 db-guardrails
 
 ## Notes
 
-The sandbox blocks agents from writing .claude/settings.json; the builder drafts the change and Taylor applies it, which the as-built records.
+The sandbox blocks agents from writing .claude/settings.json, which is why the handoff to Taylor is a non-negotiable.

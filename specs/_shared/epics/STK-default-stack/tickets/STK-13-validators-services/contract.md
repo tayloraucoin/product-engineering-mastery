@@ -4,7 +4,8 @@ size: small
 objective: "Zod schemas shared by forms and procedures, and a transport-free service layer."
 slice_type: "Business logic placement; the risk is logic welded to a transport."
 non_negotiables:
-  - "@pem/services is its own package below api; it imports no next/*, @trpc/* or react."
+  - "Precondition: Taylor answers routed call 3 (technical.md) before this ticket starts; declined, this contract and STK-21's services path are re-drafted."
+  - "Drafted on the recommended answer: @pem/services is its own package below api; it imports no next/*, @trpc/* or react."
   - "Services take ctx with user, role and the RLS-scoped db, and validated input."
   - "Typed domain errors (NotFound, Forbidden, Conflict, Invalid) from one module."
   - "@pem/validators defines each shape once; services never redefine it."
@@ -30,7 +31,7 @@ out_of_scope:
   - "A second domain."
 criteria:
   - id: C1
-    statement: "The example service rejects another user's row with Forbidden through the bridge."
+    statement: "Against a fake ctx, the example service throws NotFound when the scoped db withholds a row and Forbidden when a policy rejects a write; the policy itself is STK-9 C1's proof."
     evidence: test
     command: "yarn test"
   - id: C2
@@ -38,7 +39,7 @@ criteria:
     evidence: test
     command: "yarn test"
   - id: C3
-    statement: "Boundaries fail on a next, trpc or react import inside services."
+    statement: "The boundaries matrix declares no edge from services to next, trpc or react, and lint passes."
     evidence: check
     command: "yarn lint:boundaries"
   - id: C4
@@ -47,8 +48,8 @@ criteria:
     command: "yarn verify"
 ---
 
-# Contract — STK-0 validators-services
+# Contract — STK-13 validators-services
 
 ## Notes
 
-Routed call 3 in technical.md is settled here as a package; record the ratification in the as-built.
+Routed call 3 is Taylor's to answer, not this ticket's; the as-built cites the answer it was built under.
