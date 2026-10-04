@@ -17,9 +17,14 @@ cites:
   - "D-STK-6"
   - "D-STK-3"
 truth_files: "none: no living UX file covers the starter's own stack"
-reviewers: []
+reviewers:
+  - mason
+  - vigil
+  - warden
 planned_paths:
   - "packages/db/src/local-auth-mirror.ts"
+  - "packages/db/src/local-auth-mirror.test.ts"
+  - "packages/db/test/**"
   - "packages/db/scripts/**"
   - "packages/db/supabase/config.toml"
   - "packages/db/supabase/.gitignore"
@@ -31,6 +36,8 @@ planned_paths:
   - "docs/runbooks/remove-supabase-auth.md"
   - "docs/runbooks/remove-supabase-database.md"
   - "docs/runbooks/new-project.md"
+  - "docs/engineering/tech-stack.md"
+  - "yarn.lock"
 depends_on:
   - STK-9
 out_of_scope:
@@ -57,6 +64,19 @@ criteria:
     statement: "Following remove-supabase-database.md on a scratch copy leaves grep for drizzle and supabase empty and verify green."
     evidence: manual
     reason: "a removal rehearsal on a copy is done by a person"
+  - id: review:mason
+    statement: Mason reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run mason <id>
+  - id: review:vigil
+    statement: Vigil reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run vigil <id>
+  - id: review:warden
+    statement: Warden reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
+tier: 2
 ---
 
 # Contract — STK-11 local-auth-mirror
