@@ -16,15 +16,15 @@
       }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
       "run": {
         "command": "yarn verify",
-        "exit": 1,
-        "at": "2026-10-04T06:33:05Z",
-        "head": "dc88948f4c238580b791ea194aba05bf095910c8",
+        "exit": 0,
+        "at": "2026-10-04T06:39:03Z",
+        "head": "52541804cfcf059cd2b03f1e94e36ca7e7177ecf",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-19-helpers-deploy/evidence/C2.log",
-        "evidence_sha256": "5085f163dd50a5086cb4f5a0fd1aa2116901433e76f6d6a617fb998c6fa6db4f"
+        "evidence_sha256": "ab1ad71fd0d36aceb3acd0c60366df2dcfa268aaf24fdc2d863bf2d65eb6c2fe"
       }
     },
     "C3": {
@@ -33,5 +33,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-04T06:38:35Z"
+  "updated_at": "2026-10-04T06:40:07Z"
 }
