@@ -1,0 +1,32 @@
+{
+  "id": "STK-3",
+  "criteria_sha256": "6f8a4d6d9b56a1ece5b4384d52525b5c3ec6270818d136c32a8191f458262e35",
+  "criteria": {
+    "C1": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    },
+    "C2": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    },
+    "C3": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    },
+    "C4": {
+      "status": "FAIL",
+      "evidence": "manual",
+      "run": null
+    },
+    "review:vigil": {
+      "status": "FAIL",
+      "evidence": "manual",
+      "run": null
+    }
+  },
+  "updated_at": "2026-10-04T02:23:49Z"
+}

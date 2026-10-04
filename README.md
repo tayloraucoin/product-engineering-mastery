@@ -35,6 +35,6 @@ The docs app reads the markdown in `docs/` directly: the sidebar groups files by
 | `tooling/`        | The checks `yarn verify` runs, the hooks in `.claude/settings.json`, and `yarn doctor`.       |
 | `.claude/`        | Path rules, generated subagents (`agents/`, never edited by hand), skills.                    |
 
-## Porting into a product
+## Starting a product from this repo
 
-Written in Phase 5 (prompt [`port-dry-run.md`](docs/prompts/phases/port-dry-run.md)) from a timed cold run. Until then, the rule: a product repo copies the templates, skills, roles, `AGENTS.md` and `CLAUDE.md`; fills its own design layer and product files from the templates; and never copies the demo app or `docs/research/`.
+Duplicate, then remove ([record 0010](docs/decisions/records/0010-starter-ships-default-stack.md)): a product repo starts as a full duplicate of this one, default stack included, then removes the modules it does not use and clears the toolkit's own content (the demo, `docs/research/`, `specs/`). Follow [`docs/runbooks/new-project.md`](docs/runbooks/new-project.md); it ends on `yarn check-stack` and `yarn verify`. The guide is a draft until the dry-run ticket (STK-20) times it on a duplicate.
