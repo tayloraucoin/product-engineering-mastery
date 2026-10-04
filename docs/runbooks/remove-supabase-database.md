@@ -25,7 +25,7 @@ load_when:
 
 ## Files to edit
 
-- `package.json` (root): delete the `check-migrations`, `test:db`, `db:local`, `db:generate`, `db:migrate` and `db:setup` scripts, and `yarn check-migrations &&` from `verify`.
+- `package.json` (root): delete the `check-migrations`, `test:db`, `db:local`, `db:local:reset`, `db:generate`, `db:migrate` and `db:setup` scripts, and `yarn check-migrations &&` from `verify`.
 - `toolkit.json`: set `migrationsDir` to `null`.
 - `packages/config/eslint/boundaries.js`: see Boundaries entries.
 - `docs/engineering/codebase-conventions.md` §4: the `@pem/db` row, and `postgres` and `drizzle-kit` in the SDK-owner paragraph.
