@@ -39,7 +39,7 @@ Against the non-negotiables:
   - `remove-billing.md` reads "STK-16 and STK-21 fill this", and its Verify names both tickets;
   - the runbooks README carries `last_reviewed: 2026-10-03`.
 
-  C1 to C3 were re-proven after these edits and the review re-run. The other two should-fix findings are Taylor's, under Next. The shipped text has not had a third cold read; STK-20 reads the final text.
+  C1 to C3 were re-proven after these edits and the review re-run. On that re-run, C2 failed once on an environment change, not on STK-3. A `.claude/settings.local.json` appeared on Taylor's machine, and `check-refs` read its pending entry ("machine-local and untracked by design") as stale. At Taylor's choice, PJ commit `2287cea` makes a git-ignored pending entry never stale, with two tests, and C2 was re-proven. That fix lies outside STK-3's planned paths and is not STK-3's work. The other two should-fix findings are Taylor's, under Next. The shipped text has not had a third cold read; STK-20 reads the final text.
 
 ## Ledger IDs
 
