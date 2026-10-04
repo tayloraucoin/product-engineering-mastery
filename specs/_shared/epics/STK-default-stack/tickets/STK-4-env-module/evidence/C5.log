@@ -1,0 +1,196 @@
+command: yarn test:tooling
+exit: 0
+at: 2026-10-04T03:06:25Z
+head: 930129e639fc7cd25c3b1efed36b98ca20ebeb85
+tests: 30
+---
+TAP version 13
+# Subtest: C5: a client chunk holding a server-only sentinel fails, naming the variable and the chunk
+ok 1 - C5: a client chunk holding a server-only sentinel fails, naming the variable and the chunk
+  ---
+  duration_ms: 115.792958
+  type: 'test'
+  ...
+# Subtest: C5: no build output fails
+ok 2 - C5: no build output fails
+  ---
+  duration_ms: 171.987833
+  type: 'test'
+  ...
+# Subtest: C5: clean client chunks pass
+ok 3 - C5: clean client chunks pass
+  ---
+  duration_ms: 87.204583
+  type: 'test'
+  ...
+# Subtest: C5: a scan with no sentinel named is refused
+ok 4 - C5: a scan with no sentinel named is refused
+  ---
+  duration_ms: 75.006458
+  type: 'test'
+  ...
+# Subtest: a pending entry that now exists is stale
+ok 5 - a pending entry that now exists is stale
+  ---
+  duration_ms: 241.956291
+  type: 'test'
+  ...
+# Subtest: a git-ignored pending entry is machine-local and never stale
+ok 6 - a git-ignored pending entry is machine-local and never stale
+  ---
+  duration_ms: 209.69575
+  type: 'test'
+  ...
+# Subtest: C1: a present module missing a listed file fails, naming the module and the file
+ok 7 - C1: a present module missing a listed file fails, naming the module and the file
+  ---
+  duration_ms: 130.660417
+  type: 'test'
+  ...
+# Subtest: C2: a removed module with a leftover file, variable or dependency fails, naming each leftover
+ok 8 - C2: a removed module with a leftover file, variable or dependency fails, naming each leftover
+  ---
+  duration_ms: 349.72575
+  type: 'test'
+  ...
+# Subtest: C2: a clean removal passes, and near-miss names are not leftovers
+ok 9 - C2: a clean removal passes, and near-miss names are not leftovers
+  ---
+  duration_ms: 81.950875
+  type: 'test'
+  ...
+# Subtest: C3: a locked module marked removed fails
+ok 10 - C3: a locked module marked removed fails
+  ---
+  duration_ms: 79.487666
+  type: 'test'
+  ...
+# Subtest: C4: an entry missing any of files, env, dependencies, boundaries, locked or runbook fails, naming the field
+ok 11 - C4: an entry missing any of files, env, dependencies, boundaries, locked or runbook fails, naming the field
+  ---
+  duration_ms: 79.9185
+  type: 'test'
+  ...
+# Subtest: C5: a runbook path that does not exist fails, naming the path
+ok 12 - C5: a runbook path that does not exist fails, naming the path
+  ---
+  duration_ms: 83.930083
+  type: 'test'
+  ...
+# Subtest: a merged as-built is immutable except applied:
+ok 13 - a merged as-built is immutable except applied:
+  ---
+  duration_ms: 4915.002792
+  type: 'test'
+  ...
+# Subtest: A9 commit-msg: an agent branch needs a work-id; another branch does not
+ok 14 - A9 commit-msg: an agent branch needs a work-id; another branch does not
+  ---
+  duration_ms: 1757.132625
+  type: 'test'
+  ...
+# Subtest: A9 pre-commit: staging a hand-edited results.json is refused
+ok 15 - A9 pre-commit: staging a hand-edited results.json is refused
+  ---
+  duration_ms: 1881.314041
+  type: 'test'
+  ...
+# Subtest: A4 contract:init allocates sequential ids, from the template, then starts with every criterion FAIL
+ok 16 - A4 contract:init allocates sequential ids, from the template, then starts with every criterion FAIL
+  ---
+  duration_ms: 1385.004583
+  type: 'test'
+  ...
+# Subtest: the protected branch refuses a start; the operator picks the work branch
+ok 17 - the protected branch refuses a start; the operator picks the work branch
+  ---
+  duration_ms: 700.755042
+  type: 'test'
+  ...
+# Subtest: parallel tickets: a second item starts on the same branch while the first is open
+ok 18 - parallel tickets: a second item starts on the same branch while the first is open
+  ---
+  duration_ms: 2010.054459
+  type: 'test'
+  ...
+# Subtest: parallel tickets: another ticket's uncommitted file does not block a run, its own does
+ok 19 - parallel tickets: another ticket's uncommitted file does not block a run, its own does
+  ---
+  duration_ms: 2931.5235
+  type: 'test'
+  ...
+# Subtest: parallel tickets: another ticket's commit leaves this ticket's proof fresh
+ok 20 - parallel tickets: another ticket's commit leaves this ticket's proof fresh
+  ---
+  duration_ms: 3284.185833
+  type: 'test'
+  ...
+# Subtest: stacking: a dependent ticket starts on the same branch once its predecessor has an as-built
+ok 21 - stacking: a dependent ticket starts on the same branch once its predecessor has an as-built
+  ---
+  duration_ms: 4100.342084
+  type: 'test'
+  ...
+# Subtest: a dependency without an as-built refuses the start
+ok 22 - a dependency without an as-built refuses the start
+  ---
+  duration_ms: 1010.730542
+  type: 'test'
+  ...
+# Subtest: A6: a cited file not approved, or holding a BLOCKING marker, is refused; a plain open marker is listed
+ok 23 - A6: a cited file not approved, or holding a BLOCKING marker, is refused; a plain open marker is listed
+  ---
+  duration_ms: 2511.0525
+  type: 'test'
+  ...
+# Subtest: Vigil 9 and 10, epic: pre-flight gates the start, review:run binds the as-built, truth:promote follows
+ok 24 - Vigil 9 and 10, epic: pre-flight gates the start, review:run binds the as-built, truth:promote follows
+  ---
+  duration_ms: 10657.368458
+  type: 'test'
+  ...
+# Subtest: a fixture reviewer's PASS does not count outside the harness
+ok 25 - a fixture reviewer's PASS does not count outside the harness
+  ---
+  duration_ms: 4508.5355
+  type: 'test'
+  ...
+# Subtest: a pre-flight written by the fixture reviewer does not start a ticket outside the harness
+ok 26 - a pre-flight written by the fixture reviewer does not start a ticket outside the harness
+  ---
+  duration_ms: 1062.624959
+  type: 'test'
+  ...
+# Subtest: contract:run refuses an uncommitted tree, then records run records with HEAD and evidence hashes
+ok 27 - contract:run refuses an uncommitted tree, then records run records with HEAD and evidence hashes
+  ---
+  duration_ms: 2880.789417
+  type: 'test'
+  ...
+# Subtest: contract:run FAILs a test criterion whose runner matched zero tests
+ok 28 - contract:run FAILs a test criterion whose runner matched zero tests
+  ---
+  duration_ms: 1953.696375
+  type: 'test'
+  ...
+# Subtest: Vigil 10, one-off: init, run, as-built, status and check-specs close with nothing left
+ok 29 - Vigil 10, one-off: init, run, as-built, status and check-specs close with nothing left
+  ---
+  duration_ms: 4929.12675
+  type: 'test'
+  ...
+# Subtest: Vigil 3: a PASS recorded at X goes stale when a planned path changes at X+1
+ok 30 - Vigil 3: a PASS recorded at X goes stale when a planned path changes at X+1
+  ---
+  duration_ms: 3663.102792
+  type: 'test'
+  ...
+1..30
+# tests 30
+# suites 0
+# pass 30
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 19113.410458

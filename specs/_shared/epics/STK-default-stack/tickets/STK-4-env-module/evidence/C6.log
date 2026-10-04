@@ -1,0 +1,30 @@
+command: yarn verify
+exit: 1
+at: 2026-10-04T03:06:44Z
+head: 930129e639fc7cd25c3b1efed36b98ca20ebeb85
+---
+Checking formatting...
+All matched files use Prettier code style!
+lint:docs — 189 files, names and frontmatter clean; 8 path rules carry only paths.
+check-settings — 8 fixtures behaved; .claude/settings.json is clean.
+test:hooks — every case behaved.
+  bash-guard: 83 cases, 7 rules; median 58 ms, max 91 ms per call; longest denial about 53 tokens
+  results-gate: 14 cases, 4 rules; median 53 ms, max 54 ms per call; longest denial about 48 tokens
+  session-start: 5 cases, 4 rules; median 57 ms, max 57 ms per call; answers as context
+  stop-gate: 8 cases, 4 rules; median 56 ms, max 58 ms per call; answers as stop
+check-refs — every reference in 110 live files resolves; 41 pending (lands in J8, lands in J11, superseded by docs/runbooks/new-project.md (STK-3), lands in P-C, lands in P-D, lands in P-K, a product repo's path, named by a template, a product repo's path, named by a ruling (CF-13), a pattern, not a path, machine-local and untracked by design, stale ruling text in conflicts.md, superseded by A4; held for Taylor (PR-05), stale ruling text in conflicts.md; extensions sit beside their role (record 0006); held for Taylor (PR-05), stale ledger text; the rulings live in docs/design/workflow.md; held for Taylor (PR-05), stale ledger text; filed as docs/research/toolkit/design-candidates.md; held for Taylor (PR-05), stale ledger text; the ledger is docs/decisions/ledger.md; held for Taylor (PR-05), stale ledger text; the folder is docs/measurement/metrics/ (PR-12); held for Taylor (PR-05), stale ledger text; the folder is docs/measurement/evals/ (PR-12); held for Taylor (PR-05)).
+check-stack — 3 module(s); nothing missing, nothing left behind.
+check-specs — 13 problem(s):
+  specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/results.json: C1's PASS no longer holds: docs/_generated/directory-map.md, docs/decisions/changelog.md, docs/decisions/ledger.md and 2 more changed after it was recorded. Re-record it: yarn contract:run STK-1 C1
+  specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/results.json: C2's PASS no longer holds: docs/_generated/directory-map.md, docs/decisions/changelog.md, docs/decisions/ledger.md and 2 more changed after it was recorded. Re-record it: yarn contract:run STK-1 C2
+  specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/results.json: C3's PASS no longer holds: docs/_generated/directory-map.md, docs/decisions/changelog.md, docs/decisions/ledger.md and 2 more changed after it was recorded. Re-record it: yarn contract:run STK-1 C3
+  specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/results.json: C4's PASS no longer holds: docs/_generated/directory-map.md, docs/decisions/changelog.md, docs/decisions/ledger.md and 2 more changed after it was recorded. Re-record it: yarn contract:record STK-1 C4 --evidence <path>
+  specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/results.json: review:vigil's PASS no longer holds: docs/_generated/directory-map.md, docs/decisions/changelog.md, docs/decisions/ledger.md and 2 more changed after it was recorded. Re-record it: yarn review:run vigil STK-1
+  specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/results.json: C1's PASS no longer holds: package.json, toolkit.json changed after it was recorded. Re-record it: yarn contract:run STK-2 C1
+  specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/results.json: C2's PASS no longer holds: package.json, toolkit.json changed after it was recorded. Re-record it: yarn contract:run STK-2 C2
+  specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/results.json: C3's PASS no longer holds: package.json, toolkit.json changed after it was recorded. Re-record it: yarn contract:run STK-2 C3
+  specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/results.json: C4's PASS no longer holds: package.json, toolkit.json changed after it was recorded. Re-record it: yarn contract:run STK-2 C4
+  specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/results.json: C5's PASS no longer holds: package.json, toolkit.json changed after it was recorded. Re-record it: yarn contract:run STK-2 C5
+  specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/results.json: C6's PASS no longer holds: package.json, toolkit.json changed after it was recorded. Re-record it: yarn contract:run STK-2 C6
+  STK-2 has an as-built, so it is closing, but C7 (last run exited 1), review:mason (not proven yet), review:vigil (not proven yet), review:warden (not proven yet) are not PASS. Run: yarn review:run mason STK-2
+  STK-3 has an as-built, so it is closing, but review:vigil (last run exited 0) is not PASS. Run: yarn review:run vigil STK-3

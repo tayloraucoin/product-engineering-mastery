@@ -3,34 +3,79 @@
   "criteria_sha256": "716da9c48d921a609766f6ee544fdc61b342f7e05abde96b1841600ad0277d6b",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-04T03:06:18Z",
+        "head": "930129e639fc7cd25c3b1efed36b98ca20ebeb85",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C1.log",
+        "evidence_sha256": "76d383774b7457bc1e88632b7a6b5b2a8aa5eb259b1807d6a293f3a886f3f5fc",
+        "tests": 14
+      }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-04T03:06:19Z",
+        "head": "930129e639fc7cd25c3b1efed36b98ca20ebeb85",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C2.log",
+        "evidence_sha256": "25bf321e49ad8b67c4e408bc167bca110ca18769716827bc6c28366cff9e6d05",
+        "tests": 14
+      }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn lint:boundaries",
+        "exit": 0,
+        "at": "2026-10-04T03:06:20Z",
+        "head": "930129e639fc7cd25c3b1efed36b98ca20ebeb85",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C3.log",
+        "evidence_sha256": "3c031f1361259d4b1602588e8f9013abcc65dfb184424f36a4e740cc68af6c25"
+      }
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn check-types",
+        "exit": 0,
+        "at": "2026-10-04T03:06:21Z",
+        "head": "930129e639fc7cd25c3b1efed36b98ca20ebeb85",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C4.log",
+        "evidence_sha256": "07443190f5b07f911a1d5a3dbedcd59765634b7503354274a99b304c5ede20d3"
+      }
     },
     "C5": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-04T03:06:25Z",
+        "head": "930129e639fc7cd25c3b1efed36b98ca20ebeb85",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C5.log",
+        "evidence_sha256": "ec576d46a6e6b202409bcd54a53707be429a83af51b4a15c020c1fb802df3a95",
+        "tests": 30
+      }
     },
     "C6": {
       "status": "FAIL",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn verify",
+        "exit": 1,
+        "at": "2026-10-04T03:06:44Z",
+        "head": "930129e639fc7cd25c3b1efed36b98ca20ebeb85",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C6.log",
+        "evidence_sha256": "a124cd225d7eca3a965856226cf79a132decb0e87bc0b14b3295a21094b5b015"
+      }
     },
     "review:mason": {
       "status": "FAIL",
@@ -48,5 +93,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-04T02:53:12Z"
+  "updated_at": "2026-10-04T03:07:02Z"
 }

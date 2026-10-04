@@ -1,0 +1,24 @@
+command: yarn check-types
+exit: 0
+at: 2026-10-04T03:06:21Z
+head: 930129e639fc7cd25c3b1efed36b98ca20ebeb85
+---
+
+   • turbo 2.11.6
+   • Packages in scope: @pem/config, @pem/env, @pem/ui, docs, web
+   • Running check-types in 5 packages
+   • Remote caching disabled
+
+@pem/env:check-types: cache miss, executing 07ebe3e6c6cdecb4
+@pem/ui:check-types: cache miss, executing 2972651400f2a020
+web:check-types: cache miss, executing cb2bdeb026511e9f
+docs:check-types: cache miss, executing c3412433e40ed474
+docs:check-types: Generating route types...
+docs:check-types: ✓ Types generated successfully
+web:check-types: Generating route types...
+web:check-types: ✓ Types generated successfully
+
+ Tasks:    4 successful, 4 total
+Cached:    0 cached, 4 total
+  Time:    2.788s 
+
