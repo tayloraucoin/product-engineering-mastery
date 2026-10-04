@@ -8,11 +8,11 @@
       "run": {
         "command": "yarn test:tooling",
         "exit": 0,
-        "at": "2026-10-04T04:25:53Z",
-        "head": "72d7020249cda223274b39f93cb6e4b232041498",
+        "at": "2026-10-04T06:31:46Z",
+        "head": "98f75c569ca3c3bc139a9879cff1fb05f4ebde70",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/evidence/C1.log",
-        "evidence_sha256": "e56cd40e953f7bb97dea1985396d8f441c74b00580e8734c3f7fe99a23b3851e",
-        "tests": 32
+        "evidence_sha256": "90e9d54e030e8e196f9e96d4e0d2a97373065d83154a45e4471fa8bbb178bef2",
+        "tests": 38
       }
     },
     "C2": {
@@ -21,11 +21,11 @@
       "run": {
         "command": "yarn test:tooling",
         "exit": 0,
-        "at": "2026-10-04T04:26:18Z",
-        "head": "72d7020249cda223274b39f93cb6e4b232041498",
+        "at": "2026-10-04T06:32:14Z",
+        "head": "98f75c569ca3c3bc139a9879cff1fb05f4ebde70",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/evidence/C2.log",
-        "evidence_sha256": "c212eeb34428a6a5d330391797e4ca05d97d946bf4af280240c401ce1746904b",
-        "tests": 32
+        "evidence_sha256": "878569ac7faa64350dad31be4b4a5e6d25289afa3fc269060e8e0cf0c315f96f",
+        "tests": 38
       }
     },
     "C3": {
@@ -34,11 +34,11 @@
       "run": {
         "command": "yarn test:tooling",
         "exit": 0,
-        "at": "2026-10-04T04:26:43Z",
-        "head": "72d7020249cda223274b39f93cb6e4b232041498",
+        "at": "2026-10-04T06:32:40Z",
+        "head": "98f75c569ca3c3bc139a9879cff1fb05f4ebde70",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/evidence/C3.log",
-        "evidence_sha256": "b959e7a8688e0093f022580ecc025bbeaa923c280f5e482a2e262b8937aff56f",
-        "tests": 32
+        "evidence_sha256": "50bbaf11bf582ee8b36845c76714ef3a98c10035d4e0217f339445bdf4b073c8",
+        "tests": 38
       }
     },
     "C4": {
@@ -47,11 +47,11 @@
       "run": {
         "command": "yarn test:tooling",
         "exit": 0,
-        "at": "2026-10-04T04:27:08Z",
-        "head": "72d7020249cda223274b39f93cb6e4b232041498",
+        "at": "2026-10-04T06:33:08Z",
+        "head": "98f75c569ca3c3bc139a9879cff1fb05f4ebde70",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/evidence/C4.log",
-        "evidence_sha256": "158888661e7226644627c36ca5a2980868889e9172cda291b17c69c2cea8aa43",
-        "tests": 32
+        "evidence_sha256": "b5899af13841e79e6bab4b45e38ee7665ed3536e9fd28b52667633d92fcf17b5",
+        "tests": 38
       }
     },
     "C5": {
@@ -60,11 +60,11 @@
       "run": {
         "command": "yarn test:tooling",
         "exit": 0,
-        "at": "2026-10-04T04:27:35Z",
-        "head": "72d7020249cda223274b39f93cb6e4b232041498",
+        "at": "2026-10-04T06:33:37Z",
+        "head": "98f75c569ca3c3bc139a9879cff1fb05f4ebde70",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/evidence/C5.log",
-        "evidence_sha256": "cf866ba5c5794f5b82d23c41cf088479283a0e858806fd897aaa17d5fe51005c",
-        "tests": 32
+        "evidence_sha256": "9071c957c9331c92cda68fc9946edce8dbb0b6095cf33122e559226dff52a04c",
+        "tests": 38
       }
     },
     "C6": {
@@ -73,10 +73,10 @@
       "run": {
         "command": "yarn check-types:tooling",
         "exit": 0,
-        "at": "2026-10-04T04:28:00Z",
-        "head": "72d7020249cda223274b39f93cb6e4b232041498",
+        "at": "2026-10-04T06:34:04Z",
+        "head": "98f75c569ca3c3bc139a9879cff1fb05f4ebde70",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/evidence/C6.log",
-        "evidence_sha256": "b02bfb5085ff0c193ed26bbefb65d978949f7fa47676eb7c930d6a43ff8692db"
+        "evidence_sha256": "702ad4fe7421ef4ef95b1220cb9f414ccc6fe44754d10bd8d21347949bbc81dd"
       }
     },
     "C7": {
@@ -92,5 +92,5 @@
       }
     }
   },
-  "updated_at": "2026-10-04T04:33:41Z"
+  "updated_at": "2026-10-04T06:34:05Z"
 }

@@ -8,10 +8,10 @@
       "run": {
         "command": "yarn contract:record STK-9 C1 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/evidence/test-db.txt",
         "exit": 0,
-        "at": "2026-10-04T05:43:27Z",
-        "head": "534a7d14dd1540975e71e6fb0b23a7582ed232b8",
+        "at": "2026-10-04T06:35:14Z",
+        "head": "1ba84ad4cedf7ed66938e7745859b2251d0c41b4",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/evidence/test-db.txt",
-        "evidence_sha256": "8ac0f56cbfd4a5fb72918e449f67d431603567cacbdad57907a34c3cdc8b6234"
+        "evidence_sha256": "0f2559a6ea21b231e95ef0283bd85be88fc046b89f26b2201b9248e08570e939"
       }
     },
     "C2": {
@@ -20,10 +20,10 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-04T06:27:38Z",
-        "head": "e4833901edb9fa125d0395d7883992c9aaf7f6e8",
+        "at": "2026-10-04T06:34:58Z",
+        "head": "dc88948f4c238580b791ea194aba05bf095910c8",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/evidence/C2.log",
-        "evidence_sha256": "c7a057f4da2a2914a82747fed58619f3deb138c882c35acd7d953d2d1b962401",
+        "evidence_sha256": "759b47beec29b43ac91e47abde31f773f6ee6ac440a7d1dbfebd93594d6dbf81",
         "tests": 27
       }
     },
@@ -33,10 +33,10 @@
       "run": {
         "command": "yarn lint:boundaries",
         "exit": 0,
-        "at": "2026-10-04T06:27:38Z",
-        "head": "e4833901edb9fa125d0395d7883992c9aaf7f6e8",
+        "at": "2026-10-04T06:34:58Z",
+        "head": "dc88948f4c238580b791ea194aba05bf095910c8",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/evidence/C3.log",
-        "evidence_sha256": "5a9392137396a28cd22cb98aa4963b0c2c93feddf1c6148b4a65917e19e944c9"
+        "evidence_sha256": "d0ee61f4ad43beb1f7996ae2fc67e7af5b75cf885f336dd094bc84ecfbf9b81f"
       }
     },
     "C4": {
@@ -57,8 +57,8 @@
       "run": {
         "command": "yarn contract:record STK-9 C5 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/evidence/C5.md",
         "exit": 0,
-        "at": "2026-10-04T05:26:57Z",
-        "head": "40cac46e6cfa81f0287f5a40369d654242220943",
+        "at": "2026-10-04T06:35:21Z",
+        "head": "1ba84ad4cedf7ed66938e7745859b2251d0c41b4",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/evidence/C5.md",
         "evidence_sha256": "8723c7d78d01b977d05a052ecad1424d45fbe938113b6eeeacf192e351f55fe5"
       }
@@ -109,5 +109,5 @@
       }
     }
   },
-  "updated_at": "2026-10-04T06:27:40Z"
+  "updated_at": "2026-10-04T06:35:21Z"
 }

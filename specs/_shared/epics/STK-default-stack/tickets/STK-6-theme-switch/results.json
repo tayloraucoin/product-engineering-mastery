@@ -32,10 +32,10 @@
       "run": {
         "command": "yarn contract:record STK-6 C3 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/dark.png",
         "exit": 0,
-        "at": "2026-10-04T04:29:33Z",
-        "head": "a320df0bfbdea2e96b36b748043954fe6c4f171f",
+        "at": "2026-10-04T06:37:32Z",
+        "head": "c4a3825635b0eb443aeb240e2693a8d5f6777497",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/dark.png",
-        "evidence_sha256": "88775f734d68026c0899c5386266b5f463ec67db5c9fe12c5ed3fe8b2f558b56"
+        "evidence_sha256": "1136fc5d511d389d7abed9baaf904f2204ca7f1adff089427759eb7122b2c144"
       }
     },
     "C4": {
@@ -44,10 +44,10 @@
       "run": {
         "command": "yarn contract:record STK-6 C4 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/light.png",
         "exit": 0,
-        "at": "2026-10-04T04:29:37Z",
-        "head": "a320df0bfbdea2e96b36b748043954fe6c4f171f",
+        "at": "2026-10-04T06:37:38Z",
+        "head": "c4a3825635b0eb443aeb240e2693a8d5f6777497",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/light.png",
-        "evidence_sha256": "fcb6fe502aa7333f7901bac4a1325010d35beaf1bf7c27a44e95397ac1db8743"
+        "evidence_sha256": "7aaae57cfbbae3ae8f32df80866765a0d8d309cc1f527f9f60bf59536788b28d"
       }
     },
     "C5": {
@@ -56,8 +56,8 @@
       "run": {
         "command": "yarn contract:record STK-6 C5 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/C5.md",
         "exit": 0,
-        "at": "2026-10-04T04:29:41Z",
-        "head": "a320df0bfbdea2e96b36b748043954fe6c4f171f",
+        "at": "2026-10-04T06:37:50Z",
+        "head": "c4a3825635b0eb443aeb240e2693a8d5f6777497",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/C5.md",
         "evidence_sha256": "fa5863b087b3fcf763ccd65e5c79c9aaa314d733cd9ae25224f5ce002de1bca3"
       }
@@ -68,12 +68,12 @@
       "run": {
         "command": "yarn contract:record STK-6 C6 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/toggle-states.png",
         "exit": 0,
-        "at": "2026-10-04T04:29:45Z",
-        "head": "a320df0bfbdea2e96b36b748043954fe6c4f171f",
+        "at": "2026-10-04T06:37:44Z",
+        "head": "c4a3825635b0eb443aeb240e2693a8d5f6777497",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/toggle-states.png",
-        "evidence_sha256": "3d1e886c98eb157a411070fa2a4e744ce43d752b2fd2ff7d7fb2136835eef277"
+        "evidence_sha256": "057d49a6ef8c4ce14366239c8f29b635451abf16f8a179b4119f59bb6696e015"
       }
     }
   },
-  "updated_at": "2026-10-04T06:34:52Z"
+  "updated_at": "2026-10-04T06:37:50Z"
 }

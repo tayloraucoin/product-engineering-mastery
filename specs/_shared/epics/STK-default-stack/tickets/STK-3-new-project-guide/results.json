@@ -44,10 +44,10 @@
       "run": {
         "command": "yarn contract:record STK-3 C4 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/evidence/C4-reread.md",
         "exit": 0,
-        "at": "2026-10-04T05:35:11Z",
-        "head": "3f1e2df9acdf23cedb4844652d149eabf414d0d6",
+        "at": "2026-10-04T06:35:50Z",
+        "head": "a93db195dec3da00581f00fdc2d3d3b4f2b25daf",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/evidence/C4-reread.md",
-        "evidence_sha256": "976aa78677778411c2bbe74eff20301dcbe7cd0af4e6a0222980e4504c84829f"
+        "evidence_sha256": "fb5b94d51b435687bad4cde87b7184af7430c458ea23275c38cb841db0244fc2"
       }
     },
     "review:vigil": {
@@ -66,5 +66,5 @@
       }
     }
   },
-  "updated_at": "2026-10-04T06:35:30Z"
+  "updated_at": "2026-10-04T06:35:50Z"
 }
