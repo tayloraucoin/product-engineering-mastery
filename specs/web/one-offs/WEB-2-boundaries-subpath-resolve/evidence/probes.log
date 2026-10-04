@@ -1,0 +1,23 @@
+# WEB-2 literal probes, 2026-10-04T07:36:33Z, commit f9d7da1
+
+$ cat packages/ui/src/zz-probe.ts
+import "@pem/db/client";
+$ yarn eslint packages/ui/src/zz-probe.ts
+
+packages/ui/src/zz-probe.ts
+  1:8  error  ui must not import db (codebase-conventions §4). Refactor — do not suppress  boundaries/dependencies
+
+✖ 1 problem (1 error, 0 warnings)
+
+exit 1
+
+$ cat packages/env/src/zz-probe.ts
+import "@pem/brand/brand";
+$ yarn eslint packages/env/src/zz-probe.ts
+
+packages/env/src/zz-probe.ts
+  1:8  error  env must not import brand (codebase-conventions §4). Refactor — do not suppress  boundaries/dependencies
+
+✖ 1 problem (1 error, 0 warnings)
+
+exit 1

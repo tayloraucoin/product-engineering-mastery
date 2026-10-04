@@ -3,19 +3,42 @@
   "criteria_sha256": "5c5fd99c7bb42969e94a9004cd3fb7ca45d751047cf904282b412b23d7479bb5",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test:boundaries",
+        "exit": 0,
+        "at": "2026-10-04T07:36:12Z",
+        "head": "f9d7da16f267b9c9391840a34863225c718fe896",
+        "evidence_path": "specs/web/one-offs/WEB-2-boundaries-subpath-resolve/evidence/C1.log",
+        "evidence_sha256": "a7f34a502b8cd2f2cff8949a8311de7c3618a6a7711ef5fea653f7f1f68d5c6e",
+        "tests": 7
+      }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test:boundaries",
+        "exit": 0,
+        "at": "2026-10-04T07:36:14Z",
+        "head": "f9d7da16f267b9c9391840a34863225c718fe896",
+        "evidence_path": "specs/web/one-offs/WEB-2-boundaries-subpath-resolve/evidence/C2.log",
+        "evidence_sha256": "e794c6b6d54db2bedda53274c45c1368806009b22bae3d956645af444bb6f532",
+        "tests": 7
+      }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn lint:boundaries",
+        "exit": 0,
+        "at": "2026-10-04T07:36:15Z",
+        "head": "f9d7da16f267b9c9391840a34863225c718fe896",
+        "evidence_path": "specs/web/one-offs/WEB-2-boundaries-subpath-resolve/evidence/C3.log",
+        "evidence_sha256": "1b6aea9710b4c223e0915920e60d641fbca79da9380a8fe68dc09edd8937ba7f"
+      }
     },
     "review:mason": {
       "status": "FAIL",
@@ -33,5 +56,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-04T07:34:36Z"
+  "updated_at": "2026-10-04T07:36:17Z"
 }
