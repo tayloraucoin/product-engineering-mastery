@@ -76,15 +76,15 @@
       "run": {
         "command": "yarn review:run warden WEB-2",
         "exit": 0,
-        "at": "2026-10-04T07:55:00Z",
-        "head": "ae3b55a7d14127265e68c33a2888147fa6edf9e9",
+        "at": "2026-10-04T08:11:43Z",
+        "head": "2d2d40aaf4686cfab660dc14fa2a2e14edb41d78",
         "evidence_path": "specs/web/one-offs/WEB-2-boundaries-subpath-resolve/review-warden.md",
-        "evidence_sha256": "12a7dfc4c28aac9c0facaeaed56735c3fce1c01cc28cf2fcdae9510e4b6a926e",
+        "evidence_sha256": "6c1e59fda81e0c10457a0614d1c272dd76caa75268e9c24b56e16ae8d979f4eb",
         "contract_sha256": "ce45839c4387ad272bd390087ad5c8b64a899d13c323834ffa9fd0a520250d99",
-        "as_built_sha256": "420839230ca153d12ab4ae046198032482e76e737a458574d519aff0329313b2",
+        "as_built_sha256": "90e9dfc89a4e46863a29e5bff637391805f5c0e6a86c200f604e6eeccae72968",
         "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
       }
     }
   },
-  "updated_at": "2026-10-04T08:11:35Z"
+  "updated_at": "2026-10-04T08:15:32Z"
 }
