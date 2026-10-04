@@ -46,12 +46,12 @@
       "run": {
         "command": "yarn review:run mason WEB-2",
         "exit": 0,
-        "at": "2026-10-04T07:45:07Z",
-        "head": "5786c6284d432b6432162bb1254ef9a630b0b1b3",
+        "at": "2026-10-04T08:01:19Z",
+        "head": "7b66fdb22b32cb13f32fdb7769c552ab58f5befd",
         "evidence_path": "specs/web/one-offs/WEB-2-boundaries-subpath-resolve/review-mason.md",
-        "evidence_sha256": "eff3aef583973450a2f2343ee052d6d93463188476a5b6230eb5a89f90c69d84",
+        "evidence_sha256": "67d51ce0ae507c22849d024f468f85fd591b8d1962e91c911ff00f73860d4225",
         "contract_sha256": "ce45839c4387ad272bd390087ad5c8b64a899d13c323834ffa9fd0a520250d99",
-        "as_built_sha256": "420839230ca153d12ab4ae046198032482e76e737a458574d519aff0329313b2",
+        "as_built_sha256": "90e9dfc89a4e46863a29e5bff637391805f5c0e6a86c200f604e6eeccae72968",
         "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/mason-cto-principal-dev.md; tools Read,Grep,Glob)"
       }
     },
@@ -86,5 +86,5 @@
       }
     }
   },
-  "updated_at": "2026-10-04T08:01:04Z"
+  "updated_at": "2026-10-04T08:06:49Z"
 }
