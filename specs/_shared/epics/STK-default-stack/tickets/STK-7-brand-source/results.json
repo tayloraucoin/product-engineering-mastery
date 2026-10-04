@@ -3,25 +3,54 @@
   "criteria_sha256": "c5a4ff30404ea39e065572808bd6c427b3563b6732e4efd4450d037b3b108437",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-04T07:05:54Z",
+        "head": "f740df0853afec4f73bea6f0169fb338b259a3ba",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-7-brand-source/evidence/C1.log",
+        "evidence_sha256": "d2bd32213bbd33cd30f4448633154ed8003330b5026286dbe5ccc5ff1a8e386a",
+        "tests": 47
+      }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn lint:boundaries",
+        "exit": 0,
+        "at": "2026-10-04T07:05:55Z",
+        "head": "f740df0853afec4f73bea6f0169fb338b259a3ba",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-7-brand-source/evidence/C2.log",
+        "evidence_sha256": "64ab2245626cd41ee680b52680e7e4ba8a756da7ae5e07f54f376b09888e4d00"
+      }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn verify",
+        "exit": 0,
+        "at": "2026-10-04T07:06:50Z",
+        "head": "f740df0853afec4f73bea6f0169fb338b259a3ba",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-7-brand-source/evidence/C3.log",
+        "evidence_sha256": "6636cfd8b1033a63c33797f366747824f5cf4dd8c36ff1286cc5e2770657173b"
+      }
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "capture",
-      "run": null
+      "run": {
+        "command": "yarn contract:record STK-7 C4 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-7-brand-source/evidence/og.png",
+        "exit": 0,
+        "at": "2026-10-04T07:06:28Z",
+        "head": "f740df0853afec4f73bea6f0169fb338b259a3ba",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-7-brand-source/evidence/og.png",
+        "evidence_sha256": "9eca51197fa54f4ab8385a7d6923f44a2f535bbcf75a2e6ce401fd9d5b360506"
+      }
     }
   },
-  "updated_at": "2026-10-04T06:53:42Z"
+  "updated_at": "2026-10-04T07:07:54Z"
 }
