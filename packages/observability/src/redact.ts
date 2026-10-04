@@ -21,15 +21,34 @@ const SECRET_KEYS = [
   "privatekey",
   "clientsecret",
   "session",
-  "body",
-  "requestbody",
-  "email",
-  "phone",
-  "address",
+  // Request bodies, by the names this stack gives them (a tRPC procedure's is `input`).
+  "input",
+  "payload",
+  // Personal data that no suffix below catches.
+  "ip",
+  "firstname",
+  "lastname",
+  "fullname",
+  "displayname",
 ];
 
-/** A key that ends in one of these is secret too: `stripeSecret`, `resendApiKey`, `idToken`. */
-const SECRET_SUFFIXES = ["secret", "token", "apikey", "password"];
+/**
+ * A key that ends in one of these is redacted too: `stripeSecret`,
+ * `resendApiKey`, `idToken`, `requestBody`, `userEmail`, `phoneNumber`,
+ * `ipAddress`.
+ */
+const SECRET_SUFFIXES = [
+  "secret",
+  "token",
+  "apikey",
+  "password",
+  "cookie",
+  "body",
+  "email",
+  "phone",
+  "phonenumber",
+  "address",
+];
 
 const normalise = (key: string) => key.toLowerCase().replace(/[-_]/g, "");
 
@@ -42,7 +61,7 @@ export function isSecretKey(key: string): boolean {
 
 const MAX_DEPTH = 6;
 
-/** An Error as plain fields; its own properties are redacted like any object's. */
+/** An Error as its name, message, stack and cause; its other own properties are dropped, never printed. */
 function describeError(error: Error, depth: number): Record<string, unknown> {
   const described: Record<string, unknown> = {
     name: error.name,
