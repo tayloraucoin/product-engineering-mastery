@@ -56,15 +56,15 @@
       "run": {
         "command": "yarn review:run vigil STK-3",
         "exit": 0,
-        "at": "2026-10-04T03:08:00Z",
-        "head": "930129e639fc7cd25c3b1efed36b98ca20ebeb85",
+        "at": "2026-10-04T03:18:14Z",
+        "head": "3e5f1be000f9464ee009fc13f9da00e880365922",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/review-vigil.md",
-        "evidence_sha256": "f892c86597b381d7ae7230aebf76928922869581dfc872ab9dfa1258ec763305",
+        "evidence_sha256": "0a5e821a17758476e28087caa783e763f857f457634869841448b4ce84b7840f",
         "contract_sha256": "fec182cad4b000ba34ac49a6c13d31ff7948395c6634833c62cc9f9456c1dc72",
-        "as_built_sha256": "27f154fc55b03bb0724773ac1f6aa4451dbcc165c6870e77639be569199ceb73",
+        "as_built_sha256": "61b6228c8db2637baffa4b8a61a59b8f238c3971b2fe4320495b720a879ddb49",
         "runner": "claude 2.1.232 (Claude Code) (agent vigil; tools Read,Grep,Glob)"
       }
     }
   },
-  "updated_at": "2026-10-04T03:17:58Z"
+  "updated_at": "2026-10-04T03:25:33Z"
 }
