@@ -101,6 +101,19 @@ test("C1: a focus ring below 3:1 fails in the theme it is set in", () => {
   assert.doesNotMatch(out, /FAIL\s+light --ring/);
 });
 
+test("C1: see-through text is composited as the browser does", () => {
+  // White at 30% over black renders as about #5a5a5a: 2.9:1, not the 7:1 a
+  // linear-light blend would report.
+  const { status, out } = audit(
+    preset({ dark: "--muted-foreground: rgb(255 255 255 / 30%);" }),
+  );
+  assert.equal(status, 1, out);
+  assert.match(
+    out,
+    /FAIL\s+dark --muted-foreground on --background \(muted text\): 2\.\d\d:1/,
+  );
+});
+
 test("C1: a missing token fails rather than passing silently", () => {
   const { status, out } = audit(
     preset().replace(/--ring: var\(--step-black\);/, ""),

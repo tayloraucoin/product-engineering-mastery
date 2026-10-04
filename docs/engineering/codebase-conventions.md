@@ -66,7 +66,7 @@ apps/<app>/
 
 - **`apps/web`** — the demo app that proves the toolkit (`apps/web/AGENTS.md`); in a product cloned from here, the product.
 - **`apps/docs`** — a reader for `AGENTS.md`, `docs/**/*.md` and the demo's filled examples. Every page is statically generated from those files at build time; the sidebar groups by the `layer` frontmatter field, `docs/research/` is searchable but not in the sidebar, and frontmatter renders above each page (record 0007). Relative `.md` links are rewritten to routes; links to other repo files render inert with the path in their title. Its `turbo.json` lists the content roots as build inputs, so editing a doc invalidates the cached build.
-- **`tooling/`** — not a workspace. Scripts run directly on Node 22 (`node tooling/<script>.ts`), type-checked by `yarn check-types:tooling`. One consumer (the root scripts), so its shared module stays in `tooling/lib/`.
+- **`tooling/`** — not a workspace. Scripts run directly on Node 22 (`node tooling/<script>.ts`), type-checked by `yarn check-types:tooling`. Its consumer is the root scripts, so its shared module stays in `tooling/lib/`. One exception: `apps/web/next.config.ts` imports `tooling/local-dev-origins.ts` (STK-19), a dev-server helper with no runtime reach. The boundaries lint does not cover `tooling/`, so no other app or package file imports from it.
 
 Route-level components that grow beyond one route move up to `app/_components/`; components needed by both apps move to `@pem/ui` (§1).
 

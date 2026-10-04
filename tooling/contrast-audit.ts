@@ -103,6 +103,10 @@ const clamp = (n: number) => Math.min(1, Math.max(0, n));
 const toLinear = (c: number) =>
   c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
 
+/** Linear light to an sRGB-encoded channel (0 to 1). */
+const toEncoded = (c: number) =>
+  c <= 0.0031308 ? c * 12.92 : 1.055 * c ** (1 / 2.4) - 0.055;
+
 /** Number or percentage, scaled so 100% is `full`. */
 function amount(token: string, full: number): number {
   return token.endsWith("%")
@@ -110,7 +114,10 @@ function amount(token: string, full: number): number {
     : Number.parseFloat(token);
 }
 
-/** Parses a colour into linear-light sRGB, or null when it is not one this audit reads. */
+/**
+ * Parses a colour into sRGB-encoded channels (0 to 1), the space browsers
+ * composite in, or null when it is not one this audit reads.
+ */
 function parseColor(raw: string): Rgba | null {
   const value = raw.trim().toLowerCase();
 
@@ -120,7 +127,7 @@ function parseColor(raw: string): Rgba | null {
       hex[1]!.length === 3
         ? [...hex[1]!].map((d) => d + d)
         : hex[1]!.match(/../g)!;
-    const [r, g, b] = digits.map((d) => toLinear(Number.parseInt(d, 16) / 255));
+    const [r, g, b] = digits.map((d) => Number.parseInt(d, 16) / 255);
     return { r: r!, g: g!, b: b!, a: 1 };
   }
 
@@ -144,19 +151,27 @@ function parseColor(raw: string): Rgba | null {
     const m = (L - 0.1055613458 * A - 0.0638541728 * B) ** 3;
     const s = (L - 0.0894841775 * A - 1.291485548 * B) ** 3;
     return {
-      r: clamp(4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s),
-      g: clamp(-1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s),
-      b: clamp(-0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s),
+      r: toEncoded(
+        clamp(4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s),
+      ),
+      g: toEncoded(
+        clamp(-1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s),
+      ),
+      b: toEncoded(
+        clamp(-0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s),
+      ),
       a,
     };
   }
 
-  const [r, g, b] = parts.map((p) => toLinear(clamp(amount(p, 255) / 255)));
+  const [r, g, b] = parts.map((p) => clamp(amount(p, 255) / 255));
   return { r: r!, g: g!, b: b!, a };
 }
 
-const luminance = ({ r, g, b }: Rgba) => 0.2126 * r + 0.7152 * g + 0.0722 * b;
+const luminance = ({ r, g, b }: Rgba) =>
+  0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
 
+/** A see-through foreground is composited over the surface first, in encoded sRGB as browsers do. */
 function contrastRatio(fg: Rgba, bg: Rgba): number {
   const top = { ...bg };
   for (const k of ["r", "g", "b"] as const) {

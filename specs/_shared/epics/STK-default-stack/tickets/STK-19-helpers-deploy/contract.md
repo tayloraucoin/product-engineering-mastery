@@ -27,6 +27,7 @@ planned_paths:
   - "apps/web/vercel.json"
   - ".github/workflows/ci.yml"
   - "README.md"
+  - "docs/engineering/codebase-conventions.md"
 depends_on:
   - STK-6
 out_of_scope:
