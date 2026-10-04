@@ -73,11 +73,11 @@ All work goes on the `agent/<repo-wide-prefix>` branch: the hooks refuse commits
 
 `@pem/brand` (STK-7) will hold the name, URLs, contact, asset paths and the two theme colours, with logos and fonts in its own folder, and a check will fail when it and the token preset disagree (D-STK-9). STK-7 rewrites this step. Until it lands, the brand lives in three places:
 
-- `--primary` and `--primary-foreground` in `packages/config/tailwind/preset.css`, in both blocks: `:root` (light) and the `prefers-color-scheme: dark` block. Change values only; every other token keeps its value unless the briefing names it, and token names belong to the design system (`docs/design/canon.md`).
+- The colours in `packages/config/tailwind/preset.css`. It has three layers (D-STK-17): a raw scale, semantic names set once under `:root` (light) and again under `.dark`, and the bridge that exposes them to Tailwind. Add the briefing's colours as new raw steps in layer 1, for example `--brand-500`. Then point `--primary` and `--primary-foreground` at them in both layer-2 blocks, `:root` and `.dark`. A raw value is written nowhere else; every other semantic name keeps its step unless the briefing names it; the bridge is not touched; token names belong to the design system (`docs/design/canon.md`).
 - The `metadata` title in `apps/web/app/layout.tsx`: the product name.
 - The `metadata` title in `apps/docs/app/layout.tsx`: `Docs · ` and the product name, the form it has today.
 
-**Check:** `yarn build` exits 0, and `git grep -n "Product Engineering Mastery" -- apps/web/app/layout.tsx apps/docs/app/layout.tsx` prints nothing. The demo page still names the toolkit until step 5.
+**Check:** `git grep -n -e "--primary:" -e "--primary-foreground:" -- packages/config/tailwind/preset.css` prints four lines (light and dark), each set to one of the new raw steps. `yarn build` exits 0. `git grep -n "Product Engineering Mastery" -- apps/web/app/layout.tsx apps/docs/app/layout.tsx` prints nothing. The demo page still names the toolkit until step 5.
 
 ## 4. Choose the modules
 
@@ -94,7 +94,7 @@ All work goes on the `agent/<repo-wide-prefix>` branch: the hooks refuse commits
 
 Remove in the table's order, from the top of the package graph down (D-STK-1), so no module still present imports one already gone.
 
-A module with no entry in the `stack` block is not in the duplicate: skip its row. Today the block holds only `config` and `ui`, both locked, so every row is skipped.
+A module with no entry in the `stack` block is not in the duplicate: skip its row. Today none of the six is built: the block holds only locked modules, so every row is skipped.
 
 **Check:** `yarn check-stack` exits 0, once after each runbook and once at the end of the step, even when no runbook ran.
 

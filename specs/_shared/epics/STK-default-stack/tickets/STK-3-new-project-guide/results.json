@@ -51,20 +51,20 @@
       }
     },
     "review:vigil": {
-      "status": "PASS",
+      "status": "FAIL",
       "evidence": "manual",
       "run": {
         "command": "yarn review:run vigil STK-3",
         "exit": 0,
-        "at": "2026-10-04T02:34:23Z",
-        "head": "f89c85368e0a9155a0eb8350a2a3d0f2dde9e6f2",
+        "at": "2026-10-04T02:58:46Z",
+        "head": "02847c890c0568bdc54214188bece5893f74052f",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/review-vigil.md",
-        "evidence_sha256": "cc7f614da7e8557fa40a65e3bed3e1c26a0f86b032b669fe87c0d09f34169b1e",
+        "evidence_sha256": "2b28018dfd86a1a59ecf7f43c88352b9bcecb0be5e0a0a15ca44dd859090ac8f",
         "contract_sha256": "fec182cad4b000ba34ac49a6c13d31ff7948395c6634833c62cc9f9456c1dc72",
-        "as_built_sha256": "897fc59edee340b4133d8c2547387fb26567b840571793b14685c32447c182ef",
+        "as_built_sha256": "36a9593c62be63ff0dfb8030c5713ba8a1c470eb8257313da0a8f813caefa515",
         "runner": "claude 2.1.232 (Claude Code) (agent vigil; tools Read,Grep,Glob)"
       }
     }
   },
-  "updated_at": "2026-10-04T02:54:34Z"
+  "updated_at": "2026-10-04T03:04:39Z"
 }
