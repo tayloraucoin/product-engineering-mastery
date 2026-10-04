@@ -1,0 +1,62 @@
+{
+  "id": "STK-5",
+  "criteria_sha256": "7ce113f621ccc6532ca9ce89ccd9c7979105ecb8c3b32e4ef98b8699e51e21ae",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-04T19:29:44Z",
+        "head": "6b66f61f0076666818fc35d8106ce87155667347",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-5-constants-observability/evidence/C1.log",
+        "evidence_sha256": "6cb40d52e5638b29b8555b0d9a8634ed3e1978cf74fc2ba72d567da0b33e2030",
+        "tests": 76
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-04T19:29:44Z",
+        "head": "6b66f61f0076666818fc35d8106ce87155667347",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-5-constants-observability/evidence/C2.log",
+        "evidence_sha256": "e78b5688637c206b6e0330878d5990d71c4ce7197279d00cbdf5e8ca81f03b60",
+        "tests": 76
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn lint:boundaries",
+        "exit": 0,
+        "at": "2026-10-04T19:29:45Z",
+        "head": "6b66f61f0076666818fc35d8106ce87155667347",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-5-constants-observability/evidence/C3.log",
+        "evidence_sha256": "9d77656655eceb79b43b9818256160a85f4d608cff852124d2afbfb7d9ac866f"
+      }
+    },
+    "C4": {
+      "status": "FAIL",
+      "evidence": "manual",
+      "run": null
+    },
+    "C5": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn verify",
+        "exit": 0,
+        "at": "2026-10-04T19:29:47Z",
+        "head": "6b66f61f0076666818fc35d8106ce87155667347",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-5-constants-observability/evidence/C5.log",
+        "evidence_sha256": "b4ffefc366318a9a5142a4d92d9e0a47ae535cee68c8f55583373f692c79fe63"
+      }
+    }
+  },
+  "updated_at": "2026-10-04T19:31:00Z"
+}
