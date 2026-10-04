@@ -20,12 +20,13 @@ const withThemeClass = withThemeByClassName({
  * `themes: { disable: true }` because a `ThemeProvider` in it owns the class.
  */
 const withToolbarTheme: Decorator = (Story, context) => {
-  if (context.parameters.themes?.disable) return <Story />;
+  const { disable, themeOverride } = context.parameters.themes ?? {};
+  if (disable) return <Story />;
   // Set before the story paints, as next-themes does in the app. The addon's
   // own effect lands after paint, and axe would scan a colour transition.
   document.documentElement.classList.toggle(
     "dark",
-    context.globals.theme === "dark",
+    (themeOverride ?? context.globals.theme) === "dark",
   );
   return withThemeClass(Story, context);
 };
@@ -45,16 +46,17 @@ const withBrandFont: Decorator = (Story) => {
 const preview: Preview = {
   /**
    * `parameters.storedTheme` is the theme a person chose earlier, put where
-   * next-themes reads it before the story mounts, and taken back after.
+   * next-themes reads it before the story mounts; `null` is no choice yet.
+   * Only these stories use the key here, so whatever the story stored (a
+   * click on the toggle) is cleared after, with the class it set.
    */
   beforeEach: ({ parameters }) => {
-    const stored = parameters.storedTheme as Theme | undefined;
-    if (!stored) return;
-    const previous = localStorage.getItem(THEME_KEY);
-    localStorage.setItem(THEME_KEY, stored);
+    const stored = parameters.storedTheme as Theme | null | undefined;
+    if (stored === undefined) return;
+    if (stored === null) localStorage.removeItem(THEME_KEY);
+    else localStorage.setItem(THEME_KEY, stored);
     return () => {
-      if (previous === null) localStorage.removeItem(THEME_KEY);
-      else localStorage.setItem(THEME_KEY, previous);
+      localStorage.removeItem(THEME_KEY);
       document.documentElement.classList.remove("light", "dark");
       document.documentElement.style.removeProperty("color-scheme");
     };

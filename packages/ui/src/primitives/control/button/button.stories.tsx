@@ -29,6 +29,17 @@ export const Large: Story = { args: { size: "lg" } };
 
 export const Hover: Story = { parameters: { pseudo: { hover: true } } };
 
+export const OutlineHover: Story = {
+  args: { variant: "outline" },
+  parameters: { pseudo: { hover: true } },
+};
+
+/** Hover is a ghost button's only visible affordance. */
+export const GhostHover: Story = {
+  args: { variant: "ghost" },
+  parameters: { pseudo: { hover: true } },
+};
+
 /** Reached from the keyboard, so the focus ring shows. */
 export const Focus: Story = {
   play: async ({ canvasElement }) => {

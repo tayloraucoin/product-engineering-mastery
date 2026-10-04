@@ -51,7 +51,10 @@ function checkFolder(
 }
 
 /** Every story-coverage problem in the package at `root`. */
-export function storyCoverage(root: string, shownRoot = root): string[] {
+export function findStoryCoverageProblems(
+  root: string,
+  shownRoot = root,
+): string[] {
   const src = path.join(root, "src");
   const problems: string[] = [];
 

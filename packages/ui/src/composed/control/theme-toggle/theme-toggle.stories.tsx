@@ -7,16 +7,23 @@ import { ThemeToggle } from "./theme-toggle";
 
 const { options } = THEME_TOGGLE_COPY;
 
-/** The toggle drives the real `.dark` class, so the toolbar's is off. */
+/**
+ * The toggle drives the real `.dark` class, so the toolbar's is off. Each
+ * story mounts it under `ThemeProvider`, as the app does, unless it sets
+ * `withoutProvider`.
+ */
 const meta = {
   title: "Composed/Control/Theme toggle",
   component: ThemeToggle,
   decorators: [
-    (Story) => (
-      <ThemeProvider>
+    (Story, { parameters }) =>
+      parameters.withoutProvider ? (
         <Story />
-      </ThemeProvider>
-    ),
+      ) : (
+        <ThemeProvider>
+          <Story />
+        </ThemeProvider>
+      ),
   ],
   parameters: { themes: { disable: true } },
 } satisfies Meta<typeof ThemeToggle>;
@@ -24,8 +31,25 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/**
+ * Before the stored theme is known (server render, hydration): nothing is
+ * selected, and the first option is the tab stop.
+ */
+export const Unresolved: Story = {
+  parameters: { withoutProvider: true },
+  play: async ({ canvas }) => {
+    for (const radio of canvas.getAllByRole("radio"))
+      await expect(radio).not.toBeChecked();
+    await userEvent.tab();
+    await expect(
+      canvas.getByRole("radio", { name: options.light }),
+    ).toHaveFocus();
+  },
+};
+
 /** No stored choice: "system", the provider's default, is selected. */
 export const System: Story = {
+  parameters: { storedTheme: null },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(
@@ -75,9 +99,17 @@ export const Keyboard: Story = {
     await expect(dark).toBeChecked();
     await expect(dark).toHaveFocus();
     await userEvent.keyboard("{End}");
-    await expect(
-      canvas.getByRole("radio", { name: options.system }),
-    ).toHaveFocus();
+    const system = canvas.getByRole("radio", { name: options.system });
+    await expect(system).toBeChecked();
+    await expect(system).toHaveFocus();
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(light).toBeChecked();
+    await expect(light).toHaveFocus();
+    await userEvent.keyboard("{ArrowLeft}");
+    await expect(system).toBeChecked();
+    await userEvent.keyboard("{Home}");
+    await expect(light).toBeChecked();
+    await expect(light).toHaveFocus();
   },
 };
 

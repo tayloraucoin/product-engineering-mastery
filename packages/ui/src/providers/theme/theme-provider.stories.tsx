@@ -27,6 +27,7 @@ type Story = StoryObj<typeof meta>;
 
 /** No stored choice: the operating system decides. */
 export const System: Story = {
+  parameters: { storedTheme: null },
   play: async ({ canvas }) => {
     await expect(await canvas.findByText(/Chosen: system/)).toBeVisible();
   },

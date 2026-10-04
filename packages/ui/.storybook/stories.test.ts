@@ -17,6 +17,8 @@ for (const [file, module] of Object.entries(modules)) {
   describe(module.default.title ?? file, () => {
     for (const [name, Story] of Object.entries(composeStories(module))) {
       it(name, async () => {
+        // No story opts out of the axe pass that this test rests on.
+        expect(Story.parameters.a11y?.test).toBe("error");
         await Story.run();
       });
     }
