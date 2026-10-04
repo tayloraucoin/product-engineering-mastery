@@ -189,6 +189,18 @@
       "locked": true,
       "runbook": null
     },
+    "brand": {
+      "files": [
+        "packages/brand",
+        "apps/web/app/manifest.ts",
+        "apps/web/app/opengraph-image.tsx"
+      ],
+      "env": [],
+      "dependencies": ["@pem/brand"],
+      "boundaries": ["brand"],
+      "locked": true,
+      "runbook": null
+    },
     "ui": {
       "files": ["packages/ui"],
       "env": [],

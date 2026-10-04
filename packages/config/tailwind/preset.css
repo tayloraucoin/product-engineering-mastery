@@ -81,6 +81,8 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-ring: var(--ring);
+  /* The brand font, set on <html> by each layout from @pem/brand/font. */
+  --font-sans: var(--font-brand-sans, ui-sans-serif, system-ui, sans-serif);
   --radius-sm: calc(var(--radius) - 2px);
   --radius-md: var(--radius);
   --radius-lg: calc(var(--radius) + 4px);

@@ -3,7 +3,7 @@
  *
  * Enforced via eslint-plugin-boundaries at the repo root (eslint.config.mjs).
  * Layer order (low → high), the built part of codebase-conventions §4:
- *   config → env → db → ui → apps
+ *   config → env, brand → db → ui → apps
  *
  * - apps/* → apps/*: hard ban
  * - packages/* → apps/*: hard ban
@@ -47,6 +47,7 @@ const ELEMENTS = [
   workspaceApp("app-docs", "docs"),
   workspacePackage("config", "config"),
   workspacePackage("env", "env"),
+  workspacePackage("brand", "brand"),
   workspacePackage("db", "db"),
   workspacePackage("ui", "ui"),
 ];
@@ -55,6 +56,7 @@ const ELEMENTS = [
 const PACKAGE_IMPORTS = {
   config: [],
   env: ["config"],
+  brand: ["config"],
   db: ["config", "env"],
   ui: ["config"],
 };

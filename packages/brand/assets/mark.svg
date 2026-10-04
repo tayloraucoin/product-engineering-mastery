@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Placeholder mark. Fills are brand.theme.primary and primaryForeground, as hex, per colour scheme. -->
+  <style>
+    .surface { fill: #171717; }
+    .figure { fill: #fafafa; }
+    @media (prefers-color-scheme: dark) {
+      .surface { fill: #e5e5e5; }
+      .figure { fill: #171717; }
+    }
+  </style>
+  <rect class="surface" width="32" height="32" rx="7" />
+  <rect class="figure" x="9" y="9" width="6" height="14" rx="1.5" />
+  <rect class="figure" x="17" y="9" width="6" height="6" rx="1.5" />
+</svg>
