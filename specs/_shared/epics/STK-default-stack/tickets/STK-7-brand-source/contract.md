@@ -23,9 +23,18 @@ planned_paths:
   - "apps/web/app/icon.svg"
   - "apps/web/app/opengraph-image.tsx"
   - "apps/web/public/**"
+  - "apps/web/package.json"
+  - "apps/web/next.config.ts"
+  - "apps/docs/app/layout.tsx"
+  - "apps/docs/package.json"
+  - "apps/docs/next.config.ts"
+  - "packages/config/tailwind/preset.css"
   - "packages/config/eslint/boundaries.js"
   - "toolkit.json"
+  - "yarn.lock"
   - "docs/runbooks/new-project.md"
+  - "docs/engineering/tech-stack.md"
+  - "docs/engineering/codebase-conventions.md"
 depends_on:
   - STK-6
   - STK-3
