@@ -42,7 +42,7 @@ From `.env.example` and `turbo.json`'s `globalEnv`, each with its `_LOCAL` and `
 - `DATABASE_URL`
 - `DATABASE_MIGRATION_URL`
 
-Keep `DATABASE_ENVIRONMENT`: it is the tier switch every module reads (D-STK-3), not this module's. Keep `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` while Supabase Auth stays: STK-11 declared them for `db:seed-users`, but they are the auth module's, and its runbook removes them.
+Keep `DATABASE_ENVIRONMENT`: it is the tier switch every module reads (D-STK-3), not this module's. Keep `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` while Supabase Auth stays: STK-11 declared them for `db:seed-users`, but they are the auth module's, and its runbook removes them. When `toolkit.json`'s `stack` block has no `auth` entry, nothing else reads them: delete both, with their `_LOCAL` and `_STAGING` forms and their comment block, from `.env.example` and `turbo.json`'s `globalEnv`. A service-role key name with no reader invites a live key where nothing uses it.
 
 ## Dependencies
 

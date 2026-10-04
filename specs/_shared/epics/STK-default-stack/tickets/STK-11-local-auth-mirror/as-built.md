@@ -4,7 +4,7 @@
 
 - C1: `packages/db/src/local-auth-mirror.ts` exports `applyLocalAuthMirror(sql, { id, email })`. One statement upserts `auth.users (id, email)` and nothing else. Its own CTE opens only when `to_regclass('auth.identities') is null` and `to_regclass('local_auth_mirror.marker') is not null`; a closed guard selects no row, so zero rows are written. `test/local-auth-mirror.test.ts` (in `yarn test:db`) covers six cases: an insert whose only non-null columns are `id` and `email`, with `public.users` created by the trigger; the cache, then "unchanged"; an email change upserted into both tables; zero rows with `auth.identities` created as `supabase_auth_admin`; zero rows with the marker dropped; and a refusal leaving an existing email alone. Each refusal runs in a rolled-back transaction. A further test wipes a cached user's rows and sees them mirrored again once the cache entry expires. Capture: 15 of 15, none skipped (`evidence/test-db.txt`).
 - C2: the mirror checks the client's hosts (`sql.options.host`) are loopback before its first query; `seedLocalUsers`, which `db:seed-users` runs, refuses a non-loopback or unset auth URL before any fetch. `src/local-auth-mirror.test.ts` counts socket attempts through postgres.js's socket factory: zero for two hosted URLs. `scripts/local-users.test.ts` counts fetch calls: zero for hosted, private-network, look-alike and unset URLs.
-- C3: `yarn verify` stops at `check-settings`, on STK-10's pending `.claude/settings.json` line, which Taylor applies. The rest of the chain, run on 2026-10-04 without that one step, exits 0: format, docs, hooks, refs, stack, migrations, specs, tooling and unit tests, lint, boundaries, types, the client-bundle check and the build.
+- C3: `yarn verify` passes in full, `check-settings` included, once Taylor applied STK-10's settings line (`evidence/C3.log`).
 - Non-negotiables:
   - Supabase CLI `supabase` 2.119.0, pinned exact as an `@pem/db` devDependency (verified 2026-10-04).
   - `db:local` runs `supabase db start` with `SUPABASE_AUTH_ENABLED=false` for that run only, then creates the marker. `db:local:full` runs `supabase start`.
@@ -39,6 +39,16 @@
 - **`db:seed-users` refuses redirects** (`redirect: "error"`), so a loopback URL cannot forward the key off the machine.
 - **[ASSUMPTION] `db:seed-users` sends `Authorization: Bearer` only for a JWT-shaped key**, and `apikey` always. Both key styles worked against local Auth (GoTrue v2.197.0) on 2026-10-04.
 - **A known gap, out of scope:** a staging user deleted and re-created with the same email gets a new id. The local `auth.users` has a unique index on `email`, so the mirror's insert then fails with a unique violation until the old row is deleted. Replaying staging deletions is out of scope.
+- **Warden's first review (FAIL) and the fixes:**
+  - `test/rls.test.ts` now asserts a loopback client before migrating or writing to `auth.users`, as its sibling tests do.
+  - The network warning flags any binding that isn't loopback, a specific LAN address included (`nonLoopbackBindings`, tested).
+  - The exposure is now stated in `new-project.md` step 6 and in the `tech-stack.md` image row.
+  - The database runbook says to delete the two Supabase variables when there is no `auth` entry.
+  - `scripts/auth-writers.test.ts` fails if any shipped file other than the mirror writes to `auth.users`.
+  - The mirror documents the unique violation it throws for a re-created staging user.
+- **`packages/db/.env.example` added** (Taylor's request; path added to `planned_paths`). The db scripts run from `packages/db` and load `packages/db/.env.local`, not the root one. The file lists exactly the variables they read.
+- **C4 and C5 are deferred to the operator** (`--verdict deferred`). Each check is written out in `evidence/C4-operator.md` and `evidence/C5-operator.md`.
+- **The capture header names the commit of the code it ran on.** The capture file is committed on top of that commit, so the run record stamps the next commit.
 
 ## Not verified
 
