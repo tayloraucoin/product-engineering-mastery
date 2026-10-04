@@ -2,6 +2,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { NextConfig } from "next";
 
+import { nextConfigEnv } from "./env";
+
 const appRoot = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(appRoot, "../..");
 
@@ -14,7 +16,14 @@ const nextConfig: NextConfig = {
   agentRules: false,
 
   // Workspace packages ship TypeScript source; the app compiles them.
-  transpilePackages: ["@pem/ui"],
+  transpilePackages: ["@pem/env", "@pem/ui"],
+
+  /**
+   * Inlined into every bundle, the browser's included: only the collapsed
+   * NEXT_PUBLIC_* values from env.ts, which refuses any other name (D-STK-4).
+   * Importing env.ts here also validates the environment once, at build.
+   */
+  env: nextConfigEnv,
 
   turbopack: {
     root: repoRoot,

@@ -736,6 +736,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@pem/env@workspace:*, @pem/env@workspace:packages/env":
+  version: 0.0.0-use.local
+  resolution: "@pem/env@workspace:packages/env"
+  dependencies:
+    "@pem/config": "workspace:*"
+    "@types/node": "npm:^22"
+    eslint: "npm:^9.39.1"
+    typescript: "npm:5.9.2"
+  languageName: unknown
+  linkType: soft
+
 "@pem/ui@workspace:*, @pem/ui@workspace:packages/ui":
   version: 0.0.0-use.local
   resolution: "@pem/ui@workspace:packages/ui"
@@ -765,6 +776,50 @@ __metadata:
   dependencies:
     tslib: "npm:^2.8.0"
   checksum: 10c0/02da7b4df465693933ecd4851cc193ec729c309939c8a84eccae5ec0010aafc3894e713b8ef8d13a6ba401759f0e900c88e2dcfef5872c27bb91e70f73275cce
+  languageName: node
+  linkType: hard
+
+"@t3-oss/env-core@npm:0.13.11":
+  version: 0.13.11
+  resolution: "@t3-oss/env-core@npm:0.13.11"
+  peerDependencies:
+    arktype: ^2.1.0
+    typescript: ">=5.0.0"
+    valibot: ^1.0.0-beta.7 || ^1.0.0
+    zod: ^3.24.0 || ^4.0.0
+  peerDependenciesMeta:
+    arktype:
+      optional: true
+    typescript:
+      optional: true
+    valibot:
+      optional: true
+    zod:
+      optional: true
+  checksum: 10c0/acb1d5c8f184f0004612b0ed1ef965f3fd014b945b3192057f1500ba760ded8d4c988e6cfed3c63070ccde3b8f7dc27f90044d29474325c5025e44fd3c607441
+  languageName: node
+  linkType: hard
+
+"@t3-oss/env-nextjs@npm:^0.13.11":
+  version: 0.13.11
+  resolution: "@t3-oss/env-nextjs@npm:0.13.11"
+  dependencies:
+    "@t3-oss/env-core": "npm:0.13.11"
+  peerDependencies:
+    arktype: ^2.1.0
+    typescript: ">=5.0.0"
+    valibot: ^1.0.0-beta.7 || ^1.0.0
+    zod: ^3.24.0 || ^4.0.0
+  peerDependenciesMeta:
+    arktype:
+      optional: true
+    typescript:
+      optional: true
+    valibot:
+      optional: true
+    zod:
+      optional: true
+  checksum: 10c0/50bb7791d6eba701fcd32fd0e73d00ea4f0cab039d2f984651d48402ea77451ec6510511dccc9a83a0849754321969864dfb626067741d0477d6940ca4b6cbb1
   languageName: node
   linkType: hard
 
@@ -5201,7 +5256,9 @@ __metadata:
   resolution: "web@workspace:apps/web"
   dependencies:
     "@pem/config": "workspace:*"
+    "@pem/env": "workspace:*"
     "@pem/ui": "workspace:*"
+    "@t3-oss/env-nextjs": "npm:^0.13.11"
     "@tailwindcss/postcss": "npm:^4"
     "@types/node": "npm:^22"
     "@types/react": "npm:^19"
@@ -5212,6 +5269,7 @@ __metadata:
     react-dom: "npm:19.2.8"
     tailwindcss: "npm:^4"
     typescript: "npm:5.9.2"
+    zod: "npm:^4.6.5"
   languageName: unknown
   linkType: soft
 
@@ -5314,6 +5372,13 @@ __metadata:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: 10c0/dceb44c28578b31641e13695d200d34ec4ab3966a5729814d5445b194933c096b7ced71494ce53a0e8820685d1d010df8b2422e5bf2cdea7e469d97ffbea306f
+  languageName: node
+  linkType: hard
+
+"zod@npm:^4.6.5":
+  version: 4.6.5
+  resolution: "zod@npm:4.6.5"
+  checksum: 10c0/32eb6c5e98becbe045675b2141c3611451c16ba567f9779231d79af41c4d651ca1c22f154aef7e6c6e77b929f23e43f1154ca05b82e119e922353725d6776af5
   languageName: node
   linkType: hard
 
