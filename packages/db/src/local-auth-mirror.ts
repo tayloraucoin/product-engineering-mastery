@@ -88,7 +88,11 @@ type GuardedRow = { open: boolean; inserted: boolean | null };
 /**
  * Mirrors `user` into the local auth.users: inserts id and email when the row
  * is absent, updates the email when it changed, and does nothing otherwise.
- * Throws before connecting when the client's host is not loopback.
+ * Throws before connecting when the client's host is not loopback. Throws
+ * Postgres's unique violation (23505) when a different local id already holds
+ * the email, as when a staging user was deleted and re-created: replaying
+ * staging deletions is out of scope, so the caller logs it and serves the
+ * request, and deleting the stale local auth.users row clears it.
  */
 export async function applyLocalAuthMirror(
   sql: postgres.Sql,

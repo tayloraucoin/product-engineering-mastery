@@ -10,6 +10,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import postgres from "postgres";
 
+import { isLoopbackHost } from "../src/local-auth-mirror.ts";
 import { cliEnvironment } from "./env.ts";
 import {
   LEGACY_CONTAINER,
@@ -60,19 +61,28 @@ export function isContainerRunning(name: string): boolean {
   );
 }
 
-/** Whether a container publishes `port` on every interface rather than loopback only. */
+/**
+ * The addresses in `docker port` output that are not loopback: `0.0.0.0` and
+ * `::` (every interface) or a specific LAN address the daemon binds to.
+ */
+export function nonLoopbackBindings(dockerPortOutput: string): string[] {
+  return dockerPortOutput
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line !== "")
+    .map((line) => line.slice(0, line.lastIndexOf(":")))
+    .filter((host) => !isLoopbackHost(host));
+}
+
+/** Whether a container publishes `port` anywhere but loopback. */
 export function isPublishedBeyondLoopback(
   container: string,
   port: number,
 ): boolean {
-  const lines = execFileSync("docker", ["port", container, String(port)], {
+  const output = execFileSync("docker", ["port", container, String(port)], {
     encoding: "utf8",
-  })
-    .trim()
-    .split("\n");
-  return lines.some(
-    (line) => line.startsWith("0.0.0.0:") || line.startsWith("[::]:"),
-  );
+  });
+  return nonLoopbackBindings(output).length > 0;
 }
 
 /** Runs `supabase <args> --workdir packages/db`, streaming its output; exits on failure. */
