@@ -352,26 +352,31 @@ function start(item: Item, tree: SpecsTree) {
       );
   }
 
-  // A dependent ticket starts only after its predecessor merges (convention 5).
+  // A dependent ticket starts once its predecessor has an as-built here:
+  // merged, or stacked beneath this branch (Taylor, 2026-10-03).
   for (const dep of contract.depends_on) {
     const other = findItem(tree, dep);
-    if (!other || !fileExists(asBuiltPath(other)) || !isMerged(other))
+    if (!other || !fileExists(asBuiltPath(other)))
       refusals.push(
-        `depends on ${dep}, which has not merged; start ${item.id} after it does`,
+        `depends on ${dep}, which has no as-built on this branch; finish it, or start from its branch`,
       );
   }
 
-  // One active item per branch.
+  // One item in build per branch: a ticket with its as-built (closing or
+  // closed) lets the next one start on its own branch, stacked on this one.
   const branch = getCurrentBranch() ?? "";
   const active = tree.items.find(
     (other) => branchFor(toolkit, other.id) === branch && other.id !== item.id,
   );
-  if (active && fileExists(resultsPath(active))) {
+  if (
+    active &&
+    fileExists(resultsPath(active)) &&
+    !fileExists(asBuiltPath(active))
+  ) {
     const stage = readItemState(active, toolkit.specsRoot).stage;
-    if (stage !== "closed" && stage !== "migration pending")
-      refusals.push(
-        `${branch} holds ${active.id}, still ${stage}; finish it (yarn status ${active.id}) or git switch main first`,
-      );
+    refusals.push(
+      `${branch} holds ${active.id}, still ${stage}; write its as-built (yarn status ${active.id}) or git switch main first`,
+    );
   }
   if (refusals.length)
     stop(`${item.id} cannot start:\n  ${refusals.join("\n  ")}`);

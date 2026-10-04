@@ -9,6 +9,8 @@ import path from "node:path";
 import { test } from "node:test";
 
 import {
+  AS_BUILT,
+  buildAndProve,
   commit,
   freshRepo,
   git,
@@ -65,6 +67,36 @@ test("one active item per branch: a second start on agent/WEB-1 is refused", () 
   const r = tool(repo, "contract.ts", ["init", "web", "other"]);
   assert.notEqual(r.status, 0);
   assert.match(r.out, /holds WEB-1, still open/);
+});
+
+test("stacking: a branch whose item has its as-built starts the next item on its own branch", () => {
+  const repo = startOneOff();
+  buildAndProve(repo);
+  write(repo, "specs/web/one-offs/WEB-1-filter/as-built.md", AS_BUILT("WEB-1"));
+  commit(repo, "WEB-1: as-built");
+  tool(repo, "contract.ts", ["init", "web", "other"]);
+  write(
+    repo,
+    "specs/web/one-offs/WEB-2-other/contract.md",
+    oneOffContract("WEB-2", { depends: ["WEB-1"], planned: ["src/other.ts"] }),
+  );
+  const r = tool(repo, "contract.ts", ["init", "web", "other"]);
+  assert.equal(r.status, 0, r.out);
+  assert.equal(git(repo, "rev-parse", "--abbrev-ref", "HEAD"), "agent/WEB-2");
+});
+
+test("a dependency without an as-built refuses the start", () => {
+  const repo = freshRepo();
+  tool(repo, "contract.ts", ["init", "web", "first"]);
+  tool(repo, "contract.ts", ["init", "web", "second"]);
+  write(
+    repo,
+    "specs/web/one-offs/WEB-2-second/contract.md",
+    oneOffContract("WEB-2", { depends: ["WEB-1"] }),
+  );
+  const r = tool(repo, "contract.ts", ["init", "web", "second"]);
+  assert.notEqual(r.status, 0);
+  assert.match(r.out, /depends on WEB-1, which has no as-built on this branch/);
 });
 
 test("A6: a cited file not approved, or holding a BLOCKING marker, is refused; a plain open marker is listed", () => {

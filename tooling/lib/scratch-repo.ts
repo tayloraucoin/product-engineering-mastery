@@ -179,6 +179,7 @@ export function oneOffContract(
     truth?: string | string[];
     planned?: string[];
     criteria?: string;
+    depends?: string[];
   } = {},
 ) {
   return [
@@ -194,7 +195,7 @@ export function oneOffContract(
     `truth_files: ${JSON.stringify(extra.truth ?? "none: no living UX file in the scratch repo")}`,
     "reviewers: []",
     `planned_paths: ${JSON.stringify(extra.planned ?? ["src/filter.ts"])}`,
-    "depends_on: []",
+    `depends_on: ${JSON.stringify(extra.depends ?? [])}`,
     "out_of_scope:",
     "  - Saved filters.",
     "criteria:",
