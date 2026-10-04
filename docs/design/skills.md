@@ -41,9 +41,9 @@ Third-party design skills are untrusted code. Two enter the repo, both only afte
 **A. `shadcn`**
 
 1. Pin the CLI: add `shadcn` to devDependencies at a fixed version and replace every `npx shadcn@latest` (including the `` !`…` `` load-time injection) with `yarn shadcn …`.
-2. Delete "Check community registries too." Add: "Only the @shadcn registry. Any new primitive requires a justification in the package and a ruling per the product's `components.md`; propose, do not add."
+2. Delete "Check community registries too." Add: "Only the @shadcn registry and the sources ruled in `docs/design/component-sources.md`, which holds the review an `add` passes. A third-party item is addressed by a GitHub path pinned to a full commit SHA, never a namespace. Any new primitive requires a justification in the package and a ruling per the product's `components.md`; propose, do not add." (Amended by CS-08, 2026-10-04.)
 3. Delete the third-party registry examples, and add "Never run `add --all`, `apply`, or `init --force`."
-4. Frontmatter: `allowed-tools: Bash(yarn shadcn info *) Bash(yarn shadcn docs *) Bash(yarn shadcn add * --dry-run) Bash(yarn shadcn add * --diff *)`; `paths` per CF-23 (`apps/*/app/**`, `apps/*/src/**`, `packages/ui/**`).
+4. Frontmatter: `allowed-tools: Bash(yarn shadcn info *) Bash(yarn shadcn docs *) Bash(yarn shadcn add * --dry-run) Bash(yarn shadcn add * --diff *)`; `paths` per CF-23 (`apps/*/app/**`, `apps/*/src/**`, `packages/ui/**`, and `packages/catalog/**` per CS-07).
 5. Pointer line: "Tokens and component law live in `docs/design/canon.md` and the product's `tokens.md` and `components.md`; they override this skill."
 6. Read and copy in the nine reference files (`rules/styling.md`, `forms.md`, `composition.md`, `icons.md`, `chat.md`, `base-vs-radix.md`, `cli.md`, `registry.md`, `customization.md`) before committing. They were not opened in thread 04, so this step is not optional. Delete `chat.md` if no product surface has chat UI.
 
@@ -110,3 +110,4 @@ Skill trigger tests live with each skill at `.claude/skills/<name>/tests/trigger
 
 - 2026-10-01: v0.1, lifted from ruling 04 for the toolkit. House names prefixed `tk-` (CF-18); flat skill folders with `REGISTRY.md` (CF-19); yarn commands (CF-22); `tk-motion` model-invocable on its trigger test (CF-30, amends ruling 04's manual-only row); GSAP rejected for product UI (CF-32); the cookbook routed to references (CF-33); the critic's rubric moved to `canon.md` §3 (CF-20). The mined `DESIGN.md` lines live in `canon.md` §1 and the mined bans in `canon.md` §2; ruling 04's motion line is retired (CF-34). Product lines in edit B4 cut.
 - 2026-10-01: the critic's rubric moved from `canon.md` §3 to `canon-rubric.md` (record 0009); `tk-ui-critic` loads it with canon §2.
+- 2026-10-04: edit A2 admits the sources ruled in `component-sources.md`, by commit-pinned GitHub address (CS-08); edit A4's `paths` gains `packages/catalog/**` (CS-07, record 0011).

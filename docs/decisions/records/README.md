@@ -35,3 +35,4 @@ load_when:
 | [`0008-subagents-are-generated-opt-in.md`](0008-subagents-are-generated-opt-in.md) | Read before making a role available as a Claude Code subagent, changing a subagent's tools, or editing anything in .claude/agents/. |
 | [`0009-canon-split.md`](0009-canon-split.md) | Read before changing what loads on UI work or in the critic pass, or before moving lines between canon.md and canon-rubric.md. |
 | [`0010-starter-ships-default-stack.md`](0010-starter-ships-default-stack.md) | Read before adding, removing or placing a workspace package, reading an environment variable, or porting this repo into a product. |
+| [`0011-component-kit-and-catalog.md`](0011-component-kit-and-catalog.md) | Read before adding a component from outside shadcn core, promoting a catalog item into @pem/ui, or changing what the component workshop shows. |

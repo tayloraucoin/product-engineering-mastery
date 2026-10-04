@@ -69,6 +69,7 @@ Plumb owns this layer and its changelog; Vesper designs within it; Assay scores 
 | --- | --- |
 | [`canon-rubric.md`](canon-rubric.md) | Read when scoring rendered UI against the canon, or when calibrating the critic; the procedure and the fifteen rubric lines every product inherits. Builders never load it. |
 | [`canon.md`](canon.md) | Read before designing, building or critiquing any UI. Holds the twelve principles and twenty anti-patterns every product inherits; a product's DESIGN.md may tighten these, never loosen them. |
+| [`component-sources.md`](component-sources.md) | Read before adding a component from shadcn or any registry, choosing components for a new product, or finding which source serves a job the product's components.md lacks; holds the source verdicts, the base and style, the registry review deltas, the job index and the starter kits. |
 | [`skills.md`](skills.md) | Read before installing, updating, editing or triggering any design skill, or when a skill fires on the wrong task; holds what is adopted, mined, rejected or deferred, the load order, and the review checklist. |
 | [`workflow.md`](workflow.md) | Read before choosing a design or build tool for a loop, citing a canvas file in a review, putting customer data into a design tool, or writing a UI prompt. |
 | [`templates/`](templates/README.md) | Open when a product starts or changes its design layer: the six templates it fills, and the reference-set guide. |

@@ -15,6 +15,10 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-04 — CAT: component sources, the kit and the catalog
+
+Taylor, on the returned P-M research: every shadcn component, then the ecosystem and the custom components of five earlier products, browsable in the workshop, filterable by source, with the code ready to pick; he approved the four recommendations (Base UI, per-command registry access, Vega, catalogue by job). New: `docs/design/component-sources.md` (CS-01 to CS-10, the review deltas, the job index, the starter kits) and record 0011 (two shelves). Amended: `skills.md` edit A2 admits the ruled sources by commit-pinned GitHub address; SK-05's status. The research is filed unchanged at `docs/research/design-tools/react-ui-libraries.md`. Open: the form library, chosen by the first ticket that needs one.
+
 ## 2026-10-04 — PJ: a separate branch only when asked
 
 Taylor: the default stays one working branch, with a phrase to ask for a separate one when two pieces of work should be separate pull requests, "and not just have it start doing it and creating a big mess of branches" (PR-17). `tk-batch`: on "on its own branch", the thread runs `git worktree add .claude/worktrees/<name> -b agent/<name>` from the current branch (from `main` on "off main"), installs, and does all of that work there, so the shared checkout and its other threads are untouched. The report names the branch; pushing stays Taylor's. On "merge it back" the thread merges into the working branch and removes the folder and branch. One branch per request, never per ticket. Not yet run in a real thread.
