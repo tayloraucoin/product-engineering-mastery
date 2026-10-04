@@ -8,11 +8,11 @@
       "run": {
         "command": "yarn test:tooling",
         "exit": 0,
-        "at": "2026-10-04T06:31:46Z",
-        "head": "98f75c569ca3c3bc139a9879cff1fb05f4ebde70",
+        "at": "2026-10-04T20:37:21Z",
+        "head": "137bcff45dd0c8a422aebc5ffa605d27fd053656",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/evidence/C1.log",
-        "evidence_sha256": "90e9d54e030e8e196f9e96d4e0d2a97373065d83154a45e4471fa8bbb178bef2",
-        "tests": 38
+        "evidence_sha256": "95441c248e6e46089b438533782f7388edab85369f419dc69b9b84daf24c4650",
+        "tests": 51
       }
     },
     "C2": {
@@ -21,11 +21,11 @@
       "run": {
         "command": "yarn test:tooling",
         "exit": 0,
-        "at": "2026-10-04T06:32:14Z",
-        "head": "98f75c569ca3c3bc139a9879cff1fb05f4ebde70",
+        "at": "2026-10-04T20:37:46Z",
+        "head": "137bcff45dd0c8a422aebc5ffa605d27fd053656",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/evidence/C2.log",
-        "evidence_sha256": "878569ac7faa64350dad31be4b4a5e6d25289afa3fc269060e8e0cf0c315f96f",
-        "tests": 38
+        "evidence_sha256": "4479f940f37f2a1d9b1726ae808981f4729f9cb43c789c5aad56ef3378f07426",
+        "tests": 51
       }
     },
     "C3": {
@@ -34,11 +34,11 @@
       "run": {
         "command": "yarn test:tooling",
         "exit": 0,
-        "at": "2026-10-04T06:32:40Z",
-        "head": "98f75c569ca3c3bc139a9879cff1fb05f4ebde70",
+        "at": "2026-10-04T20:38:12Z",
+        "head": "137bcff45dd0c8a422aebc5ffa605d27fd053656",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/evidence/C3.log",
-        "evidence_sha256": "50bbaf11bf582ee8b36845c76714ef3a98c10035d4e0217f339445bdf4b073c8",
-        "tests": 38
+        "evidence_sha256": "428c67a383afc3025c4beb6511cad7b183e25c4fdecdf4b89b0880d2bf5a83d6",
+        "tests": 51
       }
     },
     "C4": {
@@ -47,11 +47,11 @@
       "run": {
         "command": "yarn test:tooling",
         "exit": 0,
-        "at": "2026-10-04T06:33:08Z",
-        "head": "98f75c569ca3c3bc139a9879cff1fb05f4ebde70",
+        "at": "2026-10-04T20:38:40Z",
+        "head": "137bcff45dd0c8a422aebc5ffa605d27fd053656",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/evidence/C4.log",
-        "evidence_sha256": "b5899af13841e79e6bab4b45e38ee7665ed3536e9fd28b52667633d92fcf17b5",
-        "tests": 38
+        "evidence_sha256": "2b2954964037e59419566fea2425c770b358c8ae77db4b4fb9269c0cca90d910",
+        "tests": 51
       }
     },
     "C5": {
@@ -60,11 +60,11 @@
       "run": {
         "command": "yarn test:tooling",
         "exit": 0,
-        "at": "2026-10-04T06:33:37Z",
-        "head": "98f75c569ca3c3bc139a9879cff1fb05f4ebde70",
+        "at": "2026-10-04T20:39:06Z",
+        "head": "137bcff45dd0c8a422aebc5ffa605d27fd053656",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/evidence/C5.log",
-        "evidence_sha256": "9071c957c9331c92cda68fc9946edce8dbb0b6095cf33122e559226dff52a04c",
-        "tests": 38
+        "evidence_sha256": "93eb369a5dafdde7b9b5e7b90a6ef1230a2fa2243a9cbb1f974ab63ce9da9d56",
+        "tests": 51
       }
     },
     "C6": {
@@ -73,10 +73,10 @@
       "run": {
         "command": "yarn check-types:tooling",
         "exit": 0,
-        "at": "2026-10-04T06:34:04Z",
-        "head": "98f75c569ca3c3bc139a9879cff1fb05f4ebde70",
+        "at": "2026-10-04T20:39:32Z",
+        "head": "137bcff45dd0c8a422aebc5ffa605d27fd053656",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/evidence/C6.log",
-        "evidence_sha256": "702ad4fe7421ef4ef95b1220cb9f414ccc6fe44754d10bd8d21347949bbc81dd"
+        "evidence_sha256": "fde53fe0c89bd6e16fb79faf450673a624aaeec78e7c7e21a8b02df275fb2322"
       }
     },
     "C7": {
@@ -85,12 +85,12 @@
       "run": {
         "command": "yarn verify",
         "exit": 0,
-        "at": "2026-10-04T06:38:22Z",
-        "head": "8d59295529cae52dd230d07d7b69e6f2d071a345",
+        "at": "2026-10-04T19:27:48Z",
+        "head": "6b66f61f0076666818fc35d8106ce87155667347",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/evidence/C7.log",
-        "evidence_sha256": "4e0d418de6549cb76ed64db4b1fc33b2317f5897d0a9a184d89c17e7718d01d3"
+        "evidence_sha256": "bec8dc1a69b3b5b3c8db9afcec49cd42a138067cf8fc0b0fb786415d11bb692c"
       }
     }
   },
-  "updated_at": "2026-10-04T06:39:34Z"
+  "updated_at": "2026-10-04T20:39:34Z"
 }

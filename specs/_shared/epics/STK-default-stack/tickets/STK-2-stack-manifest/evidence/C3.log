@@ -1,244 +1,322 @@
 command: yarn test:tooling
 exit: 0
-at: 2026-10-04T06:32:40Z
-head: 98f75c569ca3c3bc139a9879cff1fb05f4ebde70
-tests: 38
+at: 2026-10-04T20:38:12Z
+head: 137bcff45dd0c8a422aebc5ffa605d27fd053656
+tests: 51
 ---
 TAP version 13
 # Subtest: C5: a client chunk holding a server-only sentinel fails, naming the variable and the chunk
 ok 1 - C5: a client chunk holding a server-only sentinel fails, naming the variable and the chunk
   ---
-  duration_ms: 96.203084
+  duration_ms: 99.293292
   type: 'test'
   ...
 # Subtest: C5: no build output fails
 ok 2 - C5: no build output fails
   ---
-  duration_ms: 235.508708
+  duration_ms: 201.592667
   type: 'test'
   ...
 # Subtest: C5: clean client chunks pass
 ok 3 - C5: clean client chunks pass
   ---
-  duration_ms: 103.221292
+  duration_ms: 108.724708
   type: 'test'
   ...
 # Subtest: C5: a scan with no sentinel named is refused
 ok 4 - C5: a scan with no sentinel named is refused
   ---
-  duration_ms: 81.641667
+  duration_ms: 87.504459
   type: 'test'
   ...
 # Subtest: the plan plants server-only names from .env.example and turbo.json, and fails on drift, naming it
 ok 5 - the plan plants server-only names from .env.example and turbo.json, and fails on drift, naming it
   ---
-  duration_ms: 87.265917
+  duration_ms: 143.053333
   type: 'test'
   ...
 # Subtest: a pending entry that now exists is stale
 ok 6 - a pending entry that now exists is stale
   ---
-  duration_ms: 253.272833
+  duration_ms: 693.829459
   type: 'test'
   ...
 # Subtest: a git-ignored pending entry is machine-local and never stale
 ok 7 - a git-ignored pending entry is machine-local and never stale
   ---
-  duration_ms: 213.861792
+  duration_ms: 337.818666
   type: 'test'
   ...
 # Subtest: C1: a present module missing a listed file fails, naming the module and the file
 ok 8 - C1: a present module missing a listed file fails, naming the module and the file
   ---
-  duration_ms: 105.000875
+  duration_ms: 113.353458
   type: 'test'
   ...
 # Subtest: C2: a removed module with a leftover file, variable or dependency fails, naming each leftover
 ok 9 - C2: a removed module with a leftover file, variable or dependency fails, naming each leftover
   ---
-  duration_ms: 425.336709
+  duration_ms: 528.690625
   type: 'test'
   ...
 # Subtest: C2: a clean removal passes, and near-miss names are not leftovers
 ok 10 - C2: a clean removal passes, and near-miss names are not leftovers
   ---
-  duration_ms: 84.778208
+  duration_ms: 102.705708
   type: 'test'
   ...
 # Subtest: C3: a locked module marked removed fails
 ok 11 - C3: a locked module marked removed fails
   ---
-  duration_ms: 79.50525
+  duration_ms: 87.802584
   type: 'test'
   ...
 # Subtest: C4: an entry missing any of files, env, dependencies, boundaries, locked or runbook fails, naming the field
 ok 12 - C4: an entry missing any of files, env, dependencies, boundaries, locked or runbook fails, naming the field
   ---
-  duration_ms: 82.382709
+  duration_ms: 86.2705
   type: 'test'
   ...
 # Subtest: C5: a runbook path that does not exist fails, naming the path
 ok 13 - C5: a runbook path that does not exist fails, naming the path
   ---
-  duration_ms: 86.278375
+  duration_ms: 97.42925
+  type: 'test'
+  ...
+# Subtest: C1: a conforming tree passes
+ok 14 - C1: a conforming tree passes
+  ---
+  duration_ms: 7.4745
+  type: 'test'
+  ...
+# Subtest: C1: a stray top-level folder fails, naming it
+ok 15 - C1: a stray top-level folder fails, naming it
+  ---
+  duration_ms: 8.789541
+  type: 'test'
+  ...
+# Subtest: C1: an unknown kind fails, naming it
+ok 16 - C1: an unknown kind fails, naming it
+  ---
+  duration_ms: 8.077709
+  type: 'test'
+  ...
+# Subtest: C1: a component folder without <name>.tsx fails, naming it
+ok 17 - C1: a component folder without <name>.tsx fails, naming it
+  ---
+  duration_ms: 3.135042
+  type: 'test'
+  ...
+# Subtest: C1: a component folder without index.ts fails, naming it
+ok 18 - C1: a component folder without index.ts fails, naming it
+  ---
+  duration_ms: 2.317666
+  type: 'test'
+  ...
+# Subtest: C1: a cva() in the component file fails, naming the file
+ok 19 - C1: a cva() in the component file fails, naming the file
+  ---
+  duration_ms: 2.309542
+  type: 'test'
+  ...
+# Subtest: C1: an export whose target is missing fails, naming the export
+ok 20 - C1: an export whose target is missing fails, naming the export
+  ---
+  duration_ms: 2.949625
+  type: 'test'
+  ...
+# Subtest: review S1: cva in a second file of the folder fails; a comment naming cva() passes
+ok 21 - review S1: cva in a second file of the folder fails; a comment naming cva() passes
+  ---
+  duration_ms: 9.123208
+  type: 'test'
+  ...
+# Subtest: review S3: a primitive with copy.ts fails
+ok 22 - review S3: a primitive with copy.ts fails
+  ---
+  duration_ms: 4.868709
+  type: 'test'
+  ...
+# Subtest: review S3: a primitive importing another component fails
+ok 23 - review S3: a primitive importing another component fails
+  ---
+  duration_ms: 8.65375
+  type: 'test'
+  ...
+# Subtest: review N6: conditional exports resolve; a wildcard export fails
+ok 24 - review N6: conditional exports resolve; a wildcard export fails
+  ---
+  duration_ms: 13.211459
+  type: 'test'
+  ...
+# Subtest: review N7: the command exits 1 and names the path
+ok 25 - review N7: the command exits 1 and names the path
+  ---
+  duration_ms: 100.938292
   type: 'test'
   ...
 # Subtest: a merged as-built is immutable except applied:
-ok 14 - a merged as-built is immutable except applied:
+ok 26 - a merged as-built is immutable except applied:
   ---
-  duration_ms: 5572.792583
+  duration_ms: 7017.508375
   type: 'test'
   ...
 # Subtest: A9 commit-msg: an agent branch needs a work-id; another branch does not
-ok 15 - A9 commit-msg: an agent branch needs a work-id; another branch does not
+ok 27 - A9 commit-msg: an agent branch needs a work-id; another branch does not
   ---
-  duration_ms: 1813.704458
+  duration_ms: 1855.494417
   type: 'test'
   ...
 # Subtest: A9 pre-commit: staging a hand-edited results.json is refused
-ok 16 - A9 pre-commit: staging a hand-edited results.json is refused
+ok 28 - A9 pre-commit: staging a hand-edited results.json is refused
   ---
-  duration_ms: 1969.99325
+  duration_ms: 1922.347459
   type: 'test'
   ...
 # Subtest: A4 contract:init allocates sequential ids, from the template, then starts with every criterion FAIL
-ok 17 - A4 contract:init allocates sequential ids, from the template, then starts with every criterion FAIL
+ok 29 - A4 contract:init allocates sequential ids, from the template, then starts with every criterion FAIL
   ---
-  duration_ms: 1435.559
+  duration_ms: 1976.040708
   type: 'test'
   ...
 # Subtest: the protected branch refuses a start; the operator picks the work branch
-ok 18 - the protected branch refuses a start; the operator picks the work branch
+ok 30 - the protected branch refuses a start; the operator picks the work branch
   ---
-  duration_ms: 761.25525
+  duration_ms: 890.617083
   type: 'test'
   ...
 # Subtest: parallel tickets: a second item starts on the same branch while the first is open
-ok 19 - parallel tickets: a second item starts on the same branch while the first is open
+ok 31 - parallel tickets: a second item starts on the same branch while the first is open
   ---
-  duration_ms: 2530.221542
+  duration_ms: 3321.893875
   type: 'test'
   ...
 # Subtest: parallel tickets: another ticket's uncommitted file does not block a run, its own does
-ok 20 - parallel tickets: another ticket's uncommitted file does not block a run, its own does
+ok 32 - parallel tickets: another ticket's uncommitted file does not block a run, its own does
   ---
-  duration_ms: 3050.408708
+  duration_ms: 2981.3535
   type: 'test'
   ...
 # Subtest: parallel tickets: another ticket's commit leaves this ticket's proof fresh
-ok 21 - parallel tickets: another ticket's commit leaves this ticket's proof fresh
+ok 33 - parallel tickets: another ticket's commit leaves this ticket's proof fresh
   ---
-  duration_ms: 3409.863583
+  duration_ms: 3270.769584
   type: 'test'
   ...
 # Subtest: stacking: a dependent ticket starts on the same branch once its predecessor is built, before any as-built or review
-ok 22 - stacking: a dependent ticket starts on the same branch once its predecessor is built, before any as-built or review
+ok 34 - stacking: a dependent ticket starts on the same branch once its predecessor is built, before any as-built or review
   ---
-  duration_ms: 3980.109125
+  duration_ms: 3832.887042
   type: 'test'
   ...
 # Subtest: a dependency that has not started refuses the start
-ok 23 - a dependency that has not started refuses the start
+ok 35 - a dependency that has not started refuses the start
   ---
-  duration_ms: 1095.488083
+  duration_ms: 1064.284792
   type: 'test'
   ...
 # Subtest: A6: a cited file not approved, or holding a BLOCKING marker, is refused; a plain open marker is listed
-ok 24 - A6: a cited file not approved, or holding a BLOCKING marker, is refused; a plain open marker is listed
+ok 36 - A6: a cited file not approved, or holding a BLOCKING marker, is refused; a plain open marker is listed
   ---
-  duration_ms: 2702.37
+  duration_ms: 2605.375583
   type: 'test'
   ...
 # Subtest: PR-15 tiers: code is tier 1 with no reviewer; contract:tier 2 adds the review, and a lower tier drops it
-ok 25 - PR-15 tiers: code is tier 1 with no reviewer; contract:tier 2 adds the review, and a lower tier drops it
+ok 37 - PR-15 tiers: code is tier 1 with no reviewer; contract:tier 2 adds the review, and a lower tier drops it
   ---
-  duration_ms: 4166.360458
+  duration_ms: 3784.501708
   type: 'test'
   ...
 # Subtest: PR-15: check-specs warns on a ticket still closing, and fails it only with --strict
-ok 26 - PR-15: check-specs warns on a ticket still closing, and fails it only with --strict
+ok 38 - PR-15: check-specs warns on a ticket still closing, and fails it only with --strict
   ---
-  duration_ms: 2449.602667
+  duration_ms: 2237.762291
   type: 'test'
   ...
 # Subtest: Vigil 9 and 10, tier 2 epic ticket: pre-flight gates the start, review:run follows the as-built, truth:promote follows
-ok 27 - Vigil 9 and 10, tier 2 epic ticket: pre-flight gates the start, review:run follows the as-built, truth:promote follows
+ok 39 - Vigil 9 and 10, tier 2 epic ticket: pre-flight gates the start, review:run follows the as-built, truth:promote follows
   ---
-  duration_ms: 11599.512709
+  duration_ms: 12989.989833
   type: 'test'
   ...
 # Subtest: a fixture reviewer's PASS does not count outside the harness
-ok 28 - a fixture reviewer's PASS does not count outside the harness
+ok 40 - a fixture reviewer's PASS does not count outside the harness
   ---
-  duration_ms: 4857.509625
+  duration_ms: 4534.6905
   type: 'test'
   ...
 # Subtest: a pre-flight written by the fixture reviewer does not start a ticket outside the harness
-ok 29 - a pre-flight written by the fixture reviewer does not start a ticket outside the harness
+ok 41 - a pre-flight written by the fixture reviewer does not start a ticket outside the harness
   ---
-  duration_ms: 1094.713125
+  duration_ms: 1079.105
   type: 'test'
   ...
 # Subtest: contract:run refuses an uncommitted tree, then records run records with HEAD and evidence hashes
-ok 30 - contract:run refuses an uncommitted tree, then records run records with HEAD and evidence hashes
+ok 42 - contract:run refuses an uncommitted tree, then records run records with HEAD and evidence hashes
   ---
-  duration_ms: 3179.906833
+  duration_ms: 3921.681709
   type: 'test'
   ...
 # Subtest: contract:run FAILs a test criterion whose runner matched zero tests
-ok 31 - contract:run FAILs a test criterion whose runner matched zero tests
+ok 43 - contract:run FAILs a test criterion whose runner matched zero tests
   ---
-  duration_ms: 2225.698375
+  duration_ms: 2878.730875
   type: 'test'
   ...
 # Subtest: Vigil 10, one-off: init, run, as-built, status and check-specs close with nothing left
-ok 32 - Vigil 10, one-off: init, run, as-built, status and check-specs close with nothing left
+ok 44 - Vigil 10, one-off: init, run, as-built, status and check-specs close with nothing left
   ---
-  duration_ms: 5108.556375
+  duration_ms: 4971.150417
   type: 'test'
   ...
 # Subtest: Vigil 3: a PASS recorded at X goes stale when a planned path changes at X+1
-ok 33 - Vigil 3: a PASS recorded at X goes stale when a planned path changes at X+1
+ok 45 - Vigil 3: a PASS recorded at X goes stale when a planned path changes at X+1
   ---
-  duration_ms: 3858.035416
+  duration_ms: 3722.251375
   type: 'test'
   ...
 # Subtest: C1: the repo's preset passes every pair in both themes
-ok 34 - C1: the repo's preset passes every pair in both themes
+ok 46 - C1: the repo's preset passes every pair in both themes
   ---
-  duration_ms: 92.36525
+  duration_ms: 100.622167
   type: 'test'
   ...
 # Subtest: C1: black on white measures 21:1, the WCAG maximum
-ok 35 - C1: black on white measures 21:1, the WCAG maximum
+ok 47 - C1: black on white measures 21:1, the WCAG maximum
   ---
-  duration_ms: 83.111708
+  duration_ms: 100.052833
   type: 'test'
   ...
 # Subtest: C1: a text pair below 4.5:1 fails and is named
-ok 36 - C1: a text pair below 4.5:1 fails and is named
+ok 48 - C1: a text pair below 4.5:1 fails and is named
   ---
-  duration_ms: 160.1515
+  duration_ms: 131.234667
   type: 'test'
   ...
 # Subtest: C1: a focus ring below 3:1 fails in the theme it is set in
-ok 37 - C1: a focus ring below 3:1 fails in the theme it is set in
+ok 49 - C1: a focus ring below 3:1 fails in the theme it is set in
   ---
-  duration_ms: 91.788125
+  duration_ms: 92.939875
+  type: 'test'
+  ...
+# Subtest: C1: see-through text is composited as the browser does
+ok 50 - C1: see-through text is composited as the browser does
+  ---
+  duration_ms: 95.977208
   type: 'test'
   ...
 # Subtest: C1: a missing token fails rather than passing silently
-ok 38 - C1: a missing token fails rather than passing silently
+ok 51 - C1: a missing token fails rather than passing silently
   ---
-  duration_ms: 81.145375
+  duration_ms: 122.890625
   type: 'test'
   ...
-1..38
-# tests 38
+1..51
+# tests 51
 # suites 0
-# pass 38
+# pass 51
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 26954.601916
+# duration_ms 27406.136583
