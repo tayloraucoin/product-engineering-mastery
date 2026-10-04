@@ -63,9 +63,9 @@ This table is the CI contract read by `tooling/budget.ts`.
 | Build                   | Loads                                                                                                 | Cap (tokens) |
 | ----------------------- | ----------------------------------------------------------------------------------------------------- | ------------ |
 | UI build                | always 4,000 + design layer 5,000 + brief and package 2,000 + references 1,500 + one skill body 2,500 | 15,000       |
-| Non-UI build            | always 4,000 + path rules and nested `AGENTS.md` 1,500 + contract and cited spec 3,500                | 9,000        |
+| Non-UI build            | always 4,000 + path rules and nested `AGENTS.md` 1,500 + contract and cited spec 5,000                | 10,500       |
 | Critic pass (forked)    | `canon-rubric.md` and canon §2 + the cited surface file + ≤3 exemplars (screenshots excluded)         | 6,000        |
-| Evaluator pass (forked) | evaluator body 3,000 + contract and cited spec 3,500 + evidence index 500 (never the builder's summary) | 7,000        |
+| Evaluator pass (forked) | evaluator body 4,500 + contract and cited spec 5,000 + evidence index 500 (never the builder's summary) | 10,000       |
 
 A product's own design layer gets about 1,700 of the 5,000; `canon.md` takes the rest. A product `DESIGN.md` holds deltas, never restatements.
 

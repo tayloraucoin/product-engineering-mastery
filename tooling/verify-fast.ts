@@ -12,9 +12,14 @@
  *     boundaries lint on changed code, and `tsc -p tooling` for tooling;
  *   - the repo's own checks when their inputs change: the docs lint, the
  *     settings check, the hook fixtures;
- *   - always, because each takes under a second: check-specs and budget.
+ *   - check-specs and budget, when run by hand over the whole branch.
  * The build and the contract-loop tests (16 s) stay in `yarn verify` and CI. Fails fast;
  * prints each step's time.
+ *
+ * The stop gate scopes it (PR-15): PEM_VERIFY_FAST_FILES, one repo path per
+ * line, replaces the changed set with the files that session edited, and the
+ * branch-wide steps (check-specs, budget) are skipped. Threads share the
+ * operator's checkout, so one thread's stop never judges another's files.
  */
 
 import { spawnSync } from "node:child_process";
@@ -29,16 +34,35 @@ type Step = { name: string; command: string[]; when: boolean };
 const base = getBaseRef();
 const fork = base ? runGit(["merge-base", base, "HEAD"]) : null;
 const lines = (text: string | null) => (text ?? "").split("\n").filter(Boolean);
-const changed = [
-  ...new Set([
-    ...lines(
-      fork
-        ? runGit(["diff", "--name-only", fork, "--"])
-        : runGit(["diff", "--name-only", "HEAD", "--"]),
-    ),
-    ...lines(runGit(["ls-files", "--others", "--exclude-standard"])),
-  ]),
-].filter((file) => existsSync(path.join(REPO_ROOT, file)));
+const scoped = process.env.PEM_VERIFY_FAST_FILES;
+const changed = (
+  scoped !== undefined ? scoped.split("\n").filter(Boolean) : branchChanges()
+).filter((file) => existsSync(path.join(REPO_ROOT, file)));
+
+function branchChanges(): string[] {
+  return [
+    ...new Set([
+      ...lines(
+        fork
+          ? runGit(["diff", "--name-only", fork, "--"])
+          : runGit(["diff", "--name-only", "HEAD", "--"]),
+      ),
+      ...lines(runGit(["ls-files", "--others", "--exclude-standard"])),
+    ]),
+  ];
+}
+
+/** The workspaces the scoped files sit in, each with its dependents; unscoped, whatever the branch changed. */
+const workspaceFilters =
+  scoped !== undefined
+    ? [
+        ...new Set(
+          changed
+            .map((file) => file.match(/^((?:apps|packages)\/[^/]+)\//)?.[1])
+            .filter((dir): dir is string => Boolean(dir)),
+        ),
+      ].map((dir) => `--filter=...{./${dir}}`)
+    : [`--filter=...[${fork ?? "HEAD"}]`];
 
 const touches = (pattern: RegExp) => changed.some((file) => pattern.test(file));
 const code = changed.filter((file) =>
@@ -76,7 +100,7 @@ const steps: Step[] = [
       "run",
       "lint",
       "check-types",
-      `--filter=...[${fork ?? "HEAD"}]`,
+      ...workspaceFilters,
       "--output-logs=errors-only",
       "--ui=stream",
     ],
@@ -109,8 +133,12 @@ const steps: Step[] = [
     command: ["yarn", "test:hooks"],
     when: touches(/^tooling\/(hooks\/|lib\/work-ids\.ts|test-hooks\.ts)/),
   },
-  { name: "check-specs", command: ["yarn", "check-specs"], when: true },
-  { name: "budget", command: ["yarn", "budget"], when: true },
+  {
+    name: "check-specs",
+    command: ["yarn", "check-specs"],
+    when: scoped === undefined,
+  },
+  { name: "budget", command: ["yarn", "budget"], when: scoped === undefined },
 ];
 
 /** No colour codes in output the stop gate quotes: picocolors colours whenever FORCE_COLOR is present, even as "0". */

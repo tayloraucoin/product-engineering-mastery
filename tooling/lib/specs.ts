@@ -41,7 +41,8 @@ import type { Toolkit } from "./toolkit.ts";
 export const EVIDENCE_TYPES = ["test", "check", "capture", "manual"] as const;
 export type EvidenceType = (typeof EVIDENCE_TYPES)[number];
 
-export const CONTRACT_TOKEN_CAP = 1000;
+/** The ticket is the whole brief: frontmatter plus its Build notes (PR-15). */
+export const CONTRACT_TOKEN_CAP = 2500;
 /** A10's spec-file caps, enforced with a message that says to split. */
 export const SPEC_FILE_CAPS = {
   surface: 2000,
@@ -50,16 +51,30 @@ export const SPEC_FILE_CAPS = {
 } as const;
 export const MAX_NON_NEGOTIABLES = 7;
 
+/** The sections every as-built carries (PR-15). Migrations and Test changes are added when the ticket has any. */
 export const AS_BUILT_SECTIONS = [
   "Shipped against the contract",
   "Deviations",
-  "Ledger IDs",
-  "Migrations",
-  "Test changes",
   "Not verified",
-  "Model",
   "Next",
 ] as const;
+
+/**
+ * The QA tier a ticket's planned paths put it in (PR-15):
+ *   0  docs and data only: its scripted criteria, no reviewer;
+ *   1  code: its criteria, and one review of the whole batch at batch close;
+ *   2  a one-way door (the paths below): the pre-flight, and Vigil plus the
+ *      toolkit.json specialists on the ticket itself.
+ * A contract's own `tier:` wins; contract:tier sets it.
+ */
+export type Tier = 0 | 1 | 2;
+export const TIER_2_PATHS = [
+  /(^|\/)(migrations|schema|policies|db|auth|billing|webhooks)(\/|$)/,
+  /(^|\/)(env|proxy)\.ts$/,
+  /\.sql$/,
+  /^\.claude\/settings\.json$/,
+  /^tooling\/hooks\//,
+];
 
 export const CONTRACT_TEMPLATE =
   "docs/engineering/templates/contract.template.md";
@@ -108,6 +123,7 @@ export type Contract = {
   depends_on: string[];
   out_of_scope: string[];
   criteria: Criterion[];
+  tier?: Tier;
 };
 
 export type RunRecord = {
@@ -568,6 +584,48 @@ export function computeReviewers(
   return required;
 }
 
+const isNonCode = (planned: string) =>
+  planned.startsWith("docs/") ||
+  planned.startsWith("specs/") ||
+  (/\.(md|mdx|json|txt)$/.test(planned) && !planned.endsWith("package.json"));
+
+/** A ticket's tier: its contract's `tier:`, or computed from its planned paths. */
+export function tierOf(
+  contract: Pick<Contract, "planned_paths" | "tier">,
+  toolkit: Toolkit,
+): Tier {
+  if (contract.tier !== undefined) return contract.tier;
+  // A planned path reaches a door when it names one, or when it is a glob
+  // that holds a tracked door file. Never by sampling: a folder glob does not
+  // become a door because an env.ts could one day sit in it.
+  trackedCache ??= (runGit(["ls-files"]) ?? "").split("\n").filter(Boolean);
+  const tracked = trackedCache;
+  const isDoor = (file: string) => TIER_2_PATHS.some((door) => door.test(file));
+  const reachesDoor = contract.planned_paths.some(
+    (planned) =>
+      isDoor(planned) ||
+      (/[*?[{]/.test(planned) || planned.endsWith("/")
+        ? tracked.some(
+            (file) => inPlannedPaths(file, [planned]) && isDoor(file),
+          )
+        : false),
+  );
+  if (reachesDoor) return 2;
+  return contract.planned_paths.every(isNonCode) ? 0 : 1;
+}
+
+/** The reviewers a ticket must carry: computeReviewers' set at tier 2, none below it (PR-15). */
+export function requiredReviewers(
+  contract: Pick<Contract, "planned_paths" | "truth_files" | "tier">,
+  item: Pick<Item, "kind">,
+  toolkit: Toolkit,
+  options: { testChanges?: boolean } = {},
+): RequiredReviewers {
+  return tierOf(contract, toolkit) === 2
+    ? computeReviewers(contract, item, toolkit, options)
+    : new Map();
+}
+
 export function reviewCriterion(role: string): Criterion {
   return {
     id: `review:${role}`,
@@ -773,15 +831,13 @@ function changedAfter(
  * Whether each criterion's recorded status still holds (A9, A13.2): a PASS
  * needs a run record, an evidence file whose hash matches, the contract's
  * command, at least one test for a test criterion, and no later change to
- * its planned paths in the branch's diff. A review also binds the contract and the as-built it read.
+ * its planned paths in the branch's diff.
  */
 export function readItemState(item: Item, specsRoot: string): ItemState {
-  const { contract, text } = readContract(item);
+  const { contract } = readContract(item);
   const { results } = readResults(item);
   const hasAsBuilt = fileExists(asBuiltPath(item));
   const merged = hasAsBuilt && isMerged(item);
-  const contractHash = text ? hashText(text) : null;
-  const asBuiltHash = hasAsBuilt ? hashFile(asBuiltPath(item)) : null;
   const { head } = gitFacts();
   const criteria: CriterionState[] = [];
 
@@ -866,20 +922,9 @@ export function readItemState(item: Item, specsRoot: string): ItemState {
         );
         continue;
       }
-      if (run.contract_sha256 !== contractHash) {
-        fail(
-          "the contract changed after this review; re-run the review",
-          "stale",
-        );
-        continue;
-      }
-      if (run.as_built_sha256 !== asBuiltHash) {
-        fail(
-          "the as-built changed after this review; re-run the review",
-          "stale",
-        );
-        continue;
-      }
+      // A review binds the code it read (the planned-paths rule below) and
+      // the frozen criteria, never the prose around them: a build note or an
+      // as-built wording fix does not cost a second review (PR-15).
     }
     if (!merged && head) {
       if (!isAncestor(run.head, head)) {
@@ -1117,7 +1162,7 @@ export function checkContract(
   for (const id of ids)
     if (id.startsWith("review:") && !listed.has(reviewRole(id)))
       bad(`has ${id} but does not list ${reviewRole(id)} under reviewers`);
-  const required = computeReviewers(contract, item, toolkit, {
+  const required = requiredReviewers(contract, item, toolkit, {
     testChanges: options.testChanges,
   });
   for (const [role, why] of required)

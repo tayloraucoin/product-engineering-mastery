@@ -27,7 +27,7 @@ import {
 
 useScratchRepo();
 
-test("Vigil 9 and 10, epic: pre-flight gates the start, review:run binds the as-built, truth:promote follows", () => {
+test("Vigil 9 and 10, tier 2 epic ticket: pre-flight gates the start, review:run follows the as-built, truth:promote follows", () => {
   const repo = freshRepo();
   let r = tool(repo, "spec-init.ts", ["web", "OB2", "onboarding"]);
   assert.equal(r.status, 0, r.out);
@@ -44,7 +44,10 @@ test("Vigil 9 and 10, epic: pre-flight gates the start, review:run binds the as-
     `---\ntarget: ${truth}\nstatus: approved\npromoted:\n---\n\n# Welcome, v2 (synthetic)\n- OB2-W1: the welcome names the next step and the time it takes.\n`,
   );
   const draft = path.join(repo, "draft.md");
-  writeFileSync(draft, oneOffContract("OB2-1", { cites: [truth, "OB2-W1"] }));
+  writeFileSync(
+    draft,
+    oneOffContract("OB2-1", { cites: [truth, "OB2-W1"], tier: 2 }),
+  );
   r = tool(repo, "contract.ts", [
     "init",
     "OB2",
@@ -152,19 +155,21 @@ test("Vigil 9 and 10, epic: pre-flight gates the start, review:run binds the as-
     /1\. OB2-1 welcome \(closed\)/,
   );
 
-  // A13.2: editing the as-built after the review resets it.
+  // PR-15: a review binds the code, so an as-built wording fix keeps it.
   write(
     repo,
     asBuilt,
     AS_BUILT("OB2-1").replace("Nothing.", "Something else."),
   );
   r = checkSpecs(repo);
-  assert.notEqual(r.status, 0);
-  assert.match(r.out, /the as-built changed after this review/);
+  assert.equal(r.status, 0, r.out);
 });
 
 test("a fixture reviewer's PASS does not count outside the harness", () => {
-  const repo = startOneOff({ truth: ["specs/web/ux/records/table.md"] });
+  const repo = startOneOff({
+    truth: ["specs/web/ux/records/table.md"],
+    tier: 2,
+  });
   buildAndProve(repo);
   write(repo, "specs/web/one-offs/WEB-1-filter/as-built.md", AS_BUILT("WEB-1"));
   let r = tool(repo, "review-run.ts", ["vigil", "WEB-1"], {
@@ -192,7 +197,10 @@ test("a pre-flight written by the fixture reviewer does not start a ticket outsi
     "---\nstatus: approved\n---\n\n# Note (synthetic)\n- PF-N1: the note exists.\n",
   );
   const draft = path.join(repo, "draft.md");
-  writeFileSync(draft, oneOffContract("PF-1", { cites: [surface, "PF-N1"] }));
+  writeFileSync(
+    draft,
+    oneOffContract("PF-1", { cites: [surface, "PF-N1"], tier: 2 }),
+  );
   r = tool(repo, "contract.ts", [
     "init",
     "PF",

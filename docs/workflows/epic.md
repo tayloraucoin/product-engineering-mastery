@@ -106,11 +106,11 @@ Run this only when a real knowledge gap or a need for certainty exists. Examples
 
 ### Level 6: Build, once per ticket
 
-The same as moves 2 to 5 of the one-off ([`one-off.md`](one-off.md)), started from the ticket's kickoff prompt instead of the builder.
+The same as moves 2 to 5 of the one-off ([`one-off.md`](one-off.md)). You say which tickets to build ("build OB2-3 and OB2-4"), and one thread takes the batch from start to its closing report ([`stages/build.md`](stages/build.md)).
 
 - `yarn contract:init OB2 welcome-copy` creates `OB2-3` and its FAIL results, on the operator's branch. It refuses if a cited UX file isn't approved.
-- `/tk-close` proves the ticket, writes the as-built and calls the reviewers.
-- **Merge order:** a ticket that depends on another starts once that one has its as-built, merged or not. Tickets share the operator's branch, parallel ones included; Taylor branches and merges. The agent runs `/tk-kickoff` and `/tk-close` itself; nobody waits on a merge to start the next ticket.
+- The thread proves each ticket, writes its as-built and runs the review its tier calls for; `yarn verify` runs once for the batch.
+- **Merge order:** a ticket that depends on another starts once that one is built: its own criteria PASS, merged or not, reviewed or not. Tickets share the operator's branch, parallel ones included; Taylor branches and merges. Nobody waits on a merge or a review to start the next ticket.
 - **Promotion:** when every ticket citing a surface file has merged, `truth:promote` copies the proposal into `specs/web/ux/`, reconciled with what actually shipped. The truth now describes the real app.
 
 ## Gates: law or judgment
@@ -120,17 +120,17 @@ The same as moves 2 to 5 of the one-off ([`one-off.md`](one-off.md)), started fr
 | UX approved before tickets start | `contract:init` refuses (law) |
 | No blocking decision left open | `contract:init` refuses (law) |
 | Contracts well-formed and sized | `check-specs` (law) |
-| The right reviewers named | `check-specs`, plus the risk classifier at close (law) |
+| The right reviewers named, by tier | `check-specs` (law) |
 | Done means proven | Results written only by scripts, with run records (law) |
 | The brief is worth building; the UX is right; the technical calls are right | You (judgment) |
 
 ## Who reviews what
 
-Computed from the files a ticket touches, from the map in `toolkit.json`.
+The tier decides whether a ticket is reviewed alone (tier 2), with its batch (tier 1) or not at all (tier 0); see [`stages/build.md`](stages/build.md). For a tier 2 ticket the reviewers are computed from the files it touches, from the map in `toolkit.json`.
 
 | Touches | Reviewer |
 |---|---|
-| Any epic ticket | Vigil |
+| Any tier 2 epic ticket; every tier 1 batch | Vigil |
 | UI | Assay |
 | Schema, migrations, package boundaries, public API | Mason |
 | Auth, secrets, personal data | Warden |

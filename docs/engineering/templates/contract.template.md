@@ -13,10 +13,12 @@ load_when: on request
 
 # Contract — [FILL: id] [FILL: slug]
 
-> **Who fills:** the builder for a one-off; Reeve, with Mason, for an epic ticket at the Tickets stage. `contract:init` computes `id` and `reviewers`; never type them.
+> **Who fills:** the builder for a one-off; Reeve, with Mason, for an epic ticket at the Tickets stage. `contract:init` computes `id`, `tier` and `reviewers`; never type `id` or `reviewers`.
 > **When:** before any code. Run `yarn contract:init <APP | app | EPIC> <slug>` once to get this file in its folder, fill it, then run the same command again: it freezes the criteria and writes every result at FAIL, on the operator's branch. An epic's Tickets stage adds `--draft` and starts nothing.
 > **Lives at:** `specs/<app>/one-offs/<APP>-<n>-<slug>/contract.md`, or `specs/<app>/epics/<EPIC>-<slug>/tickets/<EPIC>-<n>-<slug>/contract.md`. The fields below become the file's frontmatter; delete this instruction block.
-> **What the check enforces:** `check-specs`, against `docs/engineering/schemas/contract.schema.json`: every field present; at most 1,000 tokens and seven non-negotiables (split the ticket otherwise); at most one surface file in `cites` without a `waiver`; every `test` and `check` command a `package.json` script run through `yarn`; the reviewers its planned paths require (`toolkit.json`); no `docs/research/` path; the criteria unchanged since init (add one with `yarn contract:add`). `contract:init` refuses a cited file that is not `status: approved` or holds `[NEEDS DECISION — BLOCKING]`, and an epic ticket without its pre-flight PASS.
+> **What the check enforces:** `check-specs`, against `docs/engineering/schemas/contract.schema.json`: every field present; at most 2,500 tokens and seven non-negotiables (split the ticket otherwise); at most one surface file in `cites` without a `waiver`; every `test` and `check` command a `package.json` script run through `yarn`; at tier 2, the reviewers its planned paths require (`toolkit.json`); no `docs/research/` path; the criteria unchanged since init (add one with `yarn contract:add`). `contract:init` refuses a cited file that is not `status: approved` or holds `[NEEDS DECISION — BLOCKING]`, a dependency whose own criteria are not all PASS, and a tier 2 epic ticket without its pre-flight PASS.
+> **Tier (PR-15):** computed from `planned_paths`. 0: docs and data only, scripted criteria and no reviewer. 1: code, one review of the whole batch. 2: a one-way door (the database, schema, migrations, policies, SQL, auth, billing, webhooks, `proxy.ts`, `env.ts`, agent settings and hooks), pre-flighted and reviewed on the ticket. Set `tier:` by hand to raise or lower it; after the start, `yarn contract:tier <id> [0 | 1 | 2]`.
+> **Never a criterion:** `yarn verify`. It runs once at batch close; a criterion proves this ticket's own work.
 > **Evidence types:** `test` for logic, data, money and auth (a `command`; its runner must report at least one passing test, so name tests after their criterion; a name pattern appended to a script whose last word is a file glob does not filter); `check` for lint, types, boundaries and tokens (a `command`); `capture` for UI, through `?state=` (a `path`); `manual` for a human check (a `reason`; reported as not verified). UI criteria default to `capture`.
 > **Filled example:** `specs/web/one-offs/` and `specs/web/epics/` (P-C builds the demo through this loop).
 
@@ -34,10 +36,10 @@ cites:
   - "[FILL: the one surface file, as specs/<app>/ux/<area>/<surface>.md]"
   - "[FILL: decision and criterion IDs from it, as D-OB2-1 or OB2-W3]"
 truth_files: "none: [FILL: why no living UX file changes]" # or a list of specs/<app>/ux/ paths edited in this PR
-reviewers: [] # computed by contract:init from planned_paths and toolkit.json
+reviewers: [] # computed by contract:init from the tier, planned_paths and toolkit.json
 planned_paths:
   - "[FILL: repo paths or globs this ticket will change]"
-depends_on: [] # work-ids that must merge first
+depends_on: [] # work-ids that must be built first (their own criteria PASS)
 out_of_scope:
   - "[FILL: what this ticket will not do]"
 criteria:
@@ -51,6 +53,13 @@ criteria:
     command: "[FILL: yarn <script>]"
 ```
 
-## Notes
+## Build notes
 
-`[FILL: optional. Context the builder needs that no cited file holds, in a few lines. Never the plan of work: the criteria are the plan.]`
+`[FILL: what to build, so the builder and a person reading over its shoulder need no other file. Edit this section at any time: only the criteria are frozen.]`
+
+- **Approach:** `[FILL: the shape of the solution in a few lines]`
+- **Decisions that apply:** `[FILL: each decision this ticket builds on, by ID, with its text copied from the cited file; the cited file stays the source when a decision spans tickets]`
+- **Interfaces:** `[FILL: the exports, routes, tables or commands this ticket adds or changes, by name]`
+- **Per path:** `[FILL: one line per planned path: what it will hold]`
+- **Gotchas:** `[FILL: what a builder would get wrong without being told; or "none"]`
+- **Model:** `[FILL: the model to build with, and what goes wrong when choosing down]`

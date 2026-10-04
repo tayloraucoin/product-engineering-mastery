@@ -6,6 +6,11 @@
  *   yarn check-specs                 fixtures first, then the repo's tree
  *   yarn check-specs --root <dir>    one specs tree with git off (fixture authoring)
  *   yarn check-specs --skip-fixtures the live tree only (the contract-loop harness)
+ *   yarn check-specs --strict        what is left is a failure: the check before a merge
+ *
+ * Without --strict, work still in flight only warns (PR-15): a stale PASS, a
+ * ticket closing with criteria left, _status.md out of date. Tickets share the
+ * operator's branch, so one ticket's open close never fails another's verify.
  *
  * Fails on: a layout or id problem; a contract that breaks its schema or its
  * rules; results that do not match the contract or its frozen criteria; a
@@ -57,6 +62,9 @@ import { loadToolkit, type Toolkit } from "./lib/toolkit.ts";
 const FIXTURES = "tooling/fixtures/specs";
 
 type Report = { errors: string[]; warnings: string[] };
+
+/** Fixtures and the pre-merge check judge the finished state; a build in flight does not. */
+let strict = process.argv.includes("--strict");
 
 const listIfDir = (rel: string) => {
   try {
@@ -134,7 +142,7 @@ function checkItems(tree: SpecsTree, toolkit: Toolkit, report: Report) {
           `${rel}: ${c.id} is PASS, but ${c.reason}. Re-record it: ${recordCommand(c.id, c.evidence, item.id)}`,
         );
       else if (c.stale)
-        (hasAsBuilt ? report.errors : report.warnings).push(
+        (hasAsBuilt && strict ? report.errors : report.warnings).push(
           `${rel}: ${c.id}'s PASS no longer holds: ${c.reason}. Re-record it: ${recordCommand(c.id, c.evidence, item.id)}`,
         );
     }
@@ -148,8 +156,9 @@ function checkItems(tree: SpecsTree, toolkit: Toolkit, report: Report) {
             `${at} is missing the "## ${section}" section; copy it from docs/engineering/templates/as-built.template.md`,
           );
       if (
-        !asBuilt.applied ||
-        !/^(n\/a|pending|\d{4}-\d{2}-\d{2})$/.test(asBuilt.applied)
+        asBuilt.sections.has("Migrations") &&
+        (!asBuilt.applied ||
+          !/^(n\/a|pending|\d{4}-\d{2}-\d{2})$/.test(asBuilt.applied))
       )
         report.errors.push(
           `${at}: Migrations needs "applied: n/a", "applied: pending" or "applied: <YYYY-MM-DD>"`,
@@ -170,7 +179,7 @@ function checkItems(tree: SpecsTree, toolkit: Toolkit, report: Report) {
         (c) => c.status !== "PASS" && !c.tampered && !c.stale,
       );
       if (left.length)
-        report.errors.push(
+        (strict ? report.errors : report.warnings).push(
           `${item.id} has an as-built, so it is closing, but ${left.map((c) => `${c.id} (${c.reason})`).join(", ")} ${left.length === 1 ? "is" : "are"} not PASS. ${left.some((c) => c.id.startsWith("review:")) ? `Run: yarn review:run ${left.find((c) => c.id.startsWith("review:"))!.id.slice(7)} ${item.id}` : `Run: yarn status ${item.id}`}`,
         );
       if (
@@ -335,7 +344,7 @@ function checkTree(
   if (options.status && (tree.items.length > 0 || tree.epics.length > 0)) {
     const rel = statusPath(specsRoot);
     if (!fileExists(rel) || readRepoText(rel) !== renderStatusFile(tree))
-      report.errors.push(
+      (strict ? report.errors : report.warnings).push(
         `${rel} is out of date; run yarn status and commit it`,
       );
   }
@@ -379,6 +388,7 @@ function runFixtures(toolkit: Toolkit): string[] {
 const toolkit = loadToolkit();
 const rootFlag = process.argv.indexOf("--root");
 if (rootFlag !== -1) {
+  strict = true;
   disableGit();
   const report = checkTree(toolkit, process.argv[rootFlag + 1]!, {
     status: true,
@@ -393,6 +403,9 @@ if (rootFlag !== -1) {
 }
 
 // The contract-loop harness copies no fixtures into its scratch repo.
+// Fixtures are always judged strictly: they pin the finished state.
+const strictRun = strict;
+strict = true;
 disableGit();
 const fixtureResult = process.argv.includes("--skip-fixtures")
   ? ["0"]
@@ -405,6 +418,7 @@ if (fixtureResult.length > 1 || !/^\d+$/.test(fixtureResult[0]!)) {
 }
 
 // The live tree reads git again: staleness, merged records.
+strict = strictRun;
 enableGit();
 const report = checkTree(toolkit, toolkit.specsRoot, { status: true });
 for (const warning of report.warnings) console.log(`warn  ${warning}`);

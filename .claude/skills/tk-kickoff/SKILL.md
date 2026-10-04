@@ -1,15 +1,13 @@
 ---
 name: tk-kickoff
-description: "Start a drafted ticket: check its contract, dependencies and gates, run contract:init to freeze the criteria on the operator's branch, then state the planned paths. Use when a build prompt or Taylor says to start, kick off or build a ticket that has a contract.md and no results.json yet."
+description: "Start one drafted ticket without building it: run contract:init to set its tier and reviewers and freeze its criteria on the operator's branch. Use only when Taylor asks to start or kick off a ticket and nothing more; to build a ticket, use tk-batch, which starts it too."
 argument-hint: <APP | app | EPIC> <slug>
 ---
 
-Start one ticket. `yarn contract:init` enforces every gate below; this skill only puts them in order, so a refusal is the next instruction, not an obstacle.
+Start one ticket. `yarn contract:init` enforces every gate; a refusal is the next instruction, not an obstacle.
 
-1. **The contract is complete.** Open the ticket's `contract.md` (or draft it first with `/tk-contract`). No `[FILL]` markers; `yarn check-specs` names anything else.
-2. **Its gates hold.** Every cited surface file is `status: approved` and holds no `[NEEDS DECISION — BLOCKING]` (A6). Every `depends_on` ticket has its as-built on this branch, merged or stacked beneath it; never wait for a merge. For an epic ticket, `tickets/_preflight.md` holds a PASS line for it against this contract; if the contract changed since, the gate runs again (`yarn review:run vigil <EPIC>`, which Taylor runs when the sandbox cannot reach Claude).
-3. **Start it.** Run `yarn contract:init <APP | app | EPIC> <slug>` again. It adds a `review:<role>` criterion per reviewer the planned paths require, freezes the criteria and writes every result at FAIL, on the branch the operator has checked out; it never creates or switches one, and refuses only the protected branch. Other tickets may be building on the same branch in parallel (PR-14): commit only your own planned paths, never `git add -A`.
-4. **State the planned paths** back, with what each will hold, before writing code. A path you discover later goes into `planned_paths`, and a new criterion only through `yarn contract:add <id> …`.
-5. **Build in small commits,** each `<id>: <outcome>`. Never push. `yarn status <id>` says what is left at any time.
+1. **The contract is complete.** No `[FILL]` markers; `yarn check-specs` names anything else.
+2. **Start it.** Run `yarn contract:init <APP | app | EPIC> <slug>`. It refuses a cited file that is not `status: approved` or holds `[NEEDS DECISION — BLOCKING]`, a dependency whose own criteria are not all PASS on this branch, a tier 2 epic ticket without its pre-flight PASS line, and the protected branch. It then writes the ticket's `tier:` and reviewers (PR-15), freezes the criteria and writes every result at FAIL, on the branch the operator has checked out. To change the tier afterwards: `yarn contract:tier <id> [0 | 1 | 2]`.
+3. **Go on to build it** through `tk-batch`, unless Taylor asked only for the start.
 
-End with the branch name, the reviewers, and the first criterion you will prove.
+Other tickets may be building on the same branch (PR-14): commit only your own planned paths, never `git add -A`.

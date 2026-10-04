@@ -1,6 +1,6 @@
 ---
 title: "Stage: Tickets"
-description: "Open at an epic's tickets level, to cut the approved spec into contracts a build thread can prove, with reviewers computed, dependencies ordered and a kickoff prompt per ticket."
+description: "Open at an epic's tickets level, to cut the approved spec into contracts a build thread can build and prove from the ticket alone, with tiers computed and dependencies ordered."
 layer: workflows
 status: draft
 thread: P-J
@@ -35,20 +35,22 @@ Claude Code, on `agent/<EPIC>`.
 Adapted from the owner's earlier ticket system; the spec-system guide is filed when Taylor attaches it. Until then:
 
 - One ticket cites one surface file and the criterion IDs it builds; citing more needs a `waiver:` with the reason (A5).
+- The ticket is the whole brief (PR-15): its Build notes hold the approach, the text of each decision it builds on, the interfaces, a line per planned path, the gotchas and the model. A builder, or a person checking what the builder was told, needs no other file. `technical.md` stays the source for a decision that spans tickets.
+- `yarn verify` is never a criterion; it runs once at batch close. A criterion proves the ticket's own work.
 - A ticket is under half a day by default; a bigger one is split, never padded.
 - Every criterion names its evidence type (`test`, `check`, `capture`, `manual`); UI criteria default to `capture`.
-- Reviewers are computed from planned paths against `toolkit.json`, and Vigil joins every epic ticket (A7).
+- The tier is computed from planned paths (`stages/build.md` §1); set `tier:` to raise or lower it. Only a tier 2 ticket carries reviewers, computed from `toolkit.json` (A7).
 - Start with at most three tickets per thread; the ceiling is re-measured on the first epic.
-- The model recommendation for each build thread states the failure mode of choosing down.
+- Every open `[NEEDS DECISION]` a ticket waits on is put to Taylor at this gate, in one batch, so no build thread stops on one.
 
 ## 5. Writes
 
-One `tickets/<EPIC>-<n>-<slug>/contract.md` per ticket through `yarn contract:init <EPIC> <slug> --from <draft> --draft`, which allocates the number and starts nothing (the build thread starts it); `tickets/_preflight.md`, written by `yarn review:run vigil <EPIC>` with one PASS or FAIL line per ticket, bound to that contract's hash; and one kickoff prompt per ticket in `prompts/NN-build-<id>.md`, ending with the standard's kickoff block.
+One `tickets/<EPIC>-<n>-<slug>/contract.md` per ticket through `yarn contract:init <EPIC> <slug> --from <draft> --draft`, which allocates the number and starts nothing (the build thread starts it); and `tickets/_preflight.md`, written by `yarn review:run vigil <EPIC>` with one PASS or FAIL line per ticket. No per-ticket kickoff prompt: the contract is the brief.
 
 ## 6. Gate
 
-Vigil's pre-flight line per ticket (built from the spec before any code: seats, unhappy paths, instrumentation, the promises the ticket touches), and `yarn check-specs` green on every contract. `contract:init` for an epic ticket refuses without its PASS line (A13.2).
+`yarn check-specs` green on every contract, and Vigil's pre-flight PASS line for each tier 2 ticket (built from the spec before any code: seats, unhappy paths, instrumentation, the promises the ticket touches). `contract:init` refuses a tier 2 epic ticket without its PASS line (A13.2); a contract edited after its PASS is noted, not refused.
 
 ## 7. Handoff
 
-Print the build order from `yarn status --epic <EPIC>` and the first ticket's kickoff prompt; say: open a new thread per ticket, in that order; tickets with no dependency between them run in parallel on the operator's branch.
+Print the build order from `yarn status --epic <EPIC>` as batches: each batch is the tickets whose dependencies the earlier batches build. Say: tell a thread "build <ids>"; batches with no dependency between them run in parallel threads on the operator's branch.

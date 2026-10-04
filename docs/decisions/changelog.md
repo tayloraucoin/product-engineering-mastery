@@ -15,6 +15,21 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-03 — PJ: tickets build in batches, and the tier sets the QA
+
+Taylor, after the first STK batch: threads ran over an hour, each ticket needed a pasted prompt and two typed commands, and one ticket's open close failed every other ticket's `yarn verify` on the shared branch. "This whole thing is about increasing code quality with decreasing operational stress." The loop was built for one ticket per branch, merged before the next; PR-14 put parallel tickets on one branch, and every gate that assumed isolation then fired across tickets (PR-15).
+
+- **One thread builds a batch.** `tk-batch` takes named tickets from start to a closing report: start, build, prove, as-built, review by tier, one `yarn verify`. Plain language triggers it; no slash command. `tk-kickoff` and `tk-close` remain for a single step. The closing report has one shape: Done, Not done, Needs you (numbered, with the exact command), What went wrong (three lines).
+- **Tiers.** `contract:init` writes `tier:` from the planned paths: 0 (docs and data) has no reviewer; 1 (code) is reviewed once with its batch by a `vigil` subagent; 2 (a one-way door: `TIER_2_PATHS` in `tooling/lib/specs.ts`) keeps the pre-flight and the `toolkit.json` reviewers on the ticket. `yarn contract:tier <id> [n]` changes a started ticket's tier and drops or adds its review criteria. Trade-off: a tier 1 ticket's review is not recorded in `results.json`; it is a file beside the tickets.
+- **A dependency counts once built:** every criterion of its own recorded PASS. Its as-built and reviews never hold the next ticket.
+- **`check-specs` warns on work in flight** (a stale PASS, a ticket closing with criteria left, `_status.md` out of date) and fails on it only with `--strict`, the check before a merge. Defects still fail always: a broken contract, a result without a run record, changed evidence, an edited merged record. This removes the deadlock where a `yarn verify` criterion failed on its own ticket's unfinished close.
+- **A review binds the code and the frozen criteria,** no longer the contract's and the as-built's hashes: a build note or an as-built wording fix does not cost a second review. A pre-flight PASS on a contract edited since is noted, not refused.
+- **The stop gate checks only the files its session edited,** read from the transcript, and skips `check-specs` and `budget`; a session that edited nothing is never blocked. `yarn verify:fast` by hand still checks the whole branch.
+- **The ticket is the whole brief.** The contract's body holds Build notes (approach, the text of the decisions it builds on, interfaces, a line per path, gotchas, model); only the criteria are frozen. The cap is 2,500 tokens, and the budget table's contract part is 5,000 (non-UI build 10,500; evaluator pass 10,000, with the evaluator body at 4,500). Per-ticket kickoff prompts are retired. Trade-off: a decision copied into several tickets can drift; `technical.md` stays the source for one that spans tickets.
+- **The as-built has four sections:** Shipped against the contract, Deviations, Not verified, Next. Migrations and Test changes are added when the ticket has any.
+- **`yarn verify` is never a criterion;** it runs once at batch close.
+- **Not done:** `toolkit.json` does not yet hold the tier 2 globs (a thread had it open); `yarn pr:body` (J8) should read the tier; trigger tests for `tk-batch`.
+
 ## 2026-10-03 — PJ: check-refs ignores a machine-local pending entry
 
 `yarn check-refs` failed STK-3's C2 when Taylor's machine gained a `.claude/settings.local.json`: its `refs-pending.json` entry ("machine-local and untracked by design") then read as "exists now; remove it", which would make the check fail in CI after removal. A pending entry whose path git ignores now never counts as stale. Two cases in `tooling/check-refs.test.ts` (Taylor chose this fix over leaving C2 at FAIL).

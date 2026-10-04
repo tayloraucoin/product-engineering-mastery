@@ -1,16 +1,16 @@
 ---
 name: tk-close
-description: "Close a ticket: prove every criterion through tooling, write the as-built, run the reviewers in fresh context, promote truth, and leave the branch ready for Taylor to merge. Use when a build prompt or Taylor says to close a ticket, or when yarn status <id> shows only proofs, the as-built and reviews left."
+description: "Close one ticket that is already built: prove its criteria through tooling, write the as-built, run the reviews its tier calls for, and report in the batch report's shape. Use when Taylor says to close or wrap up a single ticket; for several tickets, or one not built yet, use tk-batch."
 argument-hint: <id>
 ---
 
-Close one ticket, in this order. Only tooling writes results; never edit `results.json`, a review file or a merged as-built.
+Close one ticket. Only tooling writes results; never edit `results.json`, a review file or a merged as-built. Do not stop to ask about anything reversible.
 
-1. **Green first.** Commit the code (`<id>: <outcome>`), staging only your planned paths: other tickets may share the branch (PR-14). Then run `yarn verify`. Fix what fails before proving anything: a proof records the commit it ran on, and a later change makes it stale.
-2. **Prove.** `yarn contract:run <id>` runs every `test` and `check` criterion. Record each `capture` and `manual` criterion against its evidence file: `yarn contract:record <id> <criterion> --evidence <path>`. `yarn status <id>` lists what is left, with the reason for each.
-3. **Write the as-built** at `as-built.md` in the ticket folder, from `docs/engineering/templates/as-built.template.md`, before any review: reviewers read it, and editing it afterwards resets their verdicts. Every deviation with its reason; every `manual` criterion under Not verified; `applied:` under Migrations; test changes, or "none".
-4. **Review.** For each `review:<role>` criterion, run `yarn review:run <role> <id>`. It runs the reviewer headless with read-only tools on a prompt built from the contract, results and evidence, never your summary, and records the verdict. It needs the Anthropic API: from the sandbox, re-run it unsandboxed; if the `claude` CLI is not logged in, stop and tell Taylor. A FAIL verdict lists findings: fix them, re-prove what changed, and run the review again.
-5. **Truth.** For an epic ticket, run `yarn truth:promote <EPIC>`, then reconcile each promoted truth file with the as-built's Deviations. A one-off has already edited its `truth_files`.
-6. **Done.** `yarn status <id>` shows nothing left and `yarn check-specs` is clean. Commit the as-built, results, reviews and evidence (`<id>: as-built and reviews`).
+1. **Commit** the code (`<id>: <outcome>`), staging only this ticket's paths: other tickets share the branch (PR-14).
+2. **Prove.** `yarn contract:run <id>`, and `yarn contract:record <id> <criterion> --evidence <path>` for each `capture` and `manual` criterion. `yarn status <id>` lists what is left, with the reason for each. A proof goes stale when the ticket's own planned paths change after it: re-run it.
+3. **Tier.** A ticket started before PR-15 has no `tier:` line: run `yarn contract:tier <id>`, which computes it and drops the review criteria its tier does not call for.
+4. **As-built**, from `docs/engineering/templates/as-built.template.md`: four short sections. Editing it later does not reset a review.
+5. **Review by tier.** Tier 0: none. Tier 1: one `vigil` subagent, handed the contract, the results file and the changed files, never your summary; save its reply as `review-batch.md` in the ticket folder. Tier 2: `yarn review:run <role> <id>` for each `review:` criterion, unsandboxed. Fix a Blocking finding, re-prove, and review again.
+6. **Record.** `yarn status`, `yarn truth:promote <EPIC>` when the epic has `ux/` proposals, then commit (`<id>: as-built and reviews`). `yarn check-specs --strict` names anything this ticket still owes; another ticket's lines are not yours.
 
-End with the branch name, the reviewers' verdicts with the paths of their review files for Taylor to read, and anything not verified. Never push: Taylor pushes and merges. `yarn pr:body` lands in J8; until then, the as-built is the PR's description.
+End with the closing report from `tk-batch`: `Done`, `Not done`, `Needs you`, `What went wrong`, and nothing else. Never push: Taylor pushes and merges.

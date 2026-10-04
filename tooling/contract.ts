@@ -18,6 +18,10 @@
  *   yarn contract:add <id> <criterion> --evidence <type> --statement <text> [--command | --path | --reason <text>]
  *   yarn contract:add <id> review:<role>
  *       Adds a criterion at FAIL: the only way the frozen set grows.
+ *   yarn contract:tier <id> [0 | 1 | 2]
+ *       Sets a started ticket's tier (computed from its planned paths when
+ *       none is named) and makes its review criteria match: the required
+ *       reviewers at tier 2, none below it (PR-15).
  */
 
 import { spawnSync } from "node:child_process";
@@ -37,7 +41,6 @@ import {
   asBuiltPath,
   checkCommand,
   checkContract,
-  computeReviewers,
   CONTRACT_TEMPLATE,
   contractPath,
   EVIDENCE_TYPES,
@@ -60,10 +63,12 @@ import {
   readResults,
   readSpecsTree,
   refreshStatusFile,
+  requiredReviewers,
   resultsPath,
   reviewCriterion,
   SLUG,
   splitCommand,
+  tierOf,
   writeRepoText,
   type Contract,
   type Criterion,
@@ -313,8 +318,11 @@ function start(item: Item, tree: SpecsTree) {
       `${cited} holds [NEEDS DECISION — BLOCKING]; decide it in the file, then start`,
     );
 
-  // A13.2: an epic ticket starts only with its pre-flight PASS, against this contract.
-  if (item.epic) {
+  // A13.2, PR-15: a tier 2 epic ticket starts only with its pre-flight PASS.
+  // A contract edited since (a build note, a planned path) is named, not refused.
+  const tier = tierOf(contract, toolkit);
+  const notes: string[] = [];
+  if (item.epic && tier === 2) {
     const pre = preflightPath(item.epic);
     const contractHash = hashText(file.text);
     const line = fileExists(pre)
@@ -341,18 +349,27 @@ function start(item: Item, tree: SpecsTree) {
         `${pre} was written by a fixture reviewer, not Claude; run yarn review:run vigil ${item.epic.prefix}`,
       );
     else if (line[2] !== contractHash.slice(0, 12))
-      refusals.push(
-        `${item.id}'s contract changed after its pre-flight; run yarn review:run vigil ${item.epic.prefix} again`,
-      );
+      notes.push(`the contract was edited after its pre-flight PASS`);
   }
 
-  // A dependent ticket starts once its predecessor has an as-built here:
-  // merged, or stacked beneath this branch (Taylor, 2026-10-03).
+  // A dependent ticket starts once its predecessor is built here: every
+  // criterion of its own recorded PASS. Its reviews and its as-built never
+  // hold the next ticket (PR-15).
   for (const dep of contract.depends_on) {
     const other = findItem(tree, dep);
-    if (!other || !fileExists(asBuiltPath(other)))
+    const recorded = other ? readResults(other).results : null;
+    const unproven = recorded
+      ? Object.entries(recorded.criteria)
+          .filter(([id, c]) => !id.startsWith("review:") && c.status !== "PASS")
+          .map(([id]) => id)
+      : [];
+    if (!other || !recorded)
       refusals.push(
-        `depends on ${dep}, which has no as-built on this branch; finish it, or start from its branch`,
+        `depends on ${dep}, which has not started on this branch; build it first`,
+      );
+    else if (unproven.length)
+      refusals.push(
+        `depends on ${dep}, which is not built yet: ${unproven.join(", ")} not PASS. Run: yarn contract:run ${dep}`,
       );
   }
 
@@ -366,9 +383,10 @@ function start(item: Item, tree: SpecsTree) {
   if (refusals.length)
     stop(`${item.id} cannot start:\n  ${refusals.join("\n  ")}`);
 
-  // Reviewers by risk (A7), then freeze.
-  const roles = [...computeReviewers(contract, item, toolkit).keys()].sort();
+  // Reviewers by tier (A7, PR-15), then freeze.
+  const roles = [...requiredReviewers(contract, item, toolkit).keys()].sort();
   setFrontmatter(contractPath(item), (doc) => {
+    doc.set("tier", tier);
     doc.set("reviewers", roles);
     const criteria = doc.get("criteria") as YAML.YAMLSeq;
     const have = new Set(contract.criteria.map((c) => c.id));
@@ -390,8 +408,13 @@ function start(item: Item, tree: SpecsTree) {
   };
   writeResults(item, results);
   console.log(
-    `contract:init — ${item.id} started on ${branch}: ${frozen.criteria.length} criteria at FAIL` +
-      (roles.length ? `; reviewers ${roles.join(", ")}` : "") +
+    `contract:init — ${item.id} started on ${branch}, tier ${tier}: ${frozen.criteria.length} criteria at FAIL` +
+      (roles.length
+        ? `; reviewers ${roles.join(", ")}`
+        : tier === 1
+          ? "; reviewed with its batch"
+          : "; no reviewer") +
+      (notes.length ? `. Note: ${notes.join("; ")}` : "") +
       (decisions.open.length
         ? `. Open decisions (not blocking): ${decisions.open.join(", ")}`
         : "") +
@@ -646,10 +669,65 @@ function add() {
   console.log(`contract:add — ${item.id} gains ${name} at FAIL.`);
 }
 
+// ---------------------------------------------------------------- tier
+
+function setTier() {
+  const tree = readSpecsTree(toolkit);
+  const [id, named] = argv;
+  const item = requireItem(tree, id);
+  const results = requireResults(item);
+  if (isMerged(item))
+    stop(`${item.id} has merged; its contract is a record now`);
+  const contract = readContract(item).contract;
+  if (!contract) stop(`${contractPath(item)} is not a valid contract`);
+  requireFrozen(item, contract, results);
+  if (named !== undefined && !["0", "1", "2"].includes(named))
+    stop("a tier is 0, 1 or 2");
+  const tier =
+    named !== undefined
+      ? (Number(named) as 0 | 1 | 2)
+      : tierOf({ planned_paths: contract.planned_paths }, toolkit);
+  const roles = [
+    ...requiredReviewers({ ...contract, tier }, item, toolkit).keys(),
+  ].sort();
+  const wanted = new Set(roles.map((role) => `review:${role}`));
+  const dropped = contract.criteria
+    .filter((c) => isReview(c) && !wanted.has(c.id))
+    .map((c) => c.id);
+  const added = [...wanted].filter(
+    (id) => !contract.criteria.some((c) => c.id === id),
+  );
+  setFrontmatter(contractPath(item), (doc) => {
+    doc.set("tier", tier);
+    doc.set("reviewers", roles);
+    const criteria = doc.get("criteria") as YAML.YAMLSeq;
+    criteria.items = criteria.items.filter(
+      (node) => !dropped.includes(String((node as YAML.YAMLMap).get("id"))),
+    );
+    for (const id of added)
+      criteria.add(doc.createNode(reviewCriterion(id.slice(7))));
+  });
+  const updated = readContract(item).contract!;
+  results.criteria_sha256 = hashCriteria(updated.criteria);
+  for (const id of dropped) delete results.criteria[id];
+  for (const id of added)
+    results.criteria[id] = { status: "FAIL", evidence: "manual", run: null };
+  writeResults(item, results);
+  console.log(
+    `contract:tier — ${item.id} is tier ${tier}` +
+      (dropped.length ? `; dropped ${dropped.join(", ")}` : "") +
+      (added.length ? `; added ${added.join(", ")} at FAIL` : "") +
+      ".",
+  );
+  printLeft(item);
+}
+
 // ---------------------------------------------------------------- main
 
 if (command === "init") init();
 else if (command === "run") run();
 else if (command === "record") record();
 else if (command === "add") add();
-else stop("usage: node tooling/contract.ts <init | run | record | add> …");
+else if (command === "tier") setTier();
+else
+  stop("usage: node tooling/contract.ts <init | run | record | add | tier> …");

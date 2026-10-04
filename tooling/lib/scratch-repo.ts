@@ -84,7 +84,7 @@ export const commit = (cwd: string, message: string) => {
   git(cwd, "commit", "-q", "--no-verify", "-m", message);
 };
 export const checkSpecs = (cwd: string) =>
-  tool(cwd, "check-specs.ts", ["--skip-fixtures"]);
+  tool(cwd, "check-specs.ts", ["--skip-fixtures", "--strict"]);
 
 /** The work branch a fresh repo is on: the operator's, as tickets never make one (PR-14). */
 export const WORK_BRANCH = "work";
@@ -184,6 +184,7 @@ export function oneOffContract(
     planned?: string[];
     criteria?: string;
     depends?: string[];
+    tier?: 0 | 1 | 2;
   } = {},
 ) {
   return [
@@ -198,6 +199,7 @@ export function oneOffContract(
     `cites: ${JSON.stringify(extra.cites ?? [])}`,
     `truth_files: ${JSON.stringify(extra.truth ?? "none: no living UX file in the scratch repo")}`,
     "reviewers: []",
+    ...(extra.tier === undefined ? [] : [`tier: ${extra.tier}`]),
     `planned_paths: ${JSON.stringify(extra.planned ?? ["src/filter.ts"])}`,
     `depends_on: ${JSON.stringify(extra.depends ?? [])}`,
     "out_of_scope:",

@@ -11,6 +11,7 @@ import { test } from "node:test";
 import {
   AS_BUILT,
   buildAndProve,
+  checkSpecs,
   commit,
   freshRepo,
   git,
@@ -108,11 +109,9 @@ test("parallel tickets: another ticket's commit leaves this ticket's proof fresh
   assert.match(status.out, /Left to go: none/);
 });
 
-test("stacking: a dependent ticket starts on the same branch once its predecessor has an as-built", () => {
+test("stacking: a dependent ticket starts on the same branch once its predecessor is built, before any as-built or review", () => {
   const repo = startOneOff();
   buildAndProve(repo);
-  write(repo, "specs/web/one-offs/WEB-1-filter/as-built.md", AS_BUILT("WEB-1"));
-  commit(repo, "WEB-1: as-built");
   tool(repo, "contract.ts", ["init", "web", "other"]);
   write(
     repo,
@@ -124,7 +123,7 @@ test("stacking: a dependent ticket starts on the same branch once its predecesso
   assert.equal(git(repo, "rev-parse", "--abbrev-ref", "HEAD"), WORK_BRANCH);
 });
 
-test("a dependency without an as-built refuses the start", () => {
+test("a dependency that has not started refuses the start", () => {
   const repo = freshRepo();
   tool(repo, "contract.ts", ["init", "web", "first"]);
   tool(repo, "contract.ts", ["init", "web", "second"]);
@@ -135,7 +134,7 @@ test("a dependency without an as-built refuses the start", () => {
   );
   const r = tool(repo, "contract.ts", ["init", "web", "second"]);
   assert.notEqual(r.status, 0);
-  assert.match(r.out, /depends on WEB-1, which has no as-built on this branch/);
+  assert.match(r.out, /depends on WEB-1, which has not started on this branch/);
 });
 
 test("A6: a cited file not approved, or holding a BLOCKING marker, is refused; a plain open marker is listed", () => {
@@ -172,4 +171,34 @@ test("A6: a cited file not approved, or holding a BLOCKING marker, is refused; a
     assert.equal(r.status === 0 ? 0 : 1, status, r.out);
     assert.match(r.out, expected);
   }
+});
+
+test("PR-15 tiers: code is tier 1 with no reviewer; contract:tier 2 adds the review, and a lower tier drops it", () => {
+  const repo = startOneOff({ truth: ["specs/web/ux/records/table.md"] });
+  const rel = "specs/web/one-offs/WEB-1-filter/contract.md";
+  assert.match(read(repo, rel), /^tier: 1$/m);
+  assert.doesNotMatch(read(repo, rel), /review:/);
+  let r = tool(repo, "contract.ts", ["tier", "WEB-1", "2"]);
+  assert.equal(r.status, 0, r.out);
+  assert.match(read(repo, rel), /^tier: 2$/m);
+  assert.match(read(repo, rel), /review:vigil/);
+  r = tool(repo, "contract.ts", ["tier", "WEB-1"]);
+  assert.equal(r.status, 0, r.out);
+  assert.match(r.out, /tier 1; dropped review:vigil/);
+  assert.doesNotMatch(read(repo, rel), /review:/);
+  buildAndProve(repo);
+  const status = tool(repo, "status.ts", ["WEB-1"]);
+  assert.match(status.out, /Left to go: none/);
+});
+
+test("PR-15: check-specs warns on a ticket still closing, and fails it only with --strict", () => {
+  const repo = startOneOff();
+  write(repo, "src/filter.ts", "export const keep = (n: number) => n > 1;\n");
+  write(repo, "specs/web/one-offs/WEB-1-filter/as-built.md", AS_BUILT("WEB-1"));
+  tool(repo, "status.ts", []);
+  commit(repo, "WEB-1: as-built before proof");
+  const loose = tool(repo, "check-specs.ts", ["--skip-fixtures"]);
+  assert.equal(loose.status, 0, loose.out);
+  assert.match(loose.out, /warn .*WEB-1 has an as-built/);
+  assert.notEqual(checkSpecs(repo).status, 0);
 });

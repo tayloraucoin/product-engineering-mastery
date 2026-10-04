@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "contract.schema.json",
   "title": "contract.md frontmatter: the unit of work",
-  "description": "The fields of a ticket's contract (E-22, A5, A7). check-specs validates every contract's frontmatter against this file; the rules no schema can carry (one surface, reviewers by path, the 1,000-token cap, yarn scripts) are in tooling/lib/specs.ts.",
+  "description": "The fields of a ticket's contract (E-22, A5, A7). check-specs validates every contract's frontmatter against this file; the rules no schema can carry (one surface, reviewers by path, the 2,500-token cap, yarn scripts) are in tooling/lib/specs.ts.",
   "type": "object",
   "required": [
     "id",
@@ -49,6 +49,10 @@
       "description": "Computed by contract:init from planned_paths and toolkit.json; each has a review:<role> criterion.",
       "type": "array",
       "items": { "type": "string", "pattern": "^[a-z]+$" }
+    },
+    "tier": {
+      "description": "QA tier (PR-15). 0: docs and data, checks only. 1: code, reviewed with its batch. 2: a one-way door, pre-flighted and reviewed on the ticket. Written by contract:init from planned_paths; changed with contract:tier.",
+      "enum": [0, 1, 2]
     },
     "planned_paths": {
       "type": "array",

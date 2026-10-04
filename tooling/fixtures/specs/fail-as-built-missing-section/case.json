@@ -1,4 +1,4 @@
 {
   "expect": "fail",
-  "message": "missing the \"## Test changes\" section"
+  "message": "missing the \"## Deviations\" section"
 }

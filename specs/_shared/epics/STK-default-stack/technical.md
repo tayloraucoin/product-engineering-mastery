@@ -43,9 +43,9 @@ Possible in ten working days with every ticket under half a day.
 
 ## Calls routed to Taylor
 
-1. Ratified D-STK-1 to D-STK-15 on 2026-10-03. `[NEEDS DECISION]` D-STK-16 to D-STK-19 were added after that approval and await your yes.
+1. Ratified D-STK-1 to D-STK-15 on 2026-10-03, and D-STK-16 to D-STK-19, added after that approval, later the same day.
 2. `[NEEDS DECISION]` Sentry data region, permanent once chosen. Recommended: US. Needed before the error-monitoring ticket only.
-3. `[NEEDS DECISION]` `@pem/services` as its own package (recommended: the lint gets an edge to enforce) or folders inside `api`.
+3. Ratified 2026-10-03: `@pem/services` is its own package, so the lint gets an edge to enforce.
 
 ## Test shape per risk
 

@@ -110,7 +110,7 @@ Open when setting up a repo's layout file or its agent settings, or when `yarn v
 | File | What it is for | Status |
 | --- | --- | --- |
 | [`README.md`](../engineering/templates/README.md) | Open when setting up a repo's layout file or its agent settings, or when `yarn verify` says a key is missing from one of them. | adopted |
-| [`as-built.template.md`](../engineering/templates/as-built.template.md) | Fill when a ticket's criteria are proven and before its reviewers run: what shipped against the contract, every deviation with its reason, migrations, test changes and what is not verified. | draft |
+| [`as-built.template.md`](../engineering/templates/as-built.template.md) | Fill when a ticket's criteria are proven and before its reviewers run: what shipped against the contract, every deviation with its reason, and what is not verified. | draft |
 | [`contract.template.md`](../engineering/templates/contract.template.md) | Fill when any change starts, one-off or epic ticket: the testable criteria with their evidence types, the planned paths and the one surface it cites. yarn contract:init writes it from this file. | draft |
 | [`technical.template.md`](../engineering/templates/technical.template.md) | Fill at the Technical stage of an epic, after the UX files are approved: where the code goes and why, the data contract, the one-way doors with their records, the calls routed to Taylor, and the test shape per risk. | draft |
 
@@ -437,11 +437,11 @@ Open to see the six stage files an epic's levels run on, and the one a one-off r
 | File | What it is for | Status |
 | --- | --- | --- |
 | [`README.md`](../workflows/stages/README.md) | Open to see the six stage files an epic's levels run on, and the one a one-off runs on: each names its cast, venue, loads, interview rounds, writes, gate and handoff. | draft |
-| [`build.md`](../workflows/stages/build.md) | Open for one ticket's build thread, one-off or epic: the contract is the oracle, results are written only by tooling, reviewers run in fresh context, and the thread ends when status shows nothing left. | draft |
+| [`build.md`](../workflows/stages/build.md) | Open for a build thread, one ticket or a batch: the contract is the brief and the oracle, results are written only by tooling, the tier sets the review, and the thread ends on a short report. | draft |
 | [`frame.md`](../workflows/stages/frame.md) | Open at an epic's first level, to turn a brain dump into a brief: the problem, who has it, the appetite, what is out, and the knowledge gaps. | draft |
 | [`research.md`](../workflows/stages/research.md) | Open when a brief names a knowledge gap that the UX spec cannot proceed without: one question, one note, promoted to the library only when it outlives the epic. | draft |
 | [`technical.md`](../workflows/stages/technical.md) | Open at an epic's technical level, after the UX files are approved, to decide placement, the data contract and the one-way doors, and to route the calls that need ratifying. | draft |
-| [`tickets.md`](../workflows/stages/tickets.md) | Open at an epic's tickets level, to cut the approved spec into contracts a build thread can prove, with reviewers computed, dependencies ordered and a kickoff prompt per ticket. | draft |
+| [`tickets.md`](../workflows/stages/tickets.md) | Open at an epic's tickets level, to cut the approved spec into contracts a build thread can build and prove from the ticket alone, with tiers computed and dependencies ordered. | draft |
 | [`ux.md`](../workflows/stages/ux.md) | Open at an epic's UX level, to turn the brief into surface files a fresh thread could build without asking a question: every state, access, criteria with IDs, mirroring the living truth. | draft |
 
 ## `docs/workflows/templates/`

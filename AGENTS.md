@@ -13,11 +13,13 @@ The canonical instructions for every agent (Claude Code, Cursor, Codex). `CLAUDE
 
 ## Work loop
 
-- **Every change is a ticket with a contract**, started by `yarn contract:init`: testable criteria, each with an evidence type; the planned paths; the one UX surface it cites. The default ticket is under half a day.
+- **Every change is a ticket with a contract**, started by `yarn contract:init`: testable criteria, each with an evidence type; the planned paths; the one UX surface it cites; Build notes that say what to build. The default ticket is under half a day.
+- **Asked to build tickets, build them start to finish** (`tk-batch`; no slash command needed): start, build, prove, as-built, review by tier, one `yarn verify`, one short report. Decide what is reversible; ask Taylor only what only Taylor can answer, once, with a recommendation.
+- **The tier sets the QA** (PR-15): 0 docs, checks only; 1 code, one review per batch; 2 a one-way door, pre-flight and reviewers on the ticket.
 - **One-off or epic is decided by the routing rule in [`docs/workflows/README.md`](docs/workflows/README.md), never by size:** more than one ticket, a new surface, no living UX file, or an unsettled problem makes an epic.
-- **Done is `results.json` plus `as-built.md`, never a claim in chat.** Only `yarn contract:run`, `contract:record` and `review:run` write results. `review:run` proves a review ran against the contract, not that it was independent: Taylor reads `review-<role>.md` before merge.
-- **`specs/<app>/ux/` is the living truth** of how the app works now. An epic proposes changes in its own `ux/`; shipping promotes them. Every epic ticket is judged by `vigil`, an evaluator in fresh context.
-- **Built as of 2026-10-02:** the contract loop and `status` (J5); the Stop check and the SessionStart line (J6); `/tk-contract`, `/tk-kickoff`, `/tk-close` and `vigil` (J7). **Lands later:** `yarn pr:body` (J8), the map's other skills (P-C). Delete this line at J8.
+- **Done is `results.json` plus `as-built.md`, never a claim in chat.** Only `yarn contract:run`, `contract:record`, `contract:tier` and `review:run` write results. Taylor reads a tier 2 ticket's `review-<role>.md` before merge.
+- **`specs/<app>/ux/` is the living truth** of how the app works now. An epic proposes changes in its own `ux/`; shipping promotes them.
+- **Built as of 2026-10-02:** the contract loop and `status` (J5); the Stop check and the SessionStart line (J6); `/tk-contract`, `tk-kickoff`, `tk-close`, `tk-batch` and `vigil` (J7, PR-15). **Lands later:** `yarn pr:body` (J8), the map's other skills (P-C). Delete this line at J8.
 
 ## Commands
 

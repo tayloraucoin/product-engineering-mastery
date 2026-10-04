@@ -35,14 +35,14 @@ Example: "The records table needs a filter by status." That's a one-off: it's an
 | **1. Brain dump** | Open any Claude Code thread, type `/tk-prompt` (or tag [`prompt-builder.md`](prompt-builder.md)) and say what you want | Routes it as a one-off, picks the app, files and model, and prints a kickoff prompt | The prompt is checked against the prompt standard |
 | **2. Kick off** | Open a new thread and paste the prompt | Drafts the contract, then runs `yarn contract:init web fix-filter` | Creates `specs/web/one-offs/WEB-41-fix-filter/` and every criterion at FAIL, on the branch you have checked out. Refuses `main`. |
 | **3. Build** | Nothing, or answer a question | Writes the code. If behavior changes, edits the living truth file named in the contract. | Path rules load as files are touched. Hooks block npm, pushing, committing on `main`, and editing results by hand. |
-| **4. Prove and close** | Type `/tk-close`, or tell it to close | Runs `contract:run` and `contract:record`, writes the as-built, calls reviewers | Only scripts flip results. Reviewers are chosen by what was touched. The Stop hook prints "Left to go". |
+| **4. Prove and close** | Nothing: the thread carries on | Runs `contract:run` and `contract:record`, writes the as-built, runs the review its tier calls for | Only scripts flip results. The tier is computed from what was touched. The Stop hook prints "Left to go". |
 | **5. Merge** | Push `agent/WEB-41`, open the PR (`yarn pr:body WEB-41` writes the description), read it, merge | Nothing; agents never push | The risk tier tells you how closely to read. `check-specs` validates closure. |
 
 Exact command spellings settle in the build. This file is corrected if they differ.
 
 ## What the contract looks like
 
-A short file, at most 1,000 tokens. For the filter example:
+The whole brief, at most 2,500 tokens: frontmatter the checks read, and Build notes that say what to build. For the filter example:
 
 - **Objective:** Filter the records table by status.
 - **Slice type:** UI behavior on an existing surface; the risk is a broken empty state.

@@ -63,11 +63,11 @@ flowchart TD
     ux --> tech["Technical<br/>Mason and specialists"]
     tech --> tix["Tickets<br/>Reeve writes contracts"]
   end
-  tix -->|"one kickoff prompt per ticket"| init
-  subgraph BUILD["Build thread: one per ticket, physics enforced"]
+  tix -->|"you name the tickets to build"| init
+  subgraph BUILD["Build thread: a ticket or a batch, physics enforced"]
     init["contract:init<br/>every criterion FAIL"] --> build["Build<br/>path rules load as files are touched"]
     build --> close["tk-close<br/>scripts flip results, as-built written"]
-    close --> rev["Reviewers<br/>Vigil, Assay, plus others by risk"]
+    close --> rev["Review by tier<br/>none, per batch, or per ticket"]
   end
   rev --> merge(["You merge one PR"])
   merge --> truth[("Living UX truth<br/>specs/app/ux updated")]

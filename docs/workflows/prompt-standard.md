@@ -47,7 +47,7 @@ Kickoff
 - Ticket: <id>, in <folder>; contract at contract.md (read it first; it is the oracle)
 - Branch: the operator's; first move: yarn contract:init <APP|EPIC> <slug> (run twice when no contract is drafted yet: write, fill, start)
 - Cites: <one surface file>; truth files: <paths or none: reason>
-- Reviewers: <computed list>; your close runs /tk-close
+- Tier and reviewers: computed by contract:init; build and close without stopping (tk-batch), ending on its closing report
 - Do not: edit results.json; commit on main; push; widen settings; create or switch branches; commit another ticket's files
 - Done: results all PASS with run records, as-built written, status shows nothing left
 ```
