@@ -1,0 +1,10 @@
+command: yarn test:hooks
+exit: 0
+at: 2026-10-04T07:36:25Z
+head: e233d03d9bd3207ad0efd5d522fa1c88b043a9b0
+---
+test:hooks — every case behaved.
+  bash-guard: 120 cases, 9 rules; median 59 ms, max 69 ms per call; longest denial about 53 tokens
+  results-gate: 14 cases, 4 rules; median 55 ms, max 59 ms per call; longest denial about 48 tokens
+  session-start: 5 cases, 4 rules; median 57 ms, max 60 ms per call; answers as context
+  stop-gate: 8 cases, 4 rules; median 57 ms, max 59 ms per call; answers as stop
