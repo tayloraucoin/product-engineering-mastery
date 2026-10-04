@@ -8,10 +8,10 @@
       "run": {
         "command": "yarn contract:record STK-11 C1 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/test-db.txt",
         "exit": 0,
-        "at": "2026-10-04T07:45:55Z",
-        "head": "dab71e69e490755cea485187683c5ec17a227435",
+        "at": "2026-10-04T20:47:14Z",
+        "head": "bcf9c07770fcacad44122503257f5cbb819d11bc",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/test-db.txt",
-        "evidence_sha256": "863dd6e7c764d9604f65b762b1e410781f69822c3ac0b1d9749cca0fe34e037f"
+        "evidence_sha256": "ed32d2b7d40325457166dd520c491e8396728d25dc56a3e706793905515f6a70"
       }
     },
     "C2": {
@@ -20,23 +20,23 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-04T07:46:04Z",
-        "head": "dab71e69e490755cea485187683c5ec17a227435",
+        "at": "2026-10-04T20:47:25Z",
+        "head": "bcf9c07770fcacad44122503257f5cbb819d11bc",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/C2.log",
-        "evidence_sha256": "2580889f535c81d55ca482c264c61e75b8f9771fb31ea40809896634155758bd",
-        "tests": 54
+        "evidence_sha256": "07279d393d8015750c0f0c8f3de5a77c3d267efd65122ca3869dae54bc21ba57",
+        "tests": 78
       }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
       "run": {
         "command": "yarn verify",
-        "exit": 1,
-        "at": "2026-10-04T07:46:08Z",
-        "head": "dab71e69e490755cea485187683c5ec17a227435",
+        "exit": 0,
+        "at": "2026-10-04T20:45:29Z",
+        "head": "c2eaeeb0a8bac34e603e0423b50c004c4698d620",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/C3.log",
-        "evidence_sha256": "34a578149b1cc60b4691661eb650a65dc8f5d9c74a10e25d979716fa332aa1a6"
+        "evidence_sha256": "4804edd70b3804ab9f752aab569a3cc0b153d565cb0d11c9d9ebfd3aa3502da2"
       }
     },
     "C4": {
@@ -65,5 +65,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-04T07:46:13Z"
+  "updated_at": "2026-10-04T20:47:27Z"
 }

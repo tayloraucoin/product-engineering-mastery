@@ -1,10 +1,1083 @@
 command: yarn verify
-exit: 1
-at: 2026-10-04T07:46:08Z
-head: dab71e69e490755cea485187683c5ec17a227435
+exit: 0
+at: 2026-10-04T20:45:29Z
+head: c2eaeeb0a8bac34e603e0423b50c004c4698d620
 ---
 Checking formatting...
 All matched files use Prettier code style!
 lint:docs — 189 files, names and frontmatter clean; 8 path rules carry only paths.
-check-settings — 1 problem(s) in .claude/settings.json:
-  permissions.ask is missing Bash(*db:local:reset*); restore it from docs/engineering/templates/settings.template.json
+check-settings — 12 fixtures behaved; .claude/settings.json is clean.
+test:hooks — every case behaved.
+  bash-guard: 120 cases, 9 rules; median 59 ms, max 69 ms per call; longest denial about 53 tokens
+  results-gate: 14 cases, 4 rules; median 54 ms, max 57 ms per call; longest denial about 48 tokens
+  session-start: 5 cases, 4 rules; median 57 ms, max 61 ms per call; answers as context
+  stop-gate: 8 cases, 4 rules; median 57 ms, max 60 ms per call; answers as stop
+check-refs — every reference in 111 live files resolves; 41 pending (lands in J8, lands in J11, superseded by docs/runbooks/new-project.md (STK-3), lands in P-C, lands in P-D, lands in P-K, a product repo's path, named by a template, a product repo's path, named by a ruling (CF-13), a pattern, not a path, machine-local and untracked by design, stale ruling text in conflicts.md, superseded by A4; held for Taylor (PR-05), stale ruling text in conflicts.md; extensions sit beside their role (record 0006); held for Taylor (PR-05), stale ledger text; the rulings live in docs/design/workflow.md; held for Taylor (PR-05), stale ledger text; filed as docs/research/toolkit/design-candidates.md; held for Taylor (PR-05), stale ledger text; the ledger is docs/decisions/ledger.md; held for Taylor (PR-05), stale ledger text; the folder is docs/measurement/metrics/ (PR-12); held for Taylor (PR-05), stale ledger text; the folder is docs/measurement/evals/ (PR-12); held for Taylor (PR-05)).
+check-stack — 8 module(s); nothing missing, nothing left behind.
+check-migrations: 1 migration(s) in packages/db/migrations, none touch the auth schema.
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/results.json: C1's PASS no longer holds: docs/engineering/codebase-conventions.md, docs/engineering/tech-stack.md changed after it was recorded. Re-record it: yarn contract:run STK-1 C1
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/results.json: C2's PASS no longer holds: docs/engineering/codebase-conventions.md, docs/engineering/tech-stack.md changed after it was recorded. Re-record it: yarn contract:run STK-1 C2
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/results.json: C3's PASS no longer holds: docs/engineering/codebase-conventions.md, docs/engineering/tech-stack.md changed after it was recorded. Re-record it: yarn contract:run STK-1 C3
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/results.json: C4's PASS no longer holds: docs/engineering/codebase-conventions.md, docs/engineering/tech-stack.md changed after it was recorded. Re-record it: yarn contract:record STK-1 C4 --evidence <path>
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/results.json: C1's PASS no longer holds: docs/runbooks/new-project.md, docs/runbooks/remove-supabase-auth.md, docs/runbooks/remove-supabase-database.md changed after it was recorded. Re-record it: yarn contract:run STK-3 C1
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/results.json: C2's PASS no longer holds: docs/runbooks/new-project.md, docs/runbooks/remove-supabase-auth.md, docs/runbooks/remove-supabase-database.md changed after it was recorded. Re-record it: yarn contract:run STK-3 C2
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/results.json: C3's PASS no longer holds: docs/runbooks/new-project.md, docs/runbooks/remove-supabase-auth.md, docs/runbooks/remove-supabase-database.md changed after it was recorded. Re-record it: yarn contract:run STK-3 C3
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/results.json: C4's PASS no longer holds: docs/runbooks/new-project.md, docs/runbooks/remove-supabase-auth.md, docs/runbooks/remove-supabase-database.md changed after it was recorded. Re-record it: yarn contract:record STK-3 C4 --evidence <path>
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/results.json: review:vigil's PASS no longer holds: docs/runbooks/new-project.md, docs/runbooks/remove-supabase-auth.md, docs/runbooks/remove-supabase-database.md changed after it was recorded. Re-record it: yarn review:run vigil STK-3
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/results.json: C1's PASS no longer holds: .env.example, apps/web/next.config.ts, apps/web/package.json and 7 more changed after it was recorded. Re-record it: yarn contract:run STK-4 C1
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/results.json: C2's PASS no longer holds: .env.example, apps/web/next.config.ts, apps/web/package.json and 7 more changed after it was recorded. Re-record it: yarn contract:run STK-4 C2
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/results.json: C3's PASS no longer holds: .env.example, apps/web/next.config.ts, apps/web/package.json and 7 more changed after it was recorded. Re-record it: yarn contract:run STK-4 C3
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/results.json: C4's PASS no longer holds: .env.example, apps/web/next.config.ts, apps/web/package.json and 7 more changed after it was recorded. Re-record it: yarn contract:run STK-4 C4
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/results.json: C5's PASS no longer holds: .env.example, apps/web/next.config.ts, apps/web/package.json and 7 more changed after it was recorded. Re-record it: yarn contract:run STK-4 C5
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/results.json: C6's PASS no longer holds: .env.example, apps/web/next.config.ts, apps/web/package.json and 7 more changed after it was recorded. Re-record it: yarn contract:run STK-4 C6
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/results.json: review:mason's PASS no longer holds: .env.example, apps/web/next.config.ts, apps/web/package.json and 9 more changed after it was recorded. Re-record it: yarn review:run mason STK-4
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/results.json: review:vigil's PASS no longer holds: .env.example, apps/web/next.config.ts, apps/web/package.json and 9 more changed after it was recorded. Re-record it: yarn review:run vigil STK-4
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/results.json: review:warden's PASS no longer holds: .env.example, apps/web/next.config.ts, apps/web/package.json and 9 more changed after it was recorded. Re-record it: yarn review:run warden STK-4
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/results.json: C1's PASS no longer holds: apps/docs/app/globals.css, apps/docs/app/layout.tsx, apps/web/app/globals.css and 5 more changed after it was recorded. Re-record it: yarn contract:run STK-6 C1
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/results.json: C2's PASS no longer holds: apps/docs/app/globals.css, apps/docs/app/layout.tsx, apps/web/app/globals.css and 5 more changed after it was recorded. Re-record it: yarn contract:run STK-6 C2
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/results.json: C3's PASS no longer holds: apps/docs/app/globals.css, apps/docs/app/layout.tsx, apps/web/app/globals.css and 5 more changed after it was recorded. Re-record it: yarn contract:record STK-6 C3 --evidence <path>
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/results.json: C4's PASS no longer holds: apps/docs/app/globals.css, apps/docs/app/layout.tsx, apps/web/app/globals.css and 5 more changed after it was recorded. Re-record it: yarn contract:record STK-6 C4 --evidence <path>
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/results.json: C5's PASS no longer holds: apps/docs/app/globals.css, apps/docs/app/layout.tsx, apps/web/app/globals.css and 5 more changed after it was recorded. Re-record it: yarn contract:record STK-6 C5 --evidence <path>
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/results.json: C6's PASS no longer holds: apps/docs/app/globals.css, apps/docs/app/layout.tsx, apps/web/app/globals.css and 5 more changed after it was recorded. Re-record it: yarn contract:record STK-6 C6 --evidence <path>
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-7-brand-source/results.json: C1's PASS no longer holds: docs/engineering/codebase-conventions.md, docs/engineering/tech-stack.md, docs/runbooks/new-project.md and 3 more changed after it was recorded. Re-record it: yarn contract:run STK-7 C1
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-7-brand-source/results.json: C2's PASS no longer holds: docs/engineering/codebase-conventions.md, docs/engineering/tech-stack.md, docs/runbooks/new-project.md and 3 more changed after it was recorded. Re-record it: yarn contract:run STK-7 C2
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-7-brand-source/results.json: C3's PASS no longer holds: docs/engineering/codebase-conventions.md, docs/engineering/tech-stack.md, docs/runbooks/new-project.md and 3 more changed after it was recorded. Re-record it: yarn contract:run STK-7 C3
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-7-brand-source/results.json: C4's PASS no longer holds: docs/engineering/codebase-conventions.md, docs/engineering/tech-stack.md, docs/runbooks/new-project.md and 3 more changed after it was recorded. Re-record it: yarn contract:record STK-7 C4 --evidence <path>
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-8-component-workshop/results.json: C1's PASS no longer holds: docs/engineering/tech-stack.md, packages/config/eslint/boundaries.js, yarn.lock changed after it was recorded. Re-record it: yarn contract:run STK-8 C1
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-8-component-workshop/results.json: C2's PASS no longer holds: docs/engineering/tech-stack.md, packages/config/eslint/boundaries.js, yarn.lock changed after it was recorded. Re-record it: yarn contract:run STK-8 C2
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-8-component-workshop/results.json: C3's PASS no longer holds: docs/engineering/tech-stack.md, packages/config/eslint/boundaries.js, yarn.lock changed after it was recorded. Re-record it: yarn contract:record STK-8 C3 --evidence <path>
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-8-component-workshop/results.json: C4's PASS no longer holds: docs/engineering/tech-stack.md, packages/config/eslint/boundaries.js, yarn.lock changed after it was recorded. Re-record it: yarn contract:record STK-8 C4 --evidence <path>
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-8-component-workshop/results.json: C5's PASS no longer holds: docs/engineering/tech-stack.md, packages/config/eslint/boundaries.js, yarn.lock changed after it was recorded. Re-record it: yarn contract:run STK-8 C5
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/results.json: C1's PASS no longer holds: .env.example, apps/web/next.config.ts, docs/engineering/codebase-conventions.md and 25 more changed after it was recorded. Re-record it: yarn contract:record STK-9 C1 --evidence <path>
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/results.json: C2's PASS no longer holds: .env.example, apps/web/next.config.ts, docs/engineering/codebase-conventions.md and 25 more changed after it was recorded. Re-record it: yarn contract:run STK-9 C2
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/results.json: C3's PASS no longer holds: .env.example, apps/web/next.config.ts, docs/engineering/codebase-conventions.md and 25 more changed after it was recorded. Re-record it: yarn contract:run STK-9 C3
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/results.json: C4's PASS no longer holds: .env.example, apps/web/next.config.ts, docs/engineering/codebase-conventions.md and 25 more changed after it was recorded. Re-record it: yarn contract:run STK-9 C4
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/results.json: C5's PASS no longer holds: .env.example, apps/web/next.config.ts, docs/engineering/codebase-conventions.md and 25 more changed after it was recorded. Re-record it: yarn contract:record STK-9 C5 --evidence <path>
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/results.json: review:mason's PASS no longer holds: .env.example, apps/web/next.config.ts, docs/engineering/codebase-conventions.md and 25 more changed after it was recorded. Re-record it: yarn review:run mason STK-9
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/results.json: review:vigil's PASS no longer holds: .env.example, apps/web/next.config.ts, docs/engineering/codebase-conventions.md and 25 more changed after it was recorded. Re-record it: yarn review:run vigil STK-9
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/results.json: review:warden's PASS no longer holds: .env.example, apps/web/next.config.ts, docs/engineering/codebase-conventions.md and 25 more changed after it was recorded. Re-record it: yarn review:run warden STK-9
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/results.json: C1's PASS no longer holds: docs/engineering/tech-stack.md, toolkit.json, yarn.lock changed after it was recorded. Re-record it: yarn contract:record STK-11 C1 --evidence <path>
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/results.json: C2's PASS no longer holds: docs/engineering/tech-stack.md, toolkit.json, yarn.lock changed after it was recorded. Re-record it: yarn contract:run STK-11 C2
+warn  STK-11 has an as-built, so it is closing, but C3 (last run exited 1), C4 (not proven yet), C5 (not proven yet), review:mason (not proven yet), review:vigil (not proven yet), review:warden (not proven yet) are not PASS. Run: yarn review:run mason STK-11
+warn  STK-15 has an as-built, so it is closing, but review:mason (not proven yet), review:vigil (not proven yet) are not PASS. Run: yarn review:run mason STK-15
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-19-helpers-deploy/results.json: C1's PASS no longer holds: apps/web/next.config.ts, docs/engineering/codebase-conventions.md, package.json and 1 more changed after it was recorded. Re-record it: yarn contract:run STK-19 C1
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-19-helpers-deploy/results.json: C2's PASS no longer holds: apps/web/next.config.ts, docs/engineering/codebase-conventions.md, package.json and 1 more changed after it was recorded. Re-record it: yarn contract:run STK-19 C2
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-19-helpers-deploy/results.json: C3's PASS no longer holds: apps/web/next.config.ts, docs/engineering/codebase-conventions.md, package.json and 1 more changed after it was recorded. Re-record it: yarn contract:record STK-19 C3 --evidence <path>
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-22-ui-layout/results.json: C1's PASS no longer holds: docs/engineering/codebase-conventions.md, package.json, packages/ui/AGENTS.md and 5 more changed after it was recorded. Re-record it: yarn contract:run STK-22 C1
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-22-ui-layout/results.json: C2's PASS no longer holds: docs/engineering/codebase-conventions.md, package.json, packages/ui/AGENTS.md and 5 more changed after it was recorded. Re-record it: yarn contract:run STK-22 C2
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-22-ui-layout/results.json: C3's PASS no longer holds: docs/engineering/codebase-conventions.md, package.json, packages/ui/AGENTS.md and 5 more changed after it was recorded. Re-record it: yarn contract:run STK-22 C3
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-22-ui-layout/results.json: C4's PASS no longer holds: docs/engineering/codebase-conventions.md, package.json, packages/ui/AGENTS.md and 5 more changed after it was recorded. Re-record it: yarn contract:run STK-22 C4
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-22-ui-layout/results.json: C5's PASS no longer holds: docs/engineering/codebase-conventions.md, package.json, packages/ui/AGENTS.md and 5 more changed after it was recorded. Re-record it: yarn contract:run STK-22 C5
+check-specs — 24 fixtures behaved; specs/ is clean.
+check-test-weakening — 10 fixtures behaved; no weakening against main.
+PASS  light --foreground on --background (body text): 19.79:1, needs 4.5:1
+PASS  light --foreground on --muted (text on a muted panel): 18.15:1, needs 4.5:1
+PASS  light --muted-foreground on --background (muted text): 4.96:1, needs 4.5:1
+PASS  light --muted-foreground on --muted (muted text on a muted panel): 4.54:1, needs 4.5:1
+PASS  light --muted-foreground on --accent (muted text on a hovered row): 4.54:1, needs 4.5:1
+PASS  light --primary-foreground on --primary (primary button label): 17.16:1, needs 4.5:1
+PASS  light --accent-foreground on --accent (selected or hovered label): 16.42:1, needs 4.5:1
+PASS  light --ring on --background (focus ring): 3.30:1, needs 3:1
+PASS  light --ring on --muted (focus ring on a muted panel): 3.02:1, needs 3:1
+PASS  dark --foreground on --background (body text): 18.96:1, needs 4.5:1
+PASS  dark --foreground on --muted (text on a muted panel): 14.48:1, needs 4.5:1
+PASS  dark --muted-foreground on --background (muted text): 6.00:1, needs 4.5:1
+PASS  dark --muted-foreground on --muted (muted text on a muted panel): 4.58:1, needs 4.5:1
+PASS  dark --muted-foreground on --accent (muted text on a hovered row): 4.58:1, needs 4.5:1
+PASS  dark --primary-foreground on --primary (primary button label): 14.22:1, needs 4.5:1
+PASS  dark --accent-foreground on --accent (selected or hovered label): 14.48:1, needs 4.5:1
+PASS  dark --ring on --background (focus ring): 3.99:1, needs 3:1
+PASS  dark --ring on --muted (focus ring on a muted panel): 3.05:1, needs 3:1
+
+contrast-audit: all 18 pairs pass WCAG 2.2 AA.
+check-ui-layout: ok
+TAP version 13
+# Subtest: C5: a client chunk holding a server-only sentinel fails, naming the variable and the chunk
+ok 1 - C5: a client chunk holding a server-only sentinel fails, naming the variable and the chunk
+  ---
+  duration_ms: 178.260959
+  type: 'test'
+  ...
+# Subtest: C5: no build output fails
+ok 2 - C5: no build output fails
+  ---
+  duration_ms: 249.098667
+  type: 'test'
+  ...
+# Subtest: C5: clean client chunks pass
+ok 3 - C5: clean client chunks pass
+  ---
+  duration_ms: 88.79875
+  type: 'test'
+  ...
+# Subtest: C5: a scan with no sentinel named is refused
+ok 4 - C5: a scan with no sentinel named is refused
+  ---
+  duration_ms: 106.329167
+  type: 'test'
+  ...
+# Subtest: the plan plants server-only names from .env.example and turbo.json, and fails on drift, naming it
+ok 5 - the plan plants server-only names from .env.example and turbo.json, and fails on drift, naming it
+  ---
+  duration_ms: 110.640875
+  type: 'test'
+  ...
+# Subtest: a pending entry that now exists is stale
+ok 6 - a pending entry that now exists is stale
+  ---
+  duration_ms: 242.849042
+  type: 'test'
+  ...
+# Subtest: a git-ignored pending entry is machine-local and never stale
+ok 7 - a git-ignored pending entry is machine-local and never stale
+  ---
+  duration_ms: 221.566208
+  type: 'test'
+  ...
+# Subtest: C1: a present module missing a listed file fails, naming the module and the file
+ok 8 - C1: a present module missing a listed file fails, naming the module and the file
+  ---
+  duration_ms: 162.001041
+  type: 'test'
+  ...
+# Subtest: C2: a removed module with a leftover file, variable or dependency fails, naming each leftover
+ok 9 - C2: a removed module with a leftover file, variable or dependency fails, naming each leftover
+  ---
+  duration_ms: 443.316166
+  type: 'test'
+  ...
+# Subtest: C2: a clean removal passes, and near-miss names are not leftovers
+ok 10 - C2: a clean removal passes, and near-miss names are not leftovers
+  ---
+  duration_ms: 118.876375
+  type: 'test'
+  ...
+# Subtest: C3: a locked module marked removed fails
+ok 11 - C3: a locked module marked removed fails
+  ---
+  duration_ms: 102.435667
+  type: 'test'
+  ...
+# Subtest: C4: an entry missing any of files, env, dependencies, boundaries, locked or runbook fails, naming the field
+ok 12 - C4: an entry missing any of files, env, dependencies, boundaries, locked or runbook fails, naming the field
+  ---
+  duration_ms: 82.50925
+  type: 'test'
+  ...
+# Subtest: C5: a runbook path that does not exist fails, naming the path
+ok 13 - C5: a runbook path that does not exist fails, naming the path
+  ---
+  duration_ms: 94.212833
+  type: 'test'
+  ...
+# Subtest: C1: a conforming tree passes
+ok 14 - C1: a conforming tree passes
+  ---
+  duration_ms: 13.48525
+  type: 'test'
+  ...
+# Subtest: C1: a stray top-level folder fails, naming it
+ok 15 - C1: a stray top-level folder fails, naming it
+  ---
+  duration_ms: 7.539625
+  type: 'test'
+  ...
+# Subtest: C1: an unknown kind fails, naming it
+ok 16 - C1: an unknown kind fails, naming it
+  ---
+  duration_ms: 4.271084
+  type: 'test'
+  ...
+# Subtest: C1: a component folder without <name>.tsx fails, naming it
+ok 17 - C1: a component folder without <name>.tsx fails, naming it
+  ---
+  duration_ms: 3.802792
+  type: 'test'
+  ...
+# Subtest: C1: a component folder without index.ts fails, naming it
+ok 18 - C1: a component folder without index.ts fails, naming it
+  ---
+  duration_ms: 3.804
+  type: 'test'
+  ...
+# Subtest: C1: a cva() in the component file fails, naming the file
+ok 19 - C1: a cva() in the component file fails, naming the file
+  ---
+  duration_ms: 2.279375
+  type: 'test'
+  ...
+# Subtest: C1: an export whose target is missing fails, naming the export
+ok 20 - C1: an export whose target is missing fails, naming the export
+  ---
+  duration_ms: 2.156667
+  type: 'test'
+  ...
+# Subtest: review S1: cva in a second file of the folder fails; a comment naming cva() passes
+ok 21 - review S1: cva in a second file of the folder fails; a comment naming cva() passes
+  ---
+  duration_ms: 11.425958
+  type: 'test'
+  ...
+# Subtest: review S3: a primitive with copy.ts fails
+ok 22 - review S3: a primitive with copy.ts fails
+  ---
+  duration_ms: 9.859375
+  type: 'test'
+  ...
+# Subtest: review S3: a primitive importing another component fails
+ok 23 - review S3: a primitive importing another component fails
+  ---
+  duration_ms: 11.369709
+  type: 'test'
+  ...
+# Subtest: review N6: conditional exports resolve; a wildcard export fails
+ok 24 - review N6: conditional exports resolve; a wildcard export fails
+  ---
+  duration_ms: 18.000792
+  type: 'test'
+  ...
+# Subtest: review N7: the command exits 1 and names the path
+ok 25 - review N7: the command exits 1 and names the path
+  ---
+  duration_ms: 141.098958
+  type: 'test'
+  ...
+# Subtest: a merged as-built is immutable except applied:
+ok 26 - a merged as-built is immutable except applied:
+  ---
+  duration_ms: 5255.279791
+  type: 'test'
+  ...
+# Subtest: A9 commit-msg: an agent branch needs a work-id; another branch does not
+ok 27 - A9 commit-msg: an agent branch needs a work-id; another branch does not
+  ---
+  duration_ms: 1989.472458
+  type: 'test'
+  ...
+# Subtest: A9 pre-commit: staging a hand-edited results.json is refused
+ok 28 - A9 pre-commit: staging a hand-edited results.json is refused
+  ---
+  duration_ms: 1943.006958
+  type: 'test'
+  ...
+# Subtest: A4 contract:init allocates sequential ids, from the template, then starts with every criterion FAIL
+ok 29 - A4 contract:init allocates sequential ids, from the template, then starts with every criterion FAIL
+  ---
+  duration_ms: 1448.055292
+  type: 'test'
+  ...
+# Subtest: the protected branch refuses a start; the operator picks the work branch
+ok 30 - the protected branch refuses a start; the operator picks the work branch
+  ---
+  duration_ms: 761.083542
+  type: 'test'
+  ...
+# Subtest: parallel tickets: a second item starts on the same branch while the first is open
+ok 31 - parallel tickets: a second item starts on the same branch while the first is open
+  ---
+  duration_ms: 2113.04725
+  type: 'test'
+  ...
+# Subtest: parallel tickets: another ticket's uncommitted file does not block a run, its own does
+ok 32 - parallel tickets: another ticket's uncommitted file does not block a run, its own does
+  ---
+  duration_ms: 2905.335667
+  type: 'test'
+  ...
+# Subtest: parallel tickets: another ticket's commit leaves this ticket's proof fresh
+ok 33 - parallel tickets: another ticket's commit leaves this ticket's proof fresh
+  ---
+  duration_ms: 3372.460125
+  type: 'test'
+  ...
+# Subtest: stacking: a dependent ticket starts on the same branch once its predecessor is built, before any as-built or review
+ok 34 - stacking: a dependent ticket starts on the same branch once its predecessor is built, before any as-built or review
+  ---
+  duration_ms: 3996.582834
+  type: 'test'
+  ...
+# Subtest: a dependency that has not started refuses the start
+ok 35 - a dependency that has not started refuses the start
+  ---
+  duration_ms: 1084.964083
+  type: 'test'
+  ...
+# Subtest: A6: a cited file not approved, or holding a BLOCKING marker, is refused; a plain open marker is listed
+ok 36 - A6: a cited file not approved, or holding a BLOCKING marker, is refused; a plain open marker is listed
+  ---
+  duration_ms: 2657.240334
+  type: 'test'
+  ...
+# Subtest: PR-15 tiers: code is tier 1 with no reviewer; contract:tier 2 adds the review, and a lower tier drops it
+ok 37 - PR-15 tiers: code is tier 1 with no reviewer; contract:tier 2 adds the review, and a lower tier drops it
+  ---
+  duration_ms: 3765.053333
+  type: 'test'
+  ...
+# Subtest: PR-15: check-specs warns on a ticket still closing, and fails it only with --strict
+ok 38 - PR-15: check-specs warns on a ticket still closing, and fails it only with --strict
+  ---
+  duration_ms: 2243.635875
+  type: 'test'
+  ...
+# Subtest: Vigil 9 and 10, tier 2 epic ticket: pre-flight gates the start, review:run follows the as-built, truth:promote follows
+ok 39 - Vigil 9 and 10, tier 2 epic ticket: pre-flight gates the start, review:run follows the as-built, truth:promote follows
+  ---
+  duration_ms: 11202.320333
+  type: 'test'
+  ...
+# Subtest: a fixture reviewer's PASS does not count outside the harness
+ok 40 - a fixture reviewer's PASS does not count outside the harness
+  ---
+  duration_ms: 4742.702583
+  type: 'test'
+  ...
+# Subtest: a pre-flight written by the fixture reviewer does not start a ticket outside the harness
+ok 41 - a pre-flight written by the fixture reviewer does not start a ticket outside the harness
+  ---
+  duration_ms: 1105.329083
+  type: 'test'
+  ...
+# Subtest: contract:run refuses an uncommitted tree, then records run records with HEAD and evidence hashes
+ok 42 - contract:run refuses an uncommitted tree, then records run records with HEAD and evidence hashes
+  ---
+  duration_ms: 3037.987333
+  type: 'test'
+  ...
+# Subtest: contract:run FAILs a test criterion whose runner matched zero tests
+ok 43 - contract:run FAILs a test criterion whose runner matched zero tests
+  ---
+  duration_ms: 1979.082416
+  type: 'test'
+  ...
+# Subtest: Vigil 10, one-off: init, run, as-built, status and check-specs close with nothing left
+ok 44 - Vigil 10, one-off: init, run, as-built, status and check-specs close with nothing left
+  ---
+  duration_ms: 5011.990875
+  type: 'test'
+  ...
+# Subtest: Vigil 3: a PASS recorded at X goes stale when a planned path changes at X+1
+ok 45 - Vigil 3: a PASS recorded at X goes stale when a planned path changes at X+1
+  ---
+  duration_ms: 3906.011
+  type: 'test'
+  ...
+# Subtest: C1: the repo's preset passes every pair in both themes
+ok 46 - C1: the repo's preset passes every pair in both themes
+  ---
+  duration_ms: 151.48675
+  type: 'test'
+  ...
+# Subtest: C1: black on white measures 21:1, the WCAG maximum
+ok 47 - C1: black on white measures 21:1, the WCAG maximum
+  ---
+  duration_ms: 147.472625
+  type: 'test'
+  ...
+# Subtest: C1: a text pair below 4.5:1 fails and is named
+ok 48 - C1: a text pair below 4.5:1 fails and is named
+  ---
+  duration_ms: 109.078042
+  type: 'test'
+  ...
+# Subtest: C1: a focus ring below 3:1 fails in the theme it is set in
+ok 49 - C1: a focus ring below 3:1 fails in the theme it is set in
+  ---
+  duration_ms: 84.358375
+  type: 'test'
+  ...
+# Subtest: C1: see-through text is composited as the browser does
+ok 50 - C1: see-through text is composited as the browser does
+  ---
+  duration_ms: 116.361333
+  type: 'test'
+  ...
+# Subtest: C1: a missing token fails rather than passing silently
+ok 51 - C1: a missing token fails rather than passing silently
+  ---
+  duration_ms: 114.131833
+  type: 'test'
+  ...
+1..51
+# tests 51
+# suites 0
+# pass 51
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 25945.17875
+
+   • turbo 2.11.6
+   • Packages in scope: @pem/brand, @pem/config, @pem/constants, @pem/db, @pem/email, @pem/env, @pem/observability, @pem/ui, docs, web
+   • Running test in 10 packages
+   • Remote caching disabled
+
+cache hit, replaying logs 5ec53cee309a6d91
+cache hit, replaying logs 3bdd885d4f89a1e5
+cache hit, replaying logs f573116ae189fa2a
+TAP version 13
+# Subtest: track is a no-op until a vendor is wired
+ok 1 - track is a no-op until a vendor is wired
+  ---
+  duration_ms: 0.814125
+  type: 'test'
+  ...
+# Subtest: C1: logger.error passes the error, tags and user id to the registered reporter
+ok 2 - C1: logger.error passes the error, tags and user id to the registered reporter
+  ---
+  duration_ms: 1.848291
+  type: 'test'
+  ...
+# Subtest: C1: logger.error with no error hands the reporter one named for the event
+ok 3 - C1: logger.error with no error hands the reporter one named for the event
+  ---
+  duration_ms: 0.221
+  type: 'test'
+  ...
+# Subtest: C1: a reporter that throws is swallowed, and the line still prints
+ok 4 - C1: a reporter that throws is swallowed, and the line still prints
+  ---
+cache hit, replaying logs abbf8626ac34d151
+TAP version 13
+# Subtest: C1: brand.ts theme colours equal the preset's values
+cache hit, replaying logs 33528a25befc7adf
+ok 1 - C1: brand.ts theme colours equal the preset's values
+  ---
+  duration_ms: 1.004375
+  type: 'test'
+  ...
+# Subtest: C1: a changed preset value is a mismatch
+ok 2 - C1: a changed preset value is a mismatch
+  ---
+  duration_ms: 0.184291
+  type: 'test'
+  ...
+# Subtest: C1: a changed brand.ts value is a mismatch
+ok 3 - C1: a changed brand.ts value is a mismatch
+  ---
+  duration_ms: 0.19775
+  type: 'test'
+  ...
+  duration_ms: 0.240584
+  type: 'test'
+  ...
+# Subtest: C1: a reporter that rejects is swallowed
+ok 5 - C1: a reporter that rejects is swallowed
+  ---
+  duration_ms: 3.056583
+  type: 'test'
+cache hit, replaying logs d96e6da97d15bcf3
+# Subtest: every asset path in brand.ts exists in the package
+ok 4 - every asset path in brand.ts exists in the package
+  ---
+  ...
+# Subtest: C1: the default reporter is a no-op
+  duration_ms: 0.226
+TAP version 13
+# Subtest: C2: a live-mode key on local or staging fails with the variable named
+  type: 'test'
+  ...
+# Subtest: white, black and the sRGB primaries
+ok 6 - C1: the default reporter is a no-op
+  ---
+ok 1 - C2: a live-mode key on local or staging fails with the variable named
+  ---
+TAP version 13
+  duration_ms: 0.466541
+  type: 'test'
+# Subtest: C2: the HTML part carries the brand's name, support address, home URL and colours
+  duration_ms: 0.668584
+  ...
+  type: 'test'
+  ...
+ok 5 - white, black and the sRGB primaries
+  ---
+  duration_ms: 0.712791
+  type: 'test'
+# Subtest: C2: a test-mode key on production fails with the variable named
+ok 1 - C2: the HTML part carries the brand's name, support address, home URL and colours
+  ---
+  duration_ms: 0.65975
+  type: 'test'
+  ...
+ok 2 - C2: a test-mode key on production fails with the variable named
+  ---
+  duration_ms: 0.090042
+  type: 'test'
+  ...
+# Subtest: C2: matching modes pass
+  ...
+# Subtest: C2: the text part carries the brand and the action as a link
+# Subtest: C2: a secret-like key is redacted at any depth, whatever its case
+ok 3 - C2: matching modes pass
+  ---
+  duration_ms: 0.076875
+  type: 'test'
+  ...
+# Subtest: C2: a key with no mode prefix fails on every tier
+ok 2 - C2: the text part carries the brand and the action as a link
+ok 4 - C2: a key with no mode prefix fails on every tier
+  ---
+  duration_ms: 0.171
+  type: 'test'
+  ...
+# Subtest: public names pass, and unset values are left out
+ok 5 - public names pass, and unset values are left out
+  ---
+  duration_ms: 0.909459
+  type: 'test'
+  ...
+# Subtest: a server-only name is refused, by name
+ok 6 - a server-only name is refused, by name
+  ---
+# Subtest: lightness as a percentage, and an alpha, are accepted
+ok 7 - C2: a secret-like key is redacted at any depth, whatever its case
+  ---
+  ---
+  duration_ms: 0.257875
+  type: 'test'
+  ...
+  duration_ms: 0.339416
+# Subtest: C1: each tier reads its own variable
+ok 7 - C1: each tier reads its own variable
+  type: 'test'
+  ...
+# Subtest: C2: request bodies and personal data are redacted too
+ok 8 - C2: request bodies and personal data are redacted too
+ok 6 - lightness as a percentage, and an alpha, are accepted
+  duration_ms: 0.1005
+  ---
+  duration_ms: 0.073375
+  ---
+  type: 'test'
+  duration_ms: 0.479375
+  type: 'test'
+  ...
+# Subtest: C2: every caller value is escaped
+ok 3 - C2: every caller value is escaped
+  ---
+  duration_ms: 0.126584
+  type: 'test'
+  ---
+  ...
+
+  type: 'test'
+  duration_ms: 0.114833
+  ...
+  ...
+  type: 'test'
+  ...
+# Subtest: C1: a tier whose own value is absent or empty reads the unsuffixed value
+# Subtest: the preset's neutral steps
+ok 7 - the preset's neutral steps
+# Subtest: C2: the reporter's context is redacted; the error itself is passed as caught
+  ---
+  duration_ms: 0.132042
+  type: 'test'
+  ...
+# Subtest: anything but oklch() is refused
+ok 8 - anything but oklch() is refused
+  ---
+  duration_ms: 0.197833
+  type: 'test'
+  ...
+1..8
+# tests 8
+ok 9 - C2: the reporter's context is redacted; the error itself is passed as caught
+ RUN  v5.0.3 ./packages/ui
+ok 8 - C1: a tier whose own value is absent or empty reads the unsuffixed value
+  ---
+# suites 0
+
+# pass 8
+# Subtest: C2: an action URL that is not http(s) is refused
+# fail 0
+ok 4 - C2: an action URL that is not http(s) is refused
+# cancelled 0
+  ---
+# skipped 0
+  duration_ms: 0.201334
+TAP version 13
+  type: 'test'
+ ✓ .storybook/story-coverage.test.ts (5 tests) 6ms
+  ...
+# todo 0
+# duration_ms 80.5295
+  duration_ms: 0.126459
+  ---
+  type: 'test'
+  duration_ms: 0.216834
+stderr | .storybook/stories.test.ts > Composed/Control/Theme toggle > System
+Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template).
+# Subtest: C2: no source file in @pem/email writes a brand value or a colour literal
+  type: 'test'
+ok 5 - C2: no source file in @pem/email writes a brand value or a colour literal
+  ...
+# Subtest: C1: nothing set picks undefined
+ok 9 - C1: nothing set picks undefined
+  ---
+# Subtest: each kind of DDL or write against auth is caught
+  duration_ms: 0.104708
+ok 1 - each kind of DDL or write against auth is caught
+  type: 'test'
+  ---
+  ...
+  ...
+1..9
+  ---
+# tests 9
+  duration_ms: 0.570875
+  type: 'test'
+  ...
+  duration_ms: 1.316417
+  type: 'test'
+# Subtest: C1: production never reads a suffixed value
+  ...
+ok 10 - C1: production never reads a suffixed value
+# suites 0
+  ---
+# pass 9
+  duration_ms: 0.071833
+# Subtest: C1: a send on the local tier logs the rendered message and does not call the vendor
+  type: 'test'
+  ...
+# Subtest: C1: the suffix grammar names each form
+ok 6 - C1: a send on the local tier logs the rendered message and does not call the vendor
+# Subtest: a foreign key to auth.users and a call to auth.uid() are allowed
+  ---
+ok 2 - a foreign key to auth.users and a call to auth.uid() are allowed
+  ---
+  duration_ms: 0.098958
+  type: 'test'
+  ...
+
+ ✓ .storybook/stories.test.ts (20 tests) 687ms
+
+# fail 0
+ Test Files  2 passed (2)
+ok 11 - C1: the suffix grammar names each form
+      Tests  25 passed (25)
+   Start at  12:26:59
+# cancelled 0
+   Duration  2.52s (transform 37%, environment 30%, tests 17%, setup 16%)
+  ---
+
+# Subtest: a migration with DDL against auth fails, numbered by statement
+# skipped 0
+  duration_ms: 0.412291
+# todo 0
+# duration_ms 76.650417
+ok 3 - a migration with DDL against auth fails, numbered by statement
+  ---
+  type: 'test'
+  ...
+# Subtest: C1: the switch defaults to local, never production, and names itself when wrong
+  duration_ms: 0.61225
+  type: 'test'
+  ...
+# Subtest: the generated migration set passes, and it does reference auth.users
+ok 12 - C1: the switch defaults to local, never production, and names itself when wrong
+  ---
+  duration_ms: 0.278958
+  type: 'test'
+ok 4 - the generated migration set passes, and it does reference auth.users
+  duration_ms: 1.578208
+  type: 'test'
+  ...
+  ---
+  ...
+# Subtest: outside a deployment the site URL is localhost, whatever is configured
+  duration_ms: 1.077
+  type: 'test'
+  ...
+# Subtest: seedLocalUsers
+ok 13 - outside a deployment the site URL is localhost, whatever is configured
+  ---
+    # Subtest: refuses a non-loopback auth URL before sending anything
+    ok 1 - refuses a non-loopback auth URL before sending anything
+# Subtest: C1: a dashboard template on the local tier logs its id and variable names, not their values
+      ---
+ok 7 - C1: a dashboard template on the local tier logs its id and variable names, not their values
+  duration_ms: 0.512416
+  type: 'test'
+  ---
+  duration_ms: 0.180375
+      duration_ms: 0.990333
+  ...
+  type: 'test'
+  ...
+# Subtest: in a deployment the configured URL is used, without a trailing slash
+      type: 'test'
+# Subtest: C1: the local tier needs no key
+ok 8 - C1: the local tier needs no key
+      ...
+ok 14 - in a deployment the configured URL is used, without a trailing slash
+  ---
+  ---
+    # Subtest: refuses a missing service-role key before sending anything
+    ok 2 - refuses a missing service-role key before sending anything
+  duration_ms: 0.130625
+  duration_ms: 0.09925
+  type: 'test'
+  ...
+# Subtest: C1: staging and production call the vendor once, with the brand's sender and reply-to
+      ---
+  type: 'test'
+ok 9 - C1: staging and production call the vendor once, with the brand's sender and reply-to
+  ...
+1..14
+# tests 14
+      duration_ms: 0.307083
+  ---
+  duration_ms: 0.231542
+  type: 'test'
+  ...
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# Subtest: C1: a dashboard template is sent by its id, and EMAIL_FROM replaces the brand's address
+      type: 'test'
+# skipped 0
+# todo 0
+# duration_ms 79.664459
+      ...
+    # Subtest: creates each synthetic user through the local admin API
+    ok 3 - creates each synthetic user through the local admin API
+      ---
+ok 10 - C1: a dashboard template is sent by its id, and EMAIL_FROM replaces the brand's address
+  ---
+  duration_ms: 0.147125
+  type: 'test'
+  ...
+# Subtest: C1: staging without a key refuses to send, naming the variable
+ok 11 - C1: staging without a key refuses to send, naming the variable
+  ---
+  duration_ms: 0.265125
+      duration_ms: 16.143084
+      type: 'test'
+      ...
+    # Subtest: treats an existing email as done
+    ok 4 - treats an existing email as done
+  type: 'test'
+  ...
+# Subtest: C1: a vendor error is thrown, not swallowed
+ok 12 - C1: a vendor error is thrown, not swallowed
+  ---
+  duration_ms: 0.154334
+  type: 'test'
+  ...
+# Subtest: maskAddress keeps the first letter and the domain only
+ok 13 - maskAddress keeps the first letter and the domain only
+  ---
+  duration_ms: 0.047208
+  type: 'test'
+  ...
+1..13
+      ---
+      duration_ms: 1.091708
+      type: 'test'
+      ...
+    1..4
+ok 5 - seedLocalUsers
+  ---
+  duration_ms: 19.412917
+  type: 'suite'
+  ...
+# Subtest: db:local:reset
+    # Subtest: refuses staging before resolving a URL
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 97.40575
+    ok 1 - refuses staging before resolving a URL
+      ---
+      duration_ms: 330.361417
+      type: 'test'
+      ...
+    # Subtest: refuses staging before connecting, with its URLs set
+    ok 2 - refuses staging before connecting, with its URLs set
+      ---
+      duration_ms: 276.443042
+      type: 'test'
+      ...
+    # Subtest: refuses production before resolving a URL
+    ok 3 - refuses production before resolving a URL
+      ---
+      duration_ms: 285.270417
+      type: 'test'
+      ...
+    # Subtest: refuses production before connecting, with its URLs set
+    ok 4 - refuses production before connecting, with its URLs set
+      ---
+      duration_ms: 293.848
+      type: 'test'
+      ...
+    # Subtest: refuses a local URL that is not this machine, before connecting
+    ok 5 - refuses a local URL that is not this machine, before connecting
+      ---
+      duration_ms: 294.4635
+      type: 'test'
+      ...
+    # Subtest: refuses a malformed tier
+    ok 6 - refuses a malformed tier
+      ---
+      duration_ms: 273.796833
+      type: 'test'
+      ...
+    1..6
+ok 6 - db:local:reset
+  ---
+  duration_ms: 1754.96625
+  type: 'suite'
+  ...
+# Subtest: runtime takes the transaction pooler on a hosted tier
+ok 7 - runtime takes the transaction pooler on a hosted tier
+  ---
+  duration_ms: 0.75025
+  type: 'test'
+  ...
+# Subtest: migrations take the session pooler on a hosted tier
+ok 8 - migrations take the session pooler on a hosted tier
+  ---
+  duration_ms: 0.115084
+  type: 'test'
+  ...
+# Subtest: the local tier is not checked beyond the scheme
+ok 9 - the local tier is not checked beyond the scheme
+  ---
+  duration_ms: 0.089292
+  type: 'test'
+  ...
+# Subtest: errors and descriptions never carry credentials
+ok 10 - errors and descriptions never carry credentials
+  ---
+  duration_ms: 0.087583
+  type: 'test'
+  ...
+# Subtest: isLoopbackHost
+    # Subtest: accepts localhost, 127.0.0.0/8 and ::1
+    ok 1 - accepts localhost, 127.0.0.0/8 and ::1
+      ---
+      duration_ms: 0.522458
+      type: 'test'
+      ...
+    # Subtest: refuses every other host, including look-alikes
+    ok 2 - refuses every other host, including look-alikes
+      ---
+      duration_ms: 0.11875
+      type: 'test'
+      ...
+    # Subtest: isLoopbackUrl reads the URL's host and refuses an unparseable URL
+    ok 3 - isLoopbackUrl reads the URL's host and refuses an unparseable URL
+      ---
+      duration_ms: 0.092167
+      type: 'test'
+      ...
+    1..3
+ok 11 - isLoopbackHost
+  ---
+  duration_ms: 1.232125
+  type: 'suite'
+  ...
+# Subtest: applyLocalAuthMirror
+    # Subtest: refuses a non-loopback host before connecting
+    ok 1 - refuses a non-loopback host before connecting
+      ---
+      duration_ms: 3.015041
+      type: 'test'
+      ...
+    # Subtest: passes the host check on loopback and only then connects
+    ok 2 - passes the host check on loopback and only then connects
+      ---
+      duration_ms: 4.019792
+      type: 'test'
+      ...
+    1..2
+ok 12 - applyLocalAuthMirror
+  ---
+  duration_ms: 7.16575
+  type: 'suite'
+  ...
+# Subtest: the bridge accepts a UUID user and a known role
+ok 13 - the bridge accepts a UUID user and a known role
+  ---
+  duration_ms: 0.7895
+  type: 'test'
+  ...
+# Subtest: the bridge refuses a partial or forged identity before any SQL
+ok 14 - the bridge refuses a partial or forged identity before any SQL
+  ---
+  duration_ms: 0.274917
+  type: 'test'
+  ...
+# Subtest: the schema exports tables, and none of them outside public
+ok 15 - the schema exports tables, and none of them outside public
+  ---
+  duration_ms: 0.781167
+  type: 'test'
+  ...
+# Subtest: authUsers is never exported from the schema
+ok 16 - authUsers is never exported from the schema
+  ---
+  duration_ms: 0.060125
+  type: 'test'
+  ...
+# Subtest: every table carries its policies beside it
+ok 17 - every table carries its policies beside it
+  ---
+  duration_ms: 0.20225
+  type: 'test'
+  ...
+1..17
+# tests 28
+# suites 4
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1838.807834
+
+ Tasks:    6 successful, 6 total
+Cached:    6 cached, 6 total
+  Time:    109ms >>> FULL TURBO
+
+ok   AGENTS.md (lines)                                58 / 100
+ok   CLAUDE.md (lines)                                10 / 20
+ok   docs/index.md (lines)                            77 / 80
+ok   always-on                                      3944 / 4000  skills 3, agents 5, SessionStart 150
+ok   design layer (canon + product layer)           3856 / 5000  (product layer not written yet)
+ok   brief and package (largest example)             803 / 2000
+ok   one skill body (largest)                        898 / 2500
+ok   UI build (+ ui.md rule)                        9733 / 15000
+ok   path rules and nested AGENTS.md (heaviest file)   1162 / 1500
+ok   contract and cited spec (largest)              3342 / 5000
+ok   non-UI build                                   8448 / 10500
+ok   critic pass (rubric + canon §2 + cited surface)   2043 / 6000
+ok   evaluator pass (vigil + contract and spec + evidence index)   7627 / 10000
+WARN canon.md is 3856 tokens; the design layer cap leaves 1144 for a product layer, not the 1700 docs/index.md allots. Open item in docs/decisions/changelog.md.
+
+budget — within every cap in docs/index.md.
+gen:agents — up to date 5 agent(s):
+  vigil (docs/roles/engineering/vigil-qa.md)
+  alembic (docs/roles/product-design/alembic-research-synthesizer.md)
+  assay (docs/roles/product-design/assay-ui-critic.md)
+  compass (docs/roles/product-design/compass-product-strategist.md)
+  tally (docs/roles/product-design/tally-metrics-analyst.md)
+directory-map — up to date (189 files, 35 landing pages).
+
+   • turbo 2.11.6
+   • Packages in scope: @pem/brand, @pem/config, @pem/constants, @pem/db, @pem/email, @pem/env, @pem/observability, @pem/ui, docs, web
+   • Running lint in 10 packages
+   • Remote caching disabled
+
+@pem/env:lint: cache hit, replaying logs 0d4b336d5cfed309
+@pem/brand:lint: cache hit, replaying logs e6ab5724d1028971
+@pem/constants:lint: cache hit, replaying logs ae11fab93ee941c3
+@pem/observability:lint: cache hit, replaying logs d860550fa3ff0f19
+@pem/ui:lint: cache hit, replaying logs e40125d78260bc81
+@pem/db:lint: cache hit, replaying logs 4b298247d7b1a25a
+@pem/email:lint: cache hit, replaying logs b16acf6c83f3e5cc
+docs:lint: cache hit, replaying logs fe9cf2f11de39f7d
+web:lint: cache hit, replaying logs 4f19ad0fcff7daae
+
+ Tasks:    9 successful, 9 total
+Cached:    9 cached, 9 total
+  Time:    110ms >>> FULL TURBO
+
+
+   • turbo 2.11.6
+   • Packages in scope: @pem/brand, @pem/config, @pem/constants, @pem/db, @pem/email, @pem/env, @pem/observability, @pem/ui, docs, web
+   • Running check-types in 10 packages
+   • Remote caching disabled
+
+@pem/constants:check-types: cache hit, replaying logs 8a2c58f3f1f4217f
+@pem/observability:check-types: cache hit, replaying logs 92c87abc7e843cfc
+@pem/brand:check-types: cache hit, replaying logs 4c637767d7bbe609
+@pem/env:check-types: cache hit, replaying logs 375500a3edb3af77
+@pem/ui:check-types: cache hit, replaying logs 6f8c44a19544db8a
+@pem/db:check-types: cache hit, replaying logs 20bf9ad19dd5e598
+@pem/email:check-types: cache hit, replaying logs 59f293d7d738b698
+docs:check-types: cache hit, replaying logs dcd44889e6e6e93f
+web:check-types: cache hit, replaying logs 2f3b24da9d4542af
+docs:check-types: Generating route types...
+docs:check-types: ✓ Types generated successfully
+web:check-types: Generating route types...
+web:check-types: ✓ Types generated successfully
+
+ Tasks:    9 successful, 9 total
+Cached:    9 cached, 9 total
+  Time:    113ms >>> FULL TURBO
+
+check-client-bundle — 12 server-only value(s), none in 25 browser-facing file(s) under apps/web/.next/static, apps/web/.next/server/app.
+
+   • turbo 2.11.6
+   • Packages in scope: @pem/brand, @pem/config, @pem/constants, @pem/db, @pem/email, @pem/env, @pem/observability, @pem/ui, docs, web
+   • Running build in 10 packages
+   • Remote caching disabled
+
+docs:build: cache hit, replaying logs 5f650465baa95f2e
+docs:build: ▲ Next.js 16.3.8 (Turbopack)
+docs:build: ✓ Running next.config.ts took 16ms
+docs:build: 
+docs:build:   Creating an optimized production build ...
+docs:build: ✓ Compiled successfully in 967ms
+docs:build:   Running TypeScript ...
+docs:build:   Finished TypeScript in 1083ms ...
+docs:build:   Collecting page data using 5 workers ...
+docs:build:   Generating static pages using 5 workers (0/194) ...
+docs:build:   Generating static pages using 5 workers (48/194) 
+docs:build:   Generating static pages using 5 workers (96/194) 
+docs:build:   Generating static pages using 5 workers (145/194) 
+docs:build: ✓ Generating static pages using 5 workers (194/194) in 5.9s
+docs:build:   Finalizing page optimization ...
+docs:build: 
+docs:build: Route (app)
+docs:build: ┌ ○ /_not-found
+docs:build: ├   /[[...slug]]
+docs:build: │ ├ ● /readme
+docs:build: │ ├ ● /
+docs:build: │ ├ ● /agents
+docs:build: │ └ ● [+188 more paths]
+docs:build: └ ○ /search-index.json
+docs:build: 
+docs:build: 
+docs:build: ○  (Static)  prerendered as static content
+docs:build: ●  (SSG)     prerendered as static HTML (uses generateStaticParams)
+docs:build: 
+web:build: cache hit, replaying logs 7d0c82fa08d870b8
+web:build: ▲ Next.js 16.3.8 (Turbopack)
+web:build: ✓ Running next.config.ts took 117ms
+web:build: 
+web:build:   Creating an optimized production build ...
+web:build: ✓ Compiled successfully in 650ms
+web:build:   Running TypeScript ...
+web:build:   Finished TypeScript in 1019ms ...
+web:build:   Collecting page data using 6 workers ...
+web:build:   Generating static pages using 6 workers (0/5) ...
+web:build:   Generating static pages using 6 workers (1/5) 
+web:build:   Generating static pages using 6 workers (2/5) 
+web:build:   Generating static pages using 6 workers (3/5) 
+web:build: ✓ Generating static pages using 6 workers (5/5) in 874ms
+web:build:   Finalizing page optimization ...
+web:build: 
+web:build: Route (app)
+web:build: ┌ ○ /
+web:build: ├ ○ /_not-found
+web:build: ├ ○ /manifest.webmanifest
+web:build: └ ○ /opengraph-image
+web:build: 
+web:build: 
+web:build: ○  (Static)  prerendered as static content
+web:build: 
+
+ Tasks:    2 successful, 2 total
+Cached:    2 cached, 2 total
+  Time:    272ms >>> FULL TURBO
+
