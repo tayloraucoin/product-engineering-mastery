@@ -15,7 +15,7 @@ load_when:
 
 > **Who runs it:** an agent or a person holding a one-paragraph briefing; Taylor reviews the result.
 > **When:** a product repo starts from this one. The rule is duplicate, then remove ([record 0010](../decisions/records/0010-starter-ships-default-stack.md), D-STK-2): the product starts with the whole default stack and deletes what it does not use.
-> **Done means:** step 7's two checks exit 0 in the new repo, and the result is committed on its branch.
+> **Done means:** `yarn check-stack` and `yarn verify` exit 0 in the new repo, and the result is committed on its branch (step 7).
 > **Status:** draft until the dry-run ticket (STK-20) runs it cold on a duplicate and times each step.
 
 Every step ends on a check. A step whose check fails is fixed before the next one starts. Note the time each step starts; step 7 reports the minutes.
@@ -43,7 +43,7 @@ The apps are the keys of `apps` in `toolkit.json`: today `web` and `docs`. Each 
 Run these, with the slug and the repo-wide prefix from step 0:
 
 ```sh
-git clone <toolkit-url> <repo-slug>
+git clone --branch main <toolkit-url> <repo-slug>
 cd <repo-slug>
 rm -rf .git
 git init -b main
@@ -101,11 +101,12 @@ A module with no entry in the `stack` block is not in the duplicate: skip its ro
 ## 5. Clear the toolkit's own content
 
 1. **The demo.** `apps/web` becomes the product's app; what it holds as the toolkit's demo goes.
-   - Replace `apps/web/app/page.tsx` with a placeholder page that names the product. Product work starts with the product's first ticket, not here.
+   - Replace `apps/web/app/page.tsx` with a placeholder page that names the product, under the UI rules in `AGENTS.md` (components from the UI package, tokens only). Product work starts with the product's first ticket, not here.
    - In `apps/web/AGENTS.md`, rewrite "What this app is" as one paragraph from the briefing, delete "The filled examples live here", and keep "App rules".
    - If `apps/web/docs/design/` exists, the duplicate is past Phase 3: its demo routes, that design layer and its `specs/web/` go too, and the product fills its own design layer from `docs/design/templates/`.
-2. **Research.** Delete everything under `docs/research/` except its `README.md`. Then run `yarn check-refs`: it names each live file that still links to a deleted file. Remove the link where the sentence reads without it; otherwise add an entry to `tooling/refs-pending.json`, `"<path>": "cleared by new-project.md step 5"`.
+2. **Research.** Delete everything under `docs/research/` except its `README.md`. Then run `yarn check-refs`: it names each live file that still links to a deleted file. Remove the link where the sentence reads without it; otherwise add an entry to `tooling/refs-pending.json` keyed by the deleted path, exactly as `yarn check-refs` printed it: `"<deleted path>": "cleared by new-project.md step 5"`.
 3. **Specs.** Delete everything under `specs/`: this repo's epics, tickets and `_status.md`. The product's first `yarn spec:init` or `yarn contract:init` starts its own.
+4. **What describes the toolkit.** Rewrite the opening paragraph of `README.md`, and items 1 ("What this is") and 2 ("Current phase") of `AGENTS.md`'s Start here, for the product, from the briefing. The rest of both files is the practice the product keeps.
 
 **Check:** `yarn check-refs` and `yarn check-specs` exit 0.
 
@@ -124,4 +125,4 @@ yarn verify
 
 Both exit 0. Commit on `agent/<repo-wide-prefix>` as `<repo-wide-prefix>: new project from the toolkit`, and never push: Taylor pushes and makes `main`. Report to Taylor the date, the briefing and the minutes each step took. STK-20 turns those reports into this runbook's trial log.
 
-**Check:** `git status` shows a clean tree.
+**Check:** both commands exited 0, and `git status` shows a clean tree after the commit.
