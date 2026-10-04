@@ -46,18 +46,21 @@ for (const [file, code, message] of DISALLOWED)
     );
   });
 
-test("C2: an @pem subpath its package does not export is a resolve error", async () => {
-  const messages = await lint(
-    "packages/env/src/zz-probe.ts",
-    'import "@pem/env/not-exported";',
-  );
-  assert.ok(
-    messages.some((text) =>
-      /^Resolve error: @pem\/env\/not-exported does not resolve/.test(text),
-    ),
-    `expected a resolve error, got ${JSON.stringify(messages)}`,
-  );
-});
+const UNEXPORTED: [file: string, specifier: string][] = [
+  ["packages/env/src/zz-probe.ts", "@pem/env/not-exported"],
+  ["packages/ui/src/zz-probe.ts", "@pem/db"],
+];
+
+for (const [file, specifier] of UNEXPORTED)
+  test(`C2: ${specifier}, which its package does not export, is a resolve error with no stack`, async () => {
+    const messages = await lint(file, `import "${specifier}";`);
+    const error = messages.find((text) => text.startsWith("Resolve error:"));
+    assert.ok(
+      error?.startsWith(`Resolve error: ${specifier} does not resolve`),
+      `expected a resolve error, got ${JSON.stringify(messages)}`,
+    );
+    assert.doesNotMatch(error!, /\n\s+at /);
+  });
 
 const ALLOWED: [file: string, code: string][] = [
   ["packages/db/src/zz-probe.ts", 'import type { Tier } from "@pem/env/tier";'],
