@@ -14,6 +14,19 @@ Take the named tickets to closed. Taylor runs many threads at once and reads onl
 
 **Never in the report:** a `yarn` command for Taylor to run.
 
+## Where the work goes
+
+**By default, the branch that is checked out.** Never create or switch a branch, and never mention branches or worktrees.
+
+**Only when Taylor says "on its own branch"** (or "separate branch", "separate PR"), for work that should be its own pull request:
+
+1. Make a separate folder for it; never switch the shared checkout, because other threads are working in it: `git worktree add .claude/worktrees/<name> -b agent/<name>`, where `<name>` is the ticket id (or the first id of the batch). It starts from the current branch; from `main` only when Taylor says "off main".
+2. `yarn install` in that folder, then do everything there: every edit, every `yarn` command, every commit. Nothing for this work lands on the shared branch.
+3. Close as usual. The report's first line adds `Branch: agent/<name>, ready for a pull request.` Pushing is Taylor's; it is the one action to list under Needs you.
+4. If Taylor then says "merge it back", merge `agent/<name>` into the branch the main checkout has, remove the folder (`git worktree remove`), and delete the branch (`git branch -d`).
+
+One branch per request, never one per ticket.
+
 ## Each ticket, in build order
 
 1. **Start.** `yarn contract:init <EPIC | app> <slug>`, unless it has started. Clear a refusal yourself where you can.

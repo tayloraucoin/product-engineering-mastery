@@ -15,6 +15,10 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-04 — PJ: a separate branch only when asked
+
+Taylor: the default stays one working branch, with a phrase to ask for a separate one when two pieces of work should be separate pull requests, "and not just have it start doing it and creating a big mess of branches" (PR-17). `tk-batch`: on "on its own branch", the thread runs `git worktree add .claude/worktrees/<name> -b agent/<name>` from the current branch (from `main` on "off main"), installs, and does all of that work there, so the shared checkout and its other threads are untouched. The report names the branch; pushing stays Taylor's. On "merge it back" the thread merges into the working branch and removes the folder and branch. One branch per request, never per ticket. Not yet run in a real thread.
+
 ## 2026-10-04 — PJ: the thread closes its own tickets
 
 Taylor, after the first batches under PR-15: threads still ended by handing over `yarn contract:run`, `yarn review:run` and re-proofs of other tickets. "Running yarn commands is stupid. It only needs me for what it actually needs me." (PR-16).

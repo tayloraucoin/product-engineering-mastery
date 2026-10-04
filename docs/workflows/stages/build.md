@@ -27,7 +27,7 @@ No lead role: the thread is the builder, and the work loop in `AGENTS.md` govern
 
 ## 2. Venue
 
-Claude Code, on the branch Taylor has checked out. Say which tickets to build ("build STK-5 and STK-7"); `tk-batch` takes them from there. One thread builds a batch in order; tickets with no dependency between them can run in parallel threads on the same branch.
+Claude Code, on the branch Taylor has checked out. Say which tickets to build ("build STK-5 and STK-7"); `tk-batch` takes them from there. One thread builds a batch in order; tickets with no dependency between them can run in parallel threads on the same branch. Add "on its own branch" when the work should be its own pull request (PR-17): the thread makes a separate folder and branch `agent/<id>` for it, leaves the shared checkout alone, and reports the branch as ready; "merge it back" folds it into the working branch.
 
 ## 3. Loads
 
