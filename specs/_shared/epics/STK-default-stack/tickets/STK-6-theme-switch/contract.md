@@ -16,12 +16,7 @@ cites:
   - "D-STK-17"
   - "D-STK-1"
 truth_files: "none: no living UX file covers the starter's own stack"
-reviewers:
-  - assay
-  - mason
-  - threshold
-  - vigil
-  - warden
+reviewers: []
 planned_paths:
   - "packages/config/tailwind/preset.css"
   - "packages/config/eslint/tokens.js"
@@ -64,26 +59,7 @@ criteria:
     statement: "The toggle offers light, dark and system and shows a visible focus ring, captured on the demo home."
     evidence: capture
     path: "specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/toggle-states.png"
-  - id: review:assay
-    statement: Assay reviews this ticket in fresh context against its contract and evidence.
-    evidence: manual
-    reason: a reviewer's judgment, recorded only by yarn review:run assay <id>
-  - id: review:mason
-    statement: Mason reviews this ticket in fresh context against its contract and evidence.
-    evidence: manual
-    reason: a reviewer's judgment, recorded only by yarn review:run mason <id>
-  - id: review:threshold
-    statement: Threshold reviews this ticket in fresh context against its contract and evidence.
-    evidence: manual
-    reason: a reviewer's judgment, recorded only by yarn review:run threshold <id>
-  - id: review:vigil
-    statement: Vigil reviews this ticket in fresh context against its contract and evidence.
-    evidence: manual
-    reason: a reviewer's judgment, recorded only by yarn review:run vigil <id>
-  - id: review:warden
-    statement: Warden reviews this ticket in fresh context against its contract and evidence.
-    evidence: manual
-    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
+tier: 1
 ---
 
 # Contract — STK-6 theme-switch

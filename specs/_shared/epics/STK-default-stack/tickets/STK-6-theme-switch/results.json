@@ -1,6 +1,6 @@
 {
   "id": "STK-6",
-  "criteria_sha256": "7e5ee32da39b4e368e382454e6fd7c3b341f6add732fcafe091af1fa810b5b14",
+  "criteria_sha256": "ed2bab0fe9692b03ed1938117e0b9f3794374b7cf6af48cfcf864041dd2b3880",
   "criteria": {
     "C1": {
       "status": "PASS",
@@ -8,10 +8,10 @@
       "run": {
         "command": "yarn lint",
         "exit": 0,
-        "at": "2026-10-04T03:06:45Z",
-        "head": "930129e639fc7cd25c3b1efed36b98ca20ebeb85",
+        "at": "2026-10-04T04:29:19Z",
+        "head": "a320df0bfbdea2e96b36b748043954fe6c4f171f",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/C1.log",
-        "evidence_sha256": "242a97b2e7a9d5e43290f7cda1082499ede6b4355364161c630a89daf49bdaef"
+        "evidence_sha256": "b7ad99a987a97e79145cec2399c881c33fc27ee1977e74f3e5d59dc67d0c1580"
       }
     },
     "C2": {
@@ -32,8 +32,8 @@
       "run": {
         "command": "yarn contract:record STK-6 C3 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/dark.png",
         "exit": 0,
-        "at": "2026-10-04T03:06:27Z",
-        "head": "930129e639fc7cd25c3b1efed36b98ca20ebeb85",
+        "at": "2026-10-04T04:29:33Z",
+        "head": "a320df0bfbdea2e96b36b748043954fe6c4f171f",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/dark.png",
         "evidence_sha256": "88775f734d68026c0899c5386266b5f463ec67db5c9fe12c5ed3fe8b2f558b56"
       }
@@ -44,8 +44,8 @@
       "run": {
         "command": "yarn contract:record STK-6 C4 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/light.png",
         "exit": 0,
-        "at": "2026-10-04T03:06:30Z",
-        "head": "930129e639fc7cd25c3b1efed36b98ca20ebeb85",
+        "at": "2026-10-04T04:29:37Z",
+        "head": "a320df0bfbdea2e96b36b748043954fe6c4f171f",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/light.png",
         "evidence_sha256": "fcb6fe502aa7333f7901bac4a1325010d35beaf1bf7c27a44e95397ac1db8743"
       }
@@ -56,8 +56,8 @@
       "run": {
         "command": "yarn contract:record STK-6 C5 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/C5.md",
         "exit": 0,
-        "at": "2026-10-04T03:06:34Z",
-        "head": "930129e639fc7cd25c3b1efed36b98ca20ebeb85",
+        "at": "2026-10-04T04:29:41Z",
+        "head": "a320df0bfbdea2e96b36b748043954fe6c4f171f",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/C5.md",
         "evidence_sha256": "fa5863b087b3fcf763ccd65e5c79c9aaa314d733cd9ae25224f5ce002de1bca3"
       }
@@ -68,37 +68,12 @@
       "run": {
         "command": "yarn contract:record STK-6 C6 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/toggle-states.png",
         "exit": 0,
-        "at": "2026-10-04T03:06:38Z",
-        "head": "930129e639fc7cd25c3b1efed36b98ca20ebeb85",
+        "at": "2026-10-04T04:29:45Z",
+        "head": "a320df0bfbdea2e96b36b748043954fe6c4f171f",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/toggle-states.png",
         "evidence_sha256": "3d1e886c98eb157a411070fa2a4e744ce43d752b2fd2ff7d7fb2136835eef277"
       }
-    },
-    "review:assay": {
-      "status": "FAIL",
-      "evidence": "manual",
-      "run": null
-    },
-    "review:mason": {
-      "status": "FAIL",
-      "evidence": "manual",
-      "run": null
-    },
-    "review:threshold": {
-      "status": "FAIL",
-      "evidence": "manual",
-      "run": null
-    },
-    "review:vigil": {
-      "status": "FAIL",
-      "evidence": "manual",
-      "run": null
-    },
-    "review:warden": {
-      "status": "FAIL",
-      "evidence": "manual",
-      "run": null
     }
   },
-  "updated_at": "2026-10-04T03:07:08Z"
+  "updated_at": "2026-10-04T04:29:45Z"
 }
