@@ -74,10 +74,10 @@ All work goes on the `agent/<repo-wide-prefix>` branch: the hooks refuse commits
 `@pem/brand` (STK-7) will hold the name, URLs, contact, asset paths and the two theme colours, with logos and fonts in its own folder, and a check will fail when it and the token preset disagree (D-STK-9). STK-7 rewrites this step. Until it lands, the brand lives in three places:
 
 - The colours in `packages/config/tailwind/preset.css`. It has three layers (D-STK-17): a raw scale, semantic names set once under `:root` (light) and again under `.dark`, and the bridge that exposes them to Tailwind. Add the briefing's colours as new raw steps in layer 1, for example `--brand-500`. Then point `--primary` and `--primary-foreground` at them in both layer-2 blocks, `:root` and `.dark`. A raw value is written nowhere else; every other semantic name keeps its step unless the briefing names it; the bridge is not touched; token names belong to the design system (`docs/design/canon.md`).
-- The `metadata` title in `apps/web/app/layout.tsx`: the product name.
-- The `metadata` title in `apps/docs/app/layout.tsx`: `Docs · ` and the product name, the form it has today.
+- The `metadata` in `apps/web/app/layout.tsx`: its title becomes the product name.
+- The `metadata` in `apps/docs/app/layout.tsx`: the default title (`Docs · ` and the product name, the form it has today), the title template (`%s · ` and the product name with ` Docs`) and the description.
 
-**Check:** `git grep -n -e "--primary:" -e "--primary-foreground:" -- packages/config/tailwind/preset.css` prints four lines (light and dark), each set to one of the new raw steps. `yarn build` exits 0. `git grep -n "Product Engineering Mastery" -- apps/web/app/layout.tsx apps/docs/app/layout.tsx` prints nothing. The demo page still names the toolkit until step 5.
+**Check:** `git grep -n -e "--primary:" -e "--primary-foreground:" -- packages/config/tailwind/preset.css` prints four lines (light and dark), each set to one of the new raw steps. `yarn build` exits 0. `git grep -n -e "Product Engineering Mastery" -e "PEM" -- apps/web/app/layout.tsx apps/docs/app/layout.tsx` prints nothing. The demo page still names the toolkit until step 5.
 
 ## 4. Choose the modules
 
@@ -107,14 +107,19 @@ A module with no entry in the `stack` block is not in the duplicate: skip its ro
 2. **Research.** Delete everything under `docs/research/` except its `README.md`. Then run `yarn check-refs`: it names each live file that still links to a deleted file. Remove the link where the sentence reads without it; otherwise add an entry to `tooling/refs-pending.json` keyed by the deleted path, exactly as `yarn check-refs` printed it: `"<deleted path>": "cleared by new-project.md step 5"`.
 3. **Specs.** Delete everything under `specs/`: this repo's epics, tickets and `_status.md`. The product's first `yarn spec:init` or `yarn contract:init` starts its own.
 4. **What describes the toolkit.** Rewrite the opening paragraph of `README.md`, and items 1 ("What this is") and 2 ("Current phase") of `AGENTS.md`'s Start here, for the product, from the briefing. The rest of both files is the practice the product keeps.
+5. **The generated map.** Run `yarn directory-map`: the deletions above left `docs/_generated/directory-map.md` and the landing-page tables stale.
 
-**Check:** `yarn check-refs` and `yarn check-specs` exit 0.
+**Check:** `yarn check-refs`, `yarn check-specs` and `yarn directory-map --check` exit 0.
 
 ## 6. Fill `.env.example`
 
-STK-4 creates `.env.example`, with the tier grammar of D-STK-3, and rewrites this step. Until it lands, the duplicate has no `.env.example`, no app reads a variable, and the step has nothing to do. Whatever lands, a secret never goes in `.env.example`.
+`.env.example` (STK-4) lists every variable, each with a comment saying what breaks without it, in the tier forms of D-STK-3 (`_LOCAL`, `_STAGING`, unsuffixed for production). `turbo.json` lists the same names (`docs/engineering/codebase-conventions.md`).
 
-**Check:** `yarn check-stack` exits 0: no variable of a removed module is left.
+1. A removed module's variables are already gone: its runbook took them out of both files.
+2. Where an example value names the toolkit, replace it with the product's. A value the briefing does not give is asked for, never guessed.
+3. Keep every comment. A secret never goes in `.env.example`.
+
+**Check:** `yarn check-stack` exits 0, so no variable of a removed module is left, and `yarn check-client-bundle` exits 0.
 
 ## 7. Check and commit
 

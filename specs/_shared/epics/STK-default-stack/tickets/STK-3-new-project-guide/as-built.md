@@ -49,6 +49,12 @@ Against the non-negotiables:
 
   Step 4's "today" line now says the block holds only locked modules, so it stays true as STK-4 and STK-5 add theirs. The same review noted a Prettier miss in `tooling/check-client-bundle.test.ts`. That file is STK-4's, outside this contract, and is left to that ticket. The other two should-fix findings are Taylor's, under Next. The shipped text has not had a third cold read; STK-20 reads the final text.
 
+- **Changed after the third vigil review (PASS, four should-fix; the detail of the first three is lost from the review file, so they were re-derived from the tree):**
+  - Step 3 now covers the docs layout's title template (`%s · PEM Docs`) and description as well as its title, and its check also greps `PEM`.
+  - Step 5 runs `yarn directory-map` after the deletions and checks `directory-map --check`.
+  - Step 6 describes the `.env.example` STK-4 shipped, taken from STK-4's contract and as-built: every variable commented, the tier forms, and `turbo.json` listing the same names. Its check adds `yarn check-client-bundle`. `.env.example` itself was not read: this session's permissions deny `.env.*`.
+  - The fourth finding, `docs/index.md:16`, is Taylor's, under Next.
+
 ## Ledger IDs
 
 - EN-10 (the porting rule; its status already names STK-3 as amending the README).
