@@ -54,6 +54,7 @@
   - The mirror re-exports the checks for STK-12's `apps/web/lib/supabase/local-mirror.ts`, which is removed with Auth.
   - `test/rls.test.ts` also checks its runtime client is loopback.
   - The database runbook now names the `db` probes in `tooling/boundaries.test.ts`.
+- **Third review round:** `db:local:full` now gives the same network warning as `db:local`, and the warning's `docker port` call can no longer fail a database that already started. Reviews now run one at a time; run in parallel, they overwrote each other's records in `results.json`.
 
 ## Not verified
 
