@@ -2,6 +2,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { NextConfig } from "next";
 
+import { getLocalDevOrigins } from "../../tooling/local-dev-origins";
 import { nextConfigEnv } from "./env";
 
 const appRoot = path.dirname(fileURLToPath(import.meta.url));
@@ -14,6 +15,13 @@ const nextConfig: NextConfig = {
    * carries Next's version warning by hand.
    */
   agentRules: false,
+
+  /**
+   * Next 16 blocks cross-origin `/_next/*` and HMR in dev unless the origin is
+   * listed: without the LAN addresses, a phone on `yarn web:dev:local` gets
+   * the page but React never hydrates.
+   */
+  allowedDevOrigins: getLocalDevOrigins(),
 
   // Workspace packages ship TypeScript source; the app compiles them.
   transpilePackages: ["@pem/env", "@pem/ui"],
