@@ -32,6 +32,7 @@ load_when:
 | [`remove-ai.md`](remove-ai.md) | Follow from step 4 of new-project.md when the briefing drops AI; delete, edit and unlist what the module added, then prove it gone with yarn check-stack. |
 | [`remove-api.md`](remove-api.md) | Follow from step 4 of new-project.md when the briefing drops API (tRPC); delete, edit and unlist what the module added, then prove it gone with yarn check-stack. |
 | [`remove-billing.md`](remove-billing.md) | Follow from step 4 of new-project.md when the briefing drops Billing (Stripe); delete, edit and unlist what the module added, then prove it gone with yarn check-stack. |
+| [`remove-catalog.md`](remove-catalog.md) | Follow from step 4 of new-project.md once the product has copied the components it keeps; delete the shelf, its check and its workshop wiring, then prove it gone with yarn check-stack. |
 | [`remove-error-monitoring.md`](remove-error-monitoring.md) | Follow from step 4 of new-project.md when the briefing drops Error monitoring (Sentry); delete, edit and unlist what the module added, then prove it gone with yarn check-stack. |
 | [`remove-supabase-auth.md`](remove-supabase-auth.md) | Follow from step 4 of new-project.md when the briefing drops Supabase Auth; delete, edit and unlist what the module added, then prove it gone with yarn check-stack. |
 | [`remove-supabase-database.md`](remove-supabase-database.md) | Follow from step 4 of new-project.md when the briefing drops Supabase database; delete, edit and unlist what the module added, then prove it gone with yarn check-stack. |

@@ -230,6 +230,18 @@
       "locked": true,
       "runbook": null
     },
+    "catalog": {
+      "files": [
+        "packages/catalog",
+        "tooling/check-catalog.ts",
+        "tooling/check-catalog.test.ts"
+      ],
+      "env": [],
+      "dependencies": ["@pem/catalog"],
+      "boundaries": ["catalog"],
+      "locked": false,
+      "runbook": "docs/runbooks/remove-catalog.md"
+    },
     "db": {
       "files": ["packages/db"],
       "env": ["DATABASE_URL", "DATABASE_MIGRATION_URL"],

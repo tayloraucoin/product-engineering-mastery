@@ -13,10 +13,16 @@ const brandAssets = dirname(
  * Stories sit beside their components; `story-coverage.ts` fails a
  * component without one. Brand assets are served from @pem/brand at
  * `/brand/`, never from an app's public folder.
+ *
+ * It shows the kit and the shelf together (CS-07): @pem/catalog's stories
+ * are globbed by path, never imported, so @pem/ui takes no dependency on the
+ * catalog. Every component story carries `source:`, `verdict:` and
+ * `layer:` tags for the sidebar's tag filter (check-catalog holds them to
+ * the manifest), and `parameters.provenance` for the Provenance panel.
  */
 const config: StorybookConfig = {
   framework: "@storybook/nextjs-vite",
-  stories: ["../src/**/*.stories.tsx"],
+  stories: ["../src/**/*.stories.tsx", "../../catalog/src/**/*.stories.tsx"],
   addons: [
     "@storybook/addon-a11y",
     "@storybook/addon-themes",

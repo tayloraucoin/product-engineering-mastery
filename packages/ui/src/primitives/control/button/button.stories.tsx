@@ -6,6 +6,15 @@ import { Button } from "./button";
 const meta = {
   title: "Primitives/Control/Button",
   component: Button,
+  tags: ["source:custom", "verdict:kit", "layer:primitive"],
+  parameters: {
+    provenance: {
+      upstream:
+        "this repo, scaffold 288fe5d (2026-10-01); CAT-4 replaces it with shadcn's Vega button",
+      licence: "house",
+      adapted: "cva in button.variants.ts (STK-22)",
+    },
+  },
   args: { children: "Save changes", onClick: fn() },
 } satisfies Meta<typeof Button>;
 

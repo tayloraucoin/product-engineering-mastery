@@ -96,6 +96,7 @@ The brand has one source, `@pem/brand` (D-STK-9). `packages/brand/src/brand.ts` 
 | AI                        | [`remove-ai.md`](remove-ai.md)                               | STK-17         |
 | Supabase Auth             | [`remove-supabase-auth.md`](remove-supabase-auth.md)         | STK-12         |
 | Supabase database         | [`remove-supabase-database.md`](remove-supabase-database.md) | STK-9          |
+| Component catalog         | [`remove-catalog.md`](remove-catalog.md)                     | CAT-3          |
 
 Remove in the table's order, from the top of the package graph down (D-STK-1), so no module still present imports one already gone.
 

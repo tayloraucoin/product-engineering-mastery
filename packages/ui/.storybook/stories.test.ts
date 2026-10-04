@@ -4,12 +4,13 @@ import { describe, expect, it } from "vitest";
 import * as violation from "./fixtures/a11y-violation.stories";
 
 /**
- * Every story in @pem/ui, run as the workshop runs it: render, its `play`
- * interactions, then the accessibility addon's axe pass, which fails on any
- * violation (`a11y.test: "error"` in preview.tsx).
+ * Every story in @pem/ui and in the catalog the workshop shows (CS-07), run
+ * as the workshop runs it: render, its `play` interactions, then the
+ * accessibility addon's axe pass, which fails on any violation
+ * (`a11y.test: "error"` in preview.tsx).
  */
 const modules = import.meta.glob<Parameters<typeof composeStories>[0]>(
-  "../src/**/*.stories.tsx",
+  ["../src/**/*.stories.tsx", "../../catalog/src/**/*.stories.tsx"],
   { eager: true },
 );
 

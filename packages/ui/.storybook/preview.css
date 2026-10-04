@@ -2,3 +2,6 @@
 @import "tailwindcss";
 @import "@pem/config/tailwind/preset.css";
 @import "@pem/ui/styles/globals.css";
+
+/* The shelf's classes, for the workshop only: no app scans the catalog (CS-07). */
+@source "../../catalog/src";

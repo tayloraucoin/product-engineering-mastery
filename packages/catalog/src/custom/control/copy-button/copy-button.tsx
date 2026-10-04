@@ -71,7 +71,11 @@ export function CopyButton({
         {label}
       </Button>
       <span role="status" className="text-xs text-muted-foreground">
-        {state === "copied" ? copiedMessage : state === "failed" ? failedMessage : ""}
+        {state === "copied"
+          ? copiedMessage
+          : state === "failed"
+            ? failedMessage
+            : ""}
       </span>
     </span>
   );
