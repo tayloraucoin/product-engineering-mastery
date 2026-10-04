@@ -1,0 +1,14 @@
+{
+  "globalPassThroughEnv": ["SYNTHETIC_PASSTHROUGH"],
+  "globalEnv": [
+    "NODE_ENV",
+    "DATABASE_ENVIRONMENT",
+    "EXAMPLE_API_KEY",
+    "NEXT_PUBLIC_SITE_URL",
+    "SYNTHETIC_DB_URL",
+    "SYNTHETIC_*"
+  ],
+  "tasks": {
+    "build": { "env": ["SYNTHETIC_TASK_SECRET"] }
+  }
+}

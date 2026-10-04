@@ -2,16 +2,23 @@
  * No server-only value reaches a browser bundle (D-STK-4, STK-4).
  *
  *   yarn check-client-bundle
- *       Builds apps/web with every server-only variable in .env.example set to
- *       a unique sentinel, then fails if any sentinel appears in what the
- *       browser receives: a client chunk (.next/static) or a prerendered page
- *       or RSC payload (.next/server/app). Fails when there is nothing to plant.
+ *       Builds apps/web with every server-only variable set to a unique
+ *       sentinel, then fails if any sentinel appears in what the browser
+ *       receives: a client chunk (.next/static) or a prerendered page or RSC
+ *       payload (.next/server/app). Fails when there is nothing to plant.
+ *   yarn check-client-bundle --plan [--root <dir>]
+ *       Prints the names a build would plant, and any drift, without building.
  *   yarn check-client-bundle --scan <dir> --sentinel NAME=value [...]
  *       Scans an existing client-chunk folder for the given sentinels only.
  *
- * Server-only means every name in .env.example without the NEXT_PUBLIC_
- * prefix, except the values that cannot carry a sentinel because they are
- * enum words, not secrets: the tier switch and the ones the platform sets.
+ * Server-only means every name in .env.example or in the root turbo.json's
+ * declared env (globalEnv and each task's env; pass-through lists hold system
+ * variables such as TMPDIR) without the NEXT_PUBLIC_ prefix, except the values that
+ * cannot carry a sentinel because they are enum words, not secrets: the tier
+ * switch and the ones the platform sets. Both files are read, so a secret
+ * listed in only one is still planted; a name turbo.json lists and
+ * .env.example does not is printed as drift (codebase-conventions §5 asks for
+ * both).
  * Either mode fails when a folder is missing or no client chunk is found: a
  * scan of nothing proves nothing.
  */
@@ -43,6 +50,53 @@ function envFileNames(text: string): string[] {
     if (match) names.add(match[1]!);
   }
   return [...names];
+}
+
+/** Exact variable names a turbo.json declares (globalEnv, each task's env); wildcards such as `STRIPE_*` are skipped. */
+function turboEnvNames(text: string): string[] {
+  const turbo = JSON.parse(text) as {
+    globalEnv?: string[];
+    tasks?: Record<string, { env?: string[] }>;
+  };
+  const lists = [
+    turbo.globalEnv,
+    ...Object.values(turbo.tasks ?? {}).map((task) => task.env),
+  ];
+  return [
+    ...new Set(
+      lists
+        .flatMap((list) => list ?? [])
+        .filter((name) => /^[A-Za-z_][A-Za-z0-9_]*$/.test(name)),
+    ),
+  ];
+}
+
+const plantable = (name: string) =>
+  !name.startsWith(PUBLIC_PREFIX) && !UNPLANTABLE.has(name);
+
+/** The server-only names to plant, from both registries, and those turbo.json lists that .env.example lacks. */
+function plan(root: string): { names: string[]; drift: string[] } {
+  const example = path.join(root, ".env.example");
+  if (!existsSync(example)) stop(".env.example is missing");
+  const fromExample = envFileNames(readFileSync(example, "utf8"));
+  const turboFile = path.join(root, "turbo.json");
+  const fromTurbo = existsSync(turboFile)
+    ? turboEnvNames(readFileSync(turboFile, "utf8"))
+    : [];
+  const names = [...new Set([...fromExample, ...fromTurbo])]
+    .filter(plantable)
+    .sort();
+  const drift = fromTurbo
+    .filter((name) => plantable(name) && !fromExample.includes(name))
+    .sort();
+  return { names, drift };
+}
+
+function printDrift(drift: string[]): void {
+  if (drift.length)
+    console.log(
+      `check-client-bundle — warning: turbo.json lists ${drift.join(", ")}, which .env.example does not; planted anyway. Add each to .env.example with a comment (codebase-conventions §5).`,
+    );
 }
 
 /** What the browser receives: client chunks, and the pages and RSC payloads Next prerenders. */
@@ -92,7 +146,13 @@ function scan(targets: Target[], sentinels: Map<string, string>): void {
 const args = process.argv.slice(2);
 const scanAt = args.indexOf("--scan");
 
-if (scanAt !== -1) {
+if (args.includes("--plan")) {
+  const rootAt = args.indexOf("--root");
+  const root = rootAt === -1 ? REPO_ROOT : path.resolve(args[rootAt + 1] ?? "");
+  const { names, drift } = plan(root);
+  console.log(`check-client-bundle — would plant: ${names.join(", ")}`);
+  printDrift(drift);
+} else if (scanAt !== -1) {
   const dir = args[scanAt + 1];
   if (!dir || dir.startsWith("--")) stop("--scan needs a folder");
   const sentinels = new Map<string, string>();
@@ -106,15 +166,12 @@ if (scanAt !== -1) {
   if (sentinels.size === 0) stop("name at least one --sentinel NAME=value");
   scan([{ dir, files: CHUNKS }], sentinels);
 } else {
-  const example = path.join(REPO_ROOT, ".env.example");
-  if (!existsSync(example)) stop(".env.example is missing");
-  const names = envFileNames(readFileSync(example, "utf8")).filter(
-    (name) => !name.startsWith(PUBLIC_PREFIX) && !UNPLANTABLE.has(name),
-  );
+  const { names, drift } = plan(REPO_ROOT);
   if (names.length === 0)
     stop(
-      ".env.example lists no server-only variable to plant; the check would prove nothing",
+      ".env.example and turbo.json list no server-only variable to plant; the check would prove nothing",
     );
+  printDrift(drift);
   const sentinels = new Map(
     names.map((name) => [
       name,

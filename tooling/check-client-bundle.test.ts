@@ -6,6 +6,8 @@
 
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
+import { cpSync, mkdtempSync, renameSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { test } from "node:test";
 
@@ -59,4 +61,28 @@ test("C5: a scan with no sentinel named is refused", () => {
   const r = check("--scan", fixture("clean"));
   assert.equal(r.status, 1, r.out);
   assert.match(r.out, /name at least one --sentinel/);
+});
+
+test("the plan plants server-only names from .env.example and turbo.json, and names the drift", () => {
+  // The repo's settings deny reading .env files, so the fixture commits
+  // env.example and the test renames it in a copy under $TMPDIR.
+  const root = mkdtempSync(path.join(tmpdir(), "client-bundle-plan-"));
+  cpSync(
+    path.join(REPO_ROOT, "tooling/fixtures/client-bundle/registry"),
+    root,
+    {
+      recursive: true,
+    },
+  );
+  renameSync(path.join(root, "env.example"), path.join(root, ".env.example"));
+  const r = check("--plan", "--root", root);
+  assert.equal(r.status, 0, r.out);
+  assert.match(
+    r.out,
+    /would plant: EXAMPLE_API_KEY, EXAMPLE_API_KEY_LOCAL, SYNTHETIC_DB_URL, SYNTHETIC_TASK_SECRET\n/,
+  );
+  assert.match(
+    r.out,
+    /turbo\.json lists SYNTHETIC_DB_URL, SYNTHETIC_TASK_SECRET, which \.env\.example does not/,
+  );
 });

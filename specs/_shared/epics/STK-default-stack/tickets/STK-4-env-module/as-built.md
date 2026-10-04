@@ -21,7 +21,7 @@ Against the non-negotiables:
 
    So next.config's `env` block overrides `process.env` for `NEXT_PUBLIC_*` names.
 
-6. **`.env.example` lists every variable,** each with a comment saying what breaks without it: `NODE_ENV`, `DATABASE_ENVIRONMENT`, `VERCEL_ENV`, `NEXT_PUBLIC_SITE_URL` and its tier forms, and `EXAMPLE_API_KEY` and its tier forms. `turbo.json`'s `globalEnv` lists the same names. `turbo/no-undeclared-env-vars` passes in `yarn lint`.
+6. **`.env.example` lists every variable,** each with a comment saying what breaks without it: `NODE_ENV`, `DATABASE_ENVIRONMENT`, `VERCEL_ENV`, `NEXT_PUBLIC_SITE_URL` and its tier forms, and `EXAMPLE_API_KEY` and its tier forms. `turbo.json`'s `globalEnv` listed the same names at STK-4's close; since STK-9 it also lists the six `DATABASE_*` URL names, which `.env.example` does not yet (Taylor adds them). `turbo/no-undeclared-env-vars` passes in `yarn lint`.
 7. **`yarn verify` runs `yarn test` and `yarn check-client-bundle`.**
 
 Also shipped:
@@ -35,6 +35,7 @@ Also shipped:
 ## Deviations
 
 - **C6 first failed on branch-wide state, not on this ticket:** other tickets' stale proofs failed `check-specs`, and the evaluator-pass budget was over its cap. PR-15 made `check-specs` warn on work in flight and raised the cap; C6 passed at batch close.
+- **The bundle check plants from both registries (batch close, after the tier 2 reviews).** All three reviewers found that it planted only `.env.example`'s names, so a server secret listed only in `turbo.json` went untested. It now plants the server-only names of `.env.example` and the root `turbo.json`'s declared env (`globalEnv`, each task's `env`), prints any name `turbo.json` has and `.env.example` lacks, and gains `--plan` for a build-free test (`tooling/check-client-bundle.test.ts`, fixture `registry`). It warns rather than fails on that drift, so `yarn verify` stays green until `.env.example` is filled.
 - **The `EXAMPLE_API_KEY` server secret (Taylor's call, 2026-10-03).** At STK-4 the only server-only variable is the tier switch. Its values are enum words that cannot carry a sentinel, so C6 would have planted nothing. This synthetic tiered secret, read by `env.ts` and listed in `.env.example`, `turbo.json` and the manifest, gives the check a real target. The first vendor ticket replaces it.
 - **The check scans more than client chunks.** It also scans prerendered `.html` and `.rsc` files, because a Server Component passing a secret into rendered output leaks it there, not in a chunk. The negative control in `evidence/C6-control-leak.txt` shows it: the page temporarily rendered `env.EXAMPLE_API_KEY`, and the check failed, naming `EXAMPLE_API_KEY_LOCAL` in `index.html` and three `.rsc` files.
 - **"Where the code runs" comes from `VERCEL_ENV`, not `VERCEL`.** Vercel's docs (last updated 2026-07-15, read 2026-10-03) say `VERCEL_ENV` is set at build and runtime to `production`, `preview` or `development`. Only the first two count as deployed, so a `vercel env pull` with `development` stays local. `[ASSUMPTION: Vercel is the deploy target (D-STK-19); on any host that does not set VERCEL_ENV, the code reads as local and the site URL is localhost.]`
