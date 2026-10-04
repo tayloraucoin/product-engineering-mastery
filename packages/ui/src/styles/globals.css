@@ -6,6 +6,10 @@
  * knowing this package's path on disk.
  */
 
+/* shadcn's enter and exit animations, and its variants and utilities, ejected (CS-06). */
+@import "tw-animate-css";
+@import "./shadcn.css";
+
 @source "../";
 
 @layer base {

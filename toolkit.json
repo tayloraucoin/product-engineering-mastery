@@ -224,7 +224,11 @@
         "@pem/ui",
         "class-variance-authority",
         "clsx",
-        "tailwind-merge"
+        "tailwind-merge",
+        "@base-ui/react",
+        "lucide-react",
+        "tw-animate-css",
+        "shadcn"
       ],
       "boundaries": ["ui"],
       "locked": true,

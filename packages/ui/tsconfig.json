@@ -3,7 +3,13 @@
   "compilerOptions": {
     "noEmit": true,
     "module": "ESNext",
-    "moduleResolution": "Bundler"
+    "moduleResolution": "Bundler",
+    "paths": {
+      "@pem/ui/_shadcn": ["./src/_shadcn"],
+      "@pem/ui/_shadcn/*": ["./src/_shadcn/*"],
+      "@pem/ui/lib": ["./src/lib"],
+      "@pem/ui/lib/*": ["./src/lib/*"]
+    }
   },
   "include": ["src", ".storybook"],
   "exclude": ["node_modules", "dist"]

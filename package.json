@@ -19,6 +19,7 @@
     "docs:dev": "turbo run dev --filter=docs",
     "docs:build": "turbo run build --filter=docs",
     "ui:storybook": "yarn workspace @pem/ui storybook",
+    "shadcn": "yarn workspace @pem/ui shadcn",
     "lint:docs": "node tooling/lint-frontmatter.ts",
     "budget": "node tooling/budget.ts",
     "gen:agents": "node tooling/gen-agents.ts",
