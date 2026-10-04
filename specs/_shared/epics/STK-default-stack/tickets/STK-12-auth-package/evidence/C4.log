@@ -1,9 +1,34 @@
 command: yarn verify
 exit: 1
-at: 2026-10-04T23:26:55Z
-head: 728585c85ce5c9aec2821aba0153d603ebc67a5d
+at: 2026-10-04T23:28:01Z
+head: be5bdc58d8ad496e4b3140df17917dce6404cfca
 ---
 Checking formatting...
-[warn] packages/ui/src/composed/control/theme-toggle/theme-toggle.stories.tsx
-[warn] packages/ui/src/primitives/control/button/button.stories.tsx
-[warn] Code style issues found in 2 files. Run Prettier with --write to fix.
+All matched files use Prettier code style!
+lint:docs — 193 files, names and frontmatter clean; 8 path rules carry only paths.
+check-settings — 12 fixtures behaved; .claude/settings.json is clean.
+test:hooks — every case behaved.
+  bash-guard: 120 cases, 9 rules; median 60 ms, max 94 ms per call; longest denial about 53 tokens
+  results-gate: 14 cases, 4 rules; median 54 ms, max 58 ms per call; longest denial about 48 tokens
+  session-start: 5 cases, 4 rules; median 58 ms, max 61 ms per call; answers as context
+  stop-gate: 8 cases, 4 rules; median 57 ms, max 59 ms per call; answers as stop
+check-refs — every reference in 113 live files resolves; 41 pending (lands in J8, lands in J11, superseded by docs/runbooks/new-project.md (STK-3), lands in P-C, lands in P-D, lands in P-K, a product repo's path, named by a template, a product repo's path, named by a ruling (CF-13), a pattern, not a path, machine-local and untracked by design, stale ruling text in conflicts.md, superseded by A4; held for Taylor (PR-05), stale ruling text in conflicts.md; extensions sit beside their role (record 0006); held for Taylor (PR-05), stale ledger text; the rulings live in docs/design/workflow.md; held for Taylor (PR-05), stale ledger text; filed as docs/research/toolkit/design-candidates.md; held for Taylor (PR-05), stale ledger text; the ledger is docs/decisions/ledger.md; held for Taylor (PR-05), stale ledger text; the folder is docs/measurement/metrics/ (PR-12); held for Taylor (PR-05), stale ledger text; the folder is docs/measurement/evals/ (PR-12); held for Taylor (PR-05)).
+check-stack — 10 module(s); nothing missing, nothing left behind.
+check-migrations: 1 migration(s) in packages/db/migrations, none touch the auth schema.
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/results.json: C2's PASS no longer holds: docs/runbooks/new-project.md, docs/runbooks/remove-supabase-auth.md, docs/runbooks/remove-supabase-database.md and 16 more changed after it was recorded. Re-record it: yarn contract:run STK-11 C2
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/results.json: C3's PASS no longer holds: docs/runbooks/new-project.md, docs/runbooks/remove-supabase-auth.md, docs/runbooks/remove-supabase-database.md and 16 more changed after it was recorded. Re-record it: yarn contract:run STK-11 C3
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/results.json: C4's PASS no longer holds: docs/runbooks/new-project.md, docs/runbooks/remove-supabase-auth.md, docs/runbooks/remove-supabase-database.md and 16 more changed after it was recorded. Re-record it: yarn contract:record STK-11 C4 --evidence <path>
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/results.json: C5's PASS no longer holds: docs/runbooks/new-project.md, docs/runbooks/remove-supabase-auth.md, docs/runbooks/remove-supabase-database.md and 16 more changed after it was recorded. Re-record it: yarn contract:record STK-11 C5 --evidence <path>
+warn  STK-11 has an as-built, so it is closing, but review:mason (not proven yet), review:vigil (last run exited 0), review:warden (last run exited 0) are not PASS. Run: yarn review:run mason STK-11
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-12-auth-package/results.json: C5's PASS no longer holds: docs/engineering/codebase-conventions.md, docs/runbooks/remove-supabase-auth.md, docs/runbooks/remove-supabase-database.md and 4 more changed after it was recorded. Re-record it: yarn contract:record STK-12 C5 --evidence <path>
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-12-auth-package/results.json: review:warden's PASS no longer holds: docs/engineering/codebase-conventions.md, docs/runbooks/remove-supabase-auth.md, docs/runbooks/remove-supabase-database.md and 4 more changed after it was recorded. Re-record it: yarn review:run warden STK-12
+warn  STK-12 has an as-built, so it is closing, but C4 (last run exited 1), review:assay (not proven yet), review:mason (not proven yet), review:threshold (not proven yet) are not PASS. Run: yarn review:run assay STK-12
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/results.json: C1's PASS no longer holds: docs/engineering/codebase-conventions.md, packages/config/eslint/boundaries.js, toolkit.json and 1 more changed after it was recorded. Re-record it: yarn contract:run STK-15 C1
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/results.json: C2's PASS no longer holds: docs/engineering/codebase-conventions.md, packages/config/eslint/boundaries.js, toolkit.json and 1 more changed after it was recorded. Re-record it: yarn contract:run STK-15 C2
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/results.json: C3's PASS no longer holds: docs/engineering/codebase-conventions.md, packages/config/eslint/boundaries.js, toolkit.json and 1 more changed after it was recorded. Re-record it: yarn contract:run STK-15 C3
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/results.json: C4's PASS no longer holds: docs/engineering/codebase-conventions.md, packages/config/eslint/boundaries.js, toolkit.json and 1 more changed after it was recorded. Re-record it: yarn contract:run STK-15 C4
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/results.json: review:mason's PASS no longer holds: docs/engineering/codebase-conventions.md, packages/config/eslint/boundaries.js, toolkit.json and 1 more changed after it was recorded. Re-record it: yarn review:run mason STK-15
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/results.json: review:vigil's PASS no longer holds: docs/engineering/codebase-conventions.md, packages/config/eslint/boundaries.js, toolkit.json and 1 more changed after it was recorded. Re-record it: yarn review:run vigil STK-15
+warn  STK-15 has an as-built, so it is closing, but review:warden (last run exited 1) is not PASS. Run: yarn review:run warden STK-15
+check-specs — 1 problem(s):
+  specs/_shared/epics/STK-default-stack/tickets/STK-12-auth-package/results.json: review:vigil is PASS, but evidence specs/_shared/epics/STK-default-stack/tickets/STK-12-auth-package/review-vigil.md changed after it was recorded. Re-record it: yarn review:run vigil STK-12
