@@ -217,7 +217,13 @@
     "db": {
       "files": ["packages/db"],
       "env": ["DATABASE_URL", "DATABASE_MIGRATION_URL"],
-      "dependencies": ["@pem/db", "drizzle-orm", "drizzle-kit", "postgres"],
+      "dependencies": [
+        "@pem/db",
+        "drizzle-orm",
+        "drizzle-kit",
+        "postgres",
+        "supabase"
+      ],
       "boundaries": ["db"],
       "locked": false,
       "runbook": "docs/runbooks/remove-supabase-database.md"

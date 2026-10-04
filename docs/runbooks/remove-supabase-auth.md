@@ -17,7 +17,19 @@ load_when:
 > **Built by:** STK-12 builds it; STK-11 builds the local auth mirror it calls (D-STK-6). The module is not built, so every list below is empty until STK-12 fills it; nothing here is guessed ahead of the code.
 > **Run from:** step 4 of [`new-project.md`](new-project.md).
 
-**When both Supabase modules go.** Run this runbook first, then [`remove-supabase-database.md`](remove-supabase-database.md): auth sits above the database in the package graph (D-STK-1). With both gone, nothing uses the Supabase project, so the vendor-side steps of both runbooks apply, and the database guardrails in `.claude/settings.json` (D-STK-18, STK-10) guard nothing. Where the local auth mirror goes is filled by STK-11; which database policies assume a signed-in user is filled by STK-9 and STK-12.
+**When both Supabase modules go.** Run this runbook first, then [`remove-supabase-database.md`](remove-supabase-database.md): auth sits above the database in the package graph (D-STK-1). With both gone, nothing uses the Supabase project, so the vendor-side steps of both runbooks apply, and the database guardrails in `.claude/settings.json` (D-STK-18, STK-10) guard nothing. Which database policies assume a signed-in user is filled by STK-9 and STK-12.
+
+## The local auth mirror (STK-11)
+
+The mirror lives in the database package (D-STK-6), so it stays when only auth goes, with nothing to call it. When the database stays and auth goes:
+
+- Delete from `packages/db/`: `src/local-auth-mirror.ts` and `src/local-auth-mirror.test.ts`, `test/local-auth-mirror.test.ts`, `scripts/local-auth-marker.ts`, `scripts/local-full.ts`, `scripts/local-users.ts`, `scripts/local-users.test.ts` and `scripts/seed-users.ts`.
+- `packages/db/package.json`: the `./local-auth-mirror` export, and the `db:local:full` and `db:seed-users` scripts; the same two in the root `package.json`.
+- `packages/db/scripts/local.ts`: the marker step and the auth-URL warning; `supabase db start` stays. `scripts/env.ts`: the `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` reads, `authSettings` and `authUrlName`.
+- `packages/db/supabase/config.toml`: set `[auth] enabled = false` and delete the other `[auth]` lines.
+- From `.env.example` and `turbo.json`'s `globalEnv`, with their `_LOCAL` and `_STAGING` forms: `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`.
+
+When the database goes too, its runbook deletes the whole `packages/db/` folder, mirror included; only the variables above are this runbook's.
 
 ## Files to delete
 

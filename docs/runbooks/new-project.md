@@ -69,6 +69,7 @@ All work goes on the `agent/<repo-wide-prefix>` branch: the hooks refuse commits
 2. **Root name.** The `name` in the root `package.json` becomes the repo slug.
 3. **App prefixes.** In `toolkit.json`, each app's `prefix` becomes the briefing's prefix for that app.
 4. **Repo-wide prefix.** `toolkitPrefixes` in `toolkit.json` becomes a list of one: the repo-wide prefix. `PEM` and `PJ` both go.
+5. **Local database name.** `project_id` in `packages/db/supabase/config.toml` becomes the repo slug. The Supabase CLI names the local containers and the data volume after it, so two repos that share an id share one local database.
 
 **Check:** `git grep -n "@pem/" -- . ':!docs/decisions' ':!docs/prompts' ':!docs/research' ':!specs'` prints nothing, and `yarn check-types` exits 0.
 
@@ -122,6 +123,7 @@ A module with no entry in the `stack` block is not in the duplicate: skip its ro
 1. A removed module's variables are already gone: its runbook took them out of both files.
 2. Where an example value names the toolkit, replace it with the product's. A value the briefing does not give is asked for, never guessed.
 3. Keep every comment. A secret never goes in `.env.example`.
+4. The `_LOCAL` Supabase auth values pick how a developer runs locally (D-STK-6); there is no mode variable. Mode A, the default: the `_STAGING` values, so sign-in runs on hosted staging, `yarn db:local` starts the database only and the local auth mirror copies each signed-in user into it. Mode B: the local stack's values, from `yarn db:local:full`, with `yarn db:seed-users` for synthetic users. The comment in `.env.example` says which values go where.
 
 **Check:** `yarn check-stack` exits 0, so no variable of a removed module is left, and `yarn check-client-bundle` exits 0.
 
