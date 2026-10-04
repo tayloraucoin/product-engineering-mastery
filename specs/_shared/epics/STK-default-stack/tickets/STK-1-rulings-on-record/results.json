@@ -8,10 +8,10 @@
       "run": {
         "command": "yarn lint:docs",
         "exit": 0,
-        "at": "2026-10-04T06:44:22Z",
-        "head": "33fbc0813327394fd171e8d362065672e4e3b5e9",
+        "at": "2026-10-04T18:36:40Z",
+        "head": "b5de80bb103fa116ccfd1438324df9a77bf72a2d",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C1.log",
-        "evidence_sha256": "46d861deba538c81e0285b7667161d9c9cfc4e964ba512c021c12553ed2468fe"
+        "evidence_sha256": "9de3d060f306319dd68061f0ad3dcc92f5d91c1f1816683d9be20ec00029dbb7"
       }
     },
     "C2": {
@@ -20,10 +20,10 @@
       "run": {
         "command": "yarn check-refs",
         "exit": 0,
-        "at": "2026-10-04T06:44:23Z",
-        "head": "33fbc0813327394fd171e8d362065672e4e3b5e9",
+        "at": "2026-10-04T18:36:41Z",
+        "head": "b5de80bb103fa116ccfd1438324df9a77bf72a2d",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C2.log",
-        "evidence_sha256": "dd17982955b8a1fc019068094e073ea0c3b5934e1bcb6e3537ff11a82bee223d"
+        "evidence_sha256": "159e4a17f8f5fcba20f70dfc75ea1bb8eb34005a9144475e766f39217295f2cc"
       }
     },
     "C3": {
@@ -32,10 +32,10 @@
       "run": {
         "command": "yarn directory-map --check",
         "exit": 0,
-        "at": "2026-10-04T06:44:25Z",
-        "head": "33fbc0813327394fd171e8d362065672e4e3b5e9",
+        "at": "2026-10-04T18:36:43Z",
+        "head": "b5de80bb103fa116ccfd1438324df9a77bf72a2d",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C3.log",
-        "evidence_sha256": "893fd24d858ce2676e932f595c2384e8621b8874873cbaa93e6d2cd480c6ea29"
+        "evidence_sha256": "d248a6c4b61eb7d326380ea08f8c3830994c7295e9f4309e2d37a99d0107e2a6"
       }
     },
     "C4": {
@@ -44,12 +44,12 @@
       "run": {
         "command": "yarn contract:record STK-1 C4 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C4-reread.md",
         "exit": 0,
-        "at": "2026-10-04T06:45:35Z",
-        "head": "34ce6a57044c5409fc7df06a372519ea9a6d15c4",
+        "at": "2026-10-04T18:37:42Z",
+        "head": "f0dd8e561990cb18e6a39a676bc0010f31ab3485",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C4-reread.md",
-        "evidence_sha256": "157e939297150c92f01179e6255efc13e7487c17f369582050513127ebec682a"
+        "evidence_sha256": "fbfd0c3c4e24b2139cab0a9d9aabd4e4281b8bc827d6bfc12750c7ee4423af64"
       }
     }
   },
-  "updated_at": "2026-10-04T06:45:35Z"
+  "updated_at": "2026-10-04T18:37:42Z"
 }
