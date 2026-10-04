@@ -1,0 +1,33 @@
+{
+  "name": "@pem/email",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./mailer": {
+      "types": "./src/mailer.ts",
+      "default": "./src/mailer.ts"
+    },
+    "./default-template": {
+      "types": "./src/default-template.ts",
+      "default": "./src/default-template.ts"
+    }
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "check-types": "tsc --noEmit",
+    "test": "node --test \"src/**/*.test.ts\""
+  },
+  "dependencies": {
+    "@pem/brand": "workspace:*",
+    "@pem/env": "workspace:*",
+    "@pem/observability": "workspace:*",
+    "resend": "6.32.0"
+  },
+  "devDependencies": {
+    "@pem/config": "workspace:*",
+    "@types/node": "^22",
+    "eslint": "^9.39.1",
+    "typescript": "5.9.2"
+  }
+}

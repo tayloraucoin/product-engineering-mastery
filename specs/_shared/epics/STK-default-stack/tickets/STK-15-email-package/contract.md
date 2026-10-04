@@ -24,6 +24,12 @@ planned_paths:
   - "turbo.json"
   - "apps/web/env.ts"
   - "docs/engineering/tech-stack.md"
+  - "docs/engineering/codebase-conventions.md"
+  - "apps/web/lib/email.ts"
+  - "apps/web/package.json"
+  - "apps/web/next.config.ts"
+  - "apps/web/tsconfig.json"
+  - "yarn.lock"
 depends_on:
   - STK-4
   - STK-5

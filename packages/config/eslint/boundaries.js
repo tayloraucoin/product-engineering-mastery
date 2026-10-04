@@ -3,7 +3,7 @@
  *
  * Enforced via eslint-plugin-boundaries at the repo root (eslint.config.mjs).
  * Layer order (low → high), the built part of codebase-conventions §4:
- *   config → constants, env, brand, observability → db → ui → apps
+ *   config → constants, env, brand, observability → db → email → ui → apps
  *
  * `ui-workshop` is `packages/ui/.storybook/`, the component workshop
  * (D-STK-10): it reads @pem/brand for fonts and assets, which @pem/ui's own
@@ -55,6 +55,7 @@ const ELEMENTS = [
   workspacePackage("brand", "brand"),
   workspacePackage("observability", "observability"),
   workspacePackage("db", "db"),
+  workspacePackage("email", "email"),
   {
     type: "ui-workshop",
     pattern: ["packages/ui/.storybook/**"],
@@ -71,6 +72,7 @@ const PACKAGE_IMPORTS = {
   brand: ["config"],
   observability: ["config"],
   db: ["config", "env"],
+  email: ["config", "env", "brand", "observability"],
   ui: ["config"],
   "ui-workshop": ["config", "brand", "ui"],
 };
@@ -79,6 +81,7 @@ const PACKAGE_IMPORTS = {
 const SDK_OWNERS = {
   postgres: "db",
   "drizzle-kit": "db",
+  resend: "email",
 };
 
 const APP_TYPES = ELEMENTS.map((element) => element.type).filter((type) =>

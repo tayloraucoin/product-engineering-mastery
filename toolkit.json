@@ -243,6 +243,14 @@
       "boundaries": ["db"],
       "locked": false,
       "runbook": "docs/runbooks/remove-supabase-database.md"
+    },
+    "email": {
+      "files": ["packages/email", "apps/web/lib/email.ts"],
+      "env": ["RESEND_API_KEY", "EMAIL_FROM"],
+      "dependencies": ["@pem/email", "resend"],
+      "boundaries": ["email"],
+      "locked": true,
+      "runbook": null
     }
   }
 }
