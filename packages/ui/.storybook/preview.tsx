@@ -6,12 +6,6 @@ import type { Theme } from "@pem/ui/theme";
 
 import "./preview.css";
 
-/**
- * Every story renders the way the app does: the preset's tokens, the brand
- * font on <html>, and the `.dark` class from the toolbar. Interaction (`play`)
- * and accessibility (axe, as errors) checks run per story in the workshop and
- * in `yarn test` (stories.test.ts).
- */
 /** next-themes' storage key, which `ThemeProvider` leaves at its default. */
 const THEME_KEY = "theme";
 
@@ -25,13 +19,29 @@ const withThemeClass = withThemeByClassName({
  * The toolbar's `.dark` class, unless the story turns it off with
  * `themes: { disable: true }` because a `ThemeProvider` in it owns the class.
  */
-const withToolbarTheme: Decorator = (Story, context) =>
-  context.parameters.themes?.disable ? (
-    <Story />
-  ) : (
-    withThemeClass(Story, context)
+const withToolbarTheme: Decorator = (Story, context) => {
+  if (context.parameters.themes?.disable) return <Story />;
+  // Set before the story paints, as next-themes does in the app. The addon's
+  // own effect lands after paint, and axe would scan a colour transition.
+  document.documentElement.classList.toggle(
+    "dark",
+    context.globals.theme === "dark",
   );
+  return withThemeClass(Story, context);
+};
 
+/** The brand font's variable on <html>, as each app's root layout puts it. */
+const withBrandFont: Decorator = (Story) => {
+  document.documentElement.classList.add(brandSans.variable);
+  return <Story />;
+};
+
+/**
+ * Every story renders the way the app does: the preset's tokens, the brand
+ * font on <html>, and the `.dark` class from the toolbar. Interaction (`play`)
+ * and accessibility (axe, as errors) checks run per story in the workshop and
+ * in `yarn test` (stories.test.ts).
+ */
 const preview: Preview = {
   /**
    * `parameters.storedTheme` is the theme a person chose earlier, put where
@@ -49,13 +59,7 @@ const preview: Preview = {
       document.documentElement.style.removeProperty("color-scheme");
     };
   },
-  decorators: [
-    withToolbarTheme,
-    (Story) => {
-      document.documentElement.classList.add(brandSans.variable);
-      return <Story />;
-    },
-  ],
+  decorators: [withToolbarTheme, withBrandFont],
   parameters: {
     layout: "centered",
     a11y: { test: "error" },

@@ -13,13 +13,14 @@ src/
   providers/<name>/           context providers (theme)
   hooks/                      DOM-bound hooks only, from the first one
   lib/                        helpers (cn)
-  styles/globals.css          the Tailwind source registration
+  styles/globals.css          the Tailwind source registration and the base layer
+.storybook/                   the workshop (STK-8): config, story runner, coverage check
 ```
 
 - **Kinds** are the closed list `KINDS` in `tooling/check-ui-layout.ts`, named only there; the check prints it when a folder is not a kind. A new kind is added there.
 - **Hooks** that touch no DOM go to the `hooks` package (D-STK-1), not here.
 - **Primitive or composed.** A primitive is product-agnostic, has no `copy.ts` and imports no other component: the shadcn level (`button`). A composed component owns copy or behaviour for one use, or imports a primitive (`theme-toggle`).
-- **A component is a folder:** `<name>.tsx`, `index.ts`, and `<name>.stories.tsx` beside them (STK-8). A `cva()` lives in `<name>.variants.ts`, never in any other file. A composed component's user-facing strings live in `copy.ts`.
+- **A component is a folder:** `<name>.tsx`, `index.ts`, and `<name>.stories.tsx` beside them, one story per state, titled `<Group>/<Kind>/<Name>` (`Primitives/Control/Button`); a provider's is `Providers/<Name>`. `yarn test` runs each story's interactions and axe, and fails a component without a story. A `cva()` lives in `<name>.variants.ts`, never in any other file. A composed component's user-facing strings live in `copy.ts`.
 
 ## Exports
 
