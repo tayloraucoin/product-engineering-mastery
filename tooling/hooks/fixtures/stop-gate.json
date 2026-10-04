@@ -84,7 +84,7 @@
         "changed": false,
         "verifyExit": 1,
         "verifyOutput": "verify:fast — lint and types (affected workspaces) failed (2.0 s):\nweb:check-types: app/page.tsx(45,14): error TS2322: Type 'string' is not assignable to type 'number'. (synthetic)",
-        "left": "Active: none on agent/PJ."
+        "left": "Active: none."
       },
       "message": "Nothing changed"
     },

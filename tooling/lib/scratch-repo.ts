@@ -86,10 +86,14 @@ export const commit = (cwd: string, message: string) => {
 export const checkSpecs = (cwd: string) =>
   tool(cwd, "check-specs.ts", ["--skip-fixtures"]);
 
-/** A fresh copy of the template repo, on main. */
+/** The work branch a fresh repo is on: the operator's, as tickets never make one (PR-14). */
+export const WORK_BRANCH = "work";
+
+/** A fresh copy of the template repo, on the operator's work branch off main. */
 export function freshRepo(): string {
   const dir = path.join(scratch, `repo-${++counter}`);
   cpSync(template, dir, { recursive: true, verbatimSymlinks: true });
+  git(dir, "switch", "-q", "-c", WORK_BRANCH);
   return dir;
 }
 
@@ -255,7 +259,7 @@ export const AS_BUILT = (id: string, notVerified = "none") =>
     "",
   ].join("\n");
 
-/** Starts WEB-1 and returns the repo, on agent/WEB-1. */
+/** Starts WEB-1 and returns the repo, still on the work branch. */
 export function startOneOff(
   extra?: Parameters<typeof oneOffContract>[1],
 ): string {
@@ -267,7 +271,7 @@ export function startOneOff(
   write(repo, rel, oneOffContract("WEB-1", extra));
   r = tool(repo, "contract.ts", ["init", "web", "filter"]);
   assert.equal(r.status, 0, r.out);
-  assert.equal(git(repo, "rev-parse", "--abbrev-ref", "HEAD"), "agent/WEB-1");
+  assert.equal(git(repo, "rev-parse", "--abbrev-ref", "HEAD"), WORK_BRANCH);
   return repo;
 }
 

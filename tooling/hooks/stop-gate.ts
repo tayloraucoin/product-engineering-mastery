@@ -17,7 +17,6 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { readLayout } from "../lib/work-ids.ts";
 import {
   readSnapshot,
   saveSnapshot,
@@ -56,24 +55,10 @@ const node = (script: string, args: string[]) =>
     timeout: 90_000,
   });
 
-/** "Left to go" for the ticket this branch is for, or the brief line when there is none. */
+/** What is left on every item in build: tickets share the operator's branch (PR-14). */
 function leftToGo(): string {
   if (fixture) return fixture.left ?? "Active: none.";
-  const branch = spawnSync("git", ["rev-parse", "--abbrev-ref", "HEAD"], {
-    cwd: ROOT,
-    encoding: "utf8",
-  }).stdout.trim();
-  const [before, after] = readLayout(ROOT).branchPattern.split("{id}");
-  const id =
-    branch.startsWith(before ?? "") && branch.endsWith(after ?? "")
-      ? branch.slice(
-          (before ?? "").length,
-          branch.length - (after ?? "").length,
-        )
-      : null;
-  const status = /^[A-Z][A-Z0-9]{1,4}-\d+$/.test(id ?? "")
-    ? node("status.ts", [id!])
-    : node("status.ts", ["--brief"]);
+  const status = node("status.ts", ["--brief"]);
   return (status.stdout || "").trim() || "Status unavailable: run yarn status.";
 }
 

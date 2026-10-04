@@ -18,6 +18,7 @@ import {
   startOneOff,
   tool,
   useScratchRepo,
+  WORK_BRANCH,
   write,
 } from "./lib/scratch-repo.ts";
 
@@ -39,7 +40,7 @@ test("a merged as-built is immutable except applied:", () => {
     "--no-verify",
     "-m",
     "Merge WEB-1",
-    "agent/WEB-1",
+    WORK_BRANCH,
   );
   write(
     repo,

@@ -6,8 +6,9 @@
  *       First call: allocates the next id and writes contract.md from the
  *       template (or from --from). Run it again once the contract is filled:
  *       it checks the gates (A6, the pre-flight, dependencies), adds the
- *       review criteria, freezes the criteria, writes every result at FAIL
- *       and creates the branch agent/<id>. --draft stops before starting.
+ *       review criteria, freezes the criteria and writes every result at
+ *       FAIL, on the branch the operator has checked out (PR-14). --draft
+ *       stops before starting.
  *   yarn contract:run <id> [criterion…]
  *       Runs the test and check criteria on a committed tree and records a
  *       run record per criterion: command, exit, time, HEAD, evidence log
@@ -31,11 +32,9 @@ import {
   listBranches,
   listDirty,
   listOnRef,
-  switchToNewBranch,
 } from "./lib/git.ts";
 import {
   asBuiltPath,
-  branchFor,
   checkCommand,
   checkContract,
   computeReviewers,
@@ -49,6 +48,7 @@ import {
   hashCriteria,
   hashFile,
   hashText,
+  inPlannedPaths,
   isMerged,
   isReview,
   now,
@@ -64,7 +64,6 @@ import {
   reviewCriterion,
   SLUG,
   splitCommand,
-  statusPath,
   writeRepoText,
   type Contract,
   type Criterion,
@@ -129,23 +128,18 @@ function requireResults(item: Item): Results {
   return results;
 }
 
-/** contract:run and contract:record prove a commit, so they run on the ticket's branch with the code committed. */
-function requireProvable(item: Item, extra: string[] = []) {
-  const branch = getCurrentBranch();
-  const wanted = branchFor(toolkit, item.id);
-  if (branch !== wanted)
-    stop(
-      `${item.id} is proven on ${wanted}, and this is ${branch}. Run: git switch ${wanted}`,
-    );
-  const dirty = listDirty().filter(
-    (file) =>
-      !file.startsWith(`${item.dir}/`) &&
-      file !== statusPath(toolkit.specsRoot) &&
-      !extra.includes(file),
+/**
+ * contract:run and contract:record prove a commit, so this item's planned
+ * paths are committed first. Any branch will do, and other tickets' uncommitted
+ * files are theirs: parallel threads share the operator's checkout (PR-14).
+ */
+function requireProvable(item: Item, contract: Contract) {
+  const dirty = listDirty().filter((file) =>
+    inPlannedPaths(file, contract.planned_paths),
   );
   if (dirty.length > 0)
     stop(
-      `a run records the commit it proves, so commit first: ${dirty.slice(0, 5).join(", ")}${dirty.length > 5 ? " …" : ""}. Run: git add -A && git commit -m "${item.id}: <outcome>"`,
+      `a run records the commit it proves, so commit first: ${dirty.slice(0, 5).join(", ")}${dirty.length > 5 ? " …" : ""}. Run: git add <those paths> && git commit -m "${item.id}: <outcome>"`,
     );
 }
 
@@ -362,30 +356,15 @@ function start(item: Item, tree: SpecsTree) {
       );
   }
 
-  // One item in build per branch: a ticket with its as-built (closing or
-  // closed) lets the next one start on its own branch, stacked on this one.
+  // The operator owns branches: any number of tickets build on the branch
+  // checked out, never on the protected one, where agents do not commit (PR-14).
   const branch = getCurrentBranch() ?? "";
-  const active = tree.items.find(
-    (other) => branchFor(toolkit, other.id) === branch && other.id !== item.id,
-  );
-  if (
-    active &&
-    fileExists(resultsPath(active)) &&
-    !fileExists(asBuiltPath(active))
-  ) {
-    const stage = readItemState(active, toolkit.specsRoot).stage;
+  if (branch === toolkit.protectedBranch)
     refusals.push(
-      `${branch} holds ${active.id}, still ${stage}; write its as-built (yarn status ${active.id}) or git switch main first`,
+      `this is ${branch}, where agents do not commit; the operator picks a work branch (git switch -c <name>), then run this again`,
     );
-  }
   if (refusals.length)
     stop(`${item.id} cannot start:\n  ${refusals.join("\n  ")}`);
-
-  const wanted = branchFor(toolkit, item.id);
-  if (branch !== wanted && !switchToNewBranch(wanted))
-    stop(
-      `could not create ${wanted}; does it exist already? Run: git branch --list "${wanted}"`,
-    );
 
   // Reviewers by risk (A7), then freeze.
   const roles = [...computeReviewers(contract, item, toolkit).keys()].sort();
@@ -411,7 +390,7 @@ function start(item: Item, tree: SpecsTree) {
   };
   writeResults(item, results);
   console.log(
-    `contract:init — ${item.id} started on ${wanted}: ${frozen.criteria.length} criteria at FAIL` +
+    `contract:init — ${item.id} started on ${branch}: ${frozen.criteria.length} criteria at FAIL` +
       (roles.length ? `; reviewers ${roles.join(", ")}` : "") +
       (decisions.open.length
         ? `. Open decisions (not blocking): ${decisions.open.join(", ")}`
@@ -478,7 +457,7 @@ function run() {
           : `${name} is ${criterion.evidence} evidence; record it with yarn contract:record ${item.id} ${name} --evidence <path>`,
       );
   }
-  requireProvable(item);
+  requireProvable(item, contract);
   const head = getHead()!;
   const selected = contract.criteria.filter(
     (c) =>
@@ -583,7 +562,7 @@ function record() {
     stop(
       `${name}'s contract names ${criterion.path} as its evidence, not ${rel}`,
     );
-  requireProvable(item);
+  requireProvable(item, contract);
   const at = now();
   results.criteria[criterion.id] = {
     status: verdict === "pass" ? "PASS" : "FAIL",

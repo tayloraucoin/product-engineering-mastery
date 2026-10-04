@@ -1,18 +1,17 @@
 /**
- * Starts an epic (A4): its folder from the templates, and the shaping branch.
+ * Starts an epic (A4): its folder from the templates.
  *
  *   yarn spec:init <app | _shared> <EPIC> <slug>
  *
  * Writes specs/<app>/epics/<EPIC>-<slug>/ with brief.md (from the brief
- * template), and empty prompts/, ux/ and tickets/, and creates the branch
- * agent/<EPIC>. Refuses a prefix already in use by an app, the toolkit or
- * another epic.
+ * template), and empty prompts/, ux/ and tickets/, on the branch the operator
+ * has checked out (PR-14). Refuses the protected branch, and a prefix already
+ * in use by an app, the toolkit or another epic.
  */
 
 import { readText, splitFrontmatter } from "./lib/docs.ts";
-import { getCurrentBranch, switchToNewBranch } from "./lib/git.ts";
+import { getCurrentBranch } from "./lib/git.ts";
 import {
-  branchFor,
   EPIC_PREFIX,
   readSpecsTree,
   refreshStatusFile,
@@ -52,9 +51,12 @@ if (taken)
     `${prefix} is already the epic ${taken.dir}; an epic prefix is unique in the repo`,
   );
 
-const branch = branchFor(toolkit, prefix);
-if (getCurrentBranch() !== branch && !switchToNewBranch(branch))
-  stop(`could not create ${branch}; does it exist already?`);
+// The operator owns branches; agents never commit on the protected one (PR-14).
+const branch = getCurrentBranch() ?? "";
+if (branch === toolkit.protectedBranch)
+  stop(
+    `this is ${branch}, where agents do not commit; the operator picks a work branch (git switch -c <name>), then run this again`,
+  );
 
 const dir = `${toolkit.specsRoot}/${app}/epics/${prefix}-${slug}`;
 const { body } = splitFrontmatter(readText(BRIEF_TEMPLATE));

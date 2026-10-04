@@ -1,6 +1,6 @@
 /**
  * The git facts the work loop reads (J5; A9, A13.2 B2). Every call is
- * read-only except `switchToNewBranch`, and every one runs in the repo root
+ * read-only (the operator owns branches, PR-14), and every one runs in the repo root
  * the script was loaded from, so a copy of `tooling/` in a scratch repo
  * works on that repo.
  */
@@ -106,10 +106,6 @@ export const listBranches = (root?: string) =>
   lines(
     runGit(["for-each-ref", "--format=%(refname:short)", "refs/heads"], root),
   );
-
-export function switchToNewBranch(name: string, root?: string): boolean {
-  return runGit(["switch", "-c", name], root) !== null;
-}
 
 /** The ISO date of the last commit touching a path, or null when it has none. */
 export const getLastCommitDate = (rel: string, root?: string) =>

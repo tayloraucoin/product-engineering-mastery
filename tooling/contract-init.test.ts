@@ -1,5 +1,5 @@
 /**
- * contract:init: one active item, the A6 gates (J5; A13.2). Scratch repos in $TMPDIR with real git; see
+ * contract:init: the operator's branch, the A6 gates (J5; A13.2; PR-14). Scratch repos in $TMPDIR with real git; see
  * tooling/lib/scratch-repo.ts. Every repo, file and verdict is synthetic.
  */
 
@@ -19,6 +19,7 @@ import {
   startOneOff,
   tool,
   useScratchRepo,
+  WORK_BRANCH,
   write,
 } from "./lib/scratch-repo.ts";
 
@@ -53,23 +54,61 @@ test("A4 contract:init allocates sequential ids, from the template, then starts 
     Object.values(results.criteria).map((c: any) => c.status),
     ["FAIL", "FAIL"],
   );
-  assert.equal(git(repo, "rev-parse", "--abbrev-ref", "HEAD"), "agent/WEB-2");
+  assert.equal(git(repo, "rev-parse", "--abbrev-ref", "HEAD"), WORK_BRANCH);
 });
 
-test("one active item per branch: a second start on agent/WEB-1 is refused", () => {
+test("the protected branch refuses a start; the operator picks the work branch", () => {
+  const repo = freshRepo();
+  git(repo, "switch", "-q", "main");
+  tool(repo, "contract.ts", ["init", "web", "first"]);
+  write(
+    repo,
+    "specs/web/one-offs/WEB-1-first/contract.md",
+    oneOffContract("WEB-1"),
+  );
+  const r = tool(repo, "contract.ts", ["init", "web", "first"]);
+  assert.notEqual(r.status, 0);
+  assert.match(r.out, /this is main, where agents do not commit/);
+});
+
+test("parallel tickets: a second item starts on the same branch while the first is open", () => {
   const repo = startOneOff();
   tool(repo, "contract.ts", ["init", "web", "other"]);
   write(
     repo,
     "specs/web/one-offs/WEB-2-other/contract.md",
-    oneOffContract("WEB-2"),
+    oneOffContract("WEB-2", { planned: ["src/other.ts"] }),
   );
   const r = tool(repo, "contract.ts", ["init", "web", "other"]);
-  assert.notEqual(r.status, 0);
-  assert.match(r.out, /holds WEB-1, still open/);
+  assert.equal(r.status, 0, r.out);
+  assert.equal(git(repo, "rev-parse", "--abbrev-ref", "HEAD"), WORK_BRANCH);
+  const brief = tool(repo, "status.ts", ["--brief"]);
+  assert.match(brief.out, /Active: WEB-1 filter \(open[^)]*\); WEB-2 other/);
 });
 
-test("stacking: a branch whose item has its as-built starts the next item on its own branch", () => {
+test("parallel tickets: another ticket's uncommitted file does not block a run, its own does", () => {
+  const repo = startOneOff();
+  write(repo, "src/filter.ts", "export const keep = (n: number) => n > 1;\n");
+  commit(repo, "WEB-1: filter");
+  write(repo, "src/other.ts", "export const half = 1;\n");
+  let r = tool(repo, "contract.ts", ["run", "WEB-1"]);
+  assert.equal(r.status, 0, r.out);
+  write(repo, "src/filter.ts", "export const keep = (n: number) => n > 2;\n");
+  r = tool(repo, "contract.ts", ["run", "WEB-1"]);
+  assert.notEqual(r.status, 0);
+  assert.match(r.out, /commit first: src\/filter\.ts/);
+});
+
+test("parallel tickets: another ticket's commit leaves this ticket's proof fresh", () => {
+  const repo = startOneOff();
+  buildAndProve(repo);
+  write(repo, "src/other.ts", "export const other = 2;\n");
+  commit(repo, "WEB-2: other");
+  const status = tool(repo, "status.ts", ["WEB-1"]);
+  assert.match(status.out, /Left to go: none/);
+});
+
+test("stacking: a dependent ticket starts on the same branch once its predecessor has an as-built", () => {
   const repo = startOneOff();
   buildAndProve(repo);
   write(repo, "specs/web/one-offs/WEB-1-filter/as-built.md", AS_BUILT("WEB-1"));
@@ -82,7 +121,7 @@ test("stacking: a branch whose item has its as-built starts the next item on its
   );
   const r = tool(repo, "contract.ts", ["init", "web", "other"]);
   assert.equal(r.status, 0, r.out);
-  assert.equal(git(repo, "rev-parse", "--abbrev-ref", "HEAD"), "agent/WEB-2");
+  assert.equal(git(repo, "rev-parse", "--abbrev-ref", "HEAD"), WORK_BRANCH);
 });
 
 test("a dependency without an as-built refuses the start", () => {

@@ -741,16 +741,31 @@ export function isMerged(item: Item): boolean {
   return base !== null && readOnRef(base, asBuiltPath(item)) !== null;
 }
 
+/** Whether a repo path is one of an item's planned paths: a file, a folder ending in "/", or a glob. */
+export function inPlannedPaths(file: string, planned: string[]): boolean {
+  return planned.some((p) =>
+    p.endsWith("/") ? file.startsWith(p) : matchesGlob(file, p),
+  );
+}
+
 /**
- * Files changed after `commit` that are part of this branch's change, outside
- * the specs root: records and living truth are not what evidence proves, and a
- * one-off edits its truth file in the same PR (A8).
+ * This item's planned paths changed after `commit`, in this branch's change.
+ * Only its own paths: tickets share the operator's branch, so another ticket's
+ * commit never stales this one's proof (PR-14). The specs root is outside it:
+ * records and living truth are not what evidence proves (A8).
  */
-function changedAfter(commit: string, item: Item, specsRoot: string): string[] {
+function changedAfter(
+  commit: string,
+  planned: string[],
+  specsRoot: string,
+): string[] {
   const { changedAgainstBase } = gitFacts();
   const branch = new Set(changedAgainstBase ?? []);
   return listChangedSince(commit).filter(
-    (file) => branch.has(file) && !file.startsWith(`${specsRoot}/`),
+    (file) =>
+      branch.has(file) &&
+      !file.startsWith(`${specsRoot}/`) &&
+      inPlannedPaths(file, planned),
   );
 }
 
@@ -758,7 +773,7 @@ function changedAfter(commit: string, item: Item, specsRoot: string): string[] {
  * Whether each criterion's recorded status still holds (A9, A13.2): a PASS
  * needs a run record, an evidence file whose hash matches, the contract's
  * command, at least one test for a test criterion, and no later change to
- * the branch's diff. A review also binds the contract and the as-built it read.
+ * its planned paths in the branch's diff. A review also binds the contract and the as-built it read.
  */
 export function readItemState(item: Item, specsRoot: string): ItemState {
   const { contract, text } = readContract(item);
@@ -874,7 +889,11 @@ export function readItemState(item: Item, specsRoot: string): ItemState {
         );
         continue;
       }
-      const changed = changedAfter(run.head, item, specsRoot);
+      const changed = changedAfter(
+        run.head,
+        contract?.planned_paths ?? [],
+        specsRoot,
+      );
       if (changed.length > 0) {
         fail(
           `${changed.slice(0, 3).join(", ")}${changed.length > 3 ? ` and ${changed.length - 3} more` : ""} changed after it was recorded`,
@@ -985,10 +1004,6 @@ export function writeRepoText(rel: string, text: string) {
   mkdirSync(path.dirname(abs(rel)), { recursive: true });
   writeFileSync(abs(rel), text);
 }
-
-/** The branch an item is built on: toolkit.json's branchPattern with its id. */
-export const branchFor = (toolkit: Toolkit, id: string) =>
-  toolkit.branchPattern.replace("{id}", id);
 
 // ---------------------------------------------------------------- contract rules
 

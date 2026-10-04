@@ -26,15 +26,9 @@ import { spawnSync } from "node:child_process";
 import path from "node:path";
 
 import { splitFrontmatter } from "./lib/docs.ts";
-import {
-  getCurrentBranch,
-  getHead,
-  listChangedAgainstBase,
-  listDirty,
-} from "./lib/git.ts";
+import { getHead, listChangedAgainstBase, listDirty } from "./lib/git.ts";
 import {
   asBuiltPath,
-  branchFor,
   contractPath,
   fileExists,
   findItem,
@@ -43,6 +37,7 @@ import {
   hashCriteria,
   hashFile,
   hashText,
+  inPlannedPaths,
   now,
   preflightPath,
   readContract,
@@ -53,7 +48,6 @@ import {
   refreshStatusFile,
   resultsPath,
   reviewPath,
-  statusPath,
   writeRepoText,
   type Epic,
   type Item,
@@ -196,13 +190,9 @@ function reviewTicket(item: Item) {
     stop(
       `prove the other criteria first: ${unproven.map((c) => `${c.id} (${c.reason})`).join("; ")}`,
     );
-  const branch = getCurrentBranch();
-  if (branch !== branchFor(toolkit, item.id))
-    stop(
-      `review ${item.id} on its branch. Run: git switch ${branchFor(toolkit, item.id)}`,
-    );
-  const dirty = listDirty().filter(
-    (f) => !f.startsWith(`${item.dir}/`) && f !== statusPath(toolkit.specsRoot),
+  // Other tickets' uncommitted files are theirs: the branch is shared (PR-14).
+  const dirty = listDirty().filter((f) =>
+    inPlannedPaths(f, contract.planned_paths),
   );
   if (dirty.length)
     stop(
@@ -210,7 +200,9 @@ function reviewTicket(item: Item) {
     );
 
   const command = `yarn review:run ${role} ${item.id}`;
-  const changed = listChangedAgainstBase();
+  const changed = listChangedAgainstBase()?.filter((f) =>
+    inPlannedPaths(f, contract.planned_paths),
+  );
   const evidence = contract.criteria
     .filter((c) => !c.id.startsWith("review:"))
     .map((c) => {
@@ -229,7 +221,7 @@ function reviewTicket(item: Item) {
     `3. The as-built: ${asBuiltPath(item)}. What the builder says shipped, and every deviation. Check its claims against the code; do not trust them.`,
     "4. The evidence:",
     ...evidence,
-    `5. The files this branch changes against main: ${changed ? changed.join(", ") || "none" : "unknown (no main branch)"}.`,
+    `5. The files this ticket changes against main (its planned paths; other tickets share the branch): ${changed ? changed.join(", ") || "none" : "unknown (no main branch)"}.`,
     ...(surfaces.length
       ? [
           `6. The surface the ticket cites: ${surfaces.join(", ")}. Every state and criterion it names.`,

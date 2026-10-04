@@ -21,6 +21,7 @@ import {
   startOneOff,
   tool,
   useScratchRepo,
+  WORK_BRANCH,
   write,
 } from "./lib/scratch-repo.ts";
 
@@ -30,7 +31,7 @@ test("Vigil 9 and 10, epic: pre-flight gates the start, review:run binds the as-
   const repo = freshRepo();
   let r = tool(repo, "spec-init.ts", ["web", "OB2", "onboarding"]);
   assert.equal(r.status, 0, r.out);
-  assert.equal(git(repo, "rev-parse", "--abbrev-ref", "HEAD"), "agent/OB2");
+  assert.equal(git(repo, "rev-parse", "--abbrev-ref", "HEAD"), WORK_BRANCH);
   const truth = "specs/web/ux/onboarding/welcome.md";
   write(
     repo,

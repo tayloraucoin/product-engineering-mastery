@@ -10,10 +10,9 @@
  *                                with the critical path of what is left
  */
 
-import { getCurrentBranch, getLastCommitDate } from "./lib/git.ts";
+import { getLastCommitDate } from "./lib/git.ts";
 import {
   asBuiltPath,
-  branchFor,
   compareIds,
   fileExists,
   findItem,
@@ -46,25 +45,20 @@ function leftOf(state: ItemState): string[] {
     );
 }
 
+/** Every item in build, whatever the branch: tickets share the operator's branch (PR-14). */
 function brief(): string {
-  const branch = getCurrentBranch() ?? "";
   const all = states().filter((s) => !s.merged);
-  const active = all.find((s) => branchFor(toolkit, s.item.id) === branch);
-  const open = all.filter(
-    (s) => s !== active && !done(s) && s.stage !== "draft",
-  );
+  const active = all.filter((s) => !done(s) && s.stage !== "draft");
   const parts: string[] = [];
-  if (active) {
-    const left = leftOf(active);
+  if (active.length) {
+    const items = active.map((s) => {
+      const left = leftOf(s);
+      return `${s.item.id} ${s.item.slug} (${s.stage}; ${left.length ? `left: ${left.join(", ")}` : "nothing left"})`;
+    });
     parts.push(
-      `Active: ${active.item.id} ${active.item.slug} (${active.stage}; ${left.length ? `left: ${left.join(", ")}` : "nothing left"}). Next: yarn status ${active.item.id}.`,
+      `Active: ${items.join("; ")}. Next: yarn status ${active.length === 1 ? active[0]!.item.id : "<id>"}.`,
     );
-  } else parts.push(`Active: none on ${branch || "(no branch)"}.`);
-  parts.push(
-    open.length
-      ? `Open elsewhere: ${open.map((s) => `${s.item.id} (${s.stage})`).join(", ")}.`
-      : "Open elsewhere: none.",
-  );
+  } else parts.push("Active: none.");
   const drafts = all.filter((s) => s.stage === "draft");
   if (drafts.length)
     parts.push(`Drafted: ${drafts.map((s) => s.item.id).join(", ")}.`);
