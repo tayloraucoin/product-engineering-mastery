@@ -17,7 +17,10 @@ cites:
   - "D-STK-5"
   - "D-STK-16"
 truth_files: "none: no living UX file covers the starter's own stack"
-reviewers: []
+reviewers:
+  - mason
+  - vigil
+  - warden
 planned_paths:
   - "packages/db/**"
   - "toolkit.json"
@@ -28,6 +31,8 @@ planned_paths:
   - "packages/config/eslint/boundaries.js"
   - "docs/engineering/tech-stack.md"
   - "docs/runbooks/remove-supabase-database.md"
+  - "docs/engineering/codebase-conventions.md"
+  - "yarn.lock"
 depends_on:
   - STK-4
 out_of_scope:
@@ -56,6 +61,18 @@ criteria:
     statement: "db:generate on the example schema produces no auth objects."
     evidence: manual
     reason: "drizzle-kit runs against a database; its output is read by a person"
+  - id: review:mason
+    statement: Mason reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run mason <id>
+  - id: review:vigil
+    statement: Vigil reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run vigil <id>
+  - id: review:warden
+    statement: Warden reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
 ---
 
 # Contract — STK-9 db-package
