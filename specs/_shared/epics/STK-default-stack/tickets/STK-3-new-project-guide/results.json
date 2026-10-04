@@ -8,10 +8,10 @@
       "run": {
         "command": "yarn lint:docs",
         "exit": 0,
-        "at": "2026-10-04T02:54:28Z",
-        "head": "fcc8f6f1beb77ee18b9f5f3498a1a0cca958522c",
+        "at": "2026-10-04T03:05:35Z",
+        "head": "da5fbcf5f3a5d675ece02d82b14a3c8150a7ccea",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/evidence/C1.log",
-        "evidence_sha256": "a5e017a3f0636eb12cd93f5ae6965991be70b5edb7c1e58cc7b36f73f127f5e2"
+        "evidence_sha256": "ff8423fcc84336a73a780de05554b370834879e9b2e7fe45e2929e3fd7d2c7fb"
       }
     },
     "C2": {
@@ -20,10 +20,10 @@
       "run": {
         "command": "yarn check-refs",
         "exit": 0,
-        "at": "2026-10-04T02:54:28Z",
-        "head": "fcc8f6f1beb77ee18b9f5f3498a1a0cca958522c",
+        "at": "2026-10-04T03:05:36Z",
+        "head": "da5fbcf5f3a5d675ece02d82b14a3c8150a7ccea",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/evidence/C2.log",
-        "evidence_sha256": "fc6aae415389975557ab225ce724ad9153a1bae46f411d8f852b8f743d7a936e"
+        "evidence_sha256": "c4bfe7f5eb71a902ca749a2f4f7c53bbf930f032779906c1ac00b2a458a7e9a7"
       }
     },
     "C3": {
@@ -32,10 +32,10 @@
       "run": {
         "command": "yarn directory-map --check",
         "exit": 0,
-        "at": "2026-10-04T02:54:30Z",
-        "head": "fcc8f6f1beb77ee18b9f5f3498a1a0cca958522c",
+        "at": "2026-10-04T03:05:38Z",
+        "head": "da5fbcf5f3a5d675ece02d82b14a3c8150a7ccea",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/evidence/C3.log",
-        "evidence_sha256": "ea10c782e52eecf8f8866ddac92da613204f67588f53f589b12d821a5bcad698"
+        "evidence_sha256": "85dd220ea58e5d3f65afcb6fdcea6daa129e8efa9f1b9548fda2a2620b02a8fe"
       }
     },
     "C4": {
@@ -44,8 +44,8 @@
       "run": {
         "command": "yarn contract:record STK-3 C4 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/evidence/C4.md",
         "exit": 0,
-        "at": "2026-10-04T02:54:34Z",
-        "head": "fcc8f6f1beb77ee18b9f5f3498a1a0cca958522c",
+        "at": "2026-10-04T03:05:42Z",
+        "head": "da5fbcf5f3a5d675ece02d82b14a3c8150a7ccea",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/evidence/C4.md",
         "evidence_sha256": "9639f96220d71e3a5f7db15593669b3d9346117d77cd3257912441d1b9b9ab3c"
       }
@@ -66,5 +66,5 @@
       }
     }
   },
-  "updated_at": "2026-10-04T03:04:39Z"
+  "updated_at": "2026-10-04T03:05:42Z"
 }
