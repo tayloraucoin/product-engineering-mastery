@@ -66,9 +66,19 @@
       }
     },
     "review:assay": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run assay STK-12",
+        "exit": 0,
+        "at": "2026-10-04T23:53:44Z",
+        "head": "5508fbe40f011859ff647540c562fc1e5d0bd20c",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-12-auth-package/review-assay.md",
+        "evidence_sha256": "bdb58fd17620ce116ae93e5755a0a5122d37b92d9839382febc5792bdc6ea967",
+        "contract_sha256": "ba875bb0ce0deabe9ef8132358a95bb904251e291baf8587446b35a0d4f92eeb",
+        "as_built_sha256": "f2b2b2eef19c313a1cccdd8ba172108e296f041186791c0fd9eb9b958f574f6a",
+        "runner": "claude 2.1.232 (Claude Code) (agent assay; tools Read,Grep,Glob)"
+      }
     },
     "review:mason": {
       "status": "PASS",
@@ -121,5 +131,5 @@
       }
     }
   },
-  "updated_at": "2026-10-04T23:53:40Z"
+  "updated_at": "2026-10-04T23:57:35Z"
 }
