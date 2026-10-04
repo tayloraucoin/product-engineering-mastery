@@ -2,12 +2,12 @@
 
 > Written by `yarn review:run vigil STK-11`. Never edit it: check-specs binds it to the hashes below, and Taylor reads it before merge.
 
-- contract_sha256: efd2f37963742150cd7b8f01b4b37485de98411896332a3152159dab5e08ec04
-- as_built_sha256: d7f32fbd5ae3d707719fa92474504b10eb789521753211db0c0deab2224a32c2
-- head: c19369cb0d0de39268cbc0fb5f65e212e6f9acd2
+- contract_sha256: e7cc2fb8716af0f91ca85d99149fd2a7b79384c8741b334879d78bbd2fa04893
+- as_built_sha256: 23d561c78f14fd8768da9c6493450b8230105897869de8c103967aba35247f24
+- head: 3465bd77c5d7367af8d39de6d65d82dc74d95851
 - runner: claude 2.1.232 (Claude Code) (agent vigil; tools Read,Grep,Glob)
 - model: claude-opus-5[1m]
-- at: 2026-10-04T23:30:07Z
+- at: 2026-10-04T23:43:45Z
 - verdict: PASS
 
 ## Prompt
@@ -21,12 +21,12 @@ Read, in this order:
 2. The results: specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/results.json. Each criterion's run record and evidence file.
 3. The as-built: specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/as-built.md. What the builder says shipped, and every deviation. Check its claims against the code; do not trust them.
 4. The evidence:
-   - C1 capture: specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/test-db.txt (sha256 4068f2af91d8)
-   - C2 test: specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/C2.log (sha256 60265fe5e5d4)
-   - C3 check: specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/C3.log (sha256 c2dce1b9693f)
+   - C1 capture: specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/test-db.txt (sha256 9839db2cc5d8)
+   - C2 test: specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/C2.log (sha256 82c098df32eb)
+   - C3 check: specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/C3.log (sha256 d6901c66f2fa)
    - C4 manual: specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/C4-operator.md (sha256 babd1f230390)
    - C5 manual: specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/C5-operator.md (sha256 5b4554942813)
-5. The files this ticket changes against main (its planned paths; other tickets share the branch): .env.example, docs/engineering/tech-stack.md, docs/runbooks/new-project.md, docs/runbooks/remove-supabase-auth.md, docs/runbooks/remove-supabase-database.md, package.json, packages/db/.env.example, packages/db/package.json, packages/db/scripts/auth-ddl.test.ts, packages/db/scripts/auth-ddl.ts, packages/db/scripts/auth-writers.test.ts, packages/db/scripts/check-migrations.ts, packages/db/scripts/database.ts, packages/db/scripts/env.ts, packages/db/scripts/local-auth-marker.ts, packages/db/scripts/local-full.ts, packages/db/scripts/local-image.ts, packages/db/scripts/local-users.test.ts, packages/db/scripts/local-users.ts, packages/db/scripts/local.ts, packages/db/scripts/migrate.ts, packages/db/scripts/reset-local-db.test.ts, packages/db/scripts/reset-local-db.ts, packages/db/scripts/seed-users.ts, packages/db/scripts/setup.ts, packages/db/scripts/supabase-cli.test.ts, packages/db/scripts/supabase-cli.ts, packages/db/src/local-auth-mirror.test.ts, packages/db/src/local-auth-mirror.ts, packages/db/supabase/.gitignore, packages/db/supabase/config.toml, packages/db/supabase/setup/04_users_backfill.sql, packages/db/test/local-auth-mirror.test.ts, packages/db/test/reset-local-db.test.ts, packages/db/test/rls.test.ts, toolkit.json, turbo.json, yarn.lock.
+5. The files this ticket changes against main (its planned paths; other tickets share the branch): .env.example, docs/engineering/tech-stack.md, docs/runbooks/new-project.md, docs/runbooks/remove-supabase-auth.md, docs/runbooks/remove-supabase-database.md, package.json, packages/db/.env.example, packages/db/package.json, packages/db/scripts/auth-ddl.test.ts, packages/db/scripts/auth-ddl.ts, packages/db/scripts/auth-writers.test.ts, packages/db/scripts/check-migrations.ts, packages/db/scripts/database.ts, packages/db/scripts/env.ts, packages/db/scripts/local-auth-marker.ts, packages/db/scripts/local-full.ts, packages/db/scripts/local-image.ts, packages/db/scripts/local-users.test.ts, packages/db/scripts/local-users.ts, packages/db/scripts/local.ts, packages/db/scripts/migrate.ts, packages/db/scripts/reset-local-db.test.ts, packages/db/scripts/reset-local-db.ts, packages/db/scripts/seed-users.ts, packages/db/scripts/setup.ts, packages/db/scripts/supabase-cli.test.ts, packages/db/scripts/supabase-cli.ts, packages/db/src/local-auth-mirror.test.ts, packages/db/src/local-auth-mirror.ts, packages/db/src/loopback.test.ts, packages/db/src/loopback.ts, packages/db/supabase/.gitignore, packages/db/supabase/config.toml, packages/db/supabase/setup/04_users_backfill.sql, packages/db/test/local-auth-mirror.test.ts, packages/db/test/reset-local-db.test.ts, packages/db/test/rls.test.ts, toolkit.json, turbo.json, yarn.lock.
 6. The surface the ticket cites: specs/_shared/epics/STK-default-stack/technical.md. Every state and criterion it names.
 
 For each criterion, say whether the evidence and the code show it is met. Then list findings as Blocking, Should-fix or Consider, each with a file and line. A Blocking finding means FAIL.
@@ -39,55 +39,64 @@ VERDICT: FAIL
 
 ## Review — STK-11 local-auth-mirror (vigil, fresh context)
 
-**Verdict: Pass with conditions.** Three Should-fix findings, three Consider. No Blocking finding: every non-negotiable is verified in code, and the two deferred criteria are deferred by a sanctioned mechanism with honest operator write-ups.
+**Verdict: Pass with conditions.** No Blocking finding. Three Should-fixes, four Considers, and two criteria legitimately deferred to the operator.
 
-### Non-negotiables, checked against code first
+Tools were Read/Grep/Glob only: I could not re-run a command or diff commits. Where that limits me I say so.
 
-| Non-negotiable | Verdict |
-| --- | --- |
-| CLI pinned exact; `db:local` starts the database only; `db:local:full` starts the stack | Verified. `packages/db/package.json:61` `"supabase": "2.119.0"`; `scripts/local.ts:27` `["db","start"]`; `scripts/local-full.ts:39` `["start"]`. Row present in `docs/engineering/tech-stack.md:40` (deps.md). |
-| `src/local-auth-mirror.ts` is the only writer to `auth.users`; never reads `process.env` | Verified. No `process.env` in `local-auth-mirror.ts` or `loopback.ts`; the package's only reader is `scripts/env.ts:22`. Enforced by `scripts/auth-writers.test.ts:35`, which now asserts the *negative* over `src`, `scripts`, `supabase`, `migrations` — so it still holds after the auth runbook deletes the mirror. |
-| The INSERT itself refuses when `auth.identities` exists or the marker is absent | Verified. `local-auth-mirror.ts:91-108`: the guard CTE is inside the statement, the `select … from guard where guard.open` yields no row when closed, so no caller can skip it. Proven in `test/local-auth-mirror.test.ts:198-220` with `authCount` = 0 inside a rolled-back transaction. |
-| `applyLocalAuthMirror` refuses a non-loopback host | Verified. `local-auth-mirror.ts:76` → `loopback.ts:33-43`, before the first query. Proven by socket-attempt counting (`src/local-auth-mirror.test.ts:36-38`, `attempts() === 0`). |
-| `db:seed-users` refuses when the auth URL is not loopback | Verified. `scripts/local-users.ts:36` before any `fetch`; `local-users.test.ts:19-38` proves zero fetch calls for hosted, private-network (`10.0.0.5`), look-alike (`localhost.example.com`) and unset. |
-| `config.toml` disables CLI migrations and seeds; Drizzle owns public | Verified. `supabase/config.toml:23-27`. |
-| The `_LOCAL` auth variables select the mode; no mode variable | Verified. `scripts/env.ts:61-75`, `.env.example:49-57`, `packages/db/.env.example:22-28`, `new-project.md:127`. |
-
-Adversarial note on the guard stack: a tunnel that presents a hosted project on `127.0.0.1` passes guard 1, and is then refused by guards 2 and 3. The three guards are genuinely independent, not three readings of one check. That is the right design for this seam.
+---
 
 ### Criteria
 
-- **C1 — met.** `evidence/test-db.txt` shows 15/15, skipped 0, against `public.ecr.aws/supabase/postgres:17.11.0.002` in Mode A. I traced every TAP line to `packages/db/test/local-auth-mirror.test.ts`: the test names match one-for-one, "id and email only" is a real assertion (`deepEqual(filled, ["email","id"])`, line 116), the email upsert reads back both tables (160-170), and both refusal cases assert zero rows and run inside `rolledBack` (179-189). Limitation, stated honestly in the as-built: the capture names code at `be5bdc5` while the run record stamps `d034a273`, and no check can re-derive the log. The shipped test and the shipped guard are consistent with it, which is as far as code inspection reaches.
-- **C2 — met.** `yarn test` exit 0, 113 tests, matching `results.json`. Both refusals are proven *before* I/O, by counting, not by asserting a message: `applyLocalAuthMirror / refuses a non-loopback host before connecting` and `seedLocalUsers / refuses a non-loopback auth URL before sending anything` are both in `C2.log`, and the paired positive test (`passes the host check on loopback and only then connects`) rules out a guard that refuses everything.
-- **C3 — met as recorded, but the criterion should not exist.** `yarn verify` exit 0 with `check-migrations`, `check-stack`, boundaries probes and `lint:docs` all green. See Should-fix 2.
-- **C4 — not verified; deferral is correct.** It needs STK-12's seam and a human staging sign-in; `C4-operator.md` names the four steps and is honest about what C1 does and does not cover. The database half (insert → trigger → `public.users`, and restoration after a reset) is genuinely proven by C1 plus `supabase/setup/04_users_backfill.sql`.
-- **C5 — not verified; deferral is correct, but the criterion has no oracle.** See Should-fix 3.
+**C1 — met (verified in code + capture).** `evidence/test-db.txt` is TAP, 15 tests, `# skipped 0`, `# fail 0`. Each clause of the statement traces to an assertion: "id and email only" is `test/local-auth-mirror.test.ts:112-117` (non-null columns deep-equal `["email","id"]`); "upserting on email change" is `:160-170` (both `auth.users` and `public.users`); "zero rows when auth.identities exists" is `:198-208`, run as `supabase_auth_admin` inside a rolled-back transaction; "zero rows when the marker is absent" is `:210-220`; plus `:222-239` proving a refusal leaves an existing email alone. The guard lives inside the statement (`src/local-auth-mirror.ts:91-108`), so no caller can skip it, and a closed guard yields no row to the `written` CTE.
+
+Corroboration for a pasted capture: the file's test inventory matches the tree exactly — 8 in `test/local-auth-mirror.test.ts`, 1 in `test/reset-local-db.test.ts`, 6 in `test/rls.test.ts` = 15. The header names commit `89bff07` while the run record stamps `2047e57` (explained in `as-built.md:51`); I cannot diff those two commits, so the inventory match is as far as code inspection takes this.
+
+**C2 — met (verified in code + test log).** `C2.log` holds `applyLocalAuthMirror > refuses a non-loopback host before connecting` (`src/local-auth-mirror.test.ts:31-41` counts socket-factory attempts: 0 for two hosted URLs) and `seedLocalUsers > refuses a non-loopback auth URL before sending anything` (`scripts/local-users.test.ts:19-38` counts fetch calls: 0 for hosted, `10.0.0.5`, `localhost.example.com` and unset). The script path is real: `scripts/seed-users.ts:9-15` → `seedLocalUsers` → `isLoopbackUrl` before `new URL(...)` or any send. Caveat: the recorded run is a full turbo cache replay (`C2.log:13`, `:792` `FULL TURBO`) — a replay of an earlier pass at the same input hash, not a fresh execution.
+
+**C3 — met.** `C3.log` exit 0; every failure-class check green (`check-stack`, `check-migrations`, `check-specs`, `check-test-weakening`, boundaries probes, contrast). The output is warnings-only — but two of those warnings are this ticket's own (see S3).
+
+**C4 — not met, deferred.** `--verdict deferred`, reason sound (needs a person signing in on hosted staging). The database half is independently proven: `test/reset-local-db.test.ts:103-107` shows `04_users_backfill.sql` restoring the public row after a reset that keeps `auth.users`.
+
+**C5 — not met, deferred.** `C5-operator.md:7` honestly states the criterion is unsatisfiable as worded while Auth stays, proposes a grep scope, and routes it to Taylor. Correct handling.
+
+**Non-negotiables — all seven hold.** CLI `supabase 2.119.0` exact (`packages/db/package.json:61`); `db:local` → `db start` only, `db:local:full` → `start` (`:42-43`); the mirror never reads `process.env` (grep confirms `scripts/env.ts` is the package's only reader, lint-enforced at `eslint.config.mjs:20`); guards inside the INSERT; loopback refusal; `db:seed-users` refusal; `[db.migrations]`/`[db.seed]` disabled (`config.toml:23-27`); no mode variable anywhere in the repo (grep for `*_MODE` returns nothing).
+
+---
 
 ### Findings
 
-**Should-fix 1 — the loopback guard ships at a path the contract never declared.** `packages/db/src/loopback.ts:33` now holds `assertLoopbackClient`, the enforcement of non-negotiable 4, and `packages/db/src/loopback.test.ts` holds its tests. Neither is in `contract.md:24-42` (`src/local-auth-mirror.ts` and `src/local-auth-mirror.test.ts` are named individually; there is no `src/**` glob), and the as-built's path-addition deviation (`as-built.md:35`) lists four other files while omitting these two — so the omission is an oversight, not a choice. Consequence, per `tooling/lib/specs.ts:563-574` and `tooling/review-run.ts:198`: a later edit to `loopback.ts` stales no STK-11 proof, and the changed-file list handed to this ticket's door reviewers excludes it. The tier and reviewer set are unaffected (`packages/db/scripts/**` already reaches the door) and `toolkit.json:246` covers the file by folder, which is why this is not Blocking. Owner: builder, via `planned_paths` on the contract. Expected per `.claude/rules/specs.md` (planned paths are the declared surface) and the as-built's own deviation discipline.
+**Should-fix — Mode B keeps Mode A's data but drops the exposure warning.** `packages/db/scripts/local-full.ts:39-47` runs `supabase start` and then warns only about the auth URL. `local.ts:44-48` is where `isPublishedBeyondLoopback` fires. Yet `local-full.ts:27-38` deliberately keeps the Mode A volume ("its data is kept"), so a developer who ran Mode A first carries mirrored staging emails into Mode B — on a port published on every interface, password `postgres`, with no warning printed, and now with Auth and the API exposed beside it. The accepted risk is Taylor's (as-built.md:30); the mitigation warden asked for should cover both lanes equally. Owner: builder.
 
-**Should-fix 2 — `yarn verify` is used as a criterion command.** `contract.md:58-60` makes C3 `yarn verify`. `.claude/rules/specs.md` states plainly: "`yarn verify` is never a criterion: it runs once at batch close." The cost is visible inside the evidence itself — `evidence/C3.log:18-20` is `check-specs` reporting that C3, C4 and C5 had already gone stale against "16 more changed" files, which is the predictable result of binding a proof to the whole repo on a shared branch. Not retroactively fixable (`results.json` is write-only through the harness), so the actionable fix is the epic's remaining contracts and, if Taylor wants C3 closed cleanly, a narrower replacement criterion via `contract:add`. Owner: Taylor / contract author.
+**Should-fix — an unguarded `docker port` can crash a successful `db:local`.** `packages/db/scripts/supabase-cli.ts:82` calls `execFileSync("docker", ["port", …])` with no try/catch, and `local.ts:44` calls it after the database is up and the marker written. `docker port` exits non-zero when the mapping or container name is not found, so the process would die with a stack trace and never print the `ready … next: yarn db:migrate && yarn db:setup` line at `local.ts:57-61` — a working Mode A that reads as broken. A probe whose only product is a warning should fail soft. Owner: builder.
 
-**Should-fix 3 — C5 is recorded PASS on a statement the builder states cannot pass as worded.** `contract.md:66` asks that "grep for drizzle and supabase" come back empty after `remove-supabase-database.md`. `as-built.md:61` and `evidence/C5-operator.md:7` both say that is impossible while Supabase Auth stays, and propose a grep scope that is "not yet settled by Taylor." The `--verdict deferred` route is sanctioned and the disclosure is exactly what I want to see — but the operator has been handed a check with no agreed oracle, so whoever runs it cannot pass or fail it. This is the escalation case: it needs Taylor to settle the scope (the proposed `git grep -il 'drizzle\|supabase' -- ':!docs' ':!specs'` with the two kept auth variables allowed, or "run `remove-supabase-auth.md` first") before the rehearsal is runnable. Owner: Taylor. Note the runbooks themselves are correct and self-consistent on this point — `remove-supabase-database.md:55` is precise about keeping the two variables while an `auth` entry exists and deleting them when it does not.
+**Should-fix — the tier-2 review gate is not currently satisfied.** `evidence/C3.log:24` records `review:warden`'s PASS as stale: seven of this ticket's paths changed after it (`docs/engineering/tech-stack.md`, `docs/runbooks/new-project.md`, `package.json` and 4 more), and `C3.log:25` records `review:mason` as never run (`results.json:68-72`). `packages/db/**` is a one-way door whose ratification names mason and warden. Neither is a code defect, and neither is mine to fix — but the as-built's "Not verified" section does not mention it, and merging on the recorded PASS would ship a door with a security review that predates seven changed paths. Owner: whoever closes the batch.
 
-**Consider 1 — stale `last_reviewed` on a doc this ticket edited.** `docs/runbooks/remove-supabase-database.md:9` says `last_reviewed: 2026-10-03`, but line 55 ("Keep `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` while Supabase Auth stays…") is this ticket's 10-04 work. Its sibling `remove-supabase-auth.md:9` was updated. `lint:docs` does not enforce date freshness, so nothing caught it.
+**Consider — the auth.users writer guard is package-scoped.** `packages/db/scripts/auth-writers.test.ts:36` scans only `src`, `scripts`, `supabase`, `migrations` of `@pem/db`. A write from `apps/web` or `packages/auth` would not be caught; the real backstop is that `authUsers` is never exported from the schema (asserted, `C3.log`-adjacent in `src/schema/index.test.ts`). The rewritten test also no longer asserts that the mirror itself still holds the write, so a refactor that moved the INSERT out would pass silently.
 
-**Consider 2 — the 23505 path may carry an email into a log.** `packages/db/src/local-auth-mirror.ts:66-70` documents the unique violation thrown when a re-created staging user reuses an email. Postgres's detail line on a unique violation names the conflicting value, so whatever STK-12's seam logs around that throw may carry a user's address. It is local-only by construction (the loopback guard) and `@pem/observability` redacts personal data, so this is a note for STK-12's catch block rather than a defect here.
+**Consider — the local port is written twice.** `scripts/local-image.ts:25` hardcodes `LOCAL_PORT = 54322` while `supabase/config.toml:19` sets the same number; the deviation log says the project id was centralised "so it is written once", and the port is the one value that did not follow. Changing `[db] port` would leave the scripts pointing at the old port.
 
-**Consider 3 — the `db:local` network warning is advice the tool cannot enforce.** `scripts/local.ts:44-48` warns, correctly and specifically, that port 54322 is reachable from the LAN with password `postgres` while holding mirrored staging emails. The deviation at `as-built.md:30` routes the accept/reject to Taylor, which is right. Worth confirming that decision is on the record before the starter is ported, since in Mode A the exposed data is real users' email addresses, not synthetic ones.
+**Consider — `C4-operator.md:5` is now inaccurate.** It says the request seam "does not exist in this thread", but `apps/web/lib/supabase/local-mirror.ts:16` is on the branch and imports `applyLocalAuthMirror`. The live reason for deferral is just the staging sign-in by a person; the note should say that so the operator does not wait on STK-12.
 
-### Conversations
+**Consider — one runtime claim carries no evidence.** `as-built.md:15-20` reports a Mode B end-to-end walk (both key styles against GoTrue, `db:local` reporting auth-owned and exiting 1, `db:stop --no-backup` returning to Mode A) in prose, with no capture and no criterion requiring it, and it is not listed under "Not verified". Volunteered assurance should still be labelled unverified, or it reads like proof.
 
-One, on behalf of the developer who inherits this starter. Mode A's failure mode after a staging user is deleted and re-created is a thrown unique violation that resolves only by hand-deleting a row in the local `auth.users` (`local-auth-mirror.ts:66-70`). The mirror documents it and replaying deletions is explicitly out of scope, so this is not a defect. But the person who hits it will be mid-task, looking at a 23505 from a file they have never read, and the fix is not in either runbook or `new-project.md`. A single line in step 6 of `new-project.md` naming the symptom and the one-line `delete from auth.users where email = …` would turn a confusing dead end into a thirty-second fix. Question for the epic owner: is that worth a line now, or does it wait for STK-12, which owns the error path a developer actually sees?
+---
 
-### Runtime checklist (ordered by risk)
+### Conversations (not defects)
 
-1. C4, once STK-12 lands: `yarn db:local`, `yarn db:local:reset`, sign in on hosted staging via localhost, confirm the row in `public.users` on 127.0.0.1:54322. Record the id and date in `C4-operator.md`.
-2. Settle the C5 grep scope, then run the removal rehearsal on a scratch copy and record both exits.
-3. Confirm, on the record, the accept/reject of the LAN exposure of port 54322 in Mode A.
-4. Mode B round trip, after the Mode A checks: `db:local:full`, `db:seed-users`, then `db:stop --no-backup` and `db:local` to confirm Mode A reopens (the as-built reports this was walked on 2026-10-04; it is not machine-proven).
+The 60-second cache window is worth one sentence to whoever writes STK-12's error path. `src/local-auth-mirror.ts:53` keeps a per-process entry for a minute, and a developer who runs `db:stop --no-backup` then `db:local` under a live dev server is signed in with no `public.users` row for up to 60 s, so anything with a foreign key to it fails. The mirror's comment treats this as intended, and the cache was explicitly the dev's call — I only ask that the seam log it as a known transient rather than a 500 with no explanation.
 
-Assumptions I made: that the file list I was handed is `review-run`'s `planned_paths` intersection (it matches `contract.md` exactly), which is how I noticed `src/loopback.ts` was outside it; and that where the contract is silent I test to the most user-protective reading — hence treating the mirrored data as real user email addresses throughout.
+The LAN exposure is on the record and reads as genuinely Taylor's to accept: the CLI publishes `54322` on every interface with password `postgres`, and in Mode A that database holds real staging emails. Warning, tech-stack row and `new-project.md:127` all name it. I am not filing it as a defect — D-STK-6 chose the CLI and warden passed it — but it is an accept-the-risk decision that should be made explicitly rather than inherited.
+
+C5's wording needs settling before anyone spends an afternoon on the rehearsal: as written it cannot pass. `C5-operator.md:7` proposes the scope; it needs a yes or a different grep.
+
+---
+
+### Runtime checklist (by risk)
+
+1. Re-run `yarn review:run warden STK-11`, then `yarn review:run mason STK-11`; both are required by the tier before merge.
+2. Settle C5's grep scope, then run the removal rehearsal on a scratch copy and record the grep output plus both exits in `C5-operator.md`.
+3. With STK-12's seam up: `yarn db:local`, `yarn db:local:reset`, sign in on hosted staging, then confirm the row in local `public.users` and record it in `C4-operator.md`.
+4. From a live Mode A with mirrored users, run `yarn db:local:full` and confirm whether an exposure warning appears (S1 says it will not).
+5. On a machine where `docker port supabase_db_<id> 5432` fails, confirm `yarn db:local` still reaches its ready line (S2).
 
 VERDICT: PASS
