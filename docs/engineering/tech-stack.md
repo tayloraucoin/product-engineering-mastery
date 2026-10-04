@@ -34,6 +34,7 @@ The canonical choices and their versions. Exact pins are deliberate; a pin chang
 | React / React DOM                                                                      | 19.2.8                          | **exact**                                       |
 | Tailwind CSS                                                                           | 4.x, via `@tailwindcss/postcss` | caret                                           |
 | `class-variance-authority`, `clsx`, `tailwind-merge`                                   | —                               | caret (`@pem/ui`)                               |
+| `next-themes`                                                                          | 0.4.6 (verified 2026-10-03)     | **exact** (`@pem/ui` only, unpatched; D-STK-17) |
 | `react-markdown`, `remark-gfm`, `rehype-slug`, `@tailwindcss/typography`, `minisearch` | —                               | caret (`apps/docs` only)                        |
 | `yaml`                                                                                 | 2.x                             | caret (`tooling/` and `apps/docs`: frontmatter) |
 
