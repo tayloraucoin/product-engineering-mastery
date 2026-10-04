@@ -8,10 +8,10 @@
       "run": {
         "command": "yarn contract:record STK-11 C1 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/test-db.txt",
         "exit": 0,
-        "at": "2026-10-04T23:12:05Z",
-        "head": "76c5899bad7e6201373185350caa527bdede0091",
+        "at": "2026-10-04T23:28:05Z",
+        "head": "d034a2735e454c08a036f8b3e363b280c78dad6c",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/test-db.txt",
-        "evidence_sha256": "b785a124514c220761fa2ee9e6511b23287f3ff2ca30005b34679734de36142f"
+        "evidence_sha256": "4068f2af91d8401a2ade41363a853da0717c05a3e9e7e89c3095954b22708b56"
       }
     },
     "C2": {
@@ -20,11 +20,11 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-04T23:13:25Z",
-        "head": "76c5899bad7e6201373185350caa527bdede0091",
+        "at": "2026-10-04T23:28:32Z",
+        "head": "d034a2735e454c08a036f8b3e363b280c78dad6c",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/C2.log",
-        "evidence_sha256": "48b3da3e6100ce47b536b5ba87eab4adeb0483b755c5f79091613a1672dad108",
-        "tests": 114
+        "evidence_sha256": "60265fe5e5d4b953d1fbb7c4447370d47cfefc53bf3237e14ccc0f5265656105",
+        "tests": 113
       }
     },
     "C3": {
@@ -33,10 +33,10 @@
       "run": {
         "command": "yarn verify",
         "exit": 0,
-        "at": "2026-10-04T23:13:29Z",
-        "head": "76c5899bad7e6201373185350caa527bdede0091",
+        "at": "2026-10-04T23:28:35Z",
+        "head": "d034a2735e454c08a036f8b3e363b280c78dad6c",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/C3.log",
-        "evidence_sha256": "be0f3c11ebd8a87549e501eb8cba3435cc469f847eebc35df11963b4236b0a57"
+        "evidence_sha256": "c2dce1b9693fbb44e040b1fa8b874c18b3ded5f5b4d5fd57c89dc9912cda447c"
       }
     },
     "C4": {
@@ -45,8 +45,8 @@
       "run": {
         "command": "yarn contract:record STK-11 C4 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/C4-operator.md --verdict deferred",
         "exit": 0,
-        "at": "2026-10-04T23:15:16Z",
-        "head": "b54069cd7147ddd773f5e5c76af846365c8398f6",
+        "at": "2026-10-04T23:29:57Z",
+        "head": "af521fcdff90f66bb92d87a2a812b9e057343c85",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/C4-operator.md",
         "evidence_sha256": "babd1f230390c3836bec45a441b8c3a185bc9e92536b23b05e560b7cefe3e8ff",
         "deferred": true
@@ -58,8 +58,8 @@
       "run": {
         "command": "yarn contract:record STK-11 C5 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/C5-operator.md --verdict deferred",
         "exit": 0,
-        "at": "2026-10-04T23:15:20Z",
-        "head": "b54069cd7147ddd773f5e5c76af846365c8398f6",
+        "at": "2026-10-04T23:30:01Z",
+        "head": "af521fcdff90f66bb92d87a2a812b9e057343c85",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/C5-operator.md",
         "evidence_sha256": "5b45549428134421600c752b2a828bdbe926dbbdf66f1e588d5c02bf07100c3c",
         "deferred": true
@@ -73,7 +73,17 @@
     "review:vigil": {
       "status": "FAIL",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run vigil STK-11",
+        "exit": 0,
+        "at": "2026-10-04T23:15:29Z",
+        "head": "aa49bd5bf0f1484324da9c97bca496be70a355de",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/review-vigil.md",
+        "evidence_sha256": "5fb98882d2980160a76aa36e58b7b69050cb7cfb5d7692c9fa8913674b0b238d",
+        "contract_sha256": "efd2f37963742150cd7b8f01b4b37485de98411896332a3152159dab5e08ec04",
+        "as_built_sha256": "c8fe9fd95ef9f9136df6479494c1149dd293cd91b30dd875f40ce58177c76dee",
+        "runner": "claude 2.1.232 (Claude Code) (agent vigil; tools Read,Grep,Glob)"
+      }
     },
     "review:warden": {
       "status": "FAIL",
@@ -91,5 +101,5 @@
       }
     }
   },
-  "updated_at": "2026-10-04T23:15:20Z"
+  "updated_at": "2026-10-04T23:30:01Z"
 }
