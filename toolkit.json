@@ -18,7 +18,7 @@
     "full": "yarn verify",
     "fast": "yarn verify:fast"
   },
-  "migrationsDir": null,
+  "migrationsDir": "packages/db/migrations",
   "branchPattern": "agent/{id}",
   "protectedBranch": "main",
   "reviewers": [
@@ -201,6 +201,14 @@
       "boundaries": ["ui"],
       "locked": true,
       "runbook": null
+    },
+    "db": {
+      "files": ["packages/db"],
+      "env": ["DATABASE_URL", "DATABASE_MIGRATION_URL"],
+      "dependencies": ["@pem/db", "drizzle-orm", "drizzle-kit", "postgres"],
+      "boundaries": ["db"],
+      "locked": false,
+      "runbook": "docs/runbooks/remove-supabase-database.md"
     }
   }
 }

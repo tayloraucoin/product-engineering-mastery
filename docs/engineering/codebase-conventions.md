@@ -78,22 +78,24 @@ The default stack ([record 0010](../decisions/records/0010-starter-ships-default
 
 A package imports only packages below it, and only along the edges in `packages/config/eslint/boundaries.js`. Every edge not listed there is disallowed. A package that is not built yet has no edges; the ticket that builds it adds them and turns its row to built.
 
-| Package              | Role                                                                                                       | May import            | Status                                                            |
-| -------------------- | ---------------------------------------------------------------------------------------------------------- | --------------------- | ----------------------------------------------------------------- |
-| `@pem/config`        | ESLint (code quality + boundaries), Prettier, Tailwind tokens, tsconfig bases — exposed as subpath exports | nothing               | built                                                             |
-| `@pem/constants`     | Shared constants                                                                                           | set by its ticket     | STK-5                                                             |
-| `@pem/env`           | The pure per-tier picker (§5)                                                                              | `config`              | built                                                             |
-| `@pem/brand`         | The brand source                                                                                           | set by its ticket     | STK-7                                                             |
-| `@pem/observability` | Logger and error reporter                                                                                  | set by its ticket     | STK-5                                                             |
-| `@pem/validators`    | Shared schemas                                                                                             | set by its ticket     | STK-13                                                            |
-| `@pem/db`            | Schema, migrations, policies                                                                               | set by its ticket     | STK-9                                                             |
-| `@pem/auth`          | Auth clients and the request seam                                                                          | set by its ticket     | STK-12                                                            |
-| `@pem/email`         | Email sending and the default template                                                                     | set by its ticket     | STK-15                                                            |
-| `@pem/ai`            | The AI layer                                                                                               | set by its ticket     | STK-17                                                            |
-| `@pem/services`      | Server logic called by the API layer                                                                       | set by its ticket     | undecided: a package, or folders inside `api` (STK routed call 3) |
-| `@pem/api`           | Transport only                                                                                             | set by its ticket     | STK-14                                                            |
-| `@pem/ui`            | Shared web components                                                                                      | `config`              | built                                                             |
-| `apps/*`             | Deployable apps                                                                                            | `config`, `env`, `ui` | built                                                             |
+| Package              | Role                                                                                                       | May import          | Status                                                            |
+| -------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------- | ----------------------------------------------------------------- |
+| `@pem/config`        | ESLint (code quality + boundaries), Prettier, Tailwind tokens, tsconfig bases — exposed as subpath exports | nothing             | built                                                             |
+| `@pem/constants`     | Shared constants                                                                                           | set by its ticket   | STK-5                                                             |
+| `@pem/env`           | The pure per-tier picker (§5)                                                                              | `config`            | built                                                             |
+| `@pem/brand`         | The brand source                                                                                           | set by its ticket   | STK-7                                                             |
+| `@pem/observability` | Logger and error reporter                                                                                  | set by its ticket   | STK-5                                                             |
+| `@pem/validators`    | Shared schemas                                                                                             | set by its ticket   | STK-13                                                            |
+| `@pem/db`            | Schema, migrations, policies                                                                               | `config`, `env`     | built                                                             |
+| `@pem/auth`          | Auth clients and the request seam                                                                          | set by its ticket   | STK-12                                                            |
+| `@pem/email`         | Email sending and the default template                                                                     | set by its ticket   | STK-15                                                            |
+| `@pem/ai`            | The AI layer                                                                                               | set by its ticket   | STK-17                                                            |
+| `@pem/services`      | Server logic called by the API layer                                                                       | set by its ticket   | undecided: a package, or folders inside `api` (STK routed call 3) |
+| `@pem/api`           | Transport only                                                                                             | set by its ticket   | STK-14                                                            |
+| `@pem/ui`            | Shared web components                                                                                      | `config`            | built                                                             |
+| `apps/*`             | Deployable apps                                                                                            | every package above | built                                                             |
+
+**Each vendor SDK has one owner** (D-STK-16): only that package imports it, and everything else goes through the owner's exports. `SDK_OWNERS` in `boundaries.js` enforces it; `postgres` and `drizzle-kit` belong to `db`.
 
 **README seams.** `utils`, `types` and `hooks` ship as folders holding only a README that states their convention (STK-5). Each becomes a package with its first module and takes its place in the order then. There is no `lib` or `helpers` package (§8).
 

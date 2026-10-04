@@ -3,7 +3,7 @@
  *
  * Enforced via eslint-plugin-boundaries at the repo root (eslint.config.mjs).
  * Layer order (low → high), the built part of codebase-conventions §4:
- *   config → env → ui → apps
+ *   config → env → db → ui → apps
  *
  * - apps/* → apps/*: hard ban
  * - packages/* → apps/*: hard ban
@@ -11,6 +11,10 @@
  * Zones are matched by path pattern, so a package added later only needs a
  * line in ELEMENTS and an entry in PACKAGE_IMPORTS — every edge it does not
  * declare is disallowed by default.
+ *
+ * Each vendor SDK in SDK_OWNERS has one owner (D-STK-16): only that element's
+ * files may import it, so the rest of the repo reaches the vendor through the
+ * owner's own exports.
  */
 
 import { dirname, resolve } from "node:path";
@@ -43,6 +47,7 @@ const ELEMENTS = [
   workspaceApp("app-docs", "docs"),
   workspacePackage("config", "config"),
   workspacePackage("env", "env"),
+  workspacePackage("db", "db"),
   workspacePackage("ui", "ui"),
 ];
 
@@ -50,7 +55,14 @@ const ELEMENTS = [
 const PACKAGE_IMPORTS = {
   config: [],
   env: ["config"],
+  db: ["config", "env"],
   ui: ["config"],
+};
+
+/** Vendor SDK → the one element type allowed to import it (D-STK-16). */
+const SDK_OWNERS = {
+  postgres: "db",
+  "drizzle-kit": "db",
 };
 
 const APP_TYPES = ELEMENTS.map((element) => element.type).filter((type) =>
@@ -58,6 +70,44 @@ const APP_TYPES = ELEMENTS.map((element) => element.type).filter((type) =>
 );
 
 const APP_IMPORTS = Object.keys(PACKAGE_IMPORTS);
+
+const SOURCE_FILES = "**/*.{ts,tsx,js,jsx,mjs,cjs}";
+
+/** A relative path into another workspace bypasses its `exports`. */
+const WORKSPACE_PATH_PATTERN = {
+  group: ["**/packages/*/**", "**/apps/*/**"],
+  message:
+    "Import a workspace by its package name (@pem/<name>), never by relative path (codebase-conventions §4).",
+};
+
+/** no-restricted-imports for files in `owner` (or in no owner): every SDK owned elsewhere is banned. */
+function restrictedImports(owner) {
+  const sdkPatterns = Object.entries(SDK_OWNERS)
+    .filter(([, sdkOwner]) => sdkOwner !== owner)
+    .map(([sdk, sdkOwner]) => ({
+      group: [sdk, `${sdk}/*`],
+      message: `${sdk} is owned by @pem/${sdkOwner} (D-STK-16); import what you need from @pem/${sdkOwner}.`,
+    }));
+  return [
+    "error",
+    { patterns: [WORKSPACE_PATH_PATTERN, ...sdkPatterns] },
+  ];
+}
+
+/** One override per SDK owner, so its own files may import what it owns. */
+function ownerOverrides() {
+  const owners = [...new Set(Object.values(SDK_OWNERS))];
+  return owners.map((owner) => {
+    const element = ELEMENTS.find((candidate) => candidate.type === owner);
+    if (!element) throw new Error(`SDK owner ${owner} is not in ELEMENTS`);
+    return {
+      files: element.pattern
+        .filter((pattern) => !pattern.startsWith("node_modules/"))
+        .map((pattern) => pattern.replace(/\*\*$/, SOURCE_FILES)),
+      rules: { "no-restricted-imports": restrictedImports(owner) },
+    };
+  });
+}
 
 function buildDependencyRules() {
   const rules = [
@@ -138,18 +188,8 @@ export const boundariesConfig = [
     rules: {
       // A relative path into another workspace bypasses its `exports` and
       // lands in an allowed zone, so the matrix below would let it through.
-      "no-restricted-imports": [
-        "error",
-        {
-          patterns: [
-            {
-              group: ["**/packages/*/**", "**/apps/*/**"],
-              message:
-                "Import a workspace by its package name (@pem/<name>), never by relative path (codebase-conventions §4).",
-            },
-          ],
-        },
-      ],
+      // An SDK owned by another element is banned here too (D-STK-16).
+      "no-restricted-imports": restrictedImports(null),
       "boundaries/dependencies": [
         "error",
         {
@@ -162,4 +202,5 @@ export const boundariesConfig = [
       ],
     },
   },
+  ...ownerOverrides(),
 ];
