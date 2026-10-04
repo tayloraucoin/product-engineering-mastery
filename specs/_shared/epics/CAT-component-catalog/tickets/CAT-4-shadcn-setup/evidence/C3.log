@@ -1,0 +1,31 @@
+command: yarn check-types
+exit: 0
+at: 2026-10-04T23:43:52Z
+head: 89bff074f03c82746c0a27ea5852195e08d5d26c
+---
+
+   • turbo 2.11.6
+   • Packages in scope: @pem/auth, @pem/brand, @pem/catalog, @pem/config, @pem/constants, @pem/db, @pem/email, @pem/env, @pem/observability, @pem/ui, docs, web
+   • Running check-types in 12 packages
+   • Remote caching disabled
+
+@pem/env:check-types: cache hit, replaying logs db8601a88c044b77
+@pem/observability:check-types: cache hit, replaying logs d0f2e0842629fb59
+@pem/brand:check-types: cache hit, replaying logs c81e5603504c5717
+@pem/constants:check-types: cache hit, replaying logs c3e809bb48510faf
+@pem/ui:check-types: cache hit, replaying logs 38f3826ee1f9d670
+@pem/db:check-types: cache hit, replaying logs 1d63773fd6482958
+@pem/email:check-types: cache hit, replaying logs 9106288ef48b7426
+docs:check-types: cache hit, replaying logs 692af0277d9a07f7
+@pem/catalog:check-types: cache hit, replaying logs 493d8a16260b0d4b
+@pem/auth:check-types: cache hit, replaying logs fb62ee974ded70e2
+docs:check-types: Generating route types...
+docs:check-types: ✓ Types generated successfully
+web:check-types: cache hit, replaying logs f6cc6c015dfc1126
+web:check-types: Generating route types...
+web:check-types: ✓ Types generated successfully
+
+ Tasks:    11 successful, 11 total
+Cached:    11 cached, 11 total
+  Time:    127ms >>> FULL TURBO
+
