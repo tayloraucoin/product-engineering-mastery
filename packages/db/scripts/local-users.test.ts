@@ -65,6 +65,7 @@ describe("seedLocalUsers", () => {
       outcomes,
       LOCAL_USERS.map(({ email }) => ({ email, result: "created" })),
     );
+    assert.ok(calls.every((call) => call.init?.redirect === "error"));
     assert.deepEqual(
       calls.map((call) => call.url),
       LOCAL_USERS.map(() => "http://127.0.0.1:54321/auth/v1/admin/users"),

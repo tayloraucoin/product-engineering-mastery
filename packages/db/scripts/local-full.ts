@@ -32,7 +32,7 @@ if (
   !isContainerRunning(`supabase_auth_${LOCAL_PROJECT_ID}`)
 ) {
   console.log(
-    `${COMMAND} — stopping the Mode A database first; its data is kept`,
+    `${COMMAND} — stopping the Mode A database first; its data is kept, but Auth migrates it, so Mode A reopens only after yarn db:stop --no-backup`,
   );
   supabase(COMMAND, ["stop"]);
 }

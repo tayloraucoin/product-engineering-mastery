@@ -10,7 +10,7 @@
 
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
-import { after, before, beforeEach, describe, test } from "node:test";
+import { after, before, beforeEach, describe, mock, test } from "node:test";
 import postgres from "postgres";
 
 import {
@@ -26,6 +26,7 @@ import {
   assertLoopbackClient,
   clearLocalAuthMirrorCache,
   MARKER_TABLE,
+  MIRROR_CACHE_TTL_MS,
 } from "../src/local-auth-mirror.ts";
 
 const created: string[] = [];
@@ -137,6 +138,23 @@ describe("the mirror on a marked database without auth.identities", () => {
     assert.deepEqual(await publicEmail(user.id), []);
     await applySetup(client);
     assert.deepEqual(await publicEmail(user.id), [user.email]);
+  });
+
+  test("a cached user whose rows were wiped is mirrored again once the cache entry expires", async () => {
+    const user = syntheticUser("wiped");
+    const client = admin;
+    assert.ok(client);
+    mock.timers.enable({ apis: ["Date"], now: Date.now() });
+    try {
+      assert.equal(await applyLocalAuthMirror(client, user), "inserted");
+      await client`delete from auth.users where id = ${user.id}`;
+      assert.equal(await applyLocalAuthMirror(client, user), "cached");
+      mock.timers.tick(MIRROR_CACHE_TTL_MS);
+      assert.equal(await applyLocalAuthMirror(client, user), "inserted");
+      assert.deepEqual(await publicEmail(user.id), [user.email]);
+    } finally {
+      mock.timers.reset();
+    }
   });
 
   test("upserts a changed email into auth.users and public.users", async () => {

@@ -60,6 +60,8 @@ export async function seedLocalUsers({
     const response = await send(endpoint, {
       method: "POST",
       headers,
+      // A redirect could carry the key and the passwords off this machine.
+      redirect: "error",
       body: JSON.stringify({
         email: user.email,
         password: user.password,

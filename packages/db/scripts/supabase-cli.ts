@@ -60,6 +60,21 @@ export function isContainerRunning(name: string): boolean {
   );
 }
 
+/** Whether a container publishes `port` on every interface rather than loopback only. */
+export function isPublishedBeyondLoopback(
+  container: string,
+  port: number,
+): boolean {
+  const lines = execFileSync("docker", ["port", container, String(port)], {
+    encoding: "utf8",
+  })
+    .trim()
+    .split("\n");
+  return lines.some(
+    (line) => line.startsWith("0.0.0.0:") || line.startsWith("[::]:"),
+  );
+}
+
 /** Runs `supabase <args> --workdir packages/db`, streaming its output; exits on failure. */
 export function supabase(
   command: string,

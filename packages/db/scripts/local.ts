@@ -13,8 +13,13 @@ import postgres from "postgres";
 import { isLoopbackUrl } from "../src/local-auth-mirror.ts";
 import { authSettings, authUrlName } from "./env.ts";
 import { markLocalAuthMirror } from "./local-auth-marker.ts";
-import { LOCAL_IMAGE_URL, LOCAL_PORT } from "./local-image.ts";
-import { preflight, supabase, waitForDatabase } from "./supabase-cli.ts";
+import { LOCAL_CONTAINER, LOCAL_IMAGE_URL, LOCAL_PORT } from "./local-image.ts";
+import {
+  isPublishedBeyondLoopback,
+  preflight,
+  supabase,
+  waitForDatabase,
+} from "./supabase-cli.ts";
 
 const COMMAND = "db:local";
 
@@ -33,6 +38,13 @@ try {
   }
 } finally {
   await client.end();
+}
+
+// The CLI publishes the port on every interface and has no setting for it.
+if (isPublishedBeyondLoopback(LOCAL_CONTAINER, 5432)) {
+  console.warn(
+    `${COMMAND} — the database port ${LOCAL_PORT} is reachable from your network, password postgres, and in Mode A it holds mirrored staging emails. On a shared network, set "ip": "127.0.0.1" in Docker's daemon settings, then yarn db:stop and rerun.`,
+  );
 }
 
 const { url } = authSettings();

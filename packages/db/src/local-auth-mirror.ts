@@ -29,7 +29,7 @@ export type MirrorUser = { id: string; email: string | null };
 /**
  * What one call did. `refused` means the statement's own guard found
  * auth.identities or no marker, and wrote nothing. `cached` means this process
- * already mirrored the same id and email, and nothing was sent.
+ * mirrored the same id and email within the last minute, and nothing was sent.
  */
 export type MirrorOutcome =
   "inserted" | "updated" | "unchanged" | "refused" | "cached";
@@ -69,11 +69,14 @@ export function assertLoopbackClient(sql: postgres.Sql): void {
   }
 }
 
-// Ids this process has already mirrored, with the email written. The request
+// Ids this process has mirrored, with the email written and when. The request
 // seam calls the mirror on every request; this keeps it to one statement per
-// user and email per process. A refused call is not cached, so starting
-// `yarn db:local` takes effect without a restart.
-const mirrored = new Map<string, string | null>();
+// user and email per minute. An entry expires, so a database wiped and
+// restarted under a running dev server gets its users back within a minute,
+// and a refused call is never cached, so starting `yarn db:local` takes
+// effect without a restart.
+export const MIRROR_CACHE_TTL_MS = 60_000;
+const mirrored = new Map<string, { email: string | null; at: number }>();
 
 /** Forgets every mirrored id, for tests. */
 export function clearLocalAuthMirrorCache(): void {
@@ -92,7 +95,12 @@ export async function applyLocalAuthMirror(
   user: MirrorUser,
 ): Promise<MirrorOutcome> {
   assertLoopbackClient(sql);
-  if (mirrored.has(user.id) && mirrored.get(user.id) === user.email) {
+  const entry = mirrored.get(user.id);
+  if (
+    entry &&
+    entry.email === user.email &&
+    Date.now() - entry.at < MIRROR_CACHE_TTL_MS
+  ) {
     return "cached";
   }
 
@@ -121,7 +129,7 @@ export async function applyLocalAuthMirror(
     from guard`;
 
   if (!row?.open) return "refused";
-  mirrored.set(user.id, user.email);
+  mirrored.set(user.id, { email: user.email, at: Date.now() });
   if (row.inserted === null) return "unchanged";
   return row.inserted ? "inserted" : "updated";
 }
