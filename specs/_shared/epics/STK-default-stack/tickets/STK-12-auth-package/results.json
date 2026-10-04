@@ -96,12 +96,12 @@
       "run": {
         "command": "yarn review:run vigil STK-12",
         "exit": 0,
-        "at": "2026-10-04T21:39:32Z",
-        "head": "d0a1b7b2a508207c286584634b73d427484c1209",
+        "at": "2026-10-04T23:48:23Z",
+        "head": "9613cc3632d42b001e9aee4fd3ef90e4bbd0a373",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-12-auth-package/review-vigil.md",
-        "evidence_sha256": "6e1763d0e02bb7d57cf859063f3b7061fe44968e72488aa6caa9597c05253021",
+        "evidence_sha256": "882617986df1fff116c1e87486a64a1b74db90e214ba6ac1275f8c599399ae47",
         "contract_sha256": "ba875bb0ce0deabe9ef8132358a95bb904251e291baf8587446b35a0d4f92eeb",
-        "as_built_sha256": "159e25dc3a425dee3d2161566a419ac46a8b1cceff4594f39e4f0bdd7d16974a",
+        "as_built_sha256": "f2b2b2eef19c313a1cccdd8ba172108e296f041186791c0fd9eb9b958f574f6a",
         "runner": "claude 2.1.232 (Claude Code) (agent vigil; tools Read,Grep,Glob)"
       }
     },
@@ -121,5 +121,5 @@
       }
     }
   },
-  "updated_at": "2026-10-04T23:48:18Z"
+  "updated_at": "2026-10-04T23:53:40Z"
 }
