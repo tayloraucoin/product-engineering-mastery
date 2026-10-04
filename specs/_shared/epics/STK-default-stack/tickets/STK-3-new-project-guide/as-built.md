@@ -10,7 +10,7 @@
 
 - **C2:** every path and command the runbooks, the README and the amendment blocks name resolves. The only pending entry this ticket touches is `docs/runbooks/port.md`, which stays in `tooling/refs-pending.json`, reworded to "superseded by docs/runbooks/new-project.md (STK-3)" (non-negotiable 5). Unbuilt modules are named by their ticket only, never by a path (D-STK-19). `yarn check-refs` passes.
 - **C3:** `yarn directory-map` regenerated `docs/_generated/directory-map.md` and the table in `docs/runbooks/README.md`; the README's hand-written lines now point a new product repo at `new-project.md`. `yarn directory-map --check` passes.
-- **C4:** two fresh-context cold readers, each holding only the guide and a synthetic one-paragraph briefing. The second named steps 0 to 7 and each closing check. The gaps both found were fixed in the guide or are listed for STK-20. Record: `evidence/C4.md`.
+- **C4:** two fresh-context cold readers, each holding only the guide and a synthetic one-paragraph briefing. The second named steps 0 to 7 and each closing check. The gaps both found were fixed in the guide or are listed for STK-20. Record: `evidence/C4.md`; after STK-9 filled the database runbook, step 4's line about which modules are built was corrected and the guide re-read (`evidence/C4-reread.md`, the recorded evidence).
 
 Against the non-negotiables:
 

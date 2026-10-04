@@ -51,20 +51,20 @@
       }
     },
     "review:vigil": {
-      "status": "PASS",
+      "status": "FAIL",
       "evidence": "manual",
       "run": {
         "command": "yarn review:run vigil STK-3",
         "exit": 0,
-        "at": "2026-10-04T03:18:14Z",
-        "head": "3e5f1be000f9464ee009fc13f9da00e880365922",
+        "at": "2026-10-04T05:29:03Z",
+        "head": "2f78645c561eb9a421067e70ebc47c41d2ea6e81",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/review-vigil.md",
-        "evidence_sha256": "0a5e821a17758476e28087caa783e763f857f457634869841448b4ce84b7840f",
+        "evidence_sha256": "0e95ea2170120aefd0f3481854d757c1748c2059da5bab996eee914940e62148",
         "contract_sha256": "fec182cad4b000ba34ac49a6c13d31ff7948395c6634833c62cc9f9456c1dc72",
         "as_built_sha256": "61b6228c8db2637baffa4b8a61a59b8f238c3971b2fe4320495b720a879ddb49",
         "runner": "claude 2.1.232 (Claude Code) (agent vigil; tools Read,Grep,Glob)"
       }
     }
   },
-  "updated_at": "2026-10-04T05:28:51Z"
+  "updated_at": "2026-10-04T05:34:13Z"
 }

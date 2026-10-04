@@ -31,6 +31,8 @@ The docs app reads the markdown in `docs/` directly: the sidebar groups files by
 | `apps/web`        | The demo app; holds the filled example of every template (Phase 3).                           |
 | `apps/docs`       | Renders `docs/` in the browser.                                                               |
 | `packages/config` | `@pem/config` — ESLint (code, boundaries, tokens), Prettier, Tailwind tokens, tsconfig bases. |
+| `packages/env`    | `@pem/env` — the pure per-tier environment picker (STK-4).                                    |
+| `packages/db`     | `@pem/db` — Drizzle on Supabase: schema, policies, migrations, setup SQL (STK-9).             |
 | `packages/ui`     | `@pem/ui` — shared components.                                                                |
 | `tooling/`        | The checks `yarn verify` runs, the hooks in `.claude/settings.json`, and `yarn doctor`.       |
 | `.claude/`        | Path rules, generated subagents (`agents/`, never edited by hand), skills.                    |

@@ -54,6 +54,8 @@ yarn hooks:install
 yarn doctor
 ```
 
+`yarn hooks:install` writes `.git/config`. From an agent's sandboxed shell it exits 1, saying so; a person runs that one line in their own terminal, and the agent goes on from `yarn doctor`.
+
 All work goes on the `agent/<repo-wide-prefix>` branch: the hooks refuse commits on `main`, the protected branch. Taylor makes `main` from it.
 
 [ASSUMPTION: the product starts its own history. Whether it keeps the toolkit as a second remote, to pull later fixes, and whether committing on a branch of an empty repo needs anything more, are for the dry-run (STK-20) to settle.]
@@ -83,18 +85,18 @@ All work goes on the `agent/<repo-wide-prefix>` branch: the hooks refuse commits
 
 `toolkit.json`'s `stack` block lists one entry per module: its `files`, `env`, `dependencies`, `boundaries` names, `locked` flag and `runbook` (D-STK-13). A `locked` module stays. For each module the briefing drops, follow the entry's `runbook` from top to bottom; its last section marks the entry `"removed": true` and runs the checks.
 
-| Module                    | Runbook                                                      | Built by |
-| ------------------------- | ------------------------------------------------------------ | -------- |
-| Billing (Stripe)          | [`remove-billing.md`](remove-billing.md)                     | STK-16   |
-| Error monitoring (Sentry) | [`remove-error-monitoring.md`](remove-error-monitoring.md)   | STK-18   |
-| API (tRPC)                | [`remove-api.md`](remove-api.md)                             | STK-14   |
-| AI                        | [`remove-ai.md`](remove-ai.md)                               | STK-17   |
-| Supabase Auth             | [`remove-supabase-auth.md`](remove-supabase-auth.md)         | STK-12   |
-| Supabase database         | [`remove-supabase-database.md`](remove-supabase-database.md) | STK-9    |
+| Module                    | Runbook                                                      | Built by       |
+| ------------------------- | ------------------------------------------------------------ | -------------- |
+| Billing (Stripe)          | [`remove-billing.md`](remove-billing.md)                     | STK-16, STK-21 |
+| Error monitoring (Sentry) | [`remove-error-monitoring.md`](remove-error-monitoring.md)   | STK-18         |
+| API (tRPC)                | [`remove-api.md`](remove-api.md)                             | STK-14         |
+| AI                        | [`remove-ai.md`](remove-ai.md)                               | STK-17         |
+| Supabase Auth             | [`remove-supabase-auth.md`](remove-supabase-auth.md)         | STK-12         |
+| Supabase database         | [`remove-supabase-database.md`](remove-supabase-database.md) | STK-9          |
 
 Remove in the table's order, from the top of the package graph down (D-STK-1), so no module still present imports one already gone.
 
-A module with no entry in the `stack` block is not in the duplicate: skip its row. Today none of the six is built: the block holds only locked modules, so every row is skipped.
+A module with no entry in the `stack` block is not in the duplicate: skip its row. Today one of the six is built: the Supabase database (STK-9) has a `db` entry that is not locked, so a briefing that drops the database follows its runbook. The other five have no entry yet, so their rows are skipped. Read the `stack` block itself rather than this line: each module ticket adds its entry.
 
 **Check:** `yarn check-stack` exits 0, once after each runbook and once at the end of the step, even when no runbook ran.
 
