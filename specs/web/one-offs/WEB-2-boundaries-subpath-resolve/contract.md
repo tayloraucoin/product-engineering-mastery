@@ -15,7 +15,10 @@ cites:
   - "specs/_shared/epics/STK-default-stack/technical.md"
   - "D-STK-16"
 truth_files: "none: no living UX file covers the lint"
-reviewers: []
+reviewers:
+  - mason
+  - vigil
+  - warden
 planned_paths:
   - "packages/config/eslint/workspace-resolver.cjs"
   - "packages/config/eslint/boundaries.js"
@@ -42,6 +45,18 @@ criteria:
     statement: "The real tree passes the boundaries lint with subpaths resolved."
     evidence: check
     command: "yarn lint:boundaries"
+  - id: review:mason
+    statement: Mason reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run mason <id>
+  - id: review:vigil
+    statement: Vigil reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run vigil <id>
+  - id: review:warden
+    statement: Warden reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
 tier: 2
 ---
 

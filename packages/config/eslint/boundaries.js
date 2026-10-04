@@ -161,10 +161,15 @@ export const boundariesConfig = [
     },
     settings: {
       "boundaries/root-path": repoRoot,
-      // Without this, eslint-import-resolver-node only tries .js/.json/.node,
-      // every `@pem/*` specifier resolves to null, and the whole rule set
-      // silently passes on `isUnknown`. Workspace entry points are .ts.
+      // Tried in order, first found wins. An unresolved import passes on
+      // `isUnknown`, so resolution is what the whole rule set stands on.
+      // - workspace-resolver: `@pem/*` through each package's `exports`,
+      //   which the node resolver ignores; an unresolvable one is a lint
+      //   error, never unknown.
+      // - node: relative imports and third-party packages. Without the
+      //   extensions it tries only .js/.json/.node; workspace sources are .ts.
       "import/resolver": {
+        [resolve(configDir, "workspace-resolver.cjs")]: {},
         node: {
           extensions: [".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".json"],
         },

@@ -76,7 +76,7 @@ The default stack ([record 0010](../decisions/records/0010-starter-ships-default
 
 `config → constants, env, brand, observability → validators → db → auth → email, ai → services → api → ui → apps`
 
-A package imports only packages below it, and only along the edges in `packages/config/eslint/boundaries.js`. Every edge not listed there is disallowed. A package that is not built yet has no edges; the ticket that builds it adds them and turns its row to built.
+A package imports only packages below it, and only along the edges in `packages/config/eslint/boundaries.js`. Every edge not listed there is disallowed. An `@pem/*` import is resolved through its package's `exports`, and one that does not resolve fails the lint. A package that is not built yet has no edges; the ticket that builds it adds them and turns its row to built.
 
 | Package              | Role                                                                                                       | May import          | Status                                                            |
 | -------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------- | ----------------------------------------------------------------- |
