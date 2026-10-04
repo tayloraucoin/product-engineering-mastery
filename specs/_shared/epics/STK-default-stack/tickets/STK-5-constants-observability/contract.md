@@ -28,6 +28,7 @@ planned_paths:
   - "toolkit.json"
   - "docs/engineering/codebase-conventions.md"
   - "docs/engineering/tech-stack.md"
+  - "yarn.lock"
 depends_on:
   - STK-2
 out_of_scope:

@@ -176,6 +176,14 @@
       "locked": true,
       "runbook": null
     },
+    "constants": {
+      "files": ["packages/constants"],
+      "env": [],
+      "dependencies": ["@pem/constants"],
+      "boundaries": ["constants"],
+      "locked": true,
+      "runbook": null
+    },
     "env": {
       "files": ["packages/env", "apps/web/env.ts", ".env.example"],
       "env": [
@@ -198,6 +206,14 @@
       "env": [],
       "dependencies": ["@pem/brand"],
       "boundaries": ["brand"],
+      "locked": true,
+      "runbook": null
+    },
+    "observability": {
+      "files": ["packages/observability"],
+      "env": [],
+      "dependencies": ["@pem/observability"],
+      "boundaries": ["observability"],
       "locked": true,
       "runbook": null
     },

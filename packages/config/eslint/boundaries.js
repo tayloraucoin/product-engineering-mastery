@@ -3,7 +3,7 @@
  *
  * Enforced via eslint-plugin-boundaries at the repo root (eslint.config.mjs).
  * Layer order (low → high), the built part of codebase-conventions §4:
- *   config → env, brand → db → ui → apps
+ *   config → constants, env, brand, observability → db → ui → apps
  *
  * `ui-workshop` is `packages/ui/.storybook/`, the component workshop
  * (D-STK-10): it reads @pem/brand for fonts and assets, which @pem/ui's own
@@ -50,8 +50,10 @@ const ELEMENTS = [
   workspaceApp("app-web", "web"),
   workspaceApp("app-docs", "docs"),
   workspacePackage("config", "config"),
+  workspacePackage("constants", "constants"),
   workspacePackage("env", "env"),
   workspacePackage("brand", "brand"),
+  workspacePackage("observability", "observability"),
   workspacePackage("db", "db"),
   {
     type: "ui-workshop",
@@ -64,8 +66,10 @@ const ELEMENTS = [
 /** Each package may import only these lower-layer types. */
 const PACKAGE_IMPORTS = {
   config: [],
+  constants: ["config"],
   env: ["config"],
   brand: ["config"],
+  observability: ["config"],
   db: ["config", "env"],
   ui: ["config"],
   "ui-workshop": ["config", "brand", "ui"],

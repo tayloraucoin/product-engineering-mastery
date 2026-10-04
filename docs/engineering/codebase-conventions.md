@@ -81,10 +81,10 @@ A package imports only packages below it, and only along the edges in `packages/
 | Package              | Role                                                                                                       | May import          | Status                                                            |
 | -------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------- | ----------------------------------------------------------------- |
 | `@pem/config`        | ESLint (code quality + boundaries), Prettier, Tailwind tokens, tsconfig bases — exposed as subpath exports | nothing             | built                                                             |
-| `@pem/constants`     | Shared constants                                                                                           | set by its ticket   | STK-5                                                             |
+| `@pem/constants`     | Shared constants, one file per subject (`README.md`)                                                       | `config`            | built                                                             |
 | `@pem/env`           | The pure per-tier picker (§5)                                                                              | `config`            | built                                                             |
 | `@pem/brand`         | The brand source: name, URLs, contact, assets, the two theme colours, the font (D-STK-9)                   | `config`            | built                                                             |
-| `@pem/observability` | Logger and error reporter                                                                                  | set by its ticket   | STK-5                                                             |
+| `@pem/observability` | `createLogger` (redacts secret-like keys), the error-reporter seam, the analytics stub                     | `config`            | built                                                             |
 | `@pem/validators`    | Shared schemas                                                                                             | set by its ticket   | STK-13                                                            |
 | `@pem/db`            | Schema, migrations, policies                                                                               | `config`, `env`     | built                                                             |
 | `@pem/auth`          | Auth clients and the request seam                                                                          | set by its ticket   | STK-12                                                            |
@@ -97,7 +97,7 @@ A package imports only packages below it, and only along the edges in `packages/
 
 **Each vendor SDK has one owner** (D-STK-16): only that package imports it, and everything else goes through the owner's exports. `SDK_OWNERS` in `boundaries.js` enforces it; `postgres` and `drizzle-kit` belong to `db`.
 
-**README seams.** `utils`, `types` and `hooks` ship as folders holding only a README that states their convention (STK-5). Each becomes a package with its first module and takes its place in the order then. There is no `lib` or `helpers` package (§8).
+**README seams.** `utils`, `types` and `hooks` ship as folders holding only a README that states their convention and what turns each into a package (`packages/<name>/README.md`). Each becomes a package with its first module and takes its place in the order then. There is no `lib` or `helpers` package (§8).
 
 **Packages ship TypeScript source.** No build step: each package's `exports` points at `src/`, and each app compiles them through `transpilePackages` in `next.config.ts`.
 

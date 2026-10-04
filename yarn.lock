@@ -1906,6 +1906,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@pem/constants@workspace:packages/constants":
+  version: 0.0.0-use.local
+  resolution: "@pem/constants@workspace:packages/constants"
+  dependencies:
+    "@pem/config": "workspace:*"
+    "@types/node": "npm:^22"
+    eslint: "npm:^9.39.1"
+    typescript: "npm:5.9.2"
+  languageName: unknown
+  linkType: soft
+
 "@pem/db@workspace:packages/db":
   version: 0.0.0-use.local
   resolution: "@pem/db@workspace:packages/db"
@@ -1925,6 +1936,17 @@ __metadata:
 "@pem/env@workspace:*, @pem/env@workspace:packages/env":
   version: 0.0.0-use.local
   resolution: "@pem/env@workspace:packages/env"
+  dependencies:
+    "@pem/config": "workspace:*"
+    "@types/node": "npm:^22"
+    eslint: "npm:^9.39.1"
+    typescript: "npm:5.9.2"
+  languageName: unknown
+  linkType: soft
+
+"@pem/observability@workspace:packages/observability":
+  version: 0.0.0-use.local
+  resolution: "@pem/observability@workspace:packages/observability"
   dependencies:
     "@pem/config": "workspace:*"
     "@types/node": "npm:^22"
