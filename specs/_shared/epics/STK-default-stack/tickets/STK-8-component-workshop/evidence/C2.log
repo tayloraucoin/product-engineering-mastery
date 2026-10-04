@@ -1,0 +1,10 @@
+command: yarn verify
+exit: 1
+at: 2026-10-04T07:46:55Z
+head: dab71e69e490755cea485187683c5ec17a227435
+---
+Checking formatting...
+All matched files use Prettier code style!
+lint:docs — 189 files, names and frontmatter clean; 8 path rules carry only paths.
+check-settings — 1 problem(s) in .claude/settings.json:
+  permissions.ask is missing Bash(*db:local:reset*); restore it from docs/engineering/templates/settings.template.json
