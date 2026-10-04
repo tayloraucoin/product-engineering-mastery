@@ -62,8 +62,12 @@ export const env = createEnv({
     EXAMPLE_API_KEY: z.string().min(1).optional(),
     /** Resend's key (@pem/email). Optional: the local tier never sends, and a staging or production send without it throws. */
     RESEND_API_KEY: z.string().min(1).optional(),
-    /** The sending address, on a domain verified in Resend; @pem/brand's contact address when unset. */
-    EMAIL_FROM: z.email().optional(),
+    /**
+     * The sending address, on a domain verified in Resend; @pem/brand's contact
+     * address when unset. Resend validates the address; a format check here
+     * would also reject check-client-bundle's sentinel value.
+     */
+    EMAIL_FROM: z.string().min(1).optional(),
   },
   client: {
     NEXT_PUBLIC_SITE_URL: z.url(),
