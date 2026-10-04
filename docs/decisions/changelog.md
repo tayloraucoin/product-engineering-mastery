@@ -21,7 +21,7 @@ Taylor: the UI package did not carry the directory structure of the recent repos
 
 - **Layout.** `src/primitives/<kind>/<name>/`, `src/composed/<kind>/<name>/`, `src/providers/<name>/`, `src/hooks/`, `src/lib/`, `src/styles/`. Kinds are a closed list: control, display, feedback, layout, media, navigation, typography. The button is `primitives/control/button/`, the toggle `composed/control/theme-toggle/`, the theme provider `providers/theme/`.
 - **Folder grammar.** `<name>.tsx` and `index.ts`; `cva()` in `<name>.variants.ts`; a composed component's strings in `copy.ts`; stories beside them when STK-8 lands.
-- **Written once,** in the new `packages/ui/AGENTS.md`; `codebase-conventions.md` §4 points to it. `yarn check-ui-layout` (in `yarn verify`) enforces it and checks every `exports` target exists.
+- **Written once,** in the new `packages/ui/AGENTS.md`; `codebase-conventions.md` §4 points to it. `yarn check-ui-layout` (in `yarn verify`) enforces the folders, the files a component needs, that `cva` is imported only in a `*.variants.ts`, that a primitive has no `copy.ts` and imports no other component, and that every `exports` target exists with no wildcard.
 - **Public subpaths unchanged.** `@pem/ui/button`, `/cn`, `/theme`, `/theme-toggle`, `/styles/globals.css`: no app import moved. Trade-off: a subpath no longer names the file's folder, so a reader follows `package.json` to find the source.
 - Ledger: EN-11.
 

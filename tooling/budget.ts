@@ -204,7 +204,7 @@ const PROBES = [
   ".yarnrc.yml",
   "docs/design/canon.md",
   `${toolkit.specsRoot}/web/one-offs/WEB-1-filter/contract.md`,
-  "packages/ui/src/button.tsx",
+  "packages/ui/src/primitives/control/button/button.tsx",
 ];
 const rules = listIn(
   ".claude/rules",

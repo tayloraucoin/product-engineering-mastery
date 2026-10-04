@@ -4,21 +4,22 @@ Package-local rules only. The root `AGENTS.md`, `docs/index.md` and the design l
 
 ## Layout
 
-The house layout, carried from Synapse and Conscious Connections. `yarn check-ui-layout` enforces it and holds the two lists below.
+The house layout of Synapse and Conscious Connections; `providers/<name>/` as a folder is this repo's own. `yarn check-ui-layout` enforces the folders, the files a component needs, where `cva` lives, the two primitive rules below and the `exports` targets; whether a component is generic enough to be a primitive stays judgment.
 
 ```
 src/
   primitives/<kind>/<name>/   generic building blocks
   composed/<kind>/<name>/     assemblies with an opinion
   providers/<name>/           context providers (theme)
-  hooks/                      shared hooks, from the first one
+  hooks/                      DOM-bound hooks only, from the first one
   lib/                        helpers (cn)
   styles/globals.css          the Tailwind source registration
 ```
 
-- **Kinds:** `control`, `display`, `feedback`, `layout`, `media`, `navigation`, `typography`. A new kind is added to `KINDS` in `tooling/check-ui-layout.ts` and to this line in the same change.
-- **Primitive or composed.** A primitive is product-agnostic, owns no copy and imports no other `@pem/ui` component: the shadcn level (`button`). A composed component owns copy or behaviour for one use, or imports a primitive (`theme-toggle`).
-- **A component is a folder:** `<name>.tsx`, `index.ts`, and `<name>.stories.tsx` beside them (STK-8). A `cva()` lives in `<name>.variants.ts`, never in the component file. A composed component's user-facing strings live in `copy.ts`.
+- **Kinds** are the closed list `KINDS` in `tooling/check-ui-layout.ts`, named only there; the check prints it when a folder is not a kind. A new kind is added there.
+- **Hooks** that touch no DOM go to the `hooks` package (D-STK-1), not here.
+- **Primitive or composed.** A primitive is product-agnostic, has no `copy.ts` and imports no other component: the shadcn level (`button`). A composed component owns copy or behaviour for one use, or imports a primitive (`theme-toggle`).
+- **A component is a folder:** `<name>.tsx`, `index.ts`, and `<name>.stories.tsx` beside them (STK-8). A `cva()` lives in `<name>.variants.ts`, never in any other file. A composed component's user-facing strings live in `copy.ts`.
 
 ## Exports
 

@@ -24,6 +24,7 @@ planned_paths:
   - "packages/ui/CLAUDE.md"
   - "tooling/check-ui-layout.ts"
   - "tooling/check-ui-layout.test.ts"
+  - "tooling/budget.ts"
   - "package.json"
   - "docs/engineering/codebase-conventions.md"
   - "docs/decisions/ledger.md"
@@ -75,6 +76,7 @@ tier: 1
   - `tooling/check-ui-layout.ts`: walks `packages/ui/src` and `package.json` `exports`; exits 1 with one line per problem. Takes a root argument so the test can point it at a temp tree.
   - `tooling/check-ui-layout.test.ts`: one `node:test` case per failure class plus a passing tree, built in `$TMPDIR`.
   - `package.json`: the script and its place in `verify`.
+  - `tooling/budget.ts`: the `packages/ui` probe path moves to a legal layout path (review N10).
   - `docs/engineering/codebase-conventions.md` §4: one line pointing to `packages/ui/AGENTS.md` for the internal layout.
   - `docs/decisions/ledger.md` (EN-11), `changelog.md`: the amendment.
 - **Gotchas:** relative imports inside the package change depth (`../lib/cn` becomes `../../../lib/cn`). `check-refs` may cite old paths in closed tickets' review files; those are records and are not edited. `hooks/` stays absent until its first hook; the check allows it, it does not require it.
