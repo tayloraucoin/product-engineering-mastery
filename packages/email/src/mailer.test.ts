@@ -39,7 +39,7 @@ test("C1: a send on the local tier logs the rendered message and does not call t
   const vendor = fakeVendor();
   const { lines, logger } = memoryLogger();
   const mailer = createMailer(
-    { tier: "local", apiKey: "re_synthetic" },
+    { tier: "local", deployed: false, apiKey: "re_synthetic" },
     { sendEmail: vendor.sendEmail, logger },
   );
 
@@ -61,7 +61,7 @@ test("C1: a dashboard template on the local tier logs its id and variable names,
   const vendor = fakeVendor();
   const { lines, logger } = memoryLogger();
   const mailer = createMailer(
-    { tier: "local" },
+    { tier: "local", deployed: false },
     { sendEmail: vendor.sendEmail, logger },
   );
 
@@ -77,7 +77,10 @@ test("C1: a dashboard template on the local tier logs its id and variable names,
 });
 
 test("C1: the local tier needs no key", async () => {
-  const mailer = createMailer({ tier: "local" }, memoryLogger());
+  const mailer = createMailer(
+    { tier: "local", deployed: false },
+    memoryLogger(),
+  );
   assert.deepEqual(await mailer.send({ to: "person@example.test", content }), {
     status: "logged",
   });
@@ -87,7 +90,7 @@ test("C1: staging and production call the vendor once, with the brand's sender a
   for (const tier of ["staging", "production"] as const) {
     const vendor = fakeVendor();
     const mailer = createMailer(
-      { tier, apiKey: "re_synthetic" },
+      { tier, deployed: true, apiKey: "re_synthetic" },
       { sendEmail: vendor.sendEmail, logger: memoryLogger().logger },
     );
 
@@ -109,6 +112,7 @@ test("C1: a dashboard template is sent by its id, and EMAIL_FROM replaces the br
   const mailer = createMailer(
     {
       tier: "production",
+      deployed: true,
       apiKey: "re_synthetic",
       fromAddress: "mail@example.test",
     },
@@ -131,7 +135,7 @@ test("C1: a dashboard template is sent by its id, and EMAIL_FROM replaces the br
 test("C1: staging without a key refuses to send, naming the variable", async () => {
   const vendor = fakeVendor();
   const mailer = createMailer(
-    { tier: "staging" },
+    { tier: "staging", deployed: true },
     { sendEmail: vendor.sendEmail, logger: memoryLogger().logger },
   );
 
@@ -144,7 +148,7 @@ test("C1: staging without a key refuses to send, naming the variable", async () 
 
 test("C1: a vendor error is thrown, not swallowed", async () => {
   const mailer = createMailer(
-    { tier: "production", apiKey: "re_synthetic" },
+    { tier: "production", deployed: true, apiKey: "re_synthetic" },
     {
       sendEmail: async () => ({
         data: null,
@@ -163,4 +167,27 @@ test("C1: a vendor error is thrown, not swallowed", async () => {
 test("maskAddress keeps the first letter and the domain only", () => {
   assert.equal(maskAddress("person@example.test"), "p***@example.test");
   assert.equal(maskAddress("not-an-address"), "***");
+});
+
+test("C1: a deployment left on the local tier neither sends nor logs the body", async () => {
+  const vendor = fakeVendor();
+  const { lines, logger } = memoryLogger();
+  const mailer = createMailer(
+    { tier: "local", deployed: true, apiKey: "re_synthetic" },
+    { sendEmail: vendor.sendEmail, logger },
+  );
+
+  const result = await mailer.send({ to: "person@example.test", content });
+
+  assert.deepEqual(result, { status: "withheld" });
+  assert.equal(vendor.calls.length, 0);
+  assert.equal(lines[0]?.event, "email.withheld");
+  const logged = JSON.stringify(lines);
+  for (const leak of [
+    "Synthetic subject",
+    "Synthetic heading",
+    "app.example.test",
+    "person@",
+  ])
+    assert.ok(!logged.includes(leak), leak);
 });

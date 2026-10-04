@@ -10,12 +10,13 @@
 
 ## Deviations
 
-- **Not wired into `apps/web`.** `apps/web/env.ts` does not read `RESEND_API_KEY` or `EMAIL_FROM` yet, and `apps/web/lib/email.ts` does not exist. A variable that `env.ts` reads must be in `turbo.json` (turbo's lint), and `turbo.json` names must be in `.env.example` (`check-client-bundle`). This session's permission settings deny reading `.env.example`. The wiring was committed and then backed out in `7086a07`. It comes back once `.env.example` lists both variables.
+- The `apps/web` wiring (`env.ts`, `lib/email.ts`, `turbo.json`, `.env.example`) was backed out in `7086a07` while `.env.example` was unreadable under this session's permission settings. It was restored once the settings allowed it.
+- Added after warden's review (Should-fix 1): `createMailer` takes `deployed`, which `apps/web/env.ts` now exports, derived from `VERCEL_ENV`. A deployment left on the local tier warns `email.withheld` and logs no subject or body.
 - [ASSUMPTION] devs_call: a plain template string with escaping, and no renderer dependency.
 - [ASSUMPTION] `EMAIL_FROM` is tiered (`_LOCAL`, `_STAGING`), like every other variable, so staging can send from Resend's test domain.
 - [ASSUMPTION] Email clients ignore web fonts, so the template uses a system font stack rather than the brand font.
 - [ASSUMPTION] The example call from a service lives in `packages/email/README.md`, since `@pem/services` is STK-13.
-- `EXAMPLE_API_KEY` stays; replacing it touches `.env.example` too.
+- [ASSUMPTION] `EXAMPLE_API_KEY` stays: `check-client-bundle`'s tests and `@pem/env`'s tests name it, and `RESEND_API_KEY` now gives the bundle check a real key to plant as well.
 - STK-5 was built first in the same thread, as STK-15's dependency.
 
 ## Not verified
@@ -25,4 +26,4 @@
 
 ## Next
 
-Add the email lines to `.env.example`, then restore the `apps/web` wiring: `env.ts`, `lib/email.ts`, `turbo.json`, the dependency and `transpilePackages`.
+Send one real message on staging with `EMAIL_FROM` on a verified domain, and open it in Gmail and Outlook (vigil's runtime checks).

@@ -5,7 +5,10 @@
  *
  * The local tier never sends: it logs the rendered message and returns
  * `logged`, so a developer reads the mail in the terminal and no real inbox is
- * reached. Staging and production send through Resend and need the key.
+ * reached. A deployment left on the local tier logs neither the body nor the
+ * subject, since reset and sign-in links live there and platform logs are
+ * retained; it warns and returns `withheld`. Staging and production send
+ * through Resend and need the key.
  *
  * Two kinds of message: `content` renders the default template here
  * (`default-template.ts`); `template` names a template kept in the Resend
@@ -27,6 +30,8 @@ export type MailerConfig = {
   apiKey?: string;
   /** `EMAIL_FROM`: an address on a domain verified in Resend; `brand.contact.email` when unset. */
   fromAddress?: string;
+  /** Whether this process runs in a deployment (`isDeployed` from @pem/env/site-url), never set by hand. */
+  deployed: boolean;
 };
 
 /** A Resend dashboard template: its id from env.ts, and the values for its variables. */
@@ -40,7 +45,10 @@ export type EmailMessage = { to: string | readonly string[] } & (
   | { template: DashboardTemplate; content?: never }
 );
 
-export type SendResult = { status: "sent"; id: string } | { status: "logged" };
+export type SendResult =
+  | { status: "sent"; id: string }
+  | { status: "logged" }
+  | { status: "withheld" };
 
 /** The one vendor call, injectable so a test can prove when it is made. */
 export type SendEmail = (options: CreateEmailOptions) => Promise<{
@@ -84,6 +92,16 @@ export function createMailer(
       const part = message.template
         ? { template: message.template }
         : renderDefaultEmail(message.content);
+
+      if (config.tier === "local" && config.deployed) {
+        log.warn("email.withheld", {
+          tier: config.tier,
+          reason:
+            "DATABASE_ENVIRONMENT is local on a deployment, so the message is neither sent nor logged",
+          recipientCount: to.length,
+        });
+        return { status: "withheld" };
+      }
 
       if (config.tier === "local") {
         log.info("email.logged", {
