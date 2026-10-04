@@ -1,0 +1,22 @@
+{
+  "id": "STK-19",
+  "criteria_sha256": "544d2b5b42860abed7262e53996c63a6b6a31578966a4513254486a5894cda21",
+  "criteria": {
+    "C1": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C2": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    },
+    "C3": {
+      "status": "FAIL",
+      "evidence": "manual",
+      "run": null
+    }
+  },
+  "updated_at": "2026-10-04T06:25:34Z"
+}
