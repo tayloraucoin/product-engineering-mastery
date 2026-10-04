@@ -48,6 +48,7 @@
     "db:local": "yarn workspace @pem/db db:local",
     "db:local:full": "yarn workspace @pem/db db:local:full",
     "db:stop": "yarn workspace @pem/db db:stop",
+    "db:local:reset": "yarn workspace @pem/db db:local:reset",
     "db:generate": "yarn workspace @pem/db db:generate",
     "db:migrate": "yarn workspace @pem/db db:migrate",
     "db:setup": "yarn workspace @pem/db db:setup",

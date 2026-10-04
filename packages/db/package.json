@@ -38,6 +38,7 @@
     "db:local": "node --env-file-if-exists=.env.local scripts/local.ts",
     "db:local:full": "node --env-file-if-exists=.env.local scripts/local-full.ts",
     "db:stop": "supabase stop",
+    "db:local:reset": "node --env-file-if-exists=.env.local scripts/reset-local-db.ts",
     "db:generate": "drizzle-kit generate --config drizzle.config.ts",
     "db:migrate": "node --env-file-if-exists=.env.local scripts/migrate.ts",
     "db:setup": "node --env-file-if-exists=.env.local scripts/setup.ts",
