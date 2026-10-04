@@ -1,6 +1,6 @@
 {
   "id": "STK-1",
-  "criteria_sha256": "1efa487b0b8536068535e61ecc9b88fa562bff8c9b70c882034cc3838b49f03f",
+  "criteria_sha256": "5dc60ebc126c5dea43c1d022a806accffa8a5bebbf1a8d5fd8d920baaebf4178",
   "criteria": {
     "C1": {
       "status": "PASS",
@@ -8,10 +8,10 @@
       "run": {
         "command": "yarn lint:docs",
         "exit": 0,
-        "at": "2026-10-03T23:23:33Z",
-        "head": "0dcce4cc20c284a4c012f2eb17269d19d5f7a246",
+        "at": "2026-10-04T04:18:06Z",
+        "head": "5eb138e2b43980594ad1a6f4458615b33f9ae90f",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C1.log",
-        "evidence_sha256": "0bf40348c6d9ec3206c0328ca32896083cfc784cae2e10a8562746310599022a"
+        "evidence_sha256": "3e44a1472f73406ac4a7b00f4a0033c50bef8ef29c3c4c691804c720b3d056d1"
       }
     },
     "C2": {
@@ -20,10 +20,10 @@
       "run": {
         "command": "yarn check-refs",
         "exit": 0,
-        "at": "2026-10-03T23:23:34Z",
-        "head": "0dcce4cc20c284a4c012f2eb17269d19d5f7a246",
+        "at": "2026-10-04T04:18:07Z",
+        "head": "5eb138e2b43980594ad1a6f4458615b33f9ae90f",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C2.log",
-        "evidence_sha256": "15e0688c8634a54ff3dbe2b38a54537017518ebdab427911aa71d8d6baed0c42"
+        "evidence_sha256": "d663fc215676620549cabf1b8c5b09a92c54f26ea13d245dd6259a6f4a1c5635"
       }
     },
     "C3": {
@@ -32,39 +32,24 @@
       "run": {
         "command": "yarn directory-map --check",
         "exit": 0,
-        "at": "2026-10-03T23:23:34Z",
-        "head": "0dcce4cc20c284a4c012f2eb17269d19d5f7a246",
+        "at": "2026-10-04T04:18:09Z",
+        "head": "5eb138e2b43980594ad1a6f4458615b33f9ae90f",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C3.log",
-        "evidence_sha256": "af9e92845de423e104b967a6acff922b8017734553cb335e9ce2e14a68e7f9d4"
+        "evidence_sha256": "a7b7081da6c34e7682aeabaff158bc5066635d874f2f0ebd9099e92e57b992c2"
       }
     },
     "C4": {
       "status": "PASS",
       "evidence": "manual",
       "run": {
-        "command": "yarn contract:record STK-1 C4 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C4.md",
+        "command": "yarn contract:record STK-1 C4 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C4-reread.md",
         "exit": 0,
-        "at": "2026-10-03T23:24:24Z",
-        "head": "0dcce4cc20c284a4c012f2eb17269d19d5f7a246",
-        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C4.md",
-        "evidence_sha256": "1a821bc9a31b9249f9ee98258232a5e2457ae25fbd8738123818aade03edaa17"
-      }
-    },
-    "review:vigil": {
-      "status": "PASS",
-      "evidence": "manual",
-      "run": {
-        "command": "yarn review:run vigil STK-1",
-        "exit": 0,
-        "at": "2026-10-03T23:34:34Z",
-        "head": "0aa89aa80e98f732873370054eb88aabd2e440bb",
-        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/review-vigil.md",
-        "evidence_sha256": "9f343f901e2f9f8565287259923903ca409f4cbf195b6e81460469e7f6b52995",
-        "contract_sha256": "f54b96df289bcb30de4e6f080127a29b09100cb2c79708926cc8865c6c48e006",
-        "as_built_sha256": "60ec470a94bffd87f7810cca809356501c36812d7294832caee39950df7b4f6e",
-        "runner": "claude 2.1.232 (Claude Code) (agent vigil; tools Read,Grep,Glob)"
+        "at": "2026-10-04T04:18:36Z",
+        "head": "5eb138e2b43980594ad1a6f4458615b33f9ae90f",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C4-reread.md",
+        "evidence_sha256": "92efdb07e82f39516f1d0508f1b6ee24191492533148118e5dea2636b6773741"
       }
     }
   },
-  "updated_at": "2026-10-03T23:39:47Z"
+  "updated_at": "2026-10-04T04:18:36Z"
 }
