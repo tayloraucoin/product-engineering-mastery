@@ -245,7 +245,7 @@
       "runbook": "docs/runbooks/remove-supabase-database.md"
     },
     "email": {
-      "files": ["packages/email", "apps/web/lib/email.ts"],
+      "files": ["packages/email"],
       "env": ["RESEND_API_KEY", "EMAIL_FROM"],
       "dependencies": ["@pem/email", "resend"],
       "boundaries": ["email"],

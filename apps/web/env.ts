@@ -31,12 +31,6 @@ const raw = {
   NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
   NEXT_PUBLIC_SITE_URL_LOCAL: process.env.NEXT_PUBLIC_SITE_URL_LOCAL,
   NEXT_PUBLIC_SITE_URL_STAGING: process.env.NEXT_PUBLIC_SITE_URL_STAGING,
-  RESEND_API_KEY: process.env.RESEND_API_KEY,
-  RESEND_API_KEY_LOCAL: process.env.RESEND_API_KEY_LOCAL,
-  RESEND_API_KEY_STAGING: process.env.RESEND_API_KEY_STAGING,
-  EMAIL_FROM: process.env.EMAIL_FROM,
-  EMAIL_FROM_LOCAL: process.env.EMAIL_FROM_LOCAL,
-  EMAIL_FROM_STAGING: process.env.EMAIL_FROM_STAGING,
 };
 
 const tier = parseTier(raw.DATABASE_ENVIRONMENT);
@@ -57,10 +51,6 @@ export const env = createEnv({
      * replaces it with a real key.
      */
     EXAMPLE_API_KEY: z.string().min(1).optional(),
-    /** Resend's key (@pem/email). Optional: the local tier never sends, and a staging or production send without it throws. */
-    RESEND_API_KEY: z.string().min(1).optional(),
-    /** The sending address, on a domain verified in Resend; @pem/brand's contact address when unset. */
-    EMAIL_FROM: z.email().optional(),
   },
   client: {
     NEXT_PUBLIC_SITE_URL: z.url(),
@@ -68,8 +58,6 @@ export const env = createEnv({
   runtimeEnv: {
     DATABASE_ENVIRONMENT: tier,
     EXAMPLE_API_KEY: pickTiered(raw, "EXAMPLE_API_KEY", tier),
-    RESEND_API_KEY: pickTiered(raw, "RESEND_API_KEY", tier),
-    EMAIL_FROM: pickTiered(raw, "EMAIL_FROM", tier),
     // In the browser the tier is unknown, so the value next.config.ts inlined is the truth there.
     NEXT_PUBLIC_SITE_URL:
       typeof window === "undefined" ? siteUrl : raw.NEXT_PUBLIC_SITE_URL,

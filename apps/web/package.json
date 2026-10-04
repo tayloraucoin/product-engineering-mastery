@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@pem/brand": "workspace:*",
-    "@pem/email": "workspace:*",
     "@pem/env": "workspace:*",
     "@pem/ui": "workspace:*",
     "@t3-oss/env-nextjs": "^0.13.11",

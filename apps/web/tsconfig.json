@@ -5,7 +5,6 @@
     "jsx": "react-jsx",
     "declaration": false,
     "declarationMap": false,
-    "allowImportingTsExtensions": true,
     "paths": {
       "@/*": ["./*"]
     }

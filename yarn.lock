@@ -1933,7 +1933,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@pem/email@workspace:*, @pem/email@workspace:packages/email":
+"@pem/email@workspace:packages/email":
   version: 0.0.0-use.local
   resolution: "@pem/email@workspace:packages/email"
   dependencies:
@@ -9091,7 +9091,6 @@ __metadata:
   dependencies:
     "@pem/brand": "workspace:*"
     "@pem/config": "workspace:*"
-    "@pem/email": "workspace:*"
     "@pem/env": "workspace:*"
     "@pem/ui": "workspace:*"
     "@t3-oss/env-nextjs": "npm:^0.13.11"
