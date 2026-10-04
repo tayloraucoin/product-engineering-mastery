@@ -9207,6 +9207,7 @@ __metadata:
     "@pem/db": "workspace:*"
     "@pem/email": "workspace:*"
     "@pem/env": "workspace:*"
+    "@pem/observability": "workspace:*"
     "@pem/ui": "workspace:*"
     "@t3-oss/env-nextjs": "npm:^0.13.11"
     "@tailwindcss/postcss": "npm:^4"

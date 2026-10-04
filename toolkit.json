@@ -244,6 +244,28 @@
       "locked": false,
       "runbook": "docs/runbooks/remove-supabase-database.md"
     },
+    "auth": {
+      "files": [
+        "packages/auth",
+        "apps/web/proxy.ts",
+        "apps/web/lib/supabase",
+        "apps/web/app/auth"
+      ],
+      "env": [
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY"
+      ],
+      "dependencies": [
+        "@pem/auth",
+        "@supabase/ssr",
+        "@supabase/supabase-js",
+        "server-only"
+      ],
+      "boundaries": ["auth"],
+      "locked": false,
+      "runbook": "docs/runbooks/remove-supabase-auth.md"
+    },
     "email": {
       "files": ["packages/email", "apps/web/lib/email.ts"],
       "env": ["RESEND_API_KEY", "EMAIL_FROM"],
