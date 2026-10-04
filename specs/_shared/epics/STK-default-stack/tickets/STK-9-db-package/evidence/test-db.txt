@@ -1,0 +1,117 @@
+.env.local not found. Continuing without it.
+TAP version 13
+# .env.local not found. Continuing without it.
+# Subtest: the bridge
+    # Subtest: sets app.user_id, app.user_role and the role for the transaction
+    not ok 1 - sets app.user_id, app.user_role and the role for the transaction
+      ---
+      duration_ms: 0
+      type: 'test'
+      location: '/Users/taylor/lighthouse/product-engineering-mastery/packages/db/test/rls.test.ts:63:3'
+      failureType: 'cancelledByParent'
+      error: 'test did not finish before its parent and was cancelled'
+      code: 'ERR_TEST_FAILURE'
+      ...
+    # Subtest: leaves nothing behind on the pooled connection after the transaction
+    not ok 2 - leaves nothing behind on the pooled connection after the transaction
+      ---
+      duration_ms: 0
+      type: 'test'
+      location: '/Users/taylor/lighthouse/product-engineering-mastery/packages/db/test/rls.test.ts:76:3'
+      failureType: 'cancelledByParent'
+      error: 'test did not finish before its parent and was cancelled'
+      code: 'ERR_TEST_FAILURE'
+      ...
+    1..2
+not ok 1 - the bridge
+  ---
+  duration_ms: 2.806209
+  type: 'suite'
+  location: '/Users/taylor/lighthouse/product-engineering-mastery/packages/db/test/rls.test.ts:62:1'
+  failureType: 'hookFailed'
+  error: 'The local Supabase image is not reachable at 127.0.0.1:54322/postgres. Start it with yarn db:local, then rerun yarn test:db. (connect ECONNREFUSED 127.0.0.1:54322)'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/taylor/lighthouse/product-engineering-mastery/packages/db/test/rls.test.ts:44:11)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async TestHook.run (node:internal/test_runner/test:1054:7)
+  ...
+# Subtest: the setup SQL
+    # Subtest: mirrors each auth user into public.users
+    not ok 1 - mirrors each auth user into public.users
+      ---
+      duration_ms: 0
+      type: 'test'
+      location: '/Users/taylor/lighthouse/product-engineering-mastery/packages/db/test/rls.test.ts:95:3'
+      failureType: 'cancelledByParent'
+      error: 'test did not finish before its parent and was cancelled'
+      code: 'ERR_TEST_FAILURE'
+      ...
+    # Subtest: is idempotent: a second run leaves the same triggers and policies
+    not ok 2 - is idempotent: a second run leaves the same triggers and policies
+      ---
+      duration_ms: 0
+      type: 'test'
+      location: '/Users/taylor/lighthouse/product-engineering-mastery/packages/db/test/rls.test.ts:103:3'
+      failureType: 'cancelledByParent'
+      error: 'test did not finish before its parent and was cancelled'
+      code: 'ERR_TEST_FAILURE'
+      ...
+    1..2
+not ok 2 - the setup SQL
+  ---
+  duration_ms: 0.401083
+  type: 'suite'
+  location: '/Users/taylor/lighthouse/product-engineering-mastery/packages/db/test/rls.test.ts:94:1'
+  failureType: 'hookFailed'
+  error: 'The local Supabase image is not reachable at 127.0.0.1:54322/postgres. Start it with yarn db:local, then rerun yarn test:db. (connect ECONNREFUSED 127.0.0.1:54322)'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/taylor/lighthouse/product-engineering-mastery/packages/db/test/rls.test.ts:44:11)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async TestHook.run (node:internal/test_runner/test:1054:7)
+  ...
+# Subtest: an owner-private policy
+    # Subtest: hides another user's row and refuses writes to it
+    not ok 1 - hides another user's row and refuses writes to it
+      ---
+      duration_ms: 0
+      type: 'test'
+      location: '/Users/taylor/lighthouse/product-engineering-mastery/packages/db/test/rls.test.ts:122:3'
+      failureType: 'cancelledByParent'
+      error: 'test did not finish before its parent and was cancelled'
+      code: 'ERR_TEST_FAILURE'
+      ...
+    # Subtest: a user reads their own account row and not another's
+    not ok 2 - a user reads their own account row and not another's
+      ---
+      duration_ms: 0
+      type: 'test'
+      location: '/Users/taylor/lighthouse/product-engineering-mastery/packages/db/test/rls.test.ts:172:3'
+      failureType: 'cancelledByParent'
+      error: 'test did not finish before its parent and was cancelled'
+      code: 'ERR_TEST_FAILURE'
+      ...
+    1..2
+not ok 3 - an owner-private policy
+  ---
+  duration_ms: 0.023125
+  type: 'suite'
+  location: '/Users/taylor/lighthouse/product-engineering-mastery/packages/db/test/rls.test.ts:121:1'
+  failureType: 'hookFailed'
+  error: 'The local Supabase image is not reachable at 127.0.0.1:54322/postgres. Start it with yarn db:local, then rerun yarn test:db. (connect ECONNREFUSED 127.0.0.1:54322)'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/taylor/lighthouse/product-engineering-mastery/packages/db/test/rls.test.ts:44:11)
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async TestHook.run (node:internal/test_runner/test:1054:7)
+  ...
+1..3
+# tests 6
+# suites 3
+# pass 0
+# fail 0
+# cancelled 6
+# skipped 0
+# todo 0
+# duration_ms 351.509333
