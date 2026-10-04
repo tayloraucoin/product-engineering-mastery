@@ -16,7 +16,10 @@ cites:
   - "specs/_shared/epics/STK-default-stack/technical.md"
   - "D-STK-18"
 truth_files: "none: no living UX file covers the starter's own stack"
-reviewers: []
+reviewers:
+  - mason
+  - vigil
+  - warden
 planned_paths:
   - ".claude/settings.json"
   - "tooling/check-settings.ts"
@@ -47,6 +50,19 @@ criteria:
     statement: "Tooling tests pass."
     evidence: test
     command: "yarn test:tooling"
+  - id: review:mason
+    statement: Mason reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run mason <id>
+  - id: review:vigil
+    statement: Vigil reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run vigil <id>
+  - id: review:warden
+    statement: Warden reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
+tier: 2
 ---
 
 # Contract — STK-10 db-guardrails
