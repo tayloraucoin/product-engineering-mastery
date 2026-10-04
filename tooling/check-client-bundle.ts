@@ -7,7 +7,7 @@
  *       receives: a client chunk (.next/static) or a prerendered page or RSC
  *       payload (.next/server/app). Fails when there is nothing to plant.
  *   yarn check-client-bundle --plan [--root <dir>]
- *       Prints the names a build would plant, and any drift, without building.
+ *       Prints the names a build would plant without building; fails on drift.
  *   yarn check-client-bundle --scan <dir> --sentinel NAME=value [...]
  *       Scans an existing client-chunk folder for the given sentinels only.
  *
@@ -17,8 +17,8 @@
  * cannot carry a sentinel because they are enum words, not secrets: the tier
  * switch and the ones the platform sets. Both files are read, so a secret
  * listed in only one is still planted; a name turbo.json lists and
- * .env.example does not is printed as drift (codebase-conventions §5 asks for
- * both).
+ * .env.example does not is drift, and fails the check in every mode
+ * (codebase-conventions §5 asks for both).
  * Either mode fails when a folder is missing or no client chunk is found: a
  * scan of nothing proves nothing.
  */
@@ -92,10 +92,10 @@ function plan(root: string): { names: string[]; drift: string[] } {
   return { names, drift };
 }
 
-function printDrift(drift: string[]): void {
+function refuseDrift(drift: string[]): void {
   if (drift.length)
-    console.log(
-      `check-client-bundle — warning: turbo.json lists ${drift.join(", ")}, which .env.example does not; planted anyway. Add each to .env.example with a comment (codebase-conventions §5).`,
+    stop(
+      `turbo.json lists ${drift.join(", ")}, which .env.example does not. Add each to .env.example with a comment saying what breaks without it (codebase-conventions §5).`,
     );
 }
 
@@ -151,7 +151,7 @@ if (args.includes("--plan")) {
   const root = rootAt === -1 ? REPO_ROOT : path.resolve(args[rootAt + 1] ?? "");
   const { names, drift } = plan(root);
   console.log(`check-client-bundle — would plant: ${names.join(", ")}`);
-  printDrift(drift);
+  refuseDrift(drift);
 } else if (scanAt !== -1) {
   const dir = args[scanAt + 1];
   if (!dir || dir.startsWith("--")) stop("--scan needs a folder");
@@ -171,7 +171,7 @@ if (args.includes("--plan")) {
     stop(
       ".env.example and turbo.json list no server-only variable to plant; the check would prove nothing",
     );
-  printDrift(drift);
+  refuseDrift(drift);
   const sentinels = new Map(
     names.map((name) => [
       name,

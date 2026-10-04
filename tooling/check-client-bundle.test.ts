@@ -63,7 +63,7 @@ test("C5: a scan with no sentinel named is refused", () => {
   assert.match(r.out, /name at least one --sentinel/);
 });
 
-test("the plan plants server-only names from .env.example and turbo.json, and names the drift", () => {
+test("the plan plants server-only names from .env.example and turbo.json, and fails on drift, naming it", () => {
   // The repo's settings deny reading .env files, so the fixture commits
   // env.example and the test renames it in a copy under $TMPDIR.
   const root = mkdtempSync(path.join(tmpdir(), "client-bundle-plan-"));
@@ -76,7 +76,7 @@ test("the plan plants server-only names from .env.example and turbo.json, and na
   );
   renameSync(path.join(root, "env.example"), path.join(root, ".env.example"));
   const r = check("--plan", "--root", root);
-  assert.equal(r.status, 0, r.out);
+  assert.equal(r.status, 1, r.out);
   assert.match(
     r.out,
     /would plant: EXAMPLE_API_KEY, EXAMPLE_API_KEY_LOCAL, SYNTHETIC_DB_URL, SYNTHETIC_TASK_SECRET\n/,
