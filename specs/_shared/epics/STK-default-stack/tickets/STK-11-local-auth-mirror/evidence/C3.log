@@ -1,25 +1,8 @@
 command: yarn verify
 exit: 1
-at: 2026-10-04T23:52:41Z
-head: c2ca4e9772567fc04c6ee5f183aa7e9a028d8c7e
+at: 2026-10-04T23:58:35Z
+head: 30705285ffcf3ab5c8854a0730ba088210f955ec
 ---
 Checking formatting...
-All matched files use Prettier code style!
-lint:docs — 193 files, names and frontmatter clean; 8 path rules carry only paths.
-check-settings — 12 fixtures behaved; .claude/settings.json is clean.
-test:hooks — every case behaved.
-  bash-guard: 120 cases, 9 rules; median 60 ms, max 66 ms per call; longest denial about 53 tokens
-  results-gate: 14 cases, 4 rules; median 55 ms, max 58 ms per call; longest denial about 48 tokens
-  session-start: 5 cases, 4 rules; median 57 ms, max 60 ms per call; answers as context
-  stop-gate: 8 cases, 4 rules; median 58 ms, max 61 ms per call; answers as stop
-check-refs — every reference in 113 live files resolves; 40 pending (lands in J8, lands in J11, superseded by docs/runbooks/new-project.md (STK-3), lands in P-C, lands in P-D, lands in P-K, a product repo's path, named by a template, a product repo's path, named by a ruling (CF-13), a pattern, not a path, machine-local and untracked by design, stale ruling text in conflicts.md, superseded by A4; held for Taylor (PR-05), stale ruling text in conflicts.md; extensions sit beside their role (record 0006); held for Taylor (PR-05), stale ledger text; the rulings live in docs/design/workflow.md; held for Taylor (PR-05), stale ledger text; filed as docs/research/toolkit/design-candidates.md; held for Taylor (PR-05), stale ledger text; the ledger is docs/decisions/ledger.md; held for Taylor (PR-05), stale ledger text; the folder is docs/measurement/metrics/ (PR-12); held for Taylor (PR-05), stale ledger text; the folder is docs/measurement/evals/ (PR-12); held for Taylor (PR-05)).
-check-stack — 10 module(s); nothing missing, nothing left behind.
-check-migrations: 1 migration(s) in packages/db/migrations, none touch the auth schema.
-warn  specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/results.json: C3's PASS no longer holds: packages/db/scripts/local-full.ts, packages/db/scripts/local.ts, packages/db/scripts/supabase-cli.ts changed after it was recorded. Re-record it: yarn contract:run STK-11 C3
-warn  specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/results.json: review:vigil's PASS no longer holds: packages/db/scripts/local-full.ts, packages/db/scripts/local.ts, packages/db/scripts/supabase-cli.ts changed after it was recorded. Re-record it: yarn review:run vigil STK-11
-warn  STK-11 has an as-built, so it is closing, but review:mason (not proven yet) is not PASS. Run: yarn review:run mason STK-11
-warn  specs/_shared/epics/STK-default-stack/tickets/STK-12-auth-package/results.json: review:vigil's PASS no longer holds: apps/web/app/auth/callback/route.ts, apps/web/app/auth/sign-in/_components/email-field.tsx, apps/web/app/auth/sign-in/_components/send-link-button.tsx and 14 more changed after it was recorded. Re-record it: yarn review:run vigil STK-12
-warn  specs/_shared/epics/STK-default-stack/tickets/STK-12-auth-package/results.json: review:warden's PASS no longer holds: docs/engineering/tech-stack.md, toolkit.json, yarn.lock changed after it was recorded. Re-record it: yarn review:run warden STK-12
-warn  STK-12 has an as-built, so it is closing, but review:assay (not proven yet), review:threshold (not proven yet) are not PASS. Run: yarn review:run assay STK-12
-check-specs — 1 problem(s):
-  specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/results.json: review:warden is PASS, but evidence specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/review-warden.md changed after it was recorded. Re-record it: yarn review:run warden STK-11
+[warn] docs/design/component-sources.md
+[warn] Code style issues found in the above file. Run Prettier with --write to fix.
