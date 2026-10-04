@@ -1,0 +1,39 @@
+{
+  "name": "@pem/env",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./tier": {
+      "types": "./src/tier.ts",
+      "default": "./src/tier.ts"
+    },
+    "./pick": {
+      "types": "./src/pick.ts",
+      "default": "./src/pick.ts"
+    },
+    "./key-mode": {
+      "types": "./src/key-mode.ts",
+      "default": "./src/key-mode.ts"
+    },
+    "./site-url": {
+      "types": "./src/site-url.ts",
+      "default": "./src/site-url.ts"
+    },
+    "./next-public": {
+      "types": "./src/next-public.ts",
+      "default": "./src/next-public.ts"
+    }
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "check-types": "tsc --noEmit",
+    "test": "node --test \"src/**/*.test.ts\""
+  },
+  "devDependencies": {
+    "@pem/config": "workspace:*",
+    "@types/node": "^22",
+    "eslint": "^9.39.1",
+    "typescript": "5.9.2"
+  }
+}

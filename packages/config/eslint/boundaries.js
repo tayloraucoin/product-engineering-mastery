@@ -2,8 +2,8 @@
  * Import-boundary rules (codebase-conventions §4).
  *
  * Enforced via eslint-plugin-boundaries at the repo root (eslint.config.mjs).
- * Layer order (low → high):
- *   config → ui → apps
+ * Layer order (low → high), the built part of codebase-conventions §4:
+ *   config → env → ui → apps
  *
  * - apps/* → apps/*: hard ban
  * - packages/* → apps/*: hard ban
@@ -42,12 +42,14 @@ const ELEMENTS = [
   workspaceApp("app-web", "web"),
   workspaceApp("app-docs", "docs"),
   workspacePackage("config", "config"),
+  workspacePackage("env", "env"),
   workspacePackage("ui", "ui"),
 ];
 
 /** Each package may import only these lower-layer types. */
 const PACKAGE_IMPORTS = {
   config: [],
+  env: ["config"],
   ui: ["config"],
 };
 
