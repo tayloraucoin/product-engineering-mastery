@@ -1,12 +1,9 @@
 command: yarn verify
 exit: 1
-at: 2026-10-04T23:25:35Z
-head: 7213b10a745243a954ade78a0519278d1e380158
+at: 2026-10-04T23:26:55Z
+head: 728585c85ce5c9aec2821aba0153d603ebc67a5d
 ---
 Checking formatting...
-[warn] packages/catalog/src/custom/control/copy-button/copy-button.tsx
-[warn] packages/ui/.storybook/provenance-panel.ts
 [warn] packages/ui/src/composed/control/theme-toggle/theme-toggle.stories.tsx
 [warn] packages/ui/src/primitives/control/button/button.stories.tsx
-[warn] tooling/check-catalog.ts
-[warn] Code style issues found in 5 files. Run Prettier with --write to fix.
+[warn] Code style issues found in 2 files. Run Prettier with --write to fix.

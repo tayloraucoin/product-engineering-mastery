@@ -8,10 +8,10 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-04T23:25:15Z",
-        "head": "7213b10a745243a954ade78a0519278d1e380158",
+        "at": "2026-10-04T23:26:38Z",
+        "head": "728585c85ce5c9aec2821aba0153d603ebc67a5d",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-12-auth-package/evidence/C1.log",
-        "evidence_sha256": "e62527f17f40f68559e04a6adb217a16f9ae06e2deb0b162f76891a60887247c",
+        "evidence_sha256": "b119dd1f98389b1ac78b95d3ddeb6d9f864acda5438f597702c3380b93839b87",
         "tests": 114
       }
     },
@@ -21,23 +21,23 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-04T23:25:23Z",
-        "head": "7213b10a745243a954ade78a0519278d1e380158",
+        "at": "2026-10-04T23:26:47Z",
+        "head": "728585c85ce5c9aec2821aba0153d603ebc67a5d",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-12-auth-package/evidence/C2.log",
-        "evidence_sha256": "24710b34c3d1f13cb8fcacde03ca056a813f44584977f9608dc351dffa258060",
+        "evidence_sha256": "3de0dc71665568b3ec4ad2f1dd03eddabfadc7f54b13615769e5f43bc1d88516",
         "tests": 114
       }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
       "run": {
         "command": "yarn lint:boundaries",
-        "exit": 1,
-        "at": "2026-10-04T23:25:30Z",
-        "head": "7213b10a745243a954ade78a0519278d1e380158",
+        "exit": 0,
+        "at": "2026-10-04T23:26:50Z",
+        "head": "728585c85ce5c9aec2821aba0153d603ebc67a5d",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-12-auth-package/evidence/C3.log",
-        "evidence_sha256": "747575d20cc51c8fe8acb16e73cbb7f20b43d9bc6eb21133ad030f50d9104b4c"
+        "evidence_sha256": "05a5fadfcb7a15d070f88a5cb966f1ff2227191a7eb2921ce92ff92b1b37dd46"
       }
     },
     "C4": {
@@ -46,10 +46,10 @@
       "run": {
         "command": "yarn verify",
         "exit": 1,
-        "at": "2026-10-04T23:25:35Z",
-        "head": "7213b10a745243a954ade78a0519278d1e380158",
+        "at": "2026-10-04T23:26:55Z",
+        "head": "728585c85ce5c9aec2821aba0153d603ebc67a5d",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-12-auth-package/evidence/C4.log",
-        "evidence_sha256": "9d0b6a07840407239f0d47073fc22eae4651fc1a4c4c4300406028bc04d89109"
+        "evidence_sha256": "a6962f63d50946a90cb636ac928279575b5796010a263f81d14f22c9a7a9a93a"
       }
     },
     "C5": {
@@ -111,5 +111,5 @@
       }
     }
   },
-  "updated_at": "2026-10-04T23:25:39Z"
+  "updated_at": "2026-10-04T23:26:59Z"
 }
