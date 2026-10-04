@@ -130,11 +130,17 @@ const noRawValues = {
   },
 };
 
+/**
+ * The plugin, exported so a config that never runs the rule (the root
+ * boundaries pass) can still load it and read a waiver that names it.
+ */
+export const tokensPlugin = { rules: { "no-raw-values": noRawValues } };
+
 /** @type {import("eslint").Linter.Config[]} */
 export const tokensConfig = [
   {
     files: ["**/*.{ts,tsx,js,jsx}"],
-    plugins: { "pem-tokens": { rules: { "no-raw-values": noRawValues } } },
+    plugins: { "pem-tokens": tokensPlugin },
     rules: {
       "pem-tokens/no-raw-values": "error",
     },

@@ -25,6 +25,8 @@ operator_review: false
 planned_paths:
   - "packages/catalog/**"
   - "packages/config/eslint/boundaries.js"
+  - "packages/config/eslint/tokens.js"
+  - "eslint.config.mjs"
   - "packages/ui/.storybook/main.ts"
   - "packages/ui/.storybook/manager.ts"
   - "packages/ui/.storybook/provenance-panel.ts"
