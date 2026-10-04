@@ -3,11 +3,11 @@
 > Written by `yarn review:run vigil STK-4`. Never edit it: check-specs binds it to the hashes below, and Taylor reads it before merge.
 
 - contract_sha256: db07be97c45119b2c225fa5d746d1be093caf2258b16bc12bda576e1db822d2b
-- as_built_sha256: 943b1ff906287b29a2c11eef61e5ba5df286f98931f0671ac2162a931e276d6c
-- head: 793574d73e56c07a0a18985e539101ad27180919
+- as_built_sha256: 35661d08540697a80b9ab41bd6b2ecfcd9b5efad141be7248cba3ba76cd9834a
+- head: 4561b04bcb7302b92dfc376dbbec4421ff576eb9
 - runner: claude 2.1.232 (Claude Code) (agent vigil; tools Read,Grep,Glob)
 - model: claude-opus-5[1m]
-- at: 2026-10-04T04:41:59Z
+- at: 2026-10-04T05:09:54Z
 - verdict: PASS
 
 ## Prompt
@@ -21,13 +21,13 @@ Read, in this order:
 2. The results: specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/results.json. Each criterion's run record and evidence file.
 3. The as-built: specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/as-built.md. What the builder says shipped, and every deviation. Check its claims against the code; do not trust them.
 4. The evidence:
-   - C1 test: specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C1.log (sha256 bedfa847d671)
-   - C2 test: specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C2.log (sha256 5aeef66bfc8e)
-   - C3 check: specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C3.log (sha256 a082dcbbbdaf)
-   - C4 check: specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C4.log (sha256 f41b14998f6b)
-   - C5 test: specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C5.log (sha256 a85cdce3587b)
-   - C6 check: specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C6.log (sha256 1a98ebccb5c5)
-5. The files this ticket changes against main (its planned paths; other tickets share the branch): .env.example, AGENTS.md, apps/web/env.ts, apps/web/next.config.ts, apps/web/package.json, docs/engineering/codebase-conventions.md, docs/engineering/tech-stack.md, package.json, packages/config/eslint/boundaries.js, packages/env/eslint.config.mjs, packages/env/package.json, packages/env/src/key-mode.test.ts, packages/env/src/key-mode.ts, packages/env/src/next-public.test.ts, packages/env/src/next-public.ts, packages/env/src/pick.test.ts, packages/env/src/pick.ts, packages/env/src/site-url.test.ts, packages/env/src/site-url.ts, packages/env/src/tier.ts, packages/env/tsconfig.json, tooling/check-client-bundle.test.ts, tooling/check-client-bundle.ts, tooling/fixtures/client-bundle/clean/static/chunks/app-synthetic.js, tooling/fixtures/client-bundle/empty/static/README.md, tooling/fixtures/client-bundle/leak/static/chunks/app-synthetic.js, toolkit.json, turbo.json, yarn.lock.
+   - C1 test: specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C1.log (sha256 dd89447e843c)
+   - C2 test: specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C2.log (sha256 1c7a31534a56)
+   - C3 check: specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C3.log (sha256 74dc735048de)
+   - C4 check: specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C4.log (sha256 0465bb05625e)
+   - C5 test: specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C5.log (sha256 05c31001ca72)
+   - C6 check: specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C6.log (sha256 3906de98cd26)
+5. The files this ticket changes against main (its planned paths; other tickets share the branch): .env.example, AGENTS.md, apps/web/env.ts, apps/web/next.config.ts, apps/web/package.json, docs/engineering/codebase-conventions.md, docs/engineering/tech-stack.md, package.json, packages/config/eslint/boundaries.js, packages/env/eslint.config.mjs, packages/env/package.json, packages/env/src/key-mode.test.ts, packages/env/src/key-mode.ts, packages/env/src/next-public.test.ts, packages/env/src/next-public.ts, packages/env/src/pick.test.ts, packages/env/src/pick.ts, packages/env/src/site-url.test.ts, packages/env/src/site-url.ts, packages/env/src/tier.ts, packages/env/tsconfig.json, tooling/check-client-bundle.test.ts, tooling/check-client-bundle.ts, tooling/fixtures/client-bundle/clean/static/chunks/app-synthetic.js, tooling/fixtures/client-bundle/empty/static/README.md, tooling/fixtures/client-bundle/leak/static/chunks/app-synthetic.js, tooling/fixtures/client-bundle/registry/env.example, tooling/fixtures/client-bundle/registry/turbo.json, toolkit.json, turbo.json, yarn.lock.
 6. The surface the ticket cites: specs/_shared/epics/STK-default-stack/technical.md. Every state and criterion it names.
 
 For each criterion, say whether the evidence and the code show it is met. Then list findings as Blocking, Should-fix or Consider, each with a file and line. A Blocking finding means FAIL.
@@ -38,85 +38,69 @@ VERDICT: FAIL
 
 ## Review
 
-## STK-4 env-module — Vigil review
+## Review — STK-4 env-module (vigil, fresh context)
 
-Plan built from `contract.md`, `technical.md` (D-STK-3, D-STK-4, D-STK-16) and `.claude/rules/specs.md` before the implementation was read. I did not read `review-mason.md`: a second opinion is only worth something if it is independent.
+**Verdict: Pass with conditions.** No Blocking finding. Three Should-fix items, five Consider; all are documentation parity, contract hygiene or future-coverage notes, none of them a defect in the shipped seam.
 
-**One limit to declare up front:** my tools are denied read access to `.env.example` (both Read and Grep refused). Non-negotiable 6 therefore cannot be verified directly from my seat; what I could establish about it indirectly is below, marked as inference.
-
----
-
-## Criterion by criterion
-
-| ID | Verdict | Basis |
-|----|---------|-------|
-| **C1** | **Met** | `packages/env/src/pick.ts:36-42` returns the tier's own variable then falls back to the unsuffixed one, empty strings counting as absent (`:29-30`); production's suffix is `""` (`:13-17`), so it can never read a suffixed value. `pick.test.ts` proves each tier (`:15`), the absent/empty fallback (`:30`), nothing-set → undefined (`:48`), production-never-suffixed (`:55`), the suffix grammar (`:66`) and the local default (`:80`). `C1.log` exit 0, TAP `ok 7`–`ok 12`; re-run green inside `C6.log:363-398`. |
-| **C2** | **Met** | `key-mode.ts:27-42` names the variable in all three cases, including no-prefix-at-all — the right default for a mode it cannot vouch for. `key-mode.test.ts:12,31,38,47`; `C2.log`/`C1.log` TAP `ok 1`–`ok 4`. |
-| **C3** | **Met** | `boundaries.js:55-60`: `env: ["config"]`, `db: ["config","env"]`, apps import all of `PACKAGE_IMPORTS` (`:72,128-134`), default `disallow` (`:196`). `C3.log` exit 0; re-run clean in `C6.log:463`. Matches `codebase-conventions.md:85,89`. |
-| **C4** | **Met** | `C4.log` exit 0 across 5 packages (cached replay, keyed on file hashes); re-run in `C6.log:465-482`. |
-| **C5** | **Met** | `check-client-bundle.test.ts:27,37,49,58` — leak named by variable *and* file, missing folder, folder with no JS, clean pass, and a scan with no sentinel refused. The `leak` fixture really carries the sentinel (`app-synthetic.js:2`). `C5.log` exit 0. |
-| **C6** | **Met as recorded** | `C6.log` exit 0 at head `a208417`, full chain, `check-client-bundle — 3 server-only value(s), none in 25 browser-facing file(s)` (`:484`). Three caveats, none fatal: the as-built still says C6 is FAIL (Consider 1); `check-specs` is warn-only post-PR-15, so the branch-wide staleness lines at `:18-25` no longer fail `verify` — `--strict` before merge is the real gate; and the sentinel count is only as complete as `.env.example` (Should-fix 2). |
-
-### Non-negotiables
-
-1. **Local default** — met. `tier.ts:22-29`: unset or empty → `local`, anything else throws naming `DATABASE_ENVIRONMENT`. No production default exists anywhere in the package.
-2. **`@pem/env` is pure** — met. `eslint.config.mjs:9-17` bans `process.env`; a repo-wide grep of `packages/env` finds it only in comments.
-3. **One reader** — met. Grep of `apps/web`: `env.ts:26-33` only. `next.config.ts:5,26` imports the collapsed object rather than reading the environment, so validation happens once at build.
-4. **Key-mode guard** — guard shipped and tested; **no caller exists yet** (Consider 4). The contract's `out_of_scope` puts Stripe variables in STK-16, so this is sanctioned, not a defect.
-5. **Localhost outside a deployment** — met in code and unit tests (`site-url.ts:11-23`, `site-url.test.ts:10`; `env.ts:39-43`). The *browser* half — Next's `env` block overriding a shell `NEXT_PUBLIC_SITE_URL` — rests on an uncommitted manual build (`as-built.md:18-22`), so it is runtime-required, not verified (Consider 6).
-6. **`.env.example` ↔ `turbo.json`** — **unverifiable from my seat.** `turbo.json:5-21` lists every name `env.ts` reads, and `turbo/no-undeclared-env-vars` passes in lint. For `.env.example` I can only infer: `C6-control-leak.txt:3` shows `EXAMPLE_API_KEY_LOCAL` was planted, so the tier forms are listed; the "what breaks without it" comments are checked by nothing mechanical and I cannot read them.
-7. **`verify` runs both** — met, `package.json:13`.
+What I could not exercise, stated up front: I have Read/Grep/Glob only. `.env.example` sits in a permission-denied directory, so I verified its contents **indirectly** (see C6 below) and **cannot** verify the "comment saying what breaks without it" half of non-negotiable 6. I cannot run git, so I cannot independently confirm no planned path moved after head `c5eb5db`; I judged the recorded evidence against the files as they stand, and they agree.
 
 ---
 
-## Findings
+### Criterion by criterion
 
-### Blocking
-None.
+**C1 — the picker across tiers and the unsuffixed fallback. Met.**
+`pick.ts:36-42` resolves tier-suffix first, unsuffixed second, `undefined` third, with `present()` (`pick.ts:29-30`) treating whitespace as absent. `SUFFIX.production = ""` (`pick.ts:13-17`) is what makes "production never reads a suffixed value" structural, not incidental. The six tests in `pick.test.ts` assert exactly the criterion's four clauses plus the suffix grammar and the `local` default; `pick.test.ts:55-64` is the one that matters most and it is a real assertion (`undefined`, not a truthy check). Evidence `C1.log:140-175` shows tests 7-12 passing at exit 0. Verified in code and in the log.
 
-### Should-fix
+**C2 — mode/tier mismatch fails, naming the variable. Met, with the scope the contract set.**
+`key-mode.ts:33-41` orders the branches so an unrecognised prefix fails first — a mode the guard cannot read is not one it can vouch for, which is the user-protective reading and the right one. `key-mode.test.ts` covers live-on-local, live-on-staging, test-on-production, matching modes, and no-prefix across all three tiers, each asserting the message *starts* with the variable name (`key-mode.test.ts:16-18, 33-35`). `C2.log:15-34` confirms. The guard is not yet wired into `env.ts`; the contract puts Stripe variables out of scope ("they arrive with their tickets", `contract.md:46`), and the as-built says so plainly (`as-built.md:42`). Correctly scoped, not a gap.
 
-**1. The client-chunk leak path was never exercised by a real build.** `check-client-bundle.ts:140-146` scans `.next/static` and `.next/server/app`, and C6 reports zero sentinels in 25 files — but a grep of `apps/web` finds no `"use client"` anywhere and no module except `next.config.ts` importing `env`. So the one scenario the slice names as its risk ("a secret reaching a browser bundle") has a synthetic fixture (C5) and a server-render control (`C6-control-leak.txt`), and no end-to-end demonstration on the static-chunk path. Suggested owner: builder. Cheapest close: a temporary client leaf reading `env.EXAMPLE_API_KEY`, `yarn check-client-bundle`, confirm it names a file under `.next/static`, revert — the same shape as the control already filed.
+**C3 — boundaries pass with `@pem/env` below every reader. Met.**
+`boundaries.js:55-60`: `env: ["config"]`, `db: ["config", "env"]`, apps get every package type (`boundaries.js:72, 129`). `env` can reach nothing but `config`, and the default is `disallow` (`boundaries.js:196`), so an undeclared edge fails by construction. `C3.log` is exit 0 with empty output, which is what a clean eslint run looks like.
 
-**2. Nothing enforces that `.env.example` is complete, so the detector's name source can silently shrink.** `check-client-bundle.ts:109-117` derives the sentinel set from `.env.example` alone; a server-only variable that never gets a line there is never planted, and the check still exits 0 with a smaller number nobody reads. `check-stack` does not close this: it compares `toolkit.json` `env` lists against the files only for modules marked *removed*. Suggested owner: mason/builder. Concrete close: have `check-stack` assert each **present** module's `env` names (`toolkit.json:179-191,205-212`) appear in both `.env.example` and `turbo.json`.
+**C4 — types pass across apps and packages. Met.** `C4.log:22` — 5 of 5 tasks, exit 0. Fully cached, which is legitimate for a type check at a fixed head.
 
-**3. `turbo.json` appears to declare six `DATABASE_*` names that `.env.example` does not list** — against `codebase-conventions.md:122`, the rule this ticket authored. Chain: `turbo.json:15-20` declares `DATABASE_URL`/`DATABASE_MIGRATION_URL` and their `_LOCAL`/`_STAGING` forms; `remove-supabase-database.md:36-39` says both files carry them; but `check-client-bundle` reports **3** server-only names at head `a208417` in both `STK-4/evidence/C6.log:484` and `STK-9/evidence/C4.log:483`, and the control proves tier forms are counted when present — 3 is `EXAMPLE_API_KEY` ×3, not 9. **Routed to STK-9, not a STK-4 defect:** at STK-4's own close the parity held, and the db variables arrived with another ticket. Confirm by reading `.env.example` (I could not). If confirmed, it is also the live symptom of Should-fix 2: today's database credentials are never planted.
+**C5 — the bundle check fails a planted fixture chunk and fails with no build output. Met, and the test is honest about both failure shapes.**
+`check-client-bundle.test.ts:29-37` asserts exit 1 *and* that the output names both the variable and the chunk path. `:39-49` covers the two distinct "nothing to scan" cases — missing directory (`check-client-bundle.ts:122-123`) and a directory with no JavaScript (`:126-129`) — which is the difference between "clean" and "proved nothing." `:60-64` refuses a scan with no sentinel. `C5.log:8-33` confirms tests 1-5 at exit 0.
 
-### Consider
+**C6 — the full chain passes; the sentinel build finds nothing browser-facing. Met, and this is the strongest evidence in the ticket.**
+`C6.log:497`: 9 server-only values, none in 25 browser-facing files under `.next/static` and `.next/server/app`. The 9 reconcile exactly to the two registries (3 `EXAMPLE_API_KEY` forms from `.env.example`, 6 `DATABASE_*` forms from `turbo.json:15-20`), which is my indirect confirmation of what `.env.example` declares.
 
-1. `as-built.md:10` ("C6 is recorded FAIL") and `:71` ("review:mason… have not run") now contradict `results.json` (C6 PASS at `a208417`, mason PASS). The file is immutable by rule and its own `Next` section predicted exactly this, but say so in the batch report so the merged record is not read as a failure.
-2. `results.json` records `tests: 26` for C1 and `27` for C2 from one interleaved turbo log whose TAP totals are 13 + 14 = 27 (`C1.log:95,189`). The named tests are all visible and green, so no proof is lost — but the count is a mis-parse of interleaved output and should not be treated as a signal.
-3. C6's command is `yarn verify`, which `.claude/rules/specs.md` says is never a criterion. That choice is what produced the whole branch-wide coupling documented at `as-built.md:37-46`; worth retiring the pattern rather than re-living it.
-4. `key-mode.ts:27` has no caller in the repo. The non-negotiable is enforced only when STK-16 wires it, and nothing fails in the meantime.
-5. `check-client-bundle.ts:37-46` deliberately matches commented-out lines. Right for coverage, but a later vendor key meant to be *absent* locally will be present-with-garbage during the sentinel build — watch STK-18's tokenless-build criterion for the collision.
-6. The browser-side site URL (`as-built.md:18-22`) rests on a build that was reverted and never committed. No artifact, so it stays runtime-required.
+Two things raise this above a passing checkbox. First, the negative control (`evidence/C6-control-leak.txt`) shows the scanner actually firing on a real leak through four prerendered artifacts — a green check from an instrument never seen to go red is not evidence, and the builder closed that hole. Second, the scan deliberately covers prerendered `.html` and `.rsc` (`check-client-bundle.ts:200`), which is where a Server Component actually leaks, not a chunk. I also checked the cache-blindness failure mode: the sentinel build runs `yarn workspace web build` directly (`:187`), bypassing turbo, so it cannot be silently satisfied by a cache hit.
 
----
-
-## Conversations
-
-**On the pattern that keeps arriving in a new costume.** The pre-flight's conversation on this epic was about commands that cannot observe their subject. Should-fix 1 is the same shape one layer in: the detector is real, the fixtures are real, the control is real — and all three sit on the path that was easy to build (server render), while the path the risk is named after (a client chunk) is proven only synthetically. Not because anyone cut a corner: there is no client component in the app yet, so the honest control was awkward to write. It is worth asking, for each guard this epic ships, *which of its paths has been walked with real output, and which only with a fixture?*
-
-**On `.env.example` as an unenforced registry.** Three mechanisms now key off that one file — the sentinel set, the removal runbooks, and the new-project guide's step 6 — and nothing fails when a name is missing from it. The failure is silent and in the safe-looking direction (fewer sentinels, exit 0). That is the property worth fixing, more than today's specific gap.
-
-**On the dead guard.** The key-mode rule is the sharpest piece of logic in the ticket and currently protects nothing. Its wiring lives in a ticket eleven slots away. A one-line note in STK-16's Build notes naming `@pem/env/key-mode` would cost nothing now and is cheap insurance against a live key on a staging tier later.
+Non-negotiables 1, 2, 3, 5 and 7 all hold against the code: `parseTier` defaults to `local` and never to production (`tier.ts:22-29`); nothing under `packages/env` reads `process.env` and its own lint rule rejects a read (`eslint.config.mjs:9-18`); `apps/web/env.ts:26-33` is the app's only reader (grep across `apps/` returns that file and nothing else); `resolveSiteUrl` returns the local origin whenever `deployed` is false (`site-url.ts:21`); `verify` runs both `yarn test` and `yarn check-client-bundle` (`package.json:13`).
 
 ---
 
-## Runtime checklist (ordered by risk)
+### Findings
 
-1. **Read `.env.example`** and confirm every `turbo.json` `globalEnv` name is listed with a comment saying what breaks without it (non-negotiable 6 — I was denied access; Should-fix 3 turns on this).
-2. **Add a temporary client leaf** reading `env.EXAMPLE_API_KEY`, run `yarn check-client-bundle`, confirm it fails naming a file under `apps/web/.next/static`, then revert — and file the output beside `C6-control-leak.txt`.
-3. **Before merge, run `yarn check-specs --strict`**, and re-record C1–C5 if any planned path moved after `a208417`. Their logs sit at `0a9e14a`; the only thing making them current is C6's own re-run of the same commands.
-4. **Run `yarn review:run warden STK-4`** — the environment seam is a one-way door (`technical.md:39`) and warden is still FAIL in `results.json`.
-5. **On a real Vercel preview**, confirm the browser's site URL is the `_STAGING` value, and localhost on a local production build. Only the `VERCEL_ENV` variable has been exercised, never the platform.
+**Should-fix — `as-built.md:10` contradicts the evidence it cites.** It says "Its last run planted 3 sentinels and found none in 25 files." `evidence/C6.log:497` records **9** server-only values in those same 25 files. The 3 predates the plant-from-both-registries change the as-built itself describes at `:38`. The as-built is the durable record; a reader reconciling it against the log finds a number that does not match. One-line fix. Owner: builder.
 
-## Assumptions
+**Should-fix — `turbo.json` and `.env.example` are out of parity on the branch now.** `turbo.json:15-20` declares six `DATABASE_*` names that `.env.example` does not carry (`C6.log:496`). That makes non-negotiable 6 ("turbo.json lists the same names") and `codebase-conventions.md:122` untrue as the branch stands. I am **not** filing this against STK-4: the as-built discloses it at `:24`, attributes it to STK-9 landing on the shared branch, and STK-4 is the ticket that built the detector that found it. But the detector warns rather than fails (`check-client-bundle.ts:95-100`), so nothing will catch this if the fill is forgotten, and the drift line will sit in every `yarn verify` until it is. Owner: STK-9 / Taylor.
 
-- `[ASSUMPTION]` `.env.example` content is inferred from `check-client-bundle`'s reported sentinel count plus `C6-control-leak.txt`, never read. If it does list the `DATABASE_*` names in a form the regex at `check-client-bundle.ts:40` misses, Should-fix 3 dissolves and Should-fix 2 becomes more urgent, not less — the regex would then be the silent gap.
-- `[ASSUMPTION]` Turbo cache replays (C4, and C6's lint/types/build) count as evidence, since the cache key is the input hashes.
-- I executed nothing. Every claim above is traced to a file and line, or left on the runtime checklist.
+**Should-fix — C6 is a `yarn verify` criterion, which the harness rule forbids.** `contract.md:72` sets C6's command to `yarn verify`; `.claude/rules/specs.md` says "`yarn verify` is never a criterion: it runs once at batch close." The cost is not theoretical — C6's own log shows the treadmill it creates (`C6.log:27`: "C6's PASS no longer holds"), and a verify run that warns its own proof is stale is a circular record. Substance was honored (the chain did pass at close); the contract shape should be reconciled with the rule in one place rather than both. Owner: Taylor / contract author.
 
-No Blocking findings: the criteria are met on their own evidence, the seam holds under grep from every direction I could point it, and the two Should-fixes are coverage gaps in a guard, not a shipped leak.
+**Consider — wildcard env declarations are skipped by the plan.** `check-client-bundle.ts:69` keeps only exact `[A-Za-z_][A-Za-z0-9_]*` names, so a future `"STRIPE_*"` in `turbo.json` plants nothing and reports no drift. It is documented at `:55`, and the `registry` fixture even exercises the skip (`fixtures/client-bundle/registry/turbo.json:9`). Worth a line on STK-16's contract so the first vendor keys are declared by exact name.
+
+**Consider — drift detection is one-directional.** `check-client-bundle.ts:89-91` reports only names `turbo.json` has that `.env.example` lacks. The reverse — declared in `.env.example`, missing from `turbo.json` — breaks the cache key and goes unreported, though `codebase-conventions.md:122` requires both. `turbo/no-undeclared-env-vars` partially covers it for variables actually read in code.
+
+**Consider — the sentinel build only ever exercises the local tier.** `check-client-bundle.ts:185-186` deletes `VERCEL_ENV` and pins `DATABASE_ENVIRONMENT=local`. Per-name coverage still holds, because all three suffix forms are planted simultaneously and all are scanned, so any inlining path would surface whichever form it touched. But no production- or preview-tier build is ever scanned, and production is the tier where the unsuffixed secrets resolve. The as-built is honest about the adjacent limit (`:63`).
+
+**Consider — C6 proves the current module graph, not the guard.** Nothing in `apps/web` imports `env.ts` except `next.config.ts` importing `nextConfigEnv` (`next.config.ts:5`). So "none in 25 browser-facing files" is a true statement about a graph with no client consumer of `env` in it. The standing guard for a future `"use client"` leaf importing `env` is t3-env's client-side throw, documented at `env.ts:8-11` but not itself covered by a test. Worth re-running the sentinel check deliberately on the first ticket that adds a client consumer.
+
+**Consider — the prior `review:vigil` record is superseded, not wrong.** `results.json:95-108` holds a PASS at head `793574d` against as-built sha `943b1f`; the as-built has changed twice since (mason saw `35661d`, the current file is newer, carrying the `:38` deviation). This run supersedes it. No action beyond the re-record this run performs.
+
+---
+
+### Conversations
+
+None for product experience — this ticket has no user-facing surface. One for the team: the `.env.example` / `turbo.json` parity rule is now asserted in three places (the non-negotiable, `codebase-conventions.md:122`, and the check's own warning text) but enforced by none of them. The deliberate choice to warn rather than fail is the right call *today*, because `.env.example` is mid-fill and a hard failure would block every ticket on the branch. The question is what flips it to a failure, and who owns that flip — if the answer is "STK-9 fills the names and then someone remembers," it will not happen. Is there a ticket that should carry "make the drift warning fatal" as its last line?
+
+### For the human to verify by hand, ordered by risk
+
+1. The site URL on a real Vercel deployment, production and preview. The as-built flags this itself (`:63`); `VERCEL_ENV` has only ever been set on a local build, and this is the one path where getting it wrong puts a localhost URL into production metadata or an absolute link.
+2. `.env.example`'s comments — that every variable carries one saying what breaks without it. I could not read the file.
+3. That `c5eb5db` is still the head for STK-4's planned paths, or let `check-specs` say so at close.
+
+Clean, careful work on the parts that matter most: the picker is pure and the purity is lint-enforced, the one `process.env` reader really is one, and the leak check was proven to fail before it was trusted to pass.
 
 VERDICT: PASS
