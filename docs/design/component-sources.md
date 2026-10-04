@@ -71,6 +71,18 @@ shadcn's Vega classes enter on house tokens. The token lint judges only the util
 | other px or rem literals                       | the nearest spacing, size or text step; a gap no step serves is a token proposal here                               |
 | `bg-black`, `bg-white`, colour functions       | a role (`bg-foreground/10` for a scrim, `bg-background` for a thumb)                                                |
 
+## Bringing a shadcn component into the kit
+
+The path proven on the Button (CAT-4). The manifest entry (`packages/catalog/manifest.json`) names the folder.
+
+1. `yarn shadcn add <name> --dry-run`, under a per-command approval for `ui.shadcn.com`: read the files and dependencies it would write, and reject per the review above.
+2. `yarn shadcn add <name> --dry-run --view`: the CLI's resolved source, with the Vega classes and lucide icons in place. Write it by hand into the entry's folder, so the CLI never installs the `cn` package (CS-05) or touches `globals.css`: `<name>.tsx`, a `<name>.variants.ts` for each `cva()`, `index.ts`.
+3. Import `cn` from the package's `lib/cn` and other kit components by relative path.
+4. Map what the token lint rejects by the table above; the lint passes with no waiver.
+5. A new npm dependency gets its `tech-stack.md` row and the `ui` module's `dependencies` in `toolkit.json`, then `yarn workspace @pem/ui add -E` at a version at least a week old.
+6. Stories: one per variant and state, tagged `source:shadcn`, `verdict:kit` and the entry's `layer:`, with `parameters.provenance` naming the registry item, the shadcn version, the read date, MIT and what was adapted.
+7. The `exports` entry, the kind README's example, then `yarn check-catalog --write`.
+
 ## Catalogue by job (CS-09)
 
 The catalog takes an ecosystem item when it serves a job core does not, or serves one markedly better; reskins of a core component are left out. Copy-in maps to house tokens with the token lint on. An item that needs more than a mechanical rename is a manifest entry with a link and its reason, not code.
