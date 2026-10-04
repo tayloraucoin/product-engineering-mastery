@@ -3,8 +3,9 @@
  *
  * Rejects raw design values in class strings and inline styles on product
  * surfaces: arbitrary Tailwind values, palette utilities that bypass the
- * semantic tokens, raw hex, the default shadow scale (elevation is a token
- * scale), and raw durations or ease-in (motion comes from motion tokens).
+ * semantic tokens, raw hex or colour functions (oklch, rgb, hsl, …), the
+ * default shadow scale (elevation is a token scale), and raw durations or
+ * ease-in (motion comes from motion tokens).
  * The one home for raw values is packages/config/tailwind/preset.css.
  *
  * Applied by apps/web and packages/ui. apps/docs is the toolkit's reader,
@@ -29,6 +30,10 @@ const RULES = [
   {
     pattern: String.raw`#[0-9a-fA-F]{3,8}\b`,
     message: "Raw hex color — colors live only in packages/config/tailwind/preset.css (canon C-P06).",
+  },
+  {
+    pattern: String.raw`\b(oklch|oklab|lch|lab|rgba?|hsla?|hwb|color)\(`,
+    message: "Raw color function — colors live only in packages/config/tailwind/preset.css (canon C-P06).",
   },
   {
     pattern: String.raw`(^|[\s:])shadow-(sm|md|lg|xl|2xl|inner)\b`,

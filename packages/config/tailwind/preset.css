@@ -3,47 +3,73 @@
  * repository. Every component references a token name; a colour literal
  * anywhere else is a defect.
  *
- * Two layers: semantic custom properties (--background, --foreground, …),
- * redefined for dark mode under `prefers-color-scheme`, and `@theme inline`,
- * which exposes them to Tailwind as utilities (`bg-background`,
- * `text-muted-foreground`, …).
+ * Three layers, each reading only the one above it:
+ *
+ *   1. Raw scale (--neutral-<step>): the literal values. Never exposed to
+ *      Tailwind, so no utility can reach past the semantic names.
+ *   2. Semantic names (--background, --foreground, …): roles, each set to a
+ *      raw step under :root (light) and again under .dark.
+ *   3. shadcn bridge (@theme inline): exposes the semantic names to Tailwind
+ *      as utilities (`bg-background`, `text-muted-foreground`, …).
+ *
+ * Dark mode is the `.dark` class on <html>, set before first paint by the
+ * theme provider in `@pem/ui/theme`; "system" resolves to light or dark
+ * there, not here. The `dark:` variant follows the class.
  *
  * Neutral placeholders. A product cloned from this starter replaces the
- * values here and nowhere else.
+ * raw values here and nowhere else.
  *
  * Consumers import this after `@import "tailwindcss"` in each app's
  * `app/globals.css`.
  */
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* 1. Raw scale */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --border: oklch(0.922 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --ring: oklch(0.708 0 0);
+  --neutral-0: oklch(1 0 0);
+  --neutral-50: oklch(0.985 0 0);
+  --neutral-100: oklch(0.97 0 0);
+  --neutral-200: oklch(0.922 0 0);
+  --neutral-400: oklch(0.708 0 0);
+  --neutral-500: oklch(0.556 0 0);
+  --neutral-800: oklch(0.269 0 0);
+  --neutral-900: oklch(0.205 0 0);
+  --neutral-950: oklch(0.145 0 0);
+}
+
+/* 2. Semantic names: light */
+:root {
+  color-scheme: light;
+  --background: var(--neutral-0);
+  --foreground: var(--neutral-950);
+  --muted: var(--neutral-100);
+  --muted-foreground: var(--neutral-500);
+  --border: var(--neutral-200);
+  --primary: var(--neutral-900);
+  --primary-foreground: var(--neutral-50);
+  --accent: var(--neutral-100);
+  --accent-foreground: var(--neutral-900);
+  --ring: var(--neutral-400);
   --radius: 0.5rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --border: oklch(0.269 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --ring: oklch(0.556 0 0);
-  }
+/* 2. Semantic names: dark */
+.dark {
+  color-scheme: dark;
+  --background: var(--neutral-950);
+  --foreground: var(--neutral-50);
+  --muted: var(--neutral-800);
+  --muted-foreground: var(--neutral-400);
+  --border: var(--neutral-800);
+  --primary: var(--neutral-200);
+  --primary-foreground: var(--neutral-900);
+  --accent: var(--neutral-800);
+  --accent-foreground: var(--neutral-50);
+  --ring: var(--neutral-500);
 }
 
+/* 3. shadcn bridge */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
