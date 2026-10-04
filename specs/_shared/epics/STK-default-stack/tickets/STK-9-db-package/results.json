@@ -20,10 +20,10 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-04T06:34:58Z",
-        "head": "dc88948f4c238580b791ea194aba05bf095910c8",
+        "at": "2026-10-04T06:45:09Z",
+        "head": "33fbc0813327394fd171e8d362065672e4e3b5e9",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/evidence/C2.log",
-        "evidence_sha256": "759b47beec29b43ac91e47abde31f773f6ee6ac440a7d1dbfebd93594d6dbf81",
+        "evidence_sha256": "95ace23a781478529a00c85f07b68992611dc11225fbf9cfc1824c22e7ded29b",
         "tests": 27
       }
     },
@@ -33,10 +33,10 @@
       "run": {
         "command": "yarn lint:boundaries",
         "exit": 0,
-        "at": "2026-10-04T06:34:58Z",
-        "head": "dc88948f4c238580b791ea194aba05bf095910c8",
+        "at": "2026-10-04T06:45:10Z",
+        "head": "33fbc0813327394fd171e8d362065672e4e3b5e9",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/evidence/C3.log",
-        "evidence_sha256": "d0ee61f4ad43beb1f7996ae2fc67e7af5b75cf885f336dd094bc84ecfbf9b81f"
+        "evidence_sha256": "c31a112b0edbcdc6ddc9a343730b8a33e73c33c8aa23a74db1bc9d55442458dd"
       }
     },
     "C4": {
@@ -109,5 +109,5 @@
       }
     }
   },
-  "updated_at": "2026-10-04T06:43:07Z"
+  "updated_at": "2026-10-04T06:45:13Z"
 }

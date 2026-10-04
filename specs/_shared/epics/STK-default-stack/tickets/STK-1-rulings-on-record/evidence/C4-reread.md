@@ -26,3 +26,9 @@ Record 0010, `docs/decisions/records/README.md` and the directory map's STK-1 li
 ## Verdict
 
 PASS.
+
+## Addendum: STK-19's tooling line (`de1df9b`)
+
+STK-19 amended the `tooling/` bullet of `codebase-conventions.md` §1: `apps/web/next.config.ts` imports `tooling/local-dev-origins.ts`, a dev-server helper, as the one exception to "the root scripts are its only consumer". It does not touch rule 9, §4's graph or package table, or §5, so D-STK-1 and D-STK-3 read as above; the ledger and changelog entries are unchanged.
+
+Verdict, unchanged: PASS.

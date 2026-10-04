@@ -1,7 +1,7 @@
 command: yarn test
 exit: 0
-at: 2026-10-04T06:34:11Z
-head: dc88948f4c238580b791ea194aba05bf095910c8
+at: 2026-10-04T06:44:32Z
+head: 33fbc0813327394fd171e8d362065672e4e3b5e9
 tests: 27
 ---
 
@@ -10,9 +10,8 @@ tests: 27
    • Running test in 6 packages
    • Remote caching disabled
 
-cache miss, executing 7b03e0a0c6ee61a3
-cache miss, executing 044200e8f33636e3
-TAP version 13
+cache hit, replaying logs 7b03e0a0c6ee61a3
+cache hit, replaying logs 044200e8f33636e3
 TAP version 13
 # Subtest: C2: a live-mode key on local or staging fails with the variable named
 ok 1 - C2: a live-mode key on local or staging fails with the variable named
@@ -45,6 +44,8 @@ ok 5 - public names pass, and unset values are left out
   type: 'test'
   ...
 # Subtest: a server-only name is refused, by name
+TAP version 13
+# Subtest: each kind of DDL or write against auth is caught
 ok 6 - a server-only name is refused, by name
   ---
   duration_ms: 0.250167
@@ -57,6 +58,20 @@ ok 7 - C1: each tier reads its own variable
   type: 'test'
   ...
 # Subtest: C1: a tier whose own value is absent or empty reads the unsuffixed value
+ok 1 - each kind of DDL or write against auth is caught
+  ---
+  duration_ms: 1.320875
+  type: 'test'
+  ...
+# Subtest: a foreign key to auth.users and a call to auth.uid() are allowed
+ok 2 - a foreign key to auth.users and a call to auth.uid() are allowed
+  ---
+  duration_ms: 0.082084
+  type: 'test'
+  ...
+# Subtest: a migration with DDL against auth fails, numbered by statement
+ok 3 - a migration with DDL against auth fails, numbered by statement
+  ---
 ok 8 - C1: a tier whose own value is absent or empty reads the unsuffixed value
   ---
   duration_ms: 0.093875
@@ -107,21 +122,6 @@ ok 14 - in a deployment the configured URL is used, without a trailing slash
 # skipped 0
 # todo 0
 # duration_ms 106.478083
-# Subtest: each kind of DDL or write against auth is caught
-ok 1 - each kind of DDL or write against auth is caught
-  ---
-  duration_ms: 1.320875
-  type: 'test'
-  ...
-# Subtest: a foreign key to auth.users and a call to auth.uid() are allowed
-ok 2 - a foreign key to auth.users and a call to auth.uid() are allowed
-  ---
-  duration_ms: 0.082084
-  type: 'test'
-  ...
-# Subtest: a migration with DDL against auth fails, numbered by statement
-ok 3 - a migration with DDL against auth fails, numbered by statement
-  ---
   duration_ms: 0.845291
   type: 'test'
   ...
@@ -196,6 +196,6 @@ ok 13 - every table carries its policies beside it
 # duration_ms 387.684208
 
  Tasks:    2 successful, 2 total
-Cached:    0 cached, 2 total
-  Time:    1.087s 
+Cached:    2 cached, 2 total
+  Time:    64ms >>> FULL TURBO
 

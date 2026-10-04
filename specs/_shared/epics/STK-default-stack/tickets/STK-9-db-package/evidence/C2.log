@@ -1,7 +1,7 @@
 command: yarn test
 exit: 0
-at: 2026-10-04T06:34:58Z
-head: dc88948f4c238580b791ea194aba05bf095910c8
+at: 2026-10-04T06:45:09Z
+head: 33fbc0813327394fd171e8d362065672e4e3b5e9
 tests: 27
 ---
 
@@ -10,38 +10,10 @@ tests: 27
    • Running test in 6 packages
    • Remote caching disabled
 
-cache hit, replaying logs 044200e8f33636e3
 cache hit, replaying logs 7b03e0a0c6ee61a3
+cache hit, replaying logs 044200e8f33636e3
 TAP version 13
 # Subtest: C2: a live-mode key on local or staging fails with the variable named
-ok 1 - C2: a live-mode key on local or staging fails with the variable named
-  ---
-  duration_ms: 0.620125
-  type: 'test'
-  ...
-# Subtest: C2: a test-mode key on production fails with the variable named
-ok 2 - C2: a test-mode key on production fails with the variable named
-  ---
-  duration_ms: 0.085041
-  type: 'test'
-  ...
-# Subtest: C2: matching modes pass
-ok 3 - C2: matching modes pass
-  ---
-  duration_ms: 0.075833
-  type: 'test'
-  ...
-# Subtest: C2: a key with no mode prefix fails on every tier
-ok 4 - C2: a key with no mode prefix fails on every tier
-  ---
-  duration_ms: 0.168333
-  type: 'test'
-  ...
-# Subtest: public names pass, and unset values are left out
-ok 5 - public names pass, and unset values are left out
-  ---
-  duration_ms: 0.875292
-  type: 'test'
 TAP version 13
 # Subtest: each kind of DDL or write against auth is caught
 ok 1 - each kind of DDL or write against auth is caught
@@ -67,15 +39,6 @@ ok 4 - the generated migration set passes, and it does reference auth.users
   duration_ms: 0.730709
   type: 'test'
   ...
-  ...
-# Subtest: a server-only name is refused, by name
-ok 6 - a server-only name is refused, by name
-  ---
-  duration_ms: 0.250167
-  type: 'test'
-  ...
-# Subtest: C1: each tier reads its own variable
-ok 7 - C1: each tier reads its own variable
 # Subtest: runtime takes the transaction pooler on a hosted tier
 ok 5 - runtime takes the transaction pooler on a hosted tier
   ---
@@ -87,7 +50,34 @@ ok 6 - migrations take the session pooler on a hosted tier
   ---
   duration_ms: 0.114583
   type: 'test'
+ok 1 - C2: a live-mode key on local or staging fails with the variable named
+  ---
+  duration_ms: 0.620125
+  type: 'test'
   ...
+# Subtest: C2: a test-mode key on production fails with the variable named
+ok 2 - C2: a test-mode key on production fails with the variable named
+  ---
+  duration_ms: 0.085041
+  type: 'test'
+  ...
+# Subtest: C2: matching modes pass
+ok 3 - C2: matching modes pass
+  ---
+  duration_ms: 0.075833
+  type: 'test'
+  ...
+# Subtest: C2: a key with no mode prefix fails on every tier
+ok 4 - C2: a key with no mode prefix fails on every tier
+  ---
+  duration_ms: 0.168333
+  type: 'test'
+  ...
+# Subtest: public names pass, and unset values are left out
+ok 5 - public names pass, and unset values are left out
+  ...
+  ---
+  duration_ms: 0.875292
 # Subtest: the local tier is not checked beyond the scheme
 ok 7 - the local tier is not checked beyond the scheme
   ---
@@ -97,6 +87,40 @@ ok 7 - the local tier is not checked beyond the scheme
 # Subtest: errors and descriptions never carry credentials
 ok 8 - errors and descriptions never carry credentials
   ---
+  type: 'test'
+  ...
+# Subtest: a server-only name is refused, by name
+ok 6 - a server-only name is refused, by name
+  ---
+  duration_ms: 0.250167
+  type: 'test'
+  ...
+# Subtest: C1: each tier reads its own variable
+ok 7 - C1: each tier reads its own variable
+  ---
+  duration_ms: 0.599959
+  type: 'test'
+  ...
+# Subtest: C1: a tier whose own value is absent or empty reads the unsuffixed value
+ok 8 - C1: a tier whose own value is absent or empty reads the unsuffixed value
+  ---
+  duration_ms: 0.093875
+  type: 'test'
+  ...
+# Subtest: C1: nothing set picks undefined
+ok 9 - C1: nothing set picks undefined
+  ---
+  duration_ms: 0.064834
+  type: 'test'
+  ...
+# Subtest: C1: production never reads a suffixed value
+ok 10 - C1: production never reads a suffixed value
+  ---
+  duration_ms: 0.056917
+  type: 'test'
+  ...
+# Subtest: C1: the suffix grammar names each form
+ok 11 - C1: the suffix grammar names each form
   duration_ms: 0.108042
   type: 'test'
   ...
@@ -107,6 +131,37 @@ ok 9 - the bridge accepts a UUID user and a known role
   type: 'test'
   ...
 # Subtest: the bridge refuses a partial or forged identity before any SQL
+  ---
+  duration_ms: 0.382708
+  type: 'test'
+  ...
+# Subtest: C1: the switch defaults to local, never production, and names itself when wrong
+ok 12 - C1: the switch defaults to local, never production, and names itself when wrong
+  ---
+  duration_ms: 0.211583
+  type: 'test'
+  ...
+# Subtest: outside a deployment the site URL is localhost, whatever is configured
+ok 13 - outside a deployment the site URL is localhost, whatever is configured
+  ---
+  duration_ms: 0.634875
+  type: 'test'
+  ...
+# Subtest: in a deployment the configured URL is used, without a trailing slash
+ok 14 - in a deployment the configured URL is used, without a trailing slash
+  ---
+  duration_ms: 0.131625
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 106.478083
 ok 10 - the bridge refuses a partial or forged identity before any SQL
   ---
   duration_ms: 0.2795
@@ -139,63 +194,8 @@ ok 13 - every table carries its policies beside it
 # skipped 0
 # todo 0
 # duration_ms 387.684208
-  ---
-  duration_ms: 0.599959
-  type: 'test'
-  ...
-# Subtest: C1: a tier whose own value is absent or empty reads the unsuffixed value
-ok 8 - C1: a tier whose own value is absent or empty reads the unsuffixed value
-  ---
-  duration_ms: 0.093875
-  type: 'test'
-  ...
-# Subtest: C1: nothing set picks undefined
-ok 9 - C1: nothing set picks undefined
-  ---
-  duration_ms: 0.064834
-  type: 'test'
-  ...
-# Subtest: C1: production never reads a suffixed value
-ok 10 - C1: production never reads a suffixed value
-  ---
-  duration_ms: 0.056917
-  type: 'test'
-  ...
-# Subtest: C1: the suffix grammar names each form
-ok 11 - C1: the suffix grammar names each form
-  ---
-  duration_ms: 0.382708
-  type: 'test'
-  ...
-# Subtest: C1: the switch defaults to local, never production, and names itself when wrong
-ok 12 - C1: the switch defaults to local, never production, and names itself when wrong
-  ---
-  duration_ms: 0.211583
-  type: 'test'
-  ...
-# Subtest: outside a deployment the site URL is localhost, whatever is configured
-ok 13 - outside a deployment the site URL is localhost, whatever is configured
-  ---
-  duration_ms: 0.634875
-  type: 'test'
-  ...
-# Subtest: in a deployment the configured URL is used, without a trailing slash
-ok 14 - in a deployment the configured URL is used, without a trailing slash
-  ---
-  duration_ms: 0.131625
-  type: 'test'
-  ...
-1..14
-# tests 14
-# suites 0
-# pass 14
-# fail 0
-# cancelled 0
-# skipped 0
-# todo 0
-# duration_ms 106.478083
 
  Tasks:    2 successful, 2 total
 Cached:    2 cached, 2 total
-  Time:    63ms >>> FULL TURBO
+  Time:    66ms >>> FULL TURBO
 
