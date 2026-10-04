@@ -49,6 +49,11 @@
 - **`packages/db/.env.example` added** (Taylor's request; path added to `planned_paths`). The db scripts run from `packages/db` and load `packages/db/.env.local`, not the root one. The file lists exactly the variables they read.
 - **C4 and C5 are deferred to the operator** (`--verdict deferred`). Each check is written out in `evidence/C4-operator.md` and `evidence/C5-operator.md`.
 - **The capture header names the commit of the code it ran on.** The capture file is committed on top of that commit, so the run record stamps the next commit.
+- **Vigil's second review (FAIL) and the fixes:**
+  - The loopback checks moved from the mirror to `src/loopback.ts` (exported as `@pem/db/loopback`), so the auth runbook's removal of the mirror leaves a building tree. Every importer inside `@pem/db` uses the new module, including STK-10's `scripts/reset-local-db.ts` and its test: an import line only.
+  - The mirror re-exports the checks for STK-12's `apps/web/lib/supabase/local-mirror.ts`, which is removed with Auth.
+  - `test/rls.test.ts` also checks its runtime client is loopback.
+  - The database runbook now names the `db` probes in `tooling/boundaries.test.ts`.
 
 ## Not verified
 
@@ -61,3 +66,8 @@
 ## Next
 
 STK-12 calls `applyLocalAuthMirror(db.$client, user)` from its request seam on the local tier when the auth URL is not loopback, and adds `@pem/db` to `transpilePackages` with the first importer.
+
+## Test changes
+
+- `scripts/auth-writers.test.ts` no longer asserts that `src/local-auth-mirror.ts` exists. It now asserts that no shipped file other than the mirror writes to `auth.users`, so the guard still holds after the auth runbook deletes the mirror (vigil Blocking, 2026-10-04).
+- The `isLoopbackHost` and `isLoopbackUrl` tests moved, unchanged, from `src/local-auth-mirror.test.ts` to `src/loopback.test.ts`.

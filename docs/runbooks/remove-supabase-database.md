@@ -60,7 +60,7 @@ Keep `DATABASE_ENVIRONMENT`: it is the tier switch every module reads (D-STK-3),
 
 ## Boundaries entries
 
-In `packages/config/eslint/boundaries.js`: the `workspacePackage("db", "db")` line in `ELEMENTS`, the `db` entry in `PACKAGE_IMPORTS`, and the `postgres` and `drizzle-kit` entries in `SDK_OWNERS`. Remove `db` from the layer-order comment.
+In `packages/config/eslint/boundaries.js`: the `workspacePackage("db", "db")` line in `ELEMENTS`, the `db` entry in `PACKAGE_IMPORTS`, and the `postgres` and `drizzle-kit` entries in `SDK_OWNERS`. Remove `db` from the layer-order comment. In `tooling/boundaries.test.ts`, delete every probe that names `db`, `@pem/db` or a path under `packages/db/` (`git grep -n db tooling/boundaries.test.ts` lists them): they describe rules that no longer exist.
 
 ## Vendor-side steps
 

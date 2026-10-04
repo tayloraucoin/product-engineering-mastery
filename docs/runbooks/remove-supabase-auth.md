@@ -21,11 +21,11 @@ load_when:
 
 ## The local auth mirror (STK-11)
 
-The mirror lives in the database package (D-STK-6), so it stays when only auth goes, with nothing to call it. When the database stays and auth goes:
+The mirror lives in the database package (D-STK-6), so removing auth leaves it behind with nothing to call it. When the database stays and auth goes, delete it as below. The loopback checks in `packages/db/src/loopback.ts` stay: the local reset, the integration tests and `db:local` use them.
 
 - Delete from `packages/db/`: `src/local-auth-mirror.ts` and `src/local-auth-mirror.test.ts`, `test/local-auth-mirror.test.ts`, `scripts/local-auth-marker.ts`, `scripts/local-full.ts`, `scripts/local-users.ts`, `scripts/local-users.test.ts` and `scripts/seed-users.ts`.
-- `packages/db/package.json`: the `./local-auth-mirror` export, and the `db:local:full` and `db:seed-users` scripts; the same two in the root `package.json`.
-- `packages/db/scripts/local.ts`: the marker step and the auth-URL warning; `supabase db start` stays. `scripts/env.ts`: the `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` reads, `authSettings` and `authUrlName`.
+- `packages/db/package.json`: the `./local-auth-mirror` export (keep `./loopback`), and the `db:local:full` and `db:seed-users` scripts; the same two in the root `package.json`.
+- `packages/db/scripts/local.ts`: the marker step (`markLocalAuthMirror` and its client) and the auth-URL warning; `supabase db start` and the network warning stay. `scripts/auth-writers.test.ts` stays: with the mirror gone, it requires that no shipped file writes to `auth.users`. `scripts/env.ts`: the `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` reads, `authSettings` and `authUrlName`.
 - `packages/db/supabase/config.toml`: set `[auth] enabled = false` and delete the other `[auth]` lines.
 - From `.env.example` and `turbo.json`'s `globalEnv`, with their `_LOCAL` and `_STAGING` forms: `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`. From `packages/db/.env.example`: `NEXT_PUBLIC_SUPABASE_URL_LOCAL`, `SUPABASE_SERVICE_ROLE_KEY_LOCAL` and their comment block.
 
