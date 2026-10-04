@@ -1,7 +1,7 @@
 command: yarn check-types
 exit: 0
-at: 2026-10-04T05:04:11Z
-head: c5eb5dbb61de8fed8795bd4c48d59f02b3b796d7
+at: 2026-10-04T06:27:02Z
+head: e4833901edb9fa125d0395d7883992c9aaf7f6e8
 ---
 
    • turbo 2.11.6
@@ -9,17 +9,17 @@ head: c5eb5dbb61de8fed8795bd4c48d59f02b3b796d7
    • Running check-types in 6 packages
    • Remote caching disabled
 
-@pem/env:check-types: cache hit, replaying logs ea319e0966d5e30c
-@pem/ui:check-types: cache hit, replaying logs db649d868456dc02
-@pem/db:check-types: cache hit, replaying logs 2a1a4653acb9c760
-docs:check-types: cache hit, replaying logs ea4bcfa85817e36d
-web:check-types: cache hit, replaying logs b68f5962c22b77ad
-web:check-types: Generating route types...
-web:check-types: ✓ Types generated successfully
+@pem/env:check-types: cache miss, executing 329269ef23697344
+@pem/ui:check-types: cache miss, executing eefc9f79616b379f
+@pem/db:check-types: cache miss, executing 426685bc1fb8439a
+web:check-types: cache miss, executing f8a470bb22775c7e
+docs:check-types: cache miss, executing 8a580156d38f260a
 docs:check-types: Generating route types...
 docs:check-types: ✓ Types generated successfully
+web:check-types: Generating route types...
+web:check-types: ✓ Types generated successfully
 
  Tasks:    5 successful, 5 total
-Cached:    5 cached, 5 total
-  Time:    63ms >>> FULL TURBO
+Cached:    0 cached, 5 total
+  Time:    3.348s 
 

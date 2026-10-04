@@ -5,57 +5,57 @@ TAP version 13
     # Subtest: sets app.user_id, app.user_role and the role for the transaction
     ok 1 - sets app.user_id, app.user_role and the role for the transaction
       ---
-      duration_ms: 17.270292
+      duration_ms: 21.248125
       type: 'test'
       ...
     # Subtest: leaves nothing behind on the pooled connection after the transaction
     ok 2 - leaves nothing behind on the pooled connection after the transaction
       ---
-      duration_ms: 6.543833
+      duration_ms: 6.780792
       type: 'test'
       ...
     1..2
 ok 1 - the bridge
   ---
-  duration_ms: 129.817875
+  duration_ms: 100.411709
   type: 'suite'
   ...
 # Subtest: the setup SQL
     # Subtest: mirrors each auth user into public.users
     ok 1 - mirrors each auth user into public.users
       ---
-      duration_ms: 4.069875
+      duration_ms: 4.037875
       type: 'test'
       ...
     # Subtest: is idempotent: a second run leaves the same triggers and policies
     ok 2 - is idempotent: a second run leaves the same triggers and policies
       ---
-      duration_ms: 13.135458
+      duration_ms: 13.517
       type: 'test'
       ...
     1..2
 ok 2 - the setup SQL
   ---
-  duration_ms: 17.364709
+  duration_ms: 17.730916
   type: 'suite'
   ...
 # Subtest: an owner-private policy
     # Subtest: hides another user's row and refuses writes to it
     ok 1 - hides another user's row and refuses writes to it
       ---
-      duration_ms: 51.209125
+      duration_ms: 50.57325
       type: 'test'
       ...
     # Subtest: a user reads their own account row and not another's
     ok 2 - a user reads their own account row and not another's
       ---
-      duration_ms: 7.390375
+      duration_ms: 6.7315
       type: 'test'
       ...
     1..2
 ok 3 - an owner-private policy
   ---
-  duration_ms: 58.963625
+  duration_ms: 57.69075
   type: 'suite'
   ...
 1..3
@@ -66,4 +66,4 @@ ok 3 - an owner-private policy
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 559.705417
+# duration_ms 535.561666
