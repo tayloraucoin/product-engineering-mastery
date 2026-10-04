@@ -15,6 +15,14 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-04 — WEB-3: a `contract:run` in flight is not tampered evidence
+
+On 2026-10-04 STK-2's `yarn verify` failed twice with "C1 is PASS, but evidence … changed after it was recorded" while `contract:run STK-8` and then `contract:run STK-10` ran on the shared branch (PR-14). Seconds later it was clean both times. `contract:run` wrote each log as it went, but wrote `results.json` once, after the last criterion. So a ticket with a `yarn verify` criterion also failed on every full run of its own.
+
+- **`contract:run` records each criterion as it finishes.** The log is written to a temp file, renamed into place, and its result is written straight after. The gap between a log and its hash is now one write, not a whole run.
+- **`check-specs` reads the log's run header on a hash mismatch.** If the header shows a newer run than the recorded one, the PASS is stale: a warning while the ticket is open, and a failure under `--strict` once it has an as-built (PR-15). A matching header, an older one, or none at all is still a hard failure.
+- No lock file, so a crashed run cannot leave one behind; such a run leaves a stale PASS, and re-running the criterion clears it.
+
 ## 2026-10-04 — STK-22: `@pem/ui` takes the house layout
 
 Taylor: the UI package did not carry the directory structure of the recent repos (Synapse, Conscious Connections), which keep `primitives/` and `composed/` with kind subfolders. STK-6 had shipped `src/button/`, `src/theme/` and `src/theme-toggle/` flat.

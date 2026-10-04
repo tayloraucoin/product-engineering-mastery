@@ -25,7 +25,7 @@
  */
 
 import { spawnSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, renameSync } from "node:fs";
 import path from "node:path";
 import YAML from "yaml";
 
@@ -509,9 +509,13 @@ function run() {
     const exit = result.status ?? 1;
     const tests =
       criterion.evidence === "test" ? (countTests(output) ?? 0) : undefined;
+    // The log lands by rename, and its result is written at once: a check-specs
+    // in another thread, or in this run's own later criterion, never sees a new
+    // log beside an old hash for longer than one write (PR-14).
     const log = `${evidenceDir(item)}/${criterion.id}.log`;
+    const pending = `${evidenceDir(item)}/.${criterion.id}.log.${process.pid}.tmp`;
     writeRepoText(
-      log,
+      pending,
       `command: ${criterion.command}\nexit: ${exit}\nat: ${at}\nhead: ${head}\n` +
         (tests !== undefined ? `tests: ${tests}\n` : "") +
         `---\n${output}`,
@@ -523,7 +527,7 @@ function run() {
       at,
       head,
       evidence_path: log,
-      evidence_sha256: hashFile(log),
+      evidence_sha256: hashFile(pending),
       ...(tests !== undefined && { tests }),
     };
     results.criteria[criterion.id] = {
@@ -531,6 +535,8 @@ function run() {
       evidence: criterion.evidence,
       run: record,
     };
+    renameSync(path.join(REPO_ROOT, pending), path.join(REPO_ROOT, log));
+    writeResults(item, results);
     if (!pass) failed++;
     const seconds = ((Date.now() - started) / 1000).toFixed(1);
     console.log(
@@ -539,7 +545,6 @@ function run() {
         `)${!pass && tests === 0 && exit === 0 ? "  the runner matched zero tests: name a test after the criterion" : ""}`,
     );
   }
-  writeResults(item, results);
   printLeft(item);
   if (failed) process.exit(1);
 }

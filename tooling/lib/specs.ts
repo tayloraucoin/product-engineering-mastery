@@ -194,6 +194,27 @@ export const hashText = (text: string | Buffer) =>
   createHash("sha256").update(text).digest("hex");
 export const hashFile = (rel: string) => hashText(readFileSync(abs(rel)));
 
+/** The header contract:run writes atop a log, before its `---`; null when there is none. */
+export function readRunHeader(
+  rel: string,
+): { command: string; at: string; head: string } | null {
+  const text = readRepoText(rel);
+  const end = text.indexOf("\n---\n");
+  if (end === -1) return null;
+  const fields = new Map(
+    text
+      .slice(0, end)
+      .split("\n")
+      .map((line) => line.match(/^([a-z]+): (.*)$/))
+      .filter((m) => m !== null)
+      .map((m) => [m[1]!, m[2]!]),
+  );
+  const [command, at, head] = ["command", "at", "head"].map((k) =>
+    fields.get(k),
+  );
+  return command && at && head ? { command, at, head } : null;
+}
+
 export const contractPath = (item: Item) => `${item.dir}/contract.md`;
 export const resultsPath = (item: Item) => `${item.dir}/results.json`;
 export const asBuiltPath = (item: Item) => `${item.dir}/as-built.md`;
@@ -884,10 +905,29 @@ export function readItemState(item: Item, specsRoot: string): ItemState {
       continue;
     }
     if (hashFile(run.evidence_path) !== run.evidence_sha256) {
-      fail(
-        `evidence ${run.evidence_path} changed after it was recorded`,
-        "tampered",
-      );
+      // A newer contract:run has written this log and not yet its result
+      // (another thread on the shared branch, PR-14, or a run that stopped
+      // between the two): work in flight, not an edit. A log whose header is
+      // the recorded run's, an older one, or none was edited.
+      const header =
+        criterion.evidence === "test" || criterion.evidence === "check"
+          ? readRunHeader(run.evidence_path)
+          : null;
+      const newer =
+        header !== null &&
+        header.command === run.command &&
+        (header.at > run.at ||
+          (header.at === run.at && header.head !== run.head));
+      if (newer)
+        fail(
+          `evidence ${run.evidence_path} is from a newer run (${header.at}, ${header.head.slice(0, 7)}) than the one recorded (${run.at}); a contract:run is recording it, or stopped before it could`,
+          "stale",
+        );
+      else
+        fail(
+          `evidence ${run.evidence_path} changed after it was recorded`,
+          "tampered",
+        );
       continue;
     }
     if (run.exit !== 0) {

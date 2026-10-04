@@ -149,6 +149,7 @@ export function useScratchRepo() {
             "node --test --test-name-pattern NOTHING-MATCHES sample.test.ts",
           "check:ok": "node -e 0",
           "check:fail": "node -e process.exit(1)",
+          "check:specs": "node tooling/check-specs.ts --skip-fixtures",
         },
       }),
     );
