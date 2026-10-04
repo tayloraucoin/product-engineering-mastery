@@ -5,20 +5,20 @@
   "type": "module",
   "exports": {
     "./button": {
-      "types": "./src/button/index.ts",
-      "default": "./src/button/index.ts"
+      "types": "./src/primitives/control/button/index.ts",
+      "default": "./src/primitives/control/button/index.ts"
     },
     "./cn": {
       "types": "./src/lib/cn.ts",
       "default": "./src/lib/cn.ts"
     },
     "./theme": {
-      "types": "./src/theme/index.ts",
-      "default": "./src/theme/index.ts"
+      "types": "./src/providers/theme/index.ts",
+      "default": "./src/providers/theme/index.ts"
     },
     "./theme-toggle": {
-      "types": "./src/theme-toggle/index.ts",
-      "default": "./src/theme-toggle/index.ts"
+      "types": "./src/composed/control/theme-toggle/index.ts",
+      "default": "./src/composed/control/theme-toggle/index.ts"
     },
     "./styles/globals.css": "./src/styles/globals.css"
   },

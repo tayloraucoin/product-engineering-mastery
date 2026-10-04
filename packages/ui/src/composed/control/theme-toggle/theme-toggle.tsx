@@ -3,14 +3,9 @@
 import { useRef, useSyncExternalStore, type KeyboardEvent } from "react";
 import { useTheme } from "next-themes";
 
-import { cn } from "../lib/cn";
-import { THEMES, type Theme } from "../theme/themes";
-
-const LABELS: Record<Theme, string> = {
-  light: "Light",
-  dark: "Dark",
-  system: "System",
-};
+import { cn } from "../../../lib/cn";
+import { THEMES } from "../../../providers/theme/themes";
+import { THEME_TOGGLE_COPY } from "./copy";
 
 /** Arrow keys move the selection; Home and End jump to the ends. */
 const STEPS: Record<string, number> = {
@@ -69,7 +64,7 @@ export function ThemeToggle({ className }: { className?: string }) {
   return (
     <div
       role="radiogroup"
-      aria-label="Theme"
+      aria-label={THEME_TOGGLE_COPY.label}
       className={cn(
         "inline-flex items-center gap-1 rounded-md border border-border bg-background p-1",
         className,
@@ -102,7 +97,7 @@ export function ThemeToggle({ className }: { className?: string }) {
                 checked ? "bg-foreground" : "bg-transparent",
               )}
             />
-            {LABELS[option]}
+            {THEME_TOGGLE_COPY.options[option]}
           </button>
         );
       })}

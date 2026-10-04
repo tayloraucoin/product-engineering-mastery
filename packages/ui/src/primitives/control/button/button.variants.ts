@@ -1,7 +1,4 @@
-import type { ComponentProps } from "react";
-import { cva, type VariantProps } from "class-variance-authority";
-
-import { cn } from "../lib/cn";
+import { cva } from "class-variance-authority";
 
 /**
  * Exported on its own so a link can wear a button's styling without becoming
@@ -29,22 +26,3 @@ export const buttonVariants = cva(
     },
   },
 );
-
-export type ButtonProps = ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants>;
-
-export function Button({
-  className,
-  variant,
-  size,
-  type = "button",
-  ...props
-}: ButtonProps) {
-  return (
-    <button
-      type={type}
-      className={cn(buttonVariants({ variant, size }), className)}
-      {...props}
-    />
-  );
-}

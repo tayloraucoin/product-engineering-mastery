@@ -1,0 +1,32 @@
+{
+  "id": "STK-22",
+  "criteria_sha256": "ab856b54fd1953c43925308f997b06b873771ee7e64431116b2c872509074cb9",
+  "criteria": {
+    "C1": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C2": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    },
+    "C3": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    },
+    "C4": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    },
+    "C5": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    }
+  },
+  "updated_at": "2026-10-04T07:10:16Z"
+}

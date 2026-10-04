@@ -15,6 +15,16 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-04 — STK-22: `@pem/ui` takes the house layout
+
+Taylor: the UI package did not carry the directory structure of the recent repos (Synapse, Conscious Connections), which keep `primitives/` and `composed/` with kind subfolders. STK-6 had shipped `src/button/`, `src/theme/` and `src/theme-toggle/` flat.
+
+- **Layout.** `src/primitives/<kind>/<name>/`, `src/composed/<kind>/<name>/`, `src/providers/<name>/`, `src/hooks/`, `src/lib/`, `src/styles/`. Kinds are a closed list: control, display, feedback, layout, media, navigation, typography. The button is `primitives/control/button/`, the toggle `composed/control/theme-toggle/`, the theme provider `providers/theme/`.
+- **Folder grammar.** `<name>.tsx` and `index.ts`; `cva()` in `<name>.variants.ts`; a composed component's strings in `copy.ts`; stories beside them when STK-8 lands.
+- **Written once,** in the new `packages/ui/AGENTS.md`; `codebase-conventions.md` §4 points to it. `yarn check-ui-layout` (in `yarn verify`) enforces it and checks every `exports` target exists.
+- **Public subpaths unchanged.** `@pem/ui/button`, `/cn`, `/theme`, `/theme-toggle`, `/styles/globals.css`: no app import moved. Trade-off: a subpath no longer names the file's folder, so a reader follows `package.json` to find the source.
+- Ledger: EN-11.
+
 ## 2026-10-03 — PJ: tickets build in batches, and the tier sets the QA
 
 Taylor, after the first STK batch: threads ran over an hour, each ticket needed a pasted prompt and two typed commands, and one ticket's open close failed every other ticket's `yarn verify` on the shared branch. "This whole thing is about increasing code quality with decreasing operational stress." The loop was built for one ticket per branch, merged before the next; PR-14 put parallel tickets on one branch, and every gate that assumed isolation then fired across tickets (PR-15).

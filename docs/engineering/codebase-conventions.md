@@ -101,7 +101,7 @@ A package imports only packages below it, and only along the edges in `packages/
 
 **Packages ship TypeScript source.** No build step: each package's `exports` points at `src/`, and each app compiles them through `transpilePackages` in `next.config.ts`.
 
-**Subpath exports, not barrels.** `@pem/ui` exposes one entry per component (`@pem/ui/button`, `@pem/ui/cn`). A new component adds its own `exports` entry.
+**Subpath exports, not barrels.** `@pem/ui` exposes one entry per component (`@pem/ui/button`, `@pem/ui/cn`). A new component adds its own `exports` entry. Inside the package, components sit in `primitives/<kind>/<name>/` or `composed/<kind>/<name>/`; the layout is [`packages/ui/AGENTS.md`](../../packages/ui/AGENTS.md), enforced by `yarn check-ui-layout`.
 
 **Adding a package** (only when §1 says so, or a ticket builds a row of the table above):
 
