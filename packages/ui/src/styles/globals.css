@@ -1,8 +1,18 @@
 /**
- * Imported by each app's `app/globals.css`, after Tailwind and the token
- * preset. `@source` resolves relative to this file, so every class used
- * anywhere in `@pem/ui` is generated without the app knowing this package's
- * path on disk.
+ * Imported by each app's `app/globals.css` and by the workshop's
+ * `.storybook/preview.css`, after Tailwind and the token preset, so every
+ * surface paints the same base. `@source` resolves relative to this file, so
+ * every class used anywhere in `@pem/ui` is generated without the importer
+ * knowing this package's path on disk.
  */
 
 @source "../";
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}

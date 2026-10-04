@@ -24,6 +24,13 @@ planned_paths:
   - "turbo.json"
   - ".gitignore"
   - "docs/engineering/tech-stack.md"
+  - "packages/ui/tsconfig.json"
+  - "packages/ui/src/styles/globals.css"
+  - "packages/ui/AGENTS.md"
+  - "apps/web/app/globals.css"
+  - "apps/docs/app/globals.css"
+  - "packages/config/eslint/boundaries.js"
+  - "yarn.lock"
 depends_on:
   - STK-7
 out_of_scope:
@@ -50,6 +57,7 @@ criteria:
     statement: "A fixture @pem/ui component with no story fails the story-coverage check, naming the component."
     evidence: test
     command: "yarn test"
+tier: 1
 ---
 
 # Contract — STK-8 component-workshop

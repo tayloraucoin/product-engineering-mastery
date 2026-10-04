@@ -5,6 +5,10 @@
  * Layer order (low → high), the built part of codebase-conventions §4:
  *   config → env, brand → db → ui → apps
  *
+ * `ui-workshop` is `packages/ui/.storybook/`, the component workshop
+ * (D-STK-10): it reads @pem/brand for fonts and assets, which @pem/ui's own
+ * components never do. It is listed before `ui` because the first match wins.
+ *
  * - apps/* → apps/*: hard ban
  * - packages/* → apps/*: hard ban
  *
@@ -49,6 +53,11 @@ const ELEMENTS = [
   workspacePackage("env", "env"),
   workspacePackage("brand", "brand"),
   workspacePackage("db", "db"),
+  {
+    type: "ui-workshop",
+    pattern: ["packages/ui/.storybook/**"],
+    mode: "full",
+  },
   workspacePackage("ui", "ui"),
 ];
 
@@ -59,6 +68,7 @@ const PACKAGE_IMPORTS = {
   brand: ["config"],
   db: ["config", "env"],
   ui: ["config"],
+  "ui-workshop": ["config", "brand", "ui"],
 };
 
 /** Vendor SDK → the one element type allowed to import it (D-STK-16). */
@@ -71,7 +81,10 @@ const APP_TYPES = ELEMENTS.map((element) => element.type).filter((type) =>
   type.startsWith("app-"),
 );
 
-const APP_IMPORTS = Object.keys(PACKAGE_IMPORTS);
+/** Apps import packages, never a package's workshop. */
+const APP_IMPORTS = Object.keys(PACKAGE_IMPORTS).filter(
+  (type) => type !== "ui-workshop",
+);
 
 const SOURCE_FILES = "**/*.{ts,tsx,js,jsx,mjs,cjs}";
 
@@ -90,10 +103,7 @@ function restrictedImports(owner) {
       group: [sdk, `${sdk}/*`],
       message: `${sdk} is owned by @pem/${sdkOwner} (D-STK-16); import what you need from @pem/${sdkOwner}.`,
     }));
-  return [
-    "error",
-    { patterns: [WORKSPACE_PATH_PATTERN, ...sdkPatterns] },
-  ];
+  return ["error", { patterns: [WORKSPACE_PATH_PATTERN, ...sdkPatterns] }];
 }
 
 /** One override per SDK owner, so its own files may import what it owns. */
@@ -128,10 +138,16 @@ function buildDependencyRules() {
   }
 
   for (const appType of APP_TYPES) {
-    rules.push({ from: { type: appType }, allow: { to: { type: APP_IMPORTS } } });
+    rules.push({
+      from: { type: appType },
+      allow: { to: { type: APP_IMPORTS } },
+    });
     for (const otherApp of APP_TYPES) {
       if (otherApp !== appType) {
-        rules.push({ from: { type: appType }, disallow: { to: { type: otherApp } } });
+        rules.push({
+          from: { type: appType },
+          disallow: { to: { type: otherApp } },
+        });
       }
     }
   }
