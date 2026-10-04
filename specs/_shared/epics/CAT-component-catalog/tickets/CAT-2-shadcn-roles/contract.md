@@ -25,6 +25,7 @@ planned_paths:
   - "tooling/contrast-audit.test.ts"
   - "tooling/token-lint.test.ts"
   - "tooling/preset-tokens.test.ts"
+  - "apps/web/app/opengraph-image.tsx"
   - "docs/design/component-sources.md"
   - "docs/decisions/ledger.md"
   - "docs/decisions/changelog.md"
