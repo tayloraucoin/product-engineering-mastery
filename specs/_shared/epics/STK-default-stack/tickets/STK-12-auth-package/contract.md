@@ -39,6 +39,7 @@ planned_paths:
   - "apps/web/package.json"
   - "yarn.lock"
   - "tooling/boundaries.test.ts"
+  - "docs/engineering/codebase-conventions.md"
 depends_on:
   - STK-11
 out_of_scope:

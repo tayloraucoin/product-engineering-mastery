@@ -39,6 +39,8 @@ The canonical choices and their versions. Exact pins are deliberate; a pin chang
 | `drizzle-orm`, `drizzle-kit`, `postgres`                                                    | 0.45.2, 0.31.10, 3.4.9 (2026-10-03)      | **exact** (`@pem/db` only; D-STK-5, D-STK-16)                                                             |
 | `supabase` CLI (`yarn db:local`, `db:local:full`; D-STK-6)                                  | 2.119.0 (verified 2026-10-04)            | **exact** (`@pem/db` devDependency; it pins the images below)                                             |
 | `supabase/postgres` image, from the CLI                                                     | 17.11.0.002 (verified 2026-10-04)        | by the CLI pin (`public.ecr.aws/supabase/postgres`); listens on every interface, so `yarn db:local` warns |
+| `@supabase/ssr`, `@supabase/supabase-js`                                                    | 0.12.7, 2.117.2 (verified 2026-10-04)    | **exact** (`@pem/auth` only; D-STK-7, D-STK-16)                                                           |
+| `server-only`                                                                               | 0.0.1 (verified 2026-10-04)              | **exact** (`apps/web`: marks `lib/supabase` server files)                                                 |
 | `resend`                                                                                    | 6.32.0 (verified 2026-10-04)             | **exact** (`@pem/email` only; D-STK-12, D-STK-16)                                                         |
 | Brand font placeholder: Geist, latin, variable 400 to 600                                   | from Next 16.3.8 (2026-10-04)            | a file, SIL OFL 1.1 (`packages/brand/assets/fonts/`; the brand step replaces it)                          |
 | `react-markdown`, `remark-gfm`, `rehype-slug`, `@tailwindcss/typography`, `minisearch`      | —                                        | caret (`apps/docs` only)                                                                                  |
@@ -54,7 +56,6 @@ None of these exist yet. Every row but Tests is part of the default stack ([reco
 
 | Concern    | House choice when it arrives                                                | Ticket |
 | ---------- | --------------------------------------------------------------------------- | ------ |
-| Auth       | Supabase Auth, session refresh in `proxy.ts`                                | STK-12 |
 | API        | tRPC, thin procedures over services                                         | STK-14 |
 | Validation | Zod (pinned above for `env.ts`) — one schema shared by forms and procedures | STK-13 |
 | Tests      | During the item, per evidence type (ruling (h); `.claude/rules/testing.md`) | —      |
