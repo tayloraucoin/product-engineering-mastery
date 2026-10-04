@@ -28,18 +28,19 @@ The canonical choices and their versions. Exact pins are deliberate; a pin chang
 
 ## Apps
 
-| Library                                                                                | Version                              | Pin                                              |
-| -------------------------------------------------------------------------------------- | ------------------------------------ | ------------------------------------------------ |
-| Next.js                                                                                | 16.3.8 (App Router, Turbopack)       | **exact**                                        |
-| React / React DOM                                                                      | 19.2.8                               | **exact**                                        |
-| Tailwind CSS                                                                           | 4.x, via `@tailwindcss/postcss`      | caret                                            |
-| `class-variance-authority`, `clsx`, `tailwind-merge`                                   | —                                    | caret (`@pem/ui`)                                |
-| `next-themes`                                                                          | 0.4.6 (verified 2026-10-03)          | **exact** (`@pem/ui` only, unpatched; D-STK-17)  |
-| `@t3-oss/env-nextjs`, `zod`                                                            | 0.13.11, 4.6.5 (verified 2026-10-03) | caret (`apps/web`: `env.ts`; D-STK-3)            |
-| `drizzle-orm`, `drizzle-kit`, `postgres`                                               | 0.45.2, 0.31.10, 3.4.9 (2026-10-03)  | **exact** (`@pem/db` only; D-STK-5, D-STK-16)    |
-| `supabase/postgres` image (`yarn db:local`)                                            | 17.11.0.003 (verified 2026-10-03)    | **exact** (`packages/db/scripts/local-image.ts`) |
-| `react-markdown`, `remark-gfm`, `rehype-slug`, `@tailwindcss/typography`, `minisearch` | —                                    | caret (`apps/docs` only)                         |
-| `yaml`                                                                                 | 2.x                                  | caret (`tooling/` and `apps/docs`: frontmatter)  |
+| Library                                                                                | Version                              | Pin                                                                                  |
+| -------------------------------------------------------------------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------ |
+| Next.js                                                                                | 16.3.8 (App Router, Turbopack)       | **exact** (apps; `@pem/brand` as a peer, for `next/font` and its static mark import) |
+| React / React DOM                                                                      | 19.2.8                               | **exact**                                                                            |
+| Tailwind CSS                                                                           | 4.x, via `@tailwindcss/postcss`      | caret                                                                                |
+| `class-variance-authority`, `clsx`, `tailwind-merge`                                   | —                                    | caret (`@pem/ui`)                                                                    |
+| `next-themes`                                                                          | 0.4.6 (verified 2026-10-03)          | **exact** (`@pem/ui` only, unpatched; D-STK-17)                                      |
+| `@t3-oss/env-nextjs`, `zod`                                                            | 0.13.11, 4.6.5 (verified 2026-10-03) | caret (`apps/web`: `env.ts`; D-STK-3)                                                |
+| `drizzle-orm`, `drizzle-kit`, `postgres`                                               | 0.45.2, 0.31.10, 3.4.9 (2026-10-03)  | **exact** (`@pem/db` only; D-STK-5, D-STK-16)                                        |
+| `supabase/postgres` image (`yarn db:local`)                                            | 17.11.0.003 (verified 2026-10-03)    | **exact** (`packages/db/scripts/local-image.ts`)                                     |
+| Brand font placeholder: Geist, latin, variable 400 to 600                              | from Next 16.3.8 (2026-10-04)        | a file, SIL OFL 1.1 (`packages/brand/assets/fonts/`; the brand step replaces it)     |
+| `react-markdown`, `remark-gfm`, `rehype-slug`, `@tailwindcss/typography`, `minisearch` | —                                    | caret (`apps/docs` only)                                                             |
+| `yaml`                                                                                 | 2.x                                  | caret (`tooling/` and `apps/docs`: frontmatter)                                      |
 
 Next.js, React, and TypeScript are pinned exactly because a minor version of each can change behaviour the whole repo depends on. Everything else floats within its major version, held in place by `yarn.lock`.
 

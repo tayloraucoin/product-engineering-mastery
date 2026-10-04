@@ -22,7 +22,7 @@ Every step ends on a check. A step whose check fails is fixed before the next on
 
 ## 0. Read the briefing
 
-The briefing supplies seven inputs. If one is missing, ask before step 1. Never invent a name, a prefix or a vendor choice.
+The briefing supplies eight inputs. If one is missing, ask before step 1. Never invent a name, a prefix or a vendor choice.
 
 | Input                       | Example (synthetic)                                                        | Step    |
 | --------------------------- | -------------------------------------------------------------------------- | ------- |
@@ -32,6 +32,7 @@ The briefing supplies seven inputs. If one is missing, ask before step 1. Never 
 | Work-id prefix per app      | `NWL` for `web`, `NWD` for `docs`                                          | 2       |
 | Repo-wide work-id prefix    | `NW`, for changes that belong to no app                                    | 1, 2, 7 |
 | Primary colour and its text | light and dark values in OKLCH, for `--primary` and `--primary-foreground` | 3       |
+| Typeface and its reason     | a variable font file the product may ship, and one line on why             | 3       |
 | Modules the product drops   | billing, AI                                                                | 4       |
 
 The apps are the keys of `apps` in `toolkit.json`: today `web` and `docs`. Each needs a prefix. The toolkit URL is this repo's remote (`git remote get-url origin`, run in the toolkit).
@@ -73,13 +74,14 @@ All work goes on the `agent/<repo-wide-prefix>` branch: the hooks refuse commits
 
 ## 3. Set the brand
 
-`@pem/brand` (STK-7) will hold the name, URLs, contact, asset paths and the two theme colours, with logos and fonts in its own folder, and a check will fail when it and the token preset disagree (D-STK-9). STK-7 rewrites this step. Until it lands, the brand lives in three places:
+The brand has one source, `@pem/brand` (D-STK-9). `packages/brand/src/brand.ts` holds the name, short name, description, URLs, contact, asset paths and the two theme colours; `packages/brand/assets/` holds the logo, the mark and the font. The web app's manifest, metadata, icon and Open Graph image, and the docs app's metadata, read it. No other file names the brand, so this step edits `brand.ts` and `assets/`, and the two colour tokens behind them.
 
-- The colours in `packages/config/tailwind/preset.css`. It has three layers (D-STK-17): a raw scale, semantic names set once under `:root` (light) and again under `.dark`, and the bridge that exposes them to Tailwind. Add the briefing's colours as new raw steps in layer 1, for example `--brand-500`. Then point `--primary` and `--primary-foreground` at them in both layer-2 blocks, `:root` and `.dark`. A raw value is written nowhere else; every other semantic name keeps its step unless the briefing names it; the bridge is not touched; token names belong to the design system (`docs/design/canon.md`).
-- The `metadata` in `apps/web/app/layout.tsx`: its title becomes the product name.
-- The `metadata` in `apps/docs/app/layout.tsx`: the default title (`Docs · ` and the product name, the form it has today), the title template (`%s · ` and the product name with ` Docs`) and the description.
+1. **Words.** In `brand.ts`, set `name`, `shortName`, `description`, `urls` and `contact` from the briefing. The site URL per tier is not here: it is `NEXT_PUBLIC_SITE_URL` (step 6).
+2. **Logo and mark.** Replace `assets/logo.svg` and `assets/mark.svg`, keeping the file names. The mark is each app's icon.
+3. **Typeface.** Replace `assets/fonts/brand-sans.woff2` and its `LICENSE.txt` with the briefing's typeface, keeping the file name. It must be a variable font covering weights 400 to 600, or `src/font.ts` lists its files instead. The placeholder is Geist; keeping it is the default-typeface tell (canon A-01).
+4. **Colours.** In `brand.ts`, set `theme.primary` and `theme.primaryForeground`, light and dark, to the briefing's OKLCH values. The tokens themselves stay in `packages/config/tailwind/preset.css` (D-STK-9, D-STK-17), which has three layers: a raw scale, semantic names set once under `:root` (light) and again under `.dark`, and the bridge that exposes them to Tailwind. Add the same values as new raw steps in layer 1, for example `--brand-500`, and point `--primary` and `--primary-foreground` at them in both layer-2 blocks. A raw value is written nowhere else; every other semantic name keeps its step unless the briefing names it; the bridge is not touched.
 
-**Check:** `git grep -n -e "--primary:" -e "--primary-foreground:" -- packages/config/tailwind/preset.css` prints four lines (light and dark), each set to one of the new raw steps. `yarn build` exits 0. `git grep -n -e "Product Engineering Mastery" -e "PEM" -- apps/web/app/layout.tsx apps/docs/app/layout.tsx` prints nothing. The demo page still names the toolkit until step 5.
+**Check:** `yarn workspace @pem/brand test` exits 0: it fails, naming the token, while `brand.ts` and the preset disagree, and when an asset path in `brand.ts` has no file. `yarn contrast-audit` and `yarn build` exit 0. `git grep -n -e "Product Engineering Mastery" -e "PEM" -- apps/web/app apps/docs/app/layout.tsx packages/brand` prints nothing. The demo page still names the toolkit until step 5.
 
 ## 4. Choose the modules
 
