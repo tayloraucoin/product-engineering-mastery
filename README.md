@@ -21,6 +21,12 @@ yarn web:dev      # the demo app, at http://localhost:3000
 yarn verify       # everything CI runs
 ```
 
+**On a phone.** `yarn web:dev:local` binds the demo app to every interface and prints its LAN URLs; open one on a phone on the same Wi-Fi. `apps/web/next.config.ts` lists the same addresses in `allowedDevOrigins`, which Next.js 16 needs before it serves the client scripts to another origin.
+
+**Contrast.** `yarn contrast-audit` checks the preset's token pairs, light and dark, against WCAG 2.2 AA (4.5:1 for text, 3:1 for the focus ring) and runs in `yarn verify`. A failing pair is fixed in `packages/config/tailwind/preset.css` by changing the raw step's lightness.
+
+**Deploy.** `apps/web/vercel.json` builds the demo app on Vercel from the workspace: set the project's Root Directory to `apps/web`; it installs with Corepack and Yarn from the repo root and builds through `turbo run build --filter=web`. CI runs `yarn verify`, the same chain as a local run.
+
 The docs app reads the markdown in `docs/` directly: the sidebar groups files by their `layer`, the search box (press `/`) covers every file including archived research, and each page shows its frontmatter.
 
 ## Layout
