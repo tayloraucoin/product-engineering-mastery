@@ -8,10 +8,10 @@
       "run": {
         "command": "yarn lint:docs",
         "exit": 0,
-        "at": "2026-10-04T03:17:50Z",
-        "head": "5703e9e2d06305012fc85a0bdc79b163ee02b84f",
+        "at": "2026-10-04T05:25:39Z",
+        "head": "265676512147959fa79a196b2082f0b66214af02",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/evidence/C1.log",
-        "evidence_sha256": "1db1031578b688ec4d6e3c9df557349958c5027cd327635d0ea1d8191bd32bb7"
+        "evidence_sha256": "ba78031e2fd3adb4da5fd519f2270b2046a772538c17520a463a3716d2584ad6"
       }
     },
     "C2": {
@@ -20,10 +20,10 @@
       "run": {
         "command": "yarn check-refs",
         "exit": 0,
-        "at": "2026-10-04T03:17:51Z",
-        "head": "5703e9e2d06305012fc85a0bdc79b163ee02b84f",
+        "at": "2026-10-04T05:25:39Z",
+        "head": "265676512147959fa79a196b2082f0b66214af02",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/evidence/C2.log",
-        "evidence_sha256": "c05821a2fcdc56bc401707cf195656200ccab35fec7a4eb88a13d93d638763fd"
+        "evidence_sha256": "79531797a8825efe53d50cd1f7d9409130e3e5188f1d49293d55387c7a8bc3a4"
       }
     },
     "C3": {
@@ -32,22 +32,22 @@
       "run": {
         "command": "yarn directory-map --check",
         "exit": 0,
-        "at": "2026-10-04T03:17:53Z",
-        "head": "5703e9e2d06305012fc85a0bdc79b163ee02b84f",
+        "at": "2026-10-04T05:25:42Z",
+        "head": "265676512147959fa79a196b2082f0b66214af02",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/evidence/C3.log",
-        "evidence_sha256": "c351ddf42b7dc4ab0e0f4520b6a09efb91711d98b0b2e58a04a4ccad4bf22700"
+        "evidence_sha256": "d9a14fbe7e569277ff7610aa46acbc9da48d4dedf6be455fdc59309d02686796"
       }
     },
     "C4": {
       "status": "PASS",
       "evidence": "manual",
       "run": {
-        "command": "yarn contract:record STK-3 C4 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/evidence/C4.md",
+        "command": "yarn contract:record STK-3 C4 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/evidence/C4-reread.md",
         "exit": 0,
-        "at": "2026-10-04T03:17:58Z",
-        "head": "5703e9e2d06305012fc85a0bdc79b163ee02b84f",
-        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/evidence/C4.md",
-        "evidence_sha256": "9639f96220d71e3a5f7db15593669b3d9346117d77cd3257912441d1b9b9ab3c"
+        "at": "2026-10-04T05:28:51Z",
+        "head": "57704230be897c60232bc33c8a6e8a44c5a7d0b4",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/evidence/C4-reread.md",
+        "evidence_sha256": "5fea327320f5df51e94a49eed1336d166b5e67ae2d5a084fe1d83d23269d936d"
       }
     },
     "review:vigil": {
@@ -66,5 +66,5 @@
       }
     }
   },
-  "updated_at": "2026-10-04T03:25:33Z"
+  "updated_at": "2026-10-04T05:28:51Z"
 }
