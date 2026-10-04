@@ -6,14 +6,14 @@
 - C2: `ThemeProvider` (`@pem/ui/theme`) is mounted inside `<body>` of both apps' root layouts, with `suppressHydrationWarning` on `<html>`; types and build pass for both. The criterion is `yarn verify`, run once at batch close.
 - C3, C4: the demo home captured in dark and in light, each switched through the toggle (`evidence/dark.png`, `evidence/light.png`).
 - C5: `evidence/C5.md`: the class-only CSS, next-themes' blocking script ahead of all content, and the render-blocking stylesheet; after a reload with dark stored, the page is dark whether the system says dark or light.
-- C6: `ThemeToggle` (`@pem/ui/theme-toggle`) is one radio group of light, dark and system: one tab stop, arrow keys, Home and End, and a visible focus ring (`evidence/toggle-states.png`). It sits in the demo home's header.
+- C6: `ThemeToggle` (`@pem/ui/theme-toggle`) is one radio group of light, dark and system: one tab stop, arrow keys, Home and End, and a visible focus ring (`evidence/toggle-states.png`, focused in light mode). It sits in the demo home's header.
 
 ## Deviations
 
 - **devs_call, settled:** the toggle sits in a header in `apps/web/app/layout.tsx`, top right; the raw scale is named `--neutral-<step>` on Tailwind's step numbers.
 - **The toggle's labels pass 4.5:1 in light mode** after a fix (`0c2605e`): the track sits on the background and the selection on the accent surface.
 - **next-themes 0.4.6, exact and unpatched** (verified 2026-10-03), recorded in `tech-stack.md` per D-STK-17.
-- **C3 to C6 were re-recorded at batch close without retaking the images.** They went stale only because `tech-stack.md` and `yarn.lock` changed (STK-9's rows and lockfile range merges). No version changed and no UI file changed since the captures (`git diff 930129e HEAD` over the preset, `packages/ui`, both apps' `app/` and `tokens.js` is empty).
+- **C3, C4 and C6 were retaken after STK-19 darkened `--neutral-400` and `--neutral-500` (`aedd20e`, for AA contrast).** Headless Chrome 1280×800 over the DevTools protocol against `yarn web:dev`, with the system preference emulated as light: "Dark" and "Light" are clicked in the toggle (`<html>` turned `dark`, then `light`), and the focus ring comes from real Tab presses (`:focus-visible` true). `toggle-states.png` now shows the ring in light mode, where the batch review had measured it under 3:1 before STK-19's change.
 - [ASSUMPTION] The docs app mounts the provider but shows no toggle; the contract asks for the toggle only on the demo home.
 
 ## Not verified

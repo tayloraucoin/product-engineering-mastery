@@ -8,10 +8,10 @@
       "run": {
         "command": "yarn lint",
         "exit": 0,
-        "at": "2026-10-04T04:29:19Z",
-        "head": "a320df0bfbdea2e96b36b748043954fe6c4f171f",
+        "at": "2026-10-04T06:34:49Z",
+        "head": "dc88948f4c238580b791ea194aba05bf095910c8",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/C1.log",
-        "evidence_sha256": "b7ad99a987a97e79145cec2399c881c33fc27ee1977e74f3e5d59dc67d0c1580"
+        "evidence_sha256": "640a513ae44daeb58bce86d077f2dffe6ea0d07c555bbb3c054b4fb66b0f2159"
       }
     },
     "C2": {
@@ -75,5 +75,5 @@
       }
     }
   },
-  "updated_at": "2026-10-04T04:35:48Z"
+  "updated_at": "2026-10-04T06:34:52Z"
 }
