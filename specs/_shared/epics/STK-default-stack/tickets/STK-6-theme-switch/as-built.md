@@ -2,7 +2,7 @@
 
 ## Shipped against the contract
 
-- C1: `packages/config/tailwind/preset.css` holds three layers: a raw neutral scale (`--neutral-0` to `--neutral-950`), semantic names on `:root` with their dark values under `.dark`, and the `@theme inline` bridge that exposes the semantic names to Tailwind. `@custom-variant dark` reads the class; the `prefers-color-scheme` block is gone. `packages/config/eslint/tokens.js` now also rejects colour functions (`oklch(`, `rgb(` and the rest) outside the preset; `yarn lint` passes.
+- C1: `packages/config/tailwind/preset.css` holds three layers: a raw neutral scale (`--neutral-0` to `--neutral-950`), semantic names on `:root` with their dark values under `.dark`, and the `@theme inline` bridge that exposes the semantic names to Tailwind. `@custom-variant dark` reads the class; the `prefers-color-scheme` block is gone. `packages/config/eslint/tokens.js` now also rejects colour functions (`oklch(`, `rgb(` and the rest) in TS/TSX class strings and inline styles; it does not read CSS files. `yarn lint` passes, and a grep finds no colour literal outside the preset.
 - C2: `ThemeProvider` (`@pem/ui/theme`) is mounted inside `<body>` of both apps' root layouts, with `suppressHydrationWarning` on `<html>`; types and build pass for both. The criterion is `yarn verify`, run once at batch close.
 - C3, C4: the demo home captured in dark and in light, each switched through the toggle (`evidence/dark.png`, `evidence/light.png`).
 - C5: `evidence/C5.md`: the class-only CSS, next-themes' blocking script ahead of all content, and the render-blocking stylesheet; after a reload with dark stored, the page is dark whether the system says dark or light.

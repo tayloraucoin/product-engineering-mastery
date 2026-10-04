@@ -7,7 +7,7 @@
 - **C3:** `packages/config/eslint/boundaries.js` adds the `env` element. `env` may import `config` only, and apps may import `env`. `yarn lint:boundaries` passes.
 - **C4:** `yarn check-types` passes across apps and packages. `yarn check-types:tooling` also passes for the new tooling script.
 - **C5:** `yarn check-client-bundle --scan` fails on a fixture chunk holding a sentinel, naming the variable and the file. It also fails on a missing folder ("no build output") and on a folder with no JavaScript, and passes on a clean chunk. Proof: 4 tests in `tooling/check-client-bundle.test.ts`, with fixtures in `tooling/fixtures/client-bundle/`.
-- **C6:** `yarn verify` now runs `yarn test` and `yarn check-client-bundle` (root `package.json`). The bundle check reads every server-only name in `.env.example` and sets each to a unique random sentinel. It then builds `apps/web` and scans what the browser receives: `.next/static` JavaScript, and the prerendered `.html` and `.rsc` files under `.next/server/app`. Its last run planted 3 sentinels and found none in 25 files. **C6 is recorded FAIL:** `yarn verify` stops at `check-specs` on other tickets' state, so see Deviations.
+- **C6:** `yarn verify` now runs `yarn test` and `yarn check-client-bundle` (root `package.json`). The bundle check reads every server-only name in `.env.example` and sets each to a unique random sentinel. It then builds `apps/web` and scans what the browser receives: `.next/static` JavaScript, and the prerendered `.html` and `.rsc` files under `.next/server/app`. Its last run planted 3 sentinels and found none in 25 files. C6 PASS at batch close (2026-10-03).
 
 Against the non-negotiables:
 
@@ -34,17 +34,7 @@ Also shipped:
 
 ## Deviations
 
-- **C6 is FAIL on branch-wide state, not on this ticket.** `yarn verify` exits at `check-specs` (log: `evidence/C6.log`) on these problems, all outside STK-4:
-  - STK-1's proofs are stale: practice files changed after its runs.
-  - STK-2's C1 to C6 are stale because this ticket edited `package.json` and `toolkit.json`, which are planned paths of both tickets.
-  - STK-2's C7 and reviews, and STK-3's vigil review, are not yet PASS.
-
-  The steps after `check-specs` were run one by one on 2026-10-03: `check-test-weakening`, `test:tooling`, `test`, `lint`, `lint:boundaries`, `check-types`, `check-types:tooling`, `check-client-bundle` and `build` pass. Two did not:
-  - `budget` is over its cap (evaluator pass 7,240 of 7,000). The cap counts the largest contract, which is STK-6's.
-  - `gen:agents --check` failed once, then passed, while other threads were writing.
-
-  Tickets share one branch since PR-14, so a criterion that runs `yarn verify` cannot pass while any other ticket on the branch is open. Taylor has the options: wait for those tickets, re-run their proofs, or scope `check-specs` to the ticket.
-
+- **C6 first failed on branch-wide state, not on this ticket:** other tickets' stale proofs failed `check-specs`, and the evaluator-pass budget was over its cap. PR-15 made `check-specs` warn on work in flight and raised the cap; C6 passed at batch close.
 - **The `EXAMPLE_API_KEY` server secret (Taylor's call, 2026-10-03).** At STK-4 the only server-only variable is the tier switch. Its values are enum words that cannot carry a sentinel, so C6 would have planted nothing. This synthetic tiered secret, read by `env.ts` and listed in `.env.example`, `turbo.json` and the manifest, gives the check a real target. The first vendor ticket replaces it.
 - **The check scans more than client chunks.** It also scans prerendered `.html` and `.rsc` files, because a Server Component passing a secret into rendered output leaks it there, not in a chunk. The negative control in `evidence/C6-control-leak.txt` shows it: the page temporarily rendered `env.EXAMPLE_API_KEY`, and the check failed, naming `EXAMPLE_API_KEY_LOCAL` in `index.html` and three `.rsc` files.
 - **"Where the code runs" comes from `VERCEL_ENV`, not `VERCEL`.** Vercel's docs (last updated 2026-07-15, read 2026-10-03) say `VERCEL_ENV` is set at build and runtime to `production`, `preview` or `development`. Only the first two count as deployed, so a `vercel env pull` with `development` stays local. `[ASSUMPTION: Vercel is the deploy target (D-STK-19); on any host that does not set VERCEL_ENV, the code reads as local and the site URL is localhost.]`
@@ -68,7 +58,6 @@ none
 
 ## Not verified
 
-- review:mason, review:vigil and review:warden have not run: `yarn review:run` waits on C6.
 - No manual criteria.
 - The site URL on a real Vercel deployment: the `VERCEL_ENV` path was exercised only by setting the variable on a local build.
 
@@ -78,4 +67,4 @@ claude-opus-5-5, Claude Code 2.1.232.
 
 ## Next
 
-Clear the branch-wide `check-specs` problems or scope `check-specs` to the ticket, re-run `yarn contract:run STK-4 C6`, then run the three reviews.
+Closed. The first vendor ticket replaces `EXAMPLE_API_KEY` and wires `keyModeProblem` (STK-16).
