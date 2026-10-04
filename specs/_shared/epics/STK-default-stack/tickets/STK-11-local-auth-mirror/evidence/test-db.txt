@@ -1,5 +1,5 @@
 # yarn test:db — STK-11 C1
-# 2026-10-04T23:41Z, code at commit 89bff07 (this file is committed on top of it), against the database yarn db:local starts (supabase CLI 2.119.0, Mode A: auth.identities absent, local_auth_mirror.marker present)
+# 2026-10-04T23:52Z, code at commit 46aaece (this file is committed on top of it), against the database yarn db:local starts (supabase CLI 2.119.0, Mode A: auth.identities absent, local_auth_mirror.marker present)
 # container: supabase_db_pem public.ecr.aws/supabase/postgres:17.11.0.002
 
 TAP version 13
@@ -7,127 +7,127 @@ TAP version 13
     # Subtest: inserts id and email only, and the trigger creates public.users
     ok 1 - inserts id and email only, and the trigger creates public.users
       ---
-      duration_ms: 10.74
+      duration_ms: 13.180459
       type: 'test'
       ...
     # Subtest: a repeat call is served from the per-process cache, then unchanged
     ok 2 - a repeat call is served from the per-process cache, then unchanged
       ---
-      duration_ms: 4.167833
+      duration_ms: 4.040667
       type: 'test'
       ...
     # Subtest: after public loses the user's row, as on a local reset, setup restores it
-# (node:53860) ExperimentalWarning: The MockTimers API is an experimental feature and might change at any time
+# (node:98393) ExperimentalWarning: The MockTimers API is an experimental feature and might change at any time
 # (Use `node --trace-warnings ...` to show where the warning was created)
     ok 3 - after public loses the user's row, as on a local reset, setup restores it
       ---
-      duration_ms: 22.364167
+      duration_ms: 22.332709
       type: 'test'
       ...
     # Subtest: a cached user whose rows were wiped is mirrored again once the cache entry expires
     ok 4 - a cached user whose rows were wiped is mirrored again once the cache entry expires
       ---
-      duration_ms: 9.430375
+      duration_ms: 12.72025
       type: 'test'
       ...
     # Subtest: upserts a changed email into auth.users and public.users
     ok 5 - upserts a changed email into auth.users and public.users
       ---
-      duration_ms: 6.193334
+      duration_ms: 6.097625
       type: 'test'
       ...
     1..5
 ok 1 - the mirror on a marked database without auth.identities
   ---
-  duration_ms: 137.362542
+  duration_ms: 152.464
   type: 'suite'
   ...
 # Subtest: the guard inside the INSERT
     # Subtest: inserts zero rows when auth.identities exists
     ok 1 - inserts zero rows when auth.identities exists
       ---
-      duration_ms: 33.599334
+      duration_ms: 28.687958
       type: 'test'
       ...
     # Subtest: inserts zero rows when the marker is absent
     ok 2 - inserts zero rows when the marker is absent
       ---
-      duration_ms: 10.39075
+      duration_ms: 8.113708
       type: 'test'
       ...
     # Subtest: a refusal leaves an existing row's email as it was
     ok 3 - a refusal leaves an existing row's email as it was
       ---
-      duration_ms: 7.712208
+      duration_ms: 8.094084
       type: 'test'
       ...
     1..3
 ok 2 - the guard inside the INSERT
   ---
-  duration_ms: 52.12925
+  duration_ms: 45.343917
   type: 'suite'
   ...
 # Subtest: empties public, keeps auth, and rebuilds the schema and setup
 ok 3 - empties public, keeps auth, and rebuilds the schema and setup
   ---
-  duration_ms: 142.228625
+  duration_ms: 178.629625
   type: 'test'
   ...
 # Subtest: the bridge
     # Subtest: sets app.user_id, app.user_role and the role for the transaction
     ok 1 - sets app.user_id, app.user_role and the role for the transaction
       ---
-      duration_ms: 18.503667
+      duration_ms: 23.253
       type: 'test'
       ...
     # Subtest: leaves nothing behind on the pooled connection after the transaction
     ok 2 - leaves nothing behind on the pooled connection after the transaction
       ---
-      duration_ms: 6.964916
+      duration_ms: 8.170792
       type: 'test'
       ...
     1..2
 ok 4 - the bridge
   ---
-  duration_ms: 85.479416
+  duration_ms: 117.145958
   type: 'suite'
   ...
 # Subtest: the setup SQL
     # Subtest: mirrors each auth user into public.users
     ok 1 - mirrors each auth user into public.users
       ---
-      duration_ms: 4.445042
+      duration_ms: 5.338667
       type: 'test'
       ...
     # Subtest: is idempotent: a second run leaves the same triggers and policies
     ok 2 - is idempotent: a second run leaves the same triggers and policies
       ---
-      duration_ms: 16.7875
+      duration_ms: 17.33325
       type: 'test'
       ...
     1..2
 ok 5 - the setup SQL
   ---
-  duration_ms: 21.417041
+  duration_ms: 22.871875
   type: 'suite'
   ...
 # Subtest: an owner-private policy
     # Subtest: hides another user's row and refuses writes to it
     ok 1 - hides another user's row and refuses writes to it
       ---
-      duration_ms: 61.403583
+      duration_ms: 53.837291
       type: 'test'
       ...
     # Subtest: a user reads their own account row and not another's
     ok 2 - a user reads their own account row and not another's
       ---
-      duration_ms: 9.683333
+      duration_ms: 7.411667
       type: 'test'
       ...
     1..2
 ok 6 - an owner-private policy
   ---
-  duration_ms: 71.534166
+  duration_ms: 61.627709
   type: 'suite'
   ...
 1..6
@@ -138,4 +138,4 @@ ok 6 - an owner-private policy
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 1481.905375
+# duration_ms 1564.230875
