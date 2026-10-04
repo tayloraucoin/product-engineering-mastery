@@ -45,9 +45,12 @@
     "check-migrations": "yarn workspace @pem/db check-migrations",
     "test:db": "yarn workspace @pem/db test:db",
     "db:local": "yarn workspace @pem/db db:local",
+    "db:local:full": "yarn workspace @pem/db db:local:full",
+    "db:stop": "yarn workspace @pem/db db:stop",
     "db:generate": "yarn workspace @pem/db db:generate",
     "db:migrate": "yarn workspace @pem/db db:migrate",
-    "db:setup": "yarn workspace @pem/db db:setup"
+    "db:setup": "yarn workspace @pem/db db:setup",
+    "db:seed-users": "yarn workspace @pem/db db:seed-users"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
