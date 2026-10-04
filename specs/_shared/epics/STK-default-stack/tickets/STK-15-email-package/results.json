@@ -53,15 +53,15 @@
       }
     },
     "review:mason": {
-      "status": "PASS",
+      "status": "FAIL",
       "evidence": "manual",
       "run": {
         "command": "yarn review:run mason STK-15",
-        "exit": 0,
-        "at": "2026-10-04T21:13:02Z",
-        "head": "5663de08d2e20eb397664e850e8c8823e21d65ef",
+        "exit": 1,
+        "at": "2026-10-04T21:45:17Z",
+        "head": "14ac1b81eca89827f06e78073dc3c2822d7bb5d7",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/review-mason.md",
-        "evidence_sha256": "7fdf4d0308175d65e05dc1e2de7639344c3423944e73bdb15099eb0f04ca302d",
+        "evidence_sha256": "2d4f79fd65a95d7cd39da220cfdcecd892660273f2a981441cb8cebfeffa0375",
         "contract_sha256": "d44b04528f1ef26fb18566b40794cf59646c5b6a1a844d6d4fba9c5e32942a5b",
         "as_built_sha256": "22c9d7b56d4da7794068dffd311d292b393dd0399cfca54b9d8557edbae1f0e5",
         "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/mason-cto-principal-dev.md; tools Read,Grep,Glob)"
@@ -88,5 +88,5 @@
       }
     }
   },
-  "updated_at": "2026-10-04T21:45:06Z"
+  "updated_at": "2026-10-04T21:48:49Z"
 }
