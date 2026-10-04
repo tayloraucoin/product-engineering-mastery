@@ -16,7 +16,7 @@ export function isLoopbackHost(host: string): boolean {
   return (
     bare === "localhost" ||
     bare === "::1" ||
-    /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(bare)
+    /^127(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}$/.test(bare)
   );
 }
 

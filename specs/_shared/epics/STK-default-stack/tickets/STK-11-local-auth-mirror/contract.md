@@ -24,6 +24,8 @@ reviewers:
 planned_paths:
   - "packages/db/src/local-auth-mirror.ts"
   - "packages/db/src/local-auth-mirror.test.ts"
+  - "packages/db/src/loopback.ts"
+  - "packages/db/src/loopback.test.ts"
   - "packages/db/test/**"
   - "packages/db/scripts/**"
   - "packages/db/supabase/config.toml"

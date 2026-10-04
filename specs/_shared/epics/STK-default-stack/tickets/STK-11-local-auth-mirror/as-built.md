@@ -21,7 +21,7 @@
 - Docs:
   - The manifest's `db` entry lists `supabase`.
   - Both removal runbooks: the database one adds the CLI, the volume and the new scripts; the auth one adds where the mirror goes.
-  - `new-project.md`: step 2 renames `project_id`; step 6 explains the two modes.
+  - `new-project.md`: step 2, item 5, renames `project_id`; step 6, item 4, explains the two modes, the network exposure and how to wipe mirrored emails.
   - `tech-stack.md`: the CLI row, and the image row now pinned by the CLI.
   - `.env.example` and `turbo.json`: `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in all three tier forms.
 
