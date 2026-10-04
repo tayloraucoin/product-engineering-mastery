@@ -3,24 +3,54 @@
   "criteria_sha256": "68d097c820842cb711c5312d7427e94f3a654cac49985544c8fd3ed8381f023c",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-04T19:32:07Z",
+        "head": "aa7df7452adbaad7363a3cd70ce3182f260b72ef",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/evidence/C1.log",
+        "evidence_sha256": "2f90f6080ff0cc5589825fdd948ee38215c1e36c7800f0c0e7322e83c119a5d0",
+        "tests": 76
+      }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-04T19:32:08Z",
+        "head": "aa7df7452adbaad7363a3cd70ce3182f260b72ef",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/evidence/C2.log",
+        "evidence_sha256": "45331153ff145a4d56f4c3c289ac7325fa6831bf4352169399e0a47655de50bd",
+        "tests": 76
+      }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn lint:boundaries",
+        "exit": 0,
+        "at": "2026-10-04T19:32:08Z",
+        "head": "aa7df7452adbaad7363a3cd70ce3182f260b72ef",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/evidence/C3.log",
+        "evidence_sha256": "21cb9d9a73f8a16f673b129dadfa5a9fdf95f88d9bf764978f4f77a1ccd48242"
+      }
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn verify",
+        "exit": 0,
+        "at": "2026-10-04T19:32:10Z",
+        "head": "aa7df7452adbaad7363a3cd70ce3182f260b72ef",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/evidence/C4.log",
+        "evidence_sha256": "6e3436e08cd59d817fdd9fc0274300fa765504f52b3514d80e0aea7066ecdb28"
+      }
     },
     "review:mason": {
       "status": "FAIL",
@@ -38,5 +68,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-04T19:31:52Z"
+  "updated_at": "2026-10-04T20:35:59Z"
 }
