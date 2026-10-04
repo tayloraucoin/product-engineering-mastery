@@ -36,7 +36,7 @@ function useIsClient() {
 
 /**
  * Light, dark or system, as one radio group: one tab stop, arrow keys to
- * move, a visible focus ring. The selected option takes the background
+ * move, a visible focus ring. The selected option takes the accent
  * surface, a border and a dot. Needs `ThemeProvider` from `@pem/ui/theme`
  * above it.
  */
@@ -71,7 +71,7 @@ export function ThemeToggle({ className }: { className?: string }) {
       role="radiogroup"
       aria-label="Theme"
       className={cn(
-        "inline-flex items-center gap-1 rounded-md border border-border bg-muted p-1",
+        "inline-flex items-center gap-1 rounded-md border border-border bg-background p-1",
         className,
       )}
     >
@@ -92,7 +92,7 @@ export function ThemeToggle({ className }: { className?: string }) {
             onKeyDown={(event) => onKeyDown(event, index)}
             className={cn(
               "inline-flex h-8 items-center gap-2 rounded-sm border border-transparent px-3 text-sm font-medium text-muted-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
-              checked && "border-border bg-background text-foreground",
+              checked && "border-border bg-accent text-accent-foreground",
             )}
           >
             <span
