@@ -8,10 +8,10 @@
       "run": {
         "command": "yarn contract:record STK-11 C1 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/test-db.txt",
         "exit": 0,
-        "at": "2026-10-04T21:13:59Z",
-        "head": "0379681b1db35a8b4ab70fd81c8d9561e016e596",
+        "at": "2026-10-04T21:16:19Z",
+        "head": "62e1d7a391fab847e95882d457919b31b32185da",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/test-db.txt",
-        "evidence_sha256": "6e9a08616817c6cb9b88264d71b21eb90c0894e1eccd5439d80116de48512a70"
+        "evidence_sha256": "2998df907af6326bbe87bf6626e7bd9257ee519e4ecdd324675b493831ec49b2"
       }
     },
     "C2": {
@@ -20,11 +20,11 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-04T21:14:04Z",
-        "head": "0379681b1db35a8b4ab70fd81c8d9561e016e596",
+        "at": "2026-10-04T21:19:03Z",
+        "head": "804c7a79fed4c31cbd862f907bc5e997b3e20e5d",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/C2.log",
-        "evidence_sha256": "e0a7e0bf8fe4dba23104ee0aa9f3ac7ba0848518fc3f883e2d9b06793407e2c9",
-        "tests": 84
+        "evidence_sha256": "8b12c7e965605dbb797cbfa6702bf53444300f86e92962fae92e47131e63b7ed",
+        "tests": 97
       }
     },
     "C3": {
@@ -33,10 +33,10 @@
       "run": {
         "command": "yarn verify",
         "exit": 0,
-        "at": "2026-10-04T21:14:08Z",
-        "head": "0379681b1db35a8b4ab70fd81c8d9561e016e596",
+        "at": "2026-10-04T21:19:11Z",
+        "head": "804c7a79fed4c31cbd862f907bc5e997b3e20e5d",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/C3.log",
-        "evidence_sha256": "c59920369c1f2fa81fd1dc12fd8b5a2189e932550e6d982e1ce6110d4787310f"
+        "evidence_sha256": "40d9f4dddf1f1b7f60c79eda61ac557ba8730ef8c7a84a894e95d8668dccf305"
       }
     },
     "C4": {
@@ -91,5 +91,5 @@
       }
     }
   },
-  "updated_at": "2026-10-04T21:15:20Z"
+  "updated_at": "2026-10-04T21:20:38Z"
 }
