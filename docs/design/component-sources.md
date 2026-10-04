@@ -79,7 +79,7 @@ The path proven on the Button (CAT-4). The manifest entry (`packages/catalog/man
 2. `yarn shadcn add <name> --dry-run --view`: the CLI's resolved source, with the Vega classes and lucide icons in place. Write it by hand into the entry's folder, so the CLI never installs the `cn` package (CS-05) or touches `globals.css`: `<name>.tsx`, a `<name>.variants.ts` for each `cva()`, `index.ts`.
 3. Import `cn` from the package's `lib/cn` and other kit components by relative path.
 4. Map what the token lint rejects by the table above; the lint passes with no waiver.
-5. A new npm dependency gets its `tech-stack.md` row and the `ui` module's `dependencies` in `toolkit.json`, then `yarn workspace @pem/ui add -E` at a version at least a week old.
+5. A new npm dependency gets its `tech-stack.md` row and the `ui` module's `dependencies` in `toolkit.json`, then the package takes it as an exact pin, at a version at least a week old.
 6. Stories: one per variant and state, tagged `source:shadcn`, `verdict:kit` and the entry's `layer:`, with `parameters.provenance` naming the registry item, the shadcn version, the read date, MIT and what was adapted.
 7. The `exports` entry, the kind README's example, then `yarn check-catalog --write`.
 

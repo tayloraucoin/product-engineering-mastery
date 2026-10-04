@@ -33,6 +33,7 @@ planned_paths:
   - "toolkit.json"
   - "docs/engineering/tech-stack.md"
   - "docs/design/component-sources.md"
+  - "tooling/refs-pending.json"
 depends_on:
   - CAT-3
 out_of_scope:
