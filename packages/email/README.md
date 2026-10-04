@@ -2,7 +2,7 @@
 
 Transactional email through Resend, with one default template (D-STK-12). A locked module: `toolkit.json` marks it `locked`, and no removal runbook exists. Only this package imports `resend` (D-STK-16).
 
-- **`@pem/email/mailer`**: `createMailer({ tier, apiKey, fromAddress })` returns `send(message)`. The app builds it once from its `env.ts` (`apps/web/lib/email.ts`); this package never reads `process.env`.
+- **`@pem/email/mailer`**: `createMailer({ tier, apiKey, fromAddress })` returns `send(message)`. An app builds it once, from its `env.ts`, in a server-only module such as `lib/email.ts`; this package never reads `process.env`. `apps/web` is not wired yet: its `env.ts` gains `RESEND_API_KEY` and `EMAIL_FROM` once `.env.example` lists them.
 - **`@pem/email/default-template`**: `renderDefaultEmail({ subject, heading, paragraphs, action? })`, a plain template string with every value escaped. The brand name, the home URL, the support address and the colours come from `@pem/brand`.
 
 **Tiers.** On `local`, `send` logs the rendered message through `@pem/observability` (`[email] email.logged`, recipients masked) and returns `{ status: "logged" }`; it never calls Resend. On `staging` and `production` it sends, and it throws when `RESEND_API_KEY` is unset or Resend refuses the message.
