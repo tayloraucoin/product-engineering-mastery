@@ -7,7 +7,7 @@ argument-hint: <id>
 Close one ticket. Only tooling writes results; never edit `results.json`, a review file or a merged as-built. Do not stop to ask about anything reversible.
 
 1. **Commit** the code (`<id>: <outcome>`), staging only this ticket's paths: other tickets share the branch (PR-14).
-2. **Prove.** `yarn contract:run <id>`, and `yarn contract:record <id> <criterion> --evidence <path>` for each `capture` and `manual` criterion. `yarn status <id>` lists what is left, with the reason for each. A proof goes stale when the ticket's own planned paths change after it: re-run it.
+2. **Prove.** `yarn contract:run <id>`, and `yarn contract:record <id> <criterion> --evidence <path>` for each `capture` and `manual` criterion. `yarn status <id>` lists what is left, with the reason for each. Fix what fails and run it again until it passes; re-run a stale proof, on this ticket or any other. A manual check only a person can make is handed over with `--verdict deferred` and an evidence file that says what to look at (PR-16). You run every command yourself; never hand one to Taylor.
 3. **Tier.** A ticket started before PR-15 has no `tier:` line: run `yarn contract:tier <id>`, which computes it and drops the review criteria its tier does not call for.
 4. **As-built**, from `docs/engineering/templates/as-built.template.md`: four short sections. Editing it later does not reset a review.
 5. **Review by tier.** Tier 0: none. Tier 1: one `vigil` subagent, handed the contract, the results file and the changed files, never your summary; save its reply as `review-batch.md` in the ticket folder. Tier 2: `yarn review:run <role> <id>` for each `review:` criterion, unsandboxed. Fix a Blocking finding, re-prove, and review again.

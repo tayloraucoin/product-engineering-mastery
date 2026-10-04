@@ -68,7 +68,11 @@
         },
         "contract_sha256": { "$ref": "#/$defs/sha256" },
         "as_built_sha256": { "$ref": "#/$defs/sha256" },
-        "runner": { "type": "string", "minLength": 1 }
+        "runner": { "type": "string", "minLength": 1 },
+        "deferred": {
+          "description": "true when a manual criterion only a person can check was handed to the operator (contract:record --verdict deferred). It never holds the ticket; _status.md lists it under Operator checks.",
+          "type": "boolean"
+        }
       }
     }
   }

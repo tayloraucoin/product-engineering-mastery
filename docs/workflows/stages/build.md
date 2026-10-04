@@ -52,6 +52,8 @@ Per ticket, in build order:
 
 Once per batch: the tier 1 review, `yarn verify`, `yarn status`, and the report.
 
+The thread runs all of it and keeps going until `yarn status <id>` says nothing is left (PR-16): a failure is fixed and re-proven, a stale proof on any ticket is re-run, a blocked command is run again unsandboxed. What only a person can check is handed over as an operator check (`--verdict deferred`), which closes the ticket and lists the check in `specs/_status.md`. Set `operator_review: true`, or say so in the thread, when you want to look a ticket over yourself.
+
 ## 5. Writes
 
 `results.json` (tooling only), `as-built.md` (Shipped against the contract, Deviations, Not verified, Next), review files, and the truth-file edit for a one-off.
@@ -62,4 +64,4 @@ During a build, `yarn check-specs` fails only on a defect (a broken contract, a 
 
 ## 7. Handoff
 
-The thread ends on the closing report in `tk-batch`'s shape, and nothing else: `Done`, `Not done`, `Needs you` (numbered, each with its exact command or a yes/no question and a recommendation), `What went wrong` (three lines at most). When everything closed it is one line. The Stop hook checks only the files that thread edited.
+The thread ends on the closing report in `tk-batch`'s shape, six lines at most: `Done`, `Not done`, `Needs you` (a decision with a recommendation, or an action only a person can take; never a `yarn` command), `To look at when you like` (operator checks and drafted follow-ups), `What went wrong`. When everything closed it is one line. The Stop hook checks only the files that thread edited.

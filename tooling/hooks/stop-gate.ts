@@ -111,6 +111,9 @@ function leftToGo(): string {
   return (status.stdout || "").trim() || "Status unavailable: run yarn status.";
 }
 
+// A headless reviewer started by review:run is read-only; never block it.
+if (process.env.PEM_HEADLESS_REVIEW === "1" && !fixture) process.exit(0);
+
 const session = input.session_id ?? "unknown";
 const fingerprint = fixture ? "" : treeFingerprint(ROOT);
 const changed = fixture

@@ -15,6 +15,18 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-04 — PJ: the thread closes its own tickets
+
+Taylor, after the first batches under PR-15: threads still ended by handing over `yarn contract:run`, `yarn review:run` and re-proofs of other tickets. "Running yarn commands is stupid. It only needs me for what it actually needs me." (PR-16).
+
+- **`tk-batch` loops until closed.** The thread runs every command, fixes a failure and re-proves, runs a sandbox-blocked command again unsandboxed, re-proves a stale proof on any ticket, and pulls an unbuilt dependency into its batch. Taylor is asked only for a choice that cannot be undone, money, growing scope, a credential, a protected file, or the merge. The report is six lines at most and never holds a `yarn` command.
+- **Operator checks.** `yarn contract:record <id> <criterion> --evidence <path> --verdict deferred` hands a `manual` criterion only a person can check to Taylor: it counts as done for the ticket, reviews and dependents, and `specs/_status.md` lists it under Operator checks with the file that says what to look at. `operator_review: true` in a contract makes `contract:init` add such a criterion for Taylor's own look. Trade-off: a ticket reads "closed" with a person's check still open; the list is where that is visible.
+- **A closed ticket's proofs are frozen.** Once every criterion is recorded PASS and the as-built exists, a later change to its planned paths no longer marks it stale. Many tickets plan the same shared files (the ledger, `package.json`), and each later ticket was reopening the earlier ones. Trade-off: a regression after close is caught by the batch's `yarn verify`, not by the ticket.
+- **`contract:run` fixes.** It writes `results.json` after each criterion, not once at the end: a `yarn verify` criterion in the same run read fresh logs against old hashes and failed, then passed when run alone. One run at a time per checkout: a second thread's run waits for the first, because two full builds in one folder overwrite each other's output. `contract:record` resolves symlinked folders.
+- **The stop gate skips a headless reviewer** (`PEM_HEADLESS_REVIEW`): blocking its stop replaced one review with a reply to the hook.
+- **`.env.example` is readable.** `check-settings` accepts the blanket `Read(**/.env.*)` deny or the named value files (`.env.local`, `.env.*.local`, `.env.development`, `.env.staging`, `.env.production`); the settings template uses the named form. `.claude/settings.json` is Taylor's to update from the template.
+- **Not done:** existing STK contracts still carry `yarn verify` as a criterion; it can pass now, so they are left as cut.
+
 ## 2026-10-04 — WEB-2: the boundaries lint sees `@pem/*` subpath imports
 
 The STK-7 batch review (finding 4), confirmed by probe: `import "@pem/db/client"` in `packages/ui` and `import "@pem/brand/brand"` in `packages/env` linted clean, because eslint-import-resolver-node ignores `exports` and every `@pem/<subpath>` passed as unknown. Only relative paths into another package were caught.

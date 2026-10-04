@@ -54,6 +54,10 @@
       "description": "QA tier (PR-15). 0: docs and data, checks only. 1: code, reviewed with its batch. 2: a one-way door, pre-flighted and reviewed on the ticket. Written by contract:init from planned_paths; changed with contract:tier.",
       "enum": [0, 1, 2]
     },
+    "operator_review": {
+      "description": "true when Taylor wants to look the ticket over himself, as for a new surface in the browser (PR-16). contract:init adds a manual criterion for it; the builder hands it over as an operator check, and the ticket still closes.",
+      "type": "boolean"
+    },
     "planned_paths": {
       "type": "array",
       "items": { "$ref": "#/$defs/line" }

@@ -13,8 +13,11 @@
  *       Runs the test and check criteria on a committed tree and records a
  *       run record per criterion: command, exit, time, HEAD, evidence log
  *       and its hash, and for a test the number of tests the runner reported.
- *   yarn contract:record <id> <criterion> --evidence <path> [--verdict pass|fail]
+ *   yarn contract:record <id> <criterion> --evidence <path> [--verdict pass|fail|deferred]
  *       Records a capture or manual criterion against an evidence file.
+ *       deferred hands a manual criterion only a person can check to the
+ *       operator: it counts as done for the ticket and is listed under
+ *       Operator checks in _status.md (PR-16).
  *   yarn contract:add <id> <criterion> --evidence <type> --statement <text> [--command | --path | --reason <text>]
  *   yarn contract:add <id> review:<role>
  *       Adds a criterion at FAIL: the only way the frozen set grows.
@@ -25,7 +28,15 @@
  */
 
 import { spawnSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  realpathSync,
+  rmSync,
+  statSync,
+  writeFileSync,
+} from "node:fs";
 import path from "node:path";
 import YAML from "yaml";
 
@@ -82,6 +93,8 @@ import { loadToolkit, type Toolkit } from "./lib/toolkit.ts";
 
 const toolkit = loadToolkit();
 const [command, ...argv] = process.argv.slice(2);
+const OPERATOR_REVIEW_REASON =
+  "operator_review: true; the builder defers it with what to look at";
 
 function stop(message: string): never {
   console.error(`contract:${command} — ${message}`);
@@ -103,12 +116,19 @@ function flag(name: string): boolean {
   return i !== -1;
 }
 
-/** Repo-relative path from a path the person typed, from wherever they ran yarn. */
+/** Repo-relative path from a path the person typed, from wherever they ran yarn. Symlinked folders (macOS /tmp) are resolved on both sides. */
+const real = (p: string) => {
+  try {
+    return realpathSync(p);
+  } catch {
+    return p;
+  }
+};
 const toRepoPath = (typed: string) =>
   path
     .relative(
-      REPO_ROOT,
-      path.resolve(process.env.INIT_CWD ?? process.cwd(), typed),
+      real(REPO_ROOT),
+      real(path.resolve(process.env.INIT_CWD ?? process.cwd(), typed)),
     )
     .split(path.sep)
     .join("/");
@@ -390,6 +410,27 @@ function start(item: Item, tree: SpecsTree) {
     doc.set("reviewers", roles);
     const criteria = doc.get("criteria") as YAML.YAMLSeq;
     const have = new Set(contract.criteria.map((c) => c.id));
+    // PR-16: Taylor's own look is a manual criterion, handed over at close.
+    if (
+      contract.operator_review &&
+      !contract.criteria.some((c) => c.reason === OPERATOR_REVIEW_REASON)
+    ) {
+      const next =
+        Math.max(
+          0,
+          ...contract.criteria
+            .map((c) => Number(c.id.match(/^C(\d+)$/)?.[1]))
+            .filter(Number.isFinite),
+        ) + 1;
+      criteria.add(
+        doc.createNode({
+          id: `C${next}`,
+          statement: "Taylor has looked this ticket over and approved it.",
+          evidence: "manual",
+          reason: OPERATOR_REVIEW_REASON,
+        }),
+      );
+    }
     for (const role of roles)
       if (!have.has(`review:${role}`))
         criteria.add(doc.createNode(reviewCriterion(role)));
@@ -423,6 +464,64 @@ function start(item: Item, tree: SpecsTree) {
 }
 
 // ---------------------------------------------------------------- run
+
+/**
+ * One contract:run at a time per checkout (PR-16). Threads share the
+ * operator's tree, and two full builds at once overwrite each other's output
+ * and fail falsely; the second run waits its turn. A lock left by a dead
+ * process, or older than twenty minutes, is taken over.
+ */
+function takeRunLock(): void {
+  const lock = path.join(
+    REPO_ROOT,
+    "node_modules/.cache/pem/contract-run.lock",
+  );
+  const alive = (pid: number) => {
+    try {
+      process.kill(pid, 0);
+      return true;
+    } catch {
+      return false;
+    }
+  };
+  const deadline = Date.now() + 20 * 60_000;
+  let said = false;
+  for (;;) {
+    try {
+      mkdirSync(path.dirname(lock), { recursive: true });
+      writeFileSync(lock, String(process.pid), { flag: "wx" });
+      break;
+    } catch {
+      let holder = NaN;
+      let age = 0;
+      try {
+        holder = Number(readFileSync(lock, "utf8"));
+        age = Date.now() - statSync(lock).mtimeMs;
+      } catch {
+        continue;
+      }
+      if (!alive(holder) || age > 20 * 60_000 || Date.now() > deadline) {
+        rmSync(lock, { force: true });
+        continue;
+      }
+      if (!said) {
+        console.log(
+          "contract:run — another thread's run is in progress; waiting for it to finish.",
+        );
+        said = true;
+      }
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 2000);
+    }
+  }
+  process.on("exit", () => {
+    try {
+      if (Number(readFileSync(lock, "utf8")) === process.pid)
+        rmSync(lock, { force: true });
+    } catch {
+      // Already gone.
+    }
+  });
+}
 
 /**
  * The environment a criterion runs in. It runs as its own top-level run:
@@ -490,6 +589,7 @@ function run() {
   if (selected.length === 0)
     stop(`${item.id} has no test or check criteria to run`);
 
+  takeRunLock();
   let failed = 0;
   for (const criterion of selected) {
     const problem = checkCommand(criterion.command ?? "");
@@ -531,6 +631,9 @@ function run() {
       evidence: criterion.evidence,
       run: record,
     };
+    // Written after each criterion, not once at the end: a later criterion
+    // that runs check-specs (yarn verify) must see this log's hash recorded.
+    writeResults(item, results);
     if (!pass) failed++;
     const seconds = ((Date.now() - started) / 1000).toFixed(1);
     console.log(
@@ -539,7 +642,6 @@ function run() {
         `)${!pass && tests === 0 && exit === 0 ? "  the runner matched zero tests: name a test after the criterion" : ""}`,
     );
   }
-  writeResults(item, results);
   printLeft(item);
   if (failed) process.exit(1);
 }
@@ -568,8 +670,12 @@ function record() {
       `${name} is ${criterion.evidence} evidence; run it: yarn contract:run ${item.id} ${name}`,
     );
   if (!evidence) stop(`name the evidence file: --evidence <path>`);
-  if (verdict !== "pass" && verdict !== "fail")
-    stop("--verdict is pass or fail");
+  if (verdict !== "pass" && verdict !== "fail" && verdict !== "deferred")
+    stop("--verdict is pass, fail or deferred");
+  if (verdict === "deferred" && criterion.evidence !== "manual")
+    stop(
+      `${name} is ${criterion.evidence} evidence; only a manual criterion, one a person must check, can be deferred to the operator`,
+    );
   const rel = toRepoPath(evidence);
   if (rel.startsWith(".."))
     stop(
@@ -588,20 +694,23 @@ function record() {
   requireProvable(item, contract);
   const at = now();
   results.criteria[criterion.id] = {
-    status: verdict === "pass" ? "PASS" : "FAIL",
+    status: verdict === "fail" ? "FAIL" : "PASS",
     evidence: criterion.evidence,
     run: {
-      command: `yarn contract:record ${item.id} ${name} --evidence ${rel}${verdict === "fail" ? " --verdict fail" : ""}`,
+      command: `yarn contract:record ${item.id} ${name} --evidence ${rel}${verdict === "pass" ? "" : ` --verdict ${verdict}`}`,
       exit: 0,
       at,
       head: getHead()!,
       evidence_path: rel,
       evidence_sha256: hashFile(rel),
+      ...(verdict === "deferred" && { deferred: true }),
     },
   };
   writeResults(item, results);
   console.log(
-    `contract:record — ${name} ${verdict.toUpperCase()} against ${rel}.`,
+    verdict === "deferred"
+      ? `contract:record — ${name} handed to the operator (${rel}); it is listed under Operator checks in _status.md and does not hold ${item.id}.`
+      : `contract:record — ${name} ${verdict.toUpperCase()} against ${rel}.`,
   );
   printLeft(item);
 }

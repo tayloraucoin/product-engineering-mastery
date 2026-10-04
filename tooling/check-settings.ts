@@ -33,7 +33,6 @@ const REQUIRED_DENIES = [
   "Bash(npm publish *)",
   "Bash(npm login *)",
   "Read(**/.env)",
-  "Read(**/.env.*)",
   "Read(**/secrets/**)",
   "Read(**/*.pem)",
   "Read(~/.ssh/**)",
@@ -45,6 +44,19 @@ const REQUIRED_DENIES = [
   "Bash(*supabase db reset*)",
   "Bash(*DROP SCHEMA*)",
   "Bash(*DROP DATABASE*)",
+];
+/**
+ * The env files that hold values (PR-16). Either the blanket rule, or every
+ * one of the named files: the named form leaves .env.example readable, which
+ * holds names and local defaults, never a key.
+ */
+const ENV_BLANKET_DENY = "Read(**/.env.*)";
+const ENV_FILE_DENIES = [
+  "Read(**/.env.local)",
+  "Read(**/.env.*.local)",
+  "Read(**/.env.development)",
+  "Read(**/.env.staging)",
+  "Read(**/.env.production)",
 ];
 /** D-STK-18's asks: every command that changes a database waits for Taylor. */
 const REQUIRED_ASKS = [
@@ -132,6 +144,13 @@ export function checkSettings(settings: unknown): string[] {
         `permissions.deny is missing ${rule}; restore it from ${TEMPLATE}`,
       );
   }
+  if (
+    !deny.includes(ENV_BLANKET_DENY) &&
+    !ENV_FILE_DENIES.every((rule) => deny.includes(rule))
+  )
+    problems.push(
+      `permissions.deny must hold ${ENV_BLANKET_DENY}, or every one of ${ENV_FILE_DENIES.join(", ")}; restore it from ${TEMPLATE}`,
+    );
   for (const rule of REQUIRED_ASKS) {
     if (!ask.includes(rule))
       problems.push(

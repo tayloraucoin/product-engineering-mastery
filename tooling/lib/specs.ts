@@ -124,6 +124,8 @@ export type Contract = {
   out_of_scope: string[];
   criteria: Criterion[];
   tier?: Tier;
+  /** Taylor looks the ticket over himself: contract:init adds a manual criterion for it (PR-16). */
+  operator_review?: boolean;
 };
 
 export type RunRecord = {
@@ -137,6 +139,8 @@ export type RunRecord = {
   contract_sha256?: string;
   as_built_sha256?: string;
   runner?: string;
+  /** A manual criterion only a person can check, handed to the operator: it never holds the ticket (PR-16). */
+  deferred?: boolean;
 };
 
 export type CriterionResult = {
@@ -692,6 +696,7 @@ export function formatResults(results: Results): string {
             as_built_sha256: result.run.as_built_sha256,
           }),
           ...(result.run.runner && { runner: result.run.runner }),
+          ...(result.run.deferred && { deferred: true }),
         },
       },
     ]),
@@ -757,6 +762,8 @@ export type CriterionState = {
   tampered: boolean;
   /** A recorded PASS the code or the contract has since outrun (B2). */
   stale: boolean;
+  /** Handed to the operator: counts as done for the ticket, listed under Operator checks. */
+  deferred: boolean;
 };
 
 export type ItemState = {
@@ -840,6 +847,14 @@ export function readItemState(item: Item, specsRoot: string): ItemState {
   const merged = hasAsBuilt && isMerged(item);
   const { head } = gitFacts();
   const criteria: CriterionState[] = [];
+  // A closed ticket's proofs are frozen (PR-16): every criterion recorded PASS
+  // and the as-built written. A later edit to a file it shares with another
+  // ticket no longer reopens it; the batch's yarn verify guards regressions.
+  const frozen =
+    hasAsBuilt &&
+    (contract?.criteria ?? []).every(
+      (c) => results?.criteria[c.id]?.status === "PASS",
+    );
 
   for (const criterion of contract?.criteria ?? []) {
     const result = results?.criteria[criterion.id];
@@ -850,6 +865,7 @@ export function readItemState(item: Item, specsRoot: string): ItemState {
       reason: null,
       tampered: false,
       stale: false,
+      deferred: false,
     };
     criteria.push(state);
     const fail = (reason: string, kind?: "tampered" | "stale") => {
@@ -926,7 +942,8 @@ export function readItemState(item: Item, specsRoot: string): ItemState {
       // the frozen criteria, never the prose around them: a build note or an
       // as-built wording fix does not cost a second review (PR-15).
     }
-    if (!merged && head) {
+    state.deferred = run.deferred === true;
+    if (!merged && !frozen && head) {
       if (!isAncestor(run.head, head)) {
         fail(
           `recorded on ${run.head.slice(0, 7)}, which is not in this branch`,
@@ -992,6 +1009,14 @@ export function renderStatusFile(tree: SpecsTree): string {
     const left = recordedLeft(state);
     return `| ${state.item.id} | ${state.item.kind} | ${recordedStage(state)} | ${left.length ? left.join(", ") : "none"} | [\`${state.item.slug}\`](${path.posix.relative(tree.specsRoot, state.item.dir)}/) |`;
   });
+  const operatorRows = states.flatMap((state) =>
+    (state.contract?.criteria ?? [])
+      .filter((c) => state.results?.criteria[c.id]?.run?.deferred === true)
+      .map(
+        (c) =>
+          `| ${state.item.id} | ${c.id} | ${c.statement.replaceAll("|", "\\|")} | \`${state.results!.criteria[c.id]!.run!.evidence_path}\` |`,
+      ),
+  );
   const epicRows = tree.epics.map((epic) => {
     const tickets = tree.items.filter(
       (item) => item.epic?.prefix === epic.prefix,
@@ -1008,6 +1033,14 @@ export function renderStatusFile(tree: SpecsTree): string {
     "| ID | Kind | Stage | Left | Folder |",
     "| --- | --- | --- | --- | --- |",
     ...(rows.length ? rows : ["| none | | | | |"]),
+    "",
+    "## Operator checks",
+    "",
+    "What only a person can check. None of it holds a ticket. Once checked, tell any thread, which records it: `yarn contract:record <id> <criterion> --evidence <path>`.",
+    "",
+    "| ID | Criterion | What to check | How |",
+    "| --- | --- | --- | --- |",
+    ...(operatorRows.length ? operatorRows : ["| none | | | |"]),
     "",
     "## Epics",
     "",
