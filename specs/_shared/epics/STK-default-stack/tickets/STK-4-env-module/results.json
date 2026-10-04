@@ -66,15 +66,15 @@
       }
     },
     "C6": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
       "run": {
         "command": "yarn verify",
-        "exit": 1,
-        "at": "2026-10-04T03:06:44Z",
-        "head": "930129e639fc7cd25c3b1efed36b98ca20ebeb85",
+        "exit": 0,
+        "at": "2026-10-04T04:33:51Z",
+        "head": "a208417a5fc16c6ae9c453da538270c8979b1fb2",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C6.log",
-        "evidence_sha256": "a124cd225d7eca3a965856226cf79a132decb0e87bc0b14b3295a21094b5b015"
+        "evidence_sha256": "1a98ebccb5c5bca128b7dad95b66f2d6d12b060e90c55d6b5502bc1692906431"
       }
     },
     "review:mason": {
@@ -93,5 +93,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-04T04:28:51Z"
+  "updated_at": "2026-10-04T04:34:47Z"
 }

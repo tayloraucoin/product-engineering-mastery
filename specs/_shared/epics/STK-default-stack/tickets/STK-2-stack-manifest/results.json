@@ -80,17 +80,17 @@
       }
     },
     "C7": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
       "run": {
         "command": "yarn verify",
-        "exit": 1,
-        "at": "2026-10-04T03:36:08Z",
-        "head": "84e7958d56451054d6d606afb1d2d57122e85363",
+        "exit": 0,
+        "at": "2026-10-04T04:32:37Z",
+        "head": "a208417a5fc16c6ae9c453da538270c8979b1fb2",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/evidence/C7.log",
-        "evidence_sha256": "d1231c59faa4660fc9ef60fb1568c343571bc1fc49a9a93247f44dcce5e27a35"
+        "evidence_sha256": "aa0c6fbabc8124f84d6628858f35adb14244a6be3a148ecb21f67cba865cb857"
       }
     }
   },
-  "updated_at": "2026-10-04T04:28:01Z"
+  "updated_at": "2026-10-04T04:33:41Z"
 }
