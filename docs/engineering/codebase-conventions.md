@@ -24,7 +24,7 @@ Distilled from the Synapse and Conscious Connections conventions and scaled down
 3. **Never suppress a boundaries error.** An upward import means the boundary is wrong.
 4. **Server Components by default.** A client component is a deliberate leaf with `"use client"` on line 1. (§6)
 5. **Tokens by name.** No colour literal outside `packages/config/tailwind/preset.css`. (§6)
-6. **Environment is read in one place per workspace:** each app's `env.ts` and each package's `scripts/env.ts`. One tier switch picks every tiered key. None exists until STK-4. (§5)
+6. **Environment is read in one place per workspace:** each app's `env.ts` and each package's `scripts/env.ts`. One tier switch picks every tiered key. `apps/web/env.ts` is the first. (§5)
 7. **Docs are markdown under `docs/`.** The docs app renders them and owns none. (§7)
 8. **Decisions with real alternatives get a ledger line, and a record when the reason needs more than a line.** Records are immutable. (§7)
 9. **A seam ships with a default consumer or a README that states its convention.** (record 0010)
@@ -78,22 +78,22 @@ The default stack ([record 0010](../decisions/records/0010-starter-ships-default
 
 A package imports only packages below it, and only along the edges in `packages/config/eslint/boundaries.js`. Every edge not listed there is disallowed. A package that is not built yet has no edges; the ticket that builds it adds them and turns its row to built.
 
-| Package              | Role                                                                                                       | May import        | Status                                                            |
-| -------------------- | ---------------------------------------------------------------------------------------------------------- | ----------------- | ----------------------------------------------------------------- |
-| `@pem/config`        | ESLint (code quality + boundaries), Prettier, Tailwind tokens, tsconfig bases — exposed as subpath exports | nothing           | built                                                             |
-| `@pem/constants`     | Shared constants                                                                                           | set by its ticket | STK-5                                                             |
-| `@pem/env`           | The pure per-tier picker (§5)                                                                              | set by its ticket | STK-4                                                             |
-| `@pem/brand`         | The brand source                                                                                           | set by its ticket | STK-7                                                             |
-| `@pem/observability` | Logger and error reporter                                                                                  | set by its ticket | STK-5                                                             |
-| `@pem/validators`    | Shared schemas                                                                                             | set by its ticket | STK-13                                                            |
-| `@pem/db`            | Schema, migrations, policies                                                                               | set by its ticket | STK-9                                                             |
-| `@pem/auth`          | Auth clients and the request seam                                                                          | set by its ticket | STK-12                                                            |
-| `@pem/email`         | Email sending and the default template                                                                     | set by its ticket | STK-15                                                            |
-| `@pem/ai`            | The AI layer                                                                                               | set by its ticket | STK-17                                                            |
-| `@pem/services`      | Server logic called by the API layer                                                                       | set by its ticket | undecided: a package, or folders inside `api` (STK routed call 3) |
-| `@pem/api`           | Transport only                                                                                             | set by its ticket | STK-14                                                            |
-| `@pem/ui`            | Shared web components                                                                                      | `config`          | built                                                             |
-| `apps/*`             | Deployable apps                                                                                            | `config`, `ui`    | built                                                             |
+| Package              | Role                                                                                                       | May import            | Status                                                            |
+| -------------------- | ---------------------------------------------------------------------------------------------------------- | --------------------- | ----------------------------------------------------------------- |
+| `@pem/config`        | ESLint (code quality + boundaries), Prettier, Tailwind tokens, tsconfig bases — exposed as subpath exports | nothing               | built                                                             |
+| `@pem/constants`     | Shared constants                                                                                           | set by its ticket     | STK-5                                                             |
+| `@pem/env`           | The pure per-tier picker (§5)                                                                              | `config`              | built                                                             |
+| `@pem/brand`         | The brand source                                                                                           | set by its ticket     | STK-7                                                             |
+| `@pem/observability` | Logger and error reporter                                                                                  | set by its ticket     | STK-5                                                             |
+| `@pem/validators`    | Shared schemas                                                                                             | set by its ticket     | STK-13                                                            |
+| `@pem/db`            | Schema, migrations, policies                                                                               | set by its ticket     | STK-9                                                             |
+| `@pem/auth`          | Auth clients and the request seam                                                                          | set by its ticket     | STK-12                                                            |
+| `@pem/email`         | Email sending and the default template                                                                     | set by its ticket     | STK-15                                                            |
+| `@pem/ai`            | The AI layer                                                                                               | set by its ticket     | STK-17                                                            |
+| `@pem/services`      | Server logic called by the API layer                                                                       | set by its ticket     | undecided: a package, or folders inside `api` (STK routed call 3) |
+| `@pem/api`           | Transport only                                                                                             | set by its ticket     | STK-14                                                            |
+| `@pem/ui`            | Shared web components                                                                                      | `config`              | built                                                             |
+| `apps/*`             | Deployable apps                                                                                            | `config`, `env`, `ui` | built                                                             |
 
 **README seams.** `utils`, `types` and `hooks` ship as folders holding only a README that states their convention (STK-5). Each becomes a package with its first module and takes its place in the order then. There is no `lib` or `helpers` package (§8).
 
@@ -109,14 +109,14 @@ A package imports only packages below it, and only along the edges in `packages/
 
 ## 5. Environment variables
 
-No app or package reads an environment variable yet; STK-4 builds the first reader. The contract it builds to (record 0010):
+`apps/web/env.ts` is the first reader (STK-4). The contract (record 0010):
 
 - **One tier switch:** `DATABASE_ENVIRONMENT`, one of `local | staging | production`, default `local`. It never defaults to production. It says which backing services this process talks to: the database, the Supabase project, the Stripe keys and the site URLs all follow it.
 - **Suffix grammar:** a tiered variable ends in `_LOCAL` or `_STAGING`; unsuffixed is production. For example, `EXAMPLE_API_URL_STAGING` is read when the switch is `staging`.
-- **Where the code runs is derived, never set.** Running on localhost fixes the site URL to localhost and picks the local Stripe webhook secret.
-- **The picker is pure.** `@pem/env` (STK-4) will hold the per-tier picker, and it never reads `process.env`.
+- **Where the code runs is derived, never set.** It comes from the platform's own `VERCEL_ENV`: `production` or `preview` is a deployment, and anything else, unset included, is local. Running locally fixes the site URL to localhost and picks the local Stripe webhook secret.
+- **The picker is pure.** `@pem/env` holds the per-tier picker (`@pem/env/pick`), the switch (`/tier`), the key-mode guard (`/key-mode`) and the site URL rule (`/site-url`). It never reads `process.env`; its lint rejects a read.
 - **The readers.** Each app's `env.ts` (t3-env, zod) and each package's `scripts/env.ts` are the only modules that read `process.env`, validated with a schema. Everything else imports the resolved `env`.
-- Client code reads only `NEXT_PUBLIC_*` names. Secrets never reach a browser bundle.
+- Client code reads only `NEXT_PUBLIC_*` names. Secrets never reach a browser bundle: `next.config.ts`'s `env` block holds only the collapsed `NEXT_PUBLIC_*` values, through `nextPublicEnv` (`@pem/env/next-public`), and `yarn check-client-bundle` (in `yarn verify`) builds the app with every server-only variable set to a sentinel and fails if one reaches what the browser receives.
 - Every variable is listed in `turbo.json` (`globalEnv` or the task's `env`) so it is part of the cache key, and in a root `.env.example`.
 
 ## 6. Components and styling

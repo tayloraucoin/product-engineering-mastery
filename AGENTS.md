@@ -49,7 +49,7 @@ Node 22, Yarn 4.13.0 (`corepack enable && yarn install`).
 - **Apps import packages; packages never import apps; apps never import each other.** Enforced by `yarn lint:boundaries` (`packages/config/eslint/boundaries.js`). Never suppress a boundaries error; an upward import means the boundary is wrong.
 - Workspace packages are imported as `@pem/<name>`, never by relative path.
 - Server Components by default; a client leaf has `"use client"` on line 1, in the route's `_components/`.
-- No app reads environment variables yet; the first one creates that app's `env.ts`, the only `process.env` reader.
+- Each app's `env.ts` is its only `process.env` reader; `@pem/env` holds the pure tier picker (codebase-conventions §5).
 
 ## Keeping instructions in sync
 

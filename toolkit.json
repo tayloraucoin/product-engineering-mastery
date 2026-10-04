@@ -176,6 +176,19 @@
       "locked": true,
       "runbook": null
     },
+    "env": {
+      "files": ["packages/env", "apps/web/env.ts", ".env.example"],
+      "env": [
+        "DATABASE_ENVIRONMENT",
+        "VERCEL_ENV",
+        "NEXT_PUBLIC_SITE_URL",
+        "EXAMPLE_API_KEY"
+      ],
+      "dependencies": ["@pem/env", "@t3-oss/env-nextjs", "zod"],
+      "boundaries": ["env"],
+      "locked": true,
+      "runbook": null
+    },
     "ui": {
       "files": ["packages/ui"],
       "env": [],
