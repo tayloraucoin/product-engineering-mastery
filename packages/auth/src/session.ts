@@ -23,6 +23,8 @@ import {
 } from "./cookies.ts";
 import { createServerAuthClient, type ServerClientOptions } from "./server.ts";
 
+export type { CookieStore as SessionCookieStore } from "./cookies.ts";
+
 export type SessionUpdate = {
   /** The user Supabase returned, or null when signed out or the session failed. */
   userId: string | null;
@@ -35,6 +37,16 @@ export type SessionUpdate = {
  * write reaches `cookies.setAll` as one growing batch, so a proxy that rebuilds
  * its response on each call never drops an earlier write.
  */
+/**
+ * For a tier with no Supabase project: deletes every Supabase session cookie,
+ * so a switch to such a tier leaves nothing behind. Returns the names deleted.
+ */
+export function clearSessionCookies(cookies: CookieStore): string[] {
+  const purge = foreignSessionCookies(cookies.getAll(), null);
+  if (purge.length) cookies.setAll(purge, {});
+  return purge.map((cookie) => cookie.name);
+}
+
 export async function updateSession(
   config: AuthConfig,
   cookies: CookieStore,

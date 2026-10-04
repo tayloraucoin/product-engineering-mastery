@@ -11,15 +11,17 @@
 
 import { NextResponse, type NextRequest } from "next/server";
 
-import { updateSession } from "@pem/auth/session";
+import {
+  clearSessionCookies,
+  updateSession,
+  type SessionCookieStore,
+} from "@pem/auth/session";
 
 import { supabaseConfig } from "./lib/supabase/config";
 
 export async function proxy(request: NextRequest) {
   let response = NextResponse.next({ request });
-  if (!supabaseConfig) return response;
-
-  await updateSession(supabaseConfig, {
+  const cookies: SessionCookieStore = {
     getAll: () => request.cookies.getAll(),
     setAll: (written, headers) => {
       for (const { name, value } of written) {
@@ -33,7 +35,11 @@ export async function proxy(request: NextRequest) {
       for (const [header, value] of Object.entries(headers))
         response.headers.set(header, value);
     },
-  });
+  };
+
+  // A tier with no project still sheds the last project's cookies.
+  if (!supabaseConfig) clearSessionCookies(cookies);
+  else await updateSession(supabaseConfig, cookies);
   return response;
 }
 

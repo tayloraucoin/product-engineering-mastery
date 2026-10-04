@@ -42,3 +42,13 @@ Not captured: dark theme, 390 and 1440 widths, reduced motion. No capture harnes
 `yarn workspace web build` with `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY_LOCAL=sb_secret_synthetic` exits 1, at `next.config.ts`'s environment validation:
 
 > NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY holds a secret key (sb_secret_…), and every NEXT_PUBLIC_ value reaches the browser. …
+
+## After the second review round (same day)
+
+Run on the plain `web` server (port 3000, no Supabase project configured) and the synthetic one (port 3002).
+
+- **Tier with no project.** `sb-stagingref0000000000-auth-token.0`, its `-code-verifier` and `pem-probe` were set; after one reload only `pem-probe=kept` remained.
+- **Callback on that tier.** `/auth/callback?code=x` answered 307 to `http://localhost:3000/auth/sign-in` (no `state`), with `cache-control: private, no-cache, no-store, must-revalidate, max-age=0`, `expires: 0` and `pragma: no-cache`.
+- **Callback with the synthetic project.** `/auth/callback?code=x&next=%2F%2Fevil.example.test` answered 307 to `http://localhost:3000/auth/sign-in?state=expired`, with the same `cache-control`.
+- **`?state=invalid`.** The input has `aria-invalid="true"` and `aria-describedby="sign-in-message"`, which resolves to "Enter an email address, such as ana@example.test." One `role="status"` region (`sr-only`) is present and empty.
+- **`?state=loading`.** The input is enabled, matching a real submit. The button reads "Sending link" and is disabled, and the status region reads "Sending your sign-in link".

@@ -19,6 +19,22 @@ import { createSupabaseServerClient } from "../../../lib/supabase/server";
 
 const SIGN_IN_PATH = "/auth/sign-in";
 
+/**
+ * A redirect that no cache may keep: the success path carries the new session
+ * cookies, and a shared cache serving them would hand one user's session to
+ * another. These are the headers Supabase asks for with a session write.
+ */
+function redirectNoStore(url: URL): NextResponse {
+  const response = NextResponse.redirect(url);
+  response.headers.set(
+    "Cache-Control",
+    "private, no-cache, no-store, must-revalidate, max-age=0",
+  );
+  response.headers.set("Expires", "0");
+  response.headers.set("Pragma", "no-cache");
+  return response;
+}
+
 /** The link's two shapes: a PKCE `code`, or a `token_hash` from a custom email template. */
 const EMAIL_LINK_TYPES = ["email", "magiclink", "signup", "invite"] as const;
 type EmailLinkType = (typeof EMAIL_LINK_TYPES)[number];
@@ -31,7 +47,7 @@ export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
   // Unconfigured, the sign-in page says so; it is not an expired link.
   if (!supabaseConfig)
-    return NextResponse.redirect(
+    return redirectNoStore(
       afterSignInUrl(env.NEXT_PUBLIC_SITE_URL, SIGN_IN_PATH),
     );
   const failed = afterSignInUrl(env.NEXT_PUBLIC_SITE_URL, SIGN_IN_PATH);
@@ -50,8 +66,8 @@ export async function GET(request: NextRequest) {
       type,
     }));
 
-  if (error) return NextResponse.redirect(failed);
-  return NextResponse.redirect(
+  if (error) return redirectNoStore(failed);
+  return redirectNoStore(
     afterSignInUrl(env.NEXT_PUBLIC_SITE_URL, params.get("next")),
   );
 }

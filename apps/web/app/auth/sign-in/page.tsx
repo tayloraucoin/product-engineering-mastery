@@ -18,6 +18,8 @@ export const metadata: Metadata = { title: "Sign in" };
 const STATES = ["loading", "sent", "invalid", "error", "expired"] as const;
 type SignInState = (typeof STATES)[number] | "default";
 
+const MESSAGE_ID = "sign-in-message";
+
 const MESSAGES: Partial<Record<SignInState, string>> = {
   invalid: "Enter an email address, such as ana@example.test.",
   error:
@@ -67,11 +69,11 @@ export default async function SignInPage({
             We will email you a link that signs you in.
           </p>
           {MESSAGES[state] ? (
-            <p role="alert" className="font-medium">
+            <p id={MESSAGE_ID} role="alert" className="font-medium">
               {MESSAGES[state]}
             </p>
           ) : null}
-          <EmailField disabled={state === "loading"} />
+          <EmailField errorId={state === "invalid" ? MESSAGE_ID : undefined} />
           {next ? <input type="hidden" name="next" value={next} /> : null}
           <SendLinkButton pending={state === "loading"} />
         </form>

@@ -6,7 +6,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { foreignSessionCookies, sessionCookieRef } from "./cookies.ts";
-import { updateSession } from "./session.ts";
+import { clearSessionCookies, updateSession } from "./session.ts";
 import {
   LOCAL_STACK,
   memoryStore,
@@ -104,4 +104,16 @@ test("C2: the purge reads every cookie form Supabase writes", () => {
     ),
     [],
   );
+});
+
+test("C2: switching to a tier with no project clears every Supabase session cookie", () => {
+  const store = memoryStore([
+    ...STAGING_COOKIES,
+    { name: "sb-127-auth-token", value: "x" },
+    ...UNRELATED,
+  ]);
+  const cleared = clearSessionCookies(store);
+  assert.equal(cleared.length, STAGING_COOKIES.length + 1);
+  assert.ok(!cleared.some((name) => UNRELATED.some((u) => u.name === name)));
+  assert.ok(store.batches[0]!.every((write) => write.options.maxAge === 0));
 });

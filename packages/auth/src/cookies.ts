@@ -44,12 +44,16 @@ export function sessionCookieRef(name: string): string | undefined {
   return SESSION_COOKIE.exec(name)?.[1];
 }
 
-/** Writes that delete every Supabase session cookie of a project other than `url`'s. */
+/**
+ * Writes that delete every Supabase session cookie of a project other than
+ * `url`'s; with no `url` (a tier with no project), every Supabase session
+ * cookie.
+ */
 export function foreignSessionCookies(
   cookies: readonly Cookie[],
-  url: string,
+  url: string | null,
 ): CookieWrite[] {
-  const own = projectRef(url);
+  const own = url === null ? undefined : projectRef(url);
   return cookies
     .filter((cookie) => {
       const ref = sessionCookieRef(cookie.name);

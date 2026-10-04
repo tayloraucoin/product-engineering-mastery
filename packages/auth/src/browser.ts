@@ -1,6 +1,6 @@
 /**
- * The browser client (D-STK-7). Client-safe: it imports `@supabase/ssr`'s
- * browser entry and this package's config types, and nothing from a server
+ * The browser client (D-STK-7). Client-safe: it imports `createBrowserClient`
+ * from `@supabase/ssr` and this package's config types, and nothing from a server
  * subpath. The app builds the config from its inlined `NEXT_PUBLIC_*` literals
  * (apps/web/lib/supabase/client.ts), since Next cannot inline a value read
  * through a dynamic name, and this package never reads process.env.
