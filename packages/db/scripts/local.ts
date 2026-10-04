@@ -10,7 +10,7 @@
 
 import postgres from "postgres";
 
-import { isLoopbackUrl } from "../src/local-auth-mirror.ts";
+import { isLoopbackUrl } from "../src/loopback.ts";
 import { authSettings, authUrlName } from "./env.ts";
 import { markLocalAuthMirror } from "./local-auth-marker.ts";
 import { LOCAL_CONTAINER, LOCAL_IMAGE_URL, LOCAL_PORT } from "./local-image.ts";

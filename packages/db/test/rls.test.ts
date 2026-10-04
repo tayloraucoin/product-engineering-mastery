@@ -20,7 +20,7 @@ import {
 import { migrationUrl, runtimeUrl, tier } from "../scripts/env.ts";
 import { createDb, type Db } from "../src/client.ts";
 import { describeUrl } from "../src/connection.ts";
-import { assertLoopbackClient } from "../src/local-auth-mirror.ts";
+import { assertLoopbackClient } from "../src/loopback.ts";
 import { createRlsClient } from "../src/rls.ts";
 import { notes, users } from "../src/schema/index.ts";
 
@@ -54,6 +54,8 @@ before(async () => {
   await applySetup(client);
   await client`insert into auth.users (id, email) values (${alice}, 'alice@example.test'), (${bob}, 'bob@example.test')`;
   db = createDb({ url: runtimeUrl(), tier });
+  // The runtime client writes too, through the bridge; same check.
+  assertLoopbackClient(db.$client);
 });
 
 after(async () => {

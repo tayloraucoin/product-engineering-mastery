@@ -10,7 +10,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import postgres from "postgres";
 
-import { isLoopbackHost } from "../src/local-auth-mirror.ts";
+import { isLoopbackHost } from "../src/loopback.ts";
 import { cliEnvironment } from "./env.ts";
 import {
   LEGACY_CONTAINER,

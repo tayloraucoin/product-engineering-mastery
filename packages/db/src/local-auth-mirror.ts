@@ -20,6 +20,16 @@
 
 import type postgres from "postgres";
 
+import { assertLoopbackClient } from "./loopback.ts";
+
+// The auth seam (STK-12) imports the loopback helpers from this subpath; they
+// live in loopback.ts, which stays when the mirror is removed.
+export {
+  assertLoopbackClient,
+  isLoopbackHost,
+  isLoopbackUrl,
+} from "./loopback.ts";
+
 /** The schema and table whose presence marks a database as a Mode A mirror target. */
 export const MARKER_SCHEMA = "local_auth_mirror";
 export const MARKER_TABLE = `${MARKER_SCHEMA}.marker`;
@@ -33,41 +43,6 @@ export type MirrorUser = { id: string; email: string | null };
  */
 export type MirrorOutcome =
   "inserted" | "updated" | "unchanged" | "refused" | "cached";
-
-/** Whether `host` names this machine: localhost, 127.0.0.0/8 or ::1. */
-export function isLoopbackHost(host: string): boolean {
-  const bare = host
-    .trim()
-    .toLowerCase()
-    .replace(/^\[|\]$/g, "");
-  return (
-    bare === "localhost" ||
-    bare === "::1" ||
-    /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(bare)
-  );
-}
-
-/** Whether `url` parses and its host is loopback; an unparseable URL is not. */
-export function isLoopbackUrl(url: string): boolean {
-  try {
-    return isLoopbackHost(new URL(url).hostname);
-  } catch {
-    return false;
-  }
-}
-
-/** Throws unless every host the client would connect to is loopback. */
-export function assertLoopbackClient(sql: postgres.Sql): void {
-  const hosts = sql.options.host;
-  const offending = hosts.filter(
-    (host) => typeof host !== "string" || !isLoopbackHost(host),
-  );
-  if (hosts.length === 0 || offending.length > 0) {
-    throw new Error(
-      `The local auth mirror writes only to a loopback database; this client points at ${hosts.join(", ") || "no host"}. It is for Mode A on DATABASE_ENVIRONMENT=local (D-STK-6).`,
-    );
-  }
-}
 
 // Ids this process has mirrored, with the email written and when. The request
 // seam calls the mirror on every request; this keeps it to one statement per

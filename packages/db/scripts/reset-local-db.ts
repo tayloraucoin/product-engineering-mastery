@@ -15,10 +15,7 @@ import { fileURLToPath } from "node:url";
 import type postgres from "postgres";
 
 import { describeUrl } from "../src/connection.ts";
-import {
-  assertLoopbackClient,
-  isLoopbackUrl,
-} from "../src/local-auth-mirror.ts";
+import { assertLoopbackClient, isLoopbackUrl } from "../src/loopback.ts";
 import { applySetup, openMigrationClient, runMigrations } from "./database.ts";
 import { migrationUrl, tier } from "./env.ts";
 

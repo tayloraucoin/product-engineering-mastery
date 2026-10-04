@@ -2,7 +2,8 @@
  * Keeps src/local-auth-mirror.ts the only writer to auth.users in the
  * package's shipped code (STK-11): any other INSERT, UPDATE, DELETE or
  * TRUNCATE against auth.users would bypass the mirror's three guards. Tests
- * are exempt; they create and remove synthetic auth users.
+ * are exempt; they create and remove synthetic auth users. With the mirror
+ * removed (remove-supabase-auth.md), no shipped file may write there at all.
  */
 
 import assert from "node:assert/strict";
@@ -35,11 +36,13 @@ test("only the local auth mirror writes to auth.users", () => {
   const files = ["src", "scripts", "supabase", "migrations"].flatMap(
     shippedFiles,
   );
-  assert.ok(files.includes(MIRROR));
   const writers = files.filter((rel) =>
     WRITE.test(readFileSync(path.join(packageRoot, rel), "utf8")),
   );
-  assert.deepEqual(writers, [MIRROR]);
+  assert.deepEqual(
+    writers.filter((rel) => rel !== MIRROR),
+    [],
+  );
 });
 
 test("the pattern catches each kind of write", () => {
