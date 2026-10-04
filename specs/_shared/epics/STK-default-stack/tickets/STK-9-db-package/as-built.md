@@ -15,7 +15,7 @@
 - **The local image is `supabase/postgres:17.11.0.003`, run by `yarn db:local` through Docker**, not the Supabase CLI: Mode A of D-STK-6 needs only the database. Pinned in `tech-stack.md`.
 - **SDK ownership is enforced with `no-restricted-imports`, not a boundaries element rule.** eslint-plugin-boundaries 6.0.2 lets every third-party import through the `isUnknown` rule; per-element `no-restricted-imports` overrides are exact and name the owner in the message. Each later ticket adds its SDK to `SDK_OWNERS`.
 - **`apps/*` may import every package**, as `boundaries.js` already allowed; the conventions table now says so instead of listing names.
-- **`.env.example` is not edited.** The repo's permission rules deny reading `.env*` files, so `DATABASE_URL` and `DATABASE_MIGRATION_URL` (with `_LOCAL` and `_STAGING`) are in `turbo.json` and `toolkit.json` but not yet in `.env.example`. Taylor adds them.
+- **`.env.example` was appended to without being read.** The repo's permission rules deny reading `.env*` files, so the six names (`DATABASE_URL`, `DATABASE_MIGRATION_URL`, each with `_LOCAL` and `_STAGING`) went in with `cat >>` after `check-client-bundle` showed none was there (Taylor's instruction, 2026-10-03). Each carries a comment saying what breaks without it; the `_LOCAL` values are the local image's synthetic URL. `check-client-bundle --plan` then reported no drift from `turbo.json`.
 - **No `transpilePackages` entry in `apps/web/next.config.ts`:** no app imports `@pem/db` yet; STK-12 or STK-14 adds it with the first importer.
 - **Tooling harness fix, made under STK-2:** the `db` entry is the first with a non-null runbook, and `toolkit.json` validation failed in every scratch-repo tooling test until the harness wrote each stack runbook (`tooling/lib/scratch-repo.ts`, `tooling/check-refs.test.ts`).
 
@@ -32,4 +32,4 @@ applied: pending
 
 ## Next
 
-Taylor adds the database variables to `.env.example`; then STK-10 adds the database guardrails and STK-11 the local auth mirror.
+STK-10 adds the database guardrails and STK-11 the local auth mirror.
