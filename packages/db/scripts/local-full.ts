@@ -1,0 +1,30 @@
+/**
+ * `yarn db:local:full`: Mode B of D-STK-6. Starts the whole local Supabase
+ * stack (`supabase start`) from the same supabase/config.toml, so sign-in runs
+ * on this machine and Supabase Auth itself writes auth.users; the mirror's own
+ * guard stays shut because Auth creates auth.identities. Selecting Mode B is
+ * one config change: point NEXT_PUBLIC_SUPABASE_URL_LOCAL and
+ * SUPABASE_SERVICE_ROLE_KEY_LOCAL at the values `supabase status` prints.
+ */
+
+import { isLoopbackUrl } from "../src/local-auth-mirror.ts";
+import { authSettings, authUrlName } from "./env.ts";
+import { LOCAL_PORT } from "./local-image.ts";
+import { preflight, supabase, waitForDatabase } from "./supabase-cli.ts";
+
+const COMMAND = "db:local:full";
+
+preflight(COMMAND);
+supabase(COMMAND, ["start"]);
+await waitForDatabase(COMMAND);
+
+const { url } = authSettings();
+if (!url || !isLoopbackUrl(url)) {
+  console.warn(
+    `${COMMAND} — ${authUrlName()} does not point at this machine, so the app still signs in on hosted staging. For Mode B, set it and SUPABASE_SERVICE_ROLE_KEY_LOCAL from the API URL and service-role key above.`,
+  );
+}
+
+console.log(
+  `${COMMAND} — stack up, database at 127.0.0.1:${LOCAL_PORT} (Mode B); next: yarn db:migrate && yarn db:setup && yarn db:seed-users`,
+);
