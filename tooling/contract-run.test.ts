@@ -98,45 +98,55 @@ test("C1 a criterion that runs check-specs passes on a second full run, after an
   const r = tool(repo, "contract.ts", ["run", "WEB-1"]);
   assert.equal(r.status, 0, r.out);
   assert.equal(JSON.parse(read(repo, RESULTS)).criteria.C2.status, "PASS");
-  assert.doesNotMatch(
-    read(repo, "specs/web/one-offs/WEB-1-filter/evidence/C2.log"),
-    /changed after it was recorded/,
-  );
+  // C2's check-specs saw C1 recorded: neither tampered nor in flight.
+  const c2 = read(repo, "specs/web/one-offs/WEB-1-filter/evidence/C2.log");
+  assert.doesNotMatch(c2, /changed after it was recorded/);
+  assert.doesNotMatch(c2, /C1's PASS no longer holds|newer run/);
 });
+
+/** WEB-1 proven, its results committed, then C1 re-run with the new results.json held back: a run in flight. */
+function runInFlight(repo: string) {
+  buildAndProve(repo);
+  commit(repo, "WEB-1: proven");
+  const held = read(repo, RESULTS);
+  const r = tool(repo, "contract.ts", ["run", "WEB-1", "C1"]);
+  assert.equal(r.status, 0, r.out);
+  write(repo, RESULTS, held);
+  return JSON.parse(held).criteria.C1.run as { at: string; head: string };
+}
 
 test("C2 a log rewritten by a newer run, not yet recorded, warns as in flight and check-specs exits 0", () => {
   const repo = startOneOff();
-  buildAndProve(repo);
-  commit(repo, "WEB-1: proven");
-  const recorded = JSON.parse(read(repo, RESULTS)).criteria.C1.run;
-  // What contract:run leaves between the log's rename and its results.json write.
-  write(
-    repo,
-    C1_LOG,
-    withAt(read(repo, C1_LOG), "2999-01-01T00:00:00Z").replace(
-      "ok 1",
-      "ok 1 (re-run)",
-    ),
-  );
+  const recorded = runInFlight(repo);
+  const head = git(repo, "rev-parse", "HEAD");
+  assert.notEqual(head, recorded.head);
   const r = tool(repo, "check-specs.ts", ["--skip-fixtures"]);
   assert.equal(r.status, 0, r.out);
   assert.match(
     r.out,
-    /warn .*C1's PASS no longer holds: evidence .*C1\.log is from a newer run \(2999-01-01T00:00:00Z/,
+    new RegExp(
+      `warn .*C1's PASS no longer holds: evidence .*C1\\.log is from a newer run \\(.*, ${head.slice(0, 7)}\\) than the one recorded \\(${recorded.at}\\)`,
+    ),
   );
-  assert.match(r.out, new RegExp(`than the one recorded \\(${recorded.at}\\)`));
   assert.doesNotMatch(r.out, /changed after it was recorded/);
 });
 
-test("C3 a log edited after its run fails check-specs as changed after it was recorded, with its header kept or made older", () => {
+test("C3 a log edited after its run fails check-specs as changed after it was recorded, whatever its header claims", () => {
   const repo = startOneOff();
-  buildAndProve(repo);
-  commit(repo, "WEB-1: proven");
-  const original = read(repo, C1_LOG);
+  const recorded = runInFlight(repo);
+  const head = git(repo, "rev-parse", "HEAD");
+  const inFlight = read(repo, C1_LOG);
+  const withHead = (log: string, h: string) =>
+    log.replace(/^head: .*$/m, `head: ${h}`);
+  // The recorded run's own header, as it was before the re-run.
+  const asRecorded = withHead(withAt(inFlight, recorded.at), recorded.head);
   for (const edited of [
-    `${original}\nok 2 - an extra line\n`,
-    withAt(original, "2000-01-01T00:00:00Z"),
-    original.replace(/^[\s\S]*?\n---\n/, ""),
+    `${asRecorded}\nok 2 - an extra line\n`,
+    withAt(asRecorded, "2000-01-01T00:00:00Z"),
+    asRecorded.replace(/^[\s\S]*?\n---\n/, ""),
+    withAt(inFlight, "2999-01-01T00:00:00Z"),
+    withHead(asRecorded, "f".repeat(40)),
+    withHead(asRecorded, head).replace(/^command: .*$/m, "command: yarn x"),
   ]) {
     write(repo, C1_LOG, edited);
     const r = tool(repo, "check-specs.ts", ["--skip-fixtures"]);

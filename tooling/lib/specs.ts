@@ -908,14 +908,18 @@ export function readItemState(item: Item, specsRoot: string): ItemState {
       // A newer contract:run has written this log and not yet its result
       // (another thread on the shared branch, PR-14, or a run that stopped
       // between the two): work in flight, not an edit. A log whose header is
-      // the recorded run's, an older one, or none was edited.
+      // the recorded run's, an older one, none, one from the future or from a
+      // commit outside this branch was edited. No run writes a merged log.
       const header =
-        criterion.evidence === "test" || criterion.evidence === "check"
+        !merged &&
+        (criterion.evidence === "test" || criterion.evidence === "check")
           ? readRunHeader(run.evidence_path)
           : null;
       const newer =
         header !== null &&
         header.command === run.command &&
+        header.at <= now() &&
+        (head === null || isAncestor(header.head, head)) &&
         (header.at > run.at ||
           (header.at === run.at && header.head !== run.head));
       if (newer)

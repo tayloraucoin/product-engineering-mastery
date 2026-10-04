@@ -18,6 +18,7 @@ truth_files: "none: no living UX file covers the contract loop"
 reviewers: []
 planned_paths:
   - "tooling/contract.ts"
+  - ".gitignore"
   - "tooling/lib/specs.ts"
   - "tooling/lib/scratch-repo.ts"
   - "tooling/contract-run.test.ts"
@@ -63,6 +64,7 @@ tier: 1
 - **Interfaces:** `readRunHeader(rel)` in `tooling/lib/specs.ts` (the `command`, `exit`, `at`, `head` lines before `---`); the `check:specs` script in the scratch repo's `package.json`.
 - **Per path:**
   - `tooling/contract.ts`: temp, hash, rename, `writeResults` per criterion.
+  - `.gitignore`: the temp log a crashed run leaves (`specs/**/evidence/.*.tmp`).
   - `tooling/lib/specs.ts`: `readRunHeader`; the in-flight branch in `readItemState`.
   - `tooling/lib/scratch-repo.ts`: a `check:specs` script running `check-specs.ts --skip-fixtures`.
   - `tooling/contract-run.test.ts`: C1 to C3.

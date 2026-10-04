@@ -15,6 +15,9 @@ package-lock.json
 # Testing
 coverage
 
+# A contract:run log before its rename (tooling/contract.ts)
+specs/**/evidence/.*.tmp
+
 # Turbo
 .turbo
 
