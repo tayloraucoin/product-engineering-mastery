@@ -1,0 +1,27 @@
+{
+  "id": "CAT-2",
+  "criteria_sha256": "9a7a52f3ef62a4a06c9b2c72f1bddd850dd1140b9795364380481c0d2d6cae68",
+  "criteria": {
+    "C1": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    },
+    "C2": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C3": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    },
+    "C4": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    }
+  },
+  "updated_at": "2026-10-04T23:13:31Z"
+}

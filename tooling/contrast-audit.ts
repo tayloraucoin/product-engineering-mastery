@@ -63,6 +63,62 @@ const PAIRS: Pair[] = [
     min: TEXT,
     use: "selected or hovered label",
   },
+  // CAT-2: the surfaces and roles shadcn's Vega style puts text on.
+  { fg: "--card-foreground", bg: "--card", min: TEXT, use: "text on a card" },
+  {
+    fg: "--muted-foreground",
+    bg: "--card",
+    min: TEXT,
+    use: "a card's description",
+  },
+  {
+    fg: "--popover-foreground",
+    bg: "--popover",
+    min: TEXT,
+    use: "a menu or popover item",
+  },
+  {
+    fg: "--muted-foreground",
+    bg: "--popover",
+    min: TEXT,
+    use: "a menu shortcut or hint",
+  },
+  {
+    fg: "--secondary-foreground",
+    bg: "--secondary",
+    min: TEXT,
+    use: "secondary button label",
+  },
+  {
+    fg: "--destructive",
+    bg: "--background",
+    min: TEXT,
+    use: "destructive text and error messages",
+  },
+  {
+    fg: "--destructive",
+    bg: "--popover",
+    min: TEXT,
+    use: "a destructive menu item",
+  },
+  {
+    fg: "--sidebar-foreground",
+    bg: "--sidebar",
+    min: TEXT,
+    use: "sidebar text",
+  },
+  {
+    fg: "--sidebar-accent-foreground",
+    bg: "--sidebar-accent",
+    min: TEXT,
+    use: "the active sidebar item",
+  },
+  {
+    fg: "--sidebar-primary-foreground",
+    bg: "--sidebar-primary",
+    min: TEXT,
+    use: "a sidebar's primary mark",
+  },
   { fg: "--ring", bg: "--background", min: NON_TEXT, use: "focus ring" },
   {
     fg: "--ring",

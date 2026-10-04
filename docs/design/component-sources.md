@@ -52,6 +52,25 @@ shadcn/ui core is the house component source, on the Base UI track, in the Vega 
 5. Brings each new npm dependency through one vendor per category and a `tech-stack.md` row before merge.
 6. Is reviewed again on any SHA change, not only a version bump.
 
+## Copy-in mapping (CS-11 to CS-13)
+
+shadcn's Vega classes enter on house tokens. The token lint judges only the utility after a class's last variant (`data-[size=sm]:` is a selector, not a value), and passes arbitrary values built from variables, `--spacing()`, keywords and relative units. What it rejects is mapped like this:
+
+| Vega writes                                    | The kit writes                                                                                                      |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `shadow-xs`                                    | `shadow-control` (inputs, buttons, toggles, cards)                                                                  |
+| `shadow-sm`                                    | `shadow-raised` (slider thumb, active tab)                                                                          |
+| `shadow-md`, `shadow-xl`                       | `shadow-overlay` (popovers, menus, select, hover card, chart tooltip)                                               |
+| `shadow-lg`                                    | `shadow-floating` (sheets, toasts, submenus)                                                                        |
+| `duration-100`, `duration-150`                 | `duration-(--motion-duration-fast)`                                                                                 |
+| `duration-200`                                 | `duration-(--motion-duration-base)`                                                                                 |
+| `duration-250`, `duration-300`, `duration-400` | `duration-(--motion-duration-moderate)`                                                                             |
+| `duration-450` on the drawer                   | `duration-(--motion-duration-sheet)`                                                                                |
+| `ease-[cubic-bezier(…)]`, `ease-in`            | `ease-(--motion-ease-out)`; on-screen movement `ease-(--motion-ease-in-out)`; drawers `ease-(--motion-ease-drawer)` |
+| `ring-[3px]`, `rounded-[2px]`, `rounded-[4px]` | `ring-3`, `rounded-xs`, `rounded-sm`                                                                                |
+| other px or rem literals                       | the nearest spacing, size or text step; a gap no step serves is a token proposal here                               |
+| `bg-black`, `bg-white`, colour functions       | a role (`bg-foreground/10` for a scrim, `bg-background` for a thumb)                                                |
+
 ## Catalogue by job (CS-09)
 
 The catalog takes an ecosystem item when it serves a job core does not, or serves one markedly better; reskins of a core component are left out. Copy-in maps to house tokens with the token lint on. An item that needs more than a mechanical rename is a manifest entry with a link and its reason, not code.

@@ -15,6 +15,10 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-04 — CAT-2: the tokens shadcn's Vega style needs, and a lint that judges values
+
+Measured on the 62 resolved base-vega components: copied raw, 49 would fail the token lint, 641 times on variant selectors such as `data-[size=sm]:` that are not values, and the preset named no elevation and no motion tokens though the canon requires both. Taylor approved the addendum. New in the preset: card, popover, secondary, destructive, input, sidebar and chart roles (neutral placeholders); radius xl to 4xl on the house radius; elevation `shadow-control|raised|overlay|floating` (CS-11); the tk-motion tokens verbatim (CS-12). The token lint (CS-13) judges only the utility after the last variant, and rejects an arbitrary value only when it holds a raw length, time or curve; `shadow-xs` is now banned. The copy-in mapping is in `docs/design/component-sources.md`. P-K may rename or retune these with a brand, never remove them.
+
 ## 2026-10-04 — CAT: component sources, the kit and the catalog
 
 Taylor, on the returned P-M research: every shadcn component, then the ecosystem and the custom components of five earlier products, browsable in the workshop, filterable by source, with the code ready to pick; he approved the four recommendations (Base UI, per-command registry access, Vega, catalogue by job). New: `docs/design/component-sources.md` (CS-01 to CS-10, the review deltas, the job index, the starter kits) and record 0011 (two shelves). Amended: `skills.md` edit A2 admits the ruled sources by commit-pinned GitHub address; SK-05's status. The research is filed unchanged at `docs/research/design-tools/react-ui-libraries.md`. Open: the form library, chosen by the first ticket that needs one.
