@@ -1,5 +1,5 @@
-# yarn ui:storybook --ci, warm cache, timed on 2026-10-04T07:45:02Z at e0854e1, macOS 14.7.1, Apple M1 Pro
-http://localhost:6006/ answered 200 after 2.517 s; iframe.html answered 200
+# yarn ui:storybook --ci, warm cache, timed by a script (port poll) on 2026-10-04T07:58:08Z at 6d5405d, macOS 14.7.1, Apple M1 Pro
+http://localhost:6006/ answered 200 after 2.236 s; iframe.html answered 200
 ┌  storybook v10.6.1
 │ │   - Local:                http://localhost:6006/     │
-●  143 ms for manager and 214 ms for preview
+●  136 ms for manager and 195 ms for preview
