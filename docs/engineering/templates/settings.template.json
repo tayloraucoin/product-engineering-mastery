@@ -43,6 +43,7 @@
       "Bash(*db:push*)",
       "Bash(*db:seed*)",
       "Bash(*db:setup*)",
+      "Bash(*db:local:reset*)",
       "Bash(*supabase db push*)",
       "Bash(*drizzle-kit migrate*)",
       "Bash(*drizzle-kit push*)",

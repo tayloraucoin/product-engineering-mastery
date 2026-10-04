@@ -1,5 +1,6 @@
 {
-  "expect": "pass",
+  "expect": "fail",
+  "message": "which also blocks yarn db:local:reset",
   "settings": {
     "$schema": "https://json.schemastore.org/claude-code-settings.json",
     "permissions": {
@@ -34,7 +35,8 @@
         "Read(**/secrets/**)",
         "Read(**/*.pem)",
         "Read(~/.ssh/**)",
-        "Read(~/.aws/**)"
+        "Read(~/.aws/**)",
+        "Bash(yarn db:local:*)"
       ],
       "ask": [
         "Bash(gh pr create *)",

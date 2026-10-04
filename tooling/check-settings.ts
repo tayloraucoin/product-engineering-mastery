@@ -4,7 +4,8 @@
  *   yarn check-settings            fixtures first, then .claude/settings.json
  *   yarn check-settings <file>     one settings file, no fixtures
  *
- * Fails when: a required deny is missing, an allow rule admits every shell
+ * Fails when: a required deny or ask is missing, a deny would block the local
+ * reset, an allow rule admits every shell
  * command, a value holds a machine path, the sandbox is off, a required hook is
  * not registered, a registered hook points at a script that does not exist, or
  * settings.local.json is tracked.
@@ -37,7 +38,27 @@ const REQUIRED_DENIES = [
   "Read(**/*.pem)",
   "Read(~/.ssh/**)",
   "Read(~/.aws/**)",
+  // D-STK-18: no agent resets or drops a database.
+  "Bash(*db:reset*)",
+  "Bash(*db:drop*)",
+  "Bash(*drizzle-kit drop*)",
+  "Bash(*supabase db reset*)",
+  "Bash(*DROP SCHEMA*)",
+  "Bash(*DROP DATABASE*)",
 ];
+/** D-STK-18's asks: every command that changes a database waits for Taylor. */
+const REQUIRED_ASKS = [
+  "Bash(*db:migrate*)",
+  "Bash(*db:push*)",
+  "Bash(*db:seed*)",
+  "Bash(*db:setup*)",
+  "Bash(*db:local:reset*)",
+  "Bash(*drizzle-kit migrate*)",
+  "Bash(*drizzle-kit push*)",
+  "Bash(*supabase db push*)",
+];
+/** Asked, never denied: a deny broad enough to catch it takes the local rebuild away. */
+const LOCAL_RESET = "yarn db:local:reset";
 /**
  * Hooks that must stay registered (A13.1). Deleting a hook block would
  * otherwise pass every check. A hook joins this list in the step that lands
@@ -82,6 +103,19 @@ function walk(value: unknown, at: string, out: [string, string][]) {
       walk(item, at ? `${at}.${key}` : key, out);
 }
 
+/** Whether a `Bash(...)` rule's pattern, with `*` as any text, matches the whole command. */
+function bashRuleMatches(rule: string, command: string): boolean {
+  const pattern = rule.match(/^Bash\((.*)\)$/)?.[1];
+  if (pattern === undefined) return false;
+  // The legacy `prefix:*` form means the prefix, then anything.
+  const body = pattern
+    .replace(/:\*$/, "*")
+    .split("*")
+    .map((part) => part.replace(/[.+?^${}()|[\]\\]/g, "\\$&"))
+    .join(".*");
+  return new RegExp(`^${body}$`).test(command);
+}
+
 export function checkSettings(settings: unknown): string[] {
   const problems: string[] = [];
   if (!isObject(settings)) return ["the file must hold one JSON object"];
@@ -90,11 +124,25 @@ export function checkSettings(settings: unknown): string[] {
     : {};
   const deny = strings(permissions.deny);
   const allow = strings(permissions.allow);
+  const ask = strings(permissions.ask);
 
   for (const rule of REQUIRED_DENIES) {
     if (!deny.includes(rule))
       problems.push(
         `permissions.deny is missing ${rule}; restore it from ${TEMPLATE}`,
+      );
+  }
+  for (const rule of REQUIRED_ASKS) {
+    if (!ask.includes(rule))
+      problems.push(
+        `permissions.ask is missing ${rule}; restore it from ${TEMPLATE}`,
+      );
+  }
+  for (const rule of deny) {
+    if (bashRuleMatches(rule, LOCAL_RESET))
+      problems.push(
+        `permissions.deny holds ${rule}, which also blocks ${LOCAL_RESET}; ` +
+          "narrow it so the local reset stays an ask (D-STK-18)",
       );
   }
   for (const rule of allow) {

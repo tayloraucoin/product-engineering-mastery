@@ -1,5 +1,6 @@
 {
-  "expect": "pass",
+  "expect": "fail",
+  "message": "permissions.deny is missing Bash(*db:reset*)",
   "settings": {
     "$schema": "https://json.schemastore.org/claude-code-settings.json",
     "permissions": {
@@ -22,7 +23,6 @@
         "Bash(rm -rf /*)",
         "Bash(rm -rf ~*)",
         "Bash(dropdb *)",
-        "Bash(*db:reset*)",
         "Bash(*db:drop*)",
         "Bash(*supabase db reset*)",
         "Bash(*drizzle-kit drop*)",
