@@ -83,3 +83,15 @@ None.
 
 - No command was run; every "verified" means verified by reading the code and the recorded evidence.
 - "A story per state" is judged against the states the component code actually styles or branches on.
+
+---
+
+## Disposition (builder, 2026-10-04)
+
+- **S1 fixed** (6d5405d). `storedTheme: null` on both System stories. The cleanup now clears the key, the class and `color-scheme` instead of restoring the previous value. The review's scenario was re-run in the browser pane: click Dark in Theme toggle/System, then open Providers/Theme/System, which reads "Chosen: system" and passes.
+- **S2 addressed.** `evidence/verify-without-check-settings.log` (at 6d5405d) runs every verify step but `check-settings`, including `lint`, `lint:boundaries`, `check-types`, `check-ui-layout`, `check-client-bundle` and both builds, and exits 0. C2 is re-recorded once Taylor updates `.claude/settings.json`.
+- **S3 fixed** (6d5405d). `.storybook/manager.ts` sets the workshop's name, logo and home link from `@pem/brand`; the new C3 capture shows them.
+- **S4 carried.** A `tooling/` check comparing `preview.css` with `apps/web/app/globals.css` needs `tooling/` and a verify-chain line in the root `package.json`, which this ticket does not plan and another thread is editing. It goes in the report.
+- **S5 fixed.** C3 is listed under Not verified. C4 was re-timed at 6d5405d (2.2 s), still by script, and stays listed as not verified.
+- **S6 fixed** (6d5405d). An `Unresolved` story renders the toggle without its provider: nothing checked, Light the tab stop.
+- **Nits:** N1, N3, N4 (the provider fixture), N5, N6, N7 and N9 fixed. N2 left: the stricter regex errs safe, and CSF factories are not in use. N8 left: `tech-stack.md` is a planned path of the STK-11 thread, which was told this ticket was done with it.

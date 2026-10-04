@@ -8,10 +8,10 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-04T07:46:54Z",
-        "head": "dab71e69e490755cea485187683c5ec17a227435",
+        "at": "2026-10-04T07:58:27Z",
+        "head": "5c8c2ad4f9d544f506f3237328c921cdd5c1448c",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-8-component-workshop/evidence/C1.log",
-        "evidence_sha256": "5b04676e668b0ef437cd18fa599318e5880745bd563a1d1e53652b7c2c025acc",
+        "evidence_sha256": "0c3004affc5a4f00b9443a3b4082e38bb6f5d8c92ed1d6de4faa6b115cb516b8",
         "tests": 54
       }
     },
@@ -21,10 +21,10 @@
       "run": {
         "command": "yarn verify",
         "exit": 1,
-        "at": "2026-10-04T07:46:55Z",
-        "head": "dab71e69e490755cea485187683c5ec17a227435",
+        "at": "2026-10-04T07:58:31Z",
+        "head": "5c8c2ad4f9d544f506f3237328c921cdd5c1448c",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-8-component-workshop/evidence/C2.log",
-        "evidence_sha256": "182a9782afbe26ce328977716ef95f0b39b1cc3db24f4427a64f0e1bad5c4c57"
+        "evidence_sha256": "c350d9390b4c0f2740aff08265cfdecd57fff55e97cea940b0e3894cf314bf8a"
       }
     },
     "C3": {
@@ -33,10 +33,10 @@
       "run": {
         "command": "yarn contract:record STK-8 C3 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-8-component-workshop/evidence/button-dark.png",
         "exit": 0,
-        "at": "2026-10-04T07:49:04Z",
-        "head": "e2d1b0d72fa714403ca1805afb857d17cc7a928b",
+        "at": "2026-10-04T07:58:45Z",
+        "head": "5c8c2ad4f9d544f506f3237328c921cdd5c1448c",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-8-component-workshop/evidence/button-dark.png",
-        "evidence_sha256": "fc1cce4a901cf47dd802ef8cd715b493b57a562ebe5df0f9d24b140f25e433f2"
+        "evidence_sha256": "add44ff23ea3e302f61f33bce155bb286e7373ad8c16234402d12762eaef6281"
       }
     },
     "C4": {
@@ -45,10 +45,10 @@
       "run": {
         "command": "yarn contract:record STK-8 C4 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-8-component-workshop/evidence/C4-warm-start.log",
         "exit": 0,
-        "at": "2026-10-04T07:49:14Z",
-        "head": "e2d1b0d72fa714403ca1805afb857d17cc7a928b",
+        "at": "2026-10-04T07:58:53Z",
+        "head": "5c8c2ad4f9d544f506f3237328c921cdd5c1448c",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-8-component-workshop/evidence/C4-warm-start.log",
-        "evidence_sha256": "727786ff1a8e1718d7594d442737ee215bb5a225518142bccdfc21deb660497f"
+        "evidence_sha256": "cce99844549eb9a6ace63bcdb812a0f0571011ec7d68a0f5caec84c100c4a8f8"
       }
     },
     "C5": {
@@ -57,13 +57,13 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-04T07:47:00Z",
-        "head": "dab71e69e490755cea485187683c5ec17a227435",
+        "at": "2026-10-04T07:58:36Z",
+        "head": "5c8c2ad4f9d544f506f3237328c921cdd5c1448c",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-8-component-workshop/evidence/C5.log",
-        "evidence_sha256": "e66b6436240a67c2d99a648f2ce8bf37848b9ae975640add97683dc4745c8665",
+        "evidence_sha256": "ae2b9287feeec86a1f31e0902cd4ed154909b2a0b5e277269eb1f49d6387d08a",
         "tests": 54
       }
     }
   },
-  "updated_at": "2026-10-04T07:49:14Z"
+  "updated_at": "2026-10-04T07:58:53Z"
 }
