@@ -1,8 +1,8 @@
 command: yarn test
 exit: 0
-at: 2026-10-04T21:23:57Z
-head: 94255a034065f10b07a74b519bc2620aa5c814cc
-tests: 106
+at: 2026-10-04T21:37:48Z
+head: b542e0ee52a22c33189b0f0c3352f3950bb0136e
+tests: 113
 ---
 
    • turbo 2.11.6
@@ -10,311 +10,26 @@ tests: 106
    • Running test in 11 packages
    • Remote caching disabled
 
-cache miss, executing 7180e36d303e4367
-cache miss, executing c43ddc78d7ea228d
-cache miss, executing 3bcce333c33c1ef0
-cache miss, executing 4a0fbcb72afc9d2e
-cache miss, executing 1ea4606eac9aebcd
-cache miss, executing cb32a73087c4ca30
-cache miss, executing b45fb90bc5cc0ab3
+cache hit, replaying logs 4a0fbcb72afc9d2e
+cache hit, replaying logs b45fb90bc5cc0ab3
+cache hit, replaying logs 3bcce333c33c1ef0
+cache hit, replaying logs c43ddc78d7ea228d
 TAP version 13
-# Subtest: the admin client holds no session: nothing persisted, refreshed or read from a URL
-ok 1 - the admin client holds no session: nothing persisted, refreshed or read from a URL
+# Subtest: track is a no-op until a vendor is wired
+ok 1 - track is a no-op until a vendor is wired
   ---
-  duration_ms: 14.791542
+cache hit, replaying logs cb32a73087c4ca30
+  duration_ms: 3.036959
   type: 'test'
   ...
-TAP version 13
-# Subtest: every subpath is classed as client-safe or server
-ok 2 - every subpath is classed as client-safe or server
+# Subtest: C1: logger.error passes the error, tags and user id to the registered reporter
+ok 2 - C1: logger.error passes the error, tags and user id to the registered reporter
   ---
-  duration_ms: 0.79075
+  duration_ms: 1.625375
   type: 'test'
   ...
-# Subtest: ./config reaches no server module, built-in or workspace package
-ok 3 - ./config reaches no server module, built-in or workspace package
-  ---
-  duration_ms: 0.610166
-  type: 'test'
-  ...
-# Subtest: ./browser reaches no server module, built-in or workspace package
-ok 4 - ./browser reaches no server module, built-in or workspace package
-  ---
-  duration_ms: 0.593625
-  type: 'test'
-  ...
-# Subtest: ./redirect reaches no server module, built-in or workspace package
-ok 5 - ./redirect reaches no server module, built-in or workspace package
-  ---
-  duration_ms: 0.364292
-  type: 'test'
-  ...
-# Subtest: the walk sees a server import when there is one
-ok 6 - the walk sees a server import when there is one
-  ---
-  duration_ms: 1.015791
-  type: 'test'
-  ...
-# Subtest: C1: brand.ts theme colours equal the preset's values
-ok 1 - C1: brand.ts theme colours equal the preset's values
-  ---
-  duration_ms: 1.503125
-  type: 'test'
-  ...
-# Subtest: C1: a changed preset value is a mismatch
-ok 2 - C1: a changed preset value is a mismatch
-  ---
-  duration_ms: 0.210958
-  type: 'test'
-  ...
-# Subtest: C1: a changed brand.ts value is a mismatch
-ok 3 - C1: a changed brand.ts value is a mismatch
-  ---
-  duration_ms: 0.199709
-  type: 'test'
-  ...
-# Subtest: every asset path in brand.ts exists in the package
-ok 4 - every asset path in brand.ts exists in the package
-  ---
-  duration_ms: 0.144541
-  type: 'test'
-  ...
-# Subtest: white, black and the sRGB primaries
-ok 5 - white, black and the sRGB primaries
-  ---
-  duration_ms: 0.681583
-  type: 'test'
-  ...
-# Subtest: lightness as a percentage, and an alpha, are accepted
-ok 6 - lightness as a percentage, and an alpha, are accepted
-  ---
-  duration_ms: 0.069333
-  type: 'test'
-  ...
-# Subtest: the preset's neutral steps
-ok 7 - the preset's neutral steps
-  ---
-  duration_ms: 0.133833
-  type: 'test'
-  ...
-# Subtest: anything but oklch() is refused
-ok 8 - anything but oklch() is refused
-  ---
-  duration_ms: 0.192709
-  type: 'test'
-  ...
-1..8
-# tests 8
-# suites 0
-# pass 8
-# fail 0
-# cancelled 0
-# skipped 0
-# todo 0
-# duration_ms 79.548625
-# Using the user object as returned from supabase.auth.getSession() or from some supabase.auth.onAuthStateChange() events could be insecure! This value comes directly from the storage medium (usually cookies on the server) and may not be authentic. Use supabase.auth.getUser() instead which authenticates the data by contacting the Supabase Auth server.
-# Subtest: C1: returns the user's id, email and app_metadata role from getUser
-ok 7 - C1: returns the user's id, email and app_metadata role from getUser
-  ---
-  duration_ms: 0.844708
-  type: 'test'
-  ...
-# Subtest: C1: a user without a known app_metadata role is a user; user_metadata is never read
-ok 8 - C1: a user without a known app_metadata role is a user; user_metadata is never read
-  ---
-  duration_ms: 0.103417
-  type: 'test'
-  ...
-# Subtest: C1: refuses when getUser returns an error, even with a user beside it
-ok 9 - C1: refuses when getUser returns an error, even with a user beside it
-  ---
-  duration_ms: 0.093291
-  type: 'test'
-  ...
-# Subtest: C1: a forged session cookie is refused when Supabase cannot fetch its user
-ok 10 - C1: a forged session cookie is refused when Supabase cannot fetch its user
-  ---
-  duration_ms: 17.353791
-  type: 'test'
-  ...
-# Subtest: C1: the same cookie passes once Supabase returns its user, with the role from that answer
-ok 11 - C1: the same cookie passes once Supabase returns its user, with the role from that answer
-  ---
-  duration_ms: 1.439833
-  type: 'test'
-  ...
-# Subtest: C1: the mirror is called once per user per process, and again after a refusal, a failure or an email change
-ok 12 - C1: the mirror is called once per user per process, and again after a refusal, a failure or an email change
-  ---
-  duration_ms: 0.362458
-  type: 'test'
-  ...
-# Subtest: C1: concurrent requests for one user share one mirror call
-ok 13 - C1: concurrent requests for one user share one mirror call
-  ---
-  duration_ms: 10.566125
-  type: 'test'
-  ...
-# Subtest: C1: an anonymous or refused request never reaches the mirror
-ok 14 - C1: an anonymous or refused request never reaches the mirror
-  ---
-  duration_ms: 0.218416
-  type: 'test'
-  ...
-# Subtest: a sign-in on localhost lands back on localhost, at next
-ok 15 - a sign-in on localhost lands back on localhost, at next
-  ---
-  duration_ms: 0.54825
-  type: 'test'
-  ...
-# Subtest: next that leaves the origin becomes /
-ok 16 - next that leaves the origin becomes /
-  ---
-  duration_ms: 0.188542
-  type: 'test'
-  ...
-# Subtest: the callback URL is on the site's origin and carries next only when it is a path
-ok 17 - the callback URL is on the site's origin and carries next only when it is a path
-  ---
-  duration_ms: 0.103916
-  type: 'test'
-  ...
-# @supabase/ssr: chunked cookie decoded to invalid JSON, treating as absent. This usually indicates that cookie chunks from different writes were combined (e.g. response committed before all Set-Cookie headers were sent).
-# @supabase/ssr: chunked cookie decoded to invalid JSON, treating as absent. This usually indicates that cookie chunks from different writes were combined (e.g. response committed before all Set-Cookie headers were sent).
-# @supabase/ssr: chunked cookie decoded to invalid JSON, treating as absent. This usually indicates that cookie chunks from different writes were combined (e.g. response committed before all Set-Cookie headers were sent).
-# Subtest: C2: on the local stack, updateSession deletes every staging session cookie and nothing else
-ok 18 - C2: on the local stack, updateSession deletes every staging session cookie and nothing else
-  ---
-  duration_ms: 18.416459
-  type: 'test'
-  ...
-# Subtest: C2: the project's own cookies are never purged
-ok 19 - C2: the project's own cookies are never purged
-  ---
-  duration_ms: 1.808958
-  type: 'test'
-  ...
-# Subtest: C2: switching back to staging purges the local stack's cookies
-ok 20 - C2: switching back to staging purges the local stack's cookies
-  ---
-  duration_ms: 0.675792
-  type: 'test'
-  ...
-# Subtest: C2: with no foreign cookie, nothing is written
-ok 21 - C2: with no foreign cookie, nothing is written
-  ---
-  duration_ms: 0.471917
-  type: 'test'
-  ...
-# Subtest: C2: the purge reads every cookie form Supabase writes
-ok 22 - C2: the purge reads every cookie form Supabase writes
-  ---
-  duration_ms: 0.101833
-  type: 'test'
-  ...
-1..22
-# tests 22
-# suites 0
-# pass 22
-# fail 0
-# cancelled 0
-# skipped 0
-# todo 0
-# duration_ms 323.000916
-TAP version 13
-# Subtest: C2: a live-mode key on local or staging fails with the variable named
-ok 1 - C2: a live-mode key on local or staging fails with the variable named
-  ---
-  duration_ms: 0.685625
-  type: 'test'
-  ...
-# Subtest: C2: a test-mode key on production fails with the variable named
-ok 2 - C2: a test-mode key on production fails with the variable named
-  ---
-  duration_ms: 0.119209
-  type: 'test'
-  ...
-# Subtest: C2: matching modes pass
-ok 3 - C2: matching modes pass
-  ---
-  duration_ms: 0.082083
-  type: 'test'
-  ...
-# Subtest: C2: a key with no mode prefix fails on every tier
-ok 4 - C2: a key with no mode prefix fails on every tier
-  ---
-  duration_ms: 0.180584
-  type: 'test'
-  ...
-# Subtest: public names pass, and unset values are left out
-ok 5 - public names pass, and unset values are left out
-  ---
-  duration_ms: 0.840292
-  type: 'test'
-  ...
-# Subtest: a server-only name is refused, by name
-ok 6 - a server-only name is refused, by name
-  ---
-  duration_ms: 0.242042
-  type: 'test'
-  ...
-# Subtest: C1: each tier reads its own variable
-ok 7 - C1: each tier reads its own variable
-  ---
-  duration_ms: 0.5955
-  type: 'test'
-  ...
-# Subtest: C1: a tier whose own value is absent or empty reads the unsuffixed value
-ok 8 - C1: a tier whose own value is absent or empty reads the unsuffixed value
-  ---
-  duration_ms: 0.098209
-  type: 'test'
-  ...
-# Subtest: C1: nothing set picks undefined
-ok 9 - C1: nothing set picks undefined
-  ---
-  duration_ms: 0.066958
-  type: 'test'
-  ...
-# Subtest: C1: production never reads a suffixed value
-ok 10 - C1: production never reads a suffixed value
-  ---
-  duration_ms: 0.058667
-  type: 'test'
-  ...
-# Subtest: C1: the suffix grammar names each form
-ok 11 - C1: the suffix grammar names each form
-  ---
-  duration_ms: 0.380292
-  type: 'test'
-  ...
-# Subtest: C1: the switch defaults to local, never production, and names itself when wrong
-ok 12 - C1: the switch defaults to local, never production, and names itself when wrong
-  ---
-  duration_ms: 0.217083
-  type: 'test'
-  ...
-# Subtest: outside a deployment the site URL is localhost, whatever is configured
-ok 13 - outside a deployment the site URL is localhost, whatever is configured
-  ---
-  duration_ms: 0.59425
-  type: 'test'
-  ...
-# Subtest: in a deployment the configured URL is used, without a trailing slash
-ok 14 - in a deployment the configured URL is used, without a trailing slash
-  ---
-  duration_ms: 0.176625
-  type: 'test'
-  ...
-1..14
-# tests 14
-# suites 0
-# pass 14
-# fail 0
-# cancelled 0
-# skipped 0
-# todo 0
-# duration_ms 84.852583
+# Subtest: C1: logger.error with no error hands the reporter one named for the event
+ok 3 - C1: logger.error with no error hands the reporter one named for the event
 TAP version 13
 # Subtest: C2: the HTML part carries the brand's name, support address, home URL and colours
 ok 1 - C2: the HTML part carries the brand's name, support address, home URL and colours
@@ -341,160 +56,81 @@ ok 4 - C2: an action URL that is not http(s) is refused
   type: 'test'
   ...
 # Subtest: C2: no source file in @pem/email writes a brand value or a colour literal
+TAP version 13
+cache hit, replaying logs cc0977824067180e
+
 ok 5 - C2: no source file in @pem/email writes a brand value or a colour literal
-  ---
-  duration_ms: 1.106292
-  type: 'test'
-  ...
-# Subtest: C1: a send on the local tier logs the rendered message and does not call the vendor
-ok 6 - C1: a send on the local tier logs the rendered message and does not call the vendor
-  ---
-  duration_ms: 2.069667
-  type: 'test'
-  ...
-# Subtest: C1: a dashboard template on the local tier logs its id and variable names, not their values
-ok 7 - C1: a dashboard template on the local tier logs its id and variable names, not their values
-  ---
-  duration_ms: 0.226834
-  type: 'test'
-  ...
-# Subtest: C1: the local tier needs no key
-ok 8 - C1: the local tier needs no key
-  ---
-  duration_ms: 0.103458
-  type: 'test'
-  ...
-# Subtest: C1: staging and production call the vendor once, with the brand's sender and reply-to
-ok 9 - C1: staging and production call the vendor once, with the brand's sender and reply-to
-  ---
-  duration_ms: 0.244334
-  type: 'test'
-  ...
-# Subtest: C1: a dashboard template is sent by its id, and EMAIL_FROM replaces the brand's address
-ok 10 - C1: a dashboard template is sent by its id, and EMAIL_FROM replaces the brand's address
-  ---
-  duration_ms: 0.157583
-  type: 'test'
-  ...
-# Subtest: C1: staging without a key refuses to send, naming the variable
-ok 11 - C1: staging without a key refuses to send, naming the variable
-  ---
-  duration_ms: 0.252375
-  type: 'test'
-  ...
-# Subtest: C1: a vendor error is thrown, not swallowed
-ok 12 - C1: a vendor error is thrown, not swallowed
-  ---
-  duration_ms: 0.163333
-  type: 'test'
-  ...
-# Subtest: maskAddress keeps the first letter and the domain only
-ok 13 - maskAddress keeps the first letter and the domain only
-  ---
-  duration_ms: 0.047167
-  type: 'test'
-  ...
-# Subtest: C1: a deployment left on the local tier neither sends nor logs the body
-ok 14 - C1: a deployment left on the local tier neither sends nor logs the body
-  ---
-  duration_ms: 0.331084
-  type: 'test'
-  ...
-1..14
-# tests 14
-# suites 0
-# pass 14
-# fail 0
-# cancelled 0
-# skipped 0
-# todo 0
-# duration_ms 104.713
-TAP version 13
-TAP version 13
-# Subtest: track is a no-op until a vendor is wired
-ok 1 - track is a no-op until a vendor is wired
-  ---
-  duration_ms: 3.036959
-  type: 'test'
-  ...
-# Subtest: C1: logger.error passes the error, tags and user id to the registered reporter
-ok 2 - C1: logger.error passes the error, tags and user id to the registered reporter
-  ---
-  duration_ms: 1.625375
-  type: 'test'
-  ...
-# Subtest: C1: logger.error with no error hands the reporter one named for the event
-ok 3 - C1: logger.error with no error hands the reporter one named for the event
+# Subtest: each kind of DDL or write against auth is caught
   ---
   duration_ms: 0.166458
   type: 'test'
   ...
+cache hit, replaying logs 7180e36d303e4367
+ RUN  v5.0.3 ./packages/ui
+
+ ✓ .storybook/story-coverage.test.ts (5 tests) 7ms
 # Subtest: C1: a reporter that throws is swallowed, and the line still prints
+ok 1 - each kind of DDL or write against auth is caught
+TAP version 13
+# Subtest: C2: a live-mode key on local or staging fails with the variable named
+ok 1 - C2: a live-mode key on local or staging fails with the variable named
+  ---
+  duration_ms: 0.685625
+  type: 'test'
+  ...
+# Subtest: C2: a test-mode key on production fails with the variable named
+ok 2 - C2: a test-mode key on production fails with the variable named
+  ---
+  duration_ms: 0.119209
+  ---
+  type: 'test'
+  ...
 ok 4 - C1: a reporter that throws is swallowed, and the line still prints
   ---
-  duration_ms: 0.236708
+# Subtest: C2: matching modes pass
+ok 3 - C2: matching modes pass
+  ---
+  duration_ms: 0.082083
   type: 'test'
   ...
-# Subtest: C1: a reporter that rejects is swallowed
-ok 5 - C1: a reporter that rejects is swallowed
+# Subtest: C2: a key with no mode prefix fails on every tier
+ok 4 - C2: a key with no mode prefix fails on every tier
   ---
-  duration_ms: 3.623583
+  duration_ms: 0.180584
   type: 'test'
   ...
-# Subtest: C1: the default reporter is a no-op
-ok 6 - C1: the default reporter is a no-op
+# Subtest: public names pass, and unset values are left out
+ok 5 - public names pass, and unset values are left out
+TAP version 13
+# Subtest: the admin client holds no session: nothing persisted, refreshed or read from a URL
+ok 1 - the admin client holds no session: nothing persisted, refreshed or read from a URL
+stderr | .storybook/stories.test.ts > Composed/Control/Theme toggle > System
+Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template).
   ---
-  duration_ms: 1.020375
+  duration_ms: 14.602875
   type: 'test'
   ...
-# Subtest: C2: a secret-like key is redacted at any depth, whatever its case
-ok 7 - C2: a secret-like key is redacted at any depth, whatever its case
-  ---
-  duration_ms: 0.953959
-  type: 'test'
-  ...
-# Subtest: C2: request bodies and personal data are redacted too
-ok 8 - C2: request bodies and personal data are redacted too
-  ---
-  duration_ms: 0.124667
-  type: 'test'
-  ...
-# Subtest: C2: the reporter's context is redacted; the error itself is passed as caught
-ok 9 - C2: the reporter's context is redacted; the error itself is passed as caught
-  ---
-  duration_ms: 0.241334
-  type: 'test'
-  ...
-# Subtest: C2: personal data and request bodies are redacted under their common compound names
-ok 10 - C2: personal data and request bodies are redacted under their common compound names
-  ---
-  duration_ms: 0.333625
-  type: 'test'
-  ...
-# Subtest: C1: a secret-like tag is redacted before it reaches the reporter
-ok 11 - C1: a secret-like tag is redacted before it reaches the reporter
-  ---
-  duration_ms: 0.256
-  type: 'test'
-  ...
-1..11
-# tests 11
-# suites 0
-# pass 11
-# fail 0
-# cancelled 0
-# skipped 0
-# todo 0
-# duration_ms 127.8865
-# Subtest: each kind of DDL or write against auth is caught
-ok 1 - each kind of DDL or write against auth is caught
-  ---
+# Subtest: every subpath is classed as client-safe or server
   duration_ms: 1.08125
+ok 2 - every subpath is classed as client-safe or server
+  ---
+  duration_ms: 0.813792
+
+TAP version 13
+  ---
+# Subtest: C1: brand.ts theme colours equal the preset's values
+  duration_ms: 0.840292
   type: 'test'
+ ✓ .storybook/stories.test.ts (20 tests) 734ms
   ...
 # Subtest: a foreign key to auth.users and a call to auth.uid() are allowed
-ok 2 - a foreign key to auth.users and a call to auth.uid() are allowed
   ---
+  duration_ms: 1.106292
+  type: 'test'
+ok 2 - a foreign key to auth.users and a call to auth.uid() are allowed
+  ...
+  ---
+# Subtest: ./config reaches no server module, built-in or workspace package
   duration_ms: 0.1425
   type: 'test'
   ...
@@ -504,14 +140,69 @@ ok 3 - a migration with DDL against auth fails, numbered by statement
   duration_ms: 0.796708
   type: 'test'
   ...
+# Subtest: C1: a send on the local tier logs the rendered message and does not call the vendor
+ok 6 - C1: a send on the local tier logs the rendered message and does not call the vendor
+ok 3 - ./config reaches no server module, built-in or workspace package
+  ---
+  duration_ms: 2.069667
+  type: 'test'
+  ...
+  type: 'test'
+  ...
+# Subtest: C1: a dashboard template on the local tier logs its id and variable names, not their values
+# Subtest: a server-only name is refused, by name
+ok 6 - a server-only name is refused, by name
+  ---
+  duration_ms: 0.242042
+  type: 'test'
+  ...
+# Subtest: C1: each tier reads its own variable
+ok 7 - C1: each tier reads its own variable
+  ---
+  duration_ms: 0.5955
+  type: 'test'
+  type: 'test'
+ok 1 - C1: brand.ts theme colours equal the preset's values
+  ---
+  duration_ms: 0.236708
+  duration_ms: 0.380958
+
+  ...
+ Test Files  2 passed (2)
+      Tests  25 passed (25)
+   Start at  14:24:00
+  type: 'test'
+   Duration  2.56s (transform 38%, environment 28%, tests 18%, setup 16%)
+  ...
+# Subtest: C1: a reporter that rejects is swallowed
+ok 5 - C1: a reporter that rejects is swallowed
+
+  ...
+  ---
+# Subtest: C1: a tier whose own value is absent or empty reads the unsuffixed value
+  ---
+ok 7 - C1: a dashboard template on the local tier logs its id and variable names, not their values
+  duration_ms: 3.623583
+ok 8 - C1: a tier whose own value is absent or empty reads the unsuffixed value
 # Subtest: the generated migration set passes, and it does reference auth.users
+  type: 'test'
+  ---
+  ...
+# Subtest: ./browser reaches no server module, built-in or workspace package
+ok 4 - ./browser reaches no server module, built-in or workspace package
+  type: 'test'
 ok 4 - the generated migration set passes, and it does reference auth.users
   ---
   duration_ms: 0.787583
+  ---
   type: 'test'
   ...
 # Subtest: only the local auth mirror writes to auth.users
 ok 5 - only the local auth mirror writes to auth.users
+  duration_ms: 0.277875
+  duration_ms: 1.503125
+  ...
+  ---
   ---
   duration_ms: 14.699083
   type: 'test'
@@ -525,24 +216,195 @@ ok 6 - the pattern catches each kind of write
 # Subtest: seedLocalUsers
     # Subtest: refuses a non-loopback auth URL before sending anything
     ok 1 - refuses a non-loopback auth URL before sending anything
+  type: 'test'
+# Subtest: C1: the default reporter is a no-op
+  duration_ms: 0.226834
+ok 6 - C1: the default reporter is a no-op
+  ---
+  duration_ms: 1.020375
+  type: 'test'
+  duration_ms: 0.098209
+  type: 'test'
+  type: 'test'
+  ...
+# Subtest: C1: the local tier needs no key
+  type: 'test'
+  ...
+  ...
+# Subtest: C1: a changed preset value is a mismatch
+  ...
+ok 8 - C1: the local tier needs no key
+ok 2 - C1: a changed preset value is a mismatch
+  ---
+# Subtest: ./redirect reaches no server module, built-in or workspace package
+  ...
+ok 5 - ./redirect reaches no server module, built-in or workspace package
+# Subtest: C1: nothing set picks undefined
+ok 9 - C1: nothing set picks undefined
+  ---
+  duration_ms: 0.066958
+  ---
+  type: 'test'
+  duration_ms: 0.210958
+  type: 'test'
+  ...
+# Subtest: C1: a changed brand.ts value is a mismatch
+ok 3 - C1: a changed brand.ts value is a mismatch
+  ---
+  duration_ms: 0.199709
+  type: 'test'
+  ...
+# Subtest: C2: a secret-like key is redacted at any depth, whatever its case
+  ---
+  duration_ms: 0.103458
+# Subtest: every asset path in brand.ts exists in the package
+ok 4 - every asset path in brand.ts exists in the package
+  duration_ms: 0.139833
+  type: 'test'
+  type: 'test'
+  ...
+# Subtest: C1: production never reads a suffixed value
+  ---
       ---
       duration_ms: 0.888875
       type: 'test'
+ok 10 - C1: production never reads a suffixed value
       ...
+ok 7 - C2: a secret-like key is redacted at any depth, whatever its case
+  ---
+  duration_ms: 0.953959
+  ...
+  ---
+  duration_ms: 0.058667
+# Subtest: C1: staging and production call the vendor once, with the brand's sender and reply-to
+ok 9 - C1: staging and production call the vendor once, with the brand's sender and reply-to
     # Subtest: refuses a missing service-role key before sending anything
+  ---
+  duration_ms: 0.244334
+  type: 'test'
+  ...
+# Subtest: C1: a dashboard template is sent by its id, and EMAIL_FROM replaces the brand's address
+  duration_ms: 0.144541
+  type: 'test'
+  ...
+# Subtest: the walk sees a server import when there is one
+ok 6 - the walk sees a server import when there is one
     ok 2 - refuses a missing service-role key before sending anything
+  ---
       ---
       duration_ms: 0.154917
       type: 'test'
       ...
+  ...
+# Subtest: white, black and the sRGB primaries
+  duration_ms: 0.600375
+  type: 'test'
+  ...
+# Subtest: ./server is marked server-only, so a client component cannot import it
+ok 7 - ./server is marked server-only, so a client component cannot import it
+  ---
+  duration_ms: 0.101
+  type: 'test'
+  ...
+# Subtest: ./admin is marked server-only, so a client component cannot import it
+ok 10 - C1: a dashboard template is sent by its id, and EMAIL_FROM replaces the brand's address
+  ---
+  duration_ms: 0.157583
+  type: 'test'
+  ...
+# Subtest: C1: staging without a key refuses to send, naming the variable
+ok 11 - C1: staging without a key refuses to send, naming the variable
+  ---
+  duration_ms: 0.252375
+  type: 'test'
+  ...
+ok 5 - white, black and the sRGB primaries
+# Subtest: C1: a vendor error is thrown, not swallowed
+ok 12 - C1: a vendor error is thrown, not swallowed
+  ---
+  type: 'test'
+ok 8 - ./admin is marked server-only, so a client component cannot import it
+  ---
+  duration_ms: 0.143792
+  type: 'test'
+  type: 'test'
+  duration_ms: 0.163333
+  ...
+# Subtest: C2: request bodies and personal data are redacted too
+ok 8 - C2: request bodies and personal data are redacted too
+  ---
+  duration_ms: 0.681583
+  type: 'test'
+  ...
+  ...
+  ---
+  ...
+# Subtest: ./session is marked server-only, so a client component cannot import it
+ok 9 - ./session is marked server-only, so a client component cannot import it
+# Subtest: maskAddress keeps the first letter and the domain only
+  ---
+  duration_ms: 0.080917
+  type: 'test'
+  ...
+# Subtest: ./context is marked server-only, so a client component cannot import it
+ok 10 - ./context is marked server-only, so a client component cannot import it
+  ---
+  duration_ms: 0.290208
+  type: 'test'
+  ...
+# Subtest: a secret key in the public slot is refused, naming the variable
+ok 11 - a secret key in the public slot is refused, naming the variable
+ok 13 - maskAddress keeps the first letter and the domain only
+# Subtest: C1: the suffix grammar names each form
+  duration_ms: 0.124667
+  type: 'test'
+  ...
+  ---
+# Subtest: C2: the reporter's context is redacted; the error itself is passed as caught
+ok 9 - C2: the reporter's context is redacted; the error itself is passed as caught
+  ---
+  duration_ms: 0.241334
+  type: 'test'
+  ...
     # Subtest: creates each synthetic user through the local admin API
+  type: 'test'
     ok 3 - creates each synthetic user through the local admin API
+ok 11 - C1: the suffix grammar names each form
       ---
+  ---
       duration_ms: 45.607542
       type: 'test'
+  duration_ms: 1.078625
       ...
+  type: 'test'
     # Subtest: treats an existing email as done
     ok 4 - treats an existing email as done
+  ---
+  duration_ms: 0.380292
+  ...
+  type: 'test'
+# Subtest: the publishable key and the legacy anon key pass
+  ...
+  duration_ms: 0.047167
+# Subtest: C1: the switch defaults to local, never production, and names itself when wrong
+  type: 'test'
+  ...
+ok 12 - C1: the switch defaults to local, never production, and names itself when wrong
+  ---
+  duration_ms: 0.217083
+  type: 'test'
+  ...
+# Subtest: outside a deployment the site URL is localhost, whatever is configured
+# Subtest: C1: a deployment left on the local tier neither sends nor logs the body
+ok 14 - C1: a deployment left on the local tier neither sends nor logs the body
+  ---
+  duration_ms: 0.331084
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
       ---
       duration_ms: 1.899584
       type: 'test'
@@ -550,23 +412,190 @@ ok 6 - the pattern catches each kind of write
     1..4
 ok 7 - seedLocalUsers
   ---
+ok 13 - outside a deployment the site URL is localhost, whatever is configured
   duration_ms: 49.230209
+  ...
+# fail 0
   type: 'suite'
   ...
-
- RUN  v5.0.3 ./packages/ui
-
 # Subtest: db:local:reset
     # Subtest: refuses staging before resolving a URL
     ok 1 - refuses staging before resolving a URL
+ok 12 - the publishable key and the legacy anon key pass
+  ---
+  duration_ms: 0.133291
+# cancelled 0
+# skipped 0
+  ---
+# Subtest: C2: personal data and request bodies are redacted under their common compound names
+ok 10 - C2: personal data and request bodies are redacted under their common compound names
+  ---
+  type: 'test'
+  ...
+# Subtest: the cookie stem the purge uses is the storage key the installed SDK writes
+ok 13 - the cookie stem the purge uses is the storage key the installed SDK writes
+  ---
+  duration_ms: 0.333625
+  duration_ms: 16.774666
+  type: 'test'
+  ...
+# todo 0
+# duration_ms 104.713
+  duration_ms: 0.59425
+# Subtest: lightness as a percentage, and an alpha, are accepted
+  type: 'test'
+  type: 'test'
+  ...
+  ...
+# Subtest: C1: a secret-like tag is redacted before it reaches the reporter
+# Using the user object as returned from supabase.auth.getSession() or from some supabase.auth.onAuthStateChange() events could be insecure! This value comes directly from the storage medium (usually cookies on the server) and may not be authentic. Use supabase.auth.getUser() instead which authenticates the data by contacting the Supabase Auth server.
+ok 6 - lightness as a percentage, and an alpha, are accepted
+  ---
+  duration_ms: 0.069333
+  type: 'test'
+  ...
       ---
+# Subtest: in a deployment the configured URL is used, without a trailing slash
+# Subtest: the preset's neutral steps
+ok 7 - the preset's neutral steps
+  ---
+  duration_ms: 0.133833
+  type: 'test'
+ok 14 - in a deployment the configured URL is used, without a trailing slash
+  ---
+  duration_ms: 0.176625
+  type: 'test'
+  ...
+1..14
+# Subtest: C1: returns the user's id, email and app_metadata role from getUser
+ok 11 - C1: a secret-like tag is redacted before it reaches the reporter
+  ...
+# tests 14
+# suites 0
+ok 14 - C1: returns the user's id, email and app_metadata role from getUser
+  ---
+  duration_ms: 0.256
+# Subtest: anything but oklch() is refused
+# pass 14
+# fail 0
       duration_ms: 397.149542
       type: 'test'
+  type: 'test'
+  ...
+  ---
+# cancelled 0
+# skipped 0
+1..11
+# tests 11
+ok 8 - anything but oklch() is refused
+  ---
+  duration_ms: 0.192709
+# todo 0
+  type: 'test'
+# duration_ms 84.852583
+  duration_ms: 0.806125
+  type: 'test'
+  ...
+# Subtest: C1: a user without a known app_metadata role is a user; user_metadata is never read
+ok 15 - C1: a user without a known app_metadata role is a user; user_metadata is never read
+  ---
+  duration_ms: 0.102625
+  ...
       ...
+  type: 'test'
+  ...
+# Subtest: C1: refuses when getUser returns an error, even with a user beside it
+ok 16 - C1: refuses when getUser returns an error, even with a user beside it
+1..8
+  ---
     # Subtest: refuses staging before connecting, with its URLs set
+  duration_ms: 0.097291
+# suites 0
+# pass 11
+# fail 0
+# cancelled 0
+# skipped 0
     ok 2 - refuses staging before connecting, with its URLs set
+# todo 0
+# duration_ms 127.8865
       ---
+  type: 'test'
+  ...
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# Subtest: C1: a forged session cookie is refused when Supabase cannot fetch its user
+ok 17 - C1: a forged session cookie is refused when Supabase cannot fetch its user
+  ---
+  duration_ms: 15.45525
+  type: 'test'
+# todo 0
+# duration_ms 79.548625
+  ...
+# Subtest: C1: the same cookie passes once Supabase returns its user, with the role from that answer
+ok 18 - C1: the same cookie passes once Supabase returns its user, with the role from that answer
+  ---
+  duration_ms: 1.063042
+  type: 'test'
+  ...
+# Subtest: C1: the mirror is called once per user per process, and again after a refusal, a failure or an email change
+ok 19 - C1: the mirror is called once per user per process, and again after a refusal, a failure or an email change
+  ---
+  duration_ms: 0.312417
+  type: 'test'
+  ...
+# Subtest: C1: concurrent requests for one user share one mirror call
+ok 20 - C1: concurrent requests for one user share one mirror call
+  ---
+  duration_ms: 10.39625
+  type: 'test'
+  ...
+# Subtest: C1: an anonymous or refused request never reaches the mirror
+ok 21 - C1: an anonymous or refused request never reaches the mirror
+  ---
+  duration_ms: 0.245542
+  type: 'test'
+  ...
+# Subtest: a sign-in on localhost lands back on localhost, at next
+ok 22 - a sign-in on localhost lands back on localhost, at next
+  ---
+  duration_ms: 0.805583
+  type: 'test'
+  ...
+# Subtest: next that leaves the origin becomes /
+ok 23 - next that leaves the origin becomes /
+  ---
+  duration_ms: 0.206209
+  type: 'test'
+  ...
+# Subtest: the callback URL is on the site's origin and carries next only when it is a path
+ok 24 - the callback URL is on the site's origin and carries next only when it is a path
+  ---
+  duration_ms: 0.104667
+  type: 'test'
+  ...
+# @supabase/ssr: chunked cookie decoded to invalid JSON, treating as absent. This usually indicates that cookie chunks from different writes were combined (e.g. response committed before all Set-Cookie headers were sent).
       duration_ms: 288.118375
+# @supabase/ssr: chunked cookie decoded to invalid JSON, treating as absent. This usually indicates that cookie chunks from different writes were combined (e.g. response committed before all Set-Cookie headers were sent).
+# @supabase/ssr: chunked cookie decoded to invalid JSON, treating as absent. This usually indicates that cookie chunks from different writes were combined (e.g. response committed before all Set-Cookie headers were sent).
+# Subtest: C2: on the local stack, updateSession deletes every staging session cookie and nothing else
+ok 25 - C2: on the local stack, updateSession deletes every staging session cookie and nothing else
+  ---
+  duration_ms: 18.72
+  type: 'test'
+  ...
+# Subtest: C2: the project's own cookies are never purged
+ok 26 - C2: the project's own cookies are never purged
+  ---
+  duration_ms: 1.058125
+  type: 'test'
+  ...
+# Subtest: C2: switching back to staging purges the local stack's cookies
+ok 27 - C2: switching back to staging purges the local stack's cookies
+  ---
       type: 'test'
       ...
     # Subtest: refuses production before resolving a URL
@@ -576,6 +605,30 @@ ok 7 - seedLocalUsers
       type: 'test'
       ...
     # Subtest: refuses production before connecting, with its URLs set
+  duration_ms: 0.563666
+  type: 'test'
+  ...
+# Subtest: C2: with no foreign cookie, nothing is written
+ok 28 - C2: with no foreign cookie, nothing is written
+  ---
+  duration_ms: 0.593292
+  type: 'test'
+  ...
+# Subtest: C2: the purge reads every cookie form Supabase writes
+ok 29 - C2: the purge reads every cookie form Supabase writes
+  ---
+  duration_ms: 0.14875
+  type: 'test'
+  ...
+1..29
+# tests 29
+# suites 0
+# pass 29
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 300.077666
     ok 4 - refuses production before connecting, with its URLs set
       ---
       duration_ms: 316.960917
@@ -725,19 +778,8 @@ ok 20 - every table carries its policies beside it
 # skipped 0
 # todo 0
 # duration_ms 2042.727417
- ✓ .storybook/story-coverage.test.ts (5 tests) 7ms
-stderr | .storybook/stories.test.ts > Composed/Control/Theme toggle > System
-Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template).
-
- ✓ .storybook/stories.test.ts (20 tests) 734ms
-
- Test Files  2 passed (2)
-      Tests  25 passed (25)
-   Start at  14:24:00
-   Duration  2.56s (transform 38%, environment 28%, tests 18%, setup 16%)
-
 
  Tasks:    7 successful, 7 total
-Cached:    0 cached, 7 total
-  Time:    4.835s 
+Cached:    7 cached, 7 total
+  Time:    129ms >>> FULL TURBO
 
