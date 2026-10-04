@@ -12,13 +12,15 @@
  *
  * A reference to something a later step lands goes in tooling/refs-pending.json
  * with the step that lands it. The check fails on an unlisted missing
- * reference, and on a pending entry that now exists, so the list only shrinks.
+ * reference, and on a pending entry that now exists, so the list only shrinks;
+ * a git-ignored entry is machine-local and never counts as existing.
  */
 
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 
 import { listMarkdown, REPO_ROOT } from "./lib/docs.ts";
+import { runGit } from "./lib/git.ts";
 import { loadToolkit } from "./lib/toolkit.ts";
 
 const PENDING = "tooling/refs-pending.json";
@@ -162,9 +164,13 @@ for (const file of liveFiles()) {
   }
 }
 
+/** A git-ignored path is machine-local: present on one machine, never in CI. */
+const ignored = (rel: string) => runGit(["check-ignore", "-q", rel]) !== null;
+
 const stale = Object.keys(pending).filter((key) => {
   if (key.startsWith("yarn ")) return scripts.has(key.slice(5));
   if (key.startsWith("/tk-")) return skills.has(key.slice(1));
+  if (ignored(key)) return false;
   return key.endsWith("/") ? isDir(key.slice(0, -1)) : exists(key);
 });
 

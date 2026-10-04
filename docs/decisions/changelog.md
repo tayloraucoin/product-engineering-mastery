@@ -15,6 +15,10 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-03 — PJ: check-refs ignores a machine-local pending entry
+
+`yarn check-refs` failed STK-3's C2 when Taylor's machine gained a `.claude/settings.local.json`: its `refs-pending.json` entry ("machine-local and untracked by design") then read as "exists now; remove it", which would make the check fail in CI after removal. A pending entry whose path git ignores now never counts as stale. Two cases in `tooling/check-refs.test.ts` (Taylor chose this fix over leaving C2 at FAIL).
+
 ## 2026-10-03 — PJ: the operator manages branches
 
 Taylor, before STK-4: "By default I don't want to have branches to manage for each of these. Let the operator manage their own branches." Taylor runs tickets in batches: once 1 and 2 land, 3 to 6 run as four parallel threads at once, and a branch per ticket was one more thing to manage per thread (PR-14).
