@@ -1,17 +1,17 @@
 command: yarn verify
 exit: 0
-at: 2026-10-04T19:27:48Z
-head: 6b66f61f0076666818fc35d8106ce87155667347
+at: 2026-10-04T20:39:51Z
+head: 137bcff45dd0c8a422aebc5ffa605d27fd053656
 ---
 Checking formatting...
 All matched files use Prettier code style!
 lint:docs — 189 files, names and frontmatter clean; 8 path rules carry only paths.
 check-settings — 12 fixtures behaved; .claude/settings.json is clean.
 test:hooks — every case behaved.
-  bash-guard: 120 cases, 9 rules; median 60 ms, max 66 ms per call; longest denial about 53 tokens
-  results-gate: 14 cases, 4 rules; median 53 ms, max 56 ms per call; longest denial about 48 tokens
-  session-start: 5 cases, 4 rules; median 57 ms, max 62 ms per call; answers as context
-  stop-gate: 8 cases, 4 rules; median 58 ms, max 60 ms per call; answers as stop
+  bash-guard: 120 cases, 9 rules; median 59 ms, max 115 ms per call; longest denial about 53 tokens
+  results-gate: 14 cases, 4 rules; median 54 ms, max 67 ms per call; longest denial about 48 tokens
+  session-start: 5 cases, 4 rules; median 61 ms, max 97 ms per call; answers as context
+  stop-gate: 8 cases, 4 rules; median 57 ms, max 66 ms per call; answers as stop
 check-refs — every reference in 111 live files resolves; 41 pending (lands in J8, lands in J11, superseded by docs/runbooks/new-project.md (STK-3), lands in P-C, lands in P-D, lands in P-K, a product repo's path, named by a template, a product repo's path, named by a ruling (CF-13), a pattern, not a path, machine-local and untracked by design, stale ruling text in conflicts.md, superseded by A4; held for Taylor (PR-05), stale ruling text in conflicts.md; extensions sit beside their role (record 0006); held for Taylor (PR-05), stale ledger text; the rulings live in docs/design/workflow.md; held for Taylor (PR-05), stale ledger text; filed as docs/research/toolkit/design-candidates.md; held for Taylor (PR-05), stale ledger text; the ledger is docs/decisions/ledger.md; held for Taylor (PR-05), stale ledger text; the folder is docs/measurement/metrics/ (PR-12); held for Taylor (PR-05), stale ledger text; the folder is docs/measurement/evals/ (PR-12); held for Taylor (PR-05)).
 check-stack — 8 module(s); nothing missing, nothing left behind.
 check-migrations: 1 migration(s) in packages/db/migrations, none touch the auth schema.
@@ -19,13 +19,6 @@ warn  specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/resu
 warn  specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/results.json: C2's PASS no longer holds: docs/engineering/codebase-conventions.md, docs/engineering/tech-stack.md changed after it was recorded. Re-record it: yarn contract:run STK-1 C2
 warn  specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/results.json: C3's PASS no longer holds: docs/engineering/codebase-conventions.md, docs/engineering/tech-stack.md changed after it was recorded. Re-record it: yarn contract:run STK-1 C3
 warn  specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/results.json: C4's PASS no longer holds: docs/engineering/codebase-conventions.md, docs/engineering/tech-stack.md changed after it was recorded. Re-record it: yarn contract:record STK-1 C4 --evidence <path>
-warn  specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/results.json: C1's PASS no longer holds: toolkit.json changed after it was recorded. Re-record it: yarn contract:run STK-2 C1
-warn  specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/results.json: C2's PASS no longer holds: toolkit.json changed after it was recorded. Re-record it: yarn contract:run STK-2 C2
-warn  specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/results.json: C3's PASS no longer holds: toolkit.json changed after it was recorded. Re-record it: yarn contract:run STK-2 C3
-warn  specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/results.json: C4's PASS no longer holds: toolkit.json changed after it was recorded. Re-record it: yarn contract:run STK-2 C4
-warn  specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/results.json: C5's PASS no longer holds: toolkit.json changed after it was recorded. Re-record it: yarn contract:run STK-2 C5
-warn  specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/results.json: C6's PASS no longer holds: toolkit.json changed after it was recorded. Re-record it: yarn contract:run STK-2 C6
-warn  STK-2 has an as-built, so it is closing, but C7 (last run exited 1) is not PASS. Run: yarn status STK-2
 warn  specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/results.json: C1's PASS no longer holds: docs/runbooks/new-project.md, docs/runbooks/remove-supabase-auth.md, docs/runbooks/remove-supabase-database.md changed after it was recorded. Re-record it: yarn contract:run STK-3 C1
 warn  specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/results.json: C2's PASS no longer holds: docs/runbooks/new-project.md, docs/runbooks/remove-supabase-auth.md, docs/runbooks/remove-supabase-database.md changed after it was recorded. Re-record it: yarn contract:run STK-3 C2
 warn  specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/results.json: C3's PASS no longer holds: docs/runbooks/new-project.md, docs/runbooks/remove-supabase-auth.md, docs/runbooks/remove-supabase-database.md changed after it was recorded. Re-record it: yarn contract:run STK-3 C3
@@ -63,10 +56,10 @@ warn  specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/results.jso
 warn  specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/results.json: review:mason's PASS no longer holds: .env.example, apps/web/next.config.ts, docs/engineering/codebase-conventions.md and 25 more changed after it was recorded. Re-record it: yarn review:run mason STK-9
 warn  specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/results.json: review:vigil's PASS no longer holds: .env.example, apps/web/next.config.ts, docs/engineering/codebase-conventions.md and 25 more changed after it was recorded. Re-record it: yarn review:run vigil STK-9
 warn  specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/results.json: review:warden's PASS no longer holds: .env.example, apps/web/next.config.ts, docs/engineering/codebase-conventions.md and 25 more changed after it was recorded. Re-record it: yarn review:run warden STK-9
-warn  STK-10 has an as-built, so it is closing, but review:warden (not proven yet) is not PASS. Run: yarn review:run warden STK-10
 warn  specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/results.json: C1's PASS no longer holds: docs/engineering/tech-stack.md, toolkit.json, yarn.lock changed after it was recorded. Re-record it: yarn contract:record STK-11 C1 --evidence <path>
 warn  specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/results.json: C2's PASS no longer holds: docs/engineering/tech-stack.md, toolkit.json, yarn.lock changed after it was recorded. Re-record it: yarn contract:run STK-11 C2
 warn  STK-11 has an as-built, so it is closing, but C3 (last run exited 1), C4 (not proven yet), C5 (not proven yet), review:mason (not proven yet), review:vigil (not proven yet), review:warden (not proven yet) are not PASS. Run: yarn review:run mason STK-11
+warn  STK-15 has an as-built, so it is closing, but review:mason (not proven yet), review:vigil (not proven yet), review:warden (not proven yet) are not PASS. Run: yarn review:run mason STK-15
 warn  specs/_shared/epics/STK-default-stack/tickets/STK-19-helpers-deploy/results.json: C1's PASS no longer holds: apps/web/next.config.ts, docs/engineering/codebase-conventions.md, package.json and 1 more changed after it was recorded. Re-record it: yarn contract:run STK-19 C1
 warn  specs/_shared/epics/STK-default-stack/tickets/STK-19-helpers-deploy/results.json: C2's PASS no longer holds: apps/web/next.config.ts, docs/engineering/codebase-conventions.md, package.json and 1 more changed after it was recorded. Re-record it: yarn contract:run STK-19 C2
 warn  specs/_shared/epics/STK-default-stack/tickets/STK-19-helpers-deploy/results.json: C3's PASS no longer holds: apps/web/next.config.ts, docs/engineering/codebase-conventions.md, package.json and 1 more changed after it was recorded. Re-record it: yarn contract:record STK-19 C3 --evidence <path>
@@ -102,307 +95,307 @@ TAP version 13
 # Subtest: C5: a client chunk holding a server-only sentinel fails, naming the variable and the chunk
 ok 1 - C5: a client chunk holding a server-only sentinel fails, naming the variable and the chunk
   ---
-  duration_ms: 91.667292
+  duration_ms: 92.209625
   type: 'test'
   ...
 # Subtest: C5: no build output fails
 ok 2 - C5: no build output fails
   ---
-  duration_ms: 176.520875
+  duration_ms: 176.2165
   type: 'test'
   ...
 # Subtest: C5: clean client chunks pass
 ok 3 - C5: clean client chunks pass
   ---
-  duration_ms: 91.026667
+  duration_ms: 125.4365
   type: 'test'
   ...
 # Subtest: C5: a scan with no sentinel named is refused
 ok 4 - C5: a scan with no sentinel named is refused
   ---
-  duration_ms: 77.043084
+  duration_ms: 76.378584
   type: 'test'
   ...
 # Subtest: the plan plants server-only names from .env.example and turbo.json, and fails on drift, naming it
 ok 5 - the plan plants server-only names from .env.example and turbo.json, and fails on drift, naming it
   ---
-  duration_ms: 91.210875
+  duration_ms: 86.392042
   type: 'test'
   ...
 # Subtest: a pending entry that now exists is stale
 ok 6 - a pending entry that now exists is stale
   ---
-  duration_ms: 255.836209
+  duration_ms: 285.602875
   type: 'test'
   ...
 # Subtest: a git-ignored pending entry is machine-local and never stale
 ok 7 - a git-ignored pending entry is machine-local and never stale
   ---
-  duration_ms: 212.679709
+  duration_ms: 217.373625
   type: 'test'
   ...
 # Subtest: C1: a present module missing a listed file fails, naming the module and the file
 ok 8 - C1: a present module missing a listed file fails, naming the module and the file
   ---
-  duration_ms: 91.86175
+  duration_ms: 99.925
   type: 'test'
   ...
 # Subtest: C2: a removed module with a leftover file, variable or dependency fails, naming each leftover
 ok 9 - C2: a removed module with a leftover file, variable or dependency fails, naming each leftover
   ---
-  duration_ms: 375.1395
+  duration_ms: 427.556625
   type: 'test'
   ...
 # Subtest: C2: a clean removal passes, and near-miss names are not leftovers
 ok 10 - C2: a clean removal passes, and near-miss names are not leftovers
   ---
-  duration_ms: 89.698583
+  duration_ms: 87.2705
   type: 'test'
   ...
 # Subtest: C3: a locked module marked removed fails
 ok 11 - C3: a locked module marked removed fails
   ---
-  duration_ms: 80.830292
+  duration_ms: 83.317167
   type: 'test'
   ...
 # Subtest: C4: an entry missing any of files, env, dependencies, boundaries, locked or runbook fails, naming the field
 ok 12 - C4: an entry missing any of files, env, dependencies, boundaries, locked or runbook fails, naming the field
   ---
-  duration_ms: 81.586083
+  duration_ms: 81.551083
   type: 'test'
   ...
 # Subtest: C5: a runbook path that does not exist fails, naming the path
 ok 13 - C5: a runbook path that does not exist fails, naming the path
   ---
-  duration_ms: 85.018708
+  duration_ms: 86.875
   type: 'test'
   ...
 # Subtest: C1: a conforming tree passes
 ok 14 - C1: a conforming tree passes
   ---
-  duration_ms: 8.979875
+  duration_ms: 10.08925
   type: 'test'
   ...
 # Subtest: C1: a stray top-level folder fails, naming it
 ok 15 - C1: a stray top-level folder fails, naming it
   ---
-  duration_ms: 5.187042
+  duration_ms: 7.451
   type: 'test'
   ...
 # Subtest: C1: an unknown kind fails, naming it
 ok 16 - C1: an unknown kind fails, naming it
   ---
-  duration_ms: 3.746459
+  duration_ms: 8.326541
   type: 'test'
   ...
 # Subtest: C1: a component folder without <name>.tsx fails, naming it
 ok 17 - C1: a component folder without <name>.tsx fails, naming it
   ---
-  duration_ms: 2.333291
+  duration_ms: 3.232459
   type: 'test'
   ...
 # Subtest: C1: a component folder without index.ts fails, naming it
 ok 18 - C1: a component folder without index.ts fails, naming it
   ---
-  duration_ms: 3.045875
+  duration_ms: 2.651
   type: 'test'
   ...
 # Subtest: C1: a cva() in the component file fails, naming the file
 ok 19 - C1: a cva() in the component file fails, naming the file
   ---
-  duration_ms: 2.429917
+  duration_ms: 3.156542
   type: 'test'
   ...
 # Subtest: C1: an export whose target is missing fails, naming the export
 ok 20 - C1: an export whose target is missing fails, naming the export
   ---
-  duration_ms: 2.320375
+  duration_ms: 3.148625
   type: 'test'
   ...
 # Subtest: review S1: cva in a second file of the folder fails; a comment naming cva() passes
 ok 21 - review S1: cva in a second file of the folder fails; a comment naming cva() passes
   ---
-  duration_ms: 4.47575
+  duration_ms: 11.537958
   type: 'test'
   ...
 # Subtest: review S3: a primitive with copy.ts fails
 ok 22 - review S3: a primitive with copy.ts fails
   ---
-  duration_ms: 3.080708
+  duration_ms: 6.230958
   type: 'test'
   ...
 # Subtest: review S3: a primitive importing another component fails
 ok 23 - review S3: a primitive importing another component fails
   ---
-  duration_ms: 3.060291
+  duration_ms: 3.971333
   type: 'test'
   ...
 # Subtest: review N6: conditional exports resolve; a wildcard export fails
 ok 24 - review N6: conditional exports resolve; a wildcard export fails
   ---
-  duration_ms: 10.279166
+  duration_ms: 4.90325
   type: 'test'
   ...
 # Subtest: review N7: the command exits 1 and names the path
 ok 25 - review N7: the command exits 1 and names the path
   ---
-  duration_ms: 85.323542
+  duration_ms: 81.522333
   type: 'test'
   ...
 # Subtest: a merged as-built is immutable except applied:
 ok 26 - a merged as-built is immutable except applied:
   ---
-  duration_ms: 4906.149333
+  duration_ms: 5029.036209
   type: 'test'
   ...
 # Subtest: A9 commit-msg: an agent branch needs a work-id; another branch does not
 ok 27 - A9 commit-msg: an agent branch needs a work-id; another branch does not
   ---
-  duration_ms: 1775.3155
+  duration_ms: 1769.482708
   type: 'test'
   ...
 # Subtest: A9 pre-commit: staging a hand-edited results.json is refused
 ok 28 - A9 pre-commit: staging a hand-edited results.json is refused
   ---
-  duration_ms: 1993.42725
+  duration_ms: 1879.999917
   type: 'test'
   ...
 # Subtest: A4 contract:init allocates sequential ids, from the template, then starts with every criterion FAIL
 ok 29 - A4 contract:init allocates sequential ids, from the template, then starts with every criterion FAIL
   ---
-  duration_ms: 1417.6995
+  duration_ms: 1457.389125
   type: 'test'
   ...
 # Subtest: the protected branch refuses a start; the operator picks the work branch
 ok 30 - the protected branch refuses a start; the operator picks the work branch
   ---
-  duration_ms: 737.872375
+  duration_ms: 738.66125
   type: 'test'
   ...
 # Subtest: parallel tickets: a second item starts on the same branch while the first is open
 ok 31 - parallel tickets: a second item starts on the same branch while the first is open
   ---
-  duration_ms: 2007.784
+  duration_ms: 2046.028334
   type: 'test'
   ...
 # Subtest: parallel tickets: another ticket's uncommitted file does not block a run, its own does
 ok 32 - parallel tickets: another ticket's uncommitted file does not block a run, its own does
   ---
-  duration_ms: 2888.161917
+  duration_ms: 2924.666584
   type: 'test'
   ...
 # Subtest: parallel tickets: another ticket's commit leaves this ticket's proof fresh
 ok 33 - parallel tickets: another ticket's commit leaves this ticket's proof fresh
   ---
-  duration_ms: 3341.476459
+  duration_ms: 3228.22125
   type: 'test'
   ...
 # Subtest: stacking: a dependent ticket starts on the same branch once its predecessor is built, before any as-built or review
 ok 34 - stacking: a dependent ticket starts on the same branch once its predecessor is built, before any as-built or review
   ---
-  duration_ms: 3753.865375
+  duration_ms: 3829.952292
   type: 'test'
   ...
 # Subtest: a dependency that has not started refuses the start
 ok 35 - a dependency that has not started refuses the start
   ---
-  duration_ms: 1051.983125
+  duration_ms: 1076.5775
   type: 'test'
   ...
 # Subtest: A6: a cited file not approved, or holding a BLOCKING marker, is refused; a plain open marker is listed
 ok 36 - A6: a cited file not approved, or holding a BLOCKING marker, is refused; a plain open marker is listed
   ---
-  duration_ms: 2589.043791
+  duration_ms: 2644.947167
   type: 'test'
   ...
 # Subtest: PR-15 tiers: code is tier 1 with no reviewer; contract:tier 2 adds the review, and a lower tier drops it
 ok 37 - PR-15 tiers: code is tier 1 with no reviewer; contract:tier 2 adds the review, and a lower tier drops it
   ---
-  duration_ms: 3829.298417
+  duration_ms: 3871.276167
   type: 'test'
   ...
 # Subtest: PR-15: check-specs warns on a ticket still closing, and fails it only with --strict
 ok 38 - PR-15: check-specs warns on a ticket still closing, and fails it only with --strict
   ---
-  duration_ms: 2221.443041
+  duration_ms: 2244.314583
   type: 'test'
   ...
 # Subtest: Vigil 9 and 10, tier 2 epic ticket: pre-flight gates the start, review:run follows the as-built, truth:promote follows
 ok 39 - Vigil 9 and 10, tier 2 epic ticket: pre-flight gates the start, review:run follows the as-built, truth:promote follows
   ---
-  duration_ms: 10921.979875
+  duration_ms: 10920.221667
   type: 'test'
   ...
 # Subtest: a fixture reviewer's PASS does not count outside the harness
 ok 40 - a fixture reviewer's PASS does not count outside the harness
   ---
-  duration_ms: 4503.08175
+  duration_ms: 4601.319958
   type: 'test'
   ...
 # Subtest: a pre-flight written by the fixture reviewer does not start a ticket outside the harness
 ok 41 - a pre-flight written by the fixture reviewer does not start a ticket outside the harness
   ---
-  duration_ms: 1076.684333
+  duration_ms: 1101.723833
   type: 'test'
   ...
 # Subtest: contract:run refuses an uncommitted tree, then records run records with HEAD and evidence hashes
 ok 42 - contract:run refuses an uncommitted tree, then records run records with HEAD and evidence hashes
   ---
-  duration_ms: 2914.810167
+  duration_ms: 2975.567208
   type: 'test'
   ...
 # Subtest: contract:run FAILs a test criterion whose runner matched zero tests
 ok 43 - contract:run FAILs a test criterion whose runner matched zero tests
   ---
-  duration_ms: 1893.944709
+  duration_ms: 1916.504
   type: 'test'
   ...
 # Subtest: Vigil 10, one-off: init, run, as-built, status and check-specs close with nothing left
 ok 44 - Vigil 10, one-off: init, run, as-built, status and check-specs close with nothing left
   ---
-  duration_ms: 4946.786667
+  duration_ms: 4879.089042
   type: 'test'
   ...
 # Subtest: Vigil 3: a PASS recorded at X goes stale when a planned path changes at X+1
 ok 45 - Vigil 3: a PASS recorded at X goes stale when a planned path changes at X+1
   ---
-  duration_ms: 3643.258375
+  duration_ms: 3718.724958
   type: 'test'
   ...
 # Subtest: C1: the repo's preset passes every pair in both themes
 ok 46 - C1: the repo's preset passes every pair in both themes
   ---
-  duration_ms: 84.228958
+  duration_ms: 94.003291
   type: 'test'
   ...
 # Subtest: C1: black on white measures 21:1, the WCAG maximum
 ok 47 - C1: black on white measures 21:1, the WCAG maximum
   ---
-  duration_ms: 80.468125
+  duration_ms: 78.315916
   type: 'test'
   ...
 # Subtest: C1: a text pair below 4.5:1 fails and is named
 ok 48 - C1: a text pair below 4.5:1 fails and is named
   ---
-  duration_ms: 103.231083
+  duration_ms: 105.913875
   type: 'test'
   ...
 # Subtest: C1: a focus ring below 3:1 fails in the theme it is set in
 ok 49 - C1: a focus ring below 3:1 fails in the theme it is set in
   ---
-  duration_ms: 100.594916
+  duration_ms: 116.883459
   type: 'test'
   ...
 # Subtest: C1: see-through text is composited as the browser does
 ok 50 - C1: see-through text is composited as the browser does
   ---
-  duration_ms: 83.897125
+  duration_ms: 81.04275
   type: 'test'
   ...
 # Subtest: C1: a missing token fails rather than passing silently
 ok 51 - C1: a missing token fails rather than passing silently
   ---
-  duration_ms: 87.088459
+  duration_ms: 81.106417
   type: 'test'
   ...
 1..51
@@ -413,30 +406,61 @@ ok 51 - C1: a missing token fails rather than passing silently
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 25118.193208
+# duration_ms 25473.917084
 
    • turbo 2.11.6
    • Packages in scope: @pem/brand, @pem/config, @pem/constants, @pem/db, @pem/email, @pem/env, @pem/observability, @pem/ui, docs, web
    • Running test in 10 packages
    • Remote caching disabled
 
-cache miss, executing 33528a25befc7adf
+cache hit, replaying logs 33528a25befc7adf
 cache hit, replaying logs f573116ae189fa2a
-cache hit, replaying logs 3bdd885d4f89a1e5
-cache hit, replaying logs abbf8626ac34d151
+cache hit, replaying logs 5ec53cee309a6d91
+TAP version 13
+# Subtest: C2: the HTML part carries the brand's name, support address, home URL and colours
+ok 1 - C2: the HTML part carries the brand's name, support address, home URL and colours
+  ---
+  duration_ms: 0.65975
+  type: 'test'
+  ...
+# Subtest: C2: the text part carries the brand and the action as a link
+ok 2 - C2: the text part carries the brand and the action as a link
+  ---
+  duration_ms: 0.1005
+  type: 'test'
+  ...
+# Subtest: C2: every caller value is escaped
+ok 3 - C2: every caller value is escaped
+  ---
 cache hit, replaying logs d96e6da97d15bcf3
+  duration_ms: 0.126584
+cache hit, replaying logs abbf8626ac34d151
+cache hit, replaying logs 3bdd885d4f89a1e5
 TAP version 13
+# Subtest: track is a no-op until a vendor is wired
+ok 1 - track is a no-op until a vendor is wired
+TAP version 13
+  type: 'test'
+  ...
+# Subtest: C2: an action URL that is not http(s) is refused
+  ---
 # Subtest: C2: a live-mode key on local or staging fails with the variable named
-TAP version 13
-# Subtest: C1: brand.ts theme colours equal the preset's values
+  duration_ms: 0.814125
 ok 1 - C2: a live-mode key on local or staging fails with the variable named
   ---
-ok 1 - C1: brand.ts theme colours equal the preset's values
+ok 4 - C2: an action URL that is not http(s) is refused
   duration_ms: 0.668584
   type: 'test'
-cache hit, replaying logs 5ec53cee309a6d91
+  ---
+  duration_ms: 0.201334
   ...
 # Subtest: C2: a test-mode key on production fails with the variable named
+  type: 'test'
+  ...
+# Subtest: C2: no source file in @pem/email writes a brand value or a colour literal
+ok 5 - C2: no source file in @pem/email writes a brand value or a colour literal
+TAP version 13
+# Subtest: C1: brand.ts theme colours equal the preset's values
 ok 2 - C2: a test-mode key on production fails with the variable named
   ---
   duration_ms: 0.090042
@@ -448,12 +472,32 @@ ok 3 - C2: matching modes pass
   duration_ms: 0.076875
   type: 'test'
   ...
+  ---
 # Subtest: C2: a key with no mode prefix fails on every tier
+  type: 'test'
+ok 4 - C2: a key with no mode prefix fails on every tier
+  ...
+ok 1 - C1: brand.ts theme colours equal the preset's values
+# Subtest: C1: logger.error passes the error, tags and user id to the registered reporter
+  ---
+ok 2 - C1: logger.error passes the error, tags and user id to the registered reporter
+  ---
+  duration_ms: 0.171
+  duration_ms: 1.848291
   ---
   duration_ms: 1.004375
   type: 'test'
+  duration_ms: 0.570875
+  type: 'test'
+  ...
+  ...
+  type: 'test'
   ...
 # Subtest: C1: a changed preset value is a mismatch
+# Subtest: C1: a send on the local tier logs the rendered message and does not call the vendor
+ok 6 - C1: a send on the local tier logs the rendered message and does not call the vendor
+  type: 'test'
+  ...
 ok 2 - C1: a changed preset value is a mismatch
   ---
   duration_ms: 0.184291
@@ -463,243 +507,280 @@ ok 2 - C1: a changed preset value is a mismatch
 ok 3 - C1: a changed brand.ts value is a mismatch
   ---
   duration_ms: 0.19775
-
- RUN  v5.0.3 ./packages/ui
-
-  type: 'test'
- ✓ .storybook/story-coverage.test.ts (5 tests) 6ms
-stderr | .storybook/stories.test.ts > Composed/Control/Theme toggle > System
-TAP version 13
-# Subtest: track is a no-op until a vendor is wired
-ok 4 - C2: a key with no mode prefix fails on every tier
-  ---
-  duration_ms: 0.171
   type: 'test'
   ...
-# Subtest: public names pass, and unset values are left out
-ok 5 - public names pass, and unset values are left out
+# Subtest: every asset path in brand.ts exists in the package
+ok 4 - every asset path in brand.ts exists in the package
+# Subtest: C1: logger.error with no error hands the reporter one named for the event
   ---
-  duration_ms: 0.909459
+  duration_ms: 0.226
   type: 'test'
+  ...
+# Subtest: white, black and the sRGB primaries
+  ---
+# Subtest: public names pass, and unset values are left out
+ok 3 - C1: logger.error with no error hands the reporter one named for the event
+  duration_ms: 1.578208
+ok 5 - public names pass, and unset values are left out
+  type: 'test'
+TAP version 13
+ok 5 - white, black and the sRGB primaries
+  ---
+  duration_ms: 0.712791
+  ---
+# Subtest: each kind of DDL or write against auth is caught
+  duration_ms: 0.909459
+  ...
+  type: 'test'
+
+  ---
   ...
 # Subtest: a server-only name is refused, by name
-ok 6 - a server-only name is refused, by name
+# Subtest: C1: a dashboard template on the local tier logs its id and variable names, not their values
+ok 1 - each kind of DDL or write against auth is caught
   ---
+  duration_ms: 0.221
+  type: 'test'
+  type: 'test'
+  ...
+ok 6 - a server-only name is refused, by name
+  ...
+ok 7 - C1: a dashboard template on the local tier logs its id and variable names, not their values
+# Subtest: lightness as a percentage, and an alpha, are accepted
+ok 6 - lightness as a percentage, and an alpha, are accepted
+  ---
+  duration_ms: 0.073375
+  type: 'test'
+  duration_ms: 1.316417
+  ...
+  ---
+# Subtest: the preset's neutral steps
+ok 7 - the preset's neutral steps
+  ---
+  duration_ms: 0.132042
+  type: 'test'
   duration_ms: 0.257875
+# Subtest: C1: a reporter that throws is swallowed, and the line still prints
+  ---
+ok 4 - C1: a reporter that throws is swallowed, and the line still prints
+  duration_ms: 0.180375
+  ---
+  type: 'test'
+ RUN  v5.0.3 ./packages/ui
+  ...
+
+# Subtest: C1: the local tier needs no key
+ ✓ .storybook/story-coverage.test.ts (5 tests) 6ms
+  ...
+stderr | .storybook/stories.test.ts > Composed/Control/Theme toggle > System
+# Subtest: anything but oklch() is refused
+  duration_ms: 0.240584
   type: 'test'
 Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template).
 
  ✓ .storybook/stories.test.ts (20 tests) 687ms
 
  Test Files  2 passed (2)
-      Tests  25 passed (25)
-   Start at  12:26:59
-   Duration  2.52s (transform 37%, environment 30%, tests 17%, setup 16%)
-
-ok 1 - track is a no-op until a vendor is wired
-  ---
-TAP version 13
   ...
-  duration_ms: 0.814125
-  type: 'test'
-# Subtest: every asset path in brand.ts exists in the package
-ok 4 - every asset path in brand.ts exists in the package
-# Subtest: each kind of DDL or write against auth is caught
-  ...
-ok 1 - each kind of DDL or write against auth is caught
-  ---
-  duration_ms: 0.226
-  type: 'test'
-  ...
-# Subtest: white, black and the sRGB primaries
 # Subtest: C1: each tier reads its own variable
+ok 8 - anything but oklch() is refused
 ok 7 - C1: each tier reads its own variable
   ---
-ok 5 - white, black and the sRGB primaries
   ---
-  ...
-  duration_ms: 1.316417
-  type: 'test'
-  ...
-# Subtest: C1: logger.error passes the error, tags and user id to the registered reporter
-ok 2 - C1: logger.error passes the error, tags and user id to the registered reporter
-  ---
-# Subtest: a foreign key to auth.users and a call to auth.uid() are allowed
   duration_ms: 0.479375
   type: 'test'
+ok 8 - C1: the local tier needs no key
   ...
-  duration_ms: 1.848291
+  duration_ms: 0.197833
 # Subtest: C1: a tier whose own value is absent or empty reads the unsuffixed value
+  type: 'test'
 ok 8 - C1: a tier whose own value is absent or empty reads the unsuffixed value
   ---
-  duration_ms: 0.126459
+  type: 'test'
   type: 'test'
   ...
-# Subtest: C1: nothing set picks undefined
-  ---
-ok 9 - C1: nothing set picks undefined
-  type: 'test'
   ...
-# Subtest: C1: logger.error with no error hands the reporter one named for the event
+# Subtest: C1: a reporter that rejects is swallowed
+# Subtest: a foreign key to auth.users and a call to auth.uid() are allowed
+ok 5 - C1: a reporter that rejects is swallowed
 ok 2 - a foreign key to auth.users and a call to auth.uid() are allowed
-ok 3 - C1: logger.error with no error hands the reporter one named for the event
-  ---
-  ---
-  duration_ms: 0.221
-  type: 'test'
-  duration_ms: 0.712791
-  type: 'test'
-  ...
-  duration_ms: 0.104708
-  ...
   ---
   duration_ms: 0.098958
-# Subtest: C1: a reporter that throws is swallowed, and the line still prints
-# Subtest: lightness as a percentage, and an alpha, are accepted
-  type: 'test'
-  ...
-# Subtest: C1: production never reads a suffixed value
-ok 10 - C1: production never reads a suffixed value
   ---
-  duration_ms: 0.071833
   type: 'test'
-  ...
-# Subtest: C1: the suffix grammar names each form
-ok 11 - C1: the suffix grammar names each form
-  ---
-  duration_ms: 0.412291
-  type: 'test'
-  ...
-# Subtest: C1: the switch defaults to local, never production, and names itself when wrong
-ok 12 - C1: the switch defaults to local, never production, and names itself when wrong
-  ---
-ok 6 - lightness as a percentage, and an alpha, are accepted
-  ---
-  duration_ms: 0.073375
-  type: 'test'
-  ...
-# Subtest: the preset's neutral steps
-ok 7 - the preset's neutral steps
-  ---
-  duration_ms: 0.132042
-  type: 'test'
-ok 4 - C1: a reporter that throws is swallowed, and the line still prints
-  ---
-  ...
-# Subtest: anything but oklch() is refused
-  duration_ms: 0.278958
-  duration_ms: 0.240584
-  type: 'test'
-  type: 'test'
+  duration_ms: 0.09925
+  duration_ms: 0.126459
   ...
   type: 'test'
-# Subtest: C1: a reporter that rejects is swallowed
-ok 5 - C1: a reporter that rejects is swallowed
-  ---
-  duration_ms: 3.056583
-ok 8 - anything but oklch() is refused
-  ...
-# Subtest: a migration with DDL against auth fails, numbered by statement
-  ...
-  type: 'test'
-  ...
-# Subtest: C1: the default reporter is a no-op
-# Subtest: outside a deployment the site URL is localhost, whatever is configured
-ok 13 - outside a deployment the site URL is localhost, whatever is configured
-  ---
-  duration_ms: 0.512416
-  type: 'test'
-ok 6 - C1: the default reporter is a no-op
-ok 3 - a migration with DDL against auth fails, numbered by statement
-  ---
-  duration_ms: 0.61225
-  type: 'test'
-  ...
-# Subtest: the generated migration set passes, and it does reference auth.users
-  ...
-# Subtest: in a deployment the configured URL is used, without a trailing slash
-  ---
-ok 14 - in a deployment the configured URL is used, without a trailing slash
-  ---
-  duration_ms: 0.130625
-  type: 'test'
-  ...
-1..14
-# tests 14
-# suites 0
-# pass 14
-  duration_ms: 0.197833
-  type: 'test'
-  ---
-  ...
 1..8
 # tests 8
 # suites 0
-ok 4 - the generated migration set passes, and it does reference auth.users
-  ---
-  duration_ms: 1.077
 # pass 8
-  type: 'test'
   ...
-# Subtest: seedLocalUsers
-    # Subtest: refuses a non-loopback auth URL before sending anything
-    ok 1 - refuses a non-loopback auth URL before sending anything
-# fail 0
-      ---
-      duration_ms: 0.990333
-      type: 'test'
-      ...
-    # Subtest: refuses a missing service-role key before sending anything
 # fail 0
 # cancelled 0
+      Tests  25 passed (25)
 # skipped 0
-# cancelled 0
-    ok 2 - refuses a missing service-role key before sending anything
-      ---
-      duration_ms: 0.307083
-      type: 'test'
-      ...
-    # Subtest: creates each synthetic user through the local admin API
-# skipped 0
-# todo 0
-# duration_ms 79.664459
+   Start at  12:26:59
+  ---
+   Duration  2.52s (transform 37%, environment 30%, tests 17%, setup 16%)
+  type: 'test'
+  duration_ms: 3.056583
+  ...
+  type: 'test'
+# Subtest: C1: staging and production call the vendor once, with the brand's sender and reply-to
+ok 9 - C1: staging and production call the vendor once, with the brand's sender and reply-to
+  ---
+  ...
+  duration_ms: 0.231542
+# Subtest: C1: the default reporter is a no-op
+ok 6 - C1: the default reporter is a no-op
+  ---
   duration_ms: 0.466541
+# Subtest: C1: nothing set picks undefined
+  type: 'test'
+# todo 0
+# duration_ms 80.5295
+
+  ...
+  ...
+ok 9 - C1: nothing set picks undefined
+# Subtest: a migration with DDL against auth fails, numbered by statement
+ok 3 - a migration with DDL against auth fails, numbered by statement
+  ---
+  type: 'test'
+  ---
+  ...
+  duration_ms: 0.104708
+# Subtest: C2: a secret-like key is redacted at any depth, whatever its case
+  duration_ms: 0.61225
+  type: 'test'
+# Subtest: C1: a dashboard template is sent by its id, and EMAIL_FROM replaces the brand's address
+ok 10 - C1: a dashboard template is sent by its id, and EMAIL_FROM replaces the brand's address
+  ---
+  duration_ms: 0.147125
+ok 7 - C2: a secret-like key is redacted at any depth, whatever its case
   type: 'test'
   ...
-# Subtest: C2: a secret-like key is redacted at any depth, whatever its case
-ok 7 - C2: a secret-like key is redacted at any depth, whatever its case
+  type: 'test'
+# Subtest: C1: production never reads a suffixed value
+ok 10 - C1: production never reads a suffixed value
   ---
   duration_ms: 0.339416
+  ...
+  ...
+  ---
+# Subtest: C1: staging without a key refuses to send, naming the variable
+ok 11 - C1: staging without a key refuses to send, naming the variable
   type: 'test'
   ...
+# Subtest: the generated migration set passes, and it does reference auth.users
+ok 4 - the generated migration set passes, and it does reference auth.users
+  duration_ms: 0.071833
 # Subtest: C2: request bodies and personal data are redacted too
 ok 8 - C2: request bodies and personal data are redacted too
-    ok 3 - creates each synthetic user through the local admin API
+  ---
   ---
   duration_ms: 0.114833
   type: 'test'
+  duration_ms: 1.077
+  ---
+  type: 'test'
+  ...
+# Subtest: C1: the suffix grammar names each form
   ...
 # Subtest: C2: the reporter's context is redacted; the error itself is passed as caught
 ok 9 - C2: the reporter's context is redacted; the error itself is passed as caught
+ok 11 - C1: the suffix grammar names each form
+  ---
+  ---
+  duration_ms: 0.216834
+  type: 'test'
+  duration_ms: 0.265125
+  ...
+  type: 'test'
+  ...
+1..9
+# tests 9
+  type: 'test'
+# Subtest: C1: a vendor error is thrown, not swallowed
+ok 12 - C1: a vendor error is thrown, not swallowed
+# suites 0
+  ...
+# Subtest: seedLocalUsers
+    # Subtest: refuses a non-loopback auth URL before sending anything
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 76.650417
+    ok 1 - refuses a non-loopback auth URL before sending anything
+  duration_ms: 0.412291
+  type: 'test'
+  ...
+  ---
+  duration_ms: 0.154334
+  type: 'test'
       ---
-      duration_ms: 16.143084
+      duration_ms: 0.990333
+# Subtest: C1: the switch defaults to local, never production, and names itself when wrong
       type: 'test'
       ...
+    # Subtest: refuses a missing service-role key before sending anything
+  ...
+# Subtest: maskAddress keeps the first letter and the domain only
+    ok 2 - refuses a missing service-role key before sending anything
+      ---
+ok 13 - maskAddress keeps the first letter and the domain only
+  ---
+  duration_ms: 0.047208
+      duration_ms: 0.307083
+ok 12 - C1: the switch defaults to local, never production, and names itself when wrong
+  ---
+  duration_ms: 0.278958
+      type: 'test'
+      ...
+  type: 'test'
+  ...
+1..13
+  type: 'test'
+    # Subtest: creates each synthetic user through the local admin API
+    ok 3 - creates each synthetic user through the local admin API
+      ---
+# tests 13
+# suites 0
+  ...
+# Subtest: outside a deployment the site URL is localhost, whatever is configured
+# pass 13
+# fail 0
+ok 13 - outside a deployment the site URL is localhost, whatever is configured
+      duration_ms: 16.143084
+      type: 'test'
+# cancelled 0
+  ---
+  duration_ms: 0.512416
+  type: 'test'
+# skipped 0
+      ...
     # Subtest: treats an existing email as done
+  ...
+# Subtest: in a deployment the configured URL is used, without a trailing slash
     ok 4 - treats an existing email as done
       ---
       duration_ms: 1.091708
       type: 'test'
       ...
     1..4
+# todo 0
+# duration_ms 97.40575
+ok 14 - in a deployment the configured URL is used, without a trailing slash
   ---
-  duration_ms: 0.216834
 ok 5 - seedLocalUsers
+  ---
+  duration_ms: 0.130625
   type: 'test'
   ...
-  ---
-# todo 0
-# duration_ms 80.5295
   duration_ms: 19.412917
   type: 'suite'
   ...
@@ -717,6 +798,15 @@ ok 5 - seedLocalUsers
       type: 'test'
       ...
     # Subtest: refuses production before resolving a URL
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 79.664459
     ok 3 - refuses production before resolving a URL
       ---
       duration_ms: 285.270417
@@ -729,15 +819,6 @@ ok 5 - seedLocalUsers
       type: 'test'
       ...
     # Subtest: refuses a local URL that is not this machine, before connecting
-1..9
-# tests 9
-# suites 0
-# pass 9
-# fail 0
-# cancelled 0
-# skipped 0
-# todo 0
-# duration_ms 76.650417
     ok 5 - refuses a local URL that is not this machine, before connecting
       ---
       duration_ms: 294.4635
@@ -862,98 +943,10 @@ ok 17 - every table carries its policies beside it
 # skipped 0
 # todo 0
 # duration_ms 1838.807834
-TAP version 13
-# Subtest: C2: the HTML part carries the brand's name, support address, home URL and colours
-ok 1 - C2: the HTML part carries the brand's name, support address, home URL and colours
-  ---
-  duration_ms: 0.65975
-  type: 'test'
-  ...
-# Subtest: C2: the text part carries the brand and the action as a link
-ok 2 - C2: the text part carries the brand and the action as a link
-  ---
-  duration_ms: 0.1005
-  type: 'test'
-  ...
-# Subtest: C2: every caller value is escaped
-ok 3 - C2: every caller value is escaped
-  ---
-  duration_ms: 0.126584
-  type: 'test'
-  ...
-# Subtest: C2: an action URL that is not http(s) is refused
-ok 4 - C2: an action URL that is not http(s) is refused
-  ---
-  duration_ms: 0.201334
-  type: 'test'
-  ...
-# Subtest: C2: no source file in @pem/email writes a brand value or a colour literal
-ok 5 - C2: no source file in @pem/email writes a brand value or a colour literal
-  ---
-  duration_ms: 0.570875
-  type: 'test'
-  ...
-# Subtest: C1: a send on the local tier logs the rendered message and does not call the vendor
-ok 6 - C1: a send on the local tier logs the rendered message and does not call the vendor
-  ---
-  duration_ms: 1.578208
-  type: 'test'
-  ...
-# Subtest: C1: a dashboard template on the local tier logs its id and variable names, not their values
-ok 7 - C1: a dashboard template on the local tier logs its id and variable names, not their values
-  ---
-  duration_ms: 0.180375
-  type: 'test'
-  ...
-# Subtest: C1: the local tier needs no key
-ok 8 - C1: the local tier needs no key
-  ---
-  duration_ms: 0.09925
-  type: 'test'
-  ...
-# Subtest: C1: staging and production call the vendor once, with the brand's sender and reply-to
-ok 9 - C1: staging and production call the vendor once, with the brand's sender and reply-to
-  ---
-  duration_ms: 0.231542
-  type: 'test'
-  ...
-# Subtest: C1: a dashboard template is sent by its id, and EMAIL_FROM replaces the brand's address
-ok 10 - C1: a dashboard template is sent by its id, and EMAIL_FROM replaces the brand's address
-  ---
-  duration_ms: 0.147125
-  type: 'test'
-  ...
-# Subtest: C1: staging without a key refuses to send, naming the variable
-ok 11 - C1: staging without a key refuses to send, naming the variable
-  ---
-  duration_ms: 0.265125
-  type: 'test'
-  ...
-# Subtest: C1: a vendor error is thrown, not swallowed
-ok 12 - C1: a vendor error is thrown, not swallowed
-  ---
-  duration_ms: 0.154334
-  type: 'test'
-  ...
-# Subtest: maskAddress keeps the first letter and the domain only
-ok 13 - maskAddress keeps the first letter and the domain only
-  ---
-  duration_ms: 0.047208
-  type: 'test'
-  ...
-1..13
-# tests 13
-# suites 0
-# pass 13
-# fail 0
-# cancelled 0
-# skipped 0
-# todo 0
-# duration_ms 97.40575
 
  Tasks:    6 successful, 6 total
-Cached:    5 cached, 6 total
-  Time:    743ms 
+Cached:    6 cached, 6 total
+  Time:    99ms >>> FULL TURBO
 
 ok   AGENTS.md (lines)                                58 / 100
 ok   CLAUDE.md (lines)                                10 / 20
@@ -984,19 +977,19 @@ directory-map — up to date (189 files, 35 landing pages).
    • Running lint in 10 packages
    • Remote caching disabled
 
-@pem/env:lint: cache hit, replaying logs 0d4b336d5cfed309
 @pem/brand:lint: cache hit, replaying logs e6ab5724d1028971
 @pem/constants:lint: cache hit, replaying logs ae11fab93ee941c3
 @pem/observability:lint: cache hit, replaying logs d860550fa3ff0f19
-@pem/email:lint: cache miss, executing b16acf6c83f3e5cc
+@pem/env:lint: cache hit, replaying logs 0d4b336d5cfed309
 @pem/ui:lint: cache hit, replaying logs e40125d78260bc81
-web:lint: cache miss, executing 4f19ad0fcff7daae
+web:lint: cache hit, replaying logs 4f19ad0fcff7daae
+@pem/email:lint: cache hit, replaying logs b16acf6c83f3e5cc
 @pem/db:lint: cache hit, replaying logs 4b298247d7b1a25a
 docs:lint: cache hit, replaying logs fe9cf2f11de39f7d
 
  Tasks:    9 successful, 9 total
-Cached:    7 cached, 9 total
-  Time:    1.604s 
+Cached:    9 cached, 9 total
+  Time:    100ms >>> FULL TURBO
 
 
    • turbo 2.11.6
@@ -1004,23 +997,23 @@ Cached:    7 cached, 9 total
    • Running check-types in 10 packages
    • Remote caching disabled
 
-@pem/observability:check-types: cache hit, replaying logs 92c87abc7e843cfc
-@pem/constants:check-types: cache hit, replaying logs 8a2c58f3f1f4217f
 @pem/env:check-types: cache hit, replaying logs 375500a3edb3af77
 @pem/brand:check-types: cache hit, replaying logs 4c637767d7bbe609
-@pem/email:check-types: cache miss, executing 59f293d7d738b698
-@pem/ui:check-types: cache hit, replaying logs 6f8c44a19544db8a
+@pem/constants:check-types: cache hit, replaying logs 8a2c58f3f1f4217f
+@pem/observability:check-types: cache hit, replaying logs 92c87abc7e843cfc
 @pem/db:check-types: cache hit, replaying logs 20bf9ad19dd5e598
-web:check-types: cache miss, executing 2f3b24da9d4542af
-docs:check-types: cache miss, executing dcd44889e6e6e93f
-docs:check-types: Generating route types...
-docs:check-types: ✓ Types generated successfully
+@pem/ui:check-types: cache hit, replaying logs 6f8c44a19544db8a
+@pem/email:check-types: cache hit, replaying logs 59f293d7d738b698
+web:check-types: cache hit, replaying logs 2f3b24da9d4542af
+docs:check-types: cache hit, replaying logs dcd44889e6e6e93f
 web:check-types: Generating route types...
 web:check-types: ✓ Types generated successfully
+docs:check-types: Generating route types...
+docs:check-types: ✓ Types generated successfully
 
  Tasks:    9 successful, 9 total
-Cached:    6 cached, 9 total
-  Time:    2.354s 
+Cached:    9 cached, 9 total
+  Time:    100ms >>> FULL TURBO
 
 check-client-bundle — 12 server-only value(s), none in 25 browser-facing file(s) under apps/web/.next/static, apps/web/.next/server/app.
 
@@ -1029,41 +1022,16 @@ check-client-bundle — 12 server-only value(s), none in 25 browser-facing file(
    • Running build in 10 packages
    • Remote caching disabled
 
-web:build: cache miss, executing 7d0c82fa08d870b8
-docs:build: cache miss, executing 5f650465baa95f2e
+docs:build: cache hit, replaying logs 5f650465baa95f2e
 docs:build: ▲ Next.js 16.3.8 (Turbopack)
 docs:build: ✓ Running next.config.ts took 16ms
-web:build: ▲ Next.js 16.3.8 (Turbopack)
 docs:build: 
 docs:build:   Creating an optimized production build ...
-web:build: ✓ Running next.config.ts took 117ms
-web:build: 
-web:build:   Creating an optimized production build ...
-web:build: ✓ Compiled successfully in 650ms
-web:build:   Running TypeScript ...
 docs:build: ✓ Compiled successfully in 967ms
 docs:build:   Running TypeScript ...
-web:build:   Finished TypeScript in 1019ms ...
-web:build:   Collecting page data using 6 workers ...
 docs:build:   Finished TypeScript in 1083ms ...
 docs:build:   Collecting page data using 5 workers ...
-web:build:   Generating static pages using 6 workers (0/5) ...
 docs:build:   Generating static pages using 5 workers (0/194) ...
-web:build:   Generating static pages using 6 workers (1/5) 
-web:build:   Generating static pages using 6 workers (2/5) 
-web:build:   Generating static pages using 6 workers (3/5) 
-web:build: ✓ Generating static pages using 6 workers (5/5) in 874ms
-web:build:   Finalizing page optimization ...
-web:build: 
-web:build: Route (app)
-web:build: ┌ ○ /
-web:build: ├ ○ /_not-found
-web:build: ├ ○ /manifest.webmanifest
-web:build: └ ○ /opengraph-image
-web:build: 
-web:build: 
-web:build: ○  (Static)  prerendered as static content
-web:build: 
 docs:build:   Generating static pages using 5 workers (48/194) 
 docs:build:   Generating static pages using 5 workers (96/194) 
 docs:build:   Generating static pages using 5 workers (145/194) 
@@ -1083,8 +1051,33 @@ docs:build:
 docs:build: ○  (Static)  prerendered as static content
 docs:build: ●  (SSG)     prerendered as static HTML (uses generateStaticParams)
 docs:build: 
+web:build: cache hit, replaying logs 7d0c82fa08d870b8
+web:build: ▲ Next.js 16.3.8 (Turbopack)
+web:build: ✓ Running next.config.ts took 117ms
+web:build: 
+web:build:   Creating an optimized production build ...
+web:build: ✓ Compiled successfully in 650ms
+web:build:   Running TypeScript ...
+web:build:   Finished TypeScript in 1019ms ...
+web:build:   Collecting page data using 6 workers ...
+web:build:   Generating static pages using 6 workers (0/5) ...
+web:build:   Generating static pages using 6 workers (1/5) 
+web:build:   Generating static pages using 6 workers (2/5) 
+web:build:   Generating static pages using 6 workers (3/5) 
+web:build: ✓ Generating static pages using 6 workers (5/5) in 874ms
+web:build:   Finalizing page optimization ...
+web:build: 
+web:build: Route (app)
+web:build: ┌ ○ /
+web:build: ├ ○ /_not-found
+web:build: ├ ○ /manifest.webmanifest
+web:build: └ ○ /opengraph-image
+web:build: 
+web:build: 
+web:build: ○  (Static)  prerendered as static content
+web:build: 
 
  Tasks:    2 successful, 2 total
-Cached:    0 cached, 2 total
-  Time:    10.049s 
+Cached:    2 cached, 2 total
+  Time:    268ms >>> FULL TURBO
 

@@ -85,12 +85,12 @@
       "run": {
         "command": "yarn verify",
         "exit": 0,
-        "at": "2026-10-04T19:27:48Z",
-        "head": "6b66f61f0076666818fc35d8106ce87155667347",
+        "at": "2026-10-04T20:39:51Z",
+        "head": "137bcff45dd0c8a422aebc5ffa605d27fd053656",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/evidence/C7.log",
-        "evidence_sha256": "bec8dc1a69b3b5b3c8db9afcec49cd42a138067cf8fc0b0fb786415d11bb692c"
+        "evidence_sha256": "ef8e3b2d96c27c2bad308e8e7d0c388cd0fd21c06a912d0c4e9f14cb9d82a36f"
       }
     }
   },
-  "updated_at": "2026-10-04T20:39:34Z"
+  "updated_at": "2026-10-04T20:41:07Z"
 }
