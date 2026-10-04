@@ -3,9 +3,16 @@
   "criteria_sha256": "b9acd3605607e8812f72239acf727b8cb07e4f5da733cab0ea0f1996df35b4ff",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "capture",
-      "run": null
+      "run": {
+        "command": "yarn contract:record STK-9 C1 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/evidence/test-db.txt",
+        "exit": 0,
+        "at": "2026-10-04T05:43:27Z",
+        "head": "534a7d14dd1540975e71e6fb0b23a7582ed232b8",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/evidence/test-db.txt",
+        "evidence_sha256": "8ac0f56cbfd4a5fb72918e449f67d431603567cacbdad57907a34c3cdc8b6234"
+      }
     },
     "C2": {
       "status": "PASS",
@@ -72,5 +79,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-04T05:26:57Z"
+  "updated_at": "2026-10-04T05:43:27Z"
 }
