@@ -1,0 +1,50 @@
+# As-built — STK-11
+
+## Shipped against the contract
+
+- C1: `packages/db/src/local-auth-mirror.ts` exports `applyLocalAuthMirror(sql, { id, email })`. One statement upserts `auth.users (id, email)` and nothing else. Its own CTE opens only when `to_regclass('auth.identities') is null` and `to_regclass('local_auth_mirror.marker') is not null`; a closed guard selects no row, so zero rows are written. `test/local-auth-mirror.test.ts` (in `yarn test:db`) covers six cases: an insert whose only non-null columns are `id` and `email`, with `public.users` created by the trigger; the cache, then "unchanged"; an email change upserted into both tables; zero rows with `auth.identities` created as `supabase_auth_admin`; zero rows with the marker dropped; and a refusal leaving an existing email alone. Each refusal runs in a rolled-back transaction. Capture: 14 of 14, none skipped (`evidence/test-db.txt`).
+- C2: the mirror checks the client's hosts (`sql.options.host`) are loopback before its first query; `seedLocalUsers`, which `db:seed-users` runs, refuses a non-loopback or unset auth URL before any fetch. `src/local-auth-mirror.test.ts` counts socket attempts through postgres.js's socket factory: zero for two hosted URLs. `scripts/local-users.test.ts` counts fetch calls: zero for hosted, private-network, look-alike and unset URLs.
+- C3: `yarn verify`, once at batch close.
+- Non-negotiables:
+  - Supabase CLI `supabase` 2.119.0, pinned exact as an `@pem/db` devDependency (verified 2026-10-04).
+  - `db:local` runs `supabase db start` with `SUPABASE_AUTH_ENABLED=false` for that run only, then creates the marker. `db:local:full` runs `supabase start`.
+  - `config.toml` sets `[db.migrations]` and `[db.seed]` to `enabled = false`.
+  - The mode is the `_LOCAL` value of `NEXT_PUBLIC_SUPABASE_URL`; there is no mode variable.
+  - The mirror never reads `process.env`.
+- devs_call: the marker is the table `local_auth_mirror.marker`, in its own schema outside `public` (Drizzle never sees it) with `public` usage revoked. Only `scripts/local-auth-marker.ts` creates it, and it refuses a database that already has `auth.identities`. The cache is a per-process `Map` from id to email. A repeat call with the same email sends nothing ("cached"). A refusal is not cached, so starting `db:local` works without a restart.
+- Mode B, checked end to end on 2026-10-04 with the full stack up:
+  - The mirror returned "refused" and wrote zero rows.
+  - `db:seed-users` created both synthetic users with the `sb_secret_` key, then reported both as existing with the legacy JWT key; `public.users` held both.
+  - It refused a hosted URL.
+  - `db:local` then reported the database as owned by Auth and exited 1.
+  - `db:stop --no-backup` and `db:local` returned it to Mode A.
+- Docs:
+  - The manifest's `db` entry lists `supabase`.
+  - Both removal runbooks: the database one adds the CLI, the volume and the new scripts; the auth one adds where the mirror goes.
+  - `new-project.md`: step 2 renames `project_id`; step 6 explains the two modes.
+  - `tech-stack.md`: the CLI row, and the image row now pinned by the CLI.
+  - `.env.example` and `turbo.json`: `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in all three tier forms.
+
+## Deviations
+
+- **The CLI database listens on every interface, not 127.0.0.1.** STK-9's `docker run` published `127.0.0.1:54322`. The CLI 2.119.0 publishes `-p 54322:5432` with no host address (`docker-create-args.ts`, read 2026-10-04) and has no setting to change it, so the local database, password `postgres`, can be reached from the LAN. In Mode A it holds mirrored staging emails. D-STK-6 chose the CLI; a developer on a shared network can make Docker bind published ports to 127.0.0.1 by default.
+- **`db:local` turns Auth off through the CLI's environment, not in `config.toml`.** In CLI 2.119.0, `db start` runs Auth's `gotrue migrate` job on a fresh volume whenever `[auth] enabled` is true, which creates `auth.identities` and would keep the mirror shut for good. Checked 2026-10-04 on a scratch project: without the override `auth.identities` was present; with `SUPABASE_AUTH_ENABLED=false` it was absent. One `config.toml` keeps Auth on for Mode B.
+- **The local image moves from `supabase/postgres:17.11.0.003` to the CLI's `public.ecr.aws/supabase/postgres:17.11.0.002`.** Container `supabase_db_<project_id>`, port 54322, password `postgres`, as before. `db:local` refuses while STK-9's `pem-db-local` container runs and names `docker rm -f pem-db-local`. On this machine that container was stopped, not removed.
+- **`db:local:full` stops a lone Mode A database first** (data kept). Otherwise `supabase start` sees the database running, reports success and starts nothing (observed 2026-10-04).
+- **Added `supabase/setup/04_users_backfill.sql`** (path added to `planned_paths`). It inserts a `public.users` row for every `auth.users` row that lacks one. STK-10's `db:local:reset` empties `public` but keeps `auth.users`. The mirror then finds the auth row unchanged and the insert trigger never fires again, so C4 would fail after a reset. The backfill also covers hosted users created before setup first ran. STK-10 changed its reset test to expect the row back (commit 8071179).
+- **Other paths added to `planned_paths`:** `src/local-auth-mirror.test.ts`, `test/**`, `docs/engineering/tech-stack.md`, `yarn.lock`.
+- **`test:db` runs its files one at a time** (`--test-concurrency=1`): three files now migrate the same database.
+- **The local project id is read from `config.toml`** (`scripts/local-image.ts`), so it is written once.
+- **[ASSUMPTION] `.env.example` was appended to without being read.** Reading it was declined in this session. Before the append, `check-client-bundle --plan` showed no `SUPABASE_SERVICE_ROLE_KEY`. After it, the plan showed no drift from `turbo.json`, and the commit diff is exactly the 15 appended lines. Whether `NEXT_PUBLIC_SUPABASE_URL` was already present could not be checked: the plan omits public names.
+- **[ASSUMPTION] `db:seed-users` sends `Authorization: Bearer` only for a JWT-shaped key**, and `apikey` always. Both key styles worked against local Auth (GoTrue v2.197.0) on 2026-10-04.
+- **A known gap, out of scope:** a staging user deleted and re-created with the same email gets a new id. The local `auth.users` has a unique index on `email`, so the mirror's insert then fails with a unique violation until the old row is deleted. Replaying staging deletions is out of scope.
+
+## Not verified
+
+- C4 (manual): needs STK-12's request seam, which calls the mirror, and a person signing in on staging after `yarn db:local:reset`. Mode A's database half is covered by C1 and the backfill test.
+- C5 (manual): the removal rehearsal on a scratch copy, by a person. Until STK-12 lands, the auth runbook covers only the mirror.
+- The mirror has run only against the CLI image, never against a hosted project. There its guard would find `auth.identities` and refuse, but no test points it at one; the loopback check stops it first.
+
+## Next
+
+STK-12 calls `applyLocalAuthMirror(db.$client, user)` from its request seam on the local tier when the auth URL is not loopback, and adds `@pem/db` to `transpilePackages` with the first importer.
