@@ -56,9 +56,19 @@
       }
     },
     "review:vigil": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run vigil WEB-2",
+        "exit": 0,
+        "at": "2026-10-04T07:49:16Z",
+        "head": "c85c6ad2c5cc7ff2885db4c32d9ee278f8924260",
+        "evidence_path": "specs/web/one-offs/WEB-2-boundaries-subpath-resolve/review-vigil.md",
+        "evidence_sha256": "f431b6c34dd045c50c3cdc256b25720c95f8c4f727370313ccffd6abea812f04",
+        "contract_sha256": "ce45839c4387ad272bd390087ad5c8b64a899d13c323834ffa9fd0a520250d99",
+        "as_built_sha256": "420839230ca153d12ab4ae046198032482e76e737a458574d519aff0329313b2",
+        "runner": "claude 2.1.232 (Claude Code) (agent vigil; tools Read,Grep,Glob)"
+      }
     },
     "review:warden": {
       "status": "FAIL",
@@ -66,5 +76,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-04T07:49:08Z"
+  "updated_at": "2026-10-04T07:54:52Z"
 }
