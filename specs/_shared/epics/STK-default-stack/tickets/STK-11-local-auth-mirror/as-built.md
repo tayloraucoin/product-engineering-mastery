@@ -2,16 +2,16 @@
 
 ## Shipped against the contract
 
-- C1: `packages/db/src/local-auth-mirror.ts` exports `applyLocalAuthMirror(sql, { id, email })`. One statement upserts `auth.users (id, email)` and nothing else. Its own CTE opens only when `to_regclass('auth.identities') is null` and `to_regclass('local_auth_mirror.marker') is not null`; a closed guard selects no row, so zero rows are written. `test/local-auth-mirror.test.ts` (in `yarn test:db`) covers six cases: an insert whose only non-null columns are `id` and `email`, with `public.users` created by the trigger; the cache, then "unchanged"; an email change upserted into both tables; zero rows with `auth.identities` created as `supabase_auth_admin`; zero rows with the marker dropped; and a refusal leaving an existing email alone. Each refusal runs in a rolled-back transaction. Capture: 14 of 14, none skipped (`evidence/test-db.txt`).
+- C1: `packages/db/src/local-auth-mirror.ts` exports `applyLocalAuthMirror(sql, { id, email })`. One statement upserts `auth.users (id, email)` and nothing else. Its own CTE opens only when `to_regclass('auth.identities') is null` and `to_regclass('local_auth_mirror.marker') is not null`; a closed guard selects no row, so zero rows are written. `test/local-auth-mirror.test.ts` (in `yarn test:db`) covers six cases: an insert whose only non-null columns are `id` and `email`, with `public.users` created by the trigger; the cache, then "unchanged"; an email change upserted into both tables; zero rows with `auth.identities` created as `supabase_auth_admin`; zero rows with the marker dropped; and a refusal leaving an existing email alone. Each refusal runs in a rolled-back transaction. A further test wipes a cached user's rows and sees them mirrored again once the cache entry expires. Capture: 15 of 15, none skipped (`evidence/test-db.txt`).
 - C2: the mirror checks the client's hosts (`sql.options.host`) are loopback before its first query; `seedLocalUsers`, which `db:seed-users` runs, refuses a non-loopback or unset auth URL before any fetch. `src/local-auth-mirror.test.ts` counts socket attempts through postgres.js's socket factory: zero for two hosted URLs. `scripts/local-users.test.ts` counts fetch calls: zero for hosted, private-network, look-alike and unset URLs.
-- C3: `yarn verify`, once at batch close.
+- C3: `yarn verify` stops at `check-settings`, on STK-10's pending `.claude/settings.json` line, which Taylor applies. The rest of the chain, run on 2026-10-04 without that one step, exits 0: format, docs, hooks, refs, stack, migrations, specs, tooling and unit tests, lint, boundaries, types, the client-bundle check and the build.
 - Non-negotiables:
   - Supabase CLI `supabase` 2.119.0, pinned exact as an `@pem/db` devDependency (verified 2026-10-04).
   - `db:local` runs `supabase db start` with `SUPABASE_AUTH_ENABLED=false` for that run only, then creates the marker. `db:local:full` runs `supabase start`.
   - `config.toml` sets `[db.migrations]` and `[db.seed]` to `enabled = false`.
   - The mode is the `_LOCAL` value of `NEXT_PUBLIC_SUPABASE_URL`; there is no mode variable.
   - The mirror never reads `process.env`.
-- devs_call: the marker is the table `local_auth_mirror.marker`, in its own schema outside `public` (Drizzle never sees it) with `public` usage revoked. Only `scripts/local-auth-marker.ts` creates it, and it refuses a database that already has `auth.identities`. The cache is a per-process `Map` from id to email. A repeat call with the same email sends nothing ("cached"). A refusal is not cached, so starting `db:local` works without a restart.
+- devs_call: the marker is the table `local_auth_mirror.marker`, in its own schema outside `public` (Drizzle never sees it) with `public` usage revoked. Only `scripts/local-auth-marker.ts` creates it, and it refuses a database that already has `auth.identities`. The cache is a per-process `Map` from id to email and time. A repeat call with the same email within 60 s sends nothing ("cached"). After that the statement runs again, so a database wiped under a running dev server gets its users back within a minute. A refusal is never cached.
 - Mode B, checked end to end on 2026-10-04 with the full stack up:
   - The mirror returned "refused" and wrote zero rows.
   - `db:seed-users` created both synthetic users with the `sb_secret_` key, then reported both as existing with the legacy JWT key; `public.users` held both.
@@ -27,7 +27,7 @@
 
 ## Deviations
 
-- **The CLI database listens on every interface, not 127.0.0.1.** STK-9's `docker run` published `127.0.0.1:54322`. The CLI 2.119.0 publishes `-p 54322:5432` with no host address (`docker-create-args.ts`, read 2026-10-04) and has no setting to change it, so the local database, password `postgres`, can be reached from the LAN. In Mode A it holds mirrored staging emails. D-STK-6 chose the CLI; a developer on a shared network can make Docker bind published ports to 127.0.0.1 by default.
+- **The CLI database listens on every interface, not 127.0.0.1.** STK-9's `docker run` published `127.0.0.1:54322`. The CLI 2.119.0 publishes `-p 54322:5432` with no host address (`docker-create-args.ts`, read 2026-10-04) and has no setting to change it, so the local database, password `postgres`, can be reached from the LAN. In Mode A it holds mirrored staging emails. D-STK-6 chose the CLI. `db:local` checks the binding with `docker port` and warns, naming Docker's `"ip": "127.0.0.1"` daemon setting. Accepting the remaining exposure is Taylor's call.
 - **`db:local` turns Auth off through the CLI's environment, not in `config.toml`.** In CLI 2.119.0, `db start` runs Auth's `gotrue migrate` job on a fresh volume whenever `[auth] enabled` is true, which creates `auth.identities` and would keep the mirror shut for good. Checked 2026-10-04 on a scratch project: without the override `auth.identities` was present; with `SUPABASE_AUTH_ENABLED=false` it was absent. One `config.toml` keeps Auth on for Mode B.
 - **The local image moves from `supabase/postgres:17.11.0.003` to the CLI's `public.ecr.aws/supabase/postgres:17.11.0.002`.** Container `supabase_db_<project_id>`, port 54322, password `postgres`, as before. `db:local` refuses while STK-9's `pem-db-local` container runs and names `docker rm -f pem-db-local`. On this machine that container was stopped, not removed.
 - **`db:local:full` stops a lone Mode A database first** (data kept). Otherwise `supabase start` sees the database running, reports success and starts nothing (observed 2026-10-04).
@@ -36,14 +36,17 @@
 - **`test:db` runs its files one at a time** (`--test-concurrency=1`): three files now migrate the same database.
 - **The local project id is read from `config.toml`** (`scripts/local-image.ts`), so it is written once.
 - **[ASSUMPTION] `.env.example` was appended to without being read.** Reading it was declined in this session. Before the append, `check-client-bundle --plan` showed no `SUPABASE_SERVICE_ROLE_KEY`. After it, the plan showed no drift from `turbo.json`, and the commit diff is exactly the 15 appended lines. Whether `NEXT_PUBLIC_SUPABASE_URL` was already present could not be checked: the plan omits public names.
+- **`db:seed-users` refuses redirects** (`redirect: "error"`), so a loopback URL cannot forward the key off the machine.
 - **[ASSUMPTION] `db:seed-users` sends `Authorization: Bearer` only for a JWT-shaped key**, and `apikey` always. Both key styles worked against local Auth (GoTrue v2.197.0) on 2026-10-04.
 - **A known gap, out of scope:** a staging user deleted and re-created with the same email gets a new id. The local `auth.users` has a unique index on `email`, so the mirror's insert then fails with a unique violation until the old row is deleted. Replaying staging deletions is out of scope.
 
 ## Not verified
 
 - C4 (manual): needs STK-12's request seam, which calls the mirror, and a person signing in on staging after `yarn db:local:reset`. Mode A's database half is covered by C1 and the backfill test.
-- C5 (manual): the removal rehearsal on a scratch copy, by a person. Until STK-12 lands, the auth runbook covers only the mirror.
+- C5 (manual): the removal rehearsal on a scratch copy, by a person. As worded, the grep cannot come back empty while Auth stays. The database runbook keeps the two Supabase auth variables, and docs name Supabase. Grep scope to settle: code only (`git grep -il 'drizzle\|supabase' -- ':!docs' ':!specs'`), excluding the variables the runbook keeps on purpose. Until STK-12 lands, the auth runbook covers only the mirror.
 - The mirror has run only against the CLI image, never against a hosted project. There its guard would find `auth.identities` and refuse, but no test points it at one; the loopback check stops it first.
+
+- A vigil pre-review ran on 2026-10-04 before the recorded reviews could start; the recorded reviews need C3 to C5 first. It found nothing Blocking. Its Should-fixes on the cache, the network warning and redirects are fixed above; C3 and C5 are noted here.
 
 ## Next
 
