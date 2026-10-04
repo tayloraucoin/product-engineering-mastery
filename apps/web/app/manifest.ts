@@ -13,6 +13,8 @@ export default function manifest(): MetadataRoute.Manifest {
     start_url: "/",
     display: "standalone",
     theme_color: oklchToHex(brand.theme.primary.light),
+    // The brand has two colours (D-STK-9); the splash takes the lighter one,
+    // close to the page background but not the --background token itself.
     background_color: oklchToHex(brand.theme.primaryForeground.light),
     icons: [{ src: appIcon.src, type: appIcon.type, sizes: "any" }],
   };

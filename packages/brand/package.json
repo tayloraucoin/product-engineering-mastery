@@ -12,6 +12,10 @@
       "types": "./src/color.ts",
       "default": "./src/color.ts"
     },
+    "./image-font": {
+      "types": "./src/image-font.ts",
+      "default": "./src/image-font.ts"
+    },
     "./icon": {
       "types": "./src/icon.ts",
       "default": "./src/icon.ts"

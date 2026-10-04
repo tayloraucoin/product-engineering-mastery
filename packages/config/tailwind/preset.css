@@ -17,7 +17,9 @@
  * there, not here. The `dark:` variant follows the class.
  *
  * Neutral placeholders. A product cloned from this starter replaces the
- * raw values here and nowhere else.
+ * raw values here and nowhere else, except the two brand colours behind
+ * --primary and --primary-foreground, which @pem/brand's brand.ts mirrors
+ * and its test compares (D-STK-9).
  *
  * Consumers import this after `@import "tailwindcss"` in each app's
  * `app/globals.css`.

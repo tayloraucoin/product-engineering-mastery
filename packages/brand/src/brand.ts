@@ -30,13 +30,15 @@ export const brand = {
 
   /**
    * Files in this package, relative to its root, served as `@pem/brand/assets/*`.
-   * `@pem/brand/font` loads the font and `@pem/brand/icon` serves the mark;
+   * `@pem/brand/font` and `@pem/brand/image-font` load the font and
+   * `@pem/brand/icon` serves the mark;
    * each needs its path as a literal, so each writes it once more.
    */
   assets: {
     logo: "assets/logo.svg",
     mark: "assets/mark.svg",
     font: "assets/fonts/brand-sans.woff2",
+    imageFont: "assets/fonts/brand-sans-image.ttf",
   },
 
   /** The two theme colours, per colour scheme, in the preset's own OKLCH. */
