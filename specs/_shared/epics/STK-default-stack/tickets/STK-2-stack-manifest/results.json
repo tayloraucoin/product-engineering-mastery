@@ -82,7 +82,14 @@
     "C7": {
       "status": "FAIL",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn verify",
+        "exit": 1,
+        "at": "2026-10-04T02:11:17Z",
+        "head": "db78807a29567bc6c1f50e701cec507d5c83ee20",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-2-stack-manifest/evidence/C7.log",
+        "evidence_sha256": "05fbeb3a5e0072bae87a32c8670855ae69d1e83aee2074ae61dd59c9c2de526a"
+      }
     },
     "review:mason": {
       "status": "FAIL",
@@ -100,5 +107,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-04T00:08:15Z"
+  "updated_at": "2026-10-04T02:11:32Z"
 }
