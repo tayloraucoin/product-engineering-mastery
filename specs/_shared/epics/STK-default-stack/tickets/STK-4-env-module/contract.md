@@ -18,7 +18,10 @@ cites:
   - "D-STK-4"
   - "D-STK-16"
 truth_files: "none: no living UX file covers the starter's own stack"
-reviewers: []
+reviewers:
+  - mason
+  - vigil
+  - warden
 planned_paths:
   - "packages/env/**"
   - "apps/web/env.ts"
@@ -34,6 +37,9 @@ planned_paths:
   - "tooling/check-client-bundle.ts"
   - "tooling/check-client-bundle.test.ts"
   - "tooling/fixtures/client-bundle/**"
+  - "docs/engineering/tech-stack.md"
+  - "apps/web/package.json"
+  - "yarn.lock"
 depends_on:
   - STK-2
 out_of_scope:
@@ -64,6 +70,18 @@ criteria:
     statement: "The full chain passes; its bundle check builds apps/web with each server-only variable set to a unique sentinel and finds none in a client chunk."
     evidence: check
     command: "yarn verify"
+  - id: review:mason
+    statement: Mason reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run mason <id>
+  - id: review:vigil
+    statement: Vigil reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run vigil <id>
+  - id: review:warden
+    statement: Warden reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
 ---
 
 # Contract — STK-4 env-module
