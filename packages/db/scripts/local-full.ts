@@ -9,12 +9,33 @@
 
 import { isLoopbackUrl } from "../src/local-auth-mirror.ts";
 import { authSettings, authUrlName } from "./env.ts";
-import { LOCAL_PORT } from "./local-image.ts";
-import { preflight, supabase, waitForDatabase } from "./supabase-cli.ts";
+import {
+  LOCAL_CONTAINER,
+  LOCAL_PORT,
+  LOCAL_PROJECT_ID,
+} from "./local-image.ts";
+import {
+  isContainerRunning,
+  preflight,
+  supabase,
+  waitForDatabase,
+} from "./supabase-cli.ts";
 
 const COMMAND = "db:local:full";
 
 preflight(COMMAND);
+// `supabase start` reports success and starts nothing while Mode A's database
+// container runs alone, so that container is stopped first; its volume, and
+// so its data, is kept. Auth then migrates it and the mirror's guard shuts.
+if (
+  isContainerRunning(LOCAL_CONTAINER) &&
+  !isContainerRunning(`supabase_auth_${LOCAL_PROJECT_ID}`)
+) {
+  console.log(
+    `${COMMAND} — stopping the Mode A database first; its data is kept`,
+  );
+  supabase(COMMAND, ["stop"]);
+}
 supabase(COMMAND, ["start"]);
 await waitForDatabase(COMMAND);
 

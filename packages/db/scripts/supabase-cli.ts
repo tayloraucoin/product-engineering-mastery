@@ -41,17 +41,23 @@ export function preflight(command: string): void {
       `Docker is not running; start it (macOS: open -a Docker), then rerun yarn ${command}.`,
     );
   }
-  const legacy = execFileSync(
-    "docker",
-    ["ps", "--filter", `name=^${LEGACY_CONTAINER}$`, "--format", "{{.Names}}"],
-    { encoding: "utf8" },
-  ).trim();
-  if (legacy !== "") {
+  if (isContainerRunning(LEGACY_CONTAINER)) {
     stop(
       command,
       `container ${LEGACY_CONTAINER} (the pre-CLI local database) holds port ${LOCAL_PORT}; remove it with docker rm -f ${LEGACY_CONTAINER} and rerun.`,
     );
   }
+}
+
+/** Whether a container with exactly this name is running. */
+export function isContainerRunning(name: string): boolean {
+  return (
+    execFileSync(
+      "docker",
+      ["ps", "--filter", `name=^${name}$`, "--format", "{{.Names}}"],
+      { encoding: "utf8" },
+    ).trim() !== ""
+  );
 }
 
 /** Runs `supabase <args> --workdir packages/db`, streaming its output; exits on failure. */
