@@ -70,7 +70,17 @@
     "review:vigil": {
       "status": "FAIL",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run vigil STK-15",
+        "exit": 1,
+        "at": "2026-10-04T21:48:54Z",
+        "head": "013fc52ff80b48e68e7b7a5d3c46c86c6419f74e",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/review-vigil.md",
+        "evidence_sha256": "6ee30c2c1af19797f1ba961e44b758073fdfe8e1a18472dfe474ca6381b6bbe8",
+        "contract_sha256": "d44b04528f1ef26fb18566b40794cf59646c5b6a1a844d6d4fba9c5e32942a5b",
+        "as_built_sha256": "22c9d7b56d4da7794068dffd311d292b393dd0399cfca54b9d8557edbae1f0e5",
+        "runner": "claude 2.1.232 (Claude Code) (agent vigil; tools Read,Grep,Glob)"
+      }
     },
     "review:warden": {
       "status": "PASS",
@@ -88,5 +98,5 @@
       }
     }
   },
-  "updated_at": "2026-10-04T21:48:49Z"
+  "updated_at": "2026-10-04T21:48:58Z"
 }
