@@ -317,6 +317,7 @@ load_when:
 | PR-11 | Feature work starts from a brief and a package, or an explicit waiver; filled copies never go in `docs/`                          | `AGENTS.md` Start here 5 | Plumb | superseded by the work loop (`AGENTS.md` Work loop: every change is a ticket with a contract), 2026-10-02 (J4; A13.1). Was: ruled | —                                        | —   |
 | PR-12 | Every folder under `docs/` has a `README.md` landing page with a generated file table; names carry no numbers or thread prefixes; research sits in topic folders; metrics and evals sit under `measurement/` | REC 0006 (amended 2026-10-02) | Usher | ruled (owner instructed 2026-10-02) | `index.md` landing pages; `NN-` and `pX-` names; `docs/metrics/`, `docs/evals/` | —   |
 | PR-13 | The agent runs `/tk-kickoff` and `/tk-close` itself; a ticket starts once its `depends_on` tickets have an as-built, merged or stacked beneath its branch | changelog 2026-10-03 | Lorimer | ruled (owner instructed 2026-10-03) | J7's manual-only `tk-kickoff` and `tk-close`; "starts only after that one has merged" (`epic.md`) | —   |
+| PR-14 | The operator manages branches: tickets and epics never create or switch one, parallel tickets share the branch checked out, and a proof goes stale only when its own planned paths change | changelog 2026-10-03 | Lorimer | ruled (owner instructed 2026-10-03) | `agent/<id>` per ticket and `agent/<EPIC>` per epic, created by `contract:init` and `spec:init`; one item in build per branch (PR-13) | —   |
 
 ## 9. Engineering (scaffold)
 

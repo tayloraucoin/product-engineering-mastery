@@ -51,4 +51,4 @@ Vigil's pre-flight line per ticket (built from the spec before any code: seats, 
 
 ## 7. Handoff
 
-Print the build order from `yarn status --epic <EPIC>` and the first ticket's kickoff prompt; say: open a new thread per ticket, in that order, each on its own branch.
+Print the build order from `yarn status --epic <EPIC>` and the first ticket's kickoff prompt; say: open a new thread per ticket, in that order; tickets with no dependency between them run in parallel on the operator's branch.

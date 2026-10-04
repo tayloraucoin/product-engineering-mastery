@@ -23,7 +23,7 @@ A prompt passes when every row holds. The builder prints this table filled in un
 
 | #   | Item            | What passes                                                                                                                                                                                                                                                             |
 | --- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1   | Venue line      | The first line is `Venue: Claude Code, in <repo>, branch <branch>` or `Venue: general Claude thread`. Nothing precedes it.                                                                                                                                              |
+| 1   | Venue line      | The first line is `Venue: Claude Code, in <repo>` or `Venue: general Claude thread`. The operator picks the branch; a prompt names one only when the ticket must stay apart. Nothing precedes it.                                                                       |
 | 2   | Role            | Names one lead role by file path (`docs/roles/<department>/<name>.md`) and says to read it first with `docs/prompts/shared-context.md`. Build threads name no lead role.                                                                                                |
 | 3   | Support         | Names each supporting role and the one function it is consulted for. "Consult, never co-pilot."                                                                                                                                                                         |
 | 4   | Attached        | Every file to read, each with one reason, each within the stage's load budget. Paths are exact and exist. A `docs/research/` file appears only in a Frame, Research or UX prompt, labelled `[research: <why>]`, and only when nothing distilled covers the topic (A11). |
@@ -45,10 +45,10 @@ A ticket's kickoff prompt ends with this block, filled in:
 ```
 Kickoff
 - Ticket: <id>, in <folder>; contract at contract.md (read it first; it is the oracle)
-- Branch: agent/<id>; first move: yarn contract:init <APP|EPIC> <slug> (run twice when no contract is drafted yet: write, fill, start)
+- Branch: the operator's; first move: yarn contract:init <APP|EPIC> <slug> (run twice when no contract is drafted yet: write, fill, start)
 - Cites: <one surface file>; truth files: <paths or none: reason>
 - Reviewers: <computed list>; your close runs /tk-close
-- Do not: edit results.json; commit on main; push; widen settings; start a second ticket on this branch
+- Do not: edit results.json; commit on main; push; widen settings; create or switch branches; commit another ticket's files
 - Done: results all PASS with run records, as-built written, status shows nothing left
 ```
 

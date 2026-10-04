@@ -19,7 +19,7 @@ Lead: Compass (`docs/roles/product-design/compass-product-strategist.md`). Suppo
 
 ## 2. Venue
 
-Claude Code, in the repo, on `agent/<EPIC>`. First move: `yarn spec:init <app> <EPIC> <slug>` creates the epic folder and the branch; second move: save the prompt you were given as `prompts/00-frame.md`.
+Claude Code, in the repo, on the operator's branch. First move: `yarn spec:init <app> <EPIC> <slug>` creates the epic folder; second move: save the prompt you were given as `prompts/00-frame.md`.
 
 ## 3. Loads
 

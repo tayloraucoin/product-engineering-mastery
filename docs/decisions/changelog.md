@@ -15,6 +15,19 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-03 — PJ: the operator manages branches
+
+Taylor, before STK-4: "By default I don't want to have branches to manage for each of these. Let the operator manage their own branches." Taylor runs tickets in batches: once 1 and 2 land, 3 to 6 run as four parallel threads at once, and a branch per ticket was one more thing to manage per thread (PR-14).
+
+- **No ticket or epic creates a branch.** `contract:init` and `spec:init` work on the branch checked out and refuse only the protected one (`toolkit.json`), where agents do not commit. The one-item-per-branch gate is gone: any number of tickets build on one branch. `switchToNewBranch` and `branchFor` are deleted; `branchPattern` stays for the commit-msg hook.
+- **`contract:run`, `contract:record` and `review:run`** drop the branch check, and their uncommitted-files check reads only the ticket's planned paths, because another thread's files share the tree. The review prompt lists only the ticket's own changed files.
+- **A proof goes stale only when its own planned paths change** after its run (`changedAfter` in `tooling/lib/specs.ts`), so a parallel ticket's commit never stales another's proof. Trade-off: a repo-wide check such as `yarn verify` is no longer re-opened by a change outside the ticket; the stop gate and CI still run on the shared branch.
+- **`status --brief` and the stop gate** list every item in build, whatever the branch, under "Active".
+- **Docs:** `prompt-standard.md` (the venue line names no branch; the kickoff block's Branch is the operator's; Do not adds "create or switch branches; commit another ticket's files"), `epic.md`, `one-off.md`, `stages/frame.md`, `stages/tickets.md`, the workflows diagram and the contract template.
+- **Skills:** `tk-kickoff` (its description, step 3 and a must-not trigger) and `tk-close` (its description; step 1 stages only the planned paths) say the same.
+- **Not changed:** prompts already drafted (the STK epic's 08 to 21) still carry a branch in their venue line; ignore it.
+- **Open for the revision wave:** a ticket that must stay apart for merge reasons (a one-way door, a throwaway, a different merge date, colliding planned paths) has no field yet; the proposal is an optional contract `branch: own` with a reason, honoured by `contract:init --branch <name>`.
+
 ## 2026-10-03 — PJ: the agent starts and closes tickets, and tickets stack
 
 Taylor, while starting STK-3: the manual kickoff was "only making my role more laborious". Each ticket cost two typed commands and a wait for merges Taylor does on their own schedule (PR-13).

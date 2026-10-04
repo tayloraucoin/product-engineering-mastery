@@ -45,7 +45,7 @@ New to the terms? See [`glossary.md`](glossary.md). The big picture and the map 
 
 - **You:** brain dump into `/tk-prompt` in any thread.
 - **Builder:** routes it as an epic, picks the app, proposes an epic prefix (say `OB2`), and prints the Frame prompt with its venue line.
-- **First move in the Frame thread:** `yarn spec:init web OB2 onboarding-v2` creates the epic folder and the shaping branch `agent/OB2`.
+- **First move in the Frame thread:** `yarn spec:init web OB2 onboarding-v2` creates the epic folder on the branch the operator has checked out (PR-14).
 
 ### Level 1: Frame
 
@@ -108,9 +108,9 @@ Run this only when a real knowledge gap or a need for certainty exists. Examples
 
 The same as moves 2 to 5 of the one-off ([`one-off.md`](one-off.md)), started from the ticket's kickoff prompt instead of the builder.
 
-- `yarn contract:init OB2 welcome-copy` creates `OB2-3`, its branch and FAIL results. It refuses if a cited UX file isn't approved.
+- `yarn contract:init OB2 welcome-copy` creates `OB2-3` and its FAIL results, on the operator's branch. It refuses if a cited UX file isn't approved.
 - `/tk-close` proves the ticket, writes the as-built and calls the reviewers.
-- **Merge order:** a ticket that depends on another starts once that one has its as-built, merged or not: its branch stacks on the predecessor's, and Taylor merges them in order. The agent runs `/tk-kickoff` and `/tk-close` itself; nobody waits on a merge to start the next ticket.
+- **Merge order:** a ticket that depends on another starts once that one has its as-built, merged or not. Tickets share the operator's branch, parallel ones included; Taylor branches and merges. The agent runs `/tk-kickoff` and `/tk-close` itself; nobody waits on a merge to start the next ticket.
 - **Promotion:** when every ticket citing a surface file has merged, `truth:promote` copies the proposal into `specs/web/ux/`, reconciled with what actually shipped. The truth now describes the real app.
 
 ## Gates: law or judgment

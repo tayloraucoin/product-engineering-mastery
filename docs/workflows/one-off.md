@@ -33,7 +33,7 @@ Example: "The records table needs a filter by status." That's a one-off: it's an
 | Move | You | The agent | Physics (what makes it hold) |
 |---|---|---|---|
 | **1. Brain dump** | Open any Claude Code thread, type `/tk-prompt` (or tag [`prompt-builder.md`](prompt-builder.md)) and say what you want | Routes it as a one-off, picks the app, files and model, and prints a kickoff prompt | The prompt is checked against the prompt standard |
-| **2. Kick off** | Open a new thread and paste the prompt | Drafts the contract, then runs `yarn contract:init web fix-filter` | Creates `specs/web/one-offs/WEB-41-fix-filter/`, the branch `agent/WEB-41` and every criterion at FAIL. Refuses if another item is active on the branch. |
+| **2. Kick off** | Open a new thread and paste the prompt | Drafts the contract, then runs `yarn contract:init web fix-filter` | Creates `specs/web/one-offs/WEB-41-fix-filter/` and every criterion at FAIL, on the branch you have checked out. Refuses `main`. |
 | **3. Build** | Nothing, or answer a question | Writes the code. If behavior changes, edits the living truth file named in the contract. | Path rules load as files are touched. Hooks block npm, pushing, committing on `main`, and editing results by hand. |
 | **4. Prove and close** | Type `/tk-close`, or tell it to close | Runs `contract:run` and `contract:record`, writes the as-built, calls reviewers | Only scripts flip results. Reviewers are chosen by what was touched. The Stop hook prints "Left to go". |
 | **5. Merge** | Push `agent/WEB-41`, open the PR (`yarn pr:body WEB-41` writes the description), read it, merge | Nothing; agents never push | The risk tier tells you how closely to read. `check-specs` validates closure. |
@@ -80,4 +80,4 @@ Things that stop the agent, and the right move each time.
 
 ## Explain it back
 
-> "Brain dump into the builder, paste its prompt into a new thread. The agent writes a short contract where every check starts failing, gets its own branch, builds, and only scripts can mark checks passed. It updates the living UX file if behavior changed, the right reviewer looks with fresh eyes, and I push and merge."
+> "Brain dump into the builder, paste its prompt into a new thread. The agent writes a short contract where every check starts failing, builds on my branch, and only scripts can mark checks passed. It updates the living UX file if behavior changed, the right reviewer looks with fresh eyes, and I push and merge."

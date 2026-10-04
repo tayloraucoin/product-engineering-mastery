@@ -65,7 +65,7 @@ flowchart TD
   end
   tix -->|"one kickoff prompt per ticket"| init
   subgraph BUILD["Build thread: one per ticket, physics enforced"]
-    init["contract:init<br/>branch, every criterion FAIL"] --> build["Build<br/>path rules load as files are touched"]
+    init["contract:init<br/>every criterion FAIL"] --> build["Build<br/>path rules load as files are touched"]
     build --> close["tk-close<br/>scripts flip results, as-built written"]
     close --> rev["Reviewers<br/>Vigil, Assay, plus others by risk"]
   end

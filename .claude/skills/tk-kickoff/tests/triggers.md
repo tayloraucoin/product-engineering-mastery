@@ -15,5 +15,5 @@ Run in a fresh session at the repo root (`docs/runbooks/onboard-agent.md` §4). 
 1. Draft a contract for a bulk-archive action on the records table.
 2. What is left on WEB-9? Run its status.
 3. Close WEB-9: every criterion passes and only the reviews are left.
-4. Explain what contract:init checks before it creates a branch.
+4. Explain what contract:init checks before it freezes the criteria.
 5. Fix the typo in docs/runbooks/release.md.
