@@ -33,6 +33,7 @@ planned_paths:
   - "toolkit.json"
   - "package.json"
   - ".env.example"
+  - "packages/db/.env.example"
   - "turbo.json"
   - "docs/runbooks/remove-supabase-auth.md"
   - "docs/runbooks/remove-supabase-database.md"

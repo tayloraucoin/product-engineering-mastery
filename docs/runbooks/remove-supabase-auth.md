@@ -27,7 +27,7 @@ The mirror lives in the database package (D-STK-6), so it stays when only auth g
 - `packages/db/package.json`: the `./local-auth-mirror` export, and the `db:local:full` and `db:seed-users` scripts; the same two in the root `package.json`.
 - `packages/db/scripts/local.ts`: the marker step and the auth-URL warning; `supabase db start` stays. `scripts/env.ts`: the `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` reads, `authSettings` and `authUrlName`.
 - `packages/db/supabase/config.toml`: set `[auth] enabled = false` and delete the other `[auth]` lines.
-- From `.env.example` and `turbo.json`'s `globalEnv`, with their `_LOCAL` and `_STAGING` forms: `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`.
+- From `.env.example` and `turbo.json`'s `globalEnv`, with their `_LOCAL` and `_STAGING` forms: `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`. From `packages/db/.env.example`: `NEXT_PUBLIC_SUPABASE_URL_LOCAL`, `SUPABASE_SERVICE_ROLE_KEY_LOCAL` and their comment block.
 
 When the database goes too, its runbook deletes the whole `packages/db/` folder, mirror included; only the variables above are this runbook's.
 

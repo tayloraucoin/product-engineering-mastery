@@ -15,6 +15,15 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-04 — WEB-2: the boundaries lint sees `@pem/*` subpath imports
+
+The STK-7 batch review (finding 4), confirmed by probe: `import "@pem/db/client"` in `packages/ui` and `import "@pem/brand/brand"` in `packages/env` linted clean, because eslint-import-resolver-node ignores `exports` and every `@pem/<subpath>` passed as unknown. Only relative paths into another package were caught.
+
+- **`packages/config/eslint/workspace-resolver.cjs`** resolves `@pem/*` through each package's `exports` with Node's own resolution, ahead of the node resolver. No dependency added.
+- **It fails closed:** an `@pem/*` specifier that does not resolve is a lint error ("Resolve error"), never unknown.
+- **`yarn test:boundaries`** (`tooling/boundaries.test.ts`, also in `yarn test:tooling`) lints the probes as text and fails if either edge passes again. The real tree had no hidden violation.
+- Ledger: EN-12.
+
 ## 2026-10-04 — STK-22: `@pem/ui` takes the house layout
 
 Taylor: the UI package did not carry the directory structure of the recent repos (Synapse, Conscious Connections), which keep `primitives/` and `composed/` with kind subfolders. STK-6 had shipped `src/button/`, `src/theme/` and `src/theme-toggle/` flat.
