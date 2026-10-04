@@ -1,7 +1,7 @@
 /**
  * Integration test for `yarn db:local:reset` (D-STK-18), against the database
  * `yarn db:local` starts (`yarn test:db`; never part of `yarn test`). It
- * migrates, leaves a stray table, a stray enum and a row behind, resets, and
+ * migrates, leaves a stray table, a stray enum and a note behind, resets, and
  * reads back what the reset kept and what it rebuilt. An absent database fails
  * the run and names `yarn db:local`.
  */
@@ -67,6 +67,7 @@ test("empties public, keeps auth, and rebuilds the schema and setup", async () =
     1,
     "the auth trigger mirrors the user before the reset",
   );
+  await client`insert into public.notes (owner_id, body) values (${user}, 'synthetic note')`;
 
   await resetLocalDatabase(client);
 
@@ -75,6 +76,7 @@ test("empties public, keeps auth, and rebuilds the schema and setup", async () =
       stray: string | null;
       stray_kind: string | null;
       mirrored: number;
+      notes: number;
       auth_kept: number;
       journal: number;
       policies: number;
@@ -85,6 +87,7 @@ test("empties public, keeps auth, and rebuilds the schema and setup", async () =
       to_regclass('public.reset_stray')::text as stray,
       to_regtype('public.reset_stray_kind')::text as stray_kind,
       (select count(*)::int from public.users where id = ${user}) as mirrored,
+      (select count(*)::int from public.notes where owner_id = ${user}) as notes,
       (select count(*)::int from auth.users where id = ${user}) as auth_kept,
       (select count(*)::int from drizzle.__drizzle_migrations) as journal,
       (select count(*)::int from pg_policies where schemaname = 'public' and tablename = 'notes') as policies,
@@ -96,7 +99,12 @@ test("empties public, keeps auth, and rebuilds the schema and setup", async () =
     null,
     "an enum outside the migrations is gone",
   );
-  assert.equal(state?.mirrored, 0, "public rows are gone");
+  assert.equal(state?.notes, 0, "public rows are gone");
+  assert.equal(
+    state?.mirrored,
+    1,
+    "setup's backfill restores the user's public row",
+  );
   assert.equal(state?.auth_kept, 1, "auth.users is left alone");
   assert.ok((state?.journal ?? 0) > 0, "the migrations are reapplied");
   assert.equal(state?.policies, 4, "the notes policies are back");
