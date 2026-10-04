@@ -1,7 +1,7 @@
 command: yarn check-types
 exit: 0
-at: 2026-10-04T04:28:26Z
-head: 0a9e14a8bfcc6caff5620955f7fa653836cd3485
+at: 2026-10-04T05:04:11Z
+head: c5eb5dbb61de8fed8795bd4c48d59f02b3b796d7
 ---
 
    • turbo 2.11.6
@@ -13,13 +13,13 @@ head: 0a9e14a8bfcc6caff5620955f7fa653836cd3485
 @pem/ui:check-types: cache hit, replaying logs db649d868456dc02
 @pem/db:check-types: cache hit, replaying logs 2a1a4653acb9c760
 docs:check-types: cache hit, replaying logs ea4bcfa85817e36d
-web:check-types: cache hit, replaying logs faf5f76191a7b390
-docs:check-types: Generating route types...
-docs:check-types: ✓ Types generated successfully
+web:check-types: cache hit, replaying logs b68f5962c22b77ad
 web:check-types: Generating route types...
 web:check-types: ✓ Types generated successfully
+docs:check-types: Generating route types...
+docs:check-types: ✓ Types generated successfully
 
  Tasks:    5 successful, 5 total
 Cached:    5 cached, 5 total
-  Time:    62ms >>> FULL TURBO
+  Time:    63ms >>> FULL TURBO
 

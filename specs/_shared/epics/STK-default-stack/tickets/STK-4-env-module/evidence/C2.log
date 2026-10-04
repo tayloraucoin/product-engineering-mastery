@@ -1,7 +1,7 @@
 command: yarn test
 exit: 0
-at: 2026-10-04T04:28:24Z
-head: 0a9e14a8bfcc6caff5620955f7fa653836cd3485
+at: 2026-10-04T05:04:09Z
+head: c5eb5dbb61de8fed8795bd4c48d59f02b3b796d7
 tests: 27
 ---
 
@@ -11,103 +11,14 @@ tests: 27
    • Remote caching disabled
 
 cache hit, replaying logs 8a0b64f62fe3e87a
-cache hit, replaying logs 4f3f26975aa33463
 TAP version 13
 # Subtest: C2: a live-mode key on local or staging fails with the variable named
-TAP version 13
-# Subtest: each kind of DDL or write against auth is caught
-ok 1 - each kind of DDL or write against auth is caught
-  ---
-  duration_ms: 1.088625
-  type: 'test'
-  ...
-# Subtest: a foreign key to auth.users and a call to auth.uid() are allowed
-ok 2 - a foreign key to auth.users and a call to auth.uid() are allowed
-  ---
-  duration_ms: 0.072167
-  type: 'test'
-  ...
-# Subtest: a migration with DDL against auth fails, numbered by statement
 ok 1 - C2: a live-mode key on local or staging fails with the variable named
   ---
   duration_ms: 0.593291
   type: 'test'
   ...
-ok 3 - a migration with DDL against auth fails, numbered by statement
-  ---
-  duration_ms: 0.813625
-  type: 'test'
-  ...
-# Subtest: the generated migration set passes, and it does reference auth.users
-ok 4 - the generated migration set passes, and it does reference auth.users
-  ---
-  duration_ms: 0.807666
-  type: 'test'
-  ...
-# Subtest: runtime takes the transaction pooler on a hosted tier
-ok 5 - runtime takes the transaction pooler on a hosted tier
-  ---
-  duration_ms: 0.73
-  type: 'test'
-  ...
-# Subtest: migrations take the session pooler on a hosted tier
-ok 6 - migrations take the session pooler on a hosted tier
-  ---
-  duration_ms: 0.109834
 # Subtest: C2: a test-mode key on production fails with the variable named
-  type: 'test'
-  ...
-# Subtest: the local tier is not checked beyond the scheme
-ok 7 - the local tier is not checked beyond the scheme
-  ---
-  duration_ms: 0.085875
-  type: 'test'
-  ...
-# Subtest: errors and descriptions never carry credentials
-ok 8 - errors and descriptions never carry credentials
-  ---
-  duration_ms: 0.08525
-  type: 'test'
-  ...
-# Subtest: the bridge accepts a UUID user and a known role
-ok 9 - the bridge accepts a UUID user and a known role
-  ---
-  duration_ms: 0.789041
-  type: 'test'
-  ...
-# Subtest: the bridge refuses a partial or forged identity before any SQL
-ok 10 - the bridge refuses a partial or forged identity before any SQL
-  ---
-  duration_ms: 0.261584
-  type: 'test'
-  ...
-# Subtest: the schema exports tables, and none of them outside public
-ok 11 - the schema exports tables, and none of them outside public
-  ---
-  duration_ms: 0.914167
-  type: 'test'
-  ...
-# Subtest: authUsers is never exported from the schema
-ok 12 - authUsers is never exported from the schema
-  ---
-  duration_ms: 0.06775
-  type: 'test'
-  ...
-# Subtest: every table carries its policies beside it
-ok 13 - every table carries its policies beside it
-  ---
-  duration_ms: 0.242042
-  type: 'test'
-  ...
-1..13
-# tests 13
-# suites 0
-# pass 13
-# fail 0
-# cancelled 0
-# skipped 0
-# todo 0
-# duration_ms 305.140875
 ok 2 - C2: a test-mode key on production fails with the variable named
   ---
   duration_ms: 0.087916
@@ -194,8 +105,97 @@ ok 14 - in a deployment the configured URL is used, without a trailing slash
 # skipped 0
 # todo 0
 # duration_ms 101.589708
+cache hit, replaying logs 4f3f26975aa33463
+TAP version 13
+# Subtest: each kind of DDL or write against auth is caught
+ok 1 - each kind of DDL or write against auth is caught
+  ---
+  duration_ms: 1.088625
+  type: 'test'
+  ...
+# Subtest: a foreign key to auth.users and a call to auth.uid() are allowed
+ok 2 - a foreign key to auth.users and a call to auth.uid() are allowed
+  ---
+  duration_ms: 0.072167
+  type: 'test'
+  ...
+# Subtest: a migration with DDL against auth fails, numbered by statement
+ok 3 - a migration with DDL against auth fails, numbered by statement
+  ---
+  duration_ms: 0.813625
+  type: 'test'
+  ...
+# Subtest: the generated migration set passes, and it does reference auth.users
+ok 4 - the generated migration set passes, and it does reference auth.users
+  ---
+  duration_ms: 0.807666
+  type: 'test'
+  ...
+# Subtest: runtime takes the transaction pooler on a hosted tier
+ok 5 - runtime takes the transaction pooler on a hosted tier
+  ---
+  duration_ms: 0.73
+  type: 'test'
+  ...
+# Subtest: migrations take the session pooler on a hosted tier
+ok 6 - migrations take the session pooler on a hosted tier
+  ---
+  duration_ms: 0.109834
+  type: 'test'
+  ...
+# Subtest: the local tier is not checked beyond the scheme
+ok 7 - the local tier is not checked beyond the scheme
+  ---
+  duration_ms: 0.085875
+  type: 'test'
+  ...
+# Subtest: errors and descriptions never carry credentials
+ok 8 - errors and descriptions never carry credentials
+  ---
+  duration_ms: 0.08525
+  type: 'test'
+  ...
+# Subtest: the bridge accepts a UUID user and a known role
+ok 9 - the bridge accepts a UUID user and a known role
+  ---
+  duration_ms: 0.789041
+  type: 'test'
+  ...
+# Subtest: the bridge refuses a partial or forged identity before any SQL
+ok 10 - the bridge refuses a partial or forged identity before any SQL
+  ---
+  duration_ms: 0.261584
+  type: 'test'
+  ...
+# Subtest: the schema exports tables, and none of them outside public
+ok 11 - the schema exports tables, and none of them outside public
+  ---
+  duration_ms: 0.914167
+  type: 'test'
+  ...
+# Subtest: authUsers is never exported from the schema
+ok 12 - authUsers is never exported from the schema
+  ---
+  duration_ms: 0.06775
+  type: 'test'
+  ...
+# Subtest: every table carries its policies beside it
+ok 13 - every table carries its policies beside it
+  ---
+  duration_ms: 0.242042
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 305.140875
 
  Tasks:    2 successful, 2 total
 Cached:    2 cached, 2 total
-  Time:    60ms >>> FULL TURBO
+  Time:    63ms >>> FULL TURBO
 

@@ -1,8 +1,8 @@
 command: yarn test
 exit: 0
-at: 2026-10-04T04:28:23Z
-head: 0a9e14a8bfcc6caff5620955f7fa653836cd3485
-tests: 26
+at: 2026-10-04T05:04:09Z
+head: c5eb5dbb61de8fed8795bd4c48d59f02b3b796d7
+tests: 27
 ---
 
    • turbo 2.11.6
@@ -55,6 +55,9 @@ ok 7 - the local tier is not checked beyond the scheme
   duration_ms: 0.085875
   type: 'test'
   ...
+TAP version 13
+# Subtest: C2: a live-mode key on local or staging fails with the variable named
+ok 1 - C2: a live-mode key on local or staging fails with the variable named
 # Subtest: errors and descriptions never carry credentials
 ok 8 - errors and descriptions never carry credentials
   ---
@@ -71,8 +74,29 @@ ok 9 - the bridge accepts a UUID user and a known role
 ok 10 - the bridge refuses a partial or forged identity before any SQL
   ---
   duration_ms: 0.261584
+  ---
+  duration_ms: 0.593291
   type: 'test'
   ...
+# Subtest: C2: a test-mode key on production fails with the variable named
+ok 2 - C2: a test-mode key on production fails with the variable named
+  ---
+  duration_ms: 0.087916
+  type: 'test'
+  ...
+# Subtest: C2: matching modes pass
+ok 3 - C2: matching modes pass
+  ---
+  duration_ms: 0.0795
+  type: 'test'
+  ...
+# Subtest: C2: a key with no mode prefix fails on every tier
+ok 4 - C2: a key with no mode prefix fails on every tier
+  type: 'test'
+  ...
+  ---
+  duration_ms: 0.171625
+  type: 'test'
 # Subtest: the schema exports tables, and none of them outside public
 ok 11 - the schema exports tables, and none of them outside public
   ---
@@ -97,33 +121,9 @@ ok 13 - every table carries its policies beside it
 # pass 13
 # fail 0
 # cancelled 0
-TAP version 13
-# Subtest: C2: a live-mode key on local or staging fails with the variable named
-ok 1 - C2: a live-mode key on local or staging fails with the variable named
 # skipped 0
 # todo 0
 # duration_ms 305.140875
-  ---
-  duration_ms: 0.593291
-  type: 'test'
-  ...
-# Subtest: C2: a test-mode key on production fails with the variable named
-ok 2 - C2: a test-mode key on production fails with the variable named
-  ---
-  duration_ms: 0.087916
-  type: 'test'
-  ...
-# Subtest: C2: matching modes pass
-ok 3 - C2: matching modes pass
-  ---
-  duration_ms: 0.0795
-  type: 'test'
-  ...
-# Subtest: C2: a key with no mode prefix fails on every tier
-ok 4 - C2: a key with no mode prefix fails on every tier
-  ---
-  duration_ms: 0.171625
-  type: 'test'
   ...
 # Subtest: public names pass, and unset values are left out
 ok 5 - public names pass, and unset values are left out
@@ -197,5 +197,5 @@ ok 14 - in a deployment the configured URL is used, without a trailing slash
 
  Tasks:    2 successful, 2 total
 Cached:    2 cached, 2 total
-  Time:    65ms >>> FULL TURBO
+  Time:    60ms >>> FULL TURBO
 

@@ -1,17 +1,17 @@
 command: yarn verify
 exit: 0
-at: 2026-10-04T04:33:51Z
-head: a208417a5fc16c6ae9c453da538270c8979b1fb2
+at: 2026-10-04T05:02:51Z
+head: c5eb5dbb61de8fed8795bd4c48d59f02b3b796d7
 ---
 Checking formatting...
 All matched files use Prettier code style!
 lint:docs — 189 files, names and frontmatter clean; 8 path rules carry only paths.
 check-settings — 8 fixtures behaved; .claude/settings.json is clean.
 test:hooks — every case behaved.
-  bash-guard: 83 cases, 7 rules; median 56 ms, max 59 ms per call; longest denial about 53 tokens
-  results-gate: 14 cases, 4 rules; median 52 ms, max 53 ms per call; longest denial about 48 tokens
-  session-start: 5 cases, 4 rules; median 55 ms, max 58 ms per call; answers as context
-  stop-gate: 8 cases, 4 rules; median 56 ms, max 56 ms per call; answers as stop
+  bash-guard: 83 cases, 7 rules; median 58 ms, max 113 ms per call; longest denial about 53 tokens
+  results-gate: 14 cases, 4 rules; median 53 ms, max 58 ms per call; longest denial about 48 tokens
+  session-start: 5 cases, 4 rules; median 56 ms, max 59 ms per call; answers as context
+  stop-gate: 8 cases, 4 rules; median 57 ms, max 60 ms per call; answers as stop
 check-refs — every reference in 111 live files resolves; 41 pending (lands in J8, lands in J11, superseded by docs/runbooks/new-project.md (STK-3), lands in P-C, lands in P-D, lands in P-K, a product repo's path, named by a template, a product repo's path, named by a ruling (CF-13), a pattern, not a path, machine-local and untracked by design, stale ruling text in conflicts.md, superseded by A4; held for Taylor (PR-05), stale ruling text in conflicts.md; extensions sit beside their role (record 0006); held for Taylor (PR-05), stale ledger text; the rulings live in docs/design/workflow.md; held for Taylor (PR-05), stale ledger text; filed as docs/research/toolkit/design-candidates.md; held for Taylor (PR-05), stale ledger text; the ledger is docs/decisions/ledger.md; held for Taylor (PR-05), stale ledger text; the folder is docs/measurement/metrics/ (PR-12); held for Taylor (PR-05), stale ledger text; the folder is docs/measurement/evals/ (PR-12); held for Taylor (PR-05)).
 check-stack — 4 module(s); nothing missing, nothing left behind.
 check-migrations: 1 migration(s) in packages/db/migrations, none touch the auth schema.
@@ -20,213 +20,225 @@ warn  specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/resu
 warn  specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/results.json: C3's PASS no longer holds: docs/_generated/directory-map.md, docs/runbooks/remove-supabase-database.md changed after it was recorded. Re-record it: yarn contract:run STK-3 C3
 warn  specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/results.json: C4's PASS no longer holds: docs/_generated/directory-map.md, docs/runbooks/remove-supabase-database.md changed after it was recorded. Re-record it: yarn contract:record STK-3 C4 --evidence <path>
 warn  specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/results.json: review:vigil's PASS no longer holds: docs/_generated/directory-map.md, docs/runbooks/remove-supabase-database.md changed after it was recorded. Re-record it: yarn review:run vigil STK-3
-warn  STK-4 has an as-built, so it is closing, but C6 (last run exited 1), review:mason (not proven yet), review:vigil (not proven yet), review:warden (not proven yet) are not PASS. Run: yarn review:run mason STK-4
-warn  STK-6 has an as-built, so it is closing, but C2 (last run exited 1) is not PASS. Run: yarn status STK-6
-warn  STK-9 has an as-built, so it is closing, but C1 (not proven yet), C4 (not proven yet), review:mason (not proven yet), review:vigil (not proven yet), review:warden (not proven yet) are not PASS. Run: yarn review:run mason STK-9
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/results.json: C1's PASS no longer holds: tooling/check-client-bundle.test.ts, tooling/check-client-bundle.ts, tooling/fixtures/client-bundle/registry/env.example and 1 more changed after it was recorded. Re-record it: yarn contract:run STK-4 C1
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/results.json: C2's PASS no longer holds: tooling/check-client-bundle.test.ts, tooling/check-client-bundle.ts, tooling/fixtures/client-bundle/registry/env.example and 1 more changed after it was recorded. Re-record it: yarn contract:run STK-4 C2
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/results.json: C3's PASS no longer holds: tooling/check-client-bundle.test.ts, tooling/check-client-bundle.ts, tooling/fixtures/client-bundle/registry/env.example and 1 more changed after it was recorded. Re-record it: yarn contract:run STK-4 C3
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/results.json: C4's PASS no longer holds: tooling/check-client-bundle.test.ts, tooling/check-client-bundle.ts, tooling/fixtures/client-bundle/registry/env.example and 1 more changed after it was recorded. Re-record it: yarn contract:run STK-4 C4
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/results.json: C6's PASS no longer holds: tooling/check-client-bundle.test.ts, tooling/check-client-bundle.ts, tooling/fixtures/client-bundle/registry/env.example and 1 more changed after it was recorded. Re-record it: yarn contract:run STK-4 C6
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/results.json: review:mason's PASS no longer holds: tooling/check-client-bundle.test.ts, tooling/check-client-bundle.ts, tooling/fixtures/client-bundle/registry/env.example and 1 more changed after it was recorded. Re-record it: yarn review:run mason STK-4
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/results.json: review:vigil's PASS no longer holds: tooling/check-client-bundle.test.ts, tooling/check-client-bundle.ts, tooling/fixtures/client-bundle/registry/env.example and 1 more changed after it was recorded. Re-record it: yarn review:run vigil STK-4
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/results.json: review:warden's PASS no longer holds: tooling/check-client-bundle.test.ts, tooling/check-client-bundle.ts, tooling/fixtures/client-bundle/registry/env.example and 1 more changed after it was recorded. Re-record it: yarn review:run warden STK-4
+warn  STK-9 has an as-built, so it is closing, but C1 (not proven yet), review:mason (not proven yet), review:vigil (not proven yet), review:warden (not proven yet) are not PASS. Run: yarn review:run mason STK-9
 check-specs — 24 fixtures behaved; specs/ is clean.
 check-test-weakening — 10 fixtures behaved; no weakening against main.
 TAP version 13
 # Subtest: C5: a client chunk holding a server-only sentinel fails, naming the variable and the chunk
 ok 1 - C5: a client chunk holding a server-only sentinel fails, naming the variable and the chunk
   ---
-  duration_ms: 74.899083
+  duration_ms: 88.647084
   type: 'test'
   ...
 # Subtest: C5: no build output fails
 ok 2 - C5: no build output fails
   ---
-  duration_ms: 153.71975
+  duration_ms: 207.921875
   type: 'test'
   ...
 # Subtest: C5: clean client chunks pass
 ok 3 - C5: clean client chunks pass
   ---
-  duration_ms: 99.055667
+  duration_ms: 102.19575
   type: 'test'
   ...
 # Subtest: C5: a scan with no sentinel named is refused
 ok 4 - C5: a scan with no sentinel named is refused
   ---
-  duration_ms: 79.378
+  duration_ms: 80.366625
+  type: 'test'
+  ...
+# Subtest: the plan plants server-only names from .env.example and turbo.json, and names the drift
+ok 5 - the plan plants server-only names from .env.example and turbo.json, and names the drift
+  ---
+  duration_ms: 89.520291
   type: 'test'
   ...
 # Subtest: a pending entry that now exists is stale
-ok 5 - a pending entry that now exists is stale
+ok 6 - a pending entry that now exists is stale
   ---
-  duration_ms: 247.2935
+  duration_ms: 297.751958
   type: 'test'
   ...
 # Subtest: a git-ignored pending entry is machine-local and never stale
-ok 6 - a git-ignored pending entry is machine-local and never stale
+ok 7 - a git-ignored pending entry is machine-local and never stale
   ---
-  duration_ms: 204.227708
+  duration_ms: 236.420125
   type: 'test'
   ...
 # Subtest: C1: a present module missing a listed file fails, naming the module and the file
-ok 7 - C1: a present module missing a listed file fails, naming the module and the file
+ok 8 - C1: a present module missing a listed file fails, naming the module and the file
   ---
-  duration_ms: 84.652
+  duration_ms: 96.791958
   type: 'test'
   ...
 # Subtest: C2: a removed module with a leftover file, variable or dependency fails, naming each leftover
-ok 8 - C2: a removed module with a leftover file, variable or dependency fails, naming each leftover
+ok 9 - C2: a removed module with a leftover file, variable or dependency fails, naming each leftover
   ---
-  duration_ms: 341.683667
+  duration_ms: 426.418792
   type: 'test'
   ...
 # Subtest: C2: a clean removal passes, and near-miss names are not leftovers
-ok 9 - C2: a clean removal passes, and near-miss names are not leftovers
+ok 10 - C2: a clean removal passes, and near-miss names are not leftovers
   ---
-  duration_ms: 81.402583
+  duration_ms: 88.142958
   type: 'test'
   ...
 # Subtest: C3: a locked module marked removed fails
-ok 10 - C3: a locked module marked removed fails
+ok 11 - C3: a locked module marked removed fails
   ---
-  duration_ms: 80.665292
+  duration_ms: 96.964708
   type: 'test'
   ...
 # Subtest: C4: an entry missing any of files, env, dependencies, boundaries, locked or runbook fails, naming the field
-ok 11 - C4: an entry missing any of files, env, dependencies, boundaries, locked or runbook fails, naming the field
+ok 12 - C4: an entry missing any of files, env, dependencies, boundaries, locked or runbook fails, naming the field
   ---
-  duration_ms: 79.370375
+  duration_ms: 141.227292
   type: 'test'
   ...
 # Subtest: C5: a runbook path that does not exist fails, naming the path
-ok 12 - C5: a runbook path that does not exist fails, naming the path
+ok 13 - C5: a runbook path that does not exist fails, naming the path
   ---
-  duration_ms: 83.025375
+  duration_ms: 135.473208
   type: 'test'
   ...
 # Subtest: a merged as-built is immutable except applied:
-ok 13 - a merged as-built is immutable except applied:
+ok 14 - a merged as-built is immutable except applied:
   ---
-  duration_ms: 4859.083875
+  duration_ms: 5308.830916
   type: 'test'
   ...
 # Subtest: A9 commit-msg: an agent branch needs a work-id; another branch does not
-ok 14 - A9 commit-msg: an agent branch needs a work-id; another branch does not
+ok 15 - A9 commit-msg: an agent branch needs a work-id; another branch does not
   ---
-  duration_ms: 1719.740833
+  duration_ms: 1749.467708
   type: 'test'
   ...
 # Subtest: A9 pre-commit: staging a hand-edited results.json is refused
-ok 15 - A9 pre-commit: staging a hand-edited results.json is refused
+ok 16 - A9 pre-commit: staging a hand-edited results.json is refused
   ---
-  duration_ms: 1834.866167
+  duration_ms: 1845.251166
   type: 'test'
   ...
 # Subtest: A4 contract:init allocates sequential ids, from the template, then starts with every criterion FAIL
-ok 16 - A4 contract:init allocates sequential ids, from the template, then starts with every criterion FAIL
+ok 17 - A4 contract:init allocates sequential ids, from the template, then starts with every criterion FAIL
   ---
-  duration_ms: 1364.697542
+  duration_ms: 1581.815667
   type: 'test'
   ...
 # Subtest: the protected branch refuses a start; the operator picks the work branch
-ok 17 - the protected branch refuses a start; the operator picks the work branch
+ok 18 - the protected branch refuses a start; the operator picks the work branch
   ---
-  duration_ms: 729.983
+  duration_ms: 811.983
   type: 'test'
   ...
 # Subtest: parallel tickets: a second item starts on the same branch while the first is open
-ok 18 - parallel tickets: a second item starts on the same branch while the first is open
+ok 19 - parallel tickets: a second item starts on the same branch while the first is open
   ---
-  duration_ms: 1966.8035
+  duration_ms: 2125.324833
   type: 'test'
   ...
 # Subtest: parallel tickets: another ticket's uncommitted file does not block a run, its own does
-ok 19 - parallel tickets: another ticket's uncommitted file does not block a run, its own does
+ok 20 - parallel tickets: another ticket's uncommitted file does not block a run, its own does
   ---
-  duration_ms: 2860.926667
+  duration_ms: 2868.310583
   type: 'test'
   ...
 # Subtest: parallel tickets: another ticket's commit leaves this ticket's proof fresh
-ok 20 - parallel tickets: another ticket's commit leaves this ticket's proof fresh
+ok 21 - parallel tickets: another ticket's commit leaves this ticket's proof fresh
   ---
-  duration_ms: 3174.779459
+  duration_ms: 3190.873167
   type: 'test'
   ...
 # Subtest: stacking: a dependent ticket starts on the same branch once its predecessor is built, before any as-built or review
-ok 21 - stacking: a dependent ticket starts on the same branch once its predecessor is built, before any as-built or review
+ok 22 - stacking: a dependent ticket starts on the same branch once its predecessor is built, before any as-built or review
   ---
-  duration_ms: 3698.5735
+  duration_ms: 3786.506666
   type: 'test'
   ...
 # Subtest: a dependency that has not started refuses the start
-ok 22 - a dependency that has not started refuses the start
+ok 23 - a dependency that has not started refuses the start
   ---
-  duration_ms: 1041.169583
+  duration_ms: 1057.803542
   type: 'test'
   ...
 # Subtest: A6: a cited file not approved, or holding a BLOCKING marker, is refused; a plain open marker is listed
-ok 23 - A6: a cited file not approved, or holding a BLOCKING marker, is refused; a plain open marker is listed
+ok 24 - A6: a cited file not approved, or holding a BLOCKING marker, is refused; a plain open marker is listed
   ---
-  duration_ms: 2598.32525
+  duration_ms: 2591.555875
   type: 'test'
   ...
 # Subtest: PR-15 tiers: code is tier 1 with no reviewer; contract:tier 2 adds the review, and a lower tier drops it
-ok 24 - PR-15 tiers: code is tier 1 with no reviewer; contract:tier 2 adds the review, and a lower tier drops it
+ok 25 - PR-15 tiers: code is tier 1 with no reviewer; contract:tier 2 adds the review, and a lower tier drops it
   ---
-  duration_ms: 3696.679625
+  duration_ms: 3723.216583
   type: 'test'
   ...
 # Subtest: PR-15: check-specs warns on a ticket still closing, and fails it only with --strict
-ok 25 - PR-15: check-specs warns on a ticket still closing, and fails it only with --strict
+ok 26 - PR-15: check-specs warns on a ticket still closing, and fails it only with --strict
   ---
-  duration_ms: 2141.219458
+  duration_ms: 2177.789125
   type: 'test'
   ...
 # Subtest: Vigil 9 and 10, tier 2 epic ticket: pre-flight gates the start, review:run follows the as-built, truth:promote follows
-ok 26 - Vigil 9 and 10, tier 2 epic ticket: pre-flight gates the start, review:run follows the as-built, truth:promote follows
+ok 27 - Vigil 9 and 10, tier 2 epic ticket: pre-flight gates the start, review:run follows the as-built, truth:promote follows
   ---
-  duration_ms: 10574.110209
+  duration_ms: 11138.416666
   type: 'test'
   ...
 # Subtest: a fixture reviewer's PASS does not count outside the harness
-ok 27 - a fixture reviewer's PASS does not count outside the harness
+ok 28 - a fixture reviewer's PASS does not count outside the harness
   ---
-  duration_ms: 4487.2275
+  duration_ms: 4536.632459
   type: 'test'
   ...
 # Subtest: a pre-flight written by the fixture reviewer does not start a ticket outside the harness
-ok 28 - a pre-flight written by the fixture reviewer does not start a ticket outside the harness
+ok 29 - a pre-flight written by the fixture reviewer does not start a ticket outside the harness
   ---
-  duration_ms: 1052.573125
+  duration_ms: 1094.87
   type: 'test'
   ...
 # Subtest: contract:run refuses an uncommitted tree, then records run records with HEAD and evidence hashes
-ok 29 - contract:run refuses an uncommitted tree, then records run records with HEAD and evidence hashes
+ok 30 - contract:run refuses an uncommitted tree, then records run records with HEAD and evidence hashes
   ---
-  duration_ms: 2871.256166
+  duration_ms: 3286.95125
   type: 'test'
   ...
 # Subtest: contract:run FAILs a test criterion whose runner matched zero tests
-ok 30 - contract:run FAILs a test criterion whose runner matched zero tests
+ok 31 - contract:run FAILs a test criterion whose runner matched zero tests
   ---
-  duration_ms: 1856.3645
+  duration_ms: 1933.956542
   type: 'test'
   ...
 # Subtest: Vigil 10, one-off: init, run, as-built, status and check-specs close with nothing left
-ok 31 - Vigil 10, one-off: init, run, as-built, status and check-specs close with nothing left
+ok 32 - Vigil 10, one-off: init, run, as-built, status and check-specs close with nothing left
   ---
-  duration_ms: 4765.288042
+  duration_ms: 4824.66125
   type: 'test'
   ...
 # Subtest: Vigil 3: a PASS recorded at X goes stale when a planned path changes at X+1
-ok 32 - Vigil 3: a PASS recorded at X goes stale when a planned path changes at X+1
+ok 33 - Vigil 3: a PASS recorded at X goes stale when a planned path changes at X+1
   ---
-  duration_ms: 3605.248916
+  duration_ms: 3647.582791
   type: 'test'
   ...
-1..32
-# tests 32
+1..33
+# tests 33
 # suites 0
-# pass 32
+# pass 33
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 24418.75
+# duration_ms 25372.53575
 
    • turbo 2.11.6
    • Packages in scope: @pem/config, @pem/db, @pem/env, @pem/ui, docs, web
@@ -322,6 +334,7 @@ ok 13 - every table carries its policies beside it
 # cancelled 0
 # skipped 0
 # todo 0
+# duration_ms 305.140875
 TAP version 13
 # Subtest: C2: a live-mode key on local or staging fails with the variable named
 ok 1 - C2: a live-mode key on local or staging fails with the variable named
@@ -342,7 +355,6 @@ ok 3 - C2: matching modes pass
   type: 'test'
   ...
 # Subtest: C2: a key with no mode prefix fails on every tier
-# duration_ms 305.140875
 ok 4 - C2: a key with no mode prefix fails on every tier
   ---
   duration_ms: 0.171625
@@ -420,7 +432,7 @@ ok 14 - in a deployment the configured URL is used, without a trailing slash
 
  Tasks:    2 successful, 2 total
 Cached:    2 cached, 2 total
-  Time:    62ms >>> FULL TURBO
+  Time:    64ms >>> FULL TURBO
 
 ok   AGENTS.md (lines)                                58 / 100
 ok   CLAUDE.md (lines)                                10 / 20
@@ -451,15 +463,15 @@ directory-map — up to date (189 files, 35 landing pages).
    • Running lint in 6 packages
    • Remote caching disabled
 
-@pem/env:lint: cache hit, replaying logs 251a581d7444ca94
 @pem/ui:lint: cache hit, replaying logs 0a49fd7cabd94c75
+@pem/env:lint: cache hit, replaying logs 251a581d7444ca94
+web:lint: cache miss, executing b8b833b067aec06e
 @pem/db:lint: cache hit, replaying logs 9bb22cd9e22f971c
-web:lint: cache hit, replaying logs 77b4f628b5282b2e
 docs:lint: cache hit, replaying logs 75e5e8b682803200
 
  Tasks:    5 successful, 5 total
-Cached:    5 cached, 5 total
-  Time:    63ms >>> FULL TURBO
+Cached:    4 cached, 5 total
+  Time:    1.677s 
 
 
    • turbo 2.11.6
@@ -469,25 +481,27 @@ Cached:    5 cached, 5 total
 
 @pem/ui:check-types: cache hit, replaying logs db649d868456dc02
 @pem/env:check-types: cache hit, replaying logs ea319e0966d5e30c
+web:check-types: cache miss, executing b68f5962c22b77ad
+@pem/db:check-types: cache hit, replaying logs 2a1a4653acb9c760
 docs:check-types: cache hit, replaying logs ea4bcfa85817e36d
 docs:check-types: Generating route types...
 docs:check-types: ✓ Types generated successfully
-@pem/db:check-types: cache hit, replaying logs 2a1a4653acb9c760
-web:check-types: cache hit, replaying logs faf5f76191a7b390
 web:check-types: Generating route types...
 web:check-types: ✓ Types generated successfully
 
  Tasks:    5 successful, 5 total
-Cached:    5 cached, 5 total
-  Time:    63ms >>> FULL TURBO
+Cached:    4 cached, 5 total
+  Time:    1.767s 
 
-check-client-bundle — 3 server-only value(s), none in 25 browser-facing file(s) under apps/web/.next/static, apps/web/.next/server/app.
+check-client-bundle — warning: turbo.json lists DATABASE_MIGRATION_URL, DATABASE_MIGRATION_URL_LOCAL, DATABASE_MIGRATION_URL_STAGING, DATABASE_URL, DATABASE_URL_LOCAL, DATABASE_URL_STAGING, which .env.example does not; planted anyway. Add each to .env.example with a comment (codebase-conventions §5).
+check-client-bundle — 9 server-only value(s), none in 25 browser-facing file(s) under apps/web/.next/static, apps/web/.next/server/app.
 
    • turbo 2.11.6
    • Packages in scope: @pem/config, @pem/db, @pem/env, @pem/ui, docs, web
    • Running build in 6 packages
    • Remote caching disabled
 
+web:build: cache miss, executing 09f29205325acd70
 docs:build: cache hit, replaying logs db5e5d912093aacb
 docs:build: ▲ Next.js 16.3.8 (Turbopack)
 docs:build: ✓ Running next.config.ts took 15ms
@@ -517,17 +531,16 @@ docs:build:
 docs:build: ○  (Static)  prerendered as static content
 docs:build: ●  (SSG)     prerendered as static HTML (uses generateStaticParams)
 docs:build: 
-web:build: cache hit, replaying logs 3b69e6d45e56c98c
 web:build: ▲ Next.js 16.3.8 (Turbopack)
-web:build: ✓ Running next.config.ts took 109ms
+web:build: ✓ Running next.config.ts took 102ms
 web:build: 
 web:build:   Creating an optimized production build ...
-web:build: ✓ Compiled successfully in 527ms
+web:build: ✓ Compiled successfully in 432ms
 web:build:   Running TypeScript ...
 web:build:   Finished TypeScript in 745ms ...
 web:build:   Collecting page data using 4 workers ...
 web:build:   Generating static pages using 4 workers (0/3) ...
-web:build: ✓ Generating static pages using 4 workers (3/3) in 312ms
+web:build: ✓ Generating static pages using 4 workers (3/3) in 245ms
 web:build:   Finalizing page optimization ...
 web:build: 
 web:build: Route (app)
@@ -539,6 +552,6 @@ web:build: ○  (Static)  prerendered as static content
 web:build: 
 
  Tasks:    2 successful, 2 total
-Cached:    2 cached, 2 total
-  Time:    160ms >>> FULL TURBO
+Cached:    1 cached, 2 total
+  Time:    3.027s 
 
