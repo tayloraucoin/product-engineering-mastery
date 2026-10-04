@@ -32,3 +32,24 @@ PASS.
 STK-19 amended the `tooling/` bullet of `codebase-conventions.md` §1: `apps/web/next.config.ts` imports `tooling/local-dev-origins.ts`, a dev-server helper, as the one exception to "the root scripts are its only consumer". It does not touch rule 9, §4's graph or package table, or §5, so D-STK-1 and D-STK-3 read as above; the ledger and changelog entries are unchanged.
 
 Verdict, unchanged: PASS.
+
+## Addendum: re-read on 2026-10-04 at `b5de80b`
+
+Re-read by claude-opus-5-5 (Claude Code) after STK-7, STK-8, STK-11 and STK-22 changed the planned paths. Command: `git diff 34ce6a5 b5de80b -- <the planned paths>`. Record 0010, `docs/decisions/records/README.md` and `docs/_generated/directory-map.md` are unchanged.
+
+| File                                       | Change                                                                                                                                             | Owner                |
+| ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
+| `docs/engineering/codebase-conventions.md` | the `@pem/brand` row is built, May import `config`                                                                                                 | STK-7                |
+| `docs/engineering/codebase-conventions.md` | §4's subpath-exports paragraph points to `packages/ui/AGENTS.md` for the package's internal layout                                                 | STK-22               |
+| `docs/engineering/tech-stack.md`           | the Supabase CLI, the brand font and Storybook/Vitest rows added; the image row follows the CLI pin; the workshop row leaves "Deliberately absent" | STK-11, STK-7, STK-8 |
+| `docs/decisions/ledger.md`                 | EN-11 added under §10                                                                                                                              | STK-22               |
+| `docs/decisions/changelog.md`              | one 2026-10-04 STK-22 entry above the PJ entries                                                                                                   | STK-22               |
+
+- **Record 0010:** unchanged.
+- **Rule 9:** unchanged.
+- **§4:** the D-STK-1 graph string is unchanged, and `services` still reads undecided. The `@pem/brand` row turning built is STK-7 doing what §4 says; its May import (`config`) puts `brand` on the foundation layer, as D-STK-1 orders. The STK-22 sentence is about the inside of one package and touches no edge of the graph.
+- **§5:** unchanged.
+- **Ledger and changelog:** EN-06 to EN-10 and the five STK-1 changelog bullets are unchanged. EN-11 is STK-22's own ruling, and it has its own changelog entry.
+- **tech-stack.md:** the workshop leaving "Deliberately absent" as it lands is EN-09.
+
+Verdict, unchanged: PASS.
