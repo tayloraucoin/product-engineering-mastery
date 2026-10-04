@@ -14,6 +14,7 @@ import { isLoopbackHost } from "../src/loopback.ts";
 import { cliEnvironment } from "./env.ts";
 import {
   LEGACY_CONTAINER,
+  LOCAL_CONTAINER,
   LOCAL_IMAGE_URL,
   LOCAL_PORT,
 } from "./local-image.ts";
@@ -74,15 +75,29 @@ export function nonLoopbackBindings(dockerPortOutput: string): string[] {
     .filter((host) => !isLoopbackHost(host));
 }
 
-/** Whether a container publishes `port` anywhere but loopback. */
+/** Whether a container publishes `port` anywhere but loopback; false when Docker cannot say. */
 export function isPublishedBeyondLoopback(
   container: string,
   port: number,
 ): boolean {
-  const output = execFileSync("docker", ["port", container, String(port)], {
-    encoding: "utf8",
-  });
-  return nonLoopbackBindings(output).length > 0;
+  try {
+    const output = execFileSync("docker", ["port", container, String(port)], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    });
+    return nonLoopbackBindings(output).length > 0;
+  } catch {
+    return false;
+  }
+}
+
+/** Prints the network-exposure warning when the database port is not loopback-only. */
+export function warnIfExposed(command: string): void {
+  if (isPublishedBeyondLoopback(LOCAL_CONTAINER, 5432)) {
+    console.warn(
+      `${command} — the database port ${LOCAL_PORT} is reachable from your network, password postgres, and it may hold mirrored staging emails. On a shared network, set "ip": "127.0.0.1" in Docker's daemon settings, then yarn db:stop and rerun.`,
+    );
+  }
 }
 
 /** Runs `supabase <args> --workdir packages/db`, streaming its output; exits on failure. */

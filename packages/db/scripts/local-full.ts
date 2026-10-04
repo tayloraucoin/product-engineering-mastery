@@ -19,6 +19,7 @@ import {
   preflight,
   supabase,
   waitForDatabase,
+  warnIfExposed,
 } from "./supabase-cli.ts";
 
 const COMMAND = "db:local:full";
@@ -38,6 +39,7 @@ if (
 }
 supabase(COMMAND, ["start"]);
 await waitForDatabase(COMMAND);
+warnIfExposed(COMMAND);
 
 const { url } = authSettings();
 if (!url || !isLoopbackUrl(url)) {
