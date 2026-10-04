@@ -1,6 +1,7 @@
 command: yarn check-refs
-exit: 0
-at: 2026-10-04T02:31:38Z
-head: ca218bc7038b8078d81f7263daca2803ace2b654
+exit: 1
+at: 2026-10-04T02:41:53Z
+head: 88093e707123a32729ce0b83a88caadb47ebbdb4
 ---
-check-refs — every reference in 110 live files resolves; 41 pending (lands in J8, lands in J11, superseded by docs/runbooks/new-project.md (STK-3), lands in P-C, lands in P-D, lands in P-K, a product repo's path, named by a template, a product repo's path, named by a ruling (CF-13), a pattern, not a path, machine-local and untracked by design, stale ruling text in conflicts.md, superseded by A4; held for Taylor (PR-05), stale ruling text in conflicts.md; extensions sit beside their role (record 0006); held for Taylor (PR-05), stale ledger text; the rulings live in docs/design/workflow.md; held for Taylor (PR-05), stale ledger text; filed as docs/research/toolkit/design-candidates.md; held for Taylor (PR-05), stale ledger text; the ledger is docs/decisions/ledger.md; held for Taylor (PR-05), stale ledger text; the folder is docs/measurement/metrics/ (PR-12); held for Taylor (PR-05), stale ledger text; the folder is docs/measurement/evals/ (PR-12); held for Taylor (PR-05)).
+check-refs — 1 problem(s):
+  .claude/settings.local.json exists now; remove it from tooling/refs-pending.json.

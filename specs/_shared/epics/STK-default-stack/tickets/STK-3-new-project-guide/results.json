@@ -8,22 +8,22 @@
       "run": {
         "command": "yarn lint:docs",
         "exit": 0,
-        "at": "2026-10-04T02:31:38Z",
-        "head": "ca218bc7038b8078d81f7263daca2803ace2b654",
+        "at": "2026-10-04T02:41:52Z",
+        "head": "88093e707123a32729ce0b83a88caadb47ebbdb4",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/evidence/C1.log",
-        "evidence_sha256": "1ac7253716351b315f3f0162cd61485b71f045177ea7cf47172cdc280a1a0e01"
+        "evidence_sha256": "fee09a3c44368c5038c74077a9be522e85bbda4a84fb430813816b7895bfa42f"
       }
     },
     "C2": {
-      "status": "PASS",
+      "status": "FAIL",
       "evidence": "check",
       "run": {
         "command": "yarn check-refs",
-        "exit": 0,
-        "at": "2026-10-04T02:31:38Z",
-        "head": "ca218bc7038b8078d81f7263daca2803ace2b654",
+        "exit": 1,
+        "at": "2026-10-04T02:41:53Z",
+        "head": "88093e707123a32729ce0b83a88caadb47ebbdb4",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/evidence/C2.log",
-        "evidence_sha256": "d78e353bdae6f0725669884ee8e12224f73432a2121cfecb130772be10b9c059"
+        "evidence_sha256": "54b217986e6733e6e3f32011529756e1368ab08d1dfbac3e38e0819897a528e5"
       }
     },
     "C3": {
@@ -32,10 +32,10 @@
       "run": {
         "command": "yarn directory-map --check",
         "exit": 0,
-        "at": "2026-10-04T02:31:39Z",
-        "head": "ca218bc7038b8078d81f7263daca2803ace2b654",
+        "at": "2026-10-04T02:41:54Z",
+        "head": "88093e707123a32729ce0b83a88caadb47ebbdb4",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/evidence/C3.log",
-        "evidence_sha256": "755cf97deb21eb18dc4b2a2aef2045e2f163098bbdb29c7088feb8af0abd0053"
+        "evidence_sha256": "3600b60bbadccabb2ac235af75ee203a59772f06908cbd5429a3bc8bef9bba63"
       }
     },
     "C4": {
@@ -66,5 +66,5 @@
       }
     }
   },
-  "updated_at": "2026-10-04T02:40:48Z"
+  "updated_at": "2026-10-04T02:41:54Z"
 }
