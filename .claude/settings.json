@@ -91,7 +91,14 @@
     },
     "filesystem": {
       "allowWrite": ["~/.yarn", "~/.cache/yarn", "~/Library/Caches/Yarn"],
-      "denyRead": ["~/.ssh", "~/.aws", "./**/.env", "./**/.env.*", "./**/secrets", "./**/*.pem"]
+      "denyRead": [
+        "~/.ssh",
+        "~/.aws",
+        "./**/.env",
+        "./**/.env.*",
+        "./**/secrets",
+        "./**/*.pem"
+      ]
     }
   },
   "hooks": {
