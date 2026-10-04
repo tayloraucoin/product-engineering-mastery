@@ -41,15 +41,15 @@
       }
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
       "run": {
         "command": "yarn verify",
-        "exit": 1,
-        "at": "2026-10-04T20:57:04Z",
-        "head": "9777bd06a29c1b42d85c2683bdc2e184d0d48ce1",
+        "exit": 0,
+        "at": "2026-10-04T21:11:16Z",
+        "head": "73c0659962f3a14f5111b967d0df52db12bf1b51",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/evidence/C4.log",
-        "evidence_sha256": "bca9c48e0b8f874fce3c2d145eabfc9a957805603184ba927c1c6b0f01097fad"
+        "evidence_sha256": "7681b4940fec712822b560dda0adaf56e9c1b7e962cf251449b0e52aa4ef8216"
       }
     },
     "review:mason": {
@@ -88,5 +88,5 @@
       }
     }
   },
-  "updated_at": "2026-10-04T21:09:23Z"
+  "updated_at": "2026-10-04T21:12:33Z"
 }
