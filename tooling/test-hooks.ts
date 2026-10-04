@@ -6,13 +6,14 @@
  * A fixture file is tooling/hooks/fixtures/<hook>.json: synthetic hook inputs,
  * each with what it must produce. Its `kind` says how the hook answers:
  *   - "guard" (the default, PreToolUse): exit 0 allows, exit 2 denies, and
- *     the denial on stderr starts with "<hook> [<rule>]";
+ *     the denial on stderr starts with "<hook> [<rule>]"; "ask" means exit 0
+ *     with `permissionDecision: "ask"` on stdout, its reason opening the same way;
  *   - "stop": exit 0 and one JSON object on stdout; "deny" means
  *     `decision: "block"`, "allow" means no decision;
  *   - "context" (SessionStart): exit 0 and plain text on stdout that never
  *     opens with "{" and stays within `limit` characters; only "allow" cases.
  * The run fails when a case misbehaves, when a guard or stop rule lacks an
- * allow or a deny case, when a denial or reason is longer than its budget,
+ * allow or a deny case (an ask rule: an allow and an ask case), when a denial or reason is longer than its budget,
  * or when the hook is slow.
  */
 
@@ -31,7 +32,7 @@ const DENIAL_TOKEN_LIMIT = 60;
 
 type Case = {
   rule: string;
-  expect: "allow" | "deny";
+  expect: "allow" | "deny" | "ask";
   name: string;
   command?: string;
   input?: Record<string, unknown>;
@@ -86,6 +87,26 @@ function checkAnswer(
   return null;
 }
 
+/** A guard's "ask" reason from its stdout, or null when it did not ask. */
+function askReason(stdout: string): string | null {
+  const out = stdout.trim();
+  if (!out.startsWith("{")) return null;
+  try {
+    const answer = JSON.parse(out) as {
+      hookSpecificOutput?: {
+        permissionDecision?: string;
+        permissionDecisionReason?: string;
+      };
+    };
+    const decision = answer.hookSpecificOutput;
+    return decision?.permissionDecision === "ask"
+      ? (decision.permissionDecisionReason ?? "")
+      : null;
+  } catch {
+    return null;
+  }
+}
+
 for (const name of readdirSync(path.join(REPO_ROOT, FIXTURES)).sort()) {
   if (!name.endsWith(".json")) continue;
   const file = JSON.parse(
@@ -134,11 +155,18 @@ for (const name of readdirSync(path.join(REPO_ROOT, FIXTURES)).sort()) {
       );
       continue;
     }
-    if (item.expect !== "deny") continue;
-    const stderr = result.stderr.trim();
+    const asked = askReason(result.stdout);
+    if ((asked !== null) !== (item.expect === "ask")) {
+      failures.push(
+        `${where}: expected ${item.expect}, got ${asked === null ? "no ask" : `an ask: ${asked}`}`,
+      );
+      continue;
+    }
+    if (item.expect === "allow") continue;
+    const stderr = asked ?? result.stderr.trim();
     longest = Math.max(longest, Math.ceil(stderr.length / 4));
     if (!stderr.startsWith(`${file.hook} [${item.rule}]`))
-      failures.push(`${where}: blocked by the wrong rule: ${stderr}`);
+      failures.push(`${where}: ${item.expect} by the wrong rule: ${stderr}`);
     if (item.message && !stderr.includes(item.message))
       failures.push(
         `${where}: the denial does not say "${item.message}": ${stderr}`,
@@ -152,7 +180,7 @@ for (const name of readdirSync(path.join(REPO_ROOT, FIXTURES)).sort()) {
   for (const [rule, kinds] of (file.kind ?? "guard") === "context"
     ? []
     : seen) {
-    for (const kind of ["allow", "deny"])
+    for (const kind of ["allow", kinds.has("ask") ? "ask" : "deny"])
       if (!kinds.has(kind))
         failures.push(
           `${file.hook} / ${rule}: no ${kind} case; every rule needs both`,
