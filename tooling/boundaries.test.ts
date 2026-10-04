@@ -35,6 +35,27 @@ const DISALLOWED: [file: string, code: string, message: RegExp][] = [
     'import "../../db/src/client";',
     /^env must not import db/,
   ],
+  // STK-12: @supabase/* is owned by auth (D-STK-16); auth sits above db.
+  [
+    "packages/db/src/zz-probe.ts",
+    'import "@supabase/ssr";',
+    /@supabase\/\* is owned by @pem\/auth/,
+  ],
+  [
+    "apps/web/lib/zz-probe.ts",
+    'import "@supabase/supabase-js";',
+    /@supabase\/\* is owned by @pem\/auth/,
+  ],
+  [
+    "packages/db/src/zz-probe.ts",
+    'import "@pem/auth/context";',
+    /^db must not import auth/,
+  ],
+  [
+    "packages/email/src/zz-probe.ts",
+    'import "@pem/auth/server";',
+    /^email must not import auth/,
+  ],
 ];
 
 for (const [file, code, message] of DISALLOWED)
@@ -65,6 +86,11 @@ for (const [file, specifier] of UNEXPORTED)
 const ALLOWED: [file: string, code: string][] = [
   ["packages/db/src/zz-probe.ts", 'import type { Tier } from "@pem/env/tier";'],
   ["packages/ui/src/zz-probe.ts", 'import "next-themes"; import "react";'],
+  [
+    "packages/auth/src/zz-probe.ts",
+    'import "@supabase/ssr"; import "@supabase/supabase-js"; import "@pem/db/rls"; import "@pem/observability/logger";',
+  ],
+  ["apps/web/lib/zz-probe.ts", 'import "@pem/auth/server";'],
   [
     "apps/web/app/zz-probe.ts",
     'import "@pem/ui/button"; import "@pem/ui/styles/globals.css"; import "@pem/brand/assets/logo.svg"; import "@/app/layout";',
