@@ -9,6 +9,10 @@
  * (D-STK-10): it reads @pem/brand for fonts and assets, which @pem/ui's own
  * components never do. It is listed before `ui` because the first match wins.
  *
+ * `catalog` is `packages/catalog`, the shelf (CS-07, record 0011): it may
+ * import `config` and `ui`, and nothing may import it. No package lists it
+ * and apps are kept off it below; the workshop reaches its stories by a glob.
+ *
  * - apps/* → apps/*: hard ban
  * - packages/* → apps/*: hard ban
  *
@@ -63,6 +67,7 @@ const ELEMENTS = [
     mode: "full",
   },
   workspacePackage("ui", "ui"),
+  workspacePackage("catalog", "catalog"),
 ];
 
 /** Each package may import only these lower-layer types. */
@@ -77,6 +82,7 @@ const PACKAGE_IMPORTS = {
   email: ["config", "env", "brand", "observability"],
   ui: ["config"],
   "ui-workshop": ["config", "brand", "ui"],
+  catalog: ["config", "ui"],
 };
 
 /** Vendor SDK → the one element type allowed to import it (D-STK-16). */
@@ -91,9 +97,10 @@ const APP_TYPES = ELEMENTS.map((element) => element.type).filter((type) =>
   type.startsWith("app-"),
 );
 
-/** Apps import packages, never a package's workshop. */
+/** Apps import packages, never a package's workshop, and never the shelf. */
+const NOT_FOR_APPS = new Set(["ui-workshop", "catalog"]);
 const APP_IMPORTS = Object.keys(PACKAGE_IMPORTS).filter(
-  (type) => type !== "ui-workshop",
+  (type) => !NOT_FOR_APPS.has(type),
 );
 
 const SOURCE_FILES = "**/*.{ts,tsx,js,jsx,mjs,cjs}";

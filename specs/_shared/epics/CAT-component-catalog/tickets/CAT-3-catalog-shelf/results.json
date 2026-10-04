@@ -1,0 +1,37 @@
+{
+  "id": "CAT-3",
+  "criteria_sha256": "3f937eea7564638c7f5d576b2c9f4b112e91b9a80b7c480c8d5d2453f9648f28",
+  "criteria": {
+    "C1": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C2": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C3": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    },
+    "C4": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C5": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    },
+    "C6": {
+      "status": "FAIL",
+      "evidence": "capture",
+      "run": null
+    }
+  },
+  "updated_at": "2026-10-04T23:21:38Z"
+}

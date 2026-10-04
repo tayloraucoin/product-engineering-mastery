@@ -1,0 +1,87 @@
+{
+  "sources": {
+    "shadcn": {
+      "label": "shadcn",
+      "name": "shadcn/ui",
+      "verdict": "shelf",
+      "licence": "MIT",
+      "homepage": "https://ui.shadcn.com",
+      "ruling": "CS-01"
+    },
+    "custom": {
+      "label": "Custom",
+      "name": "Custom: built in this repo or lifted from an earlier product",
+      "verdict": "unruled",
+      "licence": "house",
+      "homepage": null,
+      "ruling": "CS-07"
+    },
+    "tablecn": {
+      "label": "tablecn",
+      "name": "tablecn",
+      "verdict": "after-edits",
+      "licence": "MIT",
+      "homepage": "https://tablecn.com",
+      "ruling": "CS-01"
+    },
+    "diceui": {
+      "label": "Dice UI",
+      "name": "Dice UI",
+      "verdict": "after-edits",
+      "licence": "MIT",
+      "homepage": "https://diceui.com",
+      "ruling": "CS-01"
+    },
+    "reui": {
+      "label": "ReUI",
+      "name": "ReUI",
+      "verdict": "mine",
+      "licence": "MIT (open repo) and proprietary (Pro)",
+      "homepage": "https://reui.io",
+      "ruling": "CS-01"
+    },
+    "radix": {
+      "label": "shadcn on Radix",
+      "name": "shadcn/ui, Radix track",
+      "verdict": "shelf",
+      "licence": "MIT",
+      "homepage": "https://ui.shadcn.com",
+      "ruling": "CS-02"
+    }
+  },
+  "entries": [
+    {
+      "id": "button",
+      "name": "Button",
+      "source": "custom",
+      "target": "ui",
+      "path": "packages/ui/src/primitives/control/button",
+      "kind": "control",
+      "layer": "primitive",
+      "wave": 0,
+      "ticket": "CAT-3"
+    },
+    {
+      "id": "theme-toggle",
+      "name": "Theme toggle",
+      "source": "custom",
+      "target": "ui",
+      "path": "packages/ui/src/composed/control/theme-toggle",
+      "kind": "control",
+      "layer": "composed",
+      "wave": null,
+      "ticket": "CAT-3"
+    },
+    {
+      "id": "custom-copy-button",
+      "name": "Copy button",
+      "source": "custom",
+      "target": "catalog",
+      "path": "packages/catalog/src/custom/control/copy-button",
+      "kind": "control",
+      "layer": "composed",
+      "wave": null,
+      "ticket": "CAT-3"
+    }
+  ]
+}

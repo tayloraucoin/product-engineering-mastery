@@ -56,6 +56,17 @@ const DISALLOWED: [file: string, code: string, message: RegExp][] = [
     'import "@pem/auth/server";',
     /^email must not import auth/,
   ],
+  // CAT-3: the shelf is never imported (CS-07, record 0011).
+  [
+    "apps/web/app/zz-probe.ts",
+    'import "@pem/catalog/manifest";',
+    /must not import catalog/,
+  ],
+  [
+    "packages/ui/src/zz-probe.ts",
+    'import "@pem/catalog/manifest";',
+    /^ui must not import catalog/,
+  ],
 ];
 
 for (const [file, code, message] of DISALLOWED)
@@ -91,6 +102,7 @@ const ALLOWED: [file: string, code: string][] = [
     'import "@supabase/ssr"; import "@supabase/supabase-js"; import "@pem/db/rls"; import "@pem/observability/logger";',
   ],
   ["apps/web/lib/zz-probe.ts", 'import "@pem/auth/server";'],
+  ["packages/catalog/src/zz-probe.ts", 'import "@pem/ui/button";'],
   [
     "apps/web/app/zz-probe.ts",
     'import "@pem/ui/button"; import "@pem/ui/styles/globals.css"; import "@pem/brand/assets/logo.svg"; import "@/app/layout";',
