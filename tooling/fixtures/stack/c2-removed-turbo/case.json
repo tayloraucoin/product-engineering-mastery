@@ -1,0 +1,7 @@
+{
+  "expect": "fail",
+  "messages": [
+    "stack.gone is removed, but its variable GONE_SECRET_LOCAL is still in apps/site/turbo.json (tasks.dev.passThroughEnv)",
+    "stack.gone is removed, but its variable GONE_SECRET is still in turbo.json (globalEnv)"
+  ]
+}

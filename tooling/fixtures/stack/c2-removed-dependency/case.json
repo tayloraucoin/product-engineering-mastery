@@ -1,0 +1,6 @@
+{
+  "expect": "fail",
+  "messages": [
+    "stack.gone is removed, but its dependency gone-sdk is still in apps/site/package.json (devDependencies)"
+  ]
+}

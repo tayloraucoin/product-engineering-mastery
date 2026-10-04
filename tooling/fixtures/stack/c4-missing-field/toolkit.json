@@ -1,0 +1,76 @@
+{
+  "stack": {
+    "no-files": {
+      "env": [],
+      "dependencies": [
+        "@demo/core"
+      ],
+      "boundaries": [
+        "no-files"
+      ],
+      "locked": true,
+      "runbook": null
+    },
+    "no-env": {
+      "files": [
+        "packages/core"
+      ],
+      "dependencies": [
+        "@demo/core"
+      ],
+      "boundaries": [
+        "no-env"
+      ],
+      "locked": true,
+      "runbook": null
+    },
+    "no-dependencies": {
+      "files": [
+        "packages/core"
+      ],
+      "env": [],
+      "boundaries": [
+        "no-dependencies"
+      ],
+      "locked": true,
+      "runbook": null
+    },
+    "no-boundaries": {
+      "files": [
+        "packages/core"
+      ],
+      "env": [],
+      "dependencies": [
+        "@demo/core"
+      ],
+      "locked": true,
+      "runbook": null
+    },
+    "no-locked": {
+      "files": [
+        "packages/core"
+      ],
+      "env": [],
+      "dependencies": [
+        "@demo/core"
+      ],
+      "boundaries": [
+        "no-locked"
+      ],
+      "runbook": null
+    },
+    "no-runbook": {
+      "files": [
+        "packages/core"
+      ],
+      "env": [],
+      "dependencies": [
+        "@demo/core"
+      ],
+      "boundaries": [
+        "no-runbook"
+      ],
+      "locked": true
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "expect": "fail",
+  "messages": [
+    "\"stack.kept.runbook\" points at docs/runbooks/remove-nothing.md, which does not exist"
+  ]
+}

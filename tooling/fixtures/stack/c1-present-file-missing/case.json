@@ -1,0 +1,6 @@
+{
+  "expect": "fail",
+  "messages": [
+    "stack.kept is present, but its file packages/kept/missing.txt is missing"
+  ]
+}

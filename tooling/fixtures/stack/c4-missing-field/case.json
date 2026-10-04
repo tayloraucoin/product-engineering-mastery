@@ -1,0 +1,11 @@
+{
+  "expect": "fail",
+  "messages": [
+    "\"stack.no-files.files\" is missing",
+    "\"stack.no-env.env\" is missing",
+    "\"stack.no-dependencies.dependencies\" is missing",
+    "\"stack.no-boundaries.boundaries\" is missing",
+    "\"stack.no-locked.locked\" is missing",
+    "\"stack.no-runbook.runbook\" is missing"
+  ]
+}

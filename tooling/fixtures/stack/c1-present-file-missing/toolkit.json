@@ -1,0 +1,52 @@
+{
+  "stack": {
+    "core": {
+      "files": [
+        "packages/core"
+      ],
+      "env": [],
+      "dependencies": [
+        "@demo/core"
+      ],
+      "boundaries": [
+        "core"
+      ],
+      "locked": true,
+      "runbook": null
+    },
+    "kept": {
+      "files": [
+        "packages/kept",
+        "packages/kept/missing.txt"
+      ],
+      "env": [
+        "KEPT_API_URL"
+      ],
+      "dependencies": [
+        "kept-sdk"
+      ],
+      "boundaries": [
+        "kept"
+      ],
+      "locked": false,
+      "runbook": "docs/runbooks/remove-kept.md"
+    },
+    "gone": {
+      "files": [
+        "packages/gone"
+      ],
+      "env": [
+        "GONE_SECRET"
+      ],
+      "dependencies": [
+        "gone-sdk"
+      ],
+      "boundaries": [
+        "gone"
+      ],
+      "locked": false,
+      "runbook": "docs/runbooks/remove-gone.md",
+      "removed": true
+    }
+  }
+}
