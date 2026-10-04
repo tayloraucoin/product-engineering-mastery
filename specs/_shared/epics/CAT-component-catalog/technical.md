@@ -1,3 +1,8 @@
+---
+epic: CAT
+status: approved
+---
+
 # CAT — technical notes
 
 > Written in the Plumb thread of 2026-10-04, with the placement checked as Mason would (plan approved by Taylor the same day). Facts verified that day: shadcn-ui/ui at `295a1f1`, Base track 62 component files in three dependency waves (43, 17, 3) plus 3 recipes and 27 blocks; the source uses `cn-*` style placeholders the CLI resolves per style; `ui.shadcn.com` answers under a per-command network approval; Storybook 10.6.1's sidebar filters on story tags (`TagOptions.defaultFilterSelection`).
