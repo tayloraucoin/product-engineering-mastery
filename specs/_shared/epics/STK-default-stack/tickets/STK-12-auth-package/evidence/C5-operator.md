@@ -10,7 +10,7 @@ Handed to the operator: it needs the hosted staging Supabase project and a real 
 
 ## Steps for the operator
 
-1. In the staging project's dashboard, Authentication, URL Configuration: add `http://localhost:3000/auth/callback` to the redirect URLs. Email sign-in (magic link) stays on.
+1. In the staging project's dashboard, Authentication, URL Configuration: add `http://localhost:3000/auth/callback` to the redirect URLs. Email sign-in (magic link) stays on. Under Authentication, Rate Limits, confirm the email-sending limit is set: the sign-in form sends to any address it is given, so that limit is what caps abuse, and wiring custom SMTP raises it.
 2. In `apps/web/.env.local`: `DATABASE_ENVIRONMENT=local`; `NEXT_PUBLIC_SUPABASE_URL_LOCAL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY_LOCAL` set to the staging values (Mode A).
 3. Start the local database and the app, then open `http://localhost:3000/auth/sign-in?next=/`.
 4. Enter an inbox you control and press "Email me a sign-in link". The page shows "Check your email for a sign-in link."

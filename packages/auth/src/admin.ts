@@ -6,6 +6,8 @@
  * process in as a user.
  */
 
+import "server-only";
+
 import { createClient } from "@supabase/supabase-js";
 
 export type AdminConfig = {

@@ -42,9 +42,9 @@ When the database goes too, its runbook deletes the whole `packages/db/` folder,
 
 - `apps/web/env.ts`: the `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` and `SUPABASE_SERVICE_ROLE_KEY` reads in `raw` (each with its `_LOCAL` and `_STAGING` forms), `supabaseUrl` and `supabasePublishableKey`, their `server`, `client` and `runtimeEnv` entries, and the two `nextConfigEnv` entries. The `DATABASE_URL` reads and entries serve only the mirror: delete them too unless another app file reads `env.DATABASE_URL`.
 - `apps/web/next.config.ts`: `@pem/auth` in `transpilePackages`, and `@pem/db` unless the app still imports it.
-- `apps/web/package.json`: `@pem/auth` and `server-only`; `@pem/db` unless the app still imports it.
+- `apps/web/package.json`: `@pem/auth`; `server-only` unless another file in the app imports it; `@pem/db` unless the app still imports it.
 - `packages/config/eslint/boundaries.js` and `tooling/boundaries.test.ts`: see Boundaries entries.
-- `docs/engineering/tech-stack.md`: the `@supabase/ssr`, `@supabase/supabase-js` row and the `server-only` row.
+- `docs/engineering/tech-stack.md`: the `@supabase/ssr`, `@supabase/supabase-js` row, and `@pem/auth` and `apps/web` from the `server-only` row.
 
 ## Variables
 
@@ -58,7 +58,7 @@ The first and last are also the database package's for `db:seed-users`; "The loc
 
 ## Dependencies
 
-`@pem/auth`, `@supabase/ssr`, `@supabase/supabase-js` and `server-only`. After deleting the folders, run `yarn install` so `yarn.lock` drops them.
+`@pem/auth`, `@supabase/ssr` and `@supabase/supabase-js`. After deleting the folders, run `yarn install` so `yarn.lock` drops them. `server-only` is not the module's: `apps/docs` uses it too, so only `apps/web`'s entry goes, and only when nothing there imports it.
 
 ## Boundaries entries
 

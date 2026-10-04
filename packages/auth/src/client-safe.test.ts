@@ -79,3 +79,8 @@ test("the walk sees a server import when there is one", () => {
   assert.ok(!external.has("node:fs"));
   assert.ok(walk(entryFile("./context")).external.has("@pem/db/rls"));
 });
+
+for (const subpath of SERVER)
+  test(`${subpath} is marked server-only, so a client component cannot import it`, () => {
+    assert.ok(importsOf(entryFile(subpath)).includes("server-only"));
+  });

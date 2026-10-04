@@ -256,12 +256,7 @@
         "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
         "SUPABASE_SERVICE_ROLE_KEY"
       ],
-      "dependencies": [
-        "@pem/auth",
-        "@supabase/ssr",
-        "@supabase/supabase-js",
-        "server-only"
-      ],
+      "dependencies": ["@pem/auth", "@supabase/ssr", "@supabase/supabase-js"],
       "boundaries": ["auth"],
       "locked": false,
       "runbook": "docs/runbooks/remove-supabase-auth.md"

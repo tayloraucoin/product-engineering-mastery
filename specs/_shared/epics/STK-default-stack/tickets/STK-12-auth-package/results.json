@@ -88,8 +88,18 @@
     "review:warden": {
       "status": "FAIL",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run warden STK-12",
+        "exit": 0,
+        "at": "2026-10-04T21:26:43Z",
+        "head": "9e1336164ea21edac17a2bdeda7384b08723cdc7",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-12-auth-package/review-warden.md",
+        "evidence_sha256": "431ae330fe65e6578bfccdd078fa4b8fb42a2a6cd46ff9631766ba69a5ba8a83",
+        "contract_sha256": "ba875bb0ce0deabe9ef8132358a95bb904251e291baf8587446b35a0d4f92eeb",
+        "as_built_sha256": "855981be4d2ad425fff17544d9036a119228db59e102d6af23b444dbbf0e4ce3",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
+      }
     }
   },
-  "updated_at": "2026-10-04T21:25:52Z"
+  "updated_at": "2026-10-04T21:33:59Z"
 }

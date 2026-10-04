@@ -13,6 +13,7 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
+import { publicKeyProblem } from "@pem/auth/config";
 import { nextPublicEnv } from "@pem/env/next-public";
 import { pickTiered } from "@pem/env/pick";
 import { isDeployed, resolveSiteUrl } from "@pem/env/site-url";
@@ -108,8 +109,17 @@ export const env = createEnv({
     NEXT_PUBLIC_SITE_URL: z.url(),
     /** The Supabase project's URL. Optional: without it and the key, the app serves signed out. */
     NEXT_PUBLIC_SUPABASE_URL: z.url().optional(),
-    /** The project's publishable key (or its legacy anon key): public by design, row-level security guards the data. */
-    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z.string().min(1).optional(),
+    /** The project's publishable key (or its legacy anon key): public by design, row-level security guards the data. A secret key here is refused, since it would reach every bundle. */
+    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: z
+      .string()
+      .min(1)
+      .optional()
+      .superRefine((value, context) => {
+        const problem =
+          value &&
+          publicKeyProblem("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", value);
+        if (problem) context.addIssue({ code: "custom", message: problem });
+      }),
   },
   runtimeEnv: {
     DATABASE_ENVIRONMENT: tier,

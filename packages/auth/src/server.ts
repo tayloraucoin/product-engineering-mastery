@@ -9,6 +9,8 @@
  * for the user with `getUser()`.
  */
 
+import "server-only";
+
 import { createServerClient } from "@supabase/ssr";
 
 import type { AuthConfig } from "./config.ts";

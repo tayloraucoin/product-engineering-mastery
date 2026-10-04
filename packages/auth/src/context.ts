@@ -19,6 +19,8 @@
  * next request tries again.
  */
 
+import "server-only";
+
 import { APP_ROLES, type AppRole } from "@pem/db/rls";
 import { createLogger, type Logger } from "@pem/observability/logger";
 

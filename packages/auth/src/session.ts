@@ -13,6 +13,8 @@
  * request seam in `context.ts`.
  */
 
+import "server-only";
+
 import type { AuthConfig } from "./config.ts";
 import {
   foreignSessionCookies,

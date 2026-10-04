@@ -29,9 +29,13 @@ function isEmailLinkType(value: string | null): value is EmailLinkType {
 
 export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
+  // Unconfigured, the sign-in page says so; it is not an expired link.
+  if (!supabaseConfig)
+    return NextResponse.redirect(
+      afterSignInUrl(env.NEXT_PUBLIC_SITE_URL, SIGN_IN_PATH),
+    );
   const failed = afterSignInUrl(env.NEXT_PUBLIC_SITE_URL, SIGN_IN_PATH);
   failed.searchParams.set("state", "expired");
-  if (!supabaseConfig) return NextResponse.redirect(failed);
 
   const code = params.get("code");
   const tokenHash = params.get("token_hash");

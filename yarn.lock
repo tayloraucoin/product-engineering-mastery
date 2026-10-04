@@ -1881,6 +1881,7 @@ __metadata:
     "@supabase/supabase-js": "npm:2.117.2"
     "@types/node": "npm:^22"
     eslint: "npm:^9.39.1"
+    server-only: "npm:0.0.1"
     typescript: "npm:5.9.2"
   languageName: unknown
   linkType: soft
