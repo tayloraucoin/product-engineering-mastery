@@ -27,6 +27,7 @@ planned_paths:
   - "packages/db/test/**"
   - "packages/db/scripts/**"
   - "packages/db/supabase/config.toml"
+  - "packages/db/supabase/setup/04_users_backfill.sql"
   - "packages/db/supabase/.gitignore"
   - "packages/db/package.json"
   - "toolkit.json"

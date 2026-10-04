@@ -126,6 +126,19 @@ describe("the mirror on a marked database without auth.identities", () => {
     assert.equal(await applyLocalAuthMirror(admin, user), "unchanged");
   });
 
+  test("after public loses the user's row, as on a local reset, setup restores it", async () => {
+    const user = syntheticUser("reset");
+    const client = admin;
+    assert.ok(client);
+    assert.equal(await applyLocalAuthMirror(client, user), "inserted");
+    await client`delete from public.users where id = ${user.id}`;
+    clearLocalAuthMirrorCache();
+    assert.equal(await applyLocalAuthMirror(client, user), "unchanged");
+    assert.deepEqual(await publicEmail(user.id), []);
+    await applySetup(client);
+    assert.deepEqual(await publicEmail(user.id), [user.email]);
+  });
+
   test("upserts a changed email into auth.users and public.users", async () => {
     const user = syntheticUser("change");
     assert.ok(admin);
