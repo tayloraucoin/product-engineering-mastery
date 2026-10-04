@@ -10,7 +10,7 @@
 
 ## Deviations
 
-- After the tier 1 review (`specs/web/_batch-review-2026-10-04-WEB-3.md`): the in-flight reading refuses merged tickets, future and off-branch headers; C1's test pins the per-criterion write; `.gitignore` ignores a crashed run's temp log (`.gitignore` added to `planned_paths`).
+- After the tier 1 review (`specs/web/one-offs/WEB-3-contract-run-in-flight/_batch-review-2026-10-04.md`): the in-flight reading refuses merged tickets, future and off-branch headers; C1's test pins the per-criterion write; `.gitignore` ignores a crashed run's temp log (`.gitignore` added to `planned_paths`).
 - No ledger line: a defect fix under PR-14 and PR-15, not a new ruling. The changelog has the entry.
 - Built in an app-made worktree branch (`claude/funny-aryabhata-60d663`), which Taylor fast-forwarded to `agent/STK-3` at `4ac308f`. It merges back into `agent/STK-3`.
 
