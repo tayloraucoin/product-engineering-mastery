@@ -15,7 +15,10 @@ cites:
   - "D-STK-12"
   - "D-STK-16"
 truth_files: "none: no living UX file covers the starter's own stack"
-reviewers: []
+reviewers:
+  - mason
+  - vigil
+  - warden
 planned_paths:
   - "packages/email/**"
   - "packages/config/eslint/boundaries.js"
@@ -54,6 +57,19 @@ criteria:
     statement: "Types and build pass."
     evidence: check
     command: "yarn verify"
+  - id: review:mason
+    statement: Mason reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run mason <id>
+  - id: review:vigil
+    statement: Vigil reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run vigil <id>
+  - id: review:warden
+    statement: Warden reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
+tier: 2
 ---
 
 # Contract — STK-15 email-package
