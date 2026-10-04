@@ -8,10 +8,10 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-04T07:05:54Z",
-        "head": "f740df0853afec4f73bea6f0169fb338b259a3ba",
+        "at": "2026-10-04T07:16:18Z",
+        "head": "3cb07ca56e0e50b77b9580b83058bd8e40a9a54c",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-7-brand-source/evidence/C1.log",
-        "evidence_sha256": "d2bd32213bbd33cd30f4448633154ed8003330b5026286dbe5ccc5ff1a8e386a",
+        "evidence_sha256": "5e3785cd343ce64d19dba8d5ca287a2650ffeb5b3c223a63ac694ab9ba17dfc2",
         "tests": 47
       }
     },
@@ -21,10 +21,10 @@
       "run": {
         "command": "yarn lint:boundaries",
         "exit": 0,
-        "at": "2026-10-04T07:05:55Z",
-        "head": "f740df0853afec4f73bea6f0169fb338b259a3ba",
+        "at": "2026-10-04T07:16:27Z",
+        "head": "3cb07ca56e0e50b77b9580b83058bd8e40a9a54c",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-7-brand-source/evidence/C2.log",
-        "evidence_sha256": "64ab2245626cd41ee680b52680e7e4ba8a756da7ae5e07f54f376b09888e4d00"
+        "evidence_sha256": "776401543fb5de04af384e779ed4236201e7ad9d54682f0f2fc0311364083f1b"
       }
     },
     "C3": {
@@ -45,12 +45,12 @@
       "run": {
         "command": "yarn contract:record STK-7 C4 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-7-brand-source/evidence/og.png",
         "exit": 0,
-        "at": "2026-10-04T07:06:28Z",
-        "head": "f740df0853afec4f73bea6f0169fb338b259a3ba",
+        "at": "2026-10-04T07:16:37Z",
+        "head": "3cb07ca56e0e50b77b9580b83058bd8e40a9a54c",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-7-brand-source/evidence/og.png",
         "evidence_sha256": "9eca51197fa54f4ab8385a7d6923f44a2f535bbcf75a2e6ce401fd9d5b360506"
       }
     }
   },
-  "updated_at": "2026-10-04T07:07:54Z"
+  "updated_at": "2026-10-04T07:16:37Z"
 }
