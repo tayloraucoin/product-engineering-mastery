@@ -6,6 +6,7 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "lint:boundaries": "eslint . --max-warnings 0",
+    "test:boundaries": "node --test tooling/boundaries.test.ts",
     "check-types": "turbo run check-types",
     "check-types:tooling": "tsc -p tooling",
     "format": "prettier --write \"**/*.{ts,tsx,md,mjs,css}\"",
