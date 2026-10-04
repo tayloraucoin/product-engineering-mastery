@@ -33,6 +33,13 @@ Against the non-negotiables:
 
 - **This branch is stacked.** `agent/STK-3` sits on STK-1 and STK-2, both unmerged, and on `agent/PJ-stacked-start` (commits `9ef500f` and `9db344c`: `contract:init` allows stacking, and `tk-kickoff`/`tk-close` became model-invocable, at Taylor's instruction of 2026-10-03, ledger PR-13). Those commits are not STK-3's work and touch none of its planned paths. Taylor merges in that order.
 - **One fact in the guide is marked, not settled:** `[ASSUMPTION]` the product starts its own git history, and a first commit on a branch of an empty repo needs nothing more. STK-20 settles both.
+- **Changed after the first vigil review (PASS, four should-fix):**
+  - step 2's scope rename and its check now also leave `specs/` alone, so the check can print nothing without hand-editing recorded contracts;
+  - the README's opening sentence states duplicate-then-remove;
+  - `remove-billing.md` reads "STK-16 and STK-21 fill this", and its Verify names both tickets;
+  - the runbooks README carries `last_reviewed: 2026-10-03`.
+
+  C1 to C3 were re-proven after these edits and the review re-run. The other two should-fix findings are Taylor's, under Next. The shipped text has not had a third cold read; STK-20 reads the final text.
 
 ## Ledger IDs
 
@@ -68,4 +75,4 @@ claude-opus-5-5, Claude Code 2.1.232
 
 ## Next
 
-Taylor reads `review-vigil.md` and merges STK-1, STK-2, `agent/PJ-stacked-start`, then STK-3. `docs/index.md` still describes the old porting rule ("copies what it needs ... the port runbook in `README.md`"). It is outside this contract and needs plan mode: a one-line follow-up. Next prompt: none yet; the Tickets stage cuts tickets 4 to 6 next.
+Taylor reads `review-vigil.md`, decides the evaluator-budget row before the stack merges (vigil should-fix 4), and merges STK-1, STK-2, `agent/PJ-stacked-start`, then STK-3. `docs/index.md:16` still describes the old porting rule ("copies what it needs ... the port runbook in `README.md`"). It is outside this contract and needs plan mode: a one-line follow-up for Taylor (vigil should-fix 3). Next prompt: none yet; the Tickets stage cuts tickets 4 to 6 next.

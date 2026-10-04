@@ -62,12 +62,12 @@ All work goes on the `agent/<repo-wide-prefix>` branch: the hooks refuse commits
 
 ## 2. Rename the scope and the prefixes
 
-1. **Scope.** `git grep -l "@pem/"` lists every file that names the scope: package manifests, imports, the ESLint and Prettier configs, `toolkit.json`, and the rules and docs that state the convention. Replace `@pem/` with the briefing's scope in each. Leave `docs/decisions/`, `docs/prompts/` and `docs/research/` alone: they are history, byte-preserved, or cleared in step 5. Then run `yarn install` so `yarn.lock` follows.
+1. **Scope.** `git grep -l "@pem/"` lists every file that names the scope: package manifests, imports, the ESLint and Prettier configs, `toolkit.json`, and the rules and docs that state the convention. Replace `@pem/` with the briefing's scope in each. Leave `docs/decisions/`, `docs/prompts/`, `docs/research/` and `specs/` alone: they are history, byte-preserved, or cleared in step 5, and a recorded contract or `results.json` is never hand-edited. Then run `yarn install` so `yarn.lock` follows.
 2. **Root name.** The `name` in the root `package.json` becomes the repo slug.
 3. **App prefixes.** In `toolkit.json`, each app's `prefix` becomes the briefing's prefix for that app.
 4. **Repo-wide prefix.** `toolkitPrefixes` in `toolkit.json` becomes a list of one: the repo-wide prefix. `PEM` and `PJ` both go.
 
-**Check:** `git grep -n "@pem/" -- . ':!docs/decisions' ':!docs/prompts' ':!docs/research'` prints nothing, and `yarn check-types` exits 0.
+**Check:** `git grep -n "@pem/" -- . ':!docs/decisions' ':!docs/prompts' ':!docs/research' ':!specs'` prints nothing, and `yarn check-types` exits 0.
 
 ## 3. Set the brand
 

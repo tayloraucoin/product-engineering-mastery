@@ -1,6 +1,6 @@
 # Product Engineering Mastery
 
-A universal product-engineering toolkit: the practice that people and coding agents build by (roles, a design canon, templates, decisions, primer prompts), a library loaded on demand, and a demo app that proves both. No product lives here. Clone it, run it, and copy what a product needs.
+A universal product-engineering toolkit: the practice that people and coding agents build by (roles, a design canon, templates, decisions, primer prompts), a library loaded on demand, and a demo app that proves both. No product lives here. Clone it and run it; a product starts as a duplicate of it, then removes what it does not use.
 
 **Start here, as a person:** [`docs/README.md`](docs/README.md), organised by the question you arrive with. **How the layers relate:** [`docs/index.md`](docs/index.md), the map agents read. This README only gets you running.
 

@@ -6,7 +6,7 @@ status: adopted
 thread: P-J
 role: Usher
 date: 2026-10-02
-last_reviewed: 2026-10-02
+last_reviewed: 2026-10-03
 supersedes:
 load_when:
 ---
