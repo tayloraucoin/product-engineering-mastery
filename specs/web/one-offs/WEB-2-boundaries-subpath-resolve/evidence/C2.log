@@ -1,50 +1,50 @@
 command: yarn test:boundaries
 exit: 0
-at: 2026-10-04T07:36:14Z
-head: f9d7da16f267b9c9391840a34863225c718fe896
+at: 2026-10-04T07:44:49Z
+head: bdd5023838693a7ad6231421463aea48a82ac49f
 tests: 7
 ---
 TAP version 13
 # Subtest: C1: import "@pem/db/client"; in packages/ui/src/zz-probe.ts fails the boundaries lint
 ok 1 - C1: import "@pem/db/client"; in packages/ui/src/zz-probe.ts fails the boundaries lint
   ---
-  duration_ms: 643.457541
+  duration_ms: 674.852875
   type: 'test'
   ...
 # Subtest: C1: import "@pem/brand/brand"; in packages/env/src/zz-probe.ts fails the boundaries lint
 ok 2 - C1: import "@pem/brand/brand"; in packages/env/src/zz-probe.ts fails the boundaries lint
   ---
-  duration_ms: 6.112458
+  duration_ms: 5.560625
   type: 'test'
   ...
 # Subtest: C1: import "../../db/src/client"; in packages/env/src/zz-probe.ts fails the boundaries lint
 ok 3 - C1: import "../../db/src/client"; in packages/env/src/zz-probe.ts fails the boundaries lint
   ---
-  duration_ms: 8.525
+  duration_ms: 9.637166
   type: 'test'
   ...
 # Subtest: C2: an @pem subpath its package does not export is a resolve error
 ok 4 - C2: an @pem subpath its package does not export is a resolve error
   ---
-  duration_ms: 2.066791
+  duration_ms: 2.018083
   type: 'test'
   ...
 # Subtest: C2: import type { Tier } from "@pem/env/tier"; in packages/db/src/zz-probe.ts still passes
 ok 5 - C2: import type { Tier } from "@pem/env/tier"; in packages/db/src/zz-probe.ts still passes
   ---
-  duration_ms: 7.005916
+  duration_ms: 5.656875
   type: 'test'
   ...
 # Subtest: C2: import "next-themes"; import "react"; in packages/ui/src/zz-probe.ts still passes
 ok 6 - C2: import "next-themes"; import "react"; in packages/ui/src/zz-probe.ts still passes
   ---
-  duration_ms: 5.354292
+  duration_ms: 5.147292
   type: 'test'
   ...
 # Subtest: C2: import "@pem/ui/button"; import "@pem/ui/styles/globals.css"; import "@pem/brand/assets/logo.svg"; import "@/app/layout"; in apps/web/app/zz-probe.ts still passes
 ok 7 - C2: import "@pem/ui/button"; import "@pem/ui/styles/globals.css"; import "@pem/brand/assets/logo.svg"; import "@/app/layout"; in apps/web/app/zz-probe.ts still passes
   ---
-  duration_ms: 7.857959
+  duration_ms: 7.481209
   type: 'test'
   ...
 1..7
@@ -55,4 +55,4 @@ ok 7 - C2: import "@pem/ui/button"; import "@pem/ui/styles/globals.css"; import 
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 876.181416
+# duration_ms 910.499333
