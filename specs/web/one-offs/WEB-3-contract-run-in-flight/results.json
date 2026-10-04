@@ -3,30 +3,68 @@
   "criteria_sha256": "90f84b34013919702edb3a9f10e6d371a0deefae47cbb671fb39b825a45c8f68",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-04T20:47:35Z",
+        "head": "6b22653d62b6dda0e33add15790e41222a59bafe",
+        "evidence_path": "specs/web/one-offs/WEB-3-contract-run-in-flight/evidence/C1.log",
+        "evidence_sha256": "11a5d975147cd803dabb63a10a4516a0d0f68f1591d4f602967550c8462c9545",
+        "tests": 54
+      }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-04T20:48:19Z",
+        "head": "6b22653d62b6dda0e33add15790e41222a59bafe",
+        "evidence_path": "specs/web/one-offs/WEB-3-contract-run-in-flight/evidence/C2.log",
+        "evidence_sha256": "c15646ca5320dcf24e2b6ac1e24dedaab1ab2cbdecd8a9b0a72003192520f34c",
+        "tests": 54
+      }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-04T20:49:00Z",
+        "head": "6b22653d62b6dda0e33add15790e41222a59bafe",
+        "evidence_path": "specs/web/one-offs/WEB-3-contract-run-in-flight/evidence/C3.log",
+        "evidence_sha256": "aa4e4c402f92716df47799b8d7ada1fb765c391ba5c86dfd587701161db1bee9",
+        "tests": 54
+      }
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn check-specs",
+        "exit": 0,
+        "at": "2026-10-04T20:49:42Z",
+        "head": "6b22653d62b6dda0e33add15790e41222a59bafe",
+        "evidence_path": "specs/web/one-offs/WEB-3-contract-run-in-flight/evidence/C4.log",
+        "evidence_sha256": "9465df31d8c9631b71fdbb44f5535cd3785cc6402db7f42632a1deb8db3535b1"
+      }
     },
     "C5": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn check-types:tooling",
+        "exit": 0,
+        "at": "2026-10-04T20:50:17Z",
+        "head": "6b22653d62b6dda0e33add15790e41222a59bafe",
+        "evidence_path": "specs/web/one-offs/WEB-3-contract-run-in-flight/evidence/C5.log",
+        "evidence_sha256": "5a04fa6627b18199d6bf119774d432d90b4a804292351a9c38de1834b18404e7"
+      }
     }
   },
-  "updated_at": "2026-10-04T20:44:27Z"
+  "updated_at": "2026-10-04T20:50:18Z"
 }
