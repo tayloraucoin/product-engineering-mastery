@@ -24,7 +24,7 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: getLocalDevOrigins(),
 
   // Workspace packages ship TypeScript source; the app compiles them.
-  transpilePackages: ["@pem/env", "@pem/ui"],
+  transpilePackages: ["@pem/brand", "@pem/env", "@pem/ui"],
 
   /**
    * Inlined into every bundle, the browser's included: only the collapsed

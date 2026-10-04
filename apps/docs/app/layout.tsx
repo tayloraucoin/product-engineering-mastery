@@ -1,6 +1,9 @@
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
 
+import { brand } from "@pem/brand/brand";
+import { brandSans } from "@pem/brand/font";
+import { appIcon } from "@pem/brand/icon";
 import { ThemeProvider } from "@pem/ui/theme";
 
 import { Sidebar } from "./_components/sidebar";
@@ -9,9 +12,10 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Docs · Product Engineering Mastery",
-    template: "%s · PEM Docs",
+    default: `Docs · ${brand.name}`,
+    template: `%s · ${brand.shortName} Docs`,
   },
+  icons: { icon: [{ url: appIcon.src, type: appIcon.type }] },
   description:
     "The practice — roles, design canon, templates, decisions, prompts — rendered from docs/ for reading.",
 };
@@ -19,7 +23,7 @@ export const metadata: Metadata = {
 /** Two columns: a full-height sidebar panel that scrolls on its own, and the page body. */
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={brandSans.variable} suppressHydrationWarning>
       <body>
         <ThemeProvider>
           <div className="md:flex">

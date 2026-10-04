@@ -11,6 +11,7 @@
     "check-types": "next typegen && tsc --noEmit"
   },
   "dependencies": {
+    "@pem/brand": "workspace:*",
     "@pem/env": "workspace:*",
     "@pem/ui": "workspace:*",
     "@t3-oss/env-nextjs": "^0.13.11",
