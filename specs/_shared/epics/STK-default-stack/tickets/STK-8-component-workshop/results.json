@@ -8,23 +8,23 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-04T07:58:27Z",
-        "head": "5c8c2ad4f9d544f506f3237328c921cdd5c1448c",
+        "at": "2026-10-04T19:06:30Z",
+        "head": "6c214cd874296aa2f9da872fba71b88cd5872361",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-8-component-workshop/evidence/C1.log",
-        "evidence_sha256": "0c3004affc5a4f00b9443a3b4082e38bb6f5d8c92ed1d6de4faa6b115cb516b8",
+        "evidence_sha256": "76695a121fb6cde556a48ea360874b70280fe2961bbd9f0ff54707727ec11452",
         "tests": 54
       }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
       "run": {
         "command": "yarn verify",
-        "exit": 1,
-        "at": "2026-10-04T07:58:31Z",
-        "head": "5c8c2ad4f9d544f506f3237328c921cdd5c1448c",
+        "exit": 0,
+        "at": "2026-10-04T19:07:21Z",
+        "head": "6c214cd874296aa2f9da872fba71b88cd5872361",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-8-component-workshop/evidence/C2.log",
-        "evidence_sha256": "c350d9390b4c0f2740aff08265cfdecd57fff55e97cea940b0e3894cf314bf8a"
+        "evidence_sha256": "6ce7fd43412d97f2ab8be0ca3b075b8a304b295c2412b26c8a91fb23878a3471"
       }
     },
     "C3": {
@@ -57,13 +57,13 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-04T07:58:36Z",
-        "head": "5c8c2ad4f9d544f506f3237328c921cdd5c1448c",
+        "at": "2026-10-04T19:07:04Z",
+        "head": "6c214cd874296aa2f9da872fba71b88cd5872361",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-8-component-workshop/evidence/C5.log",
-        "evidence_sha256": "ae2b9287feeec86a1f31e0902cd4ed154909b2a0b5e277269eb1f49d6387d08a",
+        "evidence_sha256": "640fbdc1be6113e2a0be6b1e8c049a0253d8e6fe9ab32ba324f015cd1031e9d3",
         "tests": 54
       }
     }
   },
-  "updated_at": "2026-10-04T07:58:53Z"
+  "updated_at": "2026-10-04T19:08:34Z"
 }

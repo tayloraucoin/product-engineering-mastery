@@ -1,7 +1,7 @@
 command: yarn test
 exit: 0
-at: 2026-10-04T07:58:27Z
-head: 5c8c2ad4f9d544f506f3237328c921cdd5c1448c
+at: 2026-10-04T19:06:30Z
+head: 6c214cd874296aa2f9da872fba71b88cd5872361
 tests: 54
 ---
 
@@ -10,7 +10,7 @@ tests: 54
    • Running test in 7 packages
    • Remote caching disabled
 
-cache miss, executing b0096fa85538c786
+cache hit, replaying logs b0096fa85538c786
 cache hit, replaying logs 0c7c49fe797a4850
 cache hit, replaying logs c1076eeacfa5afe5
 cache hit, replaying logs c18cc36adcb2e36c
@@ -68,14 +68,28 @@ ok 8 - anything but oklch() is refused
 # suites 0
 # pass 8
 # fail 0
+
+ RUN  v5.0.3 ./packages/ui
+
+ ✓ .storybook/story-coverage.test.ts (5 tests) 5ms
+stderr | .storybook/stories.test.ts > Composed/Control/Theme toggle > System
+Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template).
+
+ ✓ .storybook/stories.test.ts (20 tests) 680ms
 # cancelled 0
-# skipped 0
-# todo 0
-# duration_ms 83.326292
 TAP version 13
+# skipped 0
+
 # Subtest: C2: a live-mode key on local or staging fails with the variable named
+# todo 0
 ok 1 - C2: a live-mode key on local or staging fails with the variable named
+ Test Files  2 passed (2)
+      Tests  25 passed (25)
   ---
+# duration_ms 83.326292
+   Start at  00:58:29
+   Duration  2.38s (transform 38%, environment 27%, tests 18%, setup 16%)
+
   duration_ms: 0.568333
   type: 'test'
   ...
@@ -108,21 +122,7 @@ ok 6 - a server-only name is refused, by name
   ---
   duration_ms: 0.35575
   type: 'test'
-TAP version 13
-# Subtest: each kind of DDL or write against auth is caught
   ...
-ok 1 - each kind of DDL or write against auth is caught
-  ---
-  duration_ms: 1.488666
-  type: 'test'
-  ...
-# Subtest: a foreign key to auth.users and a call to auth.uid() are allowed
-ok 2 - a foreign key to auth.users and a call to auth.uid() are allowed
-  ---
-  duration_ms: 0.107958
-  type: 'test'
-  ...
-# Subtest: a migration with DDL against auth fails, numbered by statement
 # Subtest: C1: each tier reads its own variable
 ok 7 - C1: each tier reads its own variable
   ---
@@ -135,6 +135,19 @@ ok 8 - C1: a tier whose own value is absent or empty reads the unsuffixed value
   duration_ms: 0.091375
   type: 'test'
   ...
+TAP version 13
+# Subtest: each kind of DDL or write against auth is caught
+ok 1 - each kind of DDL or write against auth is caught
+  ---
+  duration_ms: 1.488666
+  type: 'test'
+  ...
+# Subtest: a foreign key to auth.users and a call to auth.uid() are allowed
+ok 2 - a foreign key to auth.users and a call to auth.uid() are allowed
+  ---
+  duration_ms: 0.107958
+  type: 'test'
+  ...
 # Subtest: C1: nothing set picks undefined
 ok 9 - C1: nothing set picks undefined
   ---
@@ -145,6 +158,10 @@ ok 9 - C1: nothing set picks undefined
 ok 10 - C1: production never reads a suffixed value
   ---
   duration_ms: 0.05625
+# Subtest: a migration with DDL against auth fails, numbered by statement
+ok 3 - a migration with DDL against auth fails, numbered by statement
+  ---
+  duration_ms: 0.699125
   type: 'test'
   ...
 # Subtest: C1: the suffix grammar names each form
@@ -154,8 +171,6 @@ ok 11 - C1: the suffix grammar names each form
   type: 'test'
   ...
 # Subtest: C1: the switch defaults to local, never production, and names itself when wrong
-ok 3 - a migration with DDL against auth fails, numbered by statement
-  ---
 ok 12 - C1: the switch defaults to local, never production, and names itself when wrong
   ---
   duration_ms: 0.216875
@@ -164,7 +179,24 @@ ok 12 - C1: the switch defaults to local, never production, and names itself whe
 # Subtest: outside a deployment the site URL is localhost, whatever is configured
 ok 13 - outside a deployment the site URL is localhost, whatever is configured
   ---
-  duration_ms: 0.699125
+  duration_ms: 0.661625
+  type: 'test'
+  ...
+# Subtest: in a deployment the configured URL is used, without a trailing slash
+ok 14 - in a deployment the configured URL is used, without a trailing slash
+  ---
+  duration_ms: 0.155875
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 77.555875
   type: 'test'
   ...
 # Subtest: the generated migration set passes, and it does reference auth.users
@@ -189,24 +221,6 @@ ok 4 - the generated migration set passes, and it does reference auth.users
     # Subtest: creates each synthetic user through the local admin API
     ok 3 - creates each synthetic user through the local admin API
       ---
-  duration_ms: 0.661625
-  type: 'test'
-  ...
-# Subtest: in a deployment the configured URL is used, without a trailing slash
-ok 14 - in a deployment the configured URL is used, without a trailing slash
-  ---
-  duration_ms: 0.155875
-  type: 'test'
-  ...
-1..14
-# tests 14
-# suites 0
-# pass 14
-# fail 0
-# cancelled 0
-# skipped 0
-# todo 0
-# duration_ms 77.555875
       duration_ms: 17.170375
       type: 'test'
       ...
@@ -373,21 +387,7 @@ ok 17 - every table carries its policies beside it
 # todo 0
 # duration_ms 1973.02625
 
- RUN  v5.0.3 ./packages/ui
-
- ✓ .storybook/story-coverage.test.ts (5 tests) 5ms
-stderr | .storybook/stories.test.ts > Composed/Control/Theme toggle > System
-Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template).
-
- ✓ .storybook/stories.test.ts (20 tests) 680ms
-
- Test Files  2 passed (2)
-      Tests  25 passed (25)
-   Start at  00:58:29
-   Duration  2.38s (transform 38%, environment 27%, tests 18%, setup 16%)
-
-
  Tasks:    4 successful, 4 total
-Cached:    3 cached, 4 total
-  Time:    3.471s 
+Cached:    4 cached, 4 total
+  Time:    116ms >>> FULL TURBO
 

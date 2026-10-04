@@ -3,7 +3,7 @@
 ## Shipped against the contract
 
 - C1: `packages/ui/.storybook/stories.test.ts` composes every `src/**/*.stories.tsx` (portable stories, `@storybook/nextjs-vite`) and runs each one in Vitest on jsdom: render, then its `play` interactions, then the a11y addon's own axe pass (`a11y.test: "error"`), so the workshop and `yarn test` use one rule set. A fixture story with an unnamed button must fail (`button-name`), which proves the axe pass really fails a story. Every story's parameters must keep `a11y.test` at `"error"`, so no story can opt out. There are 19 stories: button (Default, Outline, Ghost, Small, Large, Hover, OutlineHover, GhostHover, Focus, Disabled), theme toggle (Unresolved, System, Light, Dark, Keyboard, Click) and theme provider (System, Light, Dark). `yarn test` PASS, with `@pem/ui` at 25 tests.
-- C2: every step of `yarn verify` except `check-settings` passes with the story checks in it, including both app builds. `evidence/verify-without-check-settings.log` (at 6d5405d) exits 0. `check-settings` fails on `.claude/settings.json`, which STK-10's template change (58af6ef) now requires to ask before `db:local:reset`. That file is write-protected for agents and is not this ticket's, so C2 stays FAIL until it is updated (see Next).
+- C2: `yarn verify` PASS, with the story checks in it and both app builds. It first failed at `check-settings`, because `.claude/settings.json` lacked the `db:local:reset` ask rule that STK-10's template requires; Taylor approved the line (6c214cd). C2 then ran on its own, since a run with C1 trips `check-specs` on C1's freshly rewritten log (the race STK-7 recorded).
 - C3: `evidence/button-dark.png` (at 6d5405d) shows the workshop at 1440×900. The manager carries the brand: logo, name and home link from `manager.ts` and `@pem/brand`. Button / Default is in dark mode from the toolbar, with the brand font, the dark `--primary`, and the Accessibility panel at 0 violations.
 - C4: `evidence/C4-warm-start.log` (at 6d5405d): `yarn ui:storybook --ci` answered on `localhost:6006` after 2.2 s, warm (Storybook reports manager 136 ms, preview 195 ms).
 - C5: `.storybook/story-coverage.ts` requires `<name>.stories.tsx` beside each primitive and composed component, and a `*.stories.tsx` in each provider folder. Each story file needs at least one story and a title in the grammar `<Group>/<Kind>/<Name>` (`Primitives/Control/Button`, `Composed/Control/Theme toggle`) or `Providers/<Name>`. `story-coverage.test.ts` passes on the package. On `.storybook/fixtures/uncovered` it fails `orphan` and the provider `bare`, naming each folder and its missing file, and fails a misnamed title. It reports nothing else. `yarn test` PASS.
@@ -26,9 +26,8 @@
 - C3 is a capture. `.claude/rules/testing.md` counts every capture as UNVERIFIED until the P-C harness exists, so the critic has not scored it.
 - C4 was timed by the agent with a script that polled the port, not by a person. The criterion asks for a person.
 - The apps after the base layer moved: both build, but no one has looked at them in a browser.
-- C2 cannot pass until `.claude/settings.json` asks before `db:local:reset`.
 - The boundaries lint still ignores `@pem/*` subpath imports (STK-7's finding 4, its own task). So the new `ui-workshop` edge is declared, but the lint does not enforce it yet.
 
 ## Next
 
-Taylor adds `"Bash(*db:local:reset*)"` to `permissions.ask` in `.claude/settings.json`, as in `docs/engineering/templates/settings.template.json`. Then `yarn contract:run STK-8` proves C2.
+Closed. A later ticket can add a `tooling/` check that `preview.css` matches the app's `globals.css` (batch review S4), and decide whether the story checks move to Vitest browser mode for contrast.
