@@ -8,23 +8,23 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-04T07:36:20Z",
-        "head": "e233d03d9bd3207ad0efd5d522fa1c88b043a9b0",
+        "at": "2026-10-04T19:10:37Z",
+        "head": "9dd86e12db3428e3ee4b1d3176397285670355b4",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-10-db-guardrails/evidence/C1.log",
-        "evidence_sha256": "0ac34c6d2765d412564b03b7bad9827584dea93623dce92ba44245c6cbd24ee7",
+        "evidence_sha256": "a48eee93c255915fe005faae2825da2b3a530323de29202e3b092380688b5bd6",
         "tests": 54
       }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
       "run": {
         "command": "yarn check-settings",
-        "exit": 1,
-        "at": "2026-10-04T07:36:24Z",
-        "head": "e233d03d9bd3207ad0efd5d522fa1c88b043a9b0",
+        "exit": 0,
+        "at": "2026-10-04T19:10:37Z",
+        "head": "9dd86e12db3428e3ee4b1d3176397285670355b4",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-10-db-guardrails/evidence/C2.log",
-        "evidence_sha256": "19b3a4a74144b4e4d91f762df93ba0d79cc25b4da380597202862c8b1ad858fa"
+        "evidence_sha256": "f30d7622fc06db595354682e10c8bcf5a675d3228db18ea2882a9e5b51773c17"
       }
     },
     "C3": {
@@ -33,10 +33,10 @@
       "run": {
         "command": "yarn test:hooks",
         "exit": 0,
-        "at": "2026-10-04T07:36:25Z",
-        "head": "e233d03d9bd3207ad0efd5d522fa1c88b043a9b0",
+        "at": "2026-10-04T19:10:38Z",
+        "head": "9dd86e12db3428e3ee4b1d3176397285670355b4",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-10-db-guardrails/evidence/C3.log",
-        "evidence_sha256": "65661f61b98ebdf5f10da6e25215597cab9600bcb6f6e37b8bc459e927335192"
+        "evidence_sha256": "cb7051c9ec667614dc9a6e406cb58538175353c7236d917cd46c42cf310f89e4"
       }
     },
     "C4": {
@@ -45,10 +45,10 @@
       "run": {
         "command": "yarn test:tooling",
         "exit": 0,
-        "at": "2026-10-04T07:36:34Z",
-        "head": "e233d03d9bd3207ad0efd5d522fa1c88b043a9b0",
+        "at": "2026-10-04T19:10:47Z",
+        "head": "9dd86e12db3428e3ee4b1d3176397285670355b4",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-10-db-guardrails/evidence/C4.log",
-        "evidence_sha256": "5306a2f46ee360589271e2e8539c70857cfde989f69331022e4c034a923708b2",
+        "evidence_sha256": "28cc45666fb16b0c2df8e4e77ebb6ca9255b61fe275078430d310a5677805daf",
         "tests": 51
       }
     },
@@ -68,5 +68,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-04T07:37:02Z"
+  "updated_at": "2026-10-04T19:11:15Z"
 }

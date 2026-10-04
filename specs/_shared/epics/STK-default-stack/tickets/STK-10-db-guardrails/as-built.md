@@ -9,7 +9,7 @@
 
 ## Deviations
 
-- **The settings change is one line, and it waits for Taylor.** `.claude/settings.json` already held the contract's six denies and six asks (since PJ's J2). The only addition is the ask `Bash(*db:local:reset*)`; the sandbox blocks agents from writing the file. Applying it: `cp docs/engineering/templates/settings.template.json .claude/settings.json` (JSON-identical apart from that line, checked 2026-10-04). Until then C2 fails, on that line only.
+- **The settings change is one line, applied by Taylor.** `.claude/settings.json` already held the contract's six denies and six asks (since PJ's J2). The only addition is the ask `Bash(*db:local:reset*)`, which the sandbox blocks agents from writing: committed in 6c214cd with Taylor's approval, then Taylor copied the template over the file on 2026-10-04 (9dd86e1; only `denyRead`'s line wrapping changed). C2 passed after it.
 - **[ASSUMPTION] The local reset is asked, not denied.** D-STK-18 says reset refuses any tier but `local`, so a local reset exists; the objective says agents must ask before changing a database. It is named `db:local:reset` so no reset deny (`*db:reset*`) matches it, and check-settings keeps it that way.
 - **[ASSUMPTION] "Before reading a URL" means before resolving one.** env.ts copies the URL variables into memory when it is imported, as it does for every db script; the refusal comes before `migrationUrl()` resolves, describes or connects to any of them.
 - **The reset leaves `auth`, the mirror's marker schema and the `public` schema's own grants and default privileges as they are.** It drops objects, not the schema, so Supabase's grants survive.
@@ -19,9 +19,9 @@
 ## Not verified
 
 - review:mason, review:vigil, review:warden: recorded by `yarn review:run` only.
-- `packages/db/test/reset-local-db.test.ts` (`yarn test:db`) has not run: Docker was not running in this session. It resets a migrated database holding a stray table, a stray enum, a note and a mirrored user, and checks that the stray objects and the note are gone, auth.users is kept, STK-11's setup backfill restores the user's public row, and the journal, the notes policies and both auth triggers are back. Run `yarn db:local && yarn test:db`.
+- `packages/db/test/reset-local-db.test.ts` is in `yarn test:db`, not a criterion. It resets a migrated database holding a stray table, a stray enum, a note and a mirrored user, and checks that the stray objects and the note are gone, auth.users is kept, STK-11's setup backfill restores the user's public row, and the journal, the notes policies and both auth triggers are back. Taylor ran `yarn db:local && yarn test:db` on 2026-10-04: 15 of 15 pass, this test included (`evidence/test-db.txt`, as pasted).
 - The guard is text analysis: a SQL file passed with `psql -f`, or a command held in a variable, is invisible to it. The settings rules and the reset's own tier refusal are the layers behind it.
 
 ## Next
 
-Taylor applies the settings line, `yarn contract:run STK-10` re-proves C2, and STK-11 continues.
+Taylor reads the three `review-<role>.md` files and merges; STK-11 continues.

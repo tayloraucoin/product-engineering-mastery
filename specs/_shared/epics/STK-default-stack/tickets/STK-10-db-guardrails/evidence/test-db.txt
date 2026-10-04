@@ -1,0 +1,38 @@
+yarn db:local && yarn test:db — run by Taylor, 2026-10-04, pasted into the STK-10 thread.
+
+.env.local not found. Continuing without it.
+Postgres database is already running.
+db:local — ready at 127.0.0.1:54322 (Mode A: sign-in on staging, users mirrored here); next: yarn db:migrate && yarn db:setup
+▶ the mirror on a marked database without auth.identities
+  ✔ inserts id and email only, and the trigger creates public.users (10.589459ms)
+  ✔ a repeat call is served from the per-process cache, then unchanged (4.223416ms)
+  ✔ after public loses the user's row, as on a local reset, setup restores it (20.592625ms)
+  ✔ a cached user whose rows were wiped is mirrored again once the cache entry expires (7.92975ms)
+  ✔ upserts a changed email into auth.users and public.users (5.177167ms)
+✔ the mirror on a marked database without auth.identities (124.537625ms)
+▶ the guard inside the INSERT
+  ✔ inserts zero rows when auth.identities exists (25.455458ms)
+  ✔ inserts zero rows when the marker is absent (7.555084ms)
+  ✔ a refusal leaves an existing row's email as it was (6.403542ms)
+✔ the guard inside the INSERT (39.785417ms)
+✔ empties public, keeps auth, and rebuilds the schema and setup (127.503583ms)
+▶ the bridge
+  ✔ sets app.user_id, app.user_role and the role for the transaction (18.489833ms)
+  ✔ leaves nothing behind on the pooled connection after the transaction (5.708583ms)
+✔ the bridge (65.486291ms)
+▶ the setup SQL
+  ✔ mirrors each auth user into public.users (3.912125ms)
+  ✔ is idempotent: a second run leaves the same triggers and policies (15.318292ms)
+✔ the setup SQL (19.388ms)
+▶ an owner-private policy
+  ✔ hides another user's row and refuses writes to it (54.152542ms)
+  ✔ a user reads their own account row and not another's (8.585791ms)
+✔ an owner-private policy (63.100375ms)
+ℹ tests 15
+ℹ suites 5
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1368.711875

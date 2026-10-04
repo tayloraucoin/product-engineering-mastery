@@ -1,7 +1,6 @@
 command: yarn check-settings
-exit: 1
-at: 2026-10-04T07:36:24Z
-head: e233d03d9bd3207ad0efd5d522fa1c88b043a9b0
+exit: 0
+at: 2026-10-04T19:10:37Z
+head: 9dd86e12db3428e3ee4b1d3176397285670355b4
 ---
-check-settings — 1 problem(s) in .claude/settings.json:
-  permissions.ask is missing Bash(*db:local:reset*); restore it from docs/engineering/templates/settings.template.json
+check-settings — 12 fixtures behaved; .claude/settings.json is clean.
