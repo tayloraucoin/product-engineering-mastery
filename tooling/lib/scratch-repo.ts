@@ -131,6 +131,11 @@ export function useScratchRepo() {
     write(template, "toolkit.json", JSON.stringify(toolkit, null, 2));
     for (const app of Object.values(toolkit.apps) as { path: string }[])
       write(template, `${app.path}/.gitkeep`, "");
+    // A stack entry's runbook must exist for toolkit.json to validate (D-STK-13).
+    for (const module of Object.values(toolkit.stack ?? {}) as {
+      runbook: string | null;
+    }[])
+      if (module.runbook) write(template, module.runbook, "");
     write(
       template,
       "package.json",

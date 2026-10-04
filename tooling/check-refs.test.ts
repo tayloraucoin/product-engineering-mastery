@@ -23,6 +23,12 @@ function repoWithPending(entries: Record<string, string>) {
   const repo = freshRepo();
   // Only the files each case writes are live; the copied templates are not.
   rmSync(path.join(repo, "docs"), { recursive: true, force: true });
+  // toolkit.json still names each stack module's runbook, which must exist.
+  const { stack } = JSON.parse(read(repo, "toolkit.json"));
+  for (const module of Object.values(stack ?? {}) as {
+    runbook: string | null;
+  }[])
+    if (module.runbook) write(repo, module.runbook, "");
   for (const root of ["AGENTS.md", "CLAUDE.md", "README.md"])
     write(repo, root, "# Synthetic\n");
   write(repo, "tooling/refs-pending.json", JSON.stringify(entries, null, 2));

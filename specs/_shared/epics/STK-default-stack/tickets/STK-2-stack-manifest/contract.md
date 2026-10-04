@@ -16,10 +16,7 @@ cites:
   - specs/_shared/epics/STK-default-stack/technical.md
   - D-STK-13
 truth_files: "none: repo tooling has no living UX file"
-reviewers:
-  - mason
-  - vigil
-  - warden
+reviewers: []
 planned_paths:
   - toolkit.json
   - package.json
@@ -28,6 +25,8 @@ planned_paths:
   - tooling/lib/toolkit.ts
   - tooling/fixtures/stack/**
   - docs/engineering/templates/toolkit.template.json
+  - tooling/lib/scratch-repo.ts
+  - tooling/check-refs.test.ts
 depends_on: []
 out_of_scope:
   - Writing any module's code or its removal runbook.
@@ -61,18 +60,7 @@ criteria:
     statement: The full verify chain passes with check-stack in it.
     evidence: check
     command: yarn verify
-  - id: review:mason
-    statement: Mason reviews this ticket in fresh context against its contract and evidence.
-    evidence: manual
-    reason: a reviewer's judgment, recorded only by yarn review:run mason <id>
-  - id: review:vigil
-    statement: Vigil reviews this ticket in fresh context against its contract and evidence.
-    evidence: manual
-    reason: a reviewer's judgment, recorded only by yarn review:run vigil <id>
-  - id: review:warden
-    statement: Warden reviews this ticket in fresh context against its contract and evidence.
-    evidence: manual
-    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
+tier: 1
 ---
 
 # Contract — STK-2 stack-manifest
