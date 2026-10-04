@@ -44,12 +44,12 @@
       "run": {
         "command": "yarn contract:record STK-1 C4 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C4-reread.md",
         "exit": 0,
-        "at": "2026-10-04T04:23:14Z",
-        "head": "0c215e87438a548f5e7848f8018586b2c74096bd",
+        "at": "2026-10-04T04:31:43Z",
+        "head": "2260056bd6ecbaf623497d84890794a0327015b1",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C4-reread.md",
-        "evidence_sha256": "1cb505d8dcd5fe297d05b899bc77dfbc36f34bca4596547685e5fa734d0efae6"
+        "evidence_sha256": "947450bd23767a094b01c47449ddea34685c815d55a6ae4f2e6fe08386706d23"
       }
     }
   },
-  "updated_at": "2026-10-04T04:23:14Z"
+  "updated_at": "2026-10-04T04:31:43Z"
 }
