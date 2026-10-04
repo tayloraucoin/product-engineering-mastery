@@ -2,7 +2,7 @@
 
 ## Shipped against the contract
 
-- C1: `test/rls.test.ts` (`yarn test:db`) migrates the local image, applies the setup SQL twice, creates two synthetic auth users, and checks that the bridge sets `app.user_id`, `app.user_role` and `authenticated` for the transaction only, that an owner-private policy hides and write-protects another user's note (an admin role included), and that a user reads only their own account row. An absent image fails in `before`, naming `yarn db:local`; nothing skips. **Not captured yet:** Docker was not running in this thread (see Not verified).
+- C1: `test/rls.test.ts` (`yarn test:db`) migrates the local image, applies the setup SQL twice, creates two synthetic auth users, and checks that the bridge sets `app.user_id`, `app.user_role` and `authenticated` for the transaction only, that an owner-private policy hides and write-protects another user's note (an admin role included), and that a user reads only their own account row. An absent image fails in `before`, naming `yarn db:local`; nothing skips. Captured at batch close (`evidence/test-db.txt`): 6 of 6 pass against `supabase/postgres:17.11.0.003`, none skipped. The absent-image path was also observed earlier the same day, with Docker stopped: the `before` hook failed naming `yarn db:local` and all 6 tests were cancelled, none passed.
 - C2: `scripts/auth-ddl.ts` flags any statement that creates, alters, drops, grants, comments, triggers, indexes or writes in `auth`, and allows only a foreign key to `auth.users` and a call to an argument-free auth function. `yarn check-migrations` runs it over `toolkit.json`'s `migrationsDir`; its tests fail a synthetic auth trigger and pass the generated set.
 - C3: `packages/config/eslint/boundaries.js` adds the `db` element (may import `config`, `env`) and `SDK_OWNERS`: `postgres` and `drizzle-kit` may be imported only inside `packages/db`; anywhere else `no-restricted-imports` names the owner. `yarn lint:boundaries` passes.
 - C4: `yarn verify` now runs `yarn check-migrations` after `check-stack`; run once at batch close.
@@ -21,7 +21,6 @@
 
 ## Not verified
 
-- C1: the integration run is written but not captured. It needs Docker, then `yarn db:local` and `yarn test:db` captured to `evidence/test-db.txt`.
 - C5 is a reading of generated SQL (`evidence/C5.md`).
 - The setup SQL has run only through the integration test's `before`, never against a hosted Supabase project.
 
@@ -33,4 +32,4 @@ applied: pending
 
 ## Next
 
-Taylor adds the database variables to `.env.example` and captures C1; then STK-10 adds the database guardrails and STK-11 the local auth mirror.
+Taylor adds the database variables to `.env.example`; then STK-10 adds the database guardrails and STK-11 the local auth mirror.
