@@ -24,6 +24,14 @@ The STK-7 batch review (finding 4), confirmed by probe: `import "@pem/db/client"
 - **`yarn test:boundaries`** (`tooling/boundaries.test.ts`, also in `yarn test:tooling`) lints the probes as text and fails if either edge passes again. The real tree had no hidden violation.
 - Ledger: EN-12.
 
+## 2026-10-04 — STK-23: every `@pem/ui` kind folder exists and says what belongs in it
+
+Taylor, after STK-22: the kind subfolders were missing, and nothing told a future agent how to file a new component. STK-22 had named the kinds only in the check.
+
+- **Kind folders from day one.** `src/primitives/<kind>/` and `src/composed/<kind>/` exist for every kind, each with a `README.md` (rule 9's README seam): the kind's test, its scope at that layer, examples from Synapse and Conscious Connections, and where the line falls with its neighbours.
+- **`packages/ui/AGENTS.md`** gains a kinds table (what a person does with it, examples per layer, tie-breaks where the audited repos disagree) and "Adding a component" in five steps.
+- **`yarn check-ui-layout`** fails on a missing kind folder or README, and when the `AGENTS.md` table and `KINDS` differ. Supersedes STK-22's "kinds named once, in the check": the table is a second copy, held equal by the check.
+
 ## 2026-10-04 — STK-22: `@pem/ui` takes the house layout
 
 Taylor: the UI package did not carry the directory structure of the recent repos (Synapse, Conscious Connections), which keep `primitives/` and `composed/` with kind subfolders. STK-6 had shipped `src/button/`, `src/theme/` and `src/theme-toggle/` flat.

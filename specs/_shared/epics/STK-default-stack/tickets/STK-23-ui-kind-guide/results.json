@@ -1,0 +1,22 @@
+{
+  "id": "STK-23",
+  "criteria_sha256": "a68baa280b8a19403988a478583994fe45de1c00fafc7e7e122508f4a12dcf66",
+  "criteria": {
+    "C1": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C2": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    },
+    "C3": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    }
+  },
+  "updated_at": "2026-10-04T20:58:10Z"
+}

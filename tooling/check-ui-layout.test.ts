@@ -1,6 +1,7 @@
 /**
- * check-ui-layout (STK-22): criterion C1, over synthetic package trees built
- * in $TMPDIR. Each case starts from a conforming tree and breaks one thing.
+ * check-ui-layout (STK-22, STK-23): criterion C1 of each, over synthetic
+ * package trees built in $TMPDIR. Each case starts from a conforming tree and
+ * breaks one thing.
  */
 
 import assert from "node:assert/strict";
@@ -10,7 +11,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { after, test } from "node:test";
 
-import { checkUiLayout } from "./check-ui-layout.ts";
+import { checkUiLayout, KINDS } from "./check-ui-layout.ts";
 import { REPO_ROOT } from "./lib/docs.ts";
 
 const scratch = mkdtempSync(path.join(tmpdir(), "check-ui-layout-"));
@@ -18,7 +19,22 @@ after(() => rmSync(scratch, { recursive: true, force: true }));
 
 type Tree = Record<string, string>;
 
+/** Every kind folder's README, and the AGENTS.md kinds table, for KINDS. */
+const KIND_SCAFFOLD: Tree = Object.fromEntries([
+  ...KINDS.flatMap((kind) =>
+    ["primitives", "composed"].map((group) => [
+      `src/${group}/${kind}/README.md`,
+      `# ${group}/${kind}`,
+    ]),
+  ),
+  [
+    "AGENTS.md",
+    `# ui\n\n## Kinds\n\n| Kind | A person… |\n| --- | --- |\n${KINDS.map((k) => `| \`${k}\` | … |`).join("\n")}\n\n## Exports\n`,
+  ],
+]);
+
 const CONFORMING: Tree = {
+  ...KIND_SCAFFOLD,
   "src/primitives/control/button/button.tsx": "export function Button() {}",
   "src/primitives/control/button/button.variants.ts":
     'import { cva } from "class-variance-authority";\nexport const buttonVariants = cva("");',
@@ -182,4 +198,40 @@ test("review N7: the command exits 1 and names the path", () => {
   );
   assert.equal(run.status, 1);
   assert.match(run.stderr, /src\/button: not a layout folder/);
+});
+
+test("STK-23 C1: a missing kind folder fails, naming it", () => {
+  assertOneProblem(
+    stage({ "src/composed/media/README.md": null }),
+    "src/composed/media/README.md: missing",
+  );
+});
+
+test("STK-23 C1: a kind folder without README.md fails, naming it", () => {
+  assertOneProblem(
+    stage({
+      "src/primitives/media/README.md": null,
+      "src/primitives/media/image/image.tsx": "export function Image() {}",
+      "src/primitives/media/image/index.ts": 'export * from "./image";',
+    }),
+    "src/primitives/media/README.md: missing",
+  );
+});
+
+test("STK-23 C1: an AGENTS.md kinds table that differs from KINDS fails", () => {
+  const table = (kinds: string[]) =>
+    `## Kinds\n\n| Kind |\n| --- |\n${kinds.map((k) => `| \`${k}\` |`).join("\n")}\n`;
+  assertOneProblem(
+    stage({
+      "AGENTS.md": table([...KINDS.filter((k) => k !== "media"), "widgets"]),
+    }),
+    "AGENTS.md: the kinds table must list exactly",
+    "missing media",
+    "not in KINDS widgets",
+  );
+});
+
+test("STK-23 C1: a README.md in a kind folder is not read as a component", () => {
+  const root = stage();
+  assert.deepEqual(checkUiLayout(root), []);
 });

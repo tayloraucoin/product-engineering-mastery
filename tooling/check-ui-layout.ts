@@ -4,10 +4,11 @@
  *
  *   node tooling/check-ui-layout.ts [package dir]
  *
- * The layout is written for people in `packages/ui/AGENTS.md`; the kinds are
- * named only here, in KINDS. What this checks:
+ * The layout is written for people in `packages/ui/AGENTS.md`. What this checks:
  *
  * - `src/` holds only TOP's folders.
+ * - Every kind in KINDS is a folder under `primitives/` and `composed/` with a
+ *   `README.md`, and the kinds table in `AGENTS.md` lists exactly KINDS.
  * - A component is a kebab-case folder `primitives/<kind>/<name>/` or
  *   `composed/<kind>/<name>/`, with `<name>.tsx` and `index.ts`.
  * - `cva` is imported only in a `*.variants.ts` file.
@@ -70,6 +71,14 @@ function targetsOf(value: unknown): string[] {
   return [];
 }
 
+/** The kinds in the first column of the table under `## Kinds`. */
+function kindsTabled(markdown: string): string[] {
+  const section = markdown.split(/^## /m).find((s) => s.startsWith("Kinds"));
+  return [...(section ?? "").matchAll(/^\|\s*`([a-z-]+)`\s*\|/gm)].map(
+    (m) => m[1]!,
+  );
+}
+
 /** Every problem in the package at `root`, each naming its path. */
 export function checkUiLayout(root: string): string[] {
   const shown = path.relative(REPO_ROOT, root).startsWith("..")
@@ -89,6 +98,13 @@ export function checkUiLayout(root: string): string[] {
 
   for (const group of COMPONENT_ROOTS) {
     const groupDir = path.join(src, group);
+    for (const kind of KINDS) {
+      const readme = path.join(groupDir, kind, "README.md");
+      if (!existsSync(readme))
+        problems.push(
+          `${at(`src/${group}/${kind}/README.md`)}: missing; every kind folder states what belongs in it`,
+        );
+    }
     if (!existsSync(groupDir)) continue;
     for (const kind of visible(groupDir)) {
       const kindRel = `src/${group}/${kind}`;
@@ -100,6 +116,7 @@ export function checkUiLayout(root: string): string[] {
         continue;
       }
       for (const name of visible(kindDir)) {
+        if (name === "README.md") continue;
         const rel = `${kindRel}/${name}`;
         const dir = path.join(kindDir, name);
         if (!isDir(dir) || !KEBAB.test(name)) {
@@ -147,6 +164,21 @@ export function checkUiLayout(root: string): string[] {
         `${at(path.relative(root, file))}: cva belongs in a <name>.variants.ts beside it`,
       );
   }
+
+  const agents = path.join(root, "AGENTS.md");
+  const tabled = existsSync(agents)
+    ? kindsTabled(readFileSync(agents, "utf8"))
+    : [];
+  const missing = KINDS.filter((kind) => !tabled.includes(kind));
+  const extra = tabled.filter(
+    (kind) => !(KINDS as readonly string[]).includes(kind),
+  );
+  if (missing.length || extra.length)
+    problems.push(
+      `${at("AGENTS.md")}: the kinds table must list exactly ${KINDS.join(", ")}` +
+        (missing.length ? `; missing ${missing.join(", ")}` : "") +
+        (extra.length ? `; not in KINDS ${extra.join(", ")}` : ""),
+    );
 
   const manifest = JSON.parse(
     readFileSync(path.join(root, "package.json"), "utf8"),
