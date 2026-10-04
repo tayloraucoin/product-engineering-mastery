@@ -71,9 +71,19 @@
       "run": null
     },
     "review:mason": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run mason STK-12",
+        "exit": 0,
+        "at": "2026-10-04T23:42:39Z",
+        "head": "96ed56e82ecdff9e4aaae180831c8cd868f6d4da",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-12-auth-package/review-mason.md",
+        "evidence_sha256": "fbc246fcc93f4d3ddcf443484d3f1c8b29c9777939f178e0c018e2c778522793",
+        "contract_sha256": "ba875bb0ce0deabe9ef8132358a95bb904251e291baf8587446b35a0d4f92eeb",
+        "as_built_sha256": "f2b2b2eef19c313a1cccdd8ba172108e296f041186791c0fd9eb9b958f574f6a",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/mason-cto-principal-dev.md; tools Read,Grep,Glob)"
+      }
     },
     "review:threshold": {
       "status": "FAIL",
@@ -111,5 +121,5 @@
       }
     }
   },
-  "updated_at": "2026-10-04T23:42:27Z"
+  "updated_at": "2026-10-04T23:48:18Z"
 }
