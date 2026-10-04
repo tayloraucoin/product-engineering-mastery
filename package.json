@@ -10,7 +10,7 @@
     "check-types:tooling": "tsc -p tooling",
     "format": "prettier --write \"**/*.{ts,tsx,md,mjs,css}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,md,mjs,css}\"",
-    "verify": "yarn format:check && yarn lint:docs && yarn check-settings && yarn test:hooks && yarn check-refs && yarn check-specs && yarn check-test-weakening && yarn test:tooling && yarn budget && yarn gen:agents --check && yarn directory-map --check && yarn lint && yarn lint:boundaries && yarn check-types && yarn check-types:tooling && yarn build",
+    "verify": "yarn format:check && yarn lint:docs && yarn check-settings && yarn test:hooks && yarn check-refs && yarn check-stack && yarn check-specs && yarn check-test-weakening && yarn test:tooling && yarn budget && yarn gen:agents --check && yarn directory-map --check && yarn lint && yarn lint:boundaries && yarn check-types && yarn check-types:tooling && yarn build",
     "verify:fast": "node tooling/verify-fast.ts",
     "web:dev": "turbo run dev --filter=web",
     "web:build": "turbo run build --filter=web",
@@ -36,7 +36,8 @@
     "status": "node tooling/status.ts",
     "truth:promote": "node tooling/truth-promote.ts",
     "hooks:install": "node tooling/hooks-install.ts",
-    "check-refs": "node tooling/check-refs.ts"
+    "check-refs": "node tooling/check-refs.ts",
+    "check-stack": "node tooling/check-stack.ts"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.7.0",

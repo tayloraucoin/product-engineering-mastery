@@ -166,5 +166,28 @@
       "why": "Billing copy and what it promises.",
       "status": "draft"
     }
-  ]
+  ],
+  "stack": {
+    "config": {
+      "files": ["packages/config"],
+      "env": [],
+      "dependencies": ["@pem/config"],
+      "boundaries": ["config"],
+      "locked": true,
+      "runbook": null
+    },
+    "ui": {
+      "files": ["packages/ui"],
+      "env": [],
+      "dependencies": [
+        "@pem/ui",
+        "class-variance-authority",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "boundaries": ["ui"],
+      "locked": true,
+      "runbook": null
+    }
+  }
 }
