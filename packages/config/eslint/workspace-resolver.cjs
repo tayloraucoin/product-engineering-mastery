@@ -24,7 +24,7 @@ exports.resolve = (source, file) => {
     return { found: true, path: createRequire(file).resolve(source) };
   } catch (error) {
     throw new Error(
-      `${source} does not resolve through its package's exports (${error.code ?? error.message}); export the subpath from its package.json, or fix the import (codebase-conventions §4).`,
+      `${source} does not resolve through its package's exports (${error.code ?? error.message}). Import a subpath the package exports; add an export only for an edge codebase-conventions §4 allows.`,
     );
   }
 };

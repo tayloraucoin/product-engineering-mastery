@@ -14,6 +14,7 @@
 - **[ASSUMPTION] A one-off under `web`** (Taylor's choice), though the change is repo-wide: an STK epic ticket at tier 2 would have re-run the pre-flight over every drafted STK ticket.
 - **Tier raised to 2 by hand.** `toolkit.json` calls `boundaries.js` a one-way door; `TIER_2_PATHS` does not. `contract:init` then required mason, vigil and warden. Warden comes from the planned glob `specs/web/one-offs/WEB-2-…/**`, whose sampled paths reach a warden glob, not from the code.
 - **An in-repo resolver instead of `eslint-import-resolver-typescript`:** no native dependency or age-gate wait, and it fails closed, where the TypeScript resolver would still pass an unresolvable specifier as unknown. It does not resolve app `tsconfig` aliases (`@/*`); those stay inside one app and cannot cross a boundary.
+- **After mason's first review (PASS):** `ledger.md` was added to the planned paths with EN-12, cited from the changelog entry (should-fix 1). The resolve error no longer suggests adding an export, which could silence a real boundary violation such as a bare `@pem/db`; it says to add one only for an allowed edge (consider 4). Mason was re-run on the change. C3's empty log and the negative control kept as prose were left as they are: the criteria are frozen, and `yarn test:boundaries` is the regression guard.
 - **The resolver uses Node's `require` conditions** (`require`, `node`, `default`). Every `@pem` export today has `default`. A future package exporting under `import` only would be reported as a resolve error, never passed silently.
 
 ## Not verified
@@ -22,4 +23,4 @@
 
 ## Next
 
-Taylor merges `claude/gallant-ellis-94d0c7` into `agent/STK-3`. Separately, `TIER_2_PATHS` should name `packages/config/eslint/boundaries.js` and `packages/*/package.json`, which needs Taylor out of auto mode.
+Taylor merges `claude/gallant-ellis-94d0c7` into `agent/STK-3`. Two follow-ups. An app imported by its package name (`import "docs"` in `apps/web`) still resolves to nothing and slips past the app-to-app ban; a `no-restricted-imports` pattern on the app names closes it (mason should-fix 2). `TIER_2_PATHS` should name `packages/config/eslint/boundaries.js` and `packages/*/package.json`, which needs Taylor out of auto mode.

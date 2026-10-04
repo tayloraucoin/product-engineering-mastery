@@ -22,6 +22,7 @@ The STK-7 batch review (finding 4), confirmed by probe: `import "@pem/db/client"
 - **`packages/config/eslint/workspace-resolver.cjs`** resolves `@pem/*` through each package's `exports` with Node's own resolution, ahead of the node resolver. No dependency added.
 - **It fails closed:** an `@pem/*` specifier that does not resolve is a lint error ("Resolve error"), never unknown.
 - **`yarn test:boundaries`** (`tooling/boundaries.test.ts`, also in `yarn test:tooling`) lints the probes as text and fails if either edge passes again. The real tree had no hidden violation.
+- Ledger: EN-12.
 
 ## 2026-10-04 — STK-22: `@pem/ui` takes the house layout
 

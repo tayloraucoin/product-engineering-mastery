@@ -26,6 +26,7 @@ planned_paths:
   - "package.json"
   - "docs/engineering/codebase-conventions.md"
   - "docs/decisions/changelog.md"
+  - "docs/decisions/ledger.md"
   - "specs/web/one-offs/WEB-2-boundaries-subpath-resolve/**"
 depends_on: []
 out_of_scope:
