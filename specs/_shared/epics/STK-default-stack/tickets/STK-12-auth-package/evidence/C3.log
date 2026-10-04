@@ -1,5 +1,11 @@
 command: yarn lint:boundaries
-exit: 0
-at: 2026-10-04T23:12:03Z
-head: 53a8da1006a48be579817a14e743bc249f3900ce
+exit: 1
+at: 2026-10-04T23:25:30Z
+head: 7213b10a745243a954ade78a0519278d1e380158
 ---
+
+./apps/web/app/opengraph-image.tsx
+  1:1  error  Definition for rule 'pem-tokens/no-raw-values' was not found  pem-tokens/no-raw-values
+
+✖ 1 problem (1 error, 0 warnings)
+
