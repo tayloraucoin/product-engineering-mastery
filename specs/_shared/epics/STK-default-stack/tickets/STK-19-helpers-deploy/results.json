@@ -3,9 +3,17 @@
   "criteria_sha256": "544d2b5b42860abed7262e53996c63a6b6a31578966a4513254486a5894cda21",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-04T06:31:32Z",
+        "head": "98f75c569ca3c3bc139a9879cff1fb05f4ebde70",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-19-helpers-deploy/evidence/C1.log",
+        "evidence_sha256": "b6db9e0346cad90df6eff288ee8d5d73858b532f6695a08388760f0acd21f190",
+        "tests": 38
+      }
     },
     "C2": {
       "status": "FAIL",
@@ -18,5 +26,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-04T06:25:34Z"
+  "updated_at": "2026-10-04T06:32:01Z"
 }
