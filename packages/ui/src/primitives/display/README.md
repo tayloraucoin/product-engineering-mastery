@@ -1,11 +1,11 @@
 # primitives/display
 
-**The kind.** A person reads it: it shows a value, a status or an identity, and nothing happens when it is operated.
+**The kind.** A person reads it: it shows a value, a status or an identity.
 
-**At this layer.** Primitive: product-agnostic, no `copy.ts`, imports no other component. Here that means a small visual unit with variants and no copy.
+**At this layer.** Primitive: product-agnostic, no `copy.ts`, may import another primitive but nothing from `composed/`. Here that means a small visual unit with variants and no copy.
 
-**Examples** from the audited repos (Synapse `@syn/ui`, Conscious Connections): `badge`, `avatar`, `label`, `kbd`, `skeleton`, `table`, `helper-text`.
+**Examples** from the audited repos, Synapse `@syn/ui` (S) and Conscious Connections (CC): `badge`, `avatar`, `label`, `skeleton`, `empty`, `helper-text` (S, CC); `kbd` (S); `table`, `alert` (CC).
 
-**Where the line is.** If it tells the person what just happened or why nothing is here, it is `feedback`. If it only arranges other components, it is `layout`. Its other layer: `../../composed/display/`.
+**Where the line is.** A row that links to its record is still display (`list-row`); a row whose only job is to be chosen is `control`. A card built for one kind of data is display (`insight-card`); the bare `card` surface is `layout` here, though CC files it under display. Skeletons, the `empty` slot and an inline alert stay display, as in both repos; a composed message with its own copy about what happened is `feedback`. Its other layer: `../../composed/display/`.
 
-**Adding one.** Follow "Adding a component" in [`packages/ui/AGENTS.md`](../../../AGENTS.md): a folder `<name>/` here with `<name>.tsx`, `index.ts` and `<name>.stories.tsx`, and an `exports` entry in `package.json`.
+**Adding one.** Follow "Adding a component" in [`packages/ui/AGENTS.md`](../../../AGENTS.md): a folder `<name>/` here with `<name>.tsx`, `index.ts` and `<name>.stories.tsx`, an `exports` entry in `package.json`, and the component's name added to the examples above as this repo's own.

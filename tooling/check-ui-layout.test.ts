@@ -156,13 +156,13 @@ test("review S3: a primitive with copy.ts fails", () => {
   );
 });
 
-test("review S3: a primitive importing another component fails", () => {
+test("review S3: a primitive importing a composed component fails", () => {
   assertOneProblem(
     stage({
       "src/primitives/control/button/button.tsx":
         'import { ThemeToggle } from "../../../composed/control/theme-toggle";',
     }),
-    "button/button.tsx: a primitive imports no other component",
+    "button/button.tsx: a primitive imports nothing from composed/",
   );
 });
 
@@ -203,7 +203,7 @@ test("review N7: the command exits 1 and names the path", () => {
 test("STK-23 C1: a missing kind folder fails, naming it", () => {
   assertOneProblem(
     stage({ "src/composed/media/README.md": null }),
-    "src/composed/media/README.md: missing",
+    "src/composed/media: missing; every kind has a folder",
   );
 });
 
@@ -231,7 +231,17 @@ test("STK-23 C1: an AGENTS.md kinds table that differs from KINDS fails", () => 
   );
 });
 
-test("STK-23 C1: a README.md in a kind folder is not read as a component", () => {
-  const root = stage();
-  assert.deepEqual(checkUiLayout(root), []);
+test("STK-23 review: a primitive may import another primitive, and a story may import anything", () => {
+  assert.deepEqual(
+    checkUiLayout(
+      stage({
+        "src/primitives/feedback/dialog/dialog.tsx":
+          'import { Button } from "../../control/button";\nexport function Dialog() {}',
+        "src/primitives/feedback/dialog/index.ts": 'export * from "./dialog";',
+        "src/primitives/feedback/dialog/dialog.stories.tsx":
+          'import { ThemeToggle } from "../../../composed/control/theme-toggle";',
+      }),
+    ),
+    [],
+  );
 });

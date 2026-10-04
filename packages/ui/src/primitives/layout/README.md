@@ -1,11 +1,11 @@
 # primitives/layout
 
-**The kind.** A person doesn't notice it: it arranges, frames or reveals other components and holds no content of its own.
+**The kind.** A person sees other components through it: it arranges, frames or reveals them.
 
-**At this layer.** Primitive: product-agnostic, no `copy.ts`, imports no other component. Here that means a container with spacing, surface and reveal behaviour.
+**At this layer.** Primitive: product-agnostic, no `copy.ts`, may import another primitive but nothing from `composed/`. Here that means a container with spacing, surface and reveal behaviour, and no content of its own.
 
-**Examples** from the audited repos (Synapse `@syn/ui`, Conscious Connections): `card`, `separator`, `sheet`, `drawer`, `collapsible`, `section`, `flex`.
+**Examples** from the audited repos, Synapse `@syn/ui` (S) and Conscious Connections (CC): `separator`, `sheet`, `collapsible` (S, CC); `card`, `drawer` (S); `section`, `flex` (CC).
 
-**Where the line is.** A card is layout (Synapse's choice; Conscious Connections files it under display). A sheet or drawer that slides over the page is layout; a dialog that interrupts is `feedback`. Its other layer: `../../composed/layout/`.
+**Where the line is.** A panel that slides in to hold content is layout (sheet, drawer), in both repos; an overlay that informs or asks to confirm is `feedback`. The bare `card` surface is layout (S); a card built for one kind of data is `display`. Its other layer: `../../composed/layout/`.
 
-**Adding one.** Follow "Adding a component" in [`packages/ui/AGENTS.md`](../../../AGENTS.md): a folder `<name>/` here with `<name>.tsx`, `index.ts` and `<name>.stories.tsx`, and an `exports` entry in `package.json`.
+**Adding one.** Follow "Adding a component" in [`packages/ui/AGENTS.md`](../../../AGENTS.md): a folder `<name>/` here with `<name>.tsx`, `index.ts` and `<name>.stories.tsx`, an `exports` entry in `package.json`, and the component's name added to the examples above as this repo's own.

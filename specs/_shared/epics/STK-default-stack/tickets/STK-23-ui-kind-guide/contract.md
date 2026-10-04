@@ -21,6 +21,7 @@ planned_paths:
   - "packages/ui/AGENTS.md"
   - "tooling/check-ui-layout.ts"
   - "tooling/check-ui-layout.test.ts"
+  - "tooling/budget.ts"
   - "docs/decisions/changelog.md"
 depends_on:
   - STK-22
@@ -54,6 +55,7 @@ tier: 1
   - `packages/ui/src/{primitives,composed}/<kind>/README.md` (14 files): what belongs in this kind at this layer, examples, and the nearest kind it is confused with.
   - `packages/ui/AGENTS.md`: a Kinds section (table plus tie-breaks) and an "Adding a component" section.
   - `tooling/check-ui-layout.ts`, `.test.ts`: the three new problem classes, and README.md allowed in a kind folder.
+  - `tooling/budget.ts`: nested `AGENTS.md` in `packages/` counts toward the path-rules line, as `docs/index.md` says it loads (review N14).
   - `docs/decisions/changelog.md`: one entry.
 - **Gotchas:** STK-8's `story-coverage.ts` walks only directories, so READMEs are invisible to it; C3 proves that. Kind examples come from Synapse `@syn/ui` and Conscious Connections, where they disagree (empty state, card), the table names the pick.
 - **Model:** any current model.

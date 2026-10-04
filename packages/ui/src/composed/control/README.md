@@ -4,8 +4,8 @@
 
 **At this layer.** Composed: owns copy or behaviour for one use, or imports a primitive. Here that means a control with a job: a label, options, copy or behaviour for one use.
 
-**Examples** from the audited repos (Synapse `@syn/ui`, Conscious Connections): `theme-toggle` (here), `search-field`, `segmented-control`, `date-field`, `time-field`, `chip-picker`, `ellipses-menu`, `oauth-button`.
+**Examples** from the audited repos, Synapse `@syn/ui` (S) and Conscious Connections (CC): `theme-toggle` (here); `search-field`, `segmented-control`, `ellipses-menu` (S, CC); `date-field`, `chip-picker`, `select-row`, `large-target-row`, `image-cropper` (S).
 
-**Where the line is.** A row that is clickable as a whole is a control (`select-row`); a row that only shows data is `display`. A menu or popover that opens over the page is `feedback`, even when it holds controls. Its other layer: `../../primitives/control/`.
+**Where the line is.** A row whose only job is to be chosen is control (`select-row`); a row that shows data is `display`, even when the whole row links somewhere (`list-row`). A composed menu with its trigger and items is control (`ellipses-menu`); the bare `dropdown-menu` it opens is `feedback`. An image cropper is control (S): a person operates it. Its other layer: `../../primitives/control/`.
 
-**Adding one.** Follow "Adding a component" in [`packages/ui/AGENTS.md`](../../../AGENTS.md): a folder `<name>/` here with `<name>.tsx`, `index.ts` and `<name>.stories.tsx`, and an `exports` entry in `package.json`.
+**Adding one.** Follow "Adding a component" in [`packages/ui/AGENTS.md`](../../../AGENTS.md): a folder `<name>/` here with `<name>.tsx`, `index.ts` and `<name>.stories.tsx`, an `exports` entry in `package.json`, and the component's name added to the examples above as this repo's own.

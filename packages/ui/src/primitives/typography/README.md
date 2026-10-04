@@ -2,10 +2,10 @@
 
 **The kind.** A person reads it as styled text: the type scale, applied.
 
-**At this layer.** Primitive: product-agnostic, no `copy.ts`, imports no other component. Here that means a text style with its variants (size, weight, tone) bound to tokens.
+**At this layer.** Primitive: product-agnostic, no `copy.ts`, may import another primitive but nothing from `composed/`. Here that means a text style with its variants (size, weight, tone) bound to tokens.
 
-**Examples** from the audited repos (Synapse `@syn/ui`, Conscious Connections): `text`, `heading`, `eyebrow`, `timestamp`.
+**Examples** from the audited repos, Synapse `@syn/ui` (S) and Conscious Connections (CC): `text` (S, CC); `eyebrow` (CC).
 
-**Where the line is.** A component that only renders text in a fixed style is typography; one that formats a value (a time, a number) for display is `display` (`time-text`, `big-number`). Its other layer: `../../composed/typography/`.
+**Where the line is.** Text that formats a value (a time, a number) is `display` (`time-text`, `big-number`); CC's `timestamp` is that kind of component. A primitive here may import another typography primitive (an eyebrow built on `text`). Its other layer: `../../composed/typography/`.
 
-**Adding one.** Follow "Adding a component" in [`packages/ui/AGENTS.md`](../../../AGENTS.md): a folder `<name>/` here with `<name>.tsx`, `index.ts` and `<name>.stories.tsx`, and an `exports` entry in `package.json`.
+**Adding one.** Follow "Adding a component" in [`packages/ui/AGENTS.md`](../../../AGENTS.md): a folder `<name>/` here with `<name>.tsx`, `index.ts` and `<name>.stories.tsx`, an `exports` entry in `package.json`, and the component's name added to the examples above as this repo's own.

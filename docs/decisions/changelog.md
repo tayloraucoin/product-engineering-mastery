@@ -47,6 +47,8 @@ Taylor, after STK-22: the kind subfolders were missing, and nothing told a futur
 - **Kind folders from day one.** `src/primitives/<kind>/` and `src/composed/<kind>/` exist for every kind, each with a `README.md` (rule 9's README seam): the kind's test, its scope at that layer, examples from Synapse and Conscious Connections, and where the line falls with its neighbours.
 - **`packages/ui/AGENTS.md`** gains a kinds table (what a person does with it, examples per layer, tie-breaks where the audited repos disagree) and "Adding a component" in five steps.
 - **`yarn check-ui-layout`** fails on a missing kind folder or README, and when the `AGENTS.md` table and `KINDS` differ. Supersedes STK-22's "kinds named once, in the check": the table is a second copy, held equal by the check.
+- **A primitive may import another primitive** (a dialog uses the button), never a composed component; stories are exempt. STK-22 had banned every sibling import, which most reference primitives would fail on port.
+- **`yarn budget` counts nested `AGENTS.md` in `packages/`,** as `docs/index.md` says they load; `packages/ui/AGENTS.md` keeps the kinds table and the steps, and leaves examples to the kind READMEs.
 
 ## 2026-10-04 — STK-22: `@pem/ui` takes the house layout
 

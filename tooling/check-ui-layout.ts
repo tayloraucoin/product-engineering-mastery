@@ -12,7 +12,8 @@
  * - A component is a kebab-case folder `primitives/<kind>/<name>/` or
  *   `composed/<kind>/<name>/`, with `<name>.tsx` and `index.ts`.
  * - `cva` is imported only in a `*.variants.ts` file.
- * - A primitive has no `copy.ts` and imports no other component.
+ * - A primitive has no `copy.ts` and imports nothing from `composed/`; it may
+ *   import another primitive (a dialog uses the button). Stories are exempt.
  * - Every `exports` target in `package.json` exists, and none is a wildcard.
  *
  * Whether a component is generic enough to be a primitive is judgment; the
@@ -99,8 +100,11 @@ export function checkUiLayout(root: string): string[] {
   for (const group of COMPONENT_ROOTS) {
     const groupDir = path.join(src, group);
     for (const kind of KINDS) {
-      const readme = path.join(groupDir, kind, "README.md");
-      if (!existsSync(readme))
+      if (!existsSync(path.join(groupDir, kind)))
+        problems.push(
+          `${at(`src/${group}/${kind}`)}: missing; every kind has a folder in both layers, with a README.md`,
+        );
+      else if (!existsSync(path.join(groupDir, kind, "README.md")))
         problems.push(
           `${at(`src/${group}/${kind}/README.md`)}: missing; every kind folder states what belongs in it`,
         );
@@ -134,7 +138,10 @@ export function checkUiLayout(root: string): string[] {
             problems.push(
               `${at(`${rel}/copy.ts`)}: a primitive owns no copy; a component with strings is composed`,
             );
-          for (const file of walk(dir).filter((f) => SOURCE.test(f))) {
+          const sources = walk(dir).filter(
+            (f) => SOURCE.test(f) && !f.endsWith(".stories.tsx"),
+          );
+          for (const file of sources) {
             for (const [, spec] of readFileSync(file, "utf8").matchAll(
               RELATIVE_IMPORT,
             )) {
@@ -142,13 +149,9 @@ export function checkUiLayout(root: string): string[] {
                 src,
                 path.resolve(path.dirname(file), spec!),
               );
-              const inOther =
-                (target.startsWith(`primitives${path.sep}`) &&
-                  !path.resolve(src, target).startsWith(dir + path.sep)) ||
-                target.startsWith(`composed${path.sep}`);
-              if (inOther)
+              if (target.startsWith(`composed${path.sep}`))
                 problems.push(
-                  `${at(path.relative(root, file))}: a primitive imports no other component (${spec})`,
+                  `${at(path.relative(root, file))}: a primitive imports nothing from composed/ (${spec}); make this component composed`,
                 );
             }
           }
