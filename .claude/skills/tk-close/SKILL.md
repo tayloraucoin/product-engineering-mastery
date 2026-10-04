@@ -1,7 +1,6 @@
 ---
 name: tk-close
-description: "Close the ticket on this branch: prove every criterion through tooling, write the as-built, run the reviewers in fresh context, promote truth, and leave the branch ready for Taylor to merge. Manual: run it as /tk-close."
-disable-model-invocation: true
+description: "Close the ticket on this branch: prove every criterion through tooling, write the as-built, run the reviewers in fresh context, promote truth, and leave the branch ready for Taylor to merge. Use when a build prompt or Taylor says to close a ticket, or when yarn status <id> shows only proofs, the as-built and reviews left."
 argument-hint: <id>
 ---
 

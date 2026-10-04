@@ -15,6 +15,15 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-03 — PJ: the agent starts and closes tickets, and tickets stack
+
+Taylor, while starting STK-3: the manual kickoff was "only making my role more laborious". Each ticket cost two typed commands and a wait for merges Taylor does on their own schedule (PR-13).
+
+- **`tk-kickoff` and `tk-close` are model-invocable.** `disable-model-invocation` is removed, each description names its trigger, and each skill gains `tests/triggers.md` (five must, five must-not; run at Phase 3 with the others). `CLAUDE.md` and `REGISTRY.md` say so. `tk-contract` and `tk-prompt` stay manual: they draft what Taylor approves.
+- **`contract:init` allows stacking.** A `depends_on` ticket passes when its as-built is on this branch, merged or not; the merge requirement is gone. The one-item-per-branch gate now refuses only while the branch's item has no as-built, so a closing ticket no longer blocks the next one, which starts on its own branch on top of it. Two new cases in `tooling/contract-init.test.ts`. The quality gates are unchanged: no `[FILL]`, approved cited files, no BLOCKING marker, the pre-flight PASS, frozen criteria, results only through the scripts.
+- **`epic.md`'s merge-order line** says the same.
+- **Not changed:** stacked tickets still read their predecessor's proofs as stale until it merges, so `yarn verify` on a stacked branch can fail for that reason alone; the as-built names it.
+
 ## 2026-10-03 — STK-1: the default-stack rulings on record
 
 Taylor's rulings of 2026-10-03 (the STK epic's `prompts/03-technical.md`, rulings 1 to 3), decided in its `technical.md` as D-STK-1 to D-STK-3, are written into [record 0010](records/0010-starter-ships-default-stack.md), which supersedes [record 0005](records/0005-two-packages-and-boundaries-lint.md). Record 0005 is not edited. One entry per changed rule:

@@ -110,7 +110,7 @@ The same as moves 2 to 5 of the one-off ([`one-off.md`](one-off.md)), started fr
 
 - `yarn contract:init OB2 welcome-copy` creates `OB2-3`, its branch and FAIL results. It refuses if a cited UX file isn't approved.
 - `/tk-close` proves the ticket, writes the as-built and calls the reviewers.
-- **Merge order:** a ticket that depends on another starts only after that one has merged.
+- **Merge order:** a ticket that depends on another starts once that one has its as-built, merged or not: its branch stacks on the predecessor's, and Taylor merges them in order. The agent runs `/tk-kickoff` and `/tk-close` itself; nobody waits on a merge to start the next ticket.
 - **Promotion:** when every ticket citing a surface file has merged, `truth:promote` copies the proposal into `specs/web/ux/`, reconciled with what actually shipped. The truth now describes the real app.
 
 ## Gates: law or judgment
