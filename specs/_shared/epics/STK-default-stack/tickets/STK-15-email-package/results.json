@@ -8,10 +8,10 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-04T21:09:08Z",
-        "head": "e889bc607d36e18bf7130f10c7121f4bcc03212c",
+        "at": "2026-10-04T21:12:45Z",
+        "head": "7294682243b94b2d449fcaade0cbd0f349cf3fc2",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/evidence/C1.log",
-        "evidence_sha256": "2fbdc3b0125c070bfb717632dbde2af33875236042a355621980a79ce90eeea4",
+        "evidence_sha256": "82c78f935e5318e03ebaba5b639405626d32d61bd2ddbe2e8bf93bb05ef8ac73",
         "tests": 79
       }
     },
@@ -21,10 +21,10 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-04T21:09:15Z",
-        "head": "e889bc607d36e18bf7130f10c7121f4bcc03212c",
+        "at": "2026-10-04T21:12:50Z",
+        "head": "7294682243b94b2d449fcaade0cbd0f349cf3fc2",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/evidence/C2.log",
-        "evidence_sha256": "08991cee5cc823c6b7375a73f14ce043d8a659dfd35e6f4973ec4ca6723a84d4",
+        "evidence_sha256": "8e166ecdeb504065ab84d40d5c243d48578dcded3ceb30c75fe2e14fd7b03508",
         "tests": 79
       }
     },
@@ -34,10 +34,10 @@
       "run": {
         "command": "yarn lint:boundaries",
         "exit": 0,
-        "at": "2026-10-04T21:09:20Z",
-        "head": "e889bc607d36e18bf7130f10c7121f4bcc03212c",
+        "at": "2026-10-04T21:12:55Z",
+        "head": "7294682243b94b2d449fcaade0cbd0f349cf3fc2",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/evidence/C3.log",
-        "evidence_sha256": "f915273d94acf684fc59db09a856424625790035af81911fcc165e563c6dc16e"
+        "evidence_sha256": "78376f5fa75f1f83fcd9db69478c9532491b4b66ae07f8cf2e366d5c9ca09d32"
       }
     },
     "C4": {
@@ -88,5 +88,5 @@
       }
     }
   },
-  "updated_at": "2026-10-04T21:12:33Z"
+  "updated_at": "2026-10-04T21:12:57Z"
 }
