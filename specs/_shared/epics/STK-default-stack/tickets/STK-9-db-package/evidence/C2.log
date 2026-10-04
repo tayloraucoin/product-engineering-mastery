@@ -1,0 +1,201 @@
+command: yarn test
+exit: 0
+at: 2026-10-04T04:30:24Z
+head: 111813ec66ea5f621bae9a7d0458d06b8631ad6f
+tests: 27
+---
+
+   • turbo 2.11.6
+   • Packages in scope: @pem/config, @pem/db, @pem/env, @pem/ui, docs, web
+   • Running test in 6 packages
+   • Remote caching disabled
+
+cache hit, replaying logs 4f3f26975aa33463
+cache hit, replaying logs 8a0b64f62fe3e87a
+TAP version 13
+# Subtest: each kind of DDL or write against auth is caught
+ok 1 - each kind of DDL or write against auth is caught
+  ---
+  duration_ms: 1.088625
+  type: 'test'
+  ...
+# Subtest: a foreign key to auth.users and a call to auth.uid() are allowed
+ok 2 - a foreign key to auth.users and a call to auth.uid() are allowed
+  ---
+  duration_ms: 0.072167
+  type: 'test'
+  ...
+# Subtest: a migration with DDL against auth fails, numbered by statement
+ok 3 - a migration with DDL against auth fails, numbered by statement
+  ---
+  duration_ms: 0.813625
+  type: 'test'
+  ...
+# Subtest: the generated migration set passes, and it does reference auth.users
+ok 4 - the generated migration set passes, and it does reference auth.users
+  ---
+  duration_ms: 0.807666
+  type: 'test'
+  ...
+# Subtest: runtime takes the transaction pooler on a hosted tier
+ok 5 - runtime takes the transaction pooler on a hosted tier
+  ---
+  duration_ms: 0.73
+  type: 'test'
+  ...
+# Subtest: migrations take the session pooler on a hosted tier
+ok 6 - migrations take the session pooler on a hosted tier
+  ---
+  duration_ms: 0.109834
+  type: 'test'
+  ...
+# Subtest: the local tier is not checked beyond the scheme
+ok 7 - the local tier is not checked beyond the scheme
+  ---
+  duration_ms: 0.085875
+  type: 'test'
+  ...
+# Subtest: errors and descriptions never carry credentials
+ok 8 - errors and descriptions never carry credentials
+  ---
+  duration_ms: 0.08525
+  type: 'test'
+  ...
+# Subtest: the bridge accepts a UUID user and a known role
+ok 9 - the bridge accepts a UUID user and a known role
+  ---
+  duration_ms: 0.789041
+  type: 'test'
+  ...
+# Subtest: the bridge refuses a partial or forged identity before any SQL
+ok 10 - the bridge refuses a partial or forged identity before any SQL
+  ---
+  duration_ms: 0.261584
+  type: 'test'
+  ...
+# Subtest: the schema exports tables, and none of them outside public
+ok 11 - the schema exports tables, and none of them outside public
+  ---
+  duration_ms: 0.914167
+  type: 'test'
+  ...
+# Subtest: authUsers is never exported from the schema
+ok 12 - authUsers is never exported from the schema
+  ---
+  duration_ms: 0.06775
+  type: 'test'
+  ...
+# Subtest: every table carries its policies beside it
+ok 13 - every table carries its policies beside it
+  ---
+  duration_ms: 0.242042
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 305.140875
+TAP version 13
+# Subtest: C2: a live-mode key on local or staging fails with the variable named
+ok 1 - C2: a live-mode key on local or staging fails with the variable named
+  ---
+  duration_ms: 0.593291
+  type: 'test'
+  ...
+# Subtest: C2: a test-mode key on production fails with the variable named
+ok 2 - C2: a test-mode key on production fails with the variable named
+  ---
+  duration_ms: 0.087916
+  type: 'test'
+  ...
+# Subtest: C2: matching modes pass
+ok 3 - C2: matching modes pass
+  ---
+  duration_ms: 0.0795
+  type: 'test'
+  ...
+# Subtest: C2: a key with no mode prefix fails on every tier
+ok 4 - C2: a key with no mode prefix fails on every tier
+  ---
+  duration_ms: 0.171625
+  type: 'test'
+  ...
+# Subtest: public names pass, and unset values are left out
+ok 5 - public names pass, and unset values are left out
+  ---
+  duration_ms: 0.787917
+  type: 'test'
+  ...
+# Subtest: a server-only name is refused, by name
+ok 6 - a server-only name is refused, by name
+  ---
+  duration_ms: 0.229
+  type: 'test'
+  ...
+# Subtest: C1: each tier reads its own variable
+ok 7 - C1: each tier reads its own variable
+  ---
+  duration_ms: 0.479833
+  type: 'test'
+  ...
+# Subtest: C1: a tier whose own value is absent or empty reads the unsuffixed value
+ok 8 - C1: a tier whose own value is absent or empty reads the unsuffixed value
+  ---
+  duration_ms: 0.092958
+  type: 'test'
+  ...
+# Subtest: C1: nothing set picks undefined
+ok 9 - C1: nothing set picks undefined
+  ---
+  duration_ms: 0.069375
+  type: 'test'
+  ...
+# Subtest: C1: production never reads a suffixed value
+ok 10 - C1: production never reads a suffixed value
+  ---
+  duration_ms: 0.05825
+  type: 'test'
+  ...
+# Subtest: C1: the suffix grammar names each form
+ok 11 - C1: the suffix grammar names each form
+  ---
+  duration_ms: 0.367167
+  type: 'test'
+  ...
+# Subtest: C1: the switch defaults to local, never production, and names itself when wrong
+ok 12 - C1: the switch defaults to local, never production, and names itself when wrong
+  ---
+  duration_ms: 0.216875
+  type: 'test'
+  ...
+# Subtest: outside a deployment the site URL is localhost, whatever is configured
+ok 13 - outside a deployment the site URL is localhost, whatever is configured
+  ---
+  duration_ms: 0.54425
+  type: 'test'
+  ...
+# Subtest: in a deployment the configured URL is used, without a trailing slash
+ok 14 - in a deployment the configured URL is used, without a trailing slash
+  ---
+  duration_ms: 0.128666
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 101.589708
+
+ Tasks:    2 successful, 2 total
+Cached:    2 cached, 2 total
+  Time:    113ms >>> FULL TURBO
+

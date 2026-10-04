@@ -8,14 +8,29 @@
       "run": null
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-04T04:30:24Z",
+        "head": "111813ec66ea5f621bae9a7d0458d06b8631ad6f",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/evidence/C2.log",
+        "evidence_sha256": "82104ecb49a69eb384139ba2cecc0435ba9e50ac790992027d5717be2bf09b16",
+        "tests": 27
+      }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn lint:boundaries",
+        "exit": 0,
+        "at": "2026-10-04T04:30:24Z",
+        "head": "111813ec66ea5f621bae9a7d0458d06b8631ad6f",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/evidence/C3.log",
+        "evidence_sha256": "83c5c556a7929e743dc3ec4a5006972c286ace4505c0a4b32ea38dad12a57da7"
+      }
     },
     "C4": {
       "status": "FAIL",
@@ -23,9 +38,16 @@
       "run": null
     },
     "C5": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn contract:record STK-9 C5 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/evidence/C5.md",
+        "exit": 0,
+        "at": "2026-10-04T04:30:54Z",
+        "head": "111813ec66ea5f621bae9a7d0458d06b8631ad6f",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/evidence/C5.md",
+        "evidence_sha256": "8723c7d78d01b977d05a052ecad1424d45fbe938113b6eeeacf192e351f55fe5"
+      }
     },
     "review:mason": {
       "status": "FAIL",
@@ -43,5 +65,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-04T03:26:21Z"
+  "updated_at": "2026-10-04T04:30:54Z"
 }
