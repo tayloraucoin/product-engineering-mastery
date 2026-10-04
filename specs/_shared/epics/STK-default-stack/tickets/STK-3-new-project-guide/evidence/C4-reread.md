@@ -23,3 +23,9 @@ The criterion: a reader holding the guide and a briefing names every step and th
 ## Verdict
 
 PASS.
+
+## Addendum: STK-19's README paragraphs (`98f75c5`)
+
+STK-19 added three paragraphs to `README.md`: phone testing with `yarn web:dev:local`, the contrast audit in `yarn verify`, and the Vercel build from `apps/web/vercel.json`. `docs/runbooks/new-project.md` is unchanged, and so is the README's "Starting a product from this repo" section, which points at the guide. The steps, their checks and step 4's module table read as above.
+
+Verdict, unchanged: PASS.

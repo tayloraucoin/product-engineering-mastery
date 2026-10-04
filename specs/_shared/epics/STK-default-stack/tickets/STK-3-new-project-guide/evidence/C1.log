@@ -1,6 +1,6 @@
 command: yarn lint:docs
 exit: 0
-at: 2026-10-04T05:35:03Z
-head: 3f1e2df9acdf23cedb4844652d149eabf414d0d6
+at: 2026-10-04T06:35:27Z
+head: 1ba84ad4cedf7ed66938e7745859b2251d0c41b4
 ---
 lint:docs — 189 files, names and frontmatter clean; 8 path rules carry only paths.
