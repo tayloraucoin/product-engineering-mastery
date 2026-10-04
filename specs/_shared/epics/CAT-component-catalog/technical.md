@@ -25,10 +25,10 @@ Possible: the kit in about ten small tickets, then the catalog one source or one
 
 ## One-way doors
 
-| Door | Path glob | Record or ratification | Reviewer |
-| --- | --- | --- | --- |
-| New package boundary | `packages/config/eslint/boundaries.js`, `packages/catalog/**` | REC 0011, plan approved by Taylor 2026-10-04 | batch review |
-| Primitive base (Base UI) | `packages/ui/**` | CS-02, Taylor 2026-10-04 | batch review |
+| Door                     | Path glob                                                     | Record or ratification                       | Reviewer     |
+| ------------------------ | ------------------------------------------------------------- | -------------------------------------------- | ------------ |
+| New package boundary     | `packages/config/eslint/boundaries.js`, `packages/catalog/**` | REC 0011, plan approved by Taylor 2026-10-04 | batch review |
+| Primitive base (Base UI) | `packages/ui/**`                                              | CS-02, Taylor 2026-10-04                     | batch review |
 
 ## Calls routed to Taylor
 
