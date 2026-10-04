@@ -18,11 +18,15 @@ function docker(args: string[]): string {
   return execFileSync("docker", args, { encoding: "utf8" }).trim();
 }
 
+// The probe's stderr is dropped: with the daemon down, some Docker CLIs panic
+// on the format template and bury the one line that says what to do.
 try {
-  docker(["info", "--format", "{{.ServerVersion}}"]);
+  execFileSync("docker", ["info", "--format", "{{.ServerVersion}}"], {
+    stdio: "ignore",
+  });
 } catch {
   console.error(
-    "db:local — Docker is not running; start it, then rerun yarn db:local.",
+    "db:local — Docker is not running; start it (macOS: open -a Docker), then rerun yarn db:local.",
   );
   process.exit(1);
 }
