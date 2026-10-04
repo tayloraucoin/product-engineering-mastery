@@ -3,24 +3,52 @@
   "criteria_sha256": "6f8a4d6d9b56a1ece5b4384d52525b5c3ec6270818d136c32a8191f458262e35",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn lint:docs",
+        "exit": 0,
+        "at": "2026-10-04T02:31:38Z",
+        "head": "ca218bc7038b8078d81f7263daca2803ace2b654",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/evidence/C1.log",
+        "evidence_sha256": "1ac7253716351b315f3f0162cd61485b71f045177ea7cf47172cdc280a1a0e01"
+      }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn check-refs",
+        "exit": 0,
+        "at": "2026-10-04T02:31:38Z",
+        "head": "ca218bc7038b8078d81f7263daca2803ace2b654",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/evidence/C2.log",
+        "evidence_sha256": "d78e353bdae6f0725669884ee8e12224f73432a2121cfecb130772be10b9c059"
+      }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn directory-map --check",
+        "exit": 0,
+        "at": "2026-10-04T02:31:39Z",
+        "head": "ca218bc7038b8078d81f7263daca2803ace2b654",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/evidence/C3.log",
+        "evidence_sha256": "755cf97deb21eb18dc4b2a2aef2045e2f163098bbdb29c7088feb8af0abd0053"
+      }
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn contract:record STK-3 C4 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/evidence/C4.md",
+        "exit": 0,
+        "at": "2026-10-04T02:31:45Z",
+        "head": "ca218bc7038b8078d81f7263daca2803ace2b654",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-3-new-project-guide/evidence/C4.md",
+        "evidence_sha256": "9639f96220d71e3a5f7db15593669b3d9346117d77cd3257912441d1b9b9ab3c"
+      }
     },
     "review:vigil": {
       "status": "FAIL",
@@ -28,5 +56,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-04T02:23:49Z"
+  "updated_at": "2026-10-04T02:31:45Z"
 }
