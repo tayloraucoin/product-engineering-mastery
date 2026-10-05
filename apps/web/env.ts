@@ -14,6 +14,7 @@ import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
 import { publicKeyProblem } from "@pem/auth/config";
+import { keyModeProblem } from "@pem/env/key-mode";
 import { nextPublicEnv } from "@pem/env/next-public";
 import { pickTiered } from "@pem/env/pick";
 import { isDeployed, resolveSiteUrl } from "@pem/env/site-url";
@@ -61,6 +62,15 @@ const raw = {
   SUPABASE_SERVICE_ROLE_KEY_LOCAL: process.env.SUPABASE_SERVICE_ROLE_KEY_LOCAL,
   SUPABASE_SERVICE_ROLE_KEY_STAGING:
     process.env.SUPABASE_SERVICE_ROLE_KEY_STAGING,
+  STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+  STRIPE_SECRET_KEY_LOCAL: process.env.STRIPE_SECRET_KEY_LOCAL,
+  STRIPE_SECRET_KEY_STAGING: process.env.STRIPE_SECRET_KEY_STAGING,
+  STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
+  STRIPE_WEBHOOK_SECRET_LOCAL: process.env.STRIPE_WEBHOOK_SECRET_LOCAL,
+  STRIPE_WEBHOOK_SECRET_STAGING: process.env.STRIPE_WEBHOOK_SECRET_STAGING,
+  STRIPE_PRICE_ID: process.env.STRIPE_PRICE_ID,
+  STRIPE_PRICE_ID_LOCAL: process.env.STRIPE_PRICE_ID_LOCAL,
+  STRIPE_PRICE_ID_STAGING: process.env.STRIPE_PRICE_ID_STAGING,
   NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
   NEXT_PUBLIC_SENTRY_DSN_LOCAL: process.env.NEXT_PUBLIC_SENTRY_DSN_LOCAL,
   NEXT_PUBLIC_SENTRY_DSN_STAGING: process.env.NEXT_PUBLIC_SENTRY_DSN_STAGING,
@@ -98,6 +108,15 @@ const supabasePublishableKey = pickTiered(
   "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
   tier,
 );
+
+/**
+ * The webhook signing secret. Off a deployment, Stripe's events arrive through
+ * `yarn stripe:listen`, which signs with its own secret whatever the tier, so
+ * the local secret is picked; a deployment reads its tier's endpoint secret.
+ */
+const stripeWebhookSecret = deployed
+  ? pickTiered(raw, "STRIPE_WEBHOOK_SECRET", tier)
+  : raw.STRIPE_WEBHOOK_SECRET_LOCAL?.trim() || undefined;
 
 /** The tier's own Sentry DSN, never another tier's (lib/error-reporting/dsn.ts). */
 const sentryDsn = resolveSentryDsn(raw, tier);
@@ -153,6 +172,24 @@ export const env = createEnv({
     DATABASE_URL: z.string().min(1).optional(),
     /** Supabase's service-role key (@pem/auth's admin client): bypasses RLS, so never a NEXT_PUBLIC_ name. */
     SUPABASE_SERVICE_ROLE_KEY: z.string().min(1).optional(),
+    /**
+     * Stripe's secret key (lib/billing): a test key on local and staging, the
+     * live key on production, read from its prefix (D-STK-4). Optional: without
+     * it the app serves with billing off.
+     */
+    STRIPE_SECRET_KEY: z
+      .string()
+      .min(1)
+      .optional()
+      .superRefine((value, context) => {
+        const problem =
+          value && keyModeProblem("STRIPE_SECRET_KEY", value, tier);
+        if (problem) context.addIssue({ code: "custom", message: problem });
+      }),
+    /** The webhook endpoint's signing secret (`whsec_...`); without it the webhook route answers 500 and logs why. */
+    STRIPE_WEBHOOK_SECRET: z.string().min(1).optional(),
+    /** The price the app sells, from the tier's own Stripe account (test prices on local and staging). */
+    STRIPE_PRICE_ID: z.string().min(1).optional(),
   },
   client: {
     NEXT_PUBLIC_SITE_URL: z.url(),
@@ -186,6 +223,9 @@ export const env = createEnv({
       "SUPABASE_SERVICE_ROLE_KEY",
       tier,
     ),
+    STRIPE_SECRET_KEY: pickTiered(raw, "STRIPE_SECRET_KEY", tier),
+    STRIPE_WEBHOOK_SECRET: stripeWebhookSecret,
+    STRIPE_PRICE_ID: pickTiered(raw, "STRIPE_PRICE_ID", tier),
     // In the browser the tier is unknown, so the value next.config.ts inlined is the truth there.
     NEXT_PUBLIC_SITE_URL: isServer ? siteUrl : raw.NEXT_PUBLIC_SITE_URL,
     NEXT_PUBLIC_SUPABASE_URL: isServer

@@ -58,4 +58,5 @@ None: tRPC is a library, with no account, key or dashboard.
 1. In `toolkit.json`, set `"removed": true` on the `api` entry of the `stack` block.
 2. `yarn check-stack` exits 0: no listed file, variable or dependency of the module is left.
 3. `git grep -il trpc -- apps packages tooling` prints nothing.
-4. `yarn verify` exits 0.
+4. `yarn check-refs` names the deleted paths this runbook still lists. Add each to `tooling/refs-pending.json`, keyed exactly as printed: `"<deleted path>": "removed by docs/runbooks/remove-api.md"`.
+5. `yarn verify` exits 0.

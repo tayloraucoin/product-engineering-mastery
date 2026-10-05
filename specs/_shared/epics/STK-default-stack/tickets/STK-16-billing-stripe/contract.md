@@ -37,6 +37,14 @@ planned_paths:
   - "package.json"
   - "packages/config/eslint/boundaries.js"
   - "toolkit.json"
+  - "apps/web/lib/billing/**"
+  - "packages/db/src/billing/**"
+  - "packages/db/src/schema/index.ts"
+  - "packages/db/package.json"
+  - "tooling/boundaries.test.ts"
+  - "tooling/check-client-bundle.ts"
+  - "docs/engineering/tech-stack.md"
+  - "yarn.lock"
 depends_on:
   - STK-13
 out_of_scope:

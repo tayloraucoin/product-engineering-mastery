@@ -32,7 +32,8 @@
  *
  * Each vendor SDK in SDK_OWNERS has one owner (D-STK-16): only that element's
  * files may import it, so the rest of the repo reaches the vendor through the
- * owner's own exports.
+ * owner's own exports. An app may own an SDK only it uses (`stripe`, D-STK-11);
+ * no package can then import it.
  */
 
 import { dirname, resolve } from "node:path";
@@ -125,10 +126,11 @@ const SDK_OWNERS = {
   "drizzle-kit": "db",
   "@supabase/*": "auth",
   resend: "email",
+  "@sentry/*": "app-web",
   ai: "ai",
   "@ai-sdk/*": "ai",
   "@trpc/*": "api",
-  "@sentry/*": "app-web",
+  stripe: "app-web",
 };
 
 /** How a ban names an SDK's owner: the package's import name, or the app's folder. */

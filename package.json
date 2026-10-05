@@ -56,7 +56,8 @@
     "db:generate": "yarn workspace @pem/db db:generate",
     "db:migrate": "yarn workspace @pem/db db:migrate",
     "db:setup": "yarn workspace @pem/db db:setup",
-    "db:seed-users": "yarn workspace @pem/db db:seed-users"
+    "db:seed-users": "yarn workspace @pem/db db:seed-users",
+    "stripe:listen": "stripe listen --forward-to localhost:3000/api/webhooks/stripe"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.7.0",

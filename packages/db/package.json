@@ -31,6 +31,10 @@
     "./loopback": {
       "types": "./src/loopback.ts",
       "default": "./src/loopback.ts"
+    },
+    "./stripe-event-ledger": {
+      "types": "./src/billing/stripe-event-ledger.ts",
+      "default": "./src/billing/stripe-event-ledger.ts"
     }
   },
   "scripts": {

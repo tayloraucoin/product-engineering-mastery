@@ -98,16 +98,16 @@ const DISALLOWED: [file: string, code: string, message: RegExp][] = [
     'import { Resend } from "resend";',
     /resend is owned by @pem\/email/,
   ],
-  // STK-18: @sentry/* is owned by apps/web (D-STK-16); packages import no vendor.
+  // STK-16: stripe is owned by apps/web (D-STK-11, D-STK-16).
   [
-    "packages/observability/src/zz-probe.ts",
-    'import * as Sentry from "@sentry/nextjs";',
-    /@sentry\/\* is owned by apps\/web/,
+    "packages/services/src/zz-probe.ts",
+    'import Stripe from "stripe";',
+    /stripe is owned by apps\/web/,
   ],
   [
-    "packages/ui/src/zz-probe.ts",
-    'import "@sentry/react";',
-    /@sentry\/\* is owned by apps\/web/,
+    "packages/db/src/zz-probe.ts",
+    'import "stripe";',
+    /stripe is owned by apps\/web/,
   ],
   // STK-14: @trpc/* is owned by api (D-STK-16); api sits above services and below ui.
   [
@@ -160,6 +160,17 @@ const DISALLOWED: [file: string, code: string, message: RegExp][] = [
     "packages/ai/src/zz-probe.ts",
     'import "@pem/db/client";',
     /^ai must not import db/,
+  ],
+  // STK-18: @sentry/* is owned by apps/web (D-STK-16); packages import no vendor.
+  [
+    "packages/observability/src/zz-probe.ts",
+    'import * as Sentry from "@sentry/nextjs";',
+    /@sentry\/\* is owned by apps\/web/,
+  ],
+  [
+    "packages/ui/src/zz-probe.ts",
+    'import "@sentry/react";',
+    /@sentry\/\* is owned by apps\/web/,
   ],
   // CAT-3: the shelf is never imported (CS-07, record 0011).
   [
@@ -218,8 +229,8 @@ const ALLOWED: [file: string, code: string][] = [
   ],
   ["apps/web/lib/zz-probe.ts", 'import "@pem/email/mailer";'],
   [
-    "apps/web/lib/error-reporting/zz-probe.ts",
-    'import * as Sentry from "@sentry/nextjs"; import "@pem/observability/error-reporter";',
+    "apps/web/lib/billing/zz-probe.ts",
+    'import Stripe from "stripe"; import "@pem/db/stripe-event-ledger";',
   ],
   [
     "packages/api/src/zz-probe.ts",
@@ -237,6 +248,10 @@ const ALLOWED: [file: string, code: string][] = [
   [
     "apps/web/app/api/ai/chat/zz-probe.ts",
     'import "@pem/ai/client"; import "@/env"; import "@/lib/supabase/context";',
+  ],
+  [
+    "apps/web/lib/error-reporting/zz-probe.ts",
+    'import * as Sentry from "@sentry/nextjs"; import "@pem/observability/error-reporter";',
   ],
   ["packages/catalog/src/zz-probe.ts", 'import "@pem/ui/button";'],
   [
