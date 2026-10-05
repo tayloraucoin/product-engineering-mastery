@@ -2,12 +2,12 @@
 
 > Written by `yarn review:run mason STK-15`. Never edit it: check-specs binds it to the hashes below, and Taylor reads it before merge.
 
-- contract_sha256: d44b04528f1ef26fb18566b40794cf59646c5b6a1a844d6d4fba9c5e32942a5b
-- as_built_sha256: 22c9d7b56d4da7794068dffd311d292b393dd0399cfca54b9d8557edbae1f0e5
-- head: 53a8da1006a48be579817a14e743bc249f3900ce
+- contract_sha256: b3afca1d007a01cc26be74a2c89661dfe0653d89eca8bbba832524b4f0965151
+- as_built_sha256: 27c12c58bb19151a6826544c5a1324a944cfef6439bd507dff8bca062078f780
+- head: dabf2b9e0ea844df38257f8ee5862cecaff0a1a1
 - runner: claude 2.1.232 (Claude Code) (role docs/roles/engineering/mason-cto-principal-dev.md; tools Read,Grep,Glob)
 - model: claude-opus-5[1m]
-- at: 2026-10-04T23:11:57Z
+- at: 2026-10-05T00:20:44Z
 - verdict: PASS
 
 ## Prompt
@@ -21,11 +21,11 @@ Read, in this order:
 2. The results: specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/results.json. Each criterion's run record and evidence file.
 3. The as-built: specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/as-built.md. What the builder says shipped, and every deviation. Check its claims against the code; do not trust them.
 4. The evidence:
-   - C1 test: specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/evidence/C1.log (sha256 8e997874c62f)
-   - C2 test: specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/evidence/C2.log (sha256 5b1252e7ff8b)
-   - C3 check: specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/evidence/C3.log (sha256 00f612b5032f)
-   - C4 check: specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/evidence/C4.log (sha256 9b5a5a743f4a)
-5. The files this ticket changes against main (its planned paths; other tickets share the branch): .env.example, apps/web/env.ts, apps/web/lib/email.ts, apps/web/next.config.ts, apps/web/package.json, apps/web/tsconfig.json, docs/engineering/codebase-conventions.md, docs/engineering/tech-stack.md, packages/config/eslint/boundaries.js, packages/email/README.md, packages/email/eslint.config.mjs, packages/email/package.json, packages/email/src/default-template.test.ts, packages/email/src/default-template.ts, packages/email/src/mailer.test.ts, packages/email/src/mailer.ts, packages/email/tsconfig.json, toolkit.json, turbo.json, yarn.lock.
+   - C1 test: specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/evidence/C1.log (sha256 a737f28e03a2)
+   - C2 test: specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/evidence/C2.log (sha256 2daf8c2c36a3)
+   - C3 check: specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/evidence/C3.log (sha256 52c8f0b61bb2)
+   - C4 check: specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/evidence/C4.log (sha256 ae26f08b2a8e)
+5. The files this ticket changes against main (its planned paths; other tickets share the branch): .env.example, apps/web/env.ts, apps/web/lib/email.ts, apps/web/next.config.ts, apps/web/package.json, apps/web/tsconfig.json, docs/engineering/codebase-conventions.md, docs/engineering/tech-stack.md, packages/config/eslint/boundaries.js, packages/email/README.md, packages/email/eslint.config.mjs, packages/email/package.json, packages/email/src/default-template.test.ts, packages/email/src/default-template.ts, packages/email/src/mailer.test.ts, packages/email/src/mailer.ts, packages/email/tsconfig.json, tooling/boundaries.test.ts, toolkit.json, turbo.json, yarn.lock.
 6. The surface the ticket cites: specs/_shared/epics/STK-default-stack/technical.md. Every state and criterion it names.
 
 For each criterion, say whether the evidence and the code show it is met. Then list findings as Blocking, Should-fix or Consider, each with a file and line. A Blocking finding means FAIL.
@@ -36,40 +36,32 @@ VERDICT: FAIL
 
 ## Review
 
-## Review — mason on STK-15
+## Review — STK-15 email-package (mason, tier 2)
 
-**Verdict up top: PASS.** No Blocking findings. Two Should-fix, four Consider. The three prior review files on this ticket (`review-mason.md:39`, `review-vigil.md:39`, `review-warden.md:39`) all record "no review: You've hit your weekly limit" — no reviewer judgment exists for STK-15 yet, so I treated this as a first read, not a re-run.
+**Verdict: PASS.** No blocking findings. Two Considers and one Should-fix, all documentation-level.
+
+One-way-door paths this ticket touches — `packages/config/eslint/boundaries.js` (the boundary graph), `packages/email/package.json` (a package's exports are its public API), `apps/web/env.ts` (the environment seam) — got a full read, not a sample. The merge is still a person's.
 
 ### Criteria
 
-**C1 — a send on the local tier logs and does not call the vendor. MET.**
-`C1.log` exits 0 at `d0a1b7b2`, 113 tests. The code holds up: `packages/email/src/mailer.ts:106-120` logs and returns `logged`, and the Resend client is constructed lazily at `:126`, on the send path only — so the local path cannot reach the vendor even by accident. Positive controls are present, not just the happy case: staging and production do call it (`mailer.test.ts:89-108`), a missing key throws naming the variable (`:135-147`), a vendor error is rethrown (`:149-165`). The deployment-on-local path is the sharpest test in the file (`:172-193`): it asserts the absence of the subject, the heading, the action host and the recipient stem from the log, rather than asserting the happy shape.
+**C1 — a send on the local tier logs and does not call the vendor: met.** `packages/email/src/mailer.ts:104-128` returns before any client is constructed: `resendSender` (line 80) is reached only on the paths past line 130, so on `local` no Resend object is ever built, not merely never called. `mailer.test.ts:43-63` asserts the stand-in got zero calls, that the line is `email.logged`, and that the raw recipient never appears in the fields. The `deployed && local` path (line 104) returns `withheld` and `mailer.test.ts:177-198` proves subject, heading, action URL and address are all absent from the log — the right instinct, since sign-in links live in that body and platform logs are retained. Evidence `C1.log` shows the 17 email tests passing, exit 0, no `not ok`.
 
-**C2 — brand name, from and reply-to from `@pem/brand`, no literal. MET.**
-`default-template.ts:86,93,94,113-114` read `brand.name`, `brand.contact.support`, `brand.urls.home`; colours come from `oklchToHex(brand.theme…)` at `:33-34`. From and reply-to are built in `mailer.ts:82-86` and asserted against the brand at `mailer.test.ts:102-103`. The non-negotiable is enforced mechanically, not by inspection: `default-template.test.ts:65-100` scans every non-test source for brand values, hex, `oklch(` and anything address-shaped.
+**C2 — brand name, from and reply-to from `@pem/brand`, no literal: met.** `from` is `formatSender(brand.name, config.fromAddress ?? brand.contact.email)` and `replyTo` is `brand.contact.support` (`mailer.ts:90-94`); `mailer.test.ts:107-108` pins both against the brand module rather than against strings. The template reads `brand.name`, `brand.urls.home`, `brand.contact.support` and both theme colours through `oklchToHex` (`default-template.ts:33-34, 86-94`), which is the correct call — email clients do not read OKLCH. The no-literal scan (`default-template.test.ts:65-101`) is the part I'd have asked for: it walks `src/` recursively, asserts `sources.length >= 2` so it cannot pass by matching nothing, and rejects brand values, hex, `oklch(` and bare addresses. Verified independently: no `process.env` anywhere in `packages/email`, and the package's own ESLint config bans it (`eslint.config.mjs:9-17`).
 
-**C3 — boundaries pass with `resend` owned by `email`. MET.**
-`C3.log` exits 0. `boundaries.js:59` adds the element, `:77` declares `email → config, env, brand, observability`, `:87` puts `resend` in `SDK_OWNERS`, and `:225` bans it everywhere else via `restrictedImports(null)`. Grep confirms exactly one importer repo-wide: `packages/email/src/mailer.ts:18`. The committed probe suite proves the element is wired into the matrix rather than merely declared (`C4.log:88-89`: `@pem/auth/server` from `packages/email/src/zz-probe.ts` is rejected). Placement matches D-STK-1 and the conventions table at `codebase-conventions.md:91`.
+**C3 — boundaries pass with `resend` owned by email: met.** `SDK_OWNERS.resend = "email"` (`boundaries.js:101`) with `email: ["config", "env", "brand", "observability"]` (line 89). `yarn lint:boundaries` exits 0 and clean. The pins in `tooling/boundaries.test.ts` are the right three: `resend` from `apps/web` fails (92-95), from `@pem/observability` fails (96-100), from `packages/email` passes (152-155), and `@pem/email/mailer` from `apps/web` passes (156). I checked that `resend` is imported in exactly one file repo-wide — `mailer.ts:18`.
 
-**C4 — types and build pass. MET.**
-`C4.log` exits 0 at `d5d468cd`: lint and check-types across 10 packages including `@pem/email`, both app builds, `check-stack` clean at 9 modules, `check-client-bundle` with 18 planted server-only values and no leak. The `check-specs` lines in that log are warnings on STK-11/STK-12 still closing, which is the designed behaviour, not a failure of this ticket. C1–C3 were recorded one commit earlier and the later commits touch only `specs/`, so no planned path moved under them; the proofs are fresh.
+**C4 — types and build pass: met.** `yarn verify` exit 0 at `cf6d3a7`, with lint and check-types green across 13 packages, both builds successful, and `check-stack` reporting nothing missing or left behind. The only warnings in the log belong to STK-11, not this ticket.
 
-**Non-negotiables.** All five hold. Worth stating one explicitly, since nobody has sent a real message: the dashboard-template shape is not invented. Resend 6.32.0's `CreateEmailOptions` has a genuine template arm — `node_modules/resend/dist/index.d.mts:528-533` is `template: { id: string; variables?: Record<string, string | number> }`, and `:607-613` makes `subject` optional in that variant. `DashboardTemplate` (`mailer.ts:37-41`) matches it field for field, and the id reaches it from env, never a literal (`README.md:12`). Locked module confirmed at `toolkit.json:264-271` (`locked: true`, `runbook: null`).
+**Non-negotiables.** `toolkit.json:289-296` marks `email` locked with `runbook: null`, and the `check-stack` test "a locked module marked removed fails" holds that semantic. `resend` is pinned exact at 6.32.0 with its owner named (`tech-stack.md:49`), and the email row is gone from "Deliberately absent" as D-STK-2 requires. I checked the vendor shape rather than trusting it: Resend's `CreateEmailOptions` template variant is `template: { id, variables?: Record<string, string | number> }` with optional `from` and `subject` (`resend/dist/index.d.mts:528-537, 609`), so `DashboardTemplate` matches the API exactly and the brand sender does override the dashboard template's own. Header injection is closed at both ends — `singleLine` on sender (line 70) and the subject (line 124), each with a test.
+
+On the as-built's "Added after the reviews" list: all three recorded reviews sit at earlier heads than C1–C4, but `check-specs` inside the C4 run flags only STK-11's reviews as stale and calls `specs/` otherwise clean. The enforced check outranks the prose, so I'm treating vigil's and warden's PASSes as fresh rather than inventing a staleness finding.
 
 ### Findings
 
-**Should-fix 1 — `apps/web/lib/email.ts:1-7`: the header asserts "Server-only, since it holds the Resend key" and nothing enforces it.** Every sibling server module in the same app imports the barrier — `lib/supabase/server.ts:8`, `admin.ts:8`, `context.ts:9`, `local-mirror.ts:12` — and `server-only` is already a dependency (`apps/web/package.json:25`). Without it, a client import fails at runtime in the browser (t3-env throws on `env.RESEND_API_KEY`) after pulling the Resend SDK into the chunk, instead of failing the build. Not Blocking: the key's value does not reach a bundle, `check-client-bundle` passes and would catch an actual leak, and nothing imports this module yet. Add `import "server-only";` after the header.
+**Should-fix — `packages/email/README.md:14-17`.** "Calling it from a service. One function per message, in the service that owns the event" points an agent at `packages/services`, where that code cannot compile: `services` has no `email` edge (`boundaries.js:90`) and no package may import an app (`boundaries.js:212-215`). The snippet's own `import { mailer } from "../lib/email"` only resolves inside `apps/web`, so the prose and the code disagree. One sentence fixes it — the mailer is built in the app because that is where env lives, so the send function lives in app code until a service takes a mailer on `ctx`. Related: the as-built's stated reason for keeping the example in the README rather than in code ("since `@pem/services` is STK-13", `as-built.md:23`) no longer holds; STK-13 is built. The example-in-README itself I'd accept — the mailer instance genuinely belongs where env is read — but the reason on record is wrong and the wording misroutes the reader.
 
-**Should-fix 2 — `packages/email/src/default-template.test.ts:66-69`: the no-literal scan does not recurse.** `readdirSync(dir)` reads one directory level, so a brand value or colour literal in a future `src/templates/` subfolder would pass unseen. This scan is the only mechanical enforcement of a stated non-negotiable, in a package explicitly expected to grow templates. One-line fix (`recursive: true`), and it keeps the guard honest as the package grows.
+**Consider — `packages/config/eslint/boundaries.js:90`.** No `services → email` edge, though D-STK-1's order (`technical.md:14`) places `email` below `services`. This is the documented design, not drift — conventions §4 says every unlisted edge is disallowed and edges are added by the ticket that needs them. Worth one line somewhere so the first service that must send mail arrives expecting to ratify an edge, instead of discovering it as a lint failure.
 
-**Consider 1 — no permanent probe for `resend` in the boundaries suite.** The as-built (`:7`) cites a throwaway probe in `apps/web`. The committed table covers `@supabase/supabase-js` from `apps/web` (`C4.log:76-81`) but not `resend`. Same mechanism, so I am satisfied C3 is met — but adding `import "resend"` to the `apps/web/lib/zz-probe.ts` row would make the claim re-provable in CI rather than in a review.
-
-**Consider 2 — the local log is proven only against an injected logger.** `mailer.test.ts:29-36` substitutes a memory logger, so the real path through `createLogger` → `redactFields` is never exercised with this payload. I checked it: none of `subject`, `text`, `recipients`, `from`, `replyTo`, `templateId` matches a key or suffix in `packages/observability/src/redact.ts:10-51`, so the behaviour is correct today. But a later addition to `SECRET_SUFFIXES` would silently empty the local log without failing a test.
-
-**Consider 3 — the `withheld` backstop is Vercel-shaped.** `config.deployed` comes from `isDeployed(VERCEL_ENV)` (`packages/env/src/site-url.ts:11-13`, D-STK-3's rule, not this ticket's). A product that ports this starter to a non-Vercel host and leaves `DATABASE_ENVIRONMENT` unset gets `deployed === false` on a real deployment, and the local path then logs subjects and bodies — which is exactly where reset and sign-in links live. Two independent faults are required and the tier is the primary guard, so this is not a defect here. But the whole value of `withheld` is being the backstop, so the port step in `docs/runbooks/new-project.md` deserves one line saying `isDeployed` must be re-derived off Vercel.
-
-**Consider 4 — as-built `:19` overstates the bundle check.** `check-client-bundle` plants variable *names* from `.env.example` and `turbo.json` with its own sentinel values and never reads the file's values (`tooling/check-client-bundle.ts:14-20,43`). `RESEND_API_KEY=` is empty in `.env.example:79`; the name is what gets planted. The outcome is right, the sentence is not.
-
-The as-built's "Not verified" section is accurate and correctly scoped: no message has gone through Resend and the HTML has not been opened in a client. That is the right thing to carry forward rather than paper over.
+**Consider — `packages/email/src/mailer.ts:41-44`.** `DashboardTemplate.id` is a free string. "Dashboard templates are referenced by id in env" is kept by convention and by the README (`README.md:12`), with nothing mechanical behind it. There is nothing to enforce today — no dashboard template exists — but when the first one lands, a check that the id traces to a `RESEND_TEMPLATE_*` variable would make the rule real rather than remembered.
 
 VERDICT: PASS
