@@ -90,7 +90,7 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
 
 #### bash-guard
 
-- **What:** a PreToolUse hook that tokenizes every Bash command an agent runs. It blocks npm, npx and pnpm, any `git push`, commits on `main` or without a work-id, shell writes to results, review and merged as-built files, and database resets and drops. It asks before a migrate, push, seed or setup.
+- **What:** a PreToolUse hook that tokenizes every Bash command an agent runs, and blocks npm, npx and pnpm, any `git push`, commits on `main` or without a work-id, shell writes to results, review and merged as-built files, and database resets and drops. It asks Taylor first before a migrate, push, seed or setup.
 - **Area:** agent permissions; git; the contract records; the database (`tooling/hooks/bash-guard.ts`, `tooling/lib/work-ids.ts`).
 - **Trigger:** every Bash tool call in Claude Code.
 - **Scores:**
@@ -98,8 +98,14 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **1.5**: it is silent on allow. A denial is at most about 60 tokens (enforced by `yarn test:hooks`) and names the command to run instead. A compound command it cannot parse costs a rewrite.
   - Wall time **1.0**: 65 ms per call, on every call.
   - Standard **2.0**: PreToolUse guards are a documented Claude Code pattern; a 906-line shell lexer is not.
-- **Pros:** catches the bypass forms; every denial says what to do next; 120 fixture cases across 9 rules.
-- **Cons:** 906 lines to maintain, the largest file after `tooling/lib/specs.ts`. By its own header it is text analysis and never a boundary. The `results-write`, `review-write` and `as-built-write` rules guard records the overhaul is replacing.
+- **Pros:**
+  - Catches the bypass forms.
+  - Every denial says what to do next.
+  - 120 fixture cases across 9 rules.
+- **Cons:**
+  - 906 lines to maintain, the largest file after `tooling/lib/specs.ts`.
+  - By its own header it is text analysis and never a boundary.
+  - The `results-write`, `review-write` and `as-built-write` rules guard records the overhaul is replacing.
 - **Verdict:** **keep but simplify.** Keep `package-manager`, `push`, `commit-on-main` and the database rules. Move the three record-write rules with the overhaul. Re-decide `commit-work-id` together with the commit-msg hook ([below](#commit-msg)).
 
 #### results-gate
@@ -114,8 +120,12 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **1.0**: silent almost always; a denial is about 48 tokens.
   - Wall time **1.0**: 64 ms per edit call.
   - Standard **1.0**: the hook mechanism is standard, the rules are house.
-- **Pros:** cheap; the message names the right command.
-- **Cons:** it guards file names the overhaul is changing; a second copy of the same law lives in bash-guard.
+- **Pros:**
+  - Cheap.
+  - The message names the right command.
+- **Cons:**
+  - It guards file names the overhaul is changing.
+  - A second copy of the same law lives in bash-guard.
 - **Verdict:** **keep until the overhaul lands**, then rewrite it against the new records or drop it if the new loop has no hand-protected files.
 
 #### session-start
@@ -128,13 +138,17 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **2.0**: about 150 tokens per session. In this session the line was cut off part-way through one ticket's list of stale files, so most of the 600 characters went on file paths.
   - Wall time **3.0**: 5.4 s, nearly all of it `yarn status --brief` (5.8 s on its own).
   - Standard **3.0**: SessionStart context hooks are documented; the content is house.
-- **Pros:** an agent learns when its instructions changed underneath it; the status is generated, not remembered.
-- **Cons:** slow; the brief spends its characters on file lists instead of ids and counts.
+- **Pros:**
+  - An agent learns when its instructions changed underneath it.
+  - The status is generated, not remembered.
+- **Cons:**
+  - Slow.
+  - The brief spends its characters on file lists instead of ids and counts.
 - **Verdict:** **keep but simplify.** The brief should be ticket ids and counts. Status should be fast enough that a session start does not wait 5 s for it.
 
 #### stop-gate
 
-- **What:** a Stop hook that runs `yarn verify:fast` over the files this session edited (read from its transcript) whenever the tree changed since the last green check. On failure it blocks the stop once, with up to 1,000 characters of output as the reason, so the agent fixes its own files before it reports done. It never blocks twice in a row, and it never judges another thread's files.
+- **What:** a Stop hook that, whenever the tree changed since the last green check, runs `yarn verify:fast` over the files this session edited (read from its transcript). On failure it blocks the stop once with up to 1,000 characters of output, so the agent fixes its own files before it reports done, and it never blocks twice in a row or judges another thread's files.
 - **Area:** whatever the session edited (`tooling/hooks/stop-gate.ts`, `tooling/hooks/session-state.ts`).
 - **Trigger:** every turn end in Claude Code.
 - **Scores:**
@@ -142,8 +156,12 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **3.0**: about 250 tokens on a failure, and one forced fix loop (bounded by the once-only rule).
   - Wall time **4.0**: every stop pays 5.8 s for `yarn status --brief` (the message to the person), even when nothing changed; the scoped checks add 3–10 s (_estimate_), and 8.9 s more when hook files were touched.
   - Standard **3.0**: verify-before-stop is a known harness pattern; the scoping by transcript is house.
-- **Pros:** catches formatting, lint and type breaks while the agent still holds the context; it is safe in a shared checkout.
-- **Cons:** the status call doubles its cost for a message only the person sees; it reads the transcript format, which can change under it.
+- **Pros:**
+  - Catches formatting, lint and type breaks while the agent still holds the context.
+  - It is safe in a shared checkout.
+- **Cons:**
+  - The status call doubles its cost for a message only the person sees.
+  - It reads the transcript format, which can change under it.
 - **Verdict:** **keep but simplify.** Drop the status call, or run it only when the gate actually ran checks.
 
 #### session-state
@@ -156,8 +174,10 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **0.0**: no output.
   - Wall time **0.5**: one `git diff HEAD` per start and stop; it grows with the size of the uncommitted diff.
   - Standard **1.0**: house.
-- **Pros:** 53 lines, Node built-ins only.
-- **Cons:** on a shared tree another thread's edit changes the fingerprint, so "changed" often means "someone changed something".
+- **Pros:**
+  - 53 lines, Node built-ins only.
+- **Cons:**
+  - On a shared tree another thread's edit changes the fingerprint, so "changed" often means "someone changed something".
 - **Verdict:** **keep.**
 
 ### 3.2 Native git hooks
@@ -172,8 +192,11 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **0.5**: one line on failure.
   - Wall time **0.5**: one Node start per commit (_estimate_ 0.1 s).
   - Standard **4.0**: commit-message hooks (commitlint) are common.
-- **Pros:** the one cover for agents other than Claude Code.
-- **Cons:** dead until installed; a second home for bash-guard's commit rule.
+- **Pros:**
+  - The one cover for agents other than Claude Code.
+- **Cons:**
+  - Dead until installed.
+  - A second home for bash-guard's commit rule.
 - **Verdict:** **candidate to remove,** unless Cursor or Codex sessions start committing here, in which case install it and keep it.
 
 #### pre-commit
@@ -186,8 +209,12 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **2.0**: installed, it would print today's 13 warnings (about 860 tokens) on every such commit.
   - Wall time **3.0**: _estimate_ 4–6 s per commit, check-specs without its fixtures.
   - Standard **4.0**: pre-commit hooks are common; this content is house.
-- **Pros:** in a single-thread repo it would catch a bad record before the commit.
-- **Cons:** wrong snapshot; duplicate gate; slow commits in a shared tree.
+- **Pros:**
+  - In a single-thread repo it would catch a bad record before the commit.
+- **Cons:**
+  - Wrong snapshot.
+  - Duplicate gate.
+  - Slow commits in a shared tree.
 - **Verdict:** **candidate to remove.**
 
 #### hooks:install
@@ -200,8 +227,11 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **0.0**: one line.
   - Wall time **0.0**: instant, run once.
   - Standard **3.0**: a hooksPath installer is a lighter version of husky.
-- **Pros:** no hook-manager dependency.
-- **Cons:** never run here; `yarn doctor` carries a warning for it.
+- **Pros:**
+  - No hook-manager dependency.
+- **Cons:**
+  - Never run here.
+  - `yarn doctor` carries a warning for it.
 - **Verdict:** **candidate to remove** with the hooks; keep it if commit-msg is kept.
 
 ### 3.3 The two verify commands
@@ -216,8 +246,13 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **6.0**: about 121 KB (about 30,000 tokens) of output on a pass, measured. Inside the agent sandbox it fails at `yarn test` every time, which forces a second, unsandboxed run.
   - Wall time **7.0**: 101 s with a warm Turbo cache, measured; 3–4 minutes cold (_estimate_).
   - Standard **5.0**: one verify script mirrored by CI is standard. Ten of its 23 steps are house checks.
-- **Pros:** one command, one truth; the cheap checks mostly come first.
-- **Cons:** loud; sandbox-hostile; about 40% of its time is the contract-loop tests.
+- **Pros:**
+  - One command, one truth.
+  - The cheap checks mostly come first.
+- **Cons:**
+  - Loud.
+  - Sandbox-hostile.
+  - About 40% of its time is the contract-loop tests.
 - **Verdict:** **keep but simplify.** Quiet `yarn test` and `yarn test:tooling` on a pass. Move the contract-loop tests out of the default run, or into CI only, when the overhaul replaces them. Name the sandbox failure in the error, or make the Turbo steps run inside the sandbox.
 
 #### verify:fast
@@ -230,8 +265,13 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **2.0**: one summary line on a pass; the last 25 lines of the failing step on a failure.
   - Wall time **6.0**: unscoped it took 31.1 s on this branch (1,507 changed files against `main`), most of a full verify. Scoped by the stop gate it is _estimated_ at 3–10 s.
   - Standard **2.0**: affected-only checking is Turbo's idea; the step selection is house.
-- **Pros:** prints each step's time; it fails fast; it reads the format globs from `yarn format:check`, so the two cannot disagree.
-- **Cons:** on a long-lived branch the unscoped mode stops being fast; it silently skips steps whose inputs did not change.
+- **Pros:**
+  - Prints each step's time.
+  - It fails fast.
+  - It reads the format globs from `yarn format:check`, so the two cannot disagree.
+- **Cons:**
+  - On a long-lived branch the unscoped mode stops being fast.
+  - It silently skips steps whose inputs did not change.
 - **Verdict:** **keep.**
 
 ### 3.4 The checks inside `yarn verify`
@@ -246,8 +286,10 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **0.5**: two lines on a pass; a file list on a failure.
   - Wall time **3.0**: 6.0 s over the whole repo.
   - Standard **7.0**: Prettier.
-- **Pros:** standard, and fixed by one command.
-- **Cons:** whole-repo every run.
+- **Pros:**
+  - Standard, and fixed by one command.
+- **Cons:**
+  - Whole-repo every run.
 - **Verdict:** **keep.**
 
 #### lint:docs
@@ -260,8 +302,10 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **0.5**: one line on a pass; one line per problem, with the fix.
   - Wall time **1.0**: 0.5 s.
   - Standard **1.0**: frontmatter linting exists elsewhere; this schema is house.
-- **Pros:** the enforceable copy of record 0006.
-- **Cons:** none worth naming.
+- **Pros:**
+  - The enforceable copy of record 0006.
+- **Cons:**
+  - None worth naming.
 - **Verdict:** **keep.**
 
 #### check-settings
@@ -274,8 +318,11 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **0.5**: one line.
   - Wall time **1.0**: 0.5 s.
   - Standard **1.0**: house.
-- **Pros:** cheap; every failure says which rule is missing.
-- **Cons:** its required list is a second copy of the deny list, kept in step by hand.
+- **Pros:**
+  - Cheap.
+  - Every failure says which rule is missing.
+- **Cons:**
+  - Its required list is a second copy of the deny list, kept in step by hand.
 - **Verdict:** **keep.**
 
 #### test:hooks
@@ -288,8 +335,10 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **0.5**: five lines.
   - Wall time **4.0**: 8.9 s, one Node process per case.
   - Standard **2.0**: testing hooks with fixtures is good practice; the harness is house.
-- **Pros:** holds the hooks to a speed and message-length budget, not just correctness.
-- **Cons:** 9 s in every verify for files that rarely change.
+- **Pros:**
+  - Holds the hooks to a speed and message-length budget, not just correctness.
+- **Cons:**
+  - 9 s in every verify for files that rarely change.
 - **Verdict:** **keep but simplify.** Run the cases in parallel, or only when `tooling/hooks/` changed (verify:fast already does this).
 
 #### check-refs
@@ -302,13 +351,15 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **1.0**: one line, but almost 1 KB, because it lists every pending reason on every pass.
   - Wall time **2.0**: 2.0 s.
   - Standard **2.0**: link checkers are standard; checking script and skill names is house.
-- **Pros:** it caught the audit-day class of defect (docs naming a tool that did not exist).
-- **Cons:** the pending list is a hand-kept file of 40 entries.
+- **Pros:**
+  - It caught the audit-day class of defect (docs naming a tool that did not exist).
+- **Cons:**
+  - The pending list is a hand-kept file of 40 entries.
 - **Verdict:** **keep.** Print a count, not the reasons.
 
 #### check-stack
 
-- **What:** `yarn check-stack` compares the stack modules in `toolkit.json` with the tree. A present module must have its files. A removed one must leave no file, no environment variable in `.env.example` or `turbo.json`, and no dependency behind.
+- **What:** `yarn check-stack` compares the stack modules listed in `toolkit.json` with the tree, and fails when a present module is missing a listed file. It also fails when a removed module leaves a file, an environment variable in `.env.example` or `turbo.json`, or a dependency behind.
 - **Area:** the default stack's modules (`tooling/check-stack.ts`, `toolkit.json`).
 - **Trigger:** verify step 6.
 - **Scores:**
@@ -316,13 +367,16 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **0.5**: one line.
   - Wall time **1.0**: 0.6 s.
   - Standard **0.5**: house.
-- **Pros:** reports, never removes; it names the leftover.
-- **Cons:** another place to update when a module gains a file.
+- **Pros:**
+  - Reports, never removes.
+  - It names the leftover.
+- **Cons:**
+  - Another place to update when a module gains a file.
 - **Verdict:** **keep.**
 
 #### check-migrations
 
-- **What:** `yarn check-migrations` fails when any migration in `packages/db/migrations` acts on Supabase's `auth` schema (D-STK-5).
+- **What:** `yarn check-migrations` reads every migration in `packages/db/migrations`. It fails when one acts on Supabase's `auth` schema (D-STK-5).
 - **Area:** the database (`packages/db/scripts/check-migrations.ts`).
 - **Trigger:** verify step 7.
 - **Scores:**
@@ -330,15 +384,17 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **0.5**: one line.
   - Wall time **1.0**: 0.9 s.
   - Standard **1.5**: migration linters exist (squawk); this rule is house.
-- **Pros:** tiny and exact.
-- **Cons:** it checks one rule, not migration safety in general.
+- **Pros:**
+  - Tiny and exact.
+- **Cons:**
+  - It checks one rule, not migration safety in general.
 - **Verdict:** **keep.**
 
 #### check-specs
 
 **[changing in the workflow overhaul]**
 
-- **What:** `yarn check-specs` checks the specs tree. It covers the layout and ids, each contract against its schema, results against frozen criteria, every PASS against its run record and evidence hash, closure (an as-built only when everything is PASS), immutability against `main`, spec-file caps, and drift in `_status.md`. It runs its 26 fixtures first. `--strict` turns the in-flight warnings into failures.
+- **What:** `yarn check-specs` checks the specs tree: layout and ids, each contract against its schema, results against frozen criteria, every PASS against its run record and evidence hash, closure, immutability against `main`, spec-file caps and drift in `_status.md`. It runs its 26 fixtures first, and `--strict` turns the in-flight warnings into failures.
 - **Area:** `specs/` (`tooling/check-specs.ts`, `tooling/lib/specs.ts`, `tooling/fixtures/specs/`).
 - **Trigger:** verify step 8; verify:fast unscoped; the pre-commit hook if installed.
 - **Scores:**
@@ -346,8 +402,12 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **5.0**: on this tree it prints 13 warnings (about 860 tokens) on every verify. Each one names a `yarn` command to re-prove another thread's ticket, which invites an agent to do that work.
   - Wall time **4.0**: 9.9 s, a large part of it the fixtures.
   - Standard **0.0**: house.
-- **Pros:** the run-record idea (command, exit, commit and evidence hash) is sound and cheap to verify.
-- **Cons:** the loudest house check; 433 lines plus 1,251 in `tooling/lib/specs.ts`; it re-proves itself against its fixtures on every run.
+- **Pros:**
+  - The run-record idea (command, exit, commit and evidence hash) is sound and cheap to verify.
+- **Cons:**
+  - The loudest house check.
+  - 433 lines plus 1,251 in `tooling/lib/specs.ts`.
+  - It re-proves itself against its fixtures on every run.
 - **Verdict:** **keep the run-record integrity; let the overhaul cut the rest.** Run its fixtures in `yarn test:tooling`, not in every check, and print warnings as a count with one example.
 
 #### check-test-weakening
@@ -360,13 +420,15 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **1.0**: one line; a finding asks for a written reason, not a fix loop.
   - Wall time **1.0**: 0.7 s.
   - Standard **1.0**: house; mutation testing is the industry's heavier answer.
-- **Pros:** cheap, with an honest escape hatch.
-- **Cons:** it counts calls, so a rename can trip it (its fixtures cover the common case).
+- **Pros:**
+  - Cheap, with an honest escape hatch.
+- **Cons:**
+  - It counts calls, so a rename can trip it (its fixtures cover the common case).
 - **Verdict:** **keep.**
 
 #### contrast-audit
 
-- **What:** `yarn contrast-audit` computes the WCAG 2.2 contrast of 57 token pairs in `packages/config/tailwind/preset.css`, light and dark, and fails any text pair under 4.5:1 or boundary pair under 3:1.
+- **What:** `yarn contrast-audit` computes the WCAG 2.2 contrast of 57 token pairs in `packages/config/tailwind/preset.css`, in light and dark. It fails any text pair under 4.5:1 and any focus-ring or control-boundary pair under 3:1.
 - **Area:** the design tokens (`tooling/contrast-audit.ts`).
 - **Trigger:** verify step 10.
 - **Scores:**
@@ -374,13 +436,16 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **3.0**: it prints all 59 lines (about 1,300 tokens) on a pass.
   - Wall time **1.0**: 0.5 s.
   - Standard **3.0**: contrast checking is standard practice; the preset parser is house.
-- **Pros:** exact numbers; it caught the destructive button at 3.99:1 (CAT batch review).
-- **Cons:** loud on success.
+- **Pros:**
+  - Exact numbers.
+  - It caught the destructive button at 3.99:1 (CAT batch review).
+- **Cons:**
+  - Loud on success.
 - **Verdict:** **keep but simplify.** Print failures and a count.
 
 #### check-ui-layout
 
-- **What:** `yarn check-ui-layout` holds `@pem/ui` to its folder law: kinds as folders, a component as `primitives/<kind>/<name>/` or `composed/<kind>/<name>/` with its files, `cva` only in a variants file, primitives never importing composed, and real `exports` targets.
+- **What:** `yarn check-ui-layout` holds `@pem/ui` to the folder law in `packages/ui/AGENTS.md`: kinds as folders, and each component in its kind's folder under `primitives/` or `composed/` with its own files. It also keeps `cva` in variants files, keeps primitives from importing composed components, and checks that every `exports` target exists.
 - **Area:** `packages/ui` (`tooling/check-ui-layout.ts`).
 - **Trigger:** verify step 11.
 - **Scores:**
@@ -388,8 +453,11 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **0.5**: one line.
   - Wall time **1.0**: 0.5 s.
   - Standard **0.5**: house.
-- **Pros:** cheap; it turns a written layout into a check.
-- **Cons:** another list (the kinds) kept in step with `packages/ui/AGENTS.md`.
+- **Pros:**
+  - Cheap.
+  - It turns a written layout into a check.
+- **Cons:**
+  - Another list (the kinds) kept in step with `packages/ui/AGENTS.md`.
 - **Verdict:** **keep.**
 
 #### check-catalog
@@ -402,8 +470,10 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **0.5**: one line.
   - Wall time **1.0**: 0.5 s.
   - Standard **0.5**: house.
-- **Pros:** generated status, never typed.
-- **Cons:** tied to one epic's lifetime.
+- **Pros:**
+  - Generated status, never typed.
+- **Cons:**
+  - Tied to one epic's lifetime.
 - **Verdict:** **keep** while the catalog grows. It is a removable stack module with its own removal runbook.
 
 #### test:tooling
@@ -416,13 +486,16 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **5.0**: 994 lines (37 KB, about 9,000 tokens) of TAP on a pass.
   - Wall time **6.0**: 41.3 s, the slowest step. Run one at a time, the four contract-loop files take 88 s and the other ten take 6 s.
   - Standard **4.0**: `node:test` is standard; the scratch-repo harness is house.
-- **Pros:** no mocks; real git and a real filesystem.
-- **Cons:** most of its cost tests code the overhaul is replacing.
+- **Pros:**
+  - No mocks.
+  - Real git and a real filesystem.
+- **Cons:**
+  - Most of its cost tests code the overhaul is replacing.
 - **Verdict:** **keep but simplify.** Use a summary reporter in verify. Let the overhaul's tests replace the four contract files, and hold them to a time budget.
 
 #### test
 
-- **What:** `yarn test` runs each workspace's `test` task through Turbo: 195 Node tests across the packages and `apps/web`, and 382 Storybook-driven Vitest tests in `@pem/ui`.
+- **What:** `yarn test` runs each workspace's `test` task through Turbo. That is 195 Node tests across the packages and `apps/web`, and 382 Storybook-driven Vitest tests in `@pem/ui`.
 - **Area:** `apps/web`, `packages/*`.
 - **Trigger:** verify step 14.
 - **Scores:**
@@ -430,8 +503,11 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **6.0**: 66 KB (about 16,000 tokens) on a full cache hit, because Turbo replays every log. In the agent sandbox it fails at once on `.env.local`.
   - Wall time **4.0**: 0.7 s when fully cached (measured); about 30 s cold (_estimate_).
   - Standard **7.0**: Turbo, `node:test`, Vitest.
-- **Pros:** cached; standard.
-- **Cons:** the loudest step in verify.
+- **Pros:**
+  - Cached.
+  - Standard.
+- **Cons:**
+  - The loudest step in verify.
 - **Verdict:** **keep but simplify.** Run it with Turbo's errors-only log output inside verify.
 
 #### budget
@@ -444,8 +520,11 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **1.0**: 16 lines.
   - Wall time **1.0**: 0.6 s.
   - Standard **0.5**: house; few repos measure their agent context at all.
-- **Pros:** the table in `docs/index.md` is the contract, so prose and check cannot drift.
-- **Cons:** an estimate, not a tokenizer; at 4 tokens of headroom, every always-on edit now trips it.
+- **Pros:**
+  - The table in `docs/index.md` is the contract, so prose and check cannot drift.
+- **Cons:**
+  - An estimate, not a tokenizer.
+  - At 4 tokens of headroom, every always-on edit now trips it.
 - **Verdict:** **keep.**
 
 #### gen:agents
@@ -458,8 +537,10 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **0.5**: six lines.
   - Wall time **1.0**: 0.5 s.
   - Standard **1.0**: house.
-- **Pros:** one source per role.
-- **Cons:** none worth naming.
+- **Pros:**
+  - One source per role.
+- **Cons:**
+  - None worth naming.
 - **Verdict:** **keep.**
 
 #### directory-map
@@ -472,13 +553,16 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **2.0**: it fails on any description edit, new file or new folder until someone regenerates. It is failing right now on another thread's runbook move.
   - Wall time **1.0**: 0.6 s.
   - Standard **1.0**: generated indexes are standard; committing them and failing CI on them is a choice.
-- **Pros:** never hand-kept; every folder gets a README.
-- **Cons:** the most frequent reason a docs-only change fails verify, for an artifact no agent reads.
+- **Pros:**
+  - Never hand-kept.
+  - Every folder gets a README.
+- **Cons:**
+  - The most frequent reason a docs-only change fails verify, for an artifact no agent reads.
 - **Verdict:** **keep the generator, simplify the check.** Have `apps/docs` render the map, or regenerate it in CI, instead of failing verify on it.
 
 #### lint
 
-- **What:** `yarn lint` runs each workspace's ESLint through Turbo with `--max-warnings 0`. The shared configs are in `packages/config/eslint/`: `base.js` (recommended JS and TypeScript rules, Turbo's undeclared-env rule, everything as warnings), `next.js` and `react-internal.js` (React, hooks, Next core-web-vitals). `apps/web`, `packages/ui` and `packages/catalog` add `tokens.js`, the token lint: no raw colours, lengths, durations or palette utilities.
+- **What:** `yarn lint` runs each workspace's ESLint through Turbo with `--max-warnings 0`, using the shared configs in `packages/config/eslint/`: `base.js` (JavaScript and TypeScript rules, Turbo's undeclared-env rule) and `next.js` or `react-internal.js` (React, hooks, Next core-web-vitals). `apps/web`, `packages/ui` and `packages/catalog` also apply `tokens.js`, the token lint that bans raw colours, lengths, durations and palette utilities.
 - **Area:** `apps/*`, `packages/*`.
 - **Trigger:** verify step 18; verify:fast on affected workspaces.
 - **Scores:**
@@ -486,13 +570,15 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **1.0**: 26 lines on a cache hit; each finding is one line with its fix.
   - Wall time **3.0**: 0.7 s cached (measured); 20–40 s cold (_estimate_).
   - Standard **6.5**: ESLint and its plugin configs are standard; the token rule is house.
-- **Pros:** the token lint's messages cite the canon rule and the fix.
-- **Cons:** cold runs are slow.
+- **Pros:**
+  - The token lint's messages cite the canon rule and the fix.
+- **Cons:**
+  - Cold runs are slow.
 - **Verdict:** **keep.**
 
 #### lint:boundaries
 
-- **What:** `yarn lint:boundaries` runs ESLint once from the root with `eslint.config.mjs`, which loads only `packages/config/eslint/boundaries.js`. That file holds the import graph: apps import packages, packages never import apps, each layer imports only its declared lower layers, and each vendor SDK is imported by its single owner. `workspace-resolver.cjs` resolves `@pem/*` imports for it.
+- **What:** `yarn lint:boundaries` runs ESLint once from the root with `eslint.config.mjs`, which loads only the import-graph rules in `packages/config/eslint/boundaries.js` (resolved through `packages/config/eslint/workspace-resolver.cjs`). The graph says apps import packages, packages never import apps, each layer imports only its declared lower layers, and each vendor SDK has one owner.
 - **Area:** every import in `apps/*` and `packages/*`.
 - **Trigger:** verify step 19; verify:fast on changed code.
 - **Scores:**
@@ -500,13 +586,15 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **0.0**: silent on pass.
   - Wall time **3.0**: 4.4 s.
   - Standard **4.0**: eslint-plugin-boundaries is an established plugin; the zone map is house.
-- **Pros:** an undeclared edge is denied by default.
-- **Cons:** 344 lines of zone map, a one-way door that needs a Mason review to change.
+- **Pros:**
+  - An undeclared edge is denied by default.
+- **Cons:**
+  - 344 lines of zone map, a one-way door that needs a Mason review to change.
 - **Verdict:** **keep.**
 
 #### test:boundaries
 
-- **What:** `yarn test:boundaries` runs `tooling/boundaries.test.ts` on its own: 52 probes, each linted as text through the root config.
+- **What:** `yarn test:boundaries` runs `tooling/boundaries.test.ts` on its own. It lints 52 probes as text through the root ESLint config.
 - **Area:** the boundaries lint.
 - **Trigger:** by hand; not in verify.
 - **Scores:**
@@ -514,13 +602,15 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **0.5**: a short TAP run.
   - Wall time **0.0**: run on purpose; 1.1 s.
   - Standard **4.0**: a plain `node --test` alias.
-- **Pros:** a quick way to run one file.
-- **Cons:** a script name for something `node --test <file>` already does.
+- **Pros:**
+  - A quick way to run one file.
+- **Cons:**
+  - A script name for something `node --test <file>` already does.
 - **Verdict:** **candidate to remove.**
 
 #### check-types
 
-- **What:** `yarn check-types` runs `tsc --noEmit` in each workspace through Turbo.
+- **What:** `yarn check-types` runs `tsc --noEmit` in each workspace through Turbo. It is the type check for `apps/*` and `packages/*`; `tooling/` has its own.
 - **Area:** `apps/*`, `packages/*`.
 - **Trigger:** verify step 20; verify:fast on affected workspaces.
 - **Scores:**
@@ -528,8 +618,10 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **1.0**: 30 lines on a cache hit.
   - Wall time **3.0**: 0.7 s cached (measured); 15–30 s cold (_estimate_).
   - Standard **7.0**: tsc.
-- **Pros:** standard and cached.
-- **Cons:** none worth naming.
+- **Pros:**
+  - Standard and cached.
+- **Cons:**
+  - None worth naming.
 - **Verdict:** **keep.**
 
 #### check-types:tooling
@@ -542,13 +634,15 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **0.0**: silent on pass.
   - Wall time **2.0**: 1.3 s.
   - Standard **6.0**: tsc.
-- **Pros:** cheap.
-- **Cons:** none worth naming.
+- **Pros:**
+  - Cheap.
+- **Cons:**
+  - None worth naming.
 - **Verdict:** **keep.**
 
 #### check-client-bundle
 
-- **What:** `yarn check-client-bundle` builds `apps/web` with every server-only variable set to a unique sentinel. It then fails if any sentinel appears in a browser chunk or a prerendered page. It also fails when `turbo.json` and `.env.example` disagree on the variable names.
+- **What:** `yarn check-client-bundle` builds `apps/web` with every server-only variable set to a unique sentinel, then fails if any sentinel appears in a browser chunk or a prerendered page. It also fails when `turbo.json` and `.env.example` disagree on the variable names.
 - **Area:** `apps/web`, the environment seam (`tooling/check-client-bundle.ts`).
 - **Trigger:** verify step 22.
 - **Scores:**
@@ -556,13 +650,15 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **0.5**: one line.
   - Wall time **4.0**: 9.9 s; it is a second production build of `apps/web`, on top of `yarn build`.
   - Standard **1.0**: house; bundle secret-scanning is uncommon.
-- **Pros:** it proves the absence of a leak instead of assuming it.
-- **Cons:** a second build in every verify.
+- **Pros:**
+  - It proves the absence of a leak instead of assuming it.
+- **Cons:**
+  - A second build in every verify.
 - **Verdict:** **keep.**
 
 #### build
 
-- **What:** `yarn build` runs every workspace's production build through Turbo (`apps/web` and `apps/docs`, Next.js).
+- **What:** `yarn build` runs every workspace's production build through Turbo. Today that is the two Next.js apps, `apps/web` and `apps/docs`.
 - **Area:** `apps/*`.
 - **Trigger:** verify step 23; by hand.
 - **Scores:**
@@ -570,8 +666,10 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **1.5**: 77 lines.
   - Wall time **4.0**: 8.8 s with `web` cached and `docs` rebuilt (measured); 20–30 s cold (_estimate_).
   - Standard **7.0**: Turbo and Next.js.
-- **Pros:** standard.
-- **Cons:** last in verify, so a build break is found after everything else has run.
+- **Pros:**
+  - Standard.
+- **Cons:**
+  - Last in verify, so a build break is found after everything else has run.
 - **Verdict:** **keep.**
 
 ### 3.5 Generators and setup run by hand
@@ -586,8 +684,10 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **0.5**: a file list.
   - Wall time **0.0**: run on purpose (about 6 s).
   - Standard **7.0**: Prettier.
-- **Pros:** standard.
-- **Cons:** it rewrites every file, other threads' files included, in a shared tree.
+- **Pros:**
+  - Standard.
+- **Cons:**
+  - It rewrites every file, other threads' files included, in a shared tree.
 - **Verdict:** **keep.**
 
 #### doctor
@@ -600,8 +700,11 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **0.5**: a dozen lines.
   - Wall time **0.0**: 0.3 s, run on purpose.
   - Standard **3.0**: doctor commands are a common pattern.
-- **Pros:** each failure prints its fix; it reports a secret by kind, never by value.
-- **Cons:** its git-hook warning shows on every run in this checkout.
+- **Pros:**
+  - Each failure prints its fix.
+  - It reports a secret by kind, never by value.
+- **Cons:**
+  - Its git-hook warning shows on every run in this checkout.
 - **Verdict:** **keep.**
 
 ### 3.6 The contract loop
@@ -612,21 +715,23 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
 
 - **What:** `yarn contract:init` allocates the next ticket id and writes `contract.md` from the template. Run again on the filled contract, it checks the gates (decisions, pre-flight, dependencies), sets the tier and the required reviewers, freezes the criteria and writes every result at FAIL.
 - **Area:** `specs/` (`tooling/contract.ts`, `tooling/lib/specs.ts`, `docs/engineering/templates/contract.template.md`).
-- **Trigger:** the start of every ticket, by an agent through `tk-batch` or `tk-kickoff`.
+- **Trigger:** the start of every ticket that has a contract, run by an agent.
 - **Scores:**
   - Importance **5.0**: it is the start of the loop the repo runs on today.
   - Token cost **3.0**: a two-call ritual, and gate failures send the agent back to the contract.
   - Wall time **1.0**: _estimate_ under 1 s per call.
   - Standard **0.0**: house.
-- **Pros:** criteria cannot shift after work starts.
-- **Cons:** 846 lines in `tooling/contract.ts` for five subcommands.
+- **Pros:**
+  - Criteria cannot shift after work starts.
+- **Cons:**
+  - 846 lines in `tooling/contract.ts` for five subcommands.
 - **Verdict:** **keep until the overhaul lands.**
 
 #### contract:run
 
 **[changing in the workflow overhaul]**
 
-- **What:** `yarn contract:run` runs a ticket's test and check criteria on a committed tree. For each criterion it records the command, exit code, time, HEAD, evidence log and the log's hash. It refuses while a planned path is dirty. A lock serialises runs in one checkout.
+- **What:** `yarn contract:run` runs a ticket's test and check criteria on a committed tree, and for each one records the command, exit code, time, HEAD, evidence log and the log's hash. It refuses while a planned path is dirty, and a lock serialises runs in one checkout.
 - **Area:** `specs/`, plus whatever the criteria run (`tooling/contract.ts`).
 - **Trigger:** by an agent to prove a ticket.
 - **Scores:**
@@ -634,8 +739,10 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **4.0**: on a shared tree, other threads' dirty files block it, and the commit loop it demands costs turns. Criteria that run `yarn verify` bring verify's whole output.
   - Wall time **7.0**: it runs every criterion's command; one `yarn verify` criterion alone is over 100 s.
   - Standard **0.0**: house.
-- **Pros:** evidence is tied to a commit and a hash.
-- **Cons:** slow, and hostile to a shared checkout (see the shared-tree hygiene the threads follow).
+- **Pros:**
+  - Evidence is tied to a commit and a hash.
+- **Cons:**
+  - Slow, and hostile to a shared checkout (see the shared-tree hygiene the threads follow).
 - **Verdict:** **keep the run record; let the overhaul decide the rest.**
 
 #### contract:record
@@ -650,8 +757,10 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **1.0**: one line.
   - Wall time **0.5**: _estimate_ under 1 s.
   - Standard **0.0**: house.
-- **Pros:** operator checks are visible in one list.
-- **Cons:** a deferred check reads as closed.
+- **Pros:**
+  - Operator checks are visible in one list.
+- **Cons:**
+  - A deferred check reads as closed.
 - **Verdict:** **keep until the overhaul lands.**
 
 #### contract:add
@@ -666,15 +775,17 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **0.5**: one line.
   - Wall time **0.5**: _estimate_ under 1 s.
   - Standard **0.0**: house.
-- **Pros:** growth is recorded, never silent.
-- **Cons:** a long argument list.
+- **Pros:**
+  - Growth is recorded, never silent.
+- **Cons:**
+  - A long argument list.
 - **Verdict:** **keep until the overhaul lands.**
 
 #### contract:tier
 
 **[changing in the workflow overhaul]**
 
-- **What:** `yarn contract:tier` sets a started ticket's tier (0 docs, 1 code, 2 one-way door; computed from the planned paths when none is named), and makes its review criteria match: the required reviewers at tier 2, none below it (PR-15).
+- **What:** `yarn contract:tier` sets a started ticket's tier (0 docs, 1 code, 2 one-way door), computed from its planned paths when none is named. It then makes the review criteria match: the required reviewers at tier 2, none below it (PR-15).
 - **Area:** `specs/`, `toolkit.json` reviewers (`tooling/contract.ts`).
 - **Trigger:** by an agent when a ticket's scope changes tier.
 - **Scores:**
@@ -682,8 +793,10 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **0.5**: one line.
   - Wall time **0.5**: _estimate_ under 1 s.
   - Standard **0.0**: house.
-- **Pros:** the tier comes from paths, not from the builder's opinion.
-- **Cons:** all 24 reviewer globs in `toolkit.json` are still marked draft.
+- **Pros:**
+  - The tier comes from paths, not from the builder's opinion.
+- **Cons:**
+  - All 24 reviewer globs in `toolkit.json` are still marked draft.
 - **Verdict:** **keep until the overhaul lands.**
 
 #### spec:init
@@ -696,15 +809,17 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **0.5**: one line.
   - Wall time **0.0**: run on purpose.
   - Standard **0.0**: house.
-- **Pros:** 72 lines.
-- **Cons:** the overhaul's list leaves it out, but it writes the epic layout the overhaul is rewriting (judgment).
+- **Pros:**
+  - 72 lines.
+- **Cons:**
+  - The overhaul's list leaves it out, but it writes the epic layout the overhaul is rewriting (judgment).
 - **Verdict:** **keep;** check it against the overhaul's layout.
 
 #### review:run
 
 **[changing in the workflow overhaul]**
 
-- **What:** `yarn review:run` starts a reviewer as `claude -p` with Read, Grep and Glob only. Its prompt is built from the contract, results and evidence index, never from the builder's words. It writes `review-<role>.md` and records `review:<role>`. The `vigil <EPIC>` form pre-flights an epic's drafted tickets.
+- **What:** `yarn review:run` starts a reviewer as `claude -p` with Read, Grep and Glob only, prompted from the contract, results and evidence index rather than the builder's words, and records its verdict as `review-<role>.md` and `review:<role>`. Its `vigil <EPIC>` form pre-flights an epic's drafted tickets.
 - **Area:** `specs/`, the generated subagents (`tooling/review-run.ts`).
 - **Trigger:** by an agent for every reviewer a tier 2 ticket requires (and once per batch at tier 1).
 - **Scores:**
@@ -712,8 +827,11 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **6.0**: each review is a full model session (_estimate_ tens of thousands of tokens per role per ticket, billed). It needs the network, so it runs outside the sandbox, and it reruns whenever a planned path changes.
   - Wall time **7.0**: _estimate_ minutes per review.
   - Standard **1.0**: model-as-reviewer is emerging practice; this wiring is house.
-- **Pros:** the separation of builder and judge is structural, not requested.
-- **Cons:** the most expensive tool in the repo per use. By its own header, it proves a review ran, not that the review was independent.
+- **Pros:**
+  - The separation of builder and judge is structural, not requested.
+- **Cons:**
+  - The most expensive tool in the repo per use.
+  - By its own header, it proves a review ran, not that the review was independent.
 - **Verdict:** **keep the principle; let the overhaul decide when it runs.**
 
 #### status
@@ -728,15 +846,18 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **2.0**: its brief line goes into every session's context.
   - Wall time **3.0**: 5.8 s for `--brief`, paid at every session start and every stop.
   - Standard **0.0**: house.
-- **Pros:** never hand-kept.
-- **Cons:** slow for a status line; it recomputes staleness across every ticket each time.
+- **Pros:**
+  - Never hand-kept.
+- **Cons:**
+  - Slow for a status line.
+  - It recomputes staleness across every ticket each time.
 - **Verdict:** **keep, and make `--brief` fast** in the overhaul.
 
 #### truth:promote
 
 **[changing in the workflow overhaul]**
 
-- **What:** `yarn truth:promote` copies an epic's approved UX proposals into the living truth under `specs/<app>/ux/` once every ticket citing them is closed, and stamps `promoted:` with the date.
+- **What:** `yarn truth:promote` copies an epic's approved UX proposals into the living truth under `specs/<app>/ux/` once every ticket citing them is closed. It stamps each promoted proposal with the date.
 - **Area:** `specs/` (`tooling/truth-promote.ts`).
 - **Trigger:** by hand when an epic ships.
 - **Scores:**
@@ -744,8 +865,10 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Token cost **0.5**: one line.
   - Wall time **0.0**: run on purpose; _estimate_ under 1 s.
   - Standard **0.0**: house.
-- **Pros:** 89 lines.
-- **Cons:** untested in real use.
+- **Pros:**
+  - 89 lines.
+- **Cons:**
+  - Untested in real use.
 - **Verdict:** **candidate to remove;** hand it to the overhaul.
 
 ### 3.7 Dev servers and app scripts
@@ -758,16 +881,22 @@ Scores here are one line each: importance, token cost, wall time, standard, each
 - **Area:** `apps/*`.
 - **Trigger:** by a person; agents use the browser pane's launcher instead.
 - **Scores:** importance **3.0** (the everyday way to see both apps) · token **0.0** (a person reads its output) · wall **0.0** (long-running on purpose) · standard **7.0** (Turbo and Next.js).
-- **Pros / cons:** + standard. − none.
+- **Pros:**
+  - Standard.
+- **Cons:**
+  - None.
 - **Verdict:** **keep.**
 
 #### web:dev
 
-- **What:** `yarn web:dev` starts the `apps/web` dev server alone, on :3000.
+- **What:** `yarn web:dev` starts the `apps/web` dev server alone, on :3000. It runs until stopped.
 - **Area:** `apps/web`.
 - **Trigger:** by a person or the preview launcher.
 - **Scores:** importance **3.0** (the demo app's dev loop) · token **0.0** (a person reads its output) · wall **0.0** (long-running on purpose) · standard **7.0** (Turbo and Next.js).
-- **Pros / cons:** + standard. − none.
+- **Pros:**
+  - Standard.
+- **Cons:**
+  - None.
 - **Verdict:** **keep.**
 
 #### web:dev:local
@@ -776,16 +905,22 @@ Scores here are one line each: importance, token cost, wall time, standard, each
 - **Area:** `apps/web`, testing on a real phone.
 - **Trigger:** by a person.
 - **Scores:** importance **1.5** (phone testing only) · token **0.0** (a person reads its output) · wall **0.0** (long-running on purpose) · standard **2.0** (house wiring around a Next.js flag).
-- **Pros / cons:** + one command for a fiddly setup. − the dev server answers on the whole network while it runs.
+- **Pros:**
+  - One command for a fiddly setup.
+- **Cons:**
+  - The dev server answers on the whole network while it runs.
 - **Verdict:** **keep.**
 
 #### print-local-urls
 
-- **What:** `tooling/print-local-urls.ts` prints `http://<lan-ip>:<port>` for each LAN address, for `yarn web:dev:local`.
+- **What:** `tooling/print-local-urls.ts` prints `http://<lan-ip>:<port>` for each LAN address of the machine. `yarn web:dev:local` runs it before it starts the server.
 - **Area:** `apps/web` dev.
 - **Trigger:** `yarn web:dev:local`.
 - **Scores:** importance **1.0** (a convenience) · token **0.0** (a person reads it) · wall **0.0** (milliseconds) · standard **1.0** (house).
-- **Pros / cons:** + 26 lines. − none.
+- **Pros:**
+  - 26 lines.
+- **Cons:**
+  - None.
 - **Verdict:** **keep** while `web:dev:local` exists.
 
 #### local-dev-origins
@@ -794,16 +929,23 @@ Scores here are one line each: importance, token cost, wall time, standard, each
 - **Area:** `apps/web` dev configuration.
 - **Trigger:** every `apps/web` dev or build start, through `apps/web/next.config.ts`.
 - **Scores:** importance **2.0** (phone testing breaks without it) · token **0.0** (no output) · wall **0.0** (microseconds) · standard **2.0** (a house helper for a Next.js setting).
-- **Pros / cons:** + it never throws; a failure yields an empty list. − an app imports from `tooling/` by relative path, an edge the boundaries lint does not model.
+- **Pros:**
+  - It never throws.
+  - A failure yields an empty list.
+- **Cons:**
+  - An app imports from `tooling/` by relative path, an edge the boundaries lint does not model.
 - **Verdict:** **keep;** consider moving it into `apps/web`, so the app does not reach into `tooling/`.
 
 #### web:build
 
-- **What:** `yarn web:build` runs the production build of `apps/web` alone.
+- **What:** `yarn web:build` runs the production build of `apps/web` alone. It is `yarn build` filtered to one app.
 - **Area:** `apps/web`.
 - **Trigger:** by hand.
 - **Scores:** importance **2.0** (`yarn build` covers it) · token **1.0** (the build log) · wall **0.0** (run on purpose; _estimate_ 10–20 s cold) · standard **7.0** (Turbo and Next.js).
-- **Pros / cons:** + faster than building both apps. − a second name for a Turbo filter.
+- **Pros:**
+  - Faster than building both apps.
+- **Cons:**
+  - A second name for a Turbo filter.
 - **Verdict:** **keep;** it costs nothing to have.
 
 #### docs:dev
@@ -812,16 +954,22 @@ Scores here are one line each: importance, token cost, wall time, standard, each
 - **Area:** `apps/docs`.
 - **Trigger:** by a person.
 - **Scores:** importance **2.0** (reading the practice in a browser) · token **0.0** (a person reads its output) · wall **0.0** (long-running on purpose) · standard **7.0** (Turbo and Next.js).
-- **Pros / cons:** + standard. − none.
+- **Pros:**
+  - Standard.
+- **Cons:**
+  - None.
 - **Verdict:** **keep.**
 
 #### docs:build
 
-- **What:** `yarn docs:build` runs the production build of `apps/docs` alone.
+- **What:** `yarn docs:build` runs the production build of `apps/docs` alone. It is `yarn build` filtered to one app.
 - **Area:** `apps/docs`.
 - **Trigger:** by hand.
 - **Scores:** importance **1.5** (`yarn build` covers it) · token **1.0** (the build log) · wall **0.0** (run on purpose; 8.8 s, measured inside `yarn build`) · standard **7.0** (Turbo and Next.js).
-- **Pros / cons:** + a quick check of the docs app. − a second name for a Turbo filter.
+- **Pros:**
+  - A quick check of the docs app.
+- **Cons:**
+  - A second name for a Turbo filter.
 - **Verdict:** **keep.**
 
 #### ui:storybook
@@ -830,16 +978,22 @@ Scores here are one line each: importance, token cost, wall time, standard, each
 - **Area:** `packages/ui`, `packages/catalog`.
 - **Trigger:** by a person.
 - **Scores:** importance **3.0** (the only place to browse the catalog) · token **0.0** (a person reads its output) · wall **0.0** (long-running on purpose) · standard **6.0** (Storybook).
-- **Pros / cons:** + standard tool. − none.
+- **Pros:**
+  - Standard tool.
+- **Cons:**
+  - None.
 - **Verdict:** **keep.**
 
 #### shadcn
 
-- **What:** `yarn shadcn` runs the shadcn CLI inside `@pem/ui`, to copy a component in from a ruled registry.
+- **What:** `yarn shadcn` runs the shadcn CLI inside `@pem/ui`. It copies a component in from a ruled registry.
 - **Area:** `packages/ui`.
 - **Trigger:** by hand or by an agent adding a component (the `shadcn` skill).
 - **Scores:** importance **2.5** (the sanctioned copy-in path) · token **0.5** (a short CLI log) · wall **0.0** (run on purpose) · standard **6.0** (the shadcn CLI).
-- **Pros / cons:** + runs in the right package. − copies code that the token lint then makes someone clean.
+- **Pros:**
+  - Runs in the right package.
+- **Cons:**
+  - Copies code that the token lint then makes someone clean.
 - **Verdict:** **keep.**
 
 #### stripe:listen
@@ -848,7 +1002,10 @@ Scores here are one line each: importance, token cost, wall time, standard, each
 - **Area:** billing in `apps/web`.
 - **Trigger:** by a person.
 - **Scores:** importance **2.0** (local billing tests) · token **0.0** (a person reads its output) · wall **0.0** (long-running on purpose) · standard **6.5** (the Stripe CLI).
-- **Pros / cons:** + one line to remember instead of a URL. − none.
+- **Pros:**
+  - One line to remember instead of a URL.
+- **Cons:**
+  - None.
 - **Verdict:** **keep.**
 
 ### 3.8 Database scripts (`@pem/db`)
@@ -857,11 +1014,14 @@ All of these forward to `packages/db`. bash-guard and the permissions ask before
 
 #### test:db
 
-- **What:** `yarn test:db` runs `packages/db/test/` against a real local Postgres, one file at a time: the row-level security policies, the local auth mirror, the reset script and the Stripe event ledger.
+- **What:** `yarn test:db` runs `packages/db/test/` against a real local Postgres, one file at a time. The files cover the row-level security policies, the local auth mirror, the reset script and the Stripe event ledger.
 - **Area:** `packages/db`.
 - **Trigger:** by hand, with `yarn db:local` running. It is not in verify or CI.
 - **Scores:** importance **4.0** (the only proof the SQL and its policies work on a real database) · token **1.5** (a TAP run) · wall **0.0** (run on purpose; _estimate_ 5–20 s) · standard **6.0** (`node:test` against a real database).
-- **Pros / cons:** + no mocks. − it proves only what someone remembered to run.
+- **Pros:**
+  - No mocks.
+- **Cons:**
+  - It proves only what someone remembered to run.
 - **Verdict:** **keep.**
 
 #### db:local
@@ -870,16 +1030,22 @@ All of these forward to `packages/db`. bash-guard and the permissions ask before
 - **Area:** `packages/db`.
 - **Trigger:** by a person or an agent before database work.
 - **Scores:** importance **3.5** (the local database the other scripts need) · token **1.0** (a startup log) · wall **0.0** (run on purpose) · standard **5.0** (the Supabase CLI, wrapped).
-- **Pros / cons:** + it warns on network exposure. − the CLI publishes the port on every interface.
+- **Pros:**
+  - It warns on network exposure.
+- **Cons:**
+  - The CLI publishes the port on every interface.
 - **Verdict:** **keep.**
 
 #### db:local:full
 
-- **What:** `yarn db:local:full` starts the full local Supabase stack (auth and the rest), not just Postgres.
+- **What:** `yarn db:local:full` starts the full local Supabase stack, auth included, not just Postgres. Auth work needs it.
 - **Area:** `packages/db`, `packages/auth`.
 - **Trigger:** by a person, for auth work.
 - **Scores:** importance **2.5** (auth work needs it) · token **1.0** (a startup log) · wall **0.0** (run on purpose) · standard **5.0** (the Supabase CLI, wrapped).
-- **Pros / cons:** + one command for the full stack. − heavier than most work needs.
+- **Pros:**
+  - One command for the full stack.
+- **Cons:**
+  - Heavier than most work needs.
 - **Verdict:** **keep.**
 
 #### db:stop
@@ -888,7 +1054,10 @@ All of these forward to `packages/db`. bash-guard and the permissions ask before
 - **Area:** `packages/db`.
 - **Trigger:** by a person.
 - **Scores:** importance **2.5** (also the way to wipe mirrored personal data) · token **0.0** (one line) · wall **0.0** (run on purpose) · standard **6.0** (`supabase stop`).
-- **Pros / cons:** + the plain CLI. − none.
+- **Pros:**
+  - The plain CLI.
+- **Cons:**
+  - None.
 - **Verdict:** **keep.**
 
 #### db:local:reset
@@ -897,16 +1066,22 @@ All of these forward to `packages/db`. bash-guard and the permissions ask before
 - **Area:** `packages/db`.
 - **Trigger:** by a person, or an agent with approval.
 - **Scores:** importance **2.0** (the one sanctioned reset) · token **0.5** (a short log) · wall **0.0** (run on purpose) · standard **3.0** (a house script).
-- **Pros / cons:** + local only. − destructive by nature.
+- **Pros:**
+  - Local only.
+- **Cons:**
+  - Destructive by nature.
 - **Verdict:** **keep.**
 
 #### db:generate
 
-- **What:** `yarn db:generate` runs `drizzle-kit generate`, which writes a new migration from the schema.
+- **What:** `yarn db:generate` runs `drizzle-kit generate`. It writes a new migration from the schema.
 - **Area:** `packages/db`.
 - **Trigger:** by an agent or a person after a schema change.
 - **Scores:** importance **4.0** (the only sanctioned way to write a migration) · token **0.5** (a short log) · wall **0.0** (run on purpose) · standard **7.0** (drizzle-kit).
-- **Pros / cons:** + standard. − none.
+- **Pros:**
+  - Standard.
+- **Cons:**
+  - None.
 - **Verdict:** **keep.**
 
 #### db:migrate
@@ -915,7 +1090,10 @@ All of these forward to `packages/db`. bash-guard and the permissions ask before
 - **Area:** `packages/db`.
 - **Trigger:** by a person, or an agent with approval.
 - **Scores:** importance **4.0** (applying a migration is a one-way door) · token **0.5** (a short log) · wall **0.0** (run on purpose) · standard **5.0** (drizzle migrations, wrapped).
-- **Pros / cons:** + the tier picks the database. − none.
+- **Pros:**
+  - The tier picks the database.
+- **Cons:**
+  - None.
 - **Verdict:** **keep.**
 
 #### db:setup
@@ -924,7 +1102,10 @@ All of these forward to `packages/db`. bash-guard and the permissions ask before
 - **Area:** `packages/db`.
 - **Trigger:** by a person, for a new environment.
 - **Scores:** importance **3.0** (one command per new environment) · token **0.5** (a short log) · wall **0.0** (run on purpose) · standard **3.0** (a house script).
-- **Pros / cons:** + repeatable. − none.
+- **Pros:**
+  - Repeatable.
+- **Cons:**
+  - None.
 - **Verdict:** **keep.**
 
 #### db:seed-users
@@ -933,27 +1114,36 @@ All of these forward to `packages/db`. bash-guard and the permissions ask before
 - **Area:** `packages/db`, `packages/auth`.
 - **Trigger:** by a person.
 - **Scores:** importance **2.0** (test users for local work) · token **0.5** (a short log) · wall **0.0** (run on purpose) · standard **3.0** (a house script).
-- **Pros / cons:** + synthetic data only. − none.
+- **Pros:**
+  - Synthetic data only.
+- **Cons:**
+  - None.
 - **Verdict:** **keep.**
 
 ### 3.9 Shared libraries in `tooling/lib/`
 
 #### lib/docs.ts
 
-- **What:** the markdown and frontmatter reader, the file lister, the repo root, and the token estimate (characters ÷ 4) every budget uses.
+- **What:** the markdown and frontmatter reader, the file lister and the repo root that most tooling scripts share. It also holds the token estimate (characters ÷ 4) that every budget uses.
 - **Area:** `tooling/lib/docs.ts`, imported by 30 tooling files.
 - **Trigger:** imported.
 - **Scores:** importance **4.0** (lint:docs, budget, gen:agents, directory-map and check-refs all stand on it) · token **0.0** (no output) · wall **0.0** (a library) · standard **1.0** (house, over the `yaml` package).
-- **Pros / cons:** + one home for the token estimate. − the estimate is coarse.
+- **Pros:**
+  - One home for the token estimate.
+- **Cons:**
+  - The estimate is coarse.
 - **Verdict:** **keep.**
 
 #### lib/git.ts
 
-- **What:** the read-only git facts the loop needs: the base ref, the merge-base, changed and dirty files, a file's contents on a ref, and the native hooks path.
+- **What:** the read-only git facts the loop needs: the base ref, the merge-base, changed and dirty files, and a file's contents on a ref. It also names the native hooks path.
 - **Area:** `tooling/lib/git.ts`, imported by 10 files.
 - **Trigger:** imported.
 - **Scores:** importance **4.0** (verify:fast, check-specs, check-test-weakening and check-refs need it) · token **0.0** (no output) · wall **0.0** (a library) · standard **1.0** (house).
-- **Pros / cons:** + read-only by rule. − none.
+- **Pros:**
+  - Read-only by rule.
+- **Cons:**
+  - None.
 - **Verdict:** **keep.**
 
 #### lib/toolkit.ts
@@ -962,7 +1152,10 @@ All of these forward to `packages/db`. bash-guard and the permissions ask before
 - **Area:** `tooling/lib/toolkit.ts`, imported by 12 scripts.
 - **Trigger:** imported.
 - **Scores:** importance **5.0** (every layout fact comes through it) · token **0.0** (no output unless a key is missing) · wall **0.0** (a library) · standard **1.0** (house).
-- **Pros / cons:** + one home for layout facts. − 368 lines, a third of them the stack validator.
+- **Pros:**
+  - One home for layout facts.
+- **Cons:**
+  - 368 lines, a third of them the stack validator.
 - **Verdict:** **keep.**
 
 #### lib/work-ids.ts
@@ -971,18 +1164,24 @@ All of these forward to `packages/db`. bash-guard and the permissions ask before
 - **Area:** `tooling/lib/work-ids.ts`, used by bash-guard and both git hooks.
 - **Trigger:** imported.
 - **Scores:** importance **3.0** (the commit rule's one home) · token **0.0** (no output) · wall **0.0** (a library) · standard **1.0** (house).
-- **Pros / cons:** + one law for both hook families. − it goes if the commit-work-id rule goes.
+- **Pros:**
+  - One law for both hook families.
+- **Cons:**
+  - It goes if the commit-work-id rule goes.
 - **Verdict:** **keep** while the commit rule stays.
 
 #### lib/specs.ts
 
 **[changing in the workflow overhaul]**
 
-- **What:** the work loop's model: where tickets and epics live, the contract and results shapes, evidence types, tiers and reviewers, the staleness rule and the hashing.
+- **What:** the work loop's model: where tickets and epics live, the contract and results shapes, evidence types, tiers and reviewers. It also holds the staleness rule and the hashing behind every recorded PASS.
 - **Area:** `tooling/lib/specs.ts`, imported by the five contract-family scripts, spec-init and check-test-weakening.
 - **Trigger:** imported.
 - **Scores:** importance **5.0** (the whole loop reads the tree through it) · token **0.0** (no output of its own) · wall **0.0** (a library; its callers carry the time) · standard **0.0** (house).
-- **Pros / cons:** + one home for the layout and the staleness rule. − 1,251 lines, the largest file in `tooling/`.
+- **Pros:**
+  - One home for the layout and the staleness rule.
+- **Cons:**
+  - 1,251 lines, the largest file in `tooling/`.
 - **Verdict:** **rewritten by the overhaul.**
 
 #### lib/json-schema.ts
@@ -991,7 +1190,10 @@ All of these forward to `packages/db`. bash-guard and the permissions ask before
 - **Area:** `tooling/lib/json-schema.ts`. Its only importer is `tooling/lib/specs.ts`.
 - **Trigger:** imported by check-specs and the contract loop.
 - **Scores:** importance **2.5** (contracts and results are checked against `docs/engineering/schemas/`) · token **0.0** (no output) · wall **0.0** (a library) · standard **2.0** (JSON Schema is standard; a hand-rolled validator is not, and record 0003 rules out the dependency).
-- **Pros / cons:** + no dependency. − 128 lines that ajv would replace.
+- **Pros:**
+  - No dependency.
+- **Cons:**
+  - 128 lines that ajv would replace.
 - **Verdict:** **keep while lib/specs.ts uses it.** Its only consumer is changing, so the overhaul decides.
 
 #### lib/scratch-repo.ts
@@ -1000,27 +1202,36 @@ All of these forward to `packages/db`. bash-guard and the permissions ask before
 - **Area:** `tooling/lib/scratch-repo.ts`, used by the four contract tests and `tooling/check-refs.test.ts`.
 - **Trigger:** imported by `yarn test:tooling`.
 - **Scores:** importance **2.5** (the contract tests need it) · token **0.0** (no output of its own) · wall **5.0** (its scratch repos are why the four contract tests take 88 s run one at a time) · standard **1.0** (house).
-- **Pros / cons:** + real git, no mocks. − the slowest harness in the repo.
+- **Pros:**
+  - Real git, no mocks.
+- **Cons:**
+  - The slowest harness in the repo.
 - **Verdict:** **keep while the contract tests exist;** its users are changing.
 
 ### 3.10 Configuration files in `tooling/`
 
 #### tooling/package.json
 
-- **What:** marks `tooling/` as an ES module package, so Node runs its `.ts` files as ESM.
+- **What:** it marks `tooling/` as an ES module package. Node therefore runs every `.ts` file there as ESM.
 - **Area:** `tooling/package.json`.
 - **Trigger:** every `node tooling/…` call.
 - **Scores:** importance **3.0** (without it every import in `tooling/` breaks) · token **0.0** (no output) · wall **0.0** (none) · standard **6.0** (a standard `type` field).
-- **Pros / cons:** + four lines. − none.
+- **Pros:**
+  - Four lines.
+- **Cons:**
+  - None.
 - **Verdict:** **keep.**
 
 #### tooling/tsconfig.json
 
-- **What:** the TypeScript settings `yarn check-types:tooling` checks `tooling/` against: NodeNext modules, `.ts` imports allowed, no emit.
+- **What:** the TypeScript settings for `tooling/`: NodeNext modules, `.ts` imports allowed, no emit. `yarn check-types:tooling` checks the folder against them.
 - **Area:** `tooling/tsconfig.json`.
 - **Trigger:** `yarn check-types:tooling`.
 - **Scores:** importance **3.0** (the tooling type check reads it) · token **0.0** (no output) · wall **0.0** (none) · standard **6.0** (a standard tsconfig over the shared base).
-- **Pros / cons:** + extends the shared base. − none.
+- **Pros:**
+  - Extends the shared base.
+- **Cons:**
+  - None.
 - **Verdict:** **keep.**
 
 #### tooling/refs-pending.json
@@ -1029,7 +1240,10 @@ All of these forward to `packages/db`. bash-guard and the permissions ask before
 - **Area:** `tooling/refs-pending.json`.
 - **Trigger:** `yarn check-refs`.
 - **Scores:** importance **2.0** (it lets the docs name planned work without failing verify) · token **0.5** (check-refs prints its reasons on every pass) · wall **0.0** (none) · standard **0.5** (house).
-- **Pros / cons:** + it only shrinks. − seven entries are stale ruling text "held for Taylor (PR-05)", waiting on a person rather than a phase.
+- **Pros:**
+  - It only shrinks.
+- **Cons:**
+  - Seven entries are stale ruling text "held for Taylor (PR-05)", waiting on a person rather than a phase.
 - **Verdict:** **keep.** Clear the seven PR-05 entries when Taylor rules on them.
 
 ## 4. Weakest first
