@@ -11,7 +11,7 @@
  * is tested without the SDK; Sentry's `ErrorEvent` is assignable to it.
  */
 
-import { scrubText } from "@pem/observability/redact";
+import { redactValue, scrubText } from "@pem/observability/redact";
 
 export type ScrubbableEvent = {
   message?: string;
@@ -33,6 +33,7 @@ export type ScrubbableEvent = {
   };
   breadcrumbs?: { message?: string; data?: unknown }[];
   extra?: unknown;
+  contexts?: unknown;
 };
 
 /** `url` without its query string or fragment, its text scrubbed. */
@@ -56,7 +57,8 @@ export function scrubEvent<E extends ScrubbableEvent>(event: E): E {
   if (event.user) {
     const { id } = event.user;
     if (id === undefined) delete scrubbed.user;
-    else scrubbed.user = { id: String(id) };
+    // Scrubbed too: an id is opaque by convention only, so an address passed as one is caught.
+    else scrubbed.user = { id: scrubText(String(id)) };
   }
 
   if (event.message !== undefined) scrubbed.message = scrubText(event.message);
@@ -91,6 +93,11 @@ export function scrubEvent<E extends ScrubbableEvent>(event: E): E {
       return kept;
     });
   }
+
+  // Contexts (the SDK's os, runtime and browser, and any a caller sets) pass
+  // the logger's rule: secret-named keys redacted, every string scrubbed.
+  if (event.contexts !== undefined)
+    scrubbed.contexts = redactValue(event.contexts);
 
   delete scrubbed.extra;
   return scrubbed as E;

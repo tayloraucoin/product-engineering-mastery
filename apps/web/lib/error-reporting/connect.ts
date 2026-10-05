@@ -36,7 +36,7 @@ export function toCapture(report: ErrorReport): CaptureContext {
 
 /** Starts the SDK and registers its reporter when `dsn` is set. Returns whether it did. */
 export function connectErrorReporting(
-  target: { dsn: string | undefined; environment: string },
+  target: { dsn: string | undefined; environment: string | undefined },
   deps: ReportingDeps,
 ): boolean {
   if (!target.dsn) return false;

@@ -14,7 +14,7 @@ import { connectErrorReporting } from "./lib/error-reporting/connect";
 connectErrorReporting(
   {
     dsn: env.NEXT_PUBLIC_SENTRY_DSN,
-    environment: env.NEXT_PUBLIC_SENTRY_ENVIRONMENT ?? "unknown",
+    environment: env.NEXT_PUBLIC_SENTRY_ENVIRONMENT,
   },
   {
     init: Sentry.init,

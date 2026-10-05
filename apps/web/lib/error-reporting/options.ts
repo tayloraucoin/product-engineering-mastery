@@ -15,8 +15,8 @@ import { scrubEvent } from "./scrub.ts";
 /** What a runtime knows when it starts the SDK. */
 export type ReportingTarget = {
   dsn: string;
-  /** The tier, as Sentry's environment. */
-  environment: string;
+  /** The tier, as Sentry's environment; unset, the SDK picks one. */
+  environment?: string;
 };
 
 type Integration = { name: string };
@@ -41,7 +41,7 @@ export const DATA_COLLECTION = {
 export function sentryOptions({ dsn, environment }: ReportingTarget) {
   return {
     dsn,
-    environment,
+    ...(environment ? { environment } : {}),
     sendDefaultPii: false,
     dataCollection: DATA_COLLECTION,
     enableLogs: false,

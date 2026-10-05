@@ -51,6 +51,30 @@ test("the user is reduced to an opaque id", () => {
   assert.deepEqual(scrubEvent(synthetic()).user, { id: "user_123" });
 });
 
+test("an address passed as the id does not survive", () => {
+  const event = { ...synthetic(), user: { id: "ada@example.test" } };
+  assert.notEqual(scrubEvent(event).user?.id, "ada@example.test");
+});
+
+test("contexts keep their facts but lose secrets and addresses", () => {
+  const event = {
+    ...synthetic(),
+    contexts: {
+      os: { name: "macOS" },
+      checkout: {
+        sessionToken: "synthetic-session",
+        owner: "ada@example.test",
+      },
+    },
+  };
+  const { contexts } = scrubEvent(event) as {
+    contexts: Record<string, Record<string, string>>;
+  };
+  assert.equal(contexts.os?.name, "macOS");
+  assert.equal(contexts.checkout?.sessionToken, "[redacted]");
+  assert.notEqual(contexts.checkout?.owner, "ada@example.test");
+});
+
 test("a user without an id is dropped whole", () => {
   const event = { ...synthetic(), user: { email: "ada@example.test" } };
   assert.equal(scrubEvent(event).user, undefined);
