@@ -1,0 +1,33 @@
+command: yarn check-types
+exit: 0
+at: 2026-10-05T00:16:16Z
+head: b6a1d67cb423d2bf7fd01ea0c7bd1b4cd4e0b929
+---
+
+   • turbo 2.11.6
+   • Packages in scope: @pem/auth, @pem/brand, @pem/catalog, @pem/config, @pem/constants, @pem/db, @pem/email, @pem/env, @pem/observability, @pem/services, @pem/ui, @pem/validators, docs, web
+   • Running check-types in 14 packages
+   • Remote caching disabled
+
+@pem/constants:check-types: cache hit, replaying logs 92ad1fe9811043a7
+@pem/validators:check-types: cache hit, replaying logs d52a773a32da6285
+@pem/brand:check-types: cache hit, replaying logs 0355524bb97f8c1c
+@pem/env:check-types: cache hit, replaying logs c8babb6608fbe6af
+@pem/observability:check-types: cache hit, replaying logs f211cdd95cfee926
+@pem/db:check-types: cache hit, replaying logs e3ecf9c4e19a291e
+@pem/email:check-types: cache hit, replaying logs dc19955f3f0be106
+@pem/ui:check-types: cache hit, replaying logs cf4ff380a13563a2
+@pem/auth:check-types: cache hit, replaying logs 498cf2683582850f
+@pem/services:check-types: cache hit, replaying logs 212100adbf2622c7
+docs:check-types: cache hit, replaying logs ec77b0affb03bb77
+@pem/catalog:check-types: cache hit, replaying logs c5a1ec187465ca26
+docs:check-types: Generating route types...
+docs:check-types: ✓ Types generated successfully
+web:check-types: cache hit, replaying logs 93e9914b4e3d2679
+web:check-types: Generating route types...
+web:check-types: ✓ Types generated successfully
+
+ Tasks:    13 successful, 13 total
+Cached:    13 cached, 13 total
+  Time:    134ms >>> FULL TURBO
+
