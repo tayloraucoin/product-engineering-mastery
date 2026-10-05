@@ -8,10 +8,10 @@
       "run": {
         "command": "yarn check-catalog --ticket CAT-4",
         "exit": 0,
-        "at": "2026-10-04T23:43:44Z",
-        "head": "89bff074f03c82746c0a27ea5852195e08d5d26c",
+        "at": "2026-10-05T00:02:42Z",
+        "head": "458e25d4e332622daa4eac7e327e9e39758037fa",
         "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-4-shadcn-setup/evidence/C1.log",
-        "evidence_sha256": "bb7bd307f49383ed2a6d9548076d95d82b18c83c76a587fd3f39b89c07561c16"
+        "evidence_sha256": "ee9a185c6db9e6081962f416dcc2d8c2f8c1aa33a38d24c117b58b6989883352"
       }
     },
     "C2": {
@@ -20,10 +20,10 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-04T23:43:48Z",
-        "head": "89bff074f03c82746c0a27ea5852195e08d5d26c",
+        "at": "2026-10-05T00:02:45Z",
+        "head": "458e25d4e332622daa4eac7e327e9e39758037fa",
         "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-4-shadcn-setup/evidence/C2.log",
-        "evidence_sha256": "717a014c8b7ef7e12d1d3cd32b80eb86a35dfd9eea2099848756065527453476",
+        "evidence_sha256": "12f38e8cf1c2ab80634577b9f5039a2817972c2781a715248fadfbeeee6e04d7",
         "tests": 114
       }
     },
@@ -33,10 +33,10 @@
       "run": {
         "command": "yarn check-types",
         "exit": 0,
-        "at": "2026-10-04T23:43:52Z",
-        "head": "89bff074f03c82746c0a27ea5852195e08d5d26c",
+        "at": "2026-10-05T00:02:47Z",
+        "head": "458e25d4e332622daa4eac7e327e9e39758037fa",
         "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-4-shadcn-setup/evidence/C3.log",
-        "evidence_sha256": "9cf4c994fc7430ab1ce1685bb421245781ffa9de83cc91ccb475fd6782aa367e"
+        "evidence_sha256": "4ae19863e5d6f1d16a91ad882edd73d41f42d9311ec8e73184d1c7cc9be87f92"
       }
     },
     "C4": {
@@ -45,10 +45,10 @@
       "run": {
         "command": "yarn lint",
         "exit": 0,
-        "at": "2026-10-04T23:43:56Z",
-        "head": "89bff074f03c82746c0a27ea5852195e08d5d26c",
+        "at": "2026-10-05T00:02:51Z",
+        "head": "458e25d4e332622daa4eac7e327e9e39758037fa",
         "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-4-shadcn-setup/evidence/C4.log",
-        "evidence_sha256": "a86f259cabb0a9a997b26469169a1b0089efbb2fa9ad5d1675fec1018792660b"
+        "evidence_sha256": "d0dbdd3cdae55e11ca5cb64ad5370628640af5fd600ae4fe3b13e81b76f9345c"
       }
     },
     "C5": {
@@ -57,10 +57,10 @@
       "run": {
         "command": "yarn check-ui-layout",
         "exit": 0,
-        "at": "2026-10-04T23:43:59Z",
-        "head": "89bff074f03c82746c0a27ea5852195e08d5d26c",
+        "at": "2026-10-05T00:02:53Z",
+        "head": "458e25d4e332622daa4eac7e327e9e39758037fa",
         "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-4-shadcn-setup/evidence/C5.log",
-        "evidence_sha256": "83239f871e06e9e481b84c0675c6bd7bd56b47493a34a9027cbc674c9bd3334d"
+        "evidence_sha256": "f4beb0e373294ce6bfcba660af6b9789da7f134d6f47da6b6391ba4074122cef"
       }
     },
     "C6": {
@@ -69,10 +69,10 @@
       "run": {
         "command": "yarn check-stack",
         "exit": 0,
-        "at": "2026-10-04T23:44:03Z",
-        "head": "89bff074f03c82746c0a27ea5852195e08d5d26c",
+        "at": "2026-10-05T00:02:55Z",
+        "head": "458e25d4e332622daa4eac7e327e9e39758037fa",
         "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-4-shadcn-setup/evidence/C6.log",
-        "evidence_sha256": "b389da4a47aeab22f77b16537f53c3746dbb9e560def86c7372af0f00277e678"
+        "evidence_sha256": "1826533842a4dcbbd2e34ab92087e374830b2b622b6ea47326ad99d93ae6cf12"
       }
     },
     "C7": {
@@ -88,5 +88,5 @@
       }
     }
   },
-  "updated_at": "2026-10-05T00:01:08Z"
+  "updated_at": "2026-10-05T00:02:56Z"
 }

@@ -1,26 +1,27 @@
 command: yarn lint
 exit: 0
-at: 2026-10-04T23:18:27Z
-head: 02c09c89390bc71b5c92d03d66e13f01f6b0b6ee
+at: 2026-10-05T00:01:52Z
+head: ed3f0a25cff27c9c81f307bccff368669cebf4b2
 ---
 
    • turbo 2.11.6
-   • Packages in scope: @pem/auth, @pem/brand, @pem/config, @pem/constants, @pem/db, @pem/email, @pem/env, @pem/observability, @pem/ui, docs, web
-   • Running lint in 11 packages
+   • Packages in scope: @pem/auth, @pem/brand, @pem/catalog, @pem/config, @pem/constants, @pem/db, @pem/email, @pem/env, @pem/observability, @pem/ui, docs, web
+   • Running lint in 12 packages
    • Remote caching disabled
 
-@pem/brand:lint: cache hit, replaying logs dbb08fa79efe9df2
-@pem/observability:lint: cache hit, replaying logs 0fce317b59142a99
-@pem/env:lint: cache hit, replaying logs 226a992d5036b95f
-@pem/constants:lint: cache hit, replaying logs 6ac2ce845daf8be7
-@pem/db:lint: cache hit, replaying logs aad85e258e959856
-@pem/email:lint: cache hit, replaying logs 9238de1ce343d970
-@pem/ui:lint: cache hit, replaying logs b9daa7875ce04efd
-@pem/auth:lint: cache hit, replaying logs 7dd8cb66841bbc7b
-docs:lint: cache hit, replaying logs 7ba4ce3d26612f9d
-web:lint: cache miss, executing 79b52be1183bacce
+@pem/constants:lint: cache miss, executing 87cb2a7d556b879f
+@pem/brand:lint: cache hit, replaying logs 98075018aad00924
+@pem/observability:lint: cache hit, replaying logs 320b6c0b2ea568ea
+@pem/env:lint: cache hit, replaying logs ccac9e9f293043b3
+@pem/ui:lint: cache hit, replaying logs 707d8702806119c0
+@pem/catalog:lint: cache miss, executing 15fb75cc087874b8
+docs:lint: cache miss, executing f72604e99af4813e
+@pem/db:lint: cache hit, replaying logs 129e6b5d04ed948a
+@pem/email:lint: cache hit, replaying logs 1057ad8568d28ae5
+@pem/auth:lint: cache hit, replaying logs 24ed49e84a382335
+web:lint: cache hit, replaying logs 898c17e67f953065
 
- Tasks:    10 successful, 10 total
-Cached:    9 cached, 10 total
-  Time:    2.125s 
+ Tasks:    11 successful, 11 total
+Cached:    8 cached, 11 total
+  Time:    1.854s 
 

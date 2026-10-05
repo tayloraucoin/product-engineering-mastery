@@ -1,7 +1,7 @@
 command: yarn lint
 exit: 0
-at: 2026-10-04T23:43:56Z
-head: 89bff074f03c82746c0a27ea5852195e08d5d26c
+at: 2026-10-05T00:02:51Z
+head: 458e25d4e332622daa4eac7e327e9e39758037fa
 ---
 
    • turbo 2.11.6
@@ -9,19 +9,19 @@ head: 89bff074f03c82746c0a27ea5852195e08d5d26c
    • Running lint in 12 packages
    • Remote caching disabled
 
-@pem/observability:lint: cache hit, replaying logs 4f03b9c3496fca63
-@pem/env:lint: cache hit, replaying logs cbfa9f7fd42bed11
-@pem/brand:lint: cache hit, replaying logs 274e0d8fe64ce369
-@pem/constants:lint: cache hit, replaying logs f01ba6aea201dc4c
-@pem/db:lint: cache hit, replaying logs 669c7863997af6b9
-@pem/email:lint: cache hit, replaying logs 42322f632bfaba4e
-@pem/ui:lint: cache hit, replaying logs 3eb162993859daa5
-docs:lint: cache hit, replaying logs 39ee4c396ca9fc65
-@pem/catalog:lint: cache hit, replaying logs f4e8d98f12ae5832
-@pem/auth:lint: cache hit, replaying logs fc99544aec76bdd3
-web:lint: cache hit, replaying logs 6b7a501236dd1479
+@pem/env:lint: cache hit, replaying logs ccac9e9f293043b3
+@pem/constants:lint: cache hit, replaying logs 87cb2a7d556b879f
+@pem/brand:lint: cache hit, replaying logs 98075018aad00924
+@pem/observability:lint: cache hit, replaying logs 320b6c0b2ea568ea
+@pem/db:lint: cache hit, replaying logs 129e6b5d04ed948a
+@pem/ui:lint: cache hit, replaying logs 707d8702806119c0
+@pem/email:lint: cache hit, replaying logs 1057ad8568d28ae5
+@pem/catalog:lint: cache hit, replaying logs 15fb75cc087874b8
+docs:lint: cache hit, replaying logs f72604e99af4813e
+@pem/auth:lint: cache hit, replaying logs 24ed49e84a382335
+web:lint: cache hit, replaying logs 898c17e67f953065
 
  Tasks:    11 successful, 11 total
 Cached:    11 cached, 11 total
-  Time:    134ms >>> FULL TURBO
+  Time:    164ms >>> FULL TURBO
 
