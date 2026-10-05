@@ -2,7 +2,7 @@
 
 /**
  * shadcn's sidebar-12 block, calendars (base-vega, shadcn 4.21.0, read 2026-10-04),
- * mapped onto house tokens by docs/design/component-sources.md. MIT, see ../../LICENSE.
+ * mapped onto house tokens by docs/design/component-sources.md. Copyright (c) 2023 shadcn, MIT: keep this notice when copying; the licence text is ../../LICENSE.
  */
 import * as React from "react";
 import { CheckIcon, ChevronRightIcon } from "lucide-react";
@@ -51,12 +51,15 @@ export function Calendars({
                   <SidebarMenu>
                     {calendar.items.map((item, index) => (
                       <SidebarMenuItem key={item}>
-                        <SidebarMenuButton>
+                        <SidebarMenuButton aria-pressed={index < 2}>
                           <div
                             data-active={index < 2}
-                            className="group/calendar-item flex aspect-square size-4 shrink-0 items-center justify-center rounded-sm border border-sidebar-border text-sidebar-primary-foreground data-[active=true]:border-sidebar-primary data-[active=true]:bg-sidebar-primary"
+                            className="group/calendar-item flex aspect-square size-4 shrink-0 items-center justify-center rounded-sm border border-input text-sidebar-primary-foreground data-[active=true]:border-sidebar-primary data-[active=true]:bg-sidebar-primary"
                           >
-                            <CheckIcon className="hidden size-3 group-data-[active=true]/calendar-item:block" />
+                            <CheckIcon
+                              aria-hidden="true"
+                              className="hidden size-3 group-data-[active=true]/calendar-item:block"
+                            />
                           </div>
                           {item}
                         </SidebarMenuButton>

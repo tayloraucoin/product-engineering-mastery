@@ -2,7 +2,7 @@
 
 /**
  * shadcn's sidebar-10 block, nav favorites (base-vega, shadcn 4.21.0, read 2026-10-04),
- * mapped onto house tokens by docs/design/component-sources.md. MIT, see ../../LICENSE.
+ * mapped onto house tokens by docs/design/component-sources.md. Copyright (c) 2023 shadcn, MIT: keep this notice when copying; the licence text is ../../LICENSE.
  */
 import {
   ArrowUpRightIcon,
@@ -47,7 +47,7 @@ export function NavFavorites({
         {favorites.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton render={<a href={item.url} title={item.name} />}>
-              <span>{item.emoji}</span>
+              <span aria-hidden="true">{item.emoji}</span>
               <span>{item.name}</span>
             </SidebarMenuButton>
             <DropdownMenu>
@@ -60,7 +60,7 @@ export function NavFavorites({
                 }
               >
                 <MoreHorizontalIcon />
-                <span className="sr-only">More</span>
+                <span className="sr-only">More actions for {item.name}</span>
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 className="w-56 rounded-lg"

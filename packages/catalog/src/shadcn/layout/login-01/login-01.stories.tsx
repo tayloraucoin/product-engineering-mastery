@@ -35,3 +35,14 @@ export const Default: Story = {
     );
   },
 };
+
+/** Tab reaches the email field before the submit button. */
+export const Focus: Story = {
+  play: async ({ canvas }) => {
+    const email = canvas.getByLabelText(/^email$/i);
+    email.focus();
+    await expect(email).toHaveFocus();
+    await userEvent.tab();
+    await expect(email).not.toHaveFocus();
+  },
+};

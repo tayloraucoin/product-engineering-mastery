@@ -2,7 +2,7 @@
 
 /**
  * shadcn's sidebar-15 block, nav workspaces (base-vega, shadcn 4.21.0, read 2026-10-04),
- * mapped onto house tokens by docs/design/component-sources.md. MIT, see ../../LICENSE.
+ * mapped onto house tokens by docs/design/component-sources.md. Copyright (c) 2023 shadcn, MIT: keep this notice when copying; the licence text is ../../LICENSE.
  */
 import { ChevronRightIcon, MoreHorizontalIcon, PlusIcon } from "lucide-react";
 
@@ -44,7 +44,7 @@ export function NavWorkspaces({
           {workspaces.map((workspace) => (
             <Collapsible key={workspace.name} render={<SidebarMenuItem />}>
               <SidebarMenuButton render={<a href="#" />}>
-                <span>{workspace.emoji}</span>
+                <span aria-hidden="true">{workspace.emoji}</span>
                 <span>{workspace.name}</span>
               </SidebarMenuButton>
               <SidebarMenuAction
@@ -64,7 +64,7 @@ export function NavWorkspaces({
                   {workspace.pages.map((page) => (
                     <SidebarMenuSubItem key={page.name}>
                       <SidebarMenuSubButton render={<a href="#" />}>
-                        <span>{page.emoji}</span>
+                        <span aria-hidden="true">{page.emoji}</span>
                         <span>{page.name}</span>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>

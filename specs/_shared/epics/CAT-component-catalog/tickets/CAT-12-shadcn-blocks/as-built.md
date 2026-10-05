@@ -35,6 +35,32 @@
 - **sidebar-11's folder chevron** rotates on Base UI's `data-open`. Upstream read Radix's `data-state=open`, so it never turned.
 - **Page components are named exports** (`Login01` …), not `export default function Page`.
 
+## Review fixes
+
+From `_batch-review-2026-10-04-CAT-12.md`:
+
+- **B1:** the version switcher in sidebar-01 and -02 is a radio group. Upstream's Radix `onSelect` never fired on Base UI. A `PickVersion` story chooses one and reads it on the trigger.
+- **B2 and S1:** every sidebar block now has these stories:
+  - `Default`, expanded;
+  - `Collapsed`, by its trigger;
+  - `MenuOpen`, which opens its first menu, where it has one;
+  - `SectionToggle`, which toggles a section, where it has one;
+  - `PickDay`, where it has the date picker.
+
+  sidebar-13 has `Open` (the dialog named "Settings", scanned by axe) and `Closed`. The forms gain a `Focus` story. 382 stories run.
+
+- **S2:** the newsletter email and the mail search are labelled.
+- **S3:** calendar toggles carry `aria-pressed` on an audited `border-input`.
+- **S4:** More menus and section toggles are named per row.
+- **S5:** each block's provenance names its own changes and, where present, the brand marks outside MIT.
+- **S6:** each file's header carries shadcn's copyright notice, and the README says the licence sits once per source.
+- **S7:** dashboard-01 is CAT-13's, and its C1 names CAT-13. Its build will also need zod and @tanstack/react-table in the catalog.
+- **Nits taken:**
+  - sidebar-09's menu label is in a group (Base UI throws otherwise);
+  - brand SVGs and emoji are hidden from assistive tech;
+  - sidebar-11's dead `data-[active=true]` is gone;
+  - the date pickers show a fixed month and are client components.
+
 ## Not verified
 
 - The blocks at phone width and in dark mode in the workshop. jsdom has no layout or colour.

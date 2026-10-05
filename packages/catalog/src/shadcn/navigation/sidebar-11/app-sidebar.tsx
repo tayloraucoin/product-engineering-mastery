@@ -2,7 +2,7 @@
 
 /**
  * shadcn's sidebar-11 block, app sidebar (base-vega, shadcn 4.21.0, read 2026-10-04),
- * mapped onto house tokens by docs/design/component-sources.md. MIT, see ../../LICENSE.
+ * mapped onto house tokens by docs/design/component-sources.md. Copyright (c) 2023 shadcn, MIT: keep this notice when copying; the licence text is ../../LICENSE.
  */
 import * as React from "react";
 import { ChevronRightIcon, FileIcon, FolderIcon } from "lucide-react";
@@ -110,10 +110,7 @@ function Tree({ item }: { item: TreeItem }) {
   if (!items.length) {
     return (
       <SidebarMenuItem>
-        <SidebarMenuButton
-          isActive={name === "button.tsx"}
-          className="data-[active=true]:bg-transparent"
-        >
+        <SidebarMenuButton isActive={name === "button.tsx"}>
           <FileIcon aria-hidden="true" />
           {name}
         </SidebarMenuButton>

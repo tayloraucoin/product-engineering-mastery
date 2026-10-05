@@ -22,19 +22,31 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/** The sidebar renders expanded, and the trigger collapses it. */
+const sidebar = (root: HTMLElement) =>
+  root.querySelector<HTMLElement>('[data-slot="sidebar"][data-state]')!;
+
+/** The sidebar renders expanded with its menu. */
 export const Default: Story = {
+  play: async ({ canvasElement }) => {
+    await expect(sidebar(canvasElement)).toHaveAttribute(
+      "data-state",
+      "expanded",
+    );
+    await expect(
+      canvasElement.querySelectorAll('[data-slot="sidebar-menu-button"]')
+        .length,
+    ).toBeGreaterThan(0);
+  },
+};
+
+/** The trigger collapses it. */
+export const Collapsed: Story = {
   play: async ({ canvas, canvasElement }) => {
-    const sidebar = () =>
-      canvasElement.querySelector<HTMLElement>(
-        '[data-slot="sidebar"][data-state]',
-      )!;
-    await expect(sidebar()).toHaveAttribute("data-state", "expanded");
     await userEvent.click(
       canvas.getAllByRole("button", { name: "Toggle Sidebar" })[0]!,
     );
     await waitFor(() =>
-      expect(sidebar()).toHaveAttribute("data-state", "collapsed"),
+      expect(sidebar(canvasElement)).toHaveAttribute("data-state", "collapsed"),
     );
   },
 };

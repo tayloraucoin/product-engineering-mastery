@@ -2,19 +2,16 @@
 
 /**
  * shadcn's sidebar-01 block, version switcher (base-vega, shadcn 4.21.0, read 2026-10-04),
- * mapped onto house tokens by docs/design/component-sources.md. MIT, see ../../LICENSE.
+ * mapped onto house tokens by docs/design/component-sources.md. Copyright (c) 2023 shadcn, MIT: keep this notice when copying; the licence text is ../../LICENSE.
  */
 import * as React from "react";
-import {
-  CheckIcon,
-  ChevronsUpDownIcon,
-  GalleryVerticalEndIcon,
-} from "lucide-react";
+import { ChevronsUpDownIcon, GalleryVerticalEndIcon } from "lucide-react";
 
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@pem/ui/dropdown-menu";
 import {
@@ -53,17 +50,18 @@ export function VersionSwitcher({
             <ChevronsUpDownIcon className="ml-auto" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">
-            {versions.map((version) => (
-              <DropdownMenuItem
-                key={version}
-                onSelect={() => setSelectedVersion(version)}
-              >
-                v{version}{" "}
-                {version === selectedVersion && (
-                  <CheckIcon className="ml-auto" />
-                )}
-              </DropdownMenuItem>
-            ))}
+            {/* Base UI's radio items: a click selects, and the choice is
+                checked for assistive tech. Upstream's Radix onSelect never fired. */}
+            <DropdownMenuRadioGroup
+              value={selectedVersion}
+              onValueChange={setSelectedVersion}
+            >
+              {versions.map((version) => (
+                <DropdownMenuRadioItem key={version} value={version}>
+                  v{version}
+                </DropdownMenuRadioItem>
+              ))}
+            </DropdownMenuRadioGroup>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

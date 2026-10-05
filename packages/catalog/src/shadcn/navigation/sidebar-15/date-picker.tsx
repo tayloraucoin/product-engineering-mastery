@@ -1,6 +1,8 @@
+"use client";
+
 /**
  * shadcn's sidebar-15 block, date picker (base-vega, shadcn 4.21.0, read 2026-10-04),
- * mapped onto house tokens by docs/design/component-sources.md. MIT, see ../../LICENSE.
+ * mapped onto house tokens by docs/design/component-sources.md. Copyright (c) 2023 shadcn, MIT: keep this notice when copying; the licence text is ../../LICENSE.
  */
 import * as React from "react";
 
@@ -9,7 +11,7 @@ import { SidebarGroup, SidebarGroupContent } from "@pem/ui/sidebar";
 
 export function DatePicker() {
   const [date, setDate] = React.useState<Date | undefined>(
-    new Date(new Date().getFullYear(), new Date().getMonth(), 12),
+    new Date(2026, 9, 12),
   );
   return (
     <SidebarGroup className="px-0">

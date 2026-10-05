@@ -20,6 +20,7 @@ operator_review: false
 planned_paths:
   - "packages/catalog/src/shadcn/**"
   - "packages/catalog/manifest.json"
+  - "packages/catalog/README.md"
   - "packages/ui/package.json"
   - "packages/catalog/STATUS.md"
   - "packages/catalog/package.json"

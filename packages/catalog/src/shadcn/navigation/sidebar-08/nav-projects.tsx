@@ -2,7 +2,7 @@
 
 /**
  * shadcn's sidebar-08 block, nav projects (base-vega, shadcn 4.21.0, read 2026-10-04),
- * mapped onto house tokens by docs/design/component-sources.md. MIT, see ../../LICENSE.
+ * mapped onto house tokens by docs/design/component-sources.md. Copyright (c) 2023 shadcn, MIT: keep this notice when copying; the licence text is ../../LICENSE.
  */
 import {
   FolderIcon,
@@ -58,7 +58,7 @@ export function NavProjects({
                 }
               >
                 <MoreHorizontalIcon />
-                <span className="sr-only">More</span>
+                <span className="sr-only">More actions for {item.name}</span>
               </DropdownMenuTrigger>
               <DropdownMenuContent
                 className="w-48"

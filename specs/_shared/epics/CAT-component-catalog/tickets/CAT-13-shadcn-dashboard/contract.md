@@ -6,7 +6,7 @@ non_negotiables:
   - "The block lives in packages/catalog/src/shadcn/display/dashboard-01/ under shadcn's MIT LICENSE and imports the kit through @pem/ui subpaths only."
   - "Toasts use the kit's toast (CS-04), never sonner."
   - "Row reordering by drag has a keyboard path, as dnd-kit's sensors allow, proven by a story."
-  - "Every new dependency (@dnd-kit/core, modifiers, sortable, utilities) is pinned exactly, at least a week old, with its tech-stack row and in the catalog module."
+  - "Every new dependency (@dnd-kit/core, modifiers, sortable, utilities; zod and @tanstack/react-table for the catalog, at the repo's existing pins) is pinned exactly, at least a week old, with its tech-stack row and in the catalog module."
   - "No text on a translucent foreground the audit cannot see; no token-lint waiver; the chart's values do not animate (A-14)."
 devs_call: "Story content and names."
 cites:
@@ -32,7 +32,7 @@ criteria:
   - id: C1
     statement: "dashboard-01 is storied with its source, verdict and layer tags and provenance, and is no longer link-only; STATUS.md is current."
     evidence: check
-    command: "yarn check-catalog --ticket CAT-12"
+    command: "yarn check-catalog --ticket CAT-13"
   - id: C2
     statement: "Its stories pass interactions and axe, including keyboard row reordering, with the kit's others."
     evidence: test

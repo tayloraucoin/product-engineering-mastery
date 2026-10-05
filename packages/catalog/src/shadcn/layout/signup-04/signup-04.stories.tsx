@@ -14,7 +14,7 @@ const meta = {
         "ui.shadcn.com/r/styles/base-vega/signup-04.json, shadcn 4.21.0 (read 2026-10-04)",
       licence: "MIT",
       adapted:
-        "kit imports through @pem/ui subpaths; icons resolved to lucide; house tokens by the copy-in mapping",
+        "kit imports through @pem/ui subpaths; icons resolved to lucide; house tokens by the copy-in mapping; the placeholder photo is a muted, decorative panel; the Apple, Google and Meta marks are their owners' trademarks, outside the MIT licence",
     },
   },
 } satisfies Meta<typeof Signup04>;
@@ -33,5 +33,16 @@ export const Default: Story = {
       "type",
       "password",
     );
+  },
+};
+
+/** Tab reaches the email field before the submit button. */
+export const Focus: Story = {
+  play: async ({ canvas }) => {
+    const email = canvas.getByLabelText(/^email$/i);
+    email.focus();
+    await expect(email).toHaveFocus();
+    await userEvent.tab();
+    await expect(email).not.toHaveFocus();
   },
 };
