@@ -36,6 +36,7 @@ import { CASE_MODELS, type CaseId } from "./models.ts";
 export { CHAT_LIMITS, parseChatRequest } from "./cases/chat.ts";
 export type { ChatRequest } from "./cases/chat.ts";
 export { contactSchema, type Contact } from "./cases/extract.ts";
+export { AiInputTooLongError } from "./cases/options.ts";
 
 export type AiConfig = {
   /** `DATABASE_ENVIRONMENT`: the tier this process talks to. */
@@ -121,7 +122,7 @@ export function createAi(config: AiConfig, deps: AiDeps = {}): Ai {
     summarize: async (text, options) =>
       summarize(modelFor("generate", options), text),
     streamChat: async (messages, options) =>
-      streamChat(modelFor("chat", options), messages, logger),
+      streamChat(modelFor("chat", options), messages, logger, options),
   };
 }
 
@@ -130,6 +131,41 @@ export const CHAT_RATE = { requests: 20, windowMs: 60_000 } as const;
 
 /** A body larger than this is refused before it is parsed (the text cap is 20,000 characters). */
 export const MAX_CHAT_BODY_BYTES = 256 * 1024;
+
+/**
+ * The body as text, or null once it passes `maxBytes`. It counts the bytes as
+ * they arrive and stops reading there, so neither a missing or false
+ * content-length (a chunked upload) nor multibyte text gets a larger body
+ * buffered.
+ */
+async function readBounded(
+  request: Request,
+  maxBytes: number,
+): Promise<string | null> {
+  if (Number(request.headers.get("content-length") ?? 0) > maxBytes)
+    return null;
+  if (!request.body) return "";
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    size += value.byteLength;
+    if (size > maxBytes) {
+      await reader.cancel();
+      return null;
+    }
+    chunks.push(value);
+  }
+  const bytes = new Uint8Array(size);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return new TextDecoder().decode(bytes);
+}
 
 /**
  * The streamed chat route's whole body: the app's route file is one line, and
@@ -142,7 +178,7 @@ export const MAX_CHAT_BODY_BYTES = 256 * 1024;
  *   The count lives in this process, so a deployment running several
  *   instances allows a multiple of it; it stops a loop, not a determined
  *   spender, which is the Console limit's job.
- * - 413 for a body over MAX_CHAT_BODY_BYTES; 400 when it fails `parseChatRequest`.
+ * - 413 for a body over MAX_CHAT_BODY_BYTES, counted as it is read; 400 when it fails `parseChatRequest`.
  * - 503 when no key is set where fixtures may not answer.
  */
 export function createChatHandler(deps: {
@@ -179,11 +215,8 @@ export function createChatHandler(deps: {
       if (!userId)
         return Response.json({ error: "sign in to chat" }, { status: 401 });
     }
-    const declared = Number(request.headers.get("content-length") ?? 0);
-    if (declared > MAX_CHAT_BODY_BYTES)
-      return Response.json({ error: "body too large" }, { status: 413 });
-    const text = await request.text();
-    if (text.length > MAX_CHAT_BODY_BYTES)
+    const text = await readBounded(request, MAX_CHAT_BODY_BYTES);
+    if (text === null)
       return Response.json({ error: "body too large" }, { status: 413 });
     let body: unknown = null;
     try {

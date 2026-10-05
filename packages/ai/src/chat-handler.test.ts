@@ -83,6 +83,9 @@ test("with a key and a user: the call reaches the vendor and is logged with the 
   const vendor = lines.find((line) => line.event === "vendor");
   assert.equal(vendor?.fields?.userId, "user-synthetic");
   assert.equal(vendor?.fields?.case, "chat");
+  // The stand-in vendor fails the stream, and the failure names who it was for.
+  const failed = lines.find((line) => line.event === "chat.failed");
+  assert.equal(failed?.fields?.userId, "user-synthetic");
 });
 
 test("fixtures answer anyone, without asking who is signed in", async () => {
@@ -160,4 +163,33 @@ test("a body over the size cap is 413, before it is parsed", async () => {
   const response = await handler(post("x".repeat(256 * 1024 + 1)));
   assert.equal(response.status, 413);
   assert.equal(calls.length, 0);
+});
+
+test("a chunked body with no content-length is cut off at the cap, and the rest is never read", async () => {
+  const { calls, handler } = setup(LOCAL, null);
+  const chunk = new Uint8Array(64 * 1024).fill(0x78);
+  let pulled = 0;
+  const body = new ReadableStream<Uint8Array>({
+    pull(controller) {
+      pulled += 1;
+      controller.enqueue(chunk);
+    },
+  });
+  const request = new Request("http://localhost/api/ai/chat", {
+    method: "POST",
+    body,
+    duplex: "half",
+  } as RequestInit);
+  assert.equal(request.headers.get("content-length"), null);
+  const response = await handler(request);
+  assert.equal(response.status, 413);
+  assert.ok(pulled <= 6, `read ${pulled} chunks of an endless body`);
+  assert.equal(calls.length, 0);
+});
+
+test("the cap counts bytes, so multibyte text under it in characters is still 413", async () => {
+  const { handler } = setup(LOCAL, null);
+  // 100,000 characters, 300,000 bytes in UTF-8.
+  const response = await handler(post("€".repeat(100_000)));
+  assert.equal(response.status, 413);
 });

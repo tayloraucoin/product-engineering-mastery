@@ -18,10 +18,14 @@ import {
 
 import type { Logger } from "@pem/observability/logger";
 
+import { CASE_MODELS } from "../models.ts";
 import { chatPrompt } from "../prompts/chat.ts";
 import { callSettings } from "./options.ts";
 
-export const CHAT_LIMITS = { messages: 40, characters: 20_000 } as const;
+export const CHAT_LIMITS = {
+  messages: 40,
+  characters: CASE_MODELS.chat.maxInputCharacters,
+} as const;
 
 /**
  * Text, and the step marker the client's own transcript carries. No reasoning
@@ -69,6 +73,7 @@ export async function streamChat(
   model: LanguageModel,
   messages: UIMessage[],
   logger: Logger,
+  options: { userId?: string | null } = {},
 ): Promise<Response> {
   const result = streamText({
     model,
@@ -76,7 +81,10 @@ export async function streamChat(
     messages: await convertToModelMessages(messages),
     ...callSettings("chat"),
     onError: ({ error }) => {
-      logger.error("chat.failed", { error });
+      logger.error("chat.failed", {
+        error,
+        ...(options.userId ? { userId: options.userId } : {}),
+      });
     },
   });
   // The default error text is generic, so no vendor message reaches the browser.

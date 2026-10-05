@@ -3,12 +3,13 @@
 import { generateText, type LanguageModel } from "ai";
 
 import { summarizePrompt } from "../prompts/summarize.ts";
-import { callSettings } from "./options.ts";
+import { callSettings, checkInput } from "./options.ts";
 
 export async function summarize(
   model: LanguageModel,
   text: string,
 ): Promise<string> {
+  checkInput("generate", text);
   const result = await generateText({
     model,
     instructions: summarizePrompt.instructions,

@@ -12,6 +12,7 @@ import type { UIMessage } from "ai";
 import type { LogFields, Logger } from "@pem/observability/logger";
 
 import {
+  AiInputTooLongError,
   aiMode,
   AiNotConfiguredError,
   contactSchema,
@@ -224,6 +225,23 @@ test("with a key, the request names the case's model, its effort, the output cap
     JSON.stringify(body),
     new RegExp(`"effort":"${CASE_MODELS.generate.effort}"`),
   );
+});
+
+test("a text over its case's input cap is refused before any model is called", async () => {
+  const { calls, fetch } = fakeFetch();
+  const { logger } = memoryLogger();
+  for (const config of [LOCAL, { ...LOCAL, apiKey: "sk-ant-synthetic" }]) {
+    const ai = createAi(config, { fetch, logger });
+    await assert.rejects(
+      ai.extractContact("x".repeat(CASE_MODELS.extract.maxInputCharacters + 1)),
+      AiInputTooLongError,
+    );
+    await assert.rejects(
+      ai.summarize("x".repeat(CASE_MODELS.generate.maxInputCharacters + 1)),
+      AiInputTooLongError,
+    );
+  }
+  assert.equal(calls.length, 0);
 });
 
 test("the client module is server-only, so a client component cannot import the keyed client", () => {
