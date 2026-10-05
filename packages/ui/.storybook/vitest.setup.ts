@@ -20,6 +20,9 @@ window.matchMedia ??= (query: string) =>
 /** jsdom has no canvas either; axe probes one for colour checks and copes without. */
 HTMLCanvasElement.prototype.getContext = () => null;
 
+/** jsdom has no layout, so no elementFromPoint; input-otp probes it for password-manager badges. */
+document.elementFromPoint ??= () => null;
+
 const project = setProjectAnnotations([a11yAnnotations, previewAnnotations]);
 
 beforeAll(project.beforeAll);

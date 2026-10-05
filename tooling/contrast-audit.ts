@@ -164,6 +164,13 @@ const PAIRS: Pair[] = [
     min: TEXT,
     use: "destructive button label, hovered",
   },
+  // CAT-5: a checkbox, radio or switch is found by its `--input` boundary alone (WCAG 1.4.11).
+  {
+    fg: "--input",
+    bg: "--background",
+    min: NON_TEXT,
+    use: "a control's boundary",
+  },
   { fg: "--ring", bg: "--background", min: NON_TEXT, use: "focus ring" },
   {
     fg: "--ring",
