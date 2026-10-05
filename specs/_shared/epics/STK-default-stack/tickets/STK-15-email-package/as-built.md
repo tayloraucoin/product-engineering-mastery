@@ -12,7 +12,7 @@
 
 - The `apps/web` wiring (`env.ts`, `lib/email.ts`, `turbo.json`, `.env.example`) was backed out in `7086a07` while `.env.example` was unreadable under this session's permission settings. It was restored once the settings allowed it.
 - Added after the reviews:
-  - `createMailer` takes `deployed`, which `apps/web/lib/email.ts` fills from `productionRuntime` in `env.ts` (a Vercel deployment, or any production build, so the guard holds off Vercel). A deployment left on the local tier warns `email.withheld` and logs no subject or body.
+  - `createMailer` takes `deployed`, which `apps/web/lib/email.ts` fills from `productionRuntime` in `env.ts` (a Vercel deployment, or any production build, so the guard holds off Vercel). A deployment left on the local tier reports `email.withheld` as an error, so the reporter pages someone, and logs no subject or body.
   - `lib/email.ts` imports `server-only`.
   - A successful send logs `email.sent` with Resend's id.
   - The subject and sender stay on one header line.
@@ -20,7 +20,7 @@
 - [ASSUMPTION] devs_call: a plain template string with escaping, and no renderer dependency.
 - [ASSUMPTION] `EMAIL_FROM` is tiered (`_LOCAL`, `_STAGING`), like every other variable, so staging can send from Resend's test domain.
 - [ASSUMPTION] Email clients ignore web fonts, so the template uses a system font stack rather than the brand font.
-- [ASSUMPTION] The example call from a service lives in `packages/email/README.md`, since `@pem/services` is STK-13.
+- The README's example call sits in app code, because `@pem/services` has no `email` edge yet. The first service that sends mail adds it.
 - [ASSUMPTION] `EXAMPLE_API_KEY` stays: `check-client-bundle`'s tests and `@pem/env`'s tests name it, and `RESEND_API_KEY` now gives the bundle check a real key to plant as well.
 - STK-5 was built first in the same thread, as STK-15's dependency.
 

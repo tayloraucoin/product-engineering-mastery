@@ -7,7 +7,7 @@
  * `logged`, so a developer reads the mail in the terminal and no real inbox is
  * reached. A deployment left on the local tier logs neither the body nor the
  * subject, since reset and sign-in links live there and platform logs are
- * retained; it warns and returns `withheld`. Staging and production send
+ * retained; it reports an error and returns `withheld`. Staging and production send
  * through Resend and need the key.
  *
  * Two kinds of message: `content` renders the default template here
@@ -102,10 +102,13 @@ export function createMailer(
         : renderDefaultEmail(message.content);
 
       if (config.tier === "local" && config.deployed) {
-        log.warn("email.withheld", {
-          tier: config.tier,
-          reason:
-            "DATABASE_ENVIRONMENT is local in a deployment or production build, so the message is neither sent nor logged",
+        // An error, not a warning, so the registered reporter pages someone:
+        // every message this process sends is being dropped.
+        log.error("email.withheld", {
+          error: new Error(
+            "DATABASE_ENVIRONMENT is local in a deployment or production build, so email is neither sent nor logged",
+          ),
+          tags: { tier: config.tier },
           recipientCount: to.length,
         });
         return { status: "withheld" };

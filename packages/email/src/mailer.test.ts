@@ -187,6 +187,7 @@ test("C1: a deployment left on the local tier neither sends nor logs the body", 
   assert.deepEqual(result, { status: "withheld" });
   assert.equal(vendor.calls.length, 0);
   assert.equal(lines[0]?.event, "email.withheld");
+  assert.ok(lines[0]?.fields?.error instanceof Error);
   const logged = JSON.stringify(lines);
   for (const leak of [
     "Synthetic subject",
