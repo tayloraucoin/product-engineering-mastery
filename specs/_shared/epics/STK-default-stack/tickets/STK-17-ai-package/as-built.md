@@ -11,14 +11,14 @@
 ## Deviations
 
 - [ASSUMPTION] devs_call: the eval runner is Node's test runner over `src/evals.ts`, the same checks on the fixture in CI and on a live answer in `yarn workspace @pem/ai record`, which rewrites a fixture only when its answer passes. No vendor eval framework (the AI SDK's `experimental_evaluate` is experimental).
-- [ASSUMPTION] Every case uses `claude-opus-5-5`, the current default model. Effort is `low` for extraction and chat and `medium` for generate, and `maxOutputTokens` is 16,000 on each.
+- [ASSUMPTION] Every case uses `claude-opus-5-5`, the current default model. Effort is `low` for extraction and chat and `medium` for generate. The output caps, which include thinking, are 4,000, 8,000 and 4,000 tokens.
 - [ASSUMPTION] `ai` 7.0.116 and `@ai-sdk/anthropic` 4.0.65 rather than the latest releases, because the repo's seven-day age gate quarantines anything newer. `@ai-sdk/provider` 4.0.18 is pinned for the fixture model's types.
 - [ASSUMPTION] The chat route answers 401 when the call would reach the vendor and nobody is signed in. Local fixtures answer anyone. The input gate takes text and step-marker parts only, at most 40 turns and 20,000 characters, and the user's turn must come last.
 - The SDK bans in `boundaries.js` now match exact package names (`sdkPattern`). The gitignore-style group `ai/*` also matched `@pem/ai/client` and a relative `../ai`; `stripe` and `resend` had the same latent problem.
 - The planned path `apps/web/app/api/ai/**` was narrowed to the two files, and `contract:tier` dropped assay and threshold, which matched only through the glob. Planned paths added: `next.config.ts`, `apps/web/package.json`, `yarn.lock`, `tooling/boundaries.test.ts` and `codebase-conventions.md`.
 - `apps/web/next.config.ts` was reformatted after another ticket's commit, because format:check failed at HEAD.
 
-- Added after a first round of mason, vigil and warden reviews (each PASS, superseded by the round recorded in `review-*.md`):
+- Added after two earlier rounds of mason, vigil and warden reviews. Each round passed through `yarn review:run`; each later edit reset it, and the final round is the one in `review-*.md`:
   - The route's gates moved into `createChatHandler` in `@pem/ai`, where `chat-handler.test.ts` proves them: 401 with no user before a vendor call, 429 past a per-user window (20 a minute, per process), 413 for a body over 256 KB, 400 on a refused body, 503 with no key, and fixtures without asking who is signed in.
   - Every vendor call logs `[ai] vendor` with the case, the model and the user's id.
   - `reasoning` parts are refused, since their text escaped the character cap.
@@ -26,6 +26,7 @@
   - The extraction eval requires an email only when the input contains an `@`.
   - `packages/config/eslint/workspace-resolver.cjs` now resolves each app's `@/` alias and fails closed. Before this, every `@/` import passed the boundary rules unresolved, so `@/app/api/ai/ai` reached the route's client from any app file. Two probes pin it. The planned path was added.
   - The README covers the data that leaves for Anthropic, the spend limit, the client-owned transcript and the unvalidated email. `remove-ai.md` gains the conventions edits and a vendor-side step for data already sent. `boundaries.js`'s layer comment names `ai`, and `codebase-conventions.md` names `ai`'s SDK owners.
+  - From the second round: `@pem/ai/client` imports `server-only` (its tests run under `--conditions=react-server`, as `@pem/auth`'s do, and a test pins the import). The 429 window counts only calls that reach the vendor, so a refused request never uses it. The output cap is per case, in `models.ts`.
   - C5 was added for the operator steps that need Taylor's Anthropic account (spend limit, data settings, recording the fixtures), and was handed over as deferred.
 
 ## Not verified

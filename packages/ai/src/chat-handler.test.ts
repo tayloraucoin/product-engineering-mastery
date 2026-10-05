@@ -143,6 +143,18 @@ test("past the per-user window a vendor call is 429, before any model is called;
   await reopened.text();
 });
 
+test("a refused request does not use the window", async () => {
+  const { handler } = setup(KEYED, "user-synthetic", {
+    requests: 1,
+    windowMs: 60_000,
+  });
+  for (let i = 0; i < 3; i += 1)
+    assert.equal((await handler(post({}))).status, 400);
+  const response = await handler(post(chat));
+  assert.equal(response.status, 200);
+  await response.text();
+});
+
 test("a body over the size cap is 413, before it is parsed", async () => {
   const { calls, handler } = setup(LOCAL, null);
   const response = await handler(post("x".repeat(256 * 1024 + 1)));

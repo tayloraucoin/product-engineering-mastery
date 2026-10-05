@@ -5,12 +5,12 @@
  */
 
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { test } from "node:test";
 import type { UIMessage } from "ai";
 
 import type { LogFields, Logger } from "@pem/observability/logger";
 
-import { MAX_OUTPUT_TOKENS } from "./cases/options.ts";
 import {
   aiMode,
   AiNotConfiguredError,
@@ -215,7 +215,7 @@ test("with a key, the request names the case's model, its effort, the output cap
   assert.equal(await ai.summarize("text"), "A synthetic summary.");
   const [body] = bodies;
   assert.equal(body?.model, CASE_MODELS.generate.model);
-  assert.equal(body?.max_tokens, MAX_OUTPUT_TOKENS);
+  assert.equal(body?.max_tokens, CASE_MODELS.generate.maxOutputTokens);
   assert.match(
     JSON.stringify(body?.system),
     new RegExp(summarizePrompt.instructions.slice(0, 40)),
@@ -224,4 +224,9 @@ test("with a key, the request names the case's model, its effort, the output cap
     JSON.stringify(body),
     new RegExp(`"effort":"${CASE_MODELS.generate.effort}"`),
   );
+});
+
+test("the client module is server-only, so a client component cannot import the keyed client", () => {
+  const source = readFileSync(new URL("./client.ts", import.meta.url), "utf8");
+  assert.match(source, /^import "server-only";$/m);
 });

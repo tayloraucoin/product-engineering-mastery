@@ -13,7 +13,12 @@
  *
  * Every vendor call logs `[ai] vendor` with the case, the model and, when the
  * caller passes one, the user's id.
+ *
+ * Server-only: it builds the keyed client, so a client component that imports
+ * it fails to build rather than relying on the bundle scan.
  */
+
+import "server-only";
 
 import { createAnthropic } from "@ai-sdk/anthropic";
 import type { LanguageModel, UIMessage } from "ai";
@@ -132,7 +137,8 @@ export const MAX_CHAT_BODY_BYTES = 256 * 1024;
  * - 401 when the call would reach the vendor and `currentUserId` finds nobody:
  *   a live model spends money, so it answers only a user. The local fixtures
  *   cost nothing and answer anyone.
- * - 429 when that user has made `rate.requests` vendor calls in the window.
+ * - 429 when that user has made `rate.requests` vendor calls in the window;
+ *   a refused request never counts.
  *   The count lives in this process, so a deployment running several
  *   instances allows a multiple of it; it stops a loop, not a determined
  *   spender, which is the Console limit's job.
@@ -172,16 +178,6 @@ export function createChatHandler(deps: {
       userId = await deps.currentUserId();
       if (!userId)
         return Response.json({ error: "sign in to chat" }, { status: 401 });
-      if (!admit(userId)) {
-        logger.warn("chat.limited", { userId });
-        return Response.json(
-          { error: "too many requests" },
-          {
-            status: 429,
-            headers: { "retry-after": String(Math.ceil(rate.windowMs / 1000)) },
-          },
-        );
-      }
     }
     const declared = Number(request.headers.get("content-length") ?? 0);
     if (declared > MAX_CHAT_BODY_BYTES)
@@ -198,6 +194,17 @@ export function createChatHandler(deps: {
     const parsed = await parseChatRequest(body);
     if (!parsed.ok)
       return Response.json({ error: parsed.error }, { status: 400 });
+    // Counted here, after every refusal: only a call that reaches the vendor uses the window.
+    if (userId && !admit(userId)) {
+      logger.warn("chat.limited", { userId });
+      return Response.json(
+        { error: "too many requests" },
+        {
+          status: 429,
+          headers: { "retry-after": String(Math.ceil(rate.windowMs / 1000)) },
+        },
+      );
+    }
     try {
       return await deps.ai.streamChat(parsed.messages, { userId });
     } catch (error) {
