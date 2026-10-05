@@ -49,6 +49,10 @@ export const Range: Story = {
     getAriaLabel: (index: number) =>
       index === 0 ? "Minimum price" : "Maximum price",
   },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByLabelText("Minimum price")).toHaveValue("20");
+    await expect(canvas.getByLabelText("Maximum price")).toHaveValue("80");
+  },
 };
 
 export const Stepped: Story = { args: { defaultValue: [50], step: 10 } };
@@ -65,3 +69,16 @@ export const Vertical: Story = {
 };
 
 export const Disabled: Story = { args: { disabled: true } };
+
+/**
+ * The focused thumb shows its outline. Arrow keys move it in the browser;
+ * jsdom rejects the KeyboardEvent Base UI builds for that, so this story
+ * stops at focus.
+ */
+export const Focus: Story = {
+  play: async ({ canvas }) => {
+    const input = canvas.getByLabelText("Volume");
+    input.focus();
+    await expect(input).toHaveFocus();
+  },
+};

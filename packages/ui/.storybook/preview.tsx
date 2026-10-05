@@ -64,7 +64,21 @@ const preview: Preview = {
   decorators: [withToolbarTheme, withBrandFont],
   parameters: {
     layout: "centered",
-    a11y: { test: "error" },
+    a11y: {
+      test: "error",
+      config: {
+        rules: [
+          // Base UI's popups (select, menus, dialogs) bracket their content
+          // with focus guards: aria-hidden spans that are focusable on purpose,
+          // so Tab into one moves focus back inside. The rule still runs on
+          // every other element.
+          {
+            id: "aria-hidden-focus",
+            selector: '[aria-hidden="true"]:not([data-base-ui-focus-guard])',
+          },
+        ],
+      },
+    },
   },
 };
 

@@ -56,3 +56,12 @@ export const Small: Story = { args: { size: "sm" } };
 export const Invalid: Story = { args: { "aria-invalid": true } };
 
 export const Disabled: Story = { args: { disabled: true } };
+
+export const Focus: Story = {
+  play: async ({ canvas }) => {
+    await userEvent.tab();
+    await expect(
+      canvas.getByRole("combobox", { name: "Time zone" }),
+    ).toHaveFocus();
+  },
+};

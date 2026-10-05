@@ -12,7 +12,6 @@ import {
 type Args = {
   maxLength: number;
   "aria-label": string;
-  defaultValue?: string;
   disabled?: boolean;
   invalid?: boolean;
 };
@@ -31,7 +30,7 @@ const meta = {
   },
   args: { maxLength: 6, "aria-label": "One-time code" },
   render: ({ invalid, ...args }: Args) => (
-    <InputOTP {...args}>
+    <InputOTP {...args} aria-invalid={invalid}>
       <InputOTPGroup>
         {[0, 1, 2].map((index) => (
           <InputOTPSlot key={index} index={index} aria-invalid={invalid} />
@@ -61,10 +60,19 @@ export const Typing: Story = {
   },
 };
 
-export const Filled: Story = { args: { defaultValue: "482193" } };
-
-export const Invalid: Story = {
-  args: { defaultValue: "4821", invalid: true } as Args,
+/** Every slot filled. */
+export const Filled: Story = {
+  play: async ({ canvas }) => {
+    await userEvent.type(canvas.getByRole("textbox"), "482193");
+  },
 };
 
 export const Disabled: Story = { args: { disabled: true } };
+
+/** Reached from the keyboard: the active slot shows the ring. */
+export const Focus: Story = {
+  play: async ({ canvas }) => {
+    await userEvent.tab();
+    await expect(canvas.getByRole("textbox")).toHaveFocus();
+  },
+};

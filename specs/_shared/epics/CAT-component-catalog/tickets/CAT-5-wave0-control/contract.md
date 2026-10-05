@@ -27,6 +27,7 @@ planned_paths:
   - "packages/ui/package.json"
   - "packages/ui/.storybook/vitest.config.ts"
   - "packages/ui/.storybook/vitest.setup.ts"
+  - "packages/ui/.storybook/preview.tsx"
   - "yarn.lock"
   - "toolkit.json"
   - "docs/engineering/tech-stack.md"

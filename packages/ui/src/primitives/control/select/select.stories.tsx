@@ -99,3 +99,30 @@ export const Small: Story = { args: { size: "sm" } as Args };
 export const Invalid: Story = { args: { invalid: true } as Args };
 
 export const Disabled: Story = { args: { disabled: true } };
+
+/** Reached from the keyboard, so the trigger's focus ring shows. */
+export const Focus: Story = {
+  play: async ({ canvas }) => {
+    await userEvent.tab();
+    await expect(
+      canvas.getByRole("combobox", { name: "Produce" }),
+    ).toHaveFocus();
+  },
+};
+
+/** Open, at rest: the list with its groups, labels and separator. */
+export const Open: Story = {
+  args: { defaultOpen: true, defaultValue: "apple" },
+};
+
+/** The keyboard path: Enter opens, Escape closes and returns focus to the trigger. */
+export const Keyboard: Story = {
+  play: async ({ canvas, canvasElement }) => {
+    await userEvent.tab();
+    const trigger = canvas.getByRole("combobox", { name: "Produce" });
+    await userEvent.keyboard("{Enter}");
+    await within(canvasElement.ownerDocument.body).findByRole("listbox");
+    await userEvent.keyboard("{Escape}");
+    await expect(trigger).toHaveFocus();
+  },
+};

@@ -7,8 +7,8 @@
  * Reads every `:root` block as the light theme and layers `.dark` over it for
  * the dark theme, follows `var()` references, and converts `oklch()`, `rgb()`
  * and hex values to sRGB. Text pairs need 4.5:1 (SC 1.4.3); the focus ring
- * needs 3:1 against the surfaces it is drawn on (SC 1.4.11). Borders are
- * decorative here and are not audited.
+ * needs 3:1 against the surfaces it is drawn on (SC 1.4.11). The `--border`
+ * role is decorative and is not audited; `--input`, a control's boundary, is.
  *
  * A product that adds a semantic token, or puts text on a new surface, adds
  * the pair to PAIRS. A failing pair is fixed in preset.css by changing the raw
@@ -170,6 +170,29 @@ const PAIRS: Pair[] = [
     bg: "--background",
     min: NON_TEXT,
     use: "a control's boundary",
+  },
+  // Focus changes a control's boundary from --input to --ring: the change itself must show.
+  {
+    fg: "--ring",
+    bg: "--input",
+    min: NON_TEXT,
+    use: "a focused control's boundary against its resting one",
+  },
+  // A pressed toggle's fill against the page (CAT-5 review B4).
+  {
+    fg: "--primary",
+    bg: "--background",
+    min: NON_TEXT,
+    use: "a pressed toggle's fill",
+  },
+  // Dark fields fill with --muted at half opacity; their placeholder sits on it.
+  {
+    fg: "--muted-foreground",
+    bg: "--muted",
+    tint: 0.5,
+    themes: ["dark"],
+    min: TEXT,
+    use: "a placeholder in a dark field",
   },
   { fg: "--ring", bg: "--background", min: NON_TEXT, use: "focus ring" },
   {

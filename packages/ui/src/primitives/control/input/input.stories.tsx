@@ -44,6 +44,12 @@ export const Focus: Story = {
 
 export const Invalid: Story = {
   args: { "aria-invalid": true, defaultValue: "dana@" },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByRole("textbox")).toHaveAttribute(
+      "aria-invalid",
+      "true",
+    );
+  },
 };
 
 export const Disabled: Story = {

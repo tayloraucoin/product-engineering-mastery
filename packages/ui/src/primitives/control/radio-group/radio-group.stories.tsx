@@ -55,3 +55,36 @@ export const Choose: Story = {
 };
 
 export const Disabled: Story = { args: { disabled: true } };
+
+/** Reached from the keyboard: the checked option takes focus, and arrows move the choice. */
+export const Focus: Story = {
+  play: async ({ canvas }) => {
+    await userEvent.tab();
+    const daily = canvas.getByRole("radio", { name: "Daily" });
+    await expect(daily).toHaveFocus();
+    await userEvent.keyboard("{ArrowDown}");
+    const weekly = canvas.getByRole("radio", { name: "Weekly" });
+    await expect(weekly).toHaveFocus();
+    await expect(weekly).toHaveAttribute("aria-checked", "true");
+  },
+};
+
+export const Invalid: Story = {
+  args: { defaultValue: undefined },
+  render: (args) => (
+    <RadioGroup {...args}>
+      {OPTIONS.map((option) => (
+        <label key={option.value} className="flex items-center gap-2 text-sm">
+          <RadioGroupItem value={option.value} aria-invalid />
+          {option.label}
+        </label>
+      ))}
+    </RadioGroup>
+  ),
+  play: async ({ canvas }) => {
+    await expect(canvas.getByRole("radio", { name: "Daily" })).toHaveAttribute(
+      "aria-invalid",
+      "true",
+    );
+  },
+};

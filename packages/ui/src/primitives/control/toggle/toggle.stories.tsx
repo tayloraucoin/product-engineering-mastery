@@ -55,3 +55,21 @@ export const WithText: Story = {
 };
 
 export const Disabled: Story = { args: { disabled: true } };
+
+/** Reached from the keyboard: a solid outline marks focus, beside the ring. */
+export const Focus: Story = {
+  play: async ({ canvas }) => {
+    await userEvent.tab();
+    await expect(canvas.getByRole("button", { name: "Bold" })).toHaveFocus();
+  },
+};
+
+export const Invalid: Story = {
+  args: { "aria-invalid": true },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByRole("button", { name: "Bold" })).toHaveAttribute(
+      "aria-invalid",
+      "true",
+    );
+  },
+};

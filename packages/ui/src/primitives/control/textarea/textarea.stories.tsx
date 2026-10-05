@@ -46,8 +46,19 @@ export const Focus: Story = {
   },
 };
 
-export const Invalid: Story = { args: { "aria-invalid": true } };
+export const Invalid: Story = {
+  args: { "aria-invalid": true },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByRole("textbox")).toHaveAttribute(
+      "aria-invalid",
+      "true",
+    );
+  },
+};
 
 export const Disabled: Story = {
   args: { disabled: true, defaultValue: "Locked by an admin" },
+  play: async ({ canvas }) => {
+    await expect(canvas.getByRole("textbox")).toBeDisabled();
+  },
 };
