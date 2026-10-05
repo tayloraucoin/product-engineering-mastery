@@ -23,6 +23,14 @@ On 2026-10-04 STK-2's `yarn verify` failed twice with "C1 is PASS, but evidence 
 - **`check-specs` reads the log's run header on a hash mismatch.** If the header shows a newer run than the recorded one, the PASS is stale: a warning while the ticket is open, and a failure under `--strict` once it has an as-built (PR-15). A matching header, an older one, or none at all is still a hard failure.
 - No lock file, so a crashed run cannot leave one behind; such a run leaves a stale PASS, and re-running the criterion clears it.
 
+## 2026-10-04 — STK-11: the local database's network exposure, accepted
+
+STK-11 moved `yarn db:local` from STK-9's `docker run`, which bound `127.0.0.1:54322`, to the Supabase CLI that D-STK-6 names. The CLI (2.119.0) publishes the database port on every interface and has no setting to change that. The local database therefore answers on the network with the password `postgres`, and in Mode A it holds the emails of staging users the mirror copies. Taylor accepted this on 2026-10-04 (ledger EN-13). The controls: `db:local` and `db:local:full` warn whenever the port is bound to anything but loopback; `new-project.md` step 6 and the `tech-stack.md` image row name Docker's `"ip": "127.0.0.1"` daemon setting; and `yarn db:stop --no-backup` wipes the mirrored emails.
+
+## 2026-10-04 — CAT-5, CAT-6: the install age gate and its one exception
+
+`deps.md` said an age gate waited out new releases, but `.yarnrc.yml` set none. CAT-5 set `npmMinimalAgeGate: 7d`; a probe for a same-day release was quarantined. On review, Taylor asked for one written exception so the gate is never quietly lowered under pressure (EN-14): a security fix younger than a week enters as one exact `name@x.y.z` in `npmPreapprovedPackages`, with a ledger line naming the advisory, and comes out once the version is a week old. `tooling/age-gate.test.ts` holds the gate at a week and every pre-approval to one exact version with its ledger line.
+
 ## 2026-10-04 — CAT: the batch review of CAT-2 to CAT-4
 
 A `vigil` review (`specs/_shared/epics/CAT-component-catalog/_batch-review-2026-10-04.md`) found four Blocking items, all fixed: the token lint missed `_`-joined literals (B1); the chart roles were missing under `.dark` (B2); check-catalog passed a conflicting tag or a wrong licence (B3); the destructive Button's label sat at 3.99:1 on its tint (B4), which contrast-audit could not see until it learned to composite a tinted background. The destructive step moved to red-800 in light and red-300 in dark, and all 42 pairs pass. The lint now also rejects other absolute units, any unit case, bare colour names and font families (CS-13 amended). Elevation takes the canon's own closed scale, resting, raised, overlay, modal (CS-11 amended; C-P06 already named it). Canon C-P06's "Enforced by" line now says which arbitrary values the lint bans. Record 0011 gains an amendment block.

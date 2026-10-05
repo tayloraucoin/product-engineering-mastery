@@ -8,11 +8,11 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-04T21:43:44Z",
-        "head": "d0a1b7b2a508207c286584634b73d427484c1209",
+        "at": "2026-10-05T00:41:59Z",
+        "head": "8f2e32a6c461edc40ee2accdef4beb6ecfa698cd",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/evidence/C1.log",
-        "evidence_sha256": "8e997874c62f54558c677b9037fe8da80fd882a6af487c701b7653652b334c48",
-        "tests": 113
+        "evidence_sha256": "eba70bbd3662d5f35aefc00db4ad0428230ba086ea4059b37796578c0b733c4c",
+        "tests": 134
       }
     },
     "C2": {
@@ -21,11 +21,11 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-04T21:43:49Z",
-        "head": "d0a1b7b2a508207c286584634b73d427484c1209",
+        "at": "2026-10-05T00:42:02Z",
+        "head": "8f2e32a6c461edc40ee2accdef4beb6ecfa698cd",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/evidence/C2.log",
-        "evidence_sha256": "5b1252e7ff8b24e2aa655136c6585e410769e7d5f14a853444343bf23841a28d",
-        "tests": 113
+        "evidence_sha256": "9291db1f897a5c77152a3f2d2a272a561f710872e55bb77edff5574f8778ef37",
+        "tests": 134
       }
     },
     "C3": {
@@ -34,10 +34,10 @@
       "run": {
         "command": "yarn lint:boundaries",
         "exit": 0,
-        "at": "2026-10-04T21:43:54Z",
-        "head": "d0a1b7b2a508207c286584634b73d427484c1209",
+        "at": "2026-10-05T00:42:05Z",
+        "head": "8f2e32a6c461edc40ee2accdef4beb6ecfa698cd",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/evidence/C3.log",
-        "evidence_sha256": "00f612b5032fb59d7690d7935088ef74028c730a4f6c4d4b671aaa0b4ce8f514"
+        "evidence_sha256": "ba563a40716fac88bacfe1c4e39200743e61df240d32fa0bf6b74db9ecb6f885"
       }
     },
     "C4": {
@@ -46,10 +46,10 @@
       "run": {
         "command": "yarn verify",
         "exit": 0,
-        "at": "2026-10-04T21:44:00Z",
-        "head": "d5d468cd1db96bc1b7aecffd9173eaf81ab9d23c",
+        "at": "2026-10-05T00:42:10Z",
+        "head": "e486e8c80d663e57f57239edc34f1113a9ac7777",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/evidence/C4.log",
-        "evidence_sha256": "9b5a5a743f4aa36df08c8fce6d58144824cfe2852dc089ffdfacdd66c533b8e8"
+        "evidence_sha256": "585df8bb7fdde3a0b5bda9e192fe62e71bed02b9399f1917bce53aa50ea7f193"
       }
     },
     "review:mason": {
@@ -58,12 +58,12 @@
       "run": {
         "command": "yarn review:run mason STK-15",
         "exit": 0,
-        "at": "2026-10-04T23:11:57Z",
-        "head": "53a8da1006a48be579817a14e743bc249f3900ce",
+        "at": "2026-10-05T00:43:28Z",
+        "head": "3e3b46840f915a7cf1866f35f74957847fb5c887",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/review-mason.md",
-        "evidence_sha256": "1f9cbf4c11b925880013a0ee795769a77ff399ab45a436a7d68a1bb82388fd50",
-        "contract_sha256": "d44b04528f1ef26fb18566b40794cf59646c5b6a1a844d6d4fba9c5e32942a5b",
-        "as_built_sha256": "22c9d7b56d4da7794068dffd311d292b393dd0399cfca54b9d8557edbae1f0e5",
+        "evidence_sha256": "b90802cc71fa9ed5b8ddd0d8b7797e6b69a0aa9d0cd646435d13bb6097bf2499",
+        "contract_sha256": "b3afca1d007a01cc26be74a2c89661dfe0653d89eca8bbba832524b4f0965151",
+        "as_built_sha256": "b54b3f09baac51ef4710b448dc9a10cf29216eaab3ce82408b9039ae0ac531f0",
         "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/mason-cto-principal-dev.md; tools Read,Grep,Glob)"
       }
     },
@@ -73,12 +73,12 @@
       "run": {
         "command": "yarn review:run vigil STK-15",
         "exit": 0,
-        "at": "2026-10-04T23:17:31Z",
-        "head": "6a9646ccb6f03a914583072f82fd11a6ff1bf0e7",
+        "at": "2026-10-05T00:48:16Z",
+        "head": "2d0bdc5c98a9a2ed8b2fa33411bdc2eda537c8db",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/review-vigil.md",
-        "evidence_sha256": "8734aeb5dc8b6be7b500da477fe812166f7090a6dacaddacd24d088d1bed5044",
-        "contract_sha256": "d44b04528f1ef26fb18566b40794cf59646c5b6a1a844d6d4fba9c5e32942a5b",
-        "as_built_sha256": "22c9d7b56d4da7794068dffd311d292b393dd0399cfca54b9d8557edbae1f0e5",
+        "evidence_sha256": "20817e2ad2286be24d6883569641a2f3748bb8797bf045b5fc3d78cce0ce5fcf",
+        "contract_sha256": "b3afca1d007a01cc26be74a2c89661dfe0653d89eca8bbba832524b4f0965151",
+        "as_built_sha256": "b54b3f09baac51ef4710b448dc9a10cf29216eaab3ce82408b9039ae0ac531f0",
         "runner": "claude 2.1.232 (Claude Code) (agent vigil; tools Read,Grep,Glob)"
       }
     },
@@ -88,15 +88,15 @@
       "run": {
         "command": "yarn review:run warden STK-15",
         "exit": 0,
-        "at": "2026-10-04T23:23:15Z",
-        "head": "b76c592f56a77103ccec84b1db9bcb1f770c69bc",
+        "at": "2026-10-05T00:53:45Z",
+        "head": "9ca66f63d3a72b9b67bdacbd44807ddda7ac7a10",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/review-warden.md",
-        "evidence_sha256": "6fd7ae1361bb297f6c1ea702a8d226987db75b95eba4ee03ce32939afab7d37a",
-        "contract_sha256": "d44b04528f1ef26fb18566b40794cf59646c5b6a1a844d6d4fba9c5e32942a5b",
-        "as_built_sha256": "22c9d7b56d4da7794068dffd311d292b393dd0399cfca54b9d8557edbae1f0e5",
+        "evidence_sha256": "6a94cfa4db2d23f8be25eaafdd48fc65cbfe6d264dea9237cadab18061ae31d8",
+        "contract_sha256": "b3afca1d007a01cc26be74a2c89661dfe0653d89eca8bbba832524b4f0965151",
+        "as_built_sha256": "b54b3f09baac51ef4710b448dc9a10cf29216eaab3ce82408b9039ae0ac531f0",
         "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
       }
     }
   },
-  "updated_at": "2026-10-04T23:28:54Z"
+  "updated_at": "2026-10-05T00:58:00Z"
 }

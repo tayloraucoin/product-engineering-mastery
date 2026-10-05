@@ -64,9 +64,10 @@ test("C2: an action URL that is not http(s) is refused", () => {
 
 test("C2: no source file in @pem/email writes a brand value or a colour literal", () => {
   const dir = new URL("./", import.meta.url);
-  const sources = readdirSync(dir).filter(
-    (name) => name.endsWith(".ts") && !name.endsWith(".test.ts"),
-  );
+  const sources = readdirSync(dir, {
+    recursive: true,
+    encoding: "utf8",
+  }).filter((name) => name.endsWith(".ts") && !name.endsWith(".test.ts"));
   assert.ok(sources.length >= 2);
   const brandValues = [
     brand.name,
@@ -97,4 +98,12 @@ test("C2: no source file in @pem/email writes a brand value or a colour literal"
       `${name} writes an address`,
     );
   }
+});
+
+test("C2: a subject with a line break stays one header line", () => {
+  const { subject } = renderDefaultEmail({
+    ...content,
+    subject: "Hello\r\nBcc: someone@example.test",
+  });
+  assert.equal(subject, "Hello Bcc: someone@example.test");
 });

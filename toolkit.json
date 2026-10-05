@@ -228,7 +228,8 @@
         "@base-ui/react",
         "lucide-react",
         "tw-animate-css",
-        "shadcn"
+        "shadcn",
+        "input-otp"
       ],
       "boundaries": ["ui"],
       "locked": true,
@@ -245,6 +246,14 @@
       "boundaries": ["catalog"],
       "locked": false,
       "runbook": "docs/runbooks/remove-catalog.md"
+    },
+    "validators": {
+      "files": ["packages/validators"],
+      "env": [],
+      "dependencies": ["@pem/validators"],
+      "boundaries": ["validators"],
+      "locked": true,
+      "runbook": null
     },
     "db": {
       "files": ["packages/db"],
@@ -282,6 +291,14 @@
       "env": ["RESEND_API_KEY", "EMAIL_FROM"],
       "dependencies": ["@pem/email", "resend"],
       "boundaries": ["email"],
+      "locked": true,
+      "runbook": null
+    },
+    "services": {
+      "files": ["packages/services"],
+      "env": [],
+      "dependencies": ["@pem/services"],
+      "boundaries": ["services"],
       "locked": true,
       "runbook": null
     }

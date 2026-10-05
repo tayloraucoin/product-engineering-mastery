@@ -1,0 +1,2045 @@
+command: yarn verify
+exit: 0
+at: 2026-10-05T00:22:08Z
+head: 7f4cc0456fea1ad281522ae26f65b89e9a066519
+---
+Checking formatting...
+All matched files use Prettier code style!
+lint:docs — 193 files, names and frontmatter clean; 8 path rules carry only paths.
+check-settings — 12 fixtures behaved; .claude/settings.json is clean.
+test:hooks — every case behaved.
+  bash-guard: 120 cases, 9 rules; median 57 ms, max 62 ms per call; longest denial about 53 tokens
+  results-gate: 14 cases, 4 rules; median 54 ms, max 59 ms per call; longest denial about 48 tokens
+  session-start: 5 cases, 4 rules; median 56 ms, max 59 ms per call; answers as context
+  stop-gate: 8 cases, 4 rules; median 55 ms, max 56 ms per call; answers as stop
+check-refs — every reference in 113 live files resolves; 40 pending (lands in J8, lands in J11, superseded by docs/runbooks/new-project.md (STK-3), lands in P-C, lands in P-D, lands in P-K, a product repo's path, named by a template, a product repo's path, named by a ruling (CF-13), a pattern, not a path, machine-local and untracked by design, stale ruling text in conflicts.md, superseded by A4; held for Taylor (PR-05), stale ruling text in conflicts.md; extensions sit beside their role (record 0006); held for Taylor (PR-05), stale ledger text; the rulings live in docs/design/workflow.md; held for Taylor (PR-05), stale ledger text; filed as docs/research/toolkit/design-candidates.md; held for Taylor (PR-05), stale ledger text; the ledger is docs/decisions/ledger.md; held for Taylor (PR-05), stale ledger text; the folder is docs/measurement/metrics/ (PR-12); held for Taylor (PR-05), stale ledger text; the folder is docs/measurement/evals/ (PR-12); held for Taylor (PR-05)).
+check-stack — 12 module(s); nothing missing, nothing left behind.
+check-migrations: 1 migration(s) in packages/db/migrations, none touch the auth schema.
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/results.json: C1's PASS no longer holds: docs/engineering/tech-stack.md, docs/runbooks/remove-supabase-database.md changed after it was recorded. Re-record it: yarn contract:record STK-11 C1 --evidence <path>
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/results.json: C2's PASS no longer holds: docs/engineering/tech-stack.md, docs/runbooks/remove-supabase-database.md changed after it was recorded. Re-record it: yarn contract:run STK-11 C2
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/results.json: C3's PASS no longer holds: docs/engineering/tech-stack.md, docs/runbooks/remove-supabase-database.md changed after it was recorded. Re-record it: yarn contract:run STK-11 C3
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/results.json: C4's PASS no longer holds: docs/engineering/tech-stack.md, docs/runbooks/remove-supabase-database.md changed after it was recorded. Re-record it: yarn contract:record STK-11 C4 --evidence <path>
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/results.json: C5's PASS no longer holds: docs/engineering/tech-stack.md, docs/runbooks/remove-supabase-database.md changed after it was recorded. Re-record it: yarn contract:record STK-11 C5 --evidence <path>
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/results.json: review:vigil's PASS no longer holds: docs/engineering/tech-stack.md, docs/runbooks/remove-supabase-database.md, packages/db/scripts/local-full.ts and 4 more changed after it was recorded. Re-record it: yarn review:run vigil STK-11
+warn  specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/results.json: review:warden's PASS no longer holds: docs/engineering/tech-stack.md, docs/runbooks/new-project.md, docs/runbooks/remove-supabase-database.md and 8 more changed after it was recorded. Re-record it: yarn review:run warden STK-11
+warn  STK-11 has an as-built, so it is closing, but review:mason (not proven yet) is not PASS. Run: yarn review:run mason STK-11
+check-specs — 24 fixtures behaved; specs/ is clean.
+check-test-weakening — 10 fixtures behaved; no weakening against main.
+PASS  light --foreground on --background (body text): 19.79:1, needs 4.5:1
+PASS  light --foreground on --muted (text on a muted panel): 18.15:1, needs 4.5:1
+PASS  light --muted-foreground on --background (muted text): 4.96:1, needs 4.5:1
+PASS  light --muted-foreground on --muted (muted text on a muted panel): 4.54:1, needs 4.5:1
+PASS  light --muted-foreground on --accent (muted text on a hovered row): 4.54:1, needs 4.5:1
+PASS  light --primary-foreground on --primary (primary button label): 17.16:1, needs 4.5:1
+PASS  light --accent-foreground on --accent (selected or hovered label): 16.42:1, needs 4.5:1
+PASS  light --card-foreground on --card (text on a card): 19.79:1, needs 4.5:1
+PASS  light --muted-foreground on --card (a card's description): 4.96:1, needs 4.5:1
+PASS  light --popover-foreground on --popover (a menu or popover item): 19.79:1, needs 4.5:1
+PASS  light --muted-foreground on --popover (a menu shortcut or hint): 4.96:1, needs 4.5:1
+PASS  light --secondary-foreground on --secondary (secondary button label): 16.42:1, needs 4.5:1
+PASS  light --destructive on --background (destructive text and error messages): 8.37:1, needs 4.5:1
+PASS  light --destructive on --popover (a destructive menu item): 8.37:1, needs 4.5:1
+PASS  light --sidebar-foreground on --sidebar (sidebar text): 18.96:1, needs 4.5:1
+PASS  light --sidebar-accent-foreground on --sidebar-accent (the active sidebar item): 16.42:1, needs 4.5:1
+PASS  light --sidebar-primary-foreground on --sidebar-primary (a sidebar's primary mark): 17.16:1, needs 4.5:1
+PASS  light --destructive on --destructive/10 (destructive button label): 6.94:1, needs 4.5:1
+PASS  light --destructive on --destructive/20 (destructive button label, hovered): 5.68:1, needs 4.5:1
+PASS  light --input on --background (a control's boundary): 3.30:1, needs 3:1
+PASS  light --ring on --background (focus ring): 3.30:1, needs 3:1
+PASS  light --ring on --muted (focus ring on a muted panel): 3.02:1, needs 3:1
+PASS  dark --foreground on --background (body text): 18.96:1, needs 4.5:1
+PASS  dark --foreground on --muted (text on a muted panel): 14.48:1, needs 4.5:1
+PASS  dark --muted-foreground on --background (muted text): 6.00:1, needs 4.5:1
+PASS  dark --muted-foreground on --muted (muted text on a muted panel): 4.58:1, needs 4.5:1
+PASS  dark --muted-foreground on --accent (muted text on a hovered row): 4.58:1, needs 4.5:1
+PASS  dark --primary-foreground on --primary (primary button label): 14.22:1, needs 4.5:1
+PASS  dark --accent-foreground on --accent (selected or hovered label): 14.48:1, needs 4.5:1
+PASS  dark --card-foreground on --card (text on a card): 17.16:1, needs 4.5:1
+PASS  dark --muted-foreground on --card (a card's description): 5.43:1, needs 4.5:1
+PASS  dark --popover-foreground on --popover (a menu or popover item): 17.16:1, needs 4.5:1
+PASS  dark --muted-foreground on --popover (a menu shortcut or hint): 5.43:1, needs 4.5:1
+PASS  dark --secondary-foreground on --secondary (secondary button label): 14.48:1, needs 4.5:1
+PASS  dark --destructive on --background (destructive text and error messages): 10.30:1, needs 4.5:1
+PASS  dark --destructive on --popover (a destructive menu item): 9.33:1, needs 4.5:1
+PASS  dark --sidebar-foreground on --sidebar (sidebar text): 17.16:1, needs 4.5:1
+PASS  dark --sidebar-accent-foreground on --sidebar-accent (the active sidebar item): 14.48:1, needs 4.5:1
+PASS  dark --sidebar-primary-foreground on --sidebar-primary (a sidebar's primary mark): 14.22:1, needs 4.5:1
+PASS  dark --destructive on --destructive/20 (destructive button label): 7.16:1, needs 4.5:1
+PASS  dark --destructive on --destructive/30 (destructive button label, hovered): 5.50:1, needs 4.5:1
+PASS  dark --input on --background (a control's boundary): 3.99:1, needs 3:1
+PASS  dark --ring on --background (focus ring): 3.99:1, needs 3:1
+PASS  dark --ring on --muted (focus ring on a muted panel): 3.05:1, needs 3:1
+
+contrast-audit: all 44 pairs pass WCAG 2.2 AA.
+check-ui-layout: ok
+check-catalog: 15 of 92 entries done; STATUS.md current.
+TAP version 13
+# Subtest: C1: import "@pem/db/client"; in packages/ui/src/zz-probe.ts fails the boundaries lint
+ok 1 - C1: import "@pem/db/client"; in packages/ui/src/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 1054.033583
+  type: 'test'
+  ...
+# Subtest: C1: import "@pem/brand/brand"; in packages/env/src/zz-probe.ts fails the boundaries lint
+ok 2 - C1: import "@pem/brand/brand"; in packages/env/src/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 6.377167
+  type: 'test'
+  ...
+# Subtest: C1: import "../../db/src/client"; in packages/env/src/zz-probe.ts fails the boundaries lint
+ok 3 - C1: import "../../db/src/client"; in packages/env/src/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 9.387375
+  type: 'test'
+  ...
+# Subtest: C1: import "next/server"; in packages/services/src/zz-probe.ts fails the boundaries lint
+ok 4 - C1: import "next/server"; in packages/services/src/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 6.402166
+  type: 'test'
+  ...
+# Subtest: C1: import { useState } from "react"; in packages/services/src/zz-probe.ts fails the boundaries lint
+ok 5 - C1: import { useState } from "react"; in packages/services/src/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 3.924208
+  type: 'test'
+  ...
+# Subtest: C1: import "@trpc/server"; in packages/services/src/zz-probe.ts fails the boundaries lint
+ok 6 - C1: import "@trpc/server"; in packages/services/src/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 3.40475
+  type: 'test'
+  ...
+# Subtest: C1: import "@pem/auth/context"; in packages/services/src/zz-probe.ts fails the boundaries lint
+ok 7 - C1: import "@pem/auth/context"; in packages/services/src/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 11.158
+  type: 'test'
+  ...
+# Subtest: C1: import "@pem/db/schema"; in packages/validators/src/zz-probe.ts fails the boundaries lint
+ok 8 - C1: import "@pem/db/schema"; in packages/validators/src/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 5.059584
+  type: 'test'
+  ...
+# Subtest: C1: import "@pem/services/notes"; in packages/db/src/zz-probe.ts fails the boundaries lint
+ok 9 - C1: import "@pem/services/notes"; in packages/db/src/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 7.941584
+  type: 'test'
+  ...
+# Subtest: C1: import "@supabase/ssr"; in packages/db/src/zz-probe.ts fails the boundaries lint
+ok 10 - C1: import "@supabase/ssr"; in packages/db/src/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 3.953541
+  type: 'test'
+  ...
+# Subtest: C1: import "@supabase/supabase-js"; in apps/web/lib/zz-probe.ts fails the boundaries lint
+ok 11 - C1: import "@supabase/supabase-js"; in apps/web/lib/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 7.613125
+  type: 'test'
+  ...
+# Subtest: C1: import "@pem/auth/context"; in packages/db/src/zz-probe.ts fails the boundaries lint
+ok 12 - C1: import "@pem/auth/context"; in packages/db/src/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 10.648791
+  type: 'test'
+  ...
+# Subtest: C1: import "@pem/auth/server"; in packages/email/src/zz-probe.ts fails the boundaries lint
+ok 13 - C1: import "@pem/auth/server"; in packages/email/src/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 8.601167
+  type: 'test'
+  ...
+# Subtest: C1: import "resend"; in apps/web/lib/zz-probe.ts fails the boundaries lint
+ok 14 - C1: import "resend"; in apps/web/lib/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 1.945125
+  type: 'test'
+  ...
+# Subtest: C1: import { Resend } from "resend"; in packages/observability/src/zz-probe.ts fails the boundaries lint
+ok 15 - C1: import { Resend } from "resend"; in packages/observability/src/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 2.824625
+  type: 'test'
+  ...
+# Subtest: C1: import "@pem/catalog/manifest"; in apps/web/app/zz-probe.ts fails the boundaries lint
+ok 16 - C1: import "@pem/catalog/manifest"; in apps/web/app/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 3.759458
+  type: 'test'
+  ...
+# Subtest: C1: import "@pem/catalog/manifest"; in packages/ui/src/zz-probe.ts fails the boundaries lint
+ok 17 - C1: import "@pem/catalog/manifest"; in packages/ui/src/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 2.499083
+  type: 'test'
+  ...
+# Subtest: C2: @pem/env/not-exported, which its package does not export, is a resolve error with no stack
+ok 18 - C2: @pem/env/not-exported, which its package does not export, is a resolve error with no stack
+  ---
+  duration_ms: 2.123708
+  type: 'test'
+  ...
+# Subtest: C2: @pem/db, which its package does not export, is a resolve error with no stack
+ok 19 - C2: @pem/db, which its package does not export, is a resolve error with no stack
+  ---
+  duration_ms: 1.424416
+  type: 'test'
+  ...
+# Subtest: C2: import type { Tier } from "@pem/env/tier"; in packages/db/src/zz-probe.ts still passes
+ok 20 - C2: import type { Tier } from "@pem/env/tier"; in packages/db/src/zz-probe.ts still passes
+  ---
+  duration_ms: 2.33275
+  type: 'test'
+  ...
+# Subtest: C2: import "next-themes"; import "react"; in packages/ui/src/zz-probe.ts still passes
+ok 21 - C2: import "next-themes"; import "react"; in packages/ui/src/zz-probe.ts still passes
+  ---
+  duration_ms: 4.193
+  type: 'test'
+  ...
+# Subtest: C2: import "@supabase/ssr"; import "@supabase/supabase-js"; import "@pem/db/rls"; import "@pem/observability/logger"; in packages/auth/src/zz-probe.ts still passes
+ok 22 - C2: import "@supabase/ssr"; import "@supabase/supabase-js"; import "@pem/db/rls"; import "@pem/observability/logger"; in packages/auth/src/zz-probe.ts still passes
+  ---
+  duration_ms: 9.584709
+  type: 'test'
+  ...
+# Subtest: C2: import "@pem/auth/server"; in apps/web/lib/zz-probe.ts still passes
+ok 23 - C2: import "@pem/auth/server"; in apps/web/lib/zz-probe.ts still passes
+  ---
+  duration_ms: 2.187209
+  type: 'test'
+  ...
+# Subtest: C2: import "@pem/validators/notes"; import "@pem/db/schema"; import "drizzle-orm"; import "zod"; in packages/services/src/zz-probe.ts still passes
+ok 24 - C2: import "@pem/validators/notes"; import "@pem/db/schema"; import "drizzle-orm"; import "zod"; in packages/services/src/zz-probe.ts still passes
+  ---
+  duration_ms: 17.609375
+  type: 'test'
+  ...
+# Subtest: C2: import "@pem/services/notes"; in apps/web/lib/zz-probe.ts still passes
+ok 25 - C2: import "@pem/services/notes"; in apps/web/lib/zz-probe.ts still passes
+  ---
+  duration_ms: 2.014916
+  type: 'test'
+  ...
+# Subtest: C2: import "resend"; import "@pem/brand/brand"; import "@pem/observability/logger"; in packages/email/src/zz-probe.ts still passes
+ok 26 - C2: import "resend"; import "@pem/brand/brand"; import "@pem/observability/logger"; in packages/email/src/zz-probe.ts still passes
+  ---
+  duration_ms: 3.011583
+  type: 'test'
+  ...
+# Subtest: C2: import "@pem/email/mailer"; in apps/web/lib/zz-probe.ts still passes
+ok 27 - C2: import "@pem/email/mailer"; in apps/web/lib/zz-probe.ts still passes
+  ---
+  duration_ms: 1.724667
+  type: 'test'
+  ...
+# Subtest: C2: import "@pem/ui/button"; in packages/catalog/src/zz-probe.ts still passes
+ok 28 - C2: import "@pem/ui/button"; in packages/catalog/src/zz-probe.ts still passes
+  ---
+  duration_ms: 3.531958
+  type: 'test'
+  ...
+# Subtest: C2: import "@pem/ui/button"; import "@pem/ui/styles/globals.css"; import "@pem/brand/assets/logo.svg"; import "@/app/layout"; in apps/web/app/zz-probe.ts still passes
+ok 29 - C2: import "@pem/ui/button"; import "@pem/ui/styles/globals.css"; import "@pem/brand/assets/logo.svg"; import "@/app/layout"; in apps/web/app/zz-probe.ts still passes
+  ---
+  duration_ms: 5.357416
+  type: 'test'
+  ...
+# Subtest: C2: states are derived from the tree: storied, planned and link-only, and --write makes STATUS.md current
+ok 30 - C2: states are derived from the tree: storied, planned and link-only, and --write makes STATUS.md current
+  ---
+  duration_ms: 10.043667
+  type: 'test'
+  ...
+# Subtest: C2: a component with no story is present, and fails its ticket
+ok 31 - C2: a component with no story is present, and fails its ticket
+  ---
+  duration_ms: 4.587583
+  type: 'test'
+  ...
+# Subtest: C2: a planned entry fails its ticket, and a ticket with no entries is named
+ok 32 - C2: a planned entry fails its ticket, and a ticket with no entries is named
+  ---
+  duration_ms: 4.573375
+  type: 'test'
+  ...
+# Subtest: C2: a wrong title, a missing or wrong tag, and missing provenance are each named
+ok 33 - C2: a wrong title, a missing or wrong tag, and missing provenance are each named
+  ---
+  duration_ms: 2.698458
+  type: 'test'
+  ...
+# Subtest: C2: a component story with no manifest entry is an orphan
+ok 34 - C2: a component story with no manifest entry is an orphan
+  ---
+  duration_ms: 2.263125
+  type: 'test'
+  ...
+# Subtest: C2: a stale STATUS.md fails until it is rewritten
+ok 35 - C2: a stale STATUS.md fails until it is rewritten
+  ---
+  duration_ms: 10.807292
+  type: 'test'
+  ...
+# Subtest: C2: a malformed entry is named: unknown source, kind outside KINDS, a block in the kit, a path off the layout
+ok 36 - C2: a malformed entry is named: unknown source, kind outside KINDS, a block in the kit, a path off the layout
+  ---
+  duration_ms: 1.028541
+  type: 'test'
+  ...
+# Subtest: C2: a conflicting or negated tag anywhere in the story, and a licence unlike the source's, are each named (batch review B3)
+ok 37 - C2: a conflicting or negated tag anywhere in the story, and a licence unlike the source's, are each named (batch review B3)
+  ---
+  duration_ms: 5.382708
+  type: 'test'
+  ...
+# Subtest: C5: a client chunk holding a server-only sentinel fails, naming the variable and the chunk
+ok 38 - C5: a client chunk holding a server-only sentinel fails, naming the variable and the chunk
+  ---
+  duration_ms: 91.780417
+  type: 'test'
+  ...
+# Subtest: C5: no build output fails
+ok 39 - C5: no build output fails
+  ---
+  duration_ms: 254.526792
+  type: 'test'
+  ...
+# Subtest: C5: clean client chunks pass
+ok 40 - C5: clean client chunks pass
+  ---
+  duration_ms: 97.911375
+  type: 'test'
+  ...
+# Subtest: C5: a scan with no sentinel named is refused
+ok 41 - C5: a scan with no sentinel named is refused
+  ---
+  duration_ms: 80.2765
+  type: 'test'
+  ...
+# Subtest: the plan plants server-only names from .env.example and turbo.json, and fails on drift, naming it
+ok 42 - the plan plants server-only names from .env.example and turbo.json, and fails on drift, naming it
+  ---
+  duration_ms: 89.27575
+  type: 'test'
+  ...
+# Subtest: a pending entry that now exists is stale
+ok 43 - a pending entry that now exists is stale
+  ---
+  duration_ms: 330.791875
+  type: 'test'
+  ...
+# Subtest: a git-ignored pending entry is machine-local and never stale
+ok 44 - a git-ignored pending entry is machine-local and never stale
+  ---
+  duration_ms: 227.042375
+  type: 'test'
+  ...
+# Subtest: C1: a present module missing a listed file fails, naming the module and the file
+ok 45 - C1: a present module missing a listed file fails, naming the module and the file
+  ---
+  duration_ms: 106.861709
+  type: 'test'
+  ...
+# Subtest: C2: a removed module with a leftover file, variable or dependency fails, naming each leftover
+ok 46 - C2: a removed module with a leftover file, variable or dependency fails, naming each leftover
+  ---
+  duration_ms: 423.406375
+  type: 'test'
+  ...
+# Subtest: C2: a clean removal passes, and near-miss names are not leftovers
+ok 47 - C2: a clean removal passes, and near-miss names are not leftovers
+  ---
+  duration_ms: 101.690125
+  type: 'test'
+  ...
+# Subtest: C3: a locked module marked removed fails
+ok 48 - C3: a locked module marked removed fails
+  ---
+  duration_ms: 95.490417
+  type: 'test'
+  ...
+# Subtest: C4: an entry missing any of files, env, dependencies, boundaries, locked or runbook fails, naming the field
+ok 49 - C4: an entry missing any of files, env, dependencies, boundaries, locked or runbook fails, naming the field
+  ---
+  duration_ms: 110.524084
+  type: 'test'
+  ...
+# Subtest: C5: a runbook path that does not exist fails, naming the path
+ok 50 - C5: a runbook path that does not exist fails, naming the path
+  ---
+  duration_ms: 115.999334
+  type: 'test'
+  ...
+# Subtest: C1: a conforming tree passes
+ok 51 - C1: a conforming tree passes
+  ---
+  duration_ms: 15.079125
+  type: 'test'
+  ...
+# Subtest: C1: a stray top-level folder fails, naming it
+ok 52 - C1: a stray top-level folder fails, naming it
+  ---
+  duration_ms: 8.575875
+  type: 'test'
+  ...
+# Subtest: C1: an unknown kind fails, naming it
+ok 53 - C1: an unknown kind fails, naming it
+  ---
+  duration_ms: 22.265208
+  type: 'test'
+  ...
+# Subtest: C1: a component folder without <name>.tsx fails, naming it
+ok 54 - C1: a component folder without <name>.tsx fails, naming it
+  ---
+  duration_ms: 5.581542
+  type: 'test'
+  ...
+# Subtest: C1: a component folder without index.ts fails, naming it
+ok 55 - C1: a component folder without index.ts fails, naming it
+  ---
+  duration_ms: 6.334792
+  type: 'test'
+  ...
+# Subtest: C1: a cva() in the component file fails, naming the file
+ok 56 - C1: a cva() in the component file fails, naming the file
+  ---
+  duration_ms: 7.948834
+  type: 'test'
+  ...
+# Subtest: C1: an export whose target is missing fails, naming the export
+ok 57 - C1: an export whose target is missing fails, naming the export
+  ---
+  duration_ms: 5.0145
+  type: 'test'
+  ...
+# Subtest: review S1: cva in a second file of the folder fails; a comment naming cva() passes
+ok 58 - review S1: cva in a second file of the folder fails; a comment naming cva() passes
+  ---
+  duration_ms: 12.136417
+  type: 'test'
+  ...
+# Subtest: review S3: a primitive with copy.ts fails
+ok 59 - review S3: a primitive with copy.ts fails
+  ---
+  duration_ms: 5.913166
+  type: 'test'
+  ...
+# Subtest: review S3: a primitive importing a composed component fails
+ok 60 - review S3: a primitive importing a composed component fails
+  ---
+  duration_ms: 5.586125
+  type: 'test'
+  ...
+# Subtest: review N6: conditional exports resolve; a wildcard export fails
+ok 61 - review N6: conditional exports resolve; a wildcard export fails
+  ---
+  duration_ms: 10.557541
+  type: 'test'
+  ...
+# Subtest: review N7: the command exits 1 and names the path
+ok 62 - review N7: the command exits 1 and names the path
+  ---
+  duration_ms: 114.785584
+  type: 'test'
+  ...
+# Subtest: STK-23 C1: a missing kind folder fails, naming it
+ok 63 - STK-23 C1: a missing kind folder fails, naming it
+  ---
+  duration_ms: 9.343416
+  type: 'test'
+  ...
+# Subtest: STK-23 C1: a kind folder without README.md fails, naming it
+ok 64 - STK-23 C1: a kind folder without README.md fails, naming it
+  ---
+  duration_ms: 5.779042
+  type: 'test'
+  ...
+# Subtest: STK-23 C1: an AGENTS.md kinds table that differs from KINDS fails
+ok 65 - STK-23 C1: an AGENTS.md kinds table that differs from KINDS fails
+  ---
+  duration_ms: 5.0545
+  type: 'test'
+  ...
+# Subtest: STK-23 review: a primitive may import another primitive, and a story may import anything
+ok 66 - STK-23 review: a primitive may import another primitive, and a story may import anything
+  ---
+  duration_ms: 9.203166
+  type: 'test'
+  ...
+# Subtest: a merged as-built is immutable except applied:
+ok 67 - a merged as-built is immutable except applied:
+  ---
+  duration_ms: 4761.715791
+  type: 'test'
+  ...
+# Subtest: A9 commit-msg: an agent branch needs a work-id; another branch does not
+ok 68 - A9 commit-msg: an agent branch needs a work-id; another branch does not
+  ---
+  duration_ms: 1823.368917
+  type: 'test'
+  ...
+# Subtest: A9 pre-commit: staging a hand-edited results.json is refused
+ok 69 - A9 pre-commit: staging a hand-edited results.json is refused
+  ---
+  duration_ms: 1848.963166
+  type: 'test'
+  ...
+# Subtest: A4 contract:init allocates sequential ids, from the template, then starts with every criterion FAIL
+ok 70 - A4 contract:init allocates sequential ids, from the template, then starts with every criterion FAIL
+  ---
+  duration_ms: 1502.688208
+  type: 'test'
+  ...
+# Subtest: the protected branch refuses a start; the operator picks the work branch
+ok 71 - the protected branch refuses a start; the operator picks the work branch
+  ---
+  duration_ms: 730.357333
+  type: 'test'
+  ...
+# Subtest: parallel tickets: a second item starts on the same branch while the first is open
+ok 72 - parallel tickets: a second item starts on the same branch while the first is open
+  ---
+  duration_ms: 2012.642125
+  type: 'test'
+  ...
+# Subtest: parallel tickets: another ticket's uncommitted file does not block a run, its own does
+ok 73 - parallel tickets: another ticket's uncommitted file does not block a run, its own does
+  ---
+  duration_ms: 2927.362542
+  type: 'test'
+  ...
+# Subtest: parallel tickets: another ticket's commit leaves this ticket's proof fresh
+ok 74 - parallel tickets: another ticket's commit leaves this ticket's proof fresh
+  ---
+  duration_ms: 3317.073292
+  type: 'test'
+  ...
+# Subtest: stacking: a dependent ticket starts on the same branch once its predecessor is built, before any as-built or review
+ok 75 - stacking: a dependent ticket starts on the same branch once its predecessor is built, before any as-built or review
+  ---
+  duration_ms: 3871.81775
+  type: 'test'
+  ...
+# Subtest: a dependency that has not started refuses the start
+ok 76 - a dependency that has not started refuses the start
+  ---
+  duration_ms: 1050.718875
+  type: 'test'
+  ...
+# Subtest: A6: a cited file not approved, or holding a BLOCKING marker, is refused; a plain open marker is listed
+ok 77 - A6: a cited file not approved, or holding a BLOCKING marker, is refused; a plain open marker is listed
+  ---
+  duration_ms: 2644.284375
+  type: 'test'
+  ...
+# Subtest: PR-15 tiers: code is tier 1 with no reviewer; contract:tier 2 adds the review, and a lower tier drops it
+ok 78 - PR-15 tiers: code is tier 1 with no reviewer; contract:tier 2 adds the review, and a lower tier drops it
+  ---
+  duration_ms: 3864.290125
+  type: 'test'
+  ...
+# Subtest: PR-15: check-specs warns on a ticket still closing, and fails it only with --strict
+ok 79 - PR-15: check-specs warns on a ticket still closing, and fails it only with --strict
+  ---
+  duration_ms: 2195.328167
+  type: 'test'
+  ...
+# Subtest: Vigil 9 and 10, tier 2 epic ticket: pre-flight gates the start, review:run follows the as-built, truth:promote follows
+ok 80 - Vigil 9 and 10, tier 2 epic ticket: pre-flight gates the start, review:run follows the as-built, truth:promote follows
+  ---
+  duration_ms: 8720.36675
+  type: 'test'
+  ...
+# Subtest: a fixture reviewer's PASS does not count outside the harness
+ok 81 - a fixture reviewer's PASS does not count outside the harness
+  ---
+  duration_ms: 4000.709708
+  type: 'test'
+  ...
+# Subtest: a pre-flight written by the fixture reviewer does not start a ticket outside the harness
+ok 82 - a pre-flight written by the fixture reviewer does not start a ticket outside the harness
+  ---
+  duration_ms: 1098.302708
+  type: 'test'
+  ...
+# Subtest: contract:run refuses an uncommitted tree, then records run records with HEAD and evidence hashes
+ok 83 - contract:run refuses an uncommitted tree, then records run records with HEAD and evidence hashes
+  ---
+  duration_ms: 3228.339583
+  type: 'test'
+  ...
+# Subtest: contract:run FAILs a test criterion whose runner matched zero tests
+ok 84 - contract:run FAILs a test criterion whose runner matched zero tests
+  ---
+  duration_ms: 1904.721333
+  type: 'test'
+  ...
+# Subtest: Vigil 10, one-off: init, run, as-built, status and check-specs close with nothing left
+ok 85 - Vigil 10, one-off: init, run, as-built, status and check-specs close with nothing left
+  ---
+  duration_ms: 3964.579875
+  type: 'test'
+  ...
+# Subtest: Vigil 3: an open ticket's PASS recorded at X goes stale when a planned path changes at X+1
+ok 86 - Vigil 3: an open ticket's PASS recorded at X goes stale when a planned path changes at X+1
+  ---
+  duration_ms: 3280.658375
+  type: 'test'
+  ...
+# Subtest: PR-16: a closed ticket's proofs are frozen; a later change to its paths does not reopen it
+ok 87 - PR-16: a closed ticket's proofs are frozen; a later change to its paths does not reopen it
+  ---
+  duration_ms: 4049.153792
+  type: 'test'
+  ...
+# Subtest: PR-16: operator_review adds a manual criterion; deferring it lists an operator check and still closes the ticket
+ok 88 - PR-16: operator_review adds a manual criterion; deferring it lists an operator check and still closes the ticket
+  ---
+  duration_ms: 4970.991
+  type: 'test'
+  ...
+# Subtest: C1: the repo's preset passes every pair in both themes
+ok 89 - C1: the repo's preset passes every pair in both themes
+  ---
+  duration_ms: 96.580375
+  type: 'test'
+  ...
+# Subtest: C1: black on white measures 21:1, the WCAG maximum
+ok 90 - C1: black on white measures 21:1, the WCAG maximum
+  ---
+  duration_ms: 93.115542
+  type: 'test'
+  ...
+# Subtest: C1: a text pair below 4.5:1 fails and is named
+ok 91 - C1: a text pair below 4.5:1 fails and is named
+  ---
+  duration_ms: 99.973542
+  type: 'test'
+  ...
+# Subtest: C1: a focus ring below 3:1 fails in the theme it is set in
+ok 92 - C1: a focus ring below 3:1 fails in the theme it is set in
+  ---
+  duration_ms: 96.019
+  type: 'test'
+  ...
+# Subtest: C1: see-through text is composited as the browser does
+ok 93 - C1: see-through text is composited as the browser does
+  ---
+  duration_ms: 103.0985
+  type: 'test'
+  ...
+# Subtest: C1: a missing token fails rather than passing silently
+ok 94 - C1: a missing token fails rather than passing silently
+  ---
+  duration_ms: 139.1345
+  type: 'test'
+  ...
+# Subtest: C2: every Vega colour role is a Tailwind colour, set in light and in dark
+ok 95 - C2: every Vega colour role is a Tailwind colour, set in light and in dark
+  ---
+  duration_ms: 0.882625
+  type: 'test'
+  ...
+# Subtest: C2: the radius steps and the four elevation levels are tokens
+ok 96 - C2: the radius steps and the four elevation levels are tokens
+  ---
+  duration_ms: 0.21175
+  type: 'test'
+  ...
+# Subtest: C2: the tk-motion tokens carry their values verbatim
+ok 97 - C2: the tk-motion tokens carry their values verbatim
+  ---
+  duration_ms: 0.468708
+  type: 'test'
+  ...
+# Subtest: C2: "px-[13px]" is rejected
+ok 98 - C2: "px-[13px]" is rejected
+  ---
+  duration_ms: 926.284667
+  type: 'test'
+  ...
+# Subtest: C2: "focus-visible:ring-[3px]" is rejected
+ok 99 - C2: "focus-visible:ring-[3px]" is rejected
+  ---
+  duration_ms: 7.035209
+  type: 'test'
+  ...
+# Subtest: C2: "duration-[0.35s]" is rejected
+ok 100 - C2: "duration-[0.35s]" is rejected
+  ---
+  duration_ms: 9.304042
+  type: 'test'
+  ...
+# Subtest: C2: "ease-[cubic-bezier(0.2,0,0,1)]" is rejected
+ok 101 - C2: "ease-[cubic-bezier(0.2,0,0,1)]" is rejected
+  ---
+  duration_ms: 4.518708
+  type: 'test'
+  ...
+# Subtest: C2: "bg-red-500" is rejected
+ok 102 - C2: "bg-red-500" is rejected
+  ---
+  duration_ms: 4.433375
+  type: 'test'
+  ...
+# Subtest: C2: "dark:bg-black/10" is rejected
+ok 103 - C2: "dark:bg-black/10" is rejected
+  ---
+  duration_ms: 6.638542
+  type: 'test'
+  ...
+# Subtest: C2: "text-[\#ffffff]" is rejected
+ok 104 - C2: "text-[\#ffffff]" is rejected
+  ---
+  duration_ms: 4.24175
+  type: 'test'
+  ...
+# Subtest: C2: "bg-[oklch(0.5_0_0)]" is rejected
+ok 105 - C2: "bg-[oklch(0.5_0_0)]" is rejected
+  ---
+  duration_ms: 3.560667
+  type: 'test'
+  ...
+# Subtest: C2: "shadow-md" is rejected
+ok 106 - C2: "shadow-md" is rejected
+  ---
+  duration_ms: 9.628542
+  type: 'test'
+  ...
+# Subtest: C2: "shadow-xs" is rejected
+ok 107 - C2: "shadow-xs" is rejected
+  ---
+  duration_ms: 4.591375
+  type: 'test'
+  ...
+# Subtest: C2: "data-open:duration-200" is rejected
+ok 108 - C2: "data-open:duration-200" is rejected
+  ---
+  duration_ms: 3.355875
+  type: 'test'
+  ...
+# Subtest: C2: "ease-in" is rejected
+ok 109 - C2: "ease-in" is rejected
+  ---
+  duration_ms: 2.9765
+  type: 'test'
+  ...
+# Subtest: C2: "shadow-[0_8px_24px_var(--x)]" is rejected
+ok 110 - C2: "shadow-[0_8px_24px_var(--x)]" is rejected
+  ---
+  duration_ms: 5.005459
+  type: 'test'
+  ...
+# Subtest: C2: "p-[13px_20px]" is rejected
+ok 111 - C2: "p-[13px_20px]" is rejected
+  ---
+  duration_ms: 3.164
+  type: 'test'
+  ...
+# Subtest: C2: "grid-cols-[240px_1fr]" is rejected
+ok 112 - C2: "grid-cols-[240px_1fr]" is rejected
+  ---
+  duration_ms: 2.618292
+  type: 'test'
+  ...
+# Subtest: C2: "[box-shadow:0_8px_24px_var(--x)]" is rejected
+ok 113 - C2: "[box-shadow:0_8px_24px_var(--x)]" is rejected
+  ---
+  duration_ms: 5.761416
+  type: 'test'
+  ...
+# Subtest: C2: "text-[12pt]" is rejected
+ok 114 - C2: "text-[12pt]" is rejected
+  ---
+  duration_ms: 2.966208
+  type: 'test'
+  ...
+# Subtest: C2: "p-[13PX]" is rejected
+ok 115 - C2: "p-[13PX]" is rejected
+  ---
+  duration_ms: 3.130167
+  type: 'test'
+  ...
+# Subtest: C2: "bg-[red]" is rejected
+ok 116 - C2: "bg-[red]" is rejected
+  ---
+  duration_ms: 2.760667
+  type: 'test'
+  ...
+# Subtest: C2: "text-[black]" is rejected
+ok 117 - C2: "text-[black]" is rejected
+  ---
+  duration_ms: 4.185875
+  type: 'test'
+  ...
+# Subtest: C2: "font-['Inter']" is rejected
+ok 118 - C2: "font-['Inter']" is rejected
+  ---
+  duration_ms: 2.811542
+  type: 'test'
+  ...
+# Subtest: C2: "data-[size=sm]:px-2 has-[>svg]:px-2.5 group-data-[orientation=vertical]:flex-col" passes
+ok 119 - C2: "data-[size=sm]:px-2 has-[>svg]:px-2.5 group-data-[orientation=vertical]:flex-col" passes
+  ---
+  duration_ms: 3.018958
+  type: 'test'
+  ...
+# Subtest: C2: "active:not-aria-[haspopup]:translate-y-px aria-invalid:ring-destructive/20" passes
+ok 120 - C2: "active:not-aria-[haspopup]:translate-y-px aria-invalid:ring-destructive/20" passes
+  ---
+  duration_ms: 3.159625
+  type: 'test'
+  ...
+# Subtest: C2: "grid-rows-[auto_1fr] transition-[color,box-shadow] max-w-[80%] min-w-[14ch]" passes
+ok 121 - C2: "grid-rows-[auto_1fr] transition-[color,box-shadow] max-w-[80%] min-w-[14ch]" passes
+  ---
+  duration_ms: 4.695541
+  type: 'test'
+  ...
+# Subtest: C2: "w-[calc(var(--sidebar-width-icon)+(--spacing(4)))] translate-x-[calc(100%-2px)]" passes
+ok 122 - C2: "w-[calc(var(--sidebar-width-icon)+(--spacing(4)))] translate-x-[calc(100%-2px)]" passes
+  ---
+  duration_ms: 2.550875
+  type: 'test'
+  ...
+# Subtest: C2: "[--stack-step:0.05] h-[calc(100%-1px)] border-[1px] bg-[transparent] font-[var(--font-display)]" passes
+ok 123 - C2: "[--stack-step:0.05] h-[calc(100%-1px)] border-[1px] bg-[transparent] font-[var(--font-display)]" passes
+  ---
+  duration_ms: 2.172916
+  type: 'test'
+  ...
+# Subtest: C2: "shadow-resting shadow-raised shadow-overlay shadow-modal shadow-none" passes
+ok 124 - C2: "shadow-resting shadow-raised shadow-overlay shadow-modal shadow-none" passes
+  ---
+  duration_ms: 3.522291
+  type: 'test'
+  ...
+# Subtest: C2: "duration-(--motion-duration-base) ease-(--motion-ease-out) ease-in-out" passes
+ok 125 - C2: "duration-(--motion-duration-base) ease-(--motion-ease-out) ease-in-out" passes
+  ---
+  duration_ms: 2.819792
+  type: 'test'
+  ...
+# Subtest: C2: "rounded-xl rounded-4xl ring-3 bg-destructive/10 text-sidebar-accent-foreground" passes
+ok 126 - C2: "rounded-xl rounded-4xl ring-3 bg-destructive/10 text-sidebar-accent-foreground" passes
+  ---
+  duration_ms: 2.486708
+  type: 'test'
+  ...
+# Subtest: C2: a raw value inside cn() is reported once, and an inline style value is rejected
+ok 127 - C2: a raw value inside cn() is reported once, and an inline style value is rejected
+  ---
+  duration_ms: 5.793542
+  type: 'test'
+  ...
+1..127
+# tests 127
+# suites 0
+# pass 127
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 25686.683625
+
+   • turbo 2.11.6
+   • Packages in scope: @pem/auth, @pem/brand, @pem/catalog, @pem/config, @pem/constants, @pem/db, @pem/email, @pem/env, @pem/observability, @pem/services, @pem/ui, @pem/validators, docs, web
+   • Running test in 14 packages
+   • Remote caching disabled
+
+cache hit, replaying logs 73f12b86a8a9cdf7
+cache hit, replaying logs ffefe84ef91967c2
+cache hit, replaying logs 76fa34eff5909fd0
+cache hit, replaying logs a77769647229cfd1
+TAP version 13
+# Subtest: C2: an empty or whitespace body fails on body
+cache hit, replaying logs 794f2700f8e120a7
+ok 1 - C2: an empty or whitespace body fails on body
+  ---
+  duration_ms: 1.739458
+  type: 'test'
+  ...
+# Subtest: C2: a body over the limit fails on body
+TAP version 13
+# Subtest: each kind of DDL or write against auth is caught
+ok 1 - each kind of DDL or write against auth is caught
+  ---
+  duration_ms: 10.032666
+  type: 'test'
+  ...
+# Subtest: a foreign key to auth.users and a call to auth.uid() are allowed
+TAP version 13
+# Subtest: C2: a live-mode key on local or staging fails with the variable named
+TAP version 13
+# Subtest: C1: brand.ts theme colours equal the preset's values
+ok 1 - C1: brand.ts theme colours equal the preset's values
+  ---
+cache hit, replaying logs 13ba4d0223ae2a06
+  duration_ms: 1.428792
+  type: 'test'
+  ...
+ok 2 - a foreign key to auth.users and a call to auth.uid() are allowed
+  ---
+  duration_ms: 1.212625
+  type: 'test'
+  ...
+ok 1 - C2: a live-mode key on local or staging fails with the variable named
+# Subtest: C1: a changed preset value is a mismatch
+cache hit, replaying logs 12fed8e0aed24eee
+cache hit, replaying logs 6bf1876708deecaa
+cache hit, replaying logs 3ab3c2ed4d970a38
+# Subtest: a migration with DDL against auth fails, numbered by statement
+ok 3 - a migration with DDL against auth fails, numbered by statement
+  ---
+  duration_ms: 2.627875
+TAP version 13
+# Subtest: track is a no-op until a vendor is wired
+ok 1 - track is a no-op until a vendor is wired
+  ---
+ok 2 - C1: a changed preset value is a mismatch
+  duration_ms: 1.606333
+  ---
+  duration_ms: 0.222667
+  type: 'test'
+  ...
+# Subtest: C1: a changed brand.ts value is a mismatch
+ok 3 - C1: a changed brand.ts value is a mismatch
+  ---
+  duration_ms: 0.6735
+  type: 'test'
+  ...
+# Subtest: every asset path in brand.ts exists in the package
+TAP version 13
+# Subtest: C1: getNote throws NotFound when the scoped db withholds the row
+ok 1 - C1: getNote throws NotFound when the scoped db withholds the row
+  ---
+  type: 'test'
+  duration_ms: 3.663666
+  ...
+  type: 'test'
+# Subtest: the generated migration set passes, and it does reference auth.users
+  ...
+# Subtest: C1: createNote throws Forbidden when a policy rejects the insert
+  type: 'test'
+ok 2 - C1: createNote throws Forbidden when a policy rejects the insert
+  ...
+  ---
+# Subtest: C1: logger.error passes the error, tags and user id to the registered reporter
+  duration_ms: 1.031584
+ok 4 - every asset path in brand.ts exists in the package
+  type: 'test'
+  ---
+
+  ---
+  duration_ms: 0.154291
+  type: 'test'
+  ...
+ RUN  v5.0.3 ./packages/ui
+
+ ✓ .storybook/story-coverage.test.ts (5 tests) 11ms
+# Subtest: white, black and the sRGB primaries
+  ...
+ok 5 - white, black and the sRGB primaries
+# Subtest: C1: a policy refusal wrapped by drizzle is still Forbidden
+  ---
+ok 3 - C1: a policy refusal wrapped by drizzle is still Forbidden
+  duration_ms: 0.654625
+  type: 'test'
+stderr | .storybook/stories.test.ts > Composed/Control/Theme toggle > System
+  ...
+Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template).
+# Subtest: lightness as a percentage, and an alpha, are accepted
+
+ok 2 - C2: a body over the limit fails on body
+  ---
+  duration_ms: 0.227125
+ok 2 - C1: logger.error passes the error, tags and user id to the registered reporter
+  type: 'test'
+  ---
+  ...
+  duration_ms: 2.403417
+# Subtest: C2: a malformed id fails on id; a list limit out of range fails on limit
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 3 - C2: a malformed id fails on id; a list limit out of range fails on limit
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+TAP version 13
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Subtest: the admin client holds no session: nothing persisted, refreshed or read from a URL
+ok 1 - the admin client holds no session: nothing persisted, refreshed or read from a URL
+  type: 'test'
+  ---
+  ...
+  duration_ms: 28.32675
+  type: 'test'
+TAP version 13
+  ...
+# Subtest: C2: the HTML part carries the brand's name, support address, home URL and colours
+  ---
+  duration_ms: 0.651291
+ok 1 - C2: the HTML part carries the brand's name, support address, home URL and colours
+  ---
+  type: 'test'
+  duration_ms: 0.333792
+  type: 'test'
+  ...
+# Subtest: C1: createNote writes the caller as owner and returns the note
+  ...
+# Subtest: C2: a test-mode key on production fails with the variable named
+ok 2 - C2: a test-mode key on production fails with the variable named
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+  duration_ms: 0.11975
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  duration_ms: 0.4985
+  type: 'test'
+  ...
+# Subtest: valid input parses, trimmed and defaulted
+ok 4 - valid input parses, trimmed and defaulted
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 4 - C1: createNote writes the caller as owner and returns the note
+# Subtest: C1: logger.error with no error hands the reporter one named for the event
+  ---
+ok 4 - the generated migration set passes, and it does reference auth.users
+  duration_ms: 0.414166
+  type: 'test'
+ok 6 - lightness as a percentage, and an alpha, are accepted
+  ...
+  type: 'test'
+# Subtest: every subpath is classed as client-safe or server
+ok 3 - C1: logger.error with no error hands the reporter one named for the event
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+  ---
+  duration_ms: 0.077208
+  duration_ms: 0.202083
+  type: 'test'
+  type: 'test'
+  ...
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Subtest: the preset's neutral steps
+stderr | .storybook/stories.test.ts > Primitives/Control/Input otp > Filled
+ok 7 - the preset's neutral steps
+Input contains an input of type undefined with both value and defaultValue props. Input elements must be either controlled or uncontrolled (specify either the value prop, or the defaultValue prop, but not both). Decide between using a controlled or uncontrolled input element and remove one of these props. More info: https://react.dev/link/controlled-components
+  ---
+ok 2 - every subpath is classed as client-safe or server
+  duration_ms: 0.141792
+  ---
+  type: 'test'
+  duration_ms: 5.886375
+  ...
+  type: 'test'
+# Subtest: anything but oklch() is refused
+  ---
+  ---
+ok 8 - anything but oklch() is refused
+# Subtest: C1: getNote returns the row the scoped db shows; listNotes returns the list
+  duration_ms: 0.708625
+  duration_ms: 0.166833
+  type: 'test'
+  ...
+  ---
+# Subtest: C2: the text part carries the brand and the action as a link
+ok 2 - C2: the text part carries the brand and the action as a link
+  duration_ms: 0.204416
+  type: 'test'
+  ...
+  ---
+1..8
+  duration_ms: 1.562083
+# tests 8
+  type: 'test'
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+ok 5 - C1: getNote returns the row the scoped db shows; listNotes returns the list
+  ---
+  type: 'test'
+  duration_ms: 0.796709
+  ...
+  type: 'test'
+  ...
+# Subtest: C2: invalid input throws Invalid naming the field, before any query
+  ...
+  ...
+  ...
+# Subtest: only the local auth mirror writes to auth.users
+# Subtest: C2: matching modes pass
+ok 3 - C2: matching modes pass
+  ---
+  duration_ms: 0.086375
+
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Subtest: C1: a reporter that throws is swallowed, and the line still prints
+ok 4 - C1: a reporter that throws is swallowed, and the line still prints
+  ---
+  duration_ms: 0.343625
+# Subtest: ./config reaches no server module, built-in or workspace package
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 3 - ./config reaches no server module, built-in or workspace package
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+  ...
+  duration_ms: 3.896291
+1..4
+ok 5 - only the local auth mirror writes to auth.users
+# tests 4
+  ---
+# suites 0
+  duration_ms: 10.300542
+# pass 4
+  type: 'test'
+# fail 0
+  ...
+  ---
+# Subtest: the pattern catches each kind of write
+  type: 'test'
+ok 6 - the pattern catches each kind of write
+  ---
+# cancelled 0
+  duration_ms: 0.133458
+  type: 'test'
+# skipped 0
+  ...
+  ...
+# Subtest: C1: a reporter that rejects is swallowed
+ok 5 - C1: a reporter that rejects is swallowed
+  type: 'test'
+# todo 0
+  ...
+# Subtest: seedLocalUsers
+ok 6 - C2: invalid input throws Invalid naming the field, before any query
+    # Subtest: refuses a non-loopback auth URL before sending anything
+  ---
+    ok 1 - refuses a non-loopback auth URL before sending anything
+  duration_ms: 0.553417
+      ---
+      duration_ms: 1.028625
+      type: 'test'
+      ...
+    # Subtest: refuses a missing service-role key before sending anything
+# duration_ms 117.941083
+# todo 0
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Subtest: ./browser reaches no server module, built-in or workspace package
+ok 4 - ./browser reaches no server module, built-in or workspace package
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+  duration_ms: 3.53025
+  type: 'test'
+    ok 2 - refuses a missing service-role key before sending anything
+      ---
+  ...
+  ---
+  duration_ms: 1.33675
+# duration_ms 74.882959
+      duration_ms: 0.1615
+  type: 'test'
+      type: 'test'
+      ...
+    # Subtest: creates each synthetic user through the local admin API
+  type: 'test'
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ...
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Subtest: ./redirect reaches no server module, built-in or workspace package
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 5 - ./redirect reaches no server module, built-in or workspace package
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  duration_ms: 0.124958
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  type: 'test'
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+    ok 3 - creates each synthetic user through the local admin API
+  type: 'test'
+      ---
+  ...
+      duration_ms: 15.498792
+# Subtest: C2: a key with no mode prefix fails on every tier
+      type: 'test'
+ok 4 - C2: a key with no mode prefix fails on every tier
+      ...
+  ...
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+  ...
+# Subtest: C2: every caller value is escaped
+  duration_ms: 1.043125
+  duration_ms: 0.274166
+  type: 'test'
+  ...
+ok 3 - C2: every caller value is escaped
+# Subtest: public names pass, and unset values are left out
+  ---
+  duration_ms: 0.131708
+  type: 'test'
+  ...
+# Subtest: C2: an action URL that is not http(s) is refused
+    # Subtest: treats an existing email as done
+ok 4 - C2: an action URL that is not http(s) is refused
+    ok 4 - treats an existing email as done
+  ---
+  duration_ms: 0.202125
+      ---
+      duration_ms: 1.172
+      type: 'test'
+ok 5 - public names pass, and unset values are left out
+      ...
+  ---
+    1..4
+  duration_ms: 4.282959
+  type: 'test'
+ok 7 - seedLocalUsers
+# Subtest: C1: the default reporter is a no-op
+  ---
+ok 6 - C1: the default reporter is a no-op
+  type: 'test'
+  ...
+  ---
+# Subtest: a server-only name is refused, by name
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  duration_ms: 18.556667
+# Subtest: an error that is no domain error is not turned into one
+  type: 'suite'
+ok 7 - an error that is no domain error is not turned into one
+ok 6 - a server-only name is refused, by name
+  ...
+  ---
+  duration_ms: 0.259041
+  type: 'test'
+  ---
+  type: 'test'
+  duration_ms: 0.359167
+  ...
+  type: 'test'
+  ...
+  ...
+  duration_ms: 0.467375
+  type: 'test'
+  ...
+# Subtest: the walk sees a server import when there is one
+# Subtest: C2: a secret-like key is redacted at any depth, whatever its case
+ok 6 - the walk sees a server import when there is one
+  ...
+  ---
+# Subtest: C1: each tier reads its own variable
+  duration_ms: 4.9325
+  type: 'test'
+  ...
+# Subtest: ./server is marked server-only, so a client component cannot import it
+ok 7 - C2: a secret-like key is redacted at any depth, whatever its case
+  ---
+ok 7 - ./server is marked server-only, so a client component cannot import it
+  duration_ms: 0.366583
+  type: 'test'
+ok 7 - C1: each tier reads its own variable
+1..7
+  ---
+# Subtest: C2: no source file in @pem/email writes a brand value or a colour literal
+  duration_ms: 0.600125
+ok 5 - C2: no source file in @pem/email writes a brand value or a colour literal
+  type: 'test'
+  ---
+  ---
+  ...
+# Subtest: db:local:reset
+    # Subtest: refuses staging before resolving a URL
+    ok 1 - refuses staging before resolving a URL
+  duration_ms: 0.934791
+  type: 'test'
+# Subtest: C1: a tier whose own value is absent or empty reads the unsuffixed value
+# tests 7
+      ---
+      duration_ms: 600.388292
+      type: 'test'
+      ...
+ok 8 - C1: a tier whose own value is absent or empty reads the unsuffixed value
+    # Subtest: refuses staging before connecting, with its URLs set
+    ok 2 - refuses staging before connecting, with its URLs set
+      ---
+      duration_ms: 310.702333
+      type: 'test'
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  duration_ms: 0.314583
+      ...
+# suites 0
+  ---
+# pass 7
+  type: 'test'
+  duration_ms: 0.096917
+# fail 0
+# cancelled 0
+  type: 'test'
+  ...
+  ...
+  ...
+# Subtest: C1: nothing set picks undefined
+# Subtest: C2: request bodies and personal data are redacted too
+ok 8 - C2: request bodies and personal data are redacted too
+  ---
+  duration_ms: 0.123666
+  type: 'test'
+    # Subtest: refuses production before resolving a URL
+    ok 3 - refuses production before resolving a URL
+# Subtest: C2: a subject with a line break stays one header line
+ok 6 - C2: a subject with a line break stays one header line
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+  duration_ms: 0.662708
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  type: 'test'
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ...
+# Subtest: ./admin is marked server-only, so a client component cannot import it
+ok 8 - ./admin is marked server-only, so a client component cannot import it
+  ---
+      ---
+  duration_ms: 1.443
+  type: 'test'
+ok 9 - C1: nothing set picks undefined
+  ...
+  ---
+# Subtest: ./session is marked server-only, so a client component cannot import it
+  ...
+  ...
+# Subtest: C1: a send on the local tier logs the rendered message and does not call the vendor
+# Subtest: C2: the reporter's context is redacted; the error itself is passed as caught
+ok 7 - C1: a send on the local tier logs the rendered message and does not call the vendor
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 9 - ./session is marked server-only, so a client component cannot import it
+  ---
+  duration_ms: 0.291583
+  type: 'test'
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  duration_ms: 0.141125
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  type: 'test'
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ...
+# Subtest: ./context is marked server-only, so a client component cannot import it
+ok 10 - ./context is marked server-only, so a client component cannot import it
+# skipped 0
+ok 9 - C2: the reporter's context is redacted; the error itself is passed as caught
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ...
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Subtest: C1: production never reads a suffixed value
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+  ---
+  duration_ms: 0.627458
+  duration_ms: 0.251208
+  type: 'test'
+# todo 0
+  ...
+# Subtest: a secret key in the public slot is refused, naming the variable
+ok 11 - a secret key in the public slot is refused, naming the variable
+  type: 'test'
+# duration_ms 348.318041
+ok 10 - C1: production never reads a suffixed value
+  ---
+  ---
+  duration_ms: 1.527125
+  type: 'test'
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ...
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Subtest: C2: personal data and request bodies are redacted under their common compound names
+      duration_ms: 412.665416
+      type: 'test'
+      ...
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+    # Subtest: refuses production before connecting, with its URLs set
+ok 10 - C2: personal data and request bodies are redacted under their common compound names
+  ---
+  ---
+  duration_ms: 0.059042
+  ...
+# Subtest: C1: a dashboard template on the local tier logs its id and variable names, not their values
+  duration_ms: 0.59875
+  duration_ms: 0.331625
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+    ok 4 - refuses production before connecting, with its URLs set
+  type: 'test'
+      ---
+  ...
+# Subtest: the publishable key and the legacy anon key pass
+ok 12 - the publishable key and the legacy anon key pass
+  ---
+  duration_ms: 0.115625
+  type: 'test'
+  ...
+# Subtest: C1: a secret-like tag is redacted before it reaches the reporter
+  type: 'test'
+ok 11 - C1: a secret-like tag is redacted before it reaches the reporter
+  type: 'test'
+  ---
+  ...
+# Subtest: C1: the suffix grammar names each form
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 11 - C1: the suffix grammar names each form
+  ...
+# Subtest: the cookie stem the purge uses is the storage key the installed SDK writes
+ok 13 - the cookie stem the purge uses is the storage key the installed SDK writes
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+      duration_ms: 304.439958
+      type: 'test'
+  ---
+  duration_ms: 0.425458
+ok 8 - C1: a dashboard template on the local tier logs its id and variable names, not their values
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+  duration_ms: 0.251625
+      ...
+  type: 'test'
+    # Subtest: refuses a local URL that is not this machine, before connecting
+    ok 5 - refuses a local URL that is not this machine, before connecting
+      ---
+      duration_ms: 372.63275
+      type: 'test'
+  duration_ms: 45.885875
+      ...
+  type: 'test'
+    # Subtest: refuses a malformed tier
+    ok 6 - refuses a malformed tier
+      ---
+  type: 'test'
+      duration_ms: 384.777625
+  ...
+      type: 'test'
+      ...
+  ...
+    1..6
+# Subtest: C2: free text is scrubbed of addresses, bearer credentials, JWTs and secret query values
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Using the user object as returned from supabase.auth.getSession() or from some supabase.auth.onAuthStateChange() events could be insecure! This value comes directly from the storage medium (usually cookies on the server) and may not be authentic. Use supabase.auth.getUser() instead which authenticates the data by contacting the Supabase Auth server.
+ok 12 - C2: free text is scrubbed of addresses, bearer credentials, JWTs and secret query values
+  ---
+  duration_ms: 0.086083
+  ...
+# Subtest: C1: returns the user's id, email and app_metadata role from getUser
+# Subtest: C1: the switch defaults to local, never production, and names itself when wrong
+ok 12 - C1: the switch defaults to local, never production, and names itself when wrong
+ok 14 - C1: returns the user's id, email and app_metadata role from getUser
+  ---
+  duration_ms: 0.224917
+  type: 'test'
+  ...
+  duration_ms: 0.125125
+# Subtest: outside a deployment the site URL is localhost, whatever is configured
+  type: 'test'
+  ...
+# Subtest: C1: the local tier needs no key
+ok 9 - C1: the local tier needs no key
+ok 8 - db:local:reset
+ok 13 - outside a deployment the site URL is localhost, whatever is configured
+  ---
+  ---
+  duration_ms: 0.595666
+  type: 'test'
+  ...
+# Subtest: in a deployment the configured URL is used, without a trailing slash
+  ---
+  ---
+  duration_ms: 0.085542
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  type: 'test'
+  ...
+# Subtest: C1: staging and production call the vendor once, with the brand's sender and reply-to
+ok 10 - C1: staging and production call the vendor once, with the brand's sender and reply-to
+  ---
+  type: 'test'
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  duration_ms: 0.260958
+ok 14 - in a deployment the configured URL is used, without a trailing slash
+  ---
+  duration_ms: 0.142417
+  type: 'test'
+  ...
+  type: 'test'
+1..14
+# tests 14
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# suites 0
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  duration_ms: 2389.513584
+# pass 14
+  type: 'suite'
+# fail 0
+  ...
+# Subtest: nonLoopbackBindings
+# cancelled 0
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# skipped 0
+  duration_ms: 0.912667
+# todo 0
+  ...
+# duration_ms 131.647667
+# Subtest: C2: an error's message and stack are scrubbed on the printed line
+ok 13 - C2: an error's message and stack are scrubbed on the printed line
+  type: 'test'
+  ...
+# Subtest: C1: a dashboard template is sent by its id, and EMAIL_FROM replaces the brand's address
+ok 11 - C1: a dashboard template is sent by its id, and EMAIL_FROM replaces the brand's address
+  ---
+  ...
+    # Subtest: names every interface and a specific LAN address
+# Subtest: C1: a user without a known app_metadata role is a user; user_metadata is never read
+  ---
+ok 15 - C1: a user without a known app_metadata role is a user; user_metadata is never read
+  duration_ms: 0.138584
+  type: 'test'
+  ...
+1..13
+    ok 1 - names every interface and a specific LAN address
+  ---
+  duration_ms: 0.113
+  type: 'test'
+# tests 13
+  ...
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+      ---
+# skipped 0
+      duration_ms: 32.608875
+# todo 0
+# duration_ms 155.322208
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Subtest: C1: refuses when getUser returns an error, even with a user beside it
+      type: 'test'
+      ...
+  duration_ms: 0.14775
+ok 16 - C1: refuses when getUser returns an error, even with a user beside it
+  ---
+    # Subtest: passes loopback-only bindings
+  duration_ms: 0.101917
+  type: 'test'
+  ...
+# Subtest: C1: a forged session cookie is refused when Supabase cannot fetch its user
+ok 17 - C1: a forged session cookie is refused when Supabase cannot fetch its user
+  ---
+  duration_ms: 22.852708
+  type: 'test'
+    ok 2 - passes loopback-only bindings
+  ...
+# Subtest: C1: the same cookie passes once Supabase returns its user, with the role from that answer
+      ---
+  type: 'test'
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+      duration_ms: 18.641292
+      type: 'test'
+      ...
+    1..2
+ok 9 - nonLoopbackBindings
+  ---
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 18 - C1: the same cookie passes once Supabase returns its user, with the role from that answer
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ...
+  duration_ms: 89.033584
+  type: 'suite'
+  ...
+# Subtest: runtime takes the transaction pooler on a hosted tier
+ok 10 - runtime takes the transaction pooler on a hosted tier
+  ---
+  duration_ms: 0.878917
+  type: 'test'
+  ...
+# Subtest: migrations take the session pooler on a hosted tier
+ok 11 - migrations take the session pooler on a hosted tier
+  ---
+  duration_ms: 1.798792
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  type: 'test'
+  ...
+# Subtest: C1: the mirror is called once per user per process, and again after a refusal, a failure or an email change
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Subtest: C1: staging without a key refuses to send, naming the variable
+  ---
+  duration_ms: 0.117875
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  type: 'test'
+ok 12 - C1: staging without a key refuses to send, naming the variable
+ok 19 - C1: the mirror is called once per user per process, and again after a refusal, a failure or an email change
+  ---
+  duration_ms: 0.783667
+  type: 'test'
+  ...
+  ...
+# Subtest: C1: concurrent requests for one user share one mirror call
+ok 20 - C1: concurrent requests for one user share one mirror call
+  ---
+  duration_ms: 0.244417
+  type: 'test'
+  ...
+  ---
+  duration_ms: 21.468834
+  type: 'test'
+  ...
+# Subtest: the local tier is not checked beyond the scheme
+ok 12 - the local tier is not checked beyond the scheme
+  ---
+# Subtest: C1: an anonymous or refused request never reaches the mirror
+ok 21 - C1: an anonymous or refused request never reaches the mirror
+  ---
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  duration_ms: 0.189042
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Subtest: C1: a vendor error is thrown, not swallowed
+ok 13 - C1: a vendor error is thrown, not swallowed
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  duration_ms: 0.150542
+  duration_ms: 27.394
+  type: 'test'
+  ...
+# Subtest: errors and descriptions never carry credentials
+ok 13 - errors and descriptions never carry credentials
+  ---
+  duration_ms: 0.183042
+  type: 'test'
+  type: 'test'
+  ...
+  ...
+  type: 'test'
+# Subtest: applyLocalAuthMirror
+    # Subtest: refuses a non-loopback host before connecting
+    ok 1 - refuses a non-loopback host before connecting
+      ---
+  ...
+      duration_ms: 3.240917
+      type: 'test'
+      ...
+    # Subtest: passes the host check on loopback and only then connects
+    ok 2 - passes the host check on loopback and only then connects
+      ---
+      duration_ms: 4.970291
+      type: 'test'
+      ...
+    1..2
+# Subtest: maskAddress keeps the first letter and the domain only
+# Subtest: a sign-in on localhost lands back on localhost, at next
+ok 22 - a sign-in on localhost lands back on localhost, at next
+  ---
+  duration_ms: 0.97025
+ok 14 - maskAddress keeps the first letter and the domain only
+  ---
+  duration_ms: 0.046459
+  type: 'test'
+ok 14 - applyLocalAuthMirror
+  ...
+  ---
+  duration_ms: 8.933625
+  type: 'suite'
+  ...
+# Subtest: next that leaves the origin becomes /
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 23 - next that leaves the origin becomes /
+  ---
+  duration_ms: 0.234917
+  type: 'test'
+# Subtest: isLoopbackHost
+    # Subtest: accepts localhost, 127.0.0.0/8 and ::1
+  type: 'test'
+  ...
+    ok 1 - accepts localhost, 127.0.0.0/8 and ::1
+      ---
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Subtest: C1: a deployment left on the local tier neither sends nor logs the body
+ok 15 - C1: a deployment left on the local tier neither sends nor logs the body
+      duration_ms: 0.7325
+      type: 'test'
+  ---
+      ...
+  duration_ms: 0.33125
+    # Subtest: refuses every other host, including look-alikes
+  ...
+    ok 2 - refuses every other host, including look-alikes
+      ---
+  type: 'test'
+  ...
+# Subtest: C1: a send logs its Resend id and recipient count, never the address or body
+ok 16 - C1: a send logs its Resend id and recipient count, never the address or body
+      duration_ms: 0.083209
+  ---
+  duration_ms: 0.347708
+  type: 'test'
+  ...
+# Subtest: formatSender keeps a display name and address on one line
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+      type: 'test'
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Subtest: the callback URL is on the site's origin and carries next only when it is a path
+ok 24 - the callback URL is on the site's origin and carries next only when it is a path
+  ---
+  duration_ms: 0.110833
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 17 - formatSender keeps a display name and address on one line
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+  duration_ms: 0.103083
+  type: 'test'
+  ...
+      ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+    # Subtest: isLoopbackUrl reads the URL's host and refuses an unparseable URL
+# skipped 0
+    ok 3 - isLoopbackUrl reads the URL's host and refuses an unparseable URL
+      ---
+# todo 0
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  type: 'test'
+      duration_ms: 0.176541
+      type: 'test'
+      ...
+  ...
+    1..3
+ok 15 - isLoopbackHost
+  ---
+# duration_ms 106.198041
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# @supabase/ssr: chunked cookie decoded to invalid JSON, treating as absent. This usually indicates that cookie chunks from different writes were combined (e.g. response committed before all Set-Cookie headers were sent).
+  duration_ms: 1.544833
+# @supabase/ssr: chunked cookie decoded to invalid JSON, treating as absent. This usually indicates that cookie chunks from different writes were combined (e.g. response committed before all Set-Cookie headers were sent).
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  type: 'suite'
+  ...
+# Subtest: the bridge accepts a UUID user and a known role
+ok 16 - the bridge accepts a UUID user and a known role
+  ---
+  duration_ms: 0.877458
+  type: 'test'
+  ...
+# Subtest: the bridge refuses a partial or forged identity before any SQL
+ok 17 - the bridge refuses a partial or forged identity before any SQL
+  ---
+  duration_ms: 0.46175
+  type: 'test'
+  ...
+# Subtest: the schema exports tables, and none of them outside public
+ok 18 - the schema exports tables, and none of them outside public
+  ---
+  duration_ms: 0.785208
+  type: 'test'
+  ...
+# Subtest: authUsers is never exported from the schema
+ok 19 - authUsers is never exported from the schema
+  ---
+  duration_ms: 0.067208
+  type: 'test'
+  ...
+# Subtest: every table carries its policies beside it
+ok 20 - every table carries its policies beside it
+  ---
+  duration_ms: 0.868666
+  type: 'test'
+  ...
+1..20
+# tests 32
+# suites 5
+# @supabase/ssr: chunked cookie decoded to invalid JSON, treating as absent. This usually indicates that cookie chunks from different writes were combined (e.g. response committed before all Set-Cookie headers were sent).
+# Subtest: C2: on the local stack, updateSession deletes every staging session cookie and nothing else
+ok 25 - C2: on the local stack, updateSession deletes every staging session cookie and nothing else
+  ---
+  duration_ms: 72.367959
+  type: 'test'
+  ...
+# Subtest: C2: the project's own cookies are never purged
+ok 26 - C2: the project's own cookies are never purged
+  ---
+  duration_ms: 0.931667
+  type: 'test'
+  ...
+# Subtest: C2: switching back to staging purges the local stack's cookies
+ok 27 - C2: switching back to staging purges the local stack's cookies
+  ---
+  duration_ms: 0.4875
+  type: 'test'
+  ...
+# Subtest: C2: with no foreign cookie, nothing is written
+ok 28 - C2: with no foreign cookie, nothing is written
+  ---
+  duration_ms: 0.347708
+  type: 'test'
+  ...
+# Subtest: C2: the purge reads every cookie form Supabase writes
+ok 29 - C2: the purge reads every cookie form Supabase writes
+  ---
+  duration_ms: 0.082417
+  type: 'test'
+  ...
+# Subtest: C2: switching to a tier with no project clears every Supabase session cookie
+ok 30 - C2: switching to a tier with no project clears every Supabase session cookie
+  ---
+  duration_ms: 0.10125
+  type: 'test'
+  ...
+1..30
+# tests 30
+# suites 0
+# pass 30
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 519.019166
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# pass 32
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2600.090208
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ ✓ .storybook/stories.test.ts (99 tests) 4236ms
+   ✓ Primitives/Control/Input (7)
+     ✓ Focus 321ms
+
+ Test Files  2 passed (2)
+      Tests  104 passed (104)
+   Start at  17:15:13
+   Duration  7.14s (tests 48%, transform 28%, environment 13%, setup 8%, import 2%)
+
+  Transform  transforming modules took 2.51s · 28% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+
+ Tasks:    9 successful, 9 total
+Cached:    9 cached, 9 total
+  Time:    169ms >>> FULL TURBO
+
+ok   AGENTS.md (lines)                                58 / 100
+ok   CLAUDE.md (lines)                                10 / 20
+ok   docs/index.md (lines)                            77 / 80
+ok   always-on                                      3996 / 4000  skills 3, agents 5, SessionStart 150
+ok   design layer (canon + product layer)           3870 / 5000  (product layer not written yet)
+ok   brief and package (largest example)             803 / 2000
+ok   one skill body (largest)                       1495 / 2500
+ok   UI build (+ ui.md rule)                       10396 / 15000
+ok   path rules and nested AGENTS.md (heaviest file)   1456 / 1500
+ok   contract and cited spec (largest)              3342 / 5000
+ok   non-UI build                                   8794 / 10500
+ok   critic pass (rubric + canon §2 + cited surface)   2043 / 6000
+ok   evaluator pass (vigil + contract and spec + evidence index)   7627 / 10000
+WARN canon.md is 3870 tokens; the design layer cap leaves 1130 for a product layer, not the 1700 docs/index.md allots. Open item in docs/decisions/changelog.md.
+
+budget — within every cap in docs/index.md.
+gen:agents — up to date 5 agent(s):
+  vigil (docs/roles/engineering/vigil-qa.md)
+  alembic (docs/roles/product-design/alembic-research-synthesizer.md)
+  assay (docs/roles/product-design/assay-ui-critic.md)
+  compass (docs/roles/product-design/compass-product-strategist.md)
+  tally (docs/roles/product-design/tally-metrics-analyst.md)
+directory-map — up to date (193 files, 35 landing pages).
+
+   • turbo 2.11.6
+   • Packages in scope: @pem/auth, @pem/brand, @pem/catalog, @pem/config, @pem/constants, @pem/db, @pem/email, @pem/env, @pem/observability, @pem/services, @pem/ui, @pem/validators, docs, web
+   • Running lint in 14 packages
+   • Remote caching disabled
+
+@pem/env:lint: cache hit, replaying logs 4c58f527123bf9ef
+@pem/observability:lint: cache hit, replaying logs 121294f91bde48a2
+@pem/validators:lint: cache hit, replaying logs 91ecfc21e5b3f6a4
+@pem/brand:lint: cache hit, replaying logs 0275ad476c71eb82
+@pem/constants:lint: cache hit, replaying logs 8d07b390be670e26
+@pem/db:lint: cache hit, replaying logs 7f04daeb0280f8ac
+@pem/email:lint: cache hit, replaying logs b30e98aef9942b51
+@pem/ui:lint: cache hit, replaying logs 55ee1f696c7b83ce
+@pem/auth:lint: cache hit, replaying logs 0345af332e633530
+@pem/services:lint: cache hit, replaying logs 62ab3cef8e006e9e
+@pem/catalog:lint: cache hit, replaying logs c0c21ab26ecae6b1
+docs:lint: cache hit, replaying logs 5a158f73ac7ca99f
+web:lint: cache hit, replaying logs c6288aed01d83dd2
+
+ Tasks:    13 successful, 13 total
+Cached:    13 cached, 13 total
+  Time:    134ms >>> FULL TURBO
+
+
+   • turbo 2.11.6
+   • Packages in scope: @pem/auth, @pem/brand, @pem/catalog, @pem/config, @pem/constants, @pem/db, @pem/email, @pem/env, @pem/observability, @pem/services, @pem/ui, @pem/validators, docs, web
+   • Running check-types in 14 packages
+   • Remote caching disabled
+
+@pem/constants:check-types: cache hit, replaying logs 92ad1fe9811043a7
+@pem/validators:check-types: cache hit, replaying logs 847476f3f58f3521
+@pem/env:check-types: cache hit, replaying logs c8babb6608fbe6af
+@pem/brand:check-types: cache hit, replaying logs 0355524bb97f8c1c
+@pem/observability:check-types: cache hit, replaying logs f211cdd95cfee926
+@pem/db:check-types: cache hit, replaying logs e3ecf9c4e19a291e
+@pem/ui:check-types: cache hit, replaying logs cf4ff380a13563a2
+@pem/email:check-types: cache hit, replaying logs dc19955f3f0be106
+@pem/services:check-types: cache hit, replaying logs 972374e8f269a603
+@pem/auth:check-types: cache hit, replaying logs 498cf2683582850f
+docs:check-types: cache hit, replaying logs ec77b0affb03bb77
+@pem/catalog:check-types: cache hit, replaying logs c5a1ec187465ca26
+web:check-types: cache hit, replaying logs 93e9914b4e3d2679
+docs:check-types: Generating route types...
+docs:check-types: ✓ Types generated successfully
+web:check-types: Generating route types...
+web:check-types: ✓ Types generated successfully
+
+ Tasks:    13 successful, 13 total
+Cached:    13 cached, 13 total
+  Time:    134ms >>> FULL TURBO
+
+check-client-bundle — 18 server-only value(s), none in 27 browser-facing file(s) under apps/web/.next/static, apps/web/.next/server/app.
+
+   • turbo 2.11.6
+   • Packages in scope: @pem/auth, @pem/brand, @pem/catalog, @pem/config, @pem/constants, @pem/db, @pem/email, @pem/env, @pem/observability, @pem/services, @pem/ui, @pem/validators, docs, web
+   • Running build in 14 packages
+   • Remote caching disabled
+
+docs:build: cache hit, replaying logs 4ecd4bed6233c6b2
+docs:build: ▲ Next.js 16.3.8 (Turbopack)
+docs:build: ✓ Running next.config.ts took 15ms
+docs:build: 
+docs:build:   Creating an optimized production build ...
+docs:build: ✓ Compiled successfully in 780ms
+docs:build:   Running TypeScript ...
+docs:build:   Finished TypeScript in 949ms ...
+docs:build:   Collecting page data using 5 workers ...
+docs:build:   Generating static pages using 5 workers (0/198) ...
+docs:build:   Generating static pages using 5 workers (49/198) 
+docs:build:   Generating static pages using 5 workers (98/198) 
+docs:build:   Generating static pages using 5 workers (148/198) 
+docs:build: ✓ Generating static pages using 5 workers (198/198) in 4.1s
+docs:build:   Finalizing page optimization ...
+docs:build: 
+docs:build: Route (app)
+docs:build: ┌ ○ /_not-found
+docs:build: ├   /[[...slug]]
+docs:build: │ ├ ● /readme
+docs:build: │ ├ ● /
+docs:build: │ ├ ● /agents
+docs:build: │ └ ● [+192 more paths]
+docs:build: └ ○ /search-index.json
+docs:build: 
+docs:build: 
+docs:build: ○  (Static)  prerendered as static content
+docs:build: ●  (SSG)     prerendered as static HTML (uses generateStaticParams)
+docs:build: 
+web:build: cache hit, replaying logs 40bca4dc470fa934
+web:build: ▲ Next.js 16.3.8 (Turbopack)
+web:build: ✓ Running next.config.ts took 122ms
+web:build: 
+web:build:   Creating an optimized production build ...
+web:build: ✓ Compiled successfully in 763ms
+web:build:   Running TypeScript ...
+web:build:   Finished TypeScript in 1520ms ...
+web:build:   Collecting page data using 8 workers ...
+web:build:   Generating static pages using 8 workers (0/7) ...
+web:build:   Generating static pages using 8 workers (1/7) 
+web:build:   Generating static pages using 8 workers (3/7) 
+web:build:   Generating static pages using 8 workers (5/7) 
+web:build: ✓ Generating static pages using 8 workers (7/7) in 1070ms
+web:build:   Finalizing page optimization ...
+web:build: 
+web:build: Route (app)
+web:build: ┌ ○ /
+web:build: ├ ○ /_not-found
+web:build: ├ ƒ /auth/callback
+web:build: ├ ƒ /auth/sign-in
+web:build: ├ ○ /manifest.webmanifest
+web:build: └ ○ /opengraph-image
+web:build: 
+web:build: 
+web:build: ƒ Proxy (Middleware)
+web:build: 
+web:build: ○  (Static)   prerendered as static content
+web:build: ƒ  (Dynamic)  server-rendered on demand
+web:build: 
+
+ Tasks:    2 successful, 2 total
+Cached:    2 cached, 2 total
+  Time:    402ms >>> FULL TURBO
+

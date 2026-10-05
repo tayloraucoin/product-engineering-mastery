@@ -2306,6 +2306,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@pem/services@workspace:packages/services":
+  version: 0.0.0-use.local
+  resolution: "@pem/services@workspace:packages/services"
+  dependencies:
+    "@pem/config": "workspace:*"
+    "@pem/db": "workspace:*"
+    "@pem/validators": "workspace:*"
+    "@types/node": "npm:^22"
+    drizzle-orm: "npm:0.45.2"
+    eslint: "npm:^9.39.1"
+    typescript: "npm:5.9.2"
+    zod: "npm:4.6.5"
+  languageName: unknown
+  linkType: soft
+
 "@pem/ui@workspace:*, @pem/ui@workspace:packages/ui":
   version: 0.0.0-use.local
   resolution: "@pem/ui@workspace:packages/ui"
@@ -2323,6 +2338,7 @@ __metadata:
     class-variance-authority: "npm:^0.7.1"
     clsx: "npm:^2.1.1"
     eslint: "npm:^9.39.1"
+    input-otp: "npm:1.5.0"
     jsdom: "npm:^30.1.1"
     lucide-react: "npm:1.48.0"
     next: "npm:16.3.8"
@@ -2342,6 +2358,18 @@ __metadata:
     react: ^19.0.0
     react-dom: ^19.0.0
     tailwindcss: ^4
+  languageName: unknown
+  linkType: soft
+
+"@pem/validators@workspace:*, @pem/validators@workspace:packages/validators":
+  version: 0.0.0-use.local
+  resolution: "@pem/validators@workspace:packages/validators"
+  dependencies:
+    "@pem/config": "workspace:*"
+    "@types/node": "npm:^22"
+    eslint: "npm:^9.39.1"
+    typescript: "npm:5.9.2"
+    zod: "npm:4.6.5"
   languageName: unknown
   linkType: soft
 
@@ -6363,6 +6391,16 @@ __metadata:
   version: 0.2.7
   resolution: "inline-style-parser@npm:0.2.7"
   checksum: 10c0/d884d76f84959517430ae6c22f0bda59bb3f58f539f99aac75a8d786199ec594ed648c6ab4640531f9fc244b0ed5cd8c458078e592d016ef06de793beb1debff
+  languageName: node
+  linkType: hard
+
+"input-otp@npm:1.5.0":
+  version: 1.5.0
+  resolution: "input-otp@npm:1.5.0"
+  peerDependencies:
+    react: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
+    react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0.0 || ^19.0.0-rc
+  checksum: 10c0/08e43da5f654a5b93051c92c83a9af6aed8313b218488de41ddb099947e2c9cf6c42e295beb9ad05473e8d1713af64f85fae9185ee0139368702f8a5527b8334
   languageName: node
   linkType: hard
 
@@ -11310,17 +11348,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"zod@npm:4.6.5, zod@npm:^3.25 || ^4.0, zod@npm:^4.6.5":
+  version: 4.6.5
+  resolution: "zod@npm:4.6.5"
+  checksum: 10c0/32eb6c5e98becbe045675b2141c3611451c16ba567f9779231d79af41c4d651ca1c22f154aef7e6c6e77b929f23e43f1154ca05b82e119e922353725d6776af5
+  languageName: node
+  linkType: hard
+
 "zod@npm:^3.24.1":
   version: 3.25.76
   resolution: "zod@npm:3.25.76"
   checksum: 10c0/5718ec35e3c40b600316c5b4c5e4976f7fee68151bc8f8d90ec18a469be9571f072e1bbaace10f1e85cf8892ea12d90821b200e980ab46916a6166a4260a983c
-  languageName: node
-  linkType: hard
-
-"zod@npm:^3.25 || ^4.0, zod@npm:^4.6.5":
-  version: 4.6.5
-  resolution: "zod@npm:4.6.5"
-  checksum: 10c0/32eb6c5e98becbe045675b2141c3611451c16ba567f9779231d79af41c4d651ca1c22f154aef7e6c6e77b929f23e43f1154ca05b82e119e922353725d6776af5
   languageName: node
   linkType: hard
 

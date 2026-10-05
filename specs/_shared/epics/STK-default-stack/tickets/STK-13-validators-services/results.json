@@ -1,0 +1,57 @@
+{
+  "id": "STK-13",
+  "criteria_sha256": "02c0014ced605a46fa74f551c8209b55a8e473fecb963330f683a3a7da72f27c",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-05T00:21:58Z",
+        "head": "7f4cc0456fea1ad281522ae26f65b89e9a066519",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-13-validators-services/evidence/C1.log",
+        "evidence_sha256": "1f208e39951f2803135fbac88982884ca4c0781c38c067a9295359128ef086f3",
+        "tests": 130
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-05T00:22:01Z",
+        "head": "7f4cc0456fea1ad281522ae26f65b89e9a066519",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-13-validators-services/evidence/C2.log",
+        "evidence_sha256": "d98292b6c08716aa3f5b2e0d8b69565e5eed3377b029528b9fda97007e7bf2c4",
+        "tests": 130
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn lint:boundaries",
+        "exit": 0,
+        "at": "2026-10-05T00:22:03Z",
+        "head": "7f4cc0456fea1ad281522ae26f65b89e9a066519",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-13-validators-services/evidence/C3.log",
+        "evidence_sha256": "efd0984c4b7224176d1d1d6d338b7c52aa9e89c2e0b22861995f9c80f31187d8"
+      }
+    },
+    "C4": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn verify",
+        "exit": 0,
+        "at": "2026-10-05T00:22:08Z",
+        "head": "7f4cc0456fea1ad281522ae26f65b89e9a066519",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-13-validators-services/evidence/C4.log",
+        "evidence_sha256": "fe1fb4890d1fcb0a685b35c7a885769ed3459dac1117d90b2976304f9e6460aa"
+      }
+    }
+  },
+  "updated_at": "2026-10-05T00:23:11Z"
+}

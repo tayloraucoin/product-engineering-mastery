@@ -7,7 +7,7 @@
  * `logged`, so a developer reads the mail in the terminal and no real inbox is
  * reached. A deployment left on the local tier logs neither the body nor the
  * subject, since reset and sign-in links live there and platform logs are
- * retained; it warns and returns `withheld`. Staging and production send
+ * retained; it reports an error and returns `withheld`. Staging and production send
  * through Resend and need the key.
  *
  * Two kinds of message: `content` renders the default template here
@@ -30,7 +30,10 @@ export type MailerConfig = {
   apiKey?: string;
   /** `EMAIL_FROM`: an address on a domain verified in Resend; `brand.contact.email` when unset. */
   fromAddress?: string;
-  /** Whether this process runs in a deployment (`isDeployed` from @pem/env/site-url), never set by hand. */
+  /**
+   * Whether this process may be serving real users: a deployment or a
+   * production build (`productionRuntime` in apps/web/env.ts), never set by hand.
+   */
   deployed: boolean;
 };
 
@@ -60,7 +63,12 @@ export type Mailer = { send(message: EmailMessage): Promise<SendResult> };
 
 /** `"Name <address>"`, the form Resend reads for a sender with a display name. */
 export function formatSender(name: string, address: string): string {
-  return `${name.replace(/["<>]/g, "")} <${address}>`;
+  return `${singleLine(name).replace(/["<>]/g, "")} <${singleLine(address)}>`;
+}
+
+/** A header value on one line: CR and LF become spaces, so no value can add a header. */
+export function singleLine(value: string): string {
+  return value.replace(/[\r\n]+/g, " ").trim();
 }
 
 /** The first letter, `***` and the domain: enough to tell recipients apart in a local log, never the address. */
@@ -94,10 +102,13 @@ export function createMailer(
         : renderDefaultEmail(message.content);
 
       if (config.tier === "local" && config.deployed) {
-        log.warn("email.withheld", {
-          tier: config.tier,
-          reason:
-            "DATABASE_ENVIRONMENT is local on a deployment, so the message is neither sent nor logged",
+        // An error, not a warning, so the registered reporter pages someone:
+        // every message this process sends is being dropped.
+        log.error("email.withheld", {
+          error: new Error(
+            "DATABASE_ENVIRONMENT is local in a deployment or production build, so email is neither sent nor logged",
+          ),
+          tags: { tier: config.tier },
           recipientCount: to.length,
         });
         return { status: "withheld" };
@@ -130,6 +141,12 @@ export function createMailer(
         throw new Error(
           `Resend refused the message: ${error?.message ?? "no id returned"}`,
         );
+      log.info("email.sent", {
+        tier: config.tier,
+        id: data.id,
+        recipientCount: to.length,
+        ...("template" in part ? { templateId: part.template.id } : {}),
+      });
       return { status: "sent", id: data.id };
     },
   };

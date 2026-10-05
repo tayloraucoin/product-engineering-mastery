@@ -28,6 +28,8 @@ export default defineConfig({
           /next-themes/,
           // Base UI imports react; inlined, it resolves through the same alias as the stories.
           /@base-ui\//,
+          /input-otp/,
+          /@floating-ui\//,
         ],
       },
     },

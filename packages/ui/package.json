@@ -4,13 +4,106 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./alert": {
+      "types": "./src/primitives/display/alert/index.ts",
+      "default": "./src/primitives/display/alert/index.ts"
+    },
+    "./avatar": {
+      "types": "./src/primitives/display/avatar/index.ts",
+      "default": "./src/primitives/display/avatar/index.ts"
+    },
+    "./badge": {
+      "types": "./src/primitives/display/badge/index.ts",
+      "default": "./src/primitives/display/badge/index.ts"
+    },
+    "./bubble": {
+      "types": "./src/primitives/display/bubble/index.ts",
+      "default": "./src/primitives/display/bubble/index.ts"
+    },
     "./button": {
       "types": "./src/primitives/control/button/index.ts",
       "default": "./src/primitives/control/button/index.ts"
     },
+    "./checkbox": {
+      "types": "./src/primitives/control/checkbox/index.ts",
+      "default": "./src/primitives/control/checkbox/index.ts"
+    },
     "./cn": {
       "types": "./src/lib/cn.ts",
       "default": "./src/lib/cn.ts"
+    },
+    "./empty": {
+      "types": "./src/primitives/display/empty/index.ts",
+      "default": "./src/primitives/display/empty/index.ts"
+    },
+    "./input": {
+      "types": "./src/primitives/control/input/index.ts",
+      "default": "./src/primitives/control/input/index.ts"
+    },
+    "./input-otp": {
+      "types": "./src/primitives/control/input-otp/index.ts",
+      "default": "./src/primitives/control/input-otp/index.ts"
+    },
+    "./kbd": {
+      "types": "./src/primitives/display/kbd/index.ts",
+      "default": "./src/primitives/display/kbd/index.ts"
+    },
+    "./label": {
+      "types": "./src/primitives/display/label/index.ts",
+      "default": "./src/primitives/display/label/index.ts"
+    },
+    "./marker": {
+      "types": "./src/primitives/display/marker/index.ts",
+      "default": "./src/primitives/display/marker/index.ts"
+    },
+    "./message": {
+      "types": "./src/primitives/display/message/index.ts",
+      "default": "./src/primitives/display/message/index.ts"
+    },
+    "./native-select": {
+      "types": "./src/primitives/control/native-select/index.ts",
+      "default": "./src/primitives/control/native-select/index.ts"
+    },
+    "./progress": {
+      "types": "./src/primitives/display/progress/index.ts",
+      "default": "./src/primitives/display/progress/index.ts"
+    },
+    "./radio-group": {
+      "types": "./src/primitives/control/radio-group/index.ts",
+      "default": "./src/primitives/control/radio-group/index.ts"
+    },
+    "./select": {
+      "types": "./src/primitives/control/select/index.ts",
+      "default": "./src/primitives/control/select/index.ts"
+    },
+    "./skeleton": {
+      "types": "./src/primitives/display/skeleton/index.ts",
+      "default": "./src/primitives/display/skeleton/index.ts"
+    },
+    "./slider": {
+      "types": "./src/primitives/control/slider/index.ts",
+      "default": "./src/primitives/control/slider/index.ts"
+    },
+    "./spinner": {
+      "types": "./src/primitives/feedback/spinner/index.ts",
+      "default": "./src/primitives/feedback/spinner/index.ts"
+    },
+    "./styles/globals.css": "./src/styles/globals.css",
+    "./switch": {
+      "types": "./src/primitives/control/switch/index.ts",
+      "default": "./src/primitives/control/switch/index.ts"
+    },
+    "./table": {
+      "types": "./src/primitives/display/table/index.ts",
+      "default": "./src/primitives/display/table/index.ts"
+    },
+    "./tabs": {
+      "types": "./src/primitives/control/tabs/index.ts",
+      "default": "./src/primitives/control/tabs/index.ts"
+    },
+    "./textarea": {
+      "types": "./src/primitives/control/textarea/index.ts",
+      "default": "./src/primitives/control/textarea/index.ts"
     },
     "./theme": {
       "types": "./src/providers/theme/index.ts",
@@ -20,7 +113,10 @@
       "types": "./src/composed/control/theme-toggle/index.ts",
       "default": "./src/composed/control/theme-toggle/index.ts"
     },
-    "./styles/globals.css": "./src/styles/globals.css"
+    "./toggle": {
+      "types": "./src/primitives/control/toggle/index.ts",
+      "default": "./src/primitives/control/toggle/index.ts"
+    }
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
@@ -33,6 +129,7 @@
     "@base-ui/react": "1.8.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "input-otp": "1.5.0",
     "lucide-react": "1.48.0",
     "next-themes": "0.4.6",
     "tailwind-merge": "^3.6.0",

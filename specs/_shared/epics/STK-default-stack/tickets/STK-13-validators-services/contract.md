@@ -24,6 +24,10 @@ planned_paths:
   - "packages/config/eslint/boundaries.js"
   - "toolkit.json"
   - "docs/engineering/codebase-conventions.md"
+  - "docs/engineering/tech-stack.md"
+  - "tooling/boundaries.test.ts"
+  - "yarn.lock"
+  - "docs/runbooks/remove-supabase-database.md"
 depends_on:
   - STK-12
 out_of_scope:
@@ -46,6 +50,7 @@ criteria:
     statement: "Types and build pass."
     evidence: check
     command: "yarn verify"
+tier: 1
 ---
 
 # Contract — STK-13 validators-services

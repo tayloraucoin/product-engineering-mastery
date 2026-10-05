@@ -33,6 +33,7 @@ planned_paths:
   - "apps/web/next.config.ts"
   - "apps/web/tsconfig.json"
   - "yarn.lock"
+  - "tooling/boundaries.test.ts"
 depends_on:
   - STK-4
   - STK-5
