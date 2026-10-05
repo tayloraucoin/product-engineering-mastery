@@ -34,9 +34,17 @@
       "run": null
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn contract:record WEB-8 C4 --evidence specs/web/one-offs/WEB-008-hosted-only-database/evidence/C4-operator.md --verdict deferred",
+        "exit": 0,
+        "at": "2026-10-05T22:35:36Z",
+        "head": "d97600fca6461541ba50b843dcca4872d6fd5b20",
+        "evidence_path": "specs/web/one-offs/WEB-008-hosted-only-database/evidence/C4-operator.md",
+        "evidence_sha256": "deb3720931b48549b0273a8ae69d1585884b8024b8addb3b912b1b2166cd9862",
+        "deferred": true
+      }
     },
     "C5": {
       "status": "PASS",
@@ -56,5 +64,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-05T22:35:02Z"
+  "updated_at": "2026-10-05T22:35:36Z"
 }
