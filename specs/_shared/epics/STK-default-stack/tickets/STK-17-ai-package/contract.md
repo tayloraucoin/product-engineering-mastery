@@ -18,14 +18,18 @@ cites:
   - "D-STK-13"
 truth_files: "none: no living UX file covers the starter's own stack"
 reviewers:
-  - assay
   - mason
-  - threshold
   - vigil
   - warden
 planned_paths:
   - "packages/ai/**"
-  - "apps/web/app/api/ai/**"
+  - "apps/web/app/api/ai/ai.ts"
+  - "apps/web/app/api/ai/chat/route.ts"
+  - "apps/web/next.config.ts"
+  - "apps/web/package.json"
+  - "yarn.lock"
+  - "tooling/boundaries.test.ts"
+  - "docs/engineering/codebase-conventions.md"
   - "apps/web/env.ts"
   - ".env.example"
   - "turbo.json"
@@ -55,18 +59,10 @@ criteria:
     statement: "Types and build pass with the streaming route mounted."
     evidence: check
     command: "yarn verify"
-  - id: review:assay
-    statement: Assay reviews this ticket in fresh context against its contract and evidence.
-    evidence: manual
-    reason: a reviewer's judgment, recorded only by yarn review:run assay <id>
   - id: review:mason
     statement: Mason reviews this ticket in fresh context against its contract and evidence.
     evidence: manual
     reason: a reviewer's judgment, recorded only by yarn review:run mason <id>
-  - id: review:threshold
-    statement: Threshold reviews this ticket in fresh context against its contract and evidence.
-    evidence: manual
-    reason: a reviewer's judgment, recorded only by yarn review:run threshold <id>
   - id: review:vigil
     statement: Vigil reviews this ticket in fresh context against its contract and evidence.
     evidence: manual

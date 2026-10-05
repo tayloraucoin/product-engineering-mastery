@@ -41,6 +41,9 @@ const raw = {
   EMAIL_FROM: process.env.EMAIL_FROM,
   EMAIL_FROM_LOCAL: process.env.EMAIL_FROM_LOCAL,
   EMAIL_FROM_STAGING: process.env.EMAIL_FROM_STAGING,
+  ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
+  ANTHROPIC_API_KEY_LOCAL: process.env.ANTHROPIC_API_KEY_LOCAL,
+  ANTHROPIC_API_KEY_STAGING: process.env.ANTHROPIC_API_KEY_STAGING,
   DATABASE_URL: process.env.DATABASE_URL,
   DATABASE_URL_LOCAL: process.env.DATABASE_URL_LOCAL,
   DATABASE_URL_STAGING: process.env.DATABASE_URL_STAGING,
@@ -137,6 +140,12 @@ export const env = createEnv({
      */
     EMAIL_FROM: z.string().min(1).optional(),
     /**
+     * Anthropic's key (@pem/ai). Optional: without it the local tier replays
+     * the recorded fixtures and calls nothing, and anywhere else an AI call
+     * throws, naming the variable.
+     */
+    ANTHROPIC_API_KEY: z.string().min(1).optional(),
+    /**
      * The runtime database URL (@pem/db). The app opens it only for the local
      * auth mirror (Mode A, D-STK-6). No format check: check-client-bundle
      * plants a sentinel here, and @pem/db validates the URL when it connects.
@@ -170,6 +179,7 @@ export const env = createEnv({
     EXAMPLE_API_KEY: pickTiered(raw, "EXAMPLE_API_KEY", tier),
     RESEND_API_KEY: pickTiered(raw, "RESEND_API_KEY", tier),
     EMAIL_FROM: pickTiered(raw, "EMAIL_FROM", tier),
+    ANTHROPIC_API_KEY: pickTiered(raw, "ANTHROPIC_API_KEY", tier),
     DATABASE_URL: pickTiered(raw, "DATABASE_URL", tier),
     SUPABASE_SERVICE_ROLE_KEY: pickTiered(
       raw,

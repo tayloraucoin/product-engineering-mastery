@@ -130,6 +130,37 @@ const DISALLOWED: [file: string, code: string, message: RegExp][] = [
     'import "@pem/api/react";',
     /^ui must not import api/,
   ],
+  // STK-17: ai and @ai-sdk/* are owned by ai; @pem/ai reaches only services and the streaming route (D-STK-12, D-STK-16).
+  [
+    "apps/web/app/zz-probe.ts",
+    'import "@pem/ai/client";',
+    /^app-web must not import ai/,
+  ],
+  [
+    "apps/web/lib/zz-probe.ts",
+    'import "@pem/ai/client";',
+    /^app-web must not import ai/,
+  ],
+  [
+    "packages/ui/src/zz-probe.ts",
+    'import "@pem/ai/client";',
+    /^ui must not import ai/,
+  ],
+  [
+    "apps/web/app/api/ai/chat/zz-probe.ts",
+    'import { streamText } from "ai";',
+    /ai is owned by @pem\/ai/,
+  ],
+  [
+    "packages/services/src/zz-probe.ts",
+    'import "@ai-sdk/anthropic";',
+    /@ai-sdk\/\* is owned by @pem\/ai/,
+  ],
+  [
+    "packages/ai/src/zz-probe.ts",
+    'import "@pem/db/client";',
+    /^ai must not import db/,
+  ],
   // CAT-3: the shelf is never imported (CS-07, record 0011).
   [
     "apps/web/app/zz-probe.ts",
@@ -197,6 +228,15 @@ const ALLOWED: [file: string, code: string][] = [
   [
     "apps/web/lib/zz-probe.ts",
     'import "@pem/api/server"; import "@pem/services/context";',
+  ],
+  [
+    "packages/ai/src/zz-probe.ts",
+    'import "ai"; import "@ai-sdk/anthropic"; import "@pem/env/tier"; import "@pem/observability/logger";',
+  ],
+  ["packages/services/src/zz-probe.ts", 'import "@pem/ai/client";'],
+  [
+    "apps/web/app/api/ai/chat/zz-probe.ts",
+    'import "@pem/ai/client"; import "@/env"; import "@/lib/supabase/context";',
   ],
   ["packages/catalog/src/zz-probe.ts", 'import "@pem/ui/button";'],
   [

@@ -42,7 +42,10 @@
     "RESEND_API_KEY_STAGING",
     "EMAIL_FROM",
     "EMAIL_FROM_LOCAL",
-    "EMAIL_FROM_STAGING"
+    "EMAIL_FROM_STAGING",
+    "ANTHROPIC_API_KEY",
+    "ANTHROPIC_API_KEY_LOCAL",
+    "ANTHROPIC_API_KEY_STAGING"
   ],
   "globalPassThroughEnv": ["TMPDIR"],
   "ui": "tui",

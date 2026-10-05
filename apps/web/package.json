@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@pem/api": "workspace:*",
+    "@pem/ai": "workspace:*",
     "@pem/auth": "workspace:*",
     "@pem/brand": "workspace:*",
     "@pem/db": "workspace:*",

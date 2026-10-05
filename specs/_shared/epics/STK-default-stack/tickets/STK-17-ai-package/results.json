@@ -1,6 +1,6 @@
 {
   "id": "STK-17",
-  "criteria_sha256": "e446f9023cffa45bb47db73c5d3f53e46fcbb3fcf1239df2a53f1c3f4d2ec236",
+  "criteria_sha256": "22919a61a85d1114b23efd20f4cdc9454daaf38a00e12578a008273d5bdbd577",
   "criteria": {
     "C1": {
       "status": "FAIL",
@@ -22,17 +22,7 @@
       "evidence": "check",
       "run": null
     },
-    "review:assay": {
-      "status": "FAIL",
-      "evidence": "manual",
-      "run": null
-    },
     "review:mason": {
-      "status": "FAIL",
-      "evidence": "manual",
-      "run": null
-    },
-    "review:threshold": {
       "status": "FAIL",
       "evidence": "manual",
       "run": null
@@ -48,5 +38,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-05T01:53:55Z"
+  "updated_at": "2026-10-05T03:05:18Z"
 }

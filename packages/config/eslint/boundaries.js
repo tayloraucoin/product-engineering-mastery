@@ -13,6 +13,12 @@
  * import `config` and `ui`, and nothing may import it. No package lists it
  * and apps are kept off it below; the workshop reaches its stories by a glob.
  *
+ * `web-ai-route` is `apps/web/app/api/ai/`, the streaming route (D-STK-12):
+ * the one place in an app that may import @pem/ai. It may import whatever
+ * apps/web may, and @pem/ai; the rest of apps/web may not, nor may any
+ * package but services. It is listed before `app-web` because the first
+ * match wins.
+ *
  * Each element in TRANSPORT_FREE imports no transport or framework: a service
  * is called the same way by a tRPC procedure, a Route Handler or a webhook
  * (D-STK-8), so `next`, `react` and `@trpc/*` never reach it.
@@ -55,6 +61,11 @@ function workspaceApp(type, folder) {
 }
 
 const ELEMENTS = [
+  {
+    type: "web-ai-route",
+    pattern: ["apps/web/app/api/ai/**"],
+    mode: "full",
+  },
   workspaceApp("app-web", "web"),
   workspaceApp("app-docs", "docs"),
   workspacePackage("config", "config"),
@@ -66,6 +77,7 @@ const ELEMENTS = [
   workspacePackage("db", "db"),
   workspacePackage("auth", "auth"),
   workspacePackage("email", "email"),
+  workspacePackage("ai", "ai"),
   workspacePackage("services", "services"),
   workspacePackage("api", "api"),
   {
@@ -88,7 +100,8 @@ const PACKAGE_IMPORTS = {
   db: ["config", "env"],
   auth: ["config", "db", "observability"],
   email: ["config", "env", "brand", "observability"],
-  services: ["config", "validators", "db"],
+  ai: ["config", "env", "observability"],
+  services: ["config", "validators", "db", "ai"],
   api: ["config", "observability", "validators", "auth", "services"],
   ui: ["config"],
   "ui-workshop": ["config", "brand", "ui"],
@@ -112,6 +125,8 @@ const SDK_OWNERS = {
   "drizzle-kit": "db",
   "@supabase/*": "auth",
   resend: "email",
+  ai: "ai",
+  "@ai-sdk/*": "ai",
   "@trpc/*": "api",
   "@sentry/*": "app-web",
 };
@@ -129,8 +144,8 @@ const APP_TYPES = ELEMENTS.map((element) => element.type).filter((type) =>
   type.startsWith("app-"),
 );
 
-/** Apps import packages, never a package's workshop, and never the shelf. */
-const NOT_FOR_APPS = new Set(["ui-workshop", "catalog"]);
+/** Apps import packages, never a package's workshop, never the shelf, and @pem/ai only from `web-ai-route`. */
+const NOT_FOR_APPS = new Set(["ui-workshop", "catalog", "ai"]);
 const APP_IMPORTS = Object.keys(PACKAGE_IMPORTS).filter(
   (type) => !NOT_FOR_APPS.has(type),
 );
@@ -144,12 +159,25 @@ const WORKSPACE_PATH_PATTERN = {
     "Import a workspace by its package name (@pem/<name>), never by relative path (codebase-conventions §4).",
 };
 
+/**
+ * An SDK and its subpaths, matched by exact name. A gitignore-style group would
+ * also match a relative `../ai` or `@pem/ai/client`. A `*` in a scoped name
+ * stands for any one package in that scope.
+ */
+function sdkPattern(sdk) {
+  const name = sdk
+    .split("*")
+    .map((part) => part.replace(/[.+?^${}()|[\]\\/]/g, "\\$&"))
+    .join("[^/]+");
+  return `^${name}(/.*)?$`;
+}
+
 /** no-restricted-imports for files in `owner` (or in no owner): every SDK owned elsewhere is banned. */
 function restrictedImports(owner, extraPatterns = []) {
   const sdkPatterns = Object.entries(SDK_OWNERS)
     .filter(([, sdkOwner]) => sdkOwner !== owner)
     .map(([sdk, sdkOwner]) => ({
-      group: [sdk, `${sdk}/*`],
+      regex: sdkPattern(sdk),
       message: `${sdk} is owned by ${ownerName(sdkOwner)} (D-STK-16); import what you need from ${ownerName(sdkOwner)}.`,
     }));
   return [
@@ -228,6 +256,12 @@ function buildDependencyRules() {
       }
     }
   }
+
+  // The streaming route: what apps/web may import, and @pem/ai (D-STK-12).
+  rules.push({
+    from: { type: "web-ai-route" },
+    allow: { to: { type: ["app-web", ...APP_IMPORTS, "ai"] } },
+  });
 
   rules.push({
     from: { type: Object.keys(PACKAGE_IMPORTS) },
