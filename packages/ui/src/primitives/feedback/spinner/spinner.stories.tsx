@@ -30,11 +30,14 @@ export const Default: Story = {
   },
 };
 
-/** Inside the button whose action is running. */
+/** Inside the button whose action is running: hidden, so the button keeps its own name. */
 export const InButton: Story = {
+  play: async ({ canvas }) => {
+    await expect(canvas.getByRole("button", { name: "Saving" })).toBeDisabled();
+  },
   render: () => (
     <Button disabled>
-      <Spinner data-icon="inline-start" />
+      <Spinner data-icon="inline-start" aria-hidden="true" />
       Saving
     </Button>
   ),

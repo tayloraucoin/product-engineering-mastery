@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { CircleCheck } from "lucide-react";
+import { expect, userEvent } from "storybook/test";
 
 import { Marker, MarkerContent, MarkerIcon } from "./marker";
 
@@ -45,3 +46,20 @@ export const Separator: Story = {
 };
 
 export const Border: Story = { args: { variant: "border" } };
+
+/** Content with a link: it takes focus, and the ring shows. */
+export const WithLink: Story = {
+  render: () => (
+    <Marker className="w-80">
+      <MarkerContent>
+        Dana shared <a href="#invoice">the September invoice</a>
+      </MarkerContent>
+    </Marker>
+  ),
+  play: async ({ canvas }) => {
+    await userEvent.tab();
+    await expect(
+      canvas.getByRole("link", { name: "the September invoice" }),
+    ).toHaveFocus();
+  },
+};

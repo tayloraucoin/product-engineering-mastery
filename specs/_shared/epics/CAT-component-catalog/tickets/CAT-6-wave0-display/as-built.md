@@ -22,8 +22,8 @@
 
 ## Deviations
 
-- **The age gate's exception (EN-13)** is in `.yarnrc.yml` (`npmPreapprovedPackages: []`) and `.claude/rules/deps.md`, with a ledger line and a changelog entry, approved in plan mode.
-- **Bubble's tinted variant:** upstream mixes its fill with relative `oklch(from var(--primary) …)`. It became `bg-primary/10` (`/20` in dark), with hovers at `/15` and `/25`. Foreground text on it computes above 15:1.
+- **The age gate's exception (EN-14)** is in `.yarnrc.yml` (`npmPreapprovedPackages: []`) and `.claude/rules/deps.md`, with a ledger line and a changelog entry, approved in plan mode.
+- **Bubble's tinted variant:** upstream mixes its fill with relative `oklch(from var(--primary) …)`. It became `bg-primary/10` (`/20` in dark), with hovers at `/15` and `/25`. Foreground text on it computes to 16.1:1 at rest in light and 11.6:1 in dark.
 - **Alert's destructive description:** `text-destructive/90` became solid `text-destructive`. Translucent text is what the audit cannot see.
 - **The progress track** moved from `bg-muted` to `bg-input` (3.30:1 light, 3.99:1 dark), so the bar's full length shows. This follows CAT-5's slider-track fix.
 - `[ASSUMPTION]` **The skeleton keeps its pulse**, with `motion-reduce:animate-none`. Canon A-14 bans shimmer specifically; a slow opacity pulse is a quieter loading signal. Plumb can rule it out if it reads as decoration.
@@ -32,6 +32,17 @@
   - the avatar's status dot carries screen-reader text rather than an `aria-label` on a role-less `span`;
   - the skeleton row is a `role="status"` region;
   - the label story asserts the field's accessible name rather than clicking, which hits jsdom's PointerEvent realm quirk.
+
+- **Batch review fixes** (`_batch-review-2026-10-04-CAT-6.md`):
+  - the progress indicator no longer tweens its width (B1);
+  - the age-gate ruling is renumbered EN-14, since STK took EN-13 first;
+  - its ledger check needs one row naming the exact version, with name boundaries, and a GHSA or CVE id;
+  - the spinner is hidden inside a labelled button;
+  - reactions are read as words;
+  - indeterminate progress says what is happening;
+  - the selected table row carries a checked box;
+  - new stories for a marker link, a disabled label, reactions top and start, and the alert action's focus.
+- **Bubble's secondary and muted hovers keep upstream's 5% colour mix** (about 1.13:1 between rest and hover, an A-04 risk), as the Button's does. A hover-surface token is routed to Plumb.
 
 ## Not verified
 

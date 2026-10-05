@@ -2,7 +2,8 @@
 
 /**
  * shadcn's Vega progress (base-vega, shadcn 4.21.0, read 2026-10-04), mapped
- * onto house tokens by docs/design/component-sources.md: the track on bg-input, so the bar's full length is visible (WCAG 1.4.11).
+ * onto house tokens by docs/design/component-sources.md: the track on bg-input, so the bar's full length is visible (WCAG 1.4.11); the
+ * indicator's width does not tween (canon A-14, C-P11).
  */
 import { Progress as ProgressPrimitive } from "@base-ui/react/progress";
 
@@ -49,7 +50,7 @@ function ProgressIndicator({
   return (
     <ProgressPrimitive.Indicator
       data-slot="progress-indicator"
-      className={cn("h-full bg-primary transition-all", className)}
+      className={cn("h-full bg-primary", className)}
       {...props}
     />
   );

@@ -21,7 +21,7 @@ STK-11 moved `yarn db:local` from STK-9's `docker run`, which bound `127.0.0.1:5
 
 ## 2026-10-04 — CAT-5, CAT-6: the install age gate and its one exception
 
-`deps.md` said an age gate waited out new releases, but `.yarnrc.yml` set none. CAT-5 set `npmMinimalAgeGate: 7d`; a probe for a same-day release was quarantined. On review, Taylor asked for one written exception so the gate is never quietly lowered under pressure (EN-13): a security fix younger than a week enters as one exact `name@x.y.z` in `npmPreapprovedPackages`, with a ledger line naming the advisory, and comes out once the version is a week old. `tooling/age-gate.test.ts` holds the gate at a week and every pre-approval to one exact version with its ledger line.
+`deps.md` said an age gate waited out new releases, but `.yarnrc.yml` set none. CAT-5 set `npmMinimalAgeGate: 7d`; a probe for a same-day release was quarantined. On review, Taylor asked for one written exception so the gate is never quietly lowered under pressure (EN-14): a security fix younger than a week enters as one exact `name@x.y.z` in `npmPreapprovedPackages`, with a ledger line naming the advisory, and comes out once the version is a week old. `tooling/age-gate.test.ts` holds the gate at a week and every pre-approval to one exact version with its ledger line.
 
 ## 2026-10-04 — CAT: the batch review of CAT-2 to CAT-4
 

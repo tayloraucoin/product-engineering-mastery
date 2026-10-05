@@ -33,7 +33,7 @@ type Story = StoryObj<typeof meta>;
 export const Incoming: Story = {
   render: () => (
     <Message className="w-96">
-      <MessageAvatar>
+      <MessageAvatar aria-hidden>
         <Avatar size="sm">
           <AvatarFallback>DO</AvatarFallback>
         </Avatar>

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { CircleAlert, Info } from "lucide-react";
-import { expect } from "storybook/test";
+import { expect, userEvent } from "storybook/test";
 
 import { Button } from "../../control/button/button";
 import { Alert, AlertAction, AlertDescription, AlertTitle } from "./alert";
@@ -61,6 +61,13 @@ export const Default: Story = {
 /** A failure that says what happened and what to do (J-35). */
 export const Destructive: Story = { args: { variant: "destructive" } };
 
+/** The recovery is one keystroke away. */
 export const WithAction: Story = {
   args: { variant: "destructive", action: true },
+  play: async ({ canvas }) => {
+    await userEvent.tab();
+    await expect(
+      canvas.getByRole("button", { name: "Try again" }),
+    ).toHaveFocus();
+  },
 };

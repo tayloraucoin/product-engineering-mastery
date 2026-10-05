@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { ThumbsUp } from "lucide-react";
 import { expect, userEvent } from "storybook/test";
 
 import { Bubble, BubbleContent, BubbleReactions } from "./bubble";
@@ -22,7 +23,7 @@ const meta = {
         "ui.shadcn.com/r/styles/base-vega/bubble.json, shadcn 4.21.0 (read 2026-10-04)",
       licence: "MIT",
       adapted:
-        "cva in bubble.variants.ts; the tinted variant on a primary tint in place of relative oklch() colours; dark hovers on muted/50; the focus ring appears at once",
+        "cva in bubble.variants.ts; the tinted variant on a primary tint in place of relative oklch() colours; dark hovers on muted/50; the focus ring appears at once; the secondary and muted hovers keep upstream's 5% mix (an A-04 risk, routed to Plumb)",
     },
   },
   args: { text: "The proposal is in your inbox; the pricing is on page 3." },
@@ -55,7 +56,8 @@ export const WithReactions: Story = {
     <Bubble variant="secondary">
       <BubbleContent>Shipped the fix this morning.</BubbleContent>
       <BubbleReactions>
-        <span aria-label="2 thumbs up">+2</span>
+        <ThumbsUp className="size-3" aria-hidden />2
+        <span className="sr-only"> thumbs-up reactions</span>
       </BubbleReactions>
     </Bubble>
   ),
@@ -76,4 +78,17 @@ export const AsButton: Story = {
       canvas.getByRole("button", { name: "Retry sending" }),
     ).toHaveFocus();
   },
+};
+
+/** Reactions on the top edge, at the start. */
+export const ReactionsTopStart: Story = {
+  render: () => (
+    <Bubble variant="muted">
+      <BubbleContent>Can someone review the invoice copy?</BubbleContent>
+      <BubbleReactions side="top" align="start">
+        <ThumbsUp className="size-3" aria-hidden />1
+        <span className="sr-only"> thumbs-up reaction</span>
+      </BubbleReactions>
+    </Bubble>
+  ),
 };

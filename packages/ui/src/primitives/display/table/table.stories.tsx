@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { expect } from "storybook/test";
 
+import { Checkbox } from "../../control/checkbox/checkbox";
 import {
   Table,
   TableBody,
@@ -36,6 +37,11 @@ const meta = {
       <TableCaption>Invoices issued in September (synthetic).</TableCaption>
       <TableHeader>
         <TableRow>
+          {selected !== undefined ? (
+            <TableHead className="w-8">
+              <span className="sr-only">Select</span>
+            </TableHead>
+          ) : null}
           <TableHead>Invoice</TableHead>
           <TableHead>Client</TableHead>
           <TableHead>Status</TableHead>
@@ -48,6 +54,14 @@ const meta = {
             key={row.id}
             data-state={row.id === selected ? "selected" : undefined}
           >
+            {selected !== undefined ? (
+              <TableCell>
+                <Checkbox
+                  aria-label={`Select ${row.id}`}
+                  defaultChecked={row.id === selected}
+                />
+              </TableCell>
+            ) : null}
             <TableCell className="font-medium">{row.id}</TableCell>
             <TableCell>{row.client}</TableCell>
             <TableCell>{row.status}</TableCell>
@@ -84,5 +98,12 @@ export const Default: Story = {
 
 export const WithFooter: Story = { args: { footer: true } };
 
-/** One row marked selected. */
-export const SelectedRow: Story = { args: { selected: "INV-1043" } };
+/** One row selected: the checked box is the marker; the fill alone is too faint (C-P07). */
+export const SelectedRow: Story = {
+  args: { selected: "INV-1043" },
+  play: async ({ canvas }) => {
+    await expect(
+      canvas.getByRole("checkbox", { name: "Select INV-1043" }),
+    ).toHaveAttribute("aria-checked", "true");
+  },
+};

@@ -51,3 +51,18 @@ export const WithCheckbox: Story = {
     ).toBeInTheDocument();
   },
 };
+
+/** For a disabled field: dimmed with it (disabled controls are exempt from contrast minimums). */
+export const Disabled: Story = {
+  render: () => (
+    <div className="group grid gap-2" data-disabled="true">
+      <Label htmlFor="story-locked">Account ID</Label>
+      <Input id="story-locked" defaultValue="ACC-20931" disabled />
+    </div>
+  ),
+  play: async ({ canvas }) => {
+    await expect(
+      canvas.getByRole("textbox", { name: "Account ID" }),
+    ).toBeDisabled();
+  },
+};
