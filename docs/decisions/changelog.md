@@ -15,6 +15,14 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-05 — PEM: runbooks grouped by use case (PR-18)
+
+Taylor asked for `docs/runbooks/` grouped by use case, so the new-project duplication guide has a fixed home to be rewritten into.
+
+- **Moved, bodies unchanged except their links:** `remove-<module>.md` to `remove/<module>.md`, with a landing page; `new-project.md` to `new-project/README.md`; `postmortem.template.md` into `postmortem/`. `toolkit.json`'s `runbook` fields, the `check-stack` fixtures and every live reference follow. Closed ticket records under `specs/` keep the old paths: they are history, and their evidence is hashed.
+- **New:** `add/README.md`, which says what an add recipe is and lists none yet; `postmortem/README.md`, which picks the path for a production incident, a bad merge caught before release, an agent that went wrong, or a wrong AI output; a Trace section in the template (the tickets that touched the failing code, and what their criteria and review missed); and `postmortem/convention-log.md`, the append-only working ledger of findings that point at a convention.
+- **`onboard-agent.md`** opens with when to run it: a new model or agent tool, or a harness change, never a new developer; its rules are shared, and a developer's own preferences belong in untracked local settings.
+
 ## 2026-10-04 — WEB-3: a `contract:run` in flight is not tampered evidence
 
 On 2026-10-04 STK-2's `yarn verify` failed twice with "C1 is PASS, but evidence … changed after it was recorded" while `contract:run STK-8` and then `contract:run STK-10` ran on the shared branch (PR-14). Seconds later it was clean both times. `contract:run` wrote each log as it went, but wrote `results.json` once, after the last criterion. So a ticket with a `yarn verify` criterion also failed on every full run of its own.
@@ -25,7 +33,7 @@ On 2026-10-04 STK-2's `yarn verify` failed twice with "C1 is PASS, but evidence 
 
 ## 2026-10-04 — STK-11: the local database's network exposure, accepted
 
-STK-11 moved `yarn db:local` from STK-9's `docker run`, which bound `127.0.0.1:54322`, to the Supabase CLI that D-STK-6 names. The CLI (2.119.0) publishes the database port on every interface and has no setting to change that. The local database therefore answers on the network with the password `postgres`, and in Mode A it holds the emails of staging users the mirror copies. Taylor accepted this on 2026-10-04 (ledger EN-13). The controls: `db:local` and `db:local:full` warn whenever the port is bound to anything but loopback; `new-project.md` step 6 and the `tech-stack.md` image row name Docker's `"ip": "127.0.0.1"` daemon setting; and `yarn db:stop --no-backup` wipes the mirrored emails.
+STK-11 moved `yarn db:local` from STK-9's `docker run`, which bound `127.0.0.1:54322`, to the Supabase CLI that D-STK-6 names. The CLI (2.119.0) publishes the database port on every interface and has no setting to change that. The local database therefore answers on the network with the password `postgres`, and in Mode A it holds the emails of staging users the mirror copies. Taylor accepted this on 2026-10-04 (ledger EN-13). The controls: `db:local` and `db:local:full` warn whenever the port is bound to anything but loopback; `new-project/README.md` step 6 and the `tech-stack.md` image row name Docker's `"ip": "127.0.0.1"` daemon setting; and `yarn db:stop --no-backup` wipes the mirrored emails.
 
 ## 2026-10-04 — CAT-7: hover and selected roles, indeterminate progress, the skeleton pulse
 

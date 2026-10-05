@@ -14,7 +14,7 @@ load_when:
 # New project
 
 > **Who runs it:** an agent or a person holding a one-paragraph briefing; Taylor reviews the result.
-> **When:** a product repo starts from this one. The rule is duplicate, then remove ([record 0010](../decisions/records/0010-starter-ships-default-stack.md), D-STK-2): the product starts with the whole default stack and deletes what it does not use.
+> **When:** a product repo starts from this one. The rule is duplicate, then remove ([record 0010](../../decisions/records/0010-starter-ships-default-stack.md), D-STK-2): the product starts with the whole default stack and deletes what it does not use.
 > **Done means:** `yarn check-stack` and `yarn verify` exit 0 in the new repo, and the result is committed on its branch (step 7).
 > **Status:** draft until the dry-run ticket (STK-20) runs it cold on a duplicate and times each step.
 
@@ -88,15 +88,15 @@ The brand has one source, `@pem/brand` (D-STK-9). `packages/brand/src/brand.ts` 
 
 `toolkit.json`'s `stack` block lists one entry per module: its `files`, `env`, `dependencies`, `boundaries` names, `locked` flag and `runbook` (D-STK-13). A `locked` module stays. For each module the briefing drops, follow the entry's `runbook` from top to bottom; its last section marks the entry `"removed": true` and runs the checks.
 
-| Module                    | Runbook                                                      | Built by       |
-| ------------------------- | ------------------------------------------------------------ | -------------- |
-| Billing (Stripe)          | [`remove-billing.md`](remove-billing.md)                     | STK-16, STK-21 |
-| Error monitoring (Sentry) | [`remove-error-monitoring.md`](remove-error-monitoring.md)   | STK-18         |
-| API (tRPC)                | [`remove-api.md`](remove-api.md)                             | STK-14         |
-| AI                        | [`remove-ai.md`](remove-ai.md)                               | STK-17         |
-| Supabase Auth             | [`remove-supabase-auth.md`](remove-supabase-auth.md)         | STK-12         |
-| Supabase database         | [`remove-supabase-database.md`](remove-supabase-database.md) | STK-9          |
-| Component catalog         | [`remove-catalog.md`](remove-catalog.md)                     | CAT-3          |
+| Module                    | Runbook                                                         | Built by       |
+| ------------------------- | --------------------------------------------------------------- | -------------- |
+| Billing (Stripe)          | [`remove/billing.md`](../remove/billing.md)                     | STK-16, STK-21 |
+| Error monitoring (Sentry) | [`remove/error-monitoring.md`](../remove/error-monitoring.md)   | STK-18         |
+| API (tRPC)                | [`remove/api.md`](../remove/api.md)                             | STK-14         |
+| AI                        | [`remove/ai.md`](../remove/ai.md)                               | STK-17         |
+| Supabase Auth             | [`remove/supabase-auth.md`](../remove/supabase-auth.md)         | STK-12         |
+| Supabase database         | [`remove/supabase-database.md`](../remove/supabase-database.md) | STK-9          |
+| Component catalog         | [`remove/catalog.md`](../remove/catalog.md)                     | CAT-3          |
 
 Remove in the table's order, from the top of the package graph down (D-STK-1), so no module still present imports one already gone.
 
@@ -110,7 +110,7 @@ A module with no entry in the `stack` block is not in the duplicate: skip its ro
    - Replace `apps/web/app/page.tsx` with a placeholder page that names the product, under the UI rules in `AGENTS.md` (components from the UI package, tokens only). Product work starts with the product's first ticket, not here.
    - In `apps/web/AGENTS.md`, rewrite "What this app is" as one paragraph from the briefing, delete "The filled examples live here", and keep "App rules".
    - If `apps/web/docs/design/` exists, the duplicate is past Phase 3: its demo routes, that design layer and its `specs/web/` go too, and the product fills its own design layer from `docs/design/templates/`.
-2. **Research.** Delete everything under `docs/research/` except its `README.md`. Then run `yarn check-refs`: it names each live file that still links to a deleted file. Remove the link where the sentence reads without it; otherwise add an entry to `tooling/refs-pending.json` keyed by the deleted path, exactly as `yarn check-refs` printed it: `"<deleted path>": "cleared by new-project.md step 5"`.
+2. **Research.** Delete everything under `docs/research/` except its `README.md`. Then run `yarn check-refs`: it names each live file that still links to a deleted file. Remove the link where the sentence reads without it; otherwise add an entry to `tooling/refs-pending.json` keyed by the deleted path, exactly as `yarn check-refs` printed it: `"<deleted path>": "cleared by new-project/README.md step 5"`.
 3. **Specs.** Delete everything under `specs/`: this repo's epics, tickets and `_status.md`. The product's first `yarn spec:init` or `yarn contract:init` starts its own.
 4. **What describes the toolkit.** Rewrite the opening paragraph of `README.md`, and items 1 ("What this is") and 2 ("Current phase") of `AGENTS.md`'s Start here, for the product, from the briefing. The rest of both files is the practice the product keeps.
 5. **The generated map.** Run `yarn directory-map`: the deletions above left `docs/_generated/directory-map.md` and the landing-page tables stale.
@@ -138,3 +138,10 @@ yarn verify
 Both exit 0. Commit on `agent/<repo-wide-prefix>` as `<repo-wide-prefix>: new project from the toolkit`, and never push: Taylor pushes and makes `main`. Report to Taylor the date, the briefing and the minutes each step took. STK-20 turns those reports into this runbook's trial log.
 
 **Check:** both commands exited 0, and `git status` shows a clean tree after the commit.
+
+<!-- Generated by `yarn directory-map` from each file's frontmatter. Everything below this line is rewritten; edit above it. -->
+
+## In this folder
+
+| File | What it is for |
+| --- | --- |

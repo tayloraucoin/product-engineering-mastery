@@ -1,6 +1,6 @@
 ---
 title: "Remove billing — a removal runbook"
-description: "Follow from step 4 of new-project.md when the briefing drops Billing (Stripe); delete, edit and unlist what the module added, then prove it gone with yarn check-stack."
+description: "Follow from step 4 of new-project/README.md when the briefing drops Billing (Stripe); delete, edit and unlist what the module added, then prove it gone with yarn check-stack."
 layer: runbooks
 status: draft
 thread: "STK-3"
@@ -15,7 +15,7 @@ load_when:
 
 > **Module:** Stripe in the web app (D-STK-11: the webhook route, its dispatcher and one handler per event, with idempotency), the entitlement service, and the `stripe` SDK, owned by the web app (D-STK-16).
 > **Built by:** STK-16 built the webhook spine (route, dispatcher, ledger, keys, SDK ownership), which the lists below cover; STK-21 adds the handlers and entitlements, and its lines. Nothing here is guessed ahead of the code.
-> **Run from:** step 4 of [`new-project.md`](new-project.md).
+> **Run from:** step 4 of [`new-project/README.md`](../new-project/README.md).
 
 ## Files to delete
 

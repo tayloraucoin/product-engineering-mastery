@@ -8,7 +8,7 @@
  *
  * Retention: each row points, through Stripe, at a person's payment, so it is
  * kept no longer than it is needed. STK-21 prunes `processed` rows older than
- * 30 days, well past Stripe's three-day retries (remove-billing.md).
+ * 30 days, well past Stripe's three-day retries (remove/billing.md).
  */
 
 import { sql } from "drizzle-orm";

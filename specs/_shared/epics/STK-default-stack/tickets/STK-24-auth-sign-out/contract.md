@@ -16,7 +16,7 @@ reviewers: []
 planned_paths:
   - "apps/web/app/auth/**"
   - "apps/web/lib/supabase/**"
-  - "docs/runbooks/remove-supabase-auth.md"
+  - "docs/runbooks/remove/supabase-auth.md"
 depends_on:
   - STK-12
 out_of_scope:

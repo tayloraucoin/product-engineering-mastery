@@ -1,17 +1,23 @@
 ---
 title: Onboard an agent — verify the context loads as documented
-description: Follow when a new agent tool, a new model, or a fresh clone of this repo is first used, to prove the always-on files, path rules, skills and subagents load exactly as docs/index.md says.
+description: Follow when the team adopts a new model or a new agent tool, or after a harness change, to prove the always-on files, path rules, skills and subagents load exactly as docs/index.md says; not when a new developer joins.
 layer: runbooks
 status: adopted
 thread: P-B
 role: Plumb
 date: 2026-10-01
-last_reviewed: 2026-10-01
+last_reviewed: 2026-10-05
 supersedes:
 load_when:
 ---
 
 # Onboard an agent
+
+## When to use this
+
+- **Run it** when the team adopts a new model or a new agent tool, or after a harness change: `AGENTS.md`, `CLAUDE.md`, `docs/index.md`, `.claude/rules/`, the hooks or settings in `.claude/settings.json`, the skills or the generated subagents. A port of the toolkit into a new product repo counts; a developer's own clone does not.
+- **Not when a new developer joins.** The rules this runbook verifies are shared by everyone on the repo, tracked in git and loaded the same way for every person and every agent. A new developer reads `AGENTS.md` and `docs/index.md`; nothing here changes for them.
+- **A developer's own preferences** (a model choice, an output style, extra permissions, personal hooks) belong in their untracked local settings (`settings.local.json` beside the shared `.claude/settings.json`, or `~/.claude/`), never in the shared files this runbook checks.
 
 > **Who runs it:** whoever introduces the tool or model; Plumb reviews the result.
 > **When:** a new agent tool, a model upgrade, a fresh clone or port of the toolkit, or any change to `AGENTS.md`, `CLAUDE.md`, `docs/index.md` or `.claude/rules/`.

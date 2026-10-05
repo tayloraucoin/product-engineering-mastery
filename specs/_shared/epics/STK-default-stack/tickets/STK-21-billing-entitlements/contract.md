@@ -9,7 +9,7 @@ non_negotiables:
   - "Each handler calls the entitlement service; no handler or route writes the database directly."
   - "The entitlement service lives in packages/services/src/billing and takes ctx and validated input like every service."
   - "A handler for a customer with no matching user changes nothing and is logged through @pem/observability."
-  - "remove-billing.md lists every file, variable and dependency; the manifest entry matches it."
+  - "remove/billing.md lists every file, variable and dependency; the manifest entry matches it."
 devs_call: "Which three events the starter handles by default, and the entitlement table's columns."
 cites:
   - "specs/_shared/epics/STK-default-stack/technical.md"
@@ -24,7 +24,7 @@ planned_paths:
   - "packages/db/src/schema/billing/**"
   - "packages/db/migrations/**"
   - "toolkit.json"
-  - "docs/runbooks/remove-billing.md"
+  - "docs/runbooks/remove/billing.md"
 depends_on:
   - STK-16
 out_of_scope:

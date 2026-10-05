@@ -1,6 +1,6 @@
 # @pem/ai
 
-AI through the AI SDK and Anthropic, wired for three standard cases (D-STK-12). Only this package imports `ai` and `@ai-sdk/*` (D-STK-16), and only `@pem/services` and the app's streaming route (`apps/web/app/api/ai/`) import this package; the boundaries lint holds both. A removable module: [`docs/runbooks/remove-ai.md`](../../docs/runbooks/remove-ai.md).
+AI through the AI SDK and Anthropic, wired for three standard cases (D-STK-12). Only this package imports `ai` and `@ai-sdk/*` (D-STK-16), and only `@pem/services` and the app's streaming route (`apps/web/app/api/ai/`) import this package; the boundaries lint holds both. A removable module: [`docs/runbooks/remove/ai.md`](../../docs/runbooks/remove/ai.md).
 
 - **`@pem/ai/client`**: `createAi({ tier, apiKey, deployed })` returns `extractContact(text)`, `summarize(text)` and `streamChat(messages)`, each taking an optional `{ userId }`. `createChatHandler({ ai, currentUserId })` is the chat route's whole body, and `parseChatRequest(body)` its input gate. The app builds it once from its `env.ts` (`apps/web/app/api/ai/ai.ts`); this package never reads `process.env`, and the key is handed to the SDK, which never looks for its own.
 - **`@pem/ai/models`**: the default model per case, and `MODELS_CHOSEN_ON`, the day they were chosen. No other file names a model.

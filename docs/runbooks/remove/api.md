@@ -1,6 +1,6 @@
 ---
 title: "Remove the API layer — a removal runbook"
-description: "Follow from step 4 of new-project.md when the briefing drops API (tRPC); delete, edit and unlist what the module added, then prove it gone with yarn check-stack."
+description: "Follow from step 4 of new-project/README.md when the briefing drops API (tRPC); delete, edit and unlist what the module added, then prove it gone with yarn check-stack."
 layer: runbooks
 status: draft
 thread: "STK-3"
@@ -15,7 +15,7 @@ load_when:
 
 > **Module:** the API package (D-STK-8: tRPC 11, transport only, each procedure one call into the services), the one owner of `@trpc/*` (D-STK-16). Route Handlers for webhooks, AI streaming, cron and auth callbacks call services directly and are not part of it. D-STK-8 names the product this runbook is for: one simple Next.js app.
 > **Built by:** STK-14. The lists below are the module's `api` entry in `toolkit.json`'s `stack` block, and what reads it.
-> **Run from:** step 4 of [`new-project.md`](new-project.md).
+> **Run from:** step 4 of [`new-project/README.md`](../new-project/README.md).
 
 **What takes its place.** The services stay. A Server Component or Server Action calls a service itself: `getAuthContext()` (`apps/web/lib/supabase/context.ts`) for the user, `createServiceContext` (`@pem/services/context`) over `getDb` for the context, then the service, catching the domain errors in `@pem/services/errors` where it shows them.
 
@@ -58,5 +58,5 @@ None: tRPC is a library, with no account, key or dashboard.
 1. In `toolkit.json`, set `"removed": true` on the `api` entry of the `stack` block.
 2. `yarn check-stack` exits 0: no listed file, variable or dependency of the module is left.
 3. `git grep -il trpc -- apps packages tooling` prints nothing.
-4. `yarn check-refs` names the deleted paths this runbook still lists. Add each to `tooling/refs-pending.json`, keyed exactly as printed: `"<deleted path>": "removed by docs/runbooks/remove-api.md"`.
+4. `yarn check-refs` names the deleted paths this runbook still lists. Add each to `tooling/refs-pending.json`, keyed exactly as printed: `"<deleted path>": "removed by docs/runbooks/remove/api.md"`.
 5. `yarn verify` exits 0.

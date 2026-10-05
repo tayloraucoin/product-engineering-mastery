@@ -47,5 +47,5 @@ Every folder has a page like this one. The table at the foot of each is generate
 | [`references/`](references/README.md) | Read when a UI build, critique or spec needs the library; maps the task type to at most three reference files, so nothing else in docs/references/ loads. |
 | [`research/`](research/README.md) | Open to pull a thread output from the shelf when the context calls for it: the raw reports behind the practice, by topic, kept byte for byte. |
 | [`roles/`](roles/README.md) | Open to pick who plays a thread: the departments, their seats, and the guide for writing a new role. |
-| [`runbooks/`](runbooks/README.md) | Open when a procedure is followed by hand: onboarding an agent tool, releasing behind a flag, testing a variant with real customers, or a postmortem. |
+| [`runbooks/`](runbooks/README.md) | Open when a procedure is followed by hand: starting a product repo, removing or adding a stack module, onboarding an agent tool, releasing behind a flag, testing a variant with real customers, or a postmortem. |
 | [`workflows/`](workflows/README.md) | Read first when you are new to the toolkit or need to explain it to someone: the five systems, the two workflows, the system map, and where every file of a piece of work lives. |

@@ -1,6 +1,6 @@
 ---
 title: "Remove Supabase Auth — a removal runbook"
-description: "Follow from step 4 of new-project.md when the briefing drops Supabase Auth; delete, edit and unlist what the module added, then prove it gone with yarn check-stack."
+description: "Follow from step 4 of new-project/README.md when the briefing drops Supabase Auth; delete, edit and unlist what the module added, then prove it gone with yarn check-stack."
 layer: runbooks
 status: draft
 thread: "STK-3"
@@ -15,9 +15,9 @@ load_when:
 
 > **Module:** the auth package (D-STK-7: server, browser, admin and session-refresh factories, the request seam that returns the auth context, refresh in the proxy), the one owner of the `@supabase/*` SDKs (D-STK-16).
 > **Built by:** STK-12 builds it; STK-11 builds the local auth mirror it calls (D-STK-6). The lists below are the module's `auth` entry in `toolkit.json`'s `stack` block, and what reads it.
-> **Run from:** step 4 of [`new-project.md`](new-project.md).
+> **Run from:** step 4 of [`new-project/README.md`](../new-project/README.md).
 
-**When both Supabase modules go.** Run this runbook first, then [`remove-supabase-database.md`](remove-supabase-database.md): auth sits above the database in the package graph (D-STK-1). With both gone, nothing uses the Supabase project, so the vendor-side steps of both runbooks apply, and the database guardrails in `.claude/settings.json` (D-STK-18, STK-10) guard nothing. Every policy beside a table reads `app.user_id`, which the RLS bridge sets from the `AuthContext` this module returns; with auth gone, a product that keeps the database sets that context from its own identity source, or queries only as a service.
+**When both Supabase modules go.** Run this runbook first, then [`supabase-database.md`](supabase-database.md): auth sits above the database in the package graph (D-STK-1). With both gone, nothing uses the Supabase project, so the vendor-side steps of both runbooks apply, and the database guardrails in `.claude/settings.json` (D-STK-18, STK-10) guard nothing. Every policy beside a table reads `app.user_id`, which the RLS bridge sets from the `AuthContext` this module returns; with auth gone, a product that keeps the database sets that context from its own identity source, or queries only as a service.
 
 ## The local auth mirror (STK-11)
 

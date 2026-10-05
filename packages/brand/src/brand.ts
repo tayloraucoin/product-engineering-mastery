@@ -4,7 +4,7 @@
  * stories read it; none of them writes a brand value of its own.
  *
  * Placeholder values. A product sets its own in the new-project guide's
- * brand step, which edits this file and `assets/` (docs/runbooks/new-project.md).
+ * brand step, which edits this file and `assets/` (docs/runbooks/new-project/README.md).
  *
  * The theme colours mirror `--primary` and `--primary-foreground` in
  * `packages/config/tailwind/preset.css`, which stays the home of every colour

@@ -1,6 +1,6 @@
 ---
 title: "Remove the Supabase database — a removal runbook"
-description: "Follow from step 4 of new-project.md when the briefing drops Supabase database; delete, edit and unlist what the module added, then prove it gone with yarn check-stack."
+description: "Follow from step 4 of new-project/README.md when the briefing drops Supabase database; delete, edit and unlist what the module added, then prove it gone with yarn check-stack."
 layer: runbooks
 status: draft
 thread: "STK-3"
@@ -15,9 +15,9 @@ load_when:
 
 > **Module:** the database package (D-STK-5: Drizzle on Supabase, schema, policies, migrations and setup SQL), the one owner of `postgres` and `drizzle-kit` (D-STK-16).
 > **Built by:** STK-9; STK-10 adds its agent guardrails (D-STK-18); STK-11 adds the local auth mirror and the Supabase CLI that runs the local database (D-STK-6).
-> **Run from:** step 4 of [`new-project.md`](new-project.md).
+> **Run from:** step 4 of [`new-project/README.md`](../new-project/README.md).
 
-**When both Supabase modules go.** Run [`remove-supabase-auth.md`](remove-supabase-auth.md) first, then this one: auth sits above the database in the package graph (D-STK-1). With both gone, nothing uses the Supabase project, so the vendor-side steps of both runbooks apply, and the database guardrails in `.claude/settings.json` (D-STK-18, STK-10) guard nothing. Removing the database while keeping auth: follow "When auth stays" below as well.
+**When both Supabase modules go.** Run [`supabase-auth.md`](supabase-auth.md) first, then this one: auth sits above the database in the package graph (D-STK-1). With both gone, nothing uses the Supabase project, so the vendor-side steps of both runbooks apply, and the database guardrails in `.claude/settings.json` (D-STK-18, STK-10) guard nothing. Removing the database while keeping auth: follow "When auth stays" below as well.
 
 ## Before deleting anything
 

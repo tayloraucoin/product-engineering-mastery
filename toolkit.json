@@ -254,7 +254,7 @@
       "dependencies": ["@pem/catalog"],
       "boundaries": ["catalog"],
       "locked": false,
-      "runbook": "docs/runbooks/remove-catalog.md"
+      "runbook": "docs/runbooks/remove/catalog.md"
     },
     "validators": {
       "files": ["packages/validators"],
@@ -276,7 +276,7 @@
       ],
       "boundaries": ["db"],
       "locked": false,
-      "runbook": "docs/runbooks/remove-supabase-database.md"
+      "runbook": "docs/runbooks/remove/supabase-database.md"
     },
     "auth": {
       "files": [
@@ -293,7 +293,7 @@
       "dependencies": ["@pem/auth", "@supabase/ssr", "@supabase/supabase-js"],
       "boundaries": ["auth"],
       "locked": false,
-      "runbook": "docs/runbooks/remove-supabase-auth.md"
+      "runbook": "docs/runbooks/remove/supabase-auth.md"
     },
     "email": {
       "files": ["packages/email", "apps/web/lib/email.ts"],
@@ -314,7 +314,7 @@
       ],
       "boundaries": ["ai", "web-ai-route"],
       "locked": false,
-      "runbook": "docs/runbooks/remove-ai.md"
+      "runbook": "docs/runbooks/remove/ai.md"
     },
     "services": {
       "files": ["packages/services"],
@@ -337,7 +337,7 @@
       ],
       "boundaries": ["api"],
       "locked": false,
-      "runbook": "docs/runbooks/remove-api.md"
+      "runbook": "docs/runbooks/remove/api.md"
     },
     "error-monitoring": {
       "files": [
@@ -359,7 +359,7 @@
       "dependencies": ["@sentry/nextjs"],
       "boundaries": [],
       "locked": false,
-      "runbook": "docs/runbooks/remove-error-monitoring.md"
+      "runbook": "docs/runbooks/remove/error-monitoring.md"
     },
     "billing": {
       "files": [
@@ -373,7 +373,7 @@
       "dependencies": ["stripe"],
       "boundaries": ["stripe"],
       "locked": false,
-      "runbook": "docs/runbooks/remove-billing.md"
+      "runbook": "docs/runbooks/remove/billing.md"
     }
   }
 }

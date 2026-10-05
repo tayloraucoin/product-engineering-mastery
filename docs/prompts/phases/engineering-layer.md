@@ -29,7 +29,7 @@ load_when: on request
 >
 > Later rulings are added here as a blockquote, newest first. Each one is dated and names the ruling it applies. The body below is never rewritten.
 
-> **Amendment (2026-10-03, STK-3; applies EN-10, record 0010).** J12's `docs/runbooks/port.md` is not written: `docs/runbooks/new-project.md` replaces it, under the rule "duplicate, then remove", and the README points there. J13's "Trial log" belongs to the dry-run ticket, STK-20, and lands in `new-project.md`. The rest of J12 stands. `tooling/refs-pending.json` keeps the `port.md` entry, reworded to "superseded by docs/runbooks/new-project.md (STK-3)", because this body still names it.
+> **Amendment (2026-10-03, STK-3; applies EN-10, record 0010).** J12's `docs/runbooks/port.md` is not written: `docs/runbooks/new-project/README.md` replaces it, under the rule "duplicate, then remove", and the README points there. J13's "Trial log" belongs to the dry-run ticket, STK-20, and lands in `new-project/README.md`. The rest of J12 stands. `tooling/refs-pending.json` keeps the `port.md` entry, reworded to "superseded by docs/runbooks/new-project/README.md (STK-3)", because this body still names it.
 
 **Venue.** Claude Code, deepest available model, in `~/lighthouse/product-engineering-mastery` on `main`, on a clean tree.
 

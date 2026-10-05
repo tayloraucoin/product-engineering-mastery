@@ -12,7 +12,7 @@ load_when:
 ---
 # P-E — The port dry-run and the README (Claude Code, fresh directory, Sonnet is enough)
 
-> **Amendment (2026-10-03, STK-3; applies EN-10, record 0010).** The porting rule is now "duplicate, then remove". The port runbook this prompt asks for is `docs/runbooks/new-project.md`, and the README already points to it, so this run does not write a runbook into the README. Its dry-run of the guide is ticket STK-20; where the body says "what a product repo copies, what it generates, what it never copies", read "what a duplicate keeps, removes and clears". The body below is unchanged.
+> **Amendment (2026-10-03, STK-3; applies EN-10, record 0010).** The porting rule is now "duplicate, then remove". The port runbook this prompt asks for is `docs/runbooks/new-project/README.md`, and the README already points to it, so this run does not write a runbook into the README. Its dry-run of the guide is ticket STK-20; where the body says "what a product repo copies, what it generates, what it never copies", read "what a duplicate keeps, removes and clears". The body below is unchanged.
 
 **Inject:** none — this is a procedure, not a judgment call; Plumb reviews the result. **Attach:** the toolkit repo URL.
 

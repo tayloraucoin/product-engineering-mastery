@@ -1,6 +1,6 @@
 ---
 title: "Remove AI — a removal runbook"
-description: "Follow from step 4 of new-project.md when the briefing drops AI; delete, edit and unlist what the module added, then prove it gone with yarn check-stack."
+description: "Follow from step 4 of new-project/README.md when the briefing drops AI; delete, edit and unlist what the module added, then prove it gone with yarn check-stack."
 layer: runbooks
 status: draft
 thread: "STK-3"
@@ -15,7 +15,7 @@ load_when:
 
 > **Module:** the AI package (D-STK-12: the AI SDK and Anthropic, three standard cases, recorded fixtures for the local tier), the one owner of `ai` and `@ai-sdk/*` (D-STK-16), and the app's streaming route.
 > **Built by:** STK-17. The lists below are the module's `ai` entry in `toolkit.json`'s `stack` block, and what reads it.
-> **Run from:** step 4 of [`new-project.md`](new-project.md).
+> **Run from:** step 4 of [`new-project/README.md`](../new-project/README.md).
 
 ## Files to delete
 

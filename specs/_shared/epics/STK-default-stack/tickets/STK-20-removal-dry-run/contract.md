@@ -17,10 +17,10 @@ cites:
 truth_files: "none: no living UX file covers the starter's own stack"
 reviewers: []
 planned_paths:
-  - "docs/runbooks/new-project.md"
-  - "docs/runbooks/remove-supabase-auth.md"
-  - "docs/runbooks/remove-billing.md"
-  - "docs/runbooks/remove-ai.md"
+  - "docs/runbooks/new-project/README.md"
+  - "docs/runbooks/remove/supabase-auth.md"
+  - "docs/runbooks/remove/billing.md"
+  - "docs/runbooks/remove/ai.md"
   - "README.md"
   - "docs/prompts/phases/port-dry-run.md"
 depends_on:

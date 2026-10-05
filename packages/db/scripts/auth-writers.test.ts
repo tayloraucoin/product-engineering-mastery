@@ -3,7 +3,7 @@
  * package's shipped code (STK-11): any other INSERT, UPDATE, DELETE or
  * TRUNCATE against auth.users would bypass the mirror's three guards. Tests
  * are exempt; they create and remove synthetic auth users. With the mirror
- * removed (remove-supabase-auth.md), no shipped file may write there at all.
+ * removed (remove/supabase-auth.md), no shipped file may write there at all.
  */
 
 import assert from "node:assert/strict";

@@ -1,6 +1,6 @@
 ---
 title: "Remove error monitoring — a removal runbook"
-description: "Follow from step 4 of new-project.md when the briefing drops Error monitoring (Sentry); delete, edit and unlist what the module added, then prove it gone with yarn check-stack."
+description: "Follow from step 4 of new-project/README.md when the briefing drops Error monitoring (Sentry); delete, edit and unlist what the module added, then prove it gone with yarn check-stack."
 layer: runbooks
 status: draft
 thread: "STK-3"
@@ -15,7 +15,7 @@ load_when:
 
 > **Module:** Sentry, wired in the web app only (D-STK-12), and `@sentry/nextjs`, owned by the web app (D-STK-16). The observability package's vendor-free error reporter (STK-5) is not part of it and stays: with Sentry gone, `logger.error` still logs and hands each error to the no-op reporter.
 > **Built by:** STK-18. The lists below are the module's `error-monitoring` entry in `toolkit.json`'s `stack` block, and what reads it.
-> **Run from:** step 4 of [`new-project.md`](new-project.md).
+> **Run from:** step 4 of [`new-project/README.md`](../new-project/README.md).
 
 ## Files to delete
 
@@ -64,5 +64,5 @@ The module holds no element. In `packages/config/eslint/boundaries.js`, delete t
 1. In `toolkit.json`, set `"removed": true` on the `error-monitoring` entry of the `stack` block.
 2. `yarn check-stack` exits 0: no listed file, variable or dependency of the module is left.
 3. `git grep -il sentry -- apps packages tooling turbo.json .env.example ':!tooling/refs-pending.json'` prints nothing.
-4. `yarn check-refs` names the deleted paths this runbook still lists. Add each to `tooling/refs-pending.json`, keyed exactly as printed: `"<deleted path>": "removed by docs/runbooks/remove-error-monitoring.md"`.
+4. `yarn check-refs` names the deleted paths this runbook still lists. Add each to `tooling/refs-pending.json`, keyed exactly as printed: `"<deleted path>": "removed by docs/runbooks/remove/error-monitoring.md"`.
 5. `yarn verify` exits 0.

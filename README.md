@@ -45,4 +45,4 @@ The docs app reads the markdown in `docs/` directly: the sidebar groups files by
 
 ## Starting a product from this repo
 
-Duplicate, then remove ([record 0010](docs/decisions/records/0010-starter-ships-default-stack.md)): a product repo starts as a full duplicate of this one, default stack included, then removes the modules it does not use and clears the toolkit's own content (the demo, `docs/research/`, `specs/`). Follow [`docs/runbooks/new-project.md`](docs/runbooks/new-project.md); it ends on `yarn check-stack` and `yarn verify`. The guide is a draft until the dry-run ticket (STK-20) times it on a duplicate.
+Duplicate, then remove ([record 0010](docs/decisions/records/0010-starter-ships-default-stack.md)): a product repo starts as a full duplicate of this one, default stack included, then removes the modules it does not use and clears the toolkit's own content (the demo, `docs/research/`, `specs/`). Follow [`docs/runbooks/new-project/README.md`](docs/runbooks/new-project/README.md); it ends on `yarn check-stack` and `yarn verify`. The guide is a draft until the dry-run ticket (STK-20) times it on a duplicate.
