@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { expect, userEvent, within } from "storybook/test";
+import { expect, userEvent, waitFor, within } from "storybook/test";
 
 import {
   Select,
@@ -91,6 +91,11 @@ export const Choose: Story = {
     );
     await userEvent.click(within(list).getByRole("option", { name: "Leek" }));
     await expect(canvas.getByRole("combobox")).toHaveTextContent("Leek");
+    await waitFor(() =>
+      expect(
+        within(canvasElement.ownerDocument.body).queryByRole("listbox"),
+      ).toBeNull(),
+    );
   },
 };
 
@@ -123,6 +128,11 @@ export const Keyboard: Story = {
     await userEvent.keyboard("{Enter}");
     await within(canvasElement.ownerDocument.body).findByRole("listbox");
     await userEvent.keyboard("{Escape}");
-    await expect(trigger).toHaveFocus();
+    await waitFor(() => expect(trigger).toHaveFocus());
+    await waitFor(() =>
+      expect(
+        within(canvasElement.ownerDocument.body).queryByRole("listbox"),
+      ).toBeNull(),
+    );
   },
 };

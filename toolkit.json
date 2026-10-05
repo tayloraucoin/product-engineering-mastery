@@ -229,7 +229,8 @@
         "lucide-react",
         "tw-animate-css",
         "shadcn",
-        "input-otp"
+        "input-otp",
+        "react-resizable-panels"
       ],
       "boundaries": ["ui"],
       "locked": true,
@@ -294,6 +295,19 @@
       "locked": true,
       "runbook": null
     },
+    "ai": {
+      "files": ["packages/ai", "apps/web/app/api/ai"],
+      "env": ["ANTHROPIC_API_KEY"],
+      "dependencies": [
+        "@pem/ai",
+        "ai",
+        "@ai-sdk/anthropic",
+        "@ai-sdk/provider"
+      ],
+      "boundaries": ["ai", "web-ai-route"],
+      "locked": false,
+      "runbook": "docs/runbooks/remove-ai.md"
+    },
     "services": {
       "files": ["packages/services"],
       "env": [],
@@ -301,6 +315,56 @@
       "boundaries": ["services"],
       "locked": true,
       "runbook": null
+    },
+    "error-monitoring": {
+      "files": [
+        "apps/web/instrumentation.ts",
+        "apps/web/instrumentation-client.ts",
+        "apps/web/sentry.server.config.ts",
+        "apps/web/sentry.edge.config.ts",
+        "apps/web/lib/error-reporting"
+      ],
+      "env": [
+        "NEXT_PUBLIC_SENTRY_DSN",
+        "NEXT_PUBLIC_SENTRY_ENVIRONMENT",
+        "SENTRY_AUTH_TOKEN",
+        "SENTRY_ORG",
+        "SENTRY_PROJECT",
+        "VERCEL_GIT_COMMIT_SHA",
+        "NEXT_RUNTIME"
+      ],
+      "dependencies": ["@sentry/nextjs"],
+      "boundaries": [],
+      "locked": false,
+      "runbook": "docs/runbooks/remove-error-monitoring.md"
+    },
+    "api": {
+      "files": ["packages/api", "apps/web/app/api/trpc", "apps/web/lib/trpc"],
+      "env": [],
+      "dependencies": [
+        "@pem/api",
+        "@trpc/server",
+        "@trpc/client",
+        "@trpc/tanstack-react-query",
+        "@tanstack/react-query",
+        "superjson"
+      ],
+      "boundaries": ["api"],
+      "locked": false,
+      "runbook": "docs/runbooks/remove-api.md"
+    },
+    "billing": {
+      "files": [
+        "apps/web/app/api/webhooks/stripe",
+        "apps/web/lib/billing",
+        "packages/db/src/schema/billing",
+        "packages/db/src/billing"
+      ],
+      "env": ["STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET", "STRIPE_PRICE_ID"],
+      "dependencies": ["stripe"],
+      "boundaries": ["stripe"],
+      "locked": false,
+      "runbook": "docs/runbooks/remove-billing.md"
     }
   }
 }

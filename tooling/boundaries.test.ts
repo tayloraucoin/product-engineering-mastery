@@ -98,6 +98,17 @@ const DISALLOWED: [file: string, code: string, message: RegExp][] = [
     'import { Resend } from "resend";',
     /resend is owned by @pem\/email/,
   ],
+  // STK-18: @sentry/* is owned by apps/web (D-STK-16); packages import no vendor.
+  [
+    "packages/observability/src/zz-probe.ts",
+    'import * as Sentry from "@sentry/nextjs";',
+    /@sentry\/\* is owned by apps\/web/,
+  ],
+  [
+    "packages/ui/src/zz-probe.ts",
+    'import "@sentry/react";',
+    /@sentry\/\* is owned by apps\/web/,
+  ],
   // CAT-3: the shelf is never imported (CS-07, record 0011).
   [
     "apps/web/app/zz-probe.ts",
@@ -154,6 +165,10 @@ const ALLOWED: [file: string, code: string][] = [
     'import "resend"; import "@pem/brand/brand"; import "@pem/observability/logger";',
   ],
   ["apps/web/lib/zz-probe.ts", 'import "@pem/email/mailer";'],
+  [
+    "apps/web/lib/error-reporting/zz-probe.ts",
+    'import * as Sentry from "@sentry/nextjs"; import "@pem/observability/error-reporter";',
+  ],
   ["packages/catalog/src/zz-probe.ts", 'import "@pem/ui/button";'],
   [
     "apps/web/app/zz-probe.ts",

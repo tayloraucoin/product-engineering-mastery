@@ -3,7 +3,10 @@ import { fileURLToPath } from "node:url";
 import type { NextConfig } from "next";
 
 import { getLocalDevOrigins } from "../../tooling/local-dev-origins";
-import { nextConfigEnv } from "./env";
+import { withSentryConfig } from "@sentry/nextjs";
+
+import { errorReportingBuild, nextConfigEnv } from "./env";
+import { sentryBuildOptions } from "./lib/error-reporting/build";
 
 const appRoot = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(appRoot, "../..");
@@ -47,4 +50,8 @@ const nextConfig: NextConfig = {
   outputFileTracingRoot: repoRoot,
 };
 
-export default nextConfig;
+/** Sentry wraps the config (STK-18): the tunnel route, and the source-map upload a tokenless build skips. */
+export default withSentryConfig(
+  nextConfig,
+  sentryBuildOptions(errorReportingBuild),
+);

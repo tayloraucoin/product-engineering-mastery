@@ -59,6 +59,8 @@ const EASE_IN_RE = /^ease-in(?!-out)\b/;
 const LITERAL_UNIT_RE =
   /(?<![\w.-])-?(?:\d*\.)?\d+(?:px|rem|em|ms|s|pt|pc|in|cm|mm|q)(?![\w-])/gi;
 const HAIRLINE_RE = /^-?[12]px$/i;
+/** Zero in any unit (a fallback such as var(--x, 0px)) is not a design value. */
+const ZERO_RE = /^-?0*\.?0+[a-z]+$/i;
 /** A colour utility whose arbitrary value is a bare word: a CSS colour name. */
 const COLOR_NAME_RE = new RegExp(
   String.raw`^-?(${COLOR_UTILITIES})-\[([a-z]+)\]`,
@@ -98,7 +100,7 @@ function rawArbitrary(utility) {
     .replaceAll("_", " ");
   if (/cubic-bezier\(/.test(inner)) return true;
   return [...inner.matchAll(LITERAL_UNIT_RE)].some(
-    (match) => !HAIRLINE_RE.test(match[0]),
+    (match) => !HAIRLINE_RE.test(match[0]) && !ZERO_RE.test(match[0]),
   );
 }
 
@@ -151,8 +153,10 @@ const noRawValues = {
     };
     return {
       ...Object.fromEntries(CONTEXTS.map((selector) => [selector, check])),
-      "JSXAttribute[name.name='style'] Property > Literal"(node) {
-        context.report({ node, messageId: "inlineStyle" });
+      // A literal value in a style object; a key such as "--ratio" set from a variable is not one.
+      "JSXAttribute[name.name='style'] Property"(node) {
+        if (node.value.type === "Literal")
+          context.report({ node: node.value, messageId: "inlineStyle" });
       },
     };
   },

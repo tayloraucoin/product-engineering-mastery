@@ -99,7 +99,13 @@ const SDK_OWNERS = {
   "drizzle-kit": "db",
   "@supabase/*": "auth",
   resend: "email",
+  "@sentry/*": "app-web",
 };
+
+/** How a ban names an SDK's owner: the package's import name, or the app's folder. */
+function ownerName(type) {
+  return type.startsWith("app-") ? `apps/${type.slice(4)}` : `@pem/${type}`;
+}
 
 /** Elements that import no transport or framework (D-STK-8), and what they are kept off. */
 const TRANSPORT_FREE = ["services"];
@@ -130,7 +136,7 @@ function restrictedImports(owner, extraPatterns = []) {
     .filter(([, sdkOwner]) => sdkOwner !== owner)
     .map(([sdk, sdkOwner]) => ({
       group: [sdk, `${sdk}/*`],
-      message: `${sdk} is owned by @pem/${sdkOwner} (D-STK-16); import what you need from @pem/${sdkOwner}.`,
+      message: `${sdk} is owned by ${ownerName(sdkOwner)} (D-STK-16); import what you need from ${ownerName(sdkOwner)}.`,
     }));
   return [
     "error",

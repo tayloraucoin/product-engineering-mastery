@@ -55,6 +55,7 @@ const PASSING = [
   "grid-rows-[auto_1fr] transition-[color,box-shadow] max-w-[80%] min-w-[14ch]",
   "w-[calc(var(--sidebar-width-icon)+(--spacing(4)))] translate-x-[calc(100%-2px)]",
   "[--stack-step:0.05] h-[calc(100%-1px)] border-[1px] bg-[transparent] font-[var(--font-display)]",
+  "transform-[translate3d(var(--translate-x,0px),var(--translate-y,0px),0)] [--x:max(0px,var(--y))]",
   "shadow-resting shadow-raised shadow-overlay shadow-modal shadow-none",
   "duration-(--motion-duration-base) ease-(--motion-ease-out) ease-in-out",
   "rounded-xl rounded-4xl ring-3 bg-destructive/10 text-sidebar-accent-foreground",
@@ -92,4 +93,18 @@ test("C2: a raw value inside cn() is reported once, and an inline style value is
     1,
   );
   assert.ok(messages.some((m) => /Inline style value/.test(m)));
+});
+
+test("C2: a CSS variable set from a prop in a style object passes; its literal value would not", async () => {
+  const code = [
+    'export const A = ({ ratio }: { ratio: number }) => <div style={{ "--ratio": ratio } as never} />;',
+    'export const B = () => <div style={{ "--ratio": "16 / 9" } as never} />;',
+    "",
+  ].join("\n");
+  const [result] = await eslint.lintText(code, { filePath: PROBE });
+  const inline = result!.messages.filter((m) =>
+    /Inline style value/.test(m.message),
+  );
+  assert.equal(inline.length, 1);
+  assert.equal(inline[0]!.line, 2);
 });
