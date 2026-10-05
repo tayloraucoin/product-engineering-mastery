@@ -76,6 +76,6 @@ check-test-weakening — 10 fixtures behaved; no weakening against main.
 ...
  Tasks:    2 successful, 2 total
 Cached:    0 cached, 2 total
-  Time:    11.867s 
+  Time:    11.867s
 
 ```
