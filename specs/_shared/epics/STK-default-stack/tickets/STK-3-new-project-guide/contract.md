@@ -8,7 +8,7 @@ non_negotiables:
   - Each of the six removal runbooks has the same sections; files to delete, files to edit, variables, dependencies, boundaries entries, vendor-side steps, verify.
   - A runbook for a module not yet built says so and lists nothing invented; its file list is filled by the ticket that builds the module.
   - There is one runbook for Supabase Auth and one for the Supabase database, and each says what changes when both are removed.
-  - The README porting rule becomes duplicate, then remove, and points to the guide; new-project.md replaces the planned port.md (J12), whose pending entry stays, reworded to "superseded by docs/runbooks/new-project.md (STK-3)", because byte-preserved prompts still name it.
+  - The README porting rule becomes duplicate, then remove, and points to the guide; new-project/README.md replaces the planned port.md (J12), whose pending entry stays, reworded to "superseded by docs/runbooks/new-project/README.md (STK-3)", because byte-preserved prompts still name it.
   - port-dry-run.md and engineering-layer.md change only by a dated amendment block, never in place.
 devs_call: Wording and the order of steps inside a runbook.
 cites:
@@ -19,13 +19,13 @@ truth_files: "none: runbooks are not UX truth"
 reviewers:
   - vigil
 planned_paths:
-  - docs/runbooks/new-project.md
-  - docs/runbooks/remove-supabase-auth.md
-  - docs/runbooks/remove-supabase-database.md
-  - docs/runbooks/remove-billing.md
-  - docs/runbooks/remove-api.md
-  - docs/runbooks/remove-ai.md
-  - docs/runbooks/remove-error-monitoring.md
+  - docs/runbooks/new-project/README.md
+  - docs/runbooks/remove/supabase-auth.md
+  - docs/runbooks/remove/supabase-database.md
+  - docs/runbooks/remove/billing.md
+  - docs/runbooks/remove/api.md
+  - docs/runbooks/remove/ai.md
+  - docs/runbooks/remove/error-monitoring.md
   - README.md
   - docs/prompts/phases/port-dry-run.md
   - docs/prompts/phases/engineering-layer.md

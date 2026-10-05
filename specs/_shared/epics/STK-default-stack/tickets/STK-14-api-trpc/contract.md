@@ -9,7 +9,7 @@ non_negotiables:
   - "Context resolves a cookie session and a bearer token to the same ctx.user."
   - "hooks never imports api; query hooks live in @pem/api/react."
   - "Webhooks, AI streaming, cron and auth callbacks stay Route Handlers."
-  - "remove-api.md lists every file, variable and dependency; the manifest entry matches."
+  - "remove/api.md lists every file, variable and dependency; the manifest entry matches."
 devs_call: "Router file layout and the provider's placement in the layout."
 cites:
   - "specs/_shared/epics/STK-default-stack/technical.md"
@@ -26,7 +26,7 @@ planned_paths:
   - "apps/web/package.json"
   - "packages/config/eslint/boundaries.js"
   - "toolkit.json"
-  - "docs/runbooks/remove-api.md"
+  - "docs/runbooks/remove/api.md"
   - "docs/engineering/tech-stack.md"
   - "docs/engineering/codebase-conventions.md"
   - "apps/web/lib/supabase/context.ts"

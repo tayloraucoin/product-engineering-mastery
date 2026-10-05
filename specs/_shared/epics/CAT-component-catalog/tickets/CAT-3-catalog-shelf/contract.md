@@ -43,8 +43,8 @@ planned_paths:
   - ".prettierignore"
   - "yarn.lock"
   - "toolkit.json"
-  - "docs/runbooks/remove-catalog.md"
-  - "docs/runbooks/new-project.md"
+  - "docs/runbooks/remove/catalog.md"
+  - "docs/runbooks/new-project/README.md"
   - "docs/engineering/codebase-conventions.md"
   - "docs/_generated/directory-map.md"
   - "docs/runbooks/README.md"
@@ -89,6 +89,6 @@ tier: 1
 - **Approach:** `packages/catalog` (`@pem/catalog`, private) with `manifest.json`, generated `STATUS.md`, `README.md` and `src/<source>/<kind>/<name>/`; a `catalog` boundary element importing `config` and `ui`; the workshop globs `../../catalog/src/**/*.stories.tsx` and registers the catalog as a Tailwind source in `preview.css`; a Provenance panel in the manager reads `parameters.provenance`; `tooling/check-catalog.ts` derives states and writes STATUS.md.
 - **Decisions that apply:** D-CAT-3 to D-CAT-8. Deviation from D-CAT-6, recorded in technical.md: provenance shows in a manager panel, not a canvas strip, so axe and layout see only the component; and the workshop gains no import of the catalog (a dependency would cycle with the catalog's own on @pem/ui).
 - **Interfaces:** `yarn check-catalog [--ticket <id>] [--write]`; manifest `{ sources: { <id>: { name, verdict, licence, homepage, ruling } }, entries: [{ id, name, source, target, path, kind, layer, wave, ticket, linkOnly? }] }`; story tags `source:<id>`, `verdict:<kit | after-edits | shelf | mine | unruled>` (kit for every @pem/ui entry, else the source's), `layer:<primitive | composed | block>`; `parameters.provenance = { upstream, licence, adapted }`; catalog titles `Catalog/<Kind>/<Name>/<Source name>`.
-- **Per path:** the package and its proof item `src/custom/control/copy-button/` (lifted from taylor-aucoin at 7f8a4a1, onto the house Button and tokens); boundaries element and probes; workshop files; the button and theme-toggle stories gain tags and provenance; root `check-catalog` script, also added to `verify`; toolkit.json `catalog` module, `remove-catalog.md` and its row in `new-project.md`; the conventions' package table; technical.md's D-CAT-6 wording.
+- **Per path:** the package and its proof item `src/custom/control/copy-button/` (lifted from taylor-aucoin at 7f8a4a1, onto the house Button and tokens); boundaries element and probes; workshop files; the button and theme-toggle stories gain tags and provenance; root `check-catalog` script, also added to `verify`; toolkit.json `catalog` module, `remove/catalog.md` and its row in `new-project/README.md`; the conventions' package table; technical.md's D-CAT-6 wording.
 - **Gotchas:** `@pem/ui` must not list `@pem/catalog` in any dependency field (turbo rejects the cycle). Storybook indexes tags statically, so tags are literals in each story's meta. A nested `AGENTS.md` in packages/ would push the path-rules budget over (1,456 of 1,500), so the catalog's conventions live in its `README.md`.
 - **Model:** any current model.

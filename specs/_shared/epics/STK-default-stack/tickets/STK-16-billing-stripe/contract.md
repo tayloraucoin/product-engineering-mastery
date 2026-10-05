@@ -10,7 +10,7 @@ non_negotiables:
   - "The event id is recorded as processed only after its handler succeeds."
   - "The dispatcher is a map from event type to a handler file under lib/billing/webhook/handlers, not a switch."
   - "yarn stripe:listen forwards to the local route."
-  - "The manifest entry lists this ticket's files; STK-21 completes it with remove-billing.md."
+  - "The manifest entry lists this ticket's files; STK-21 completes it with remove/billing.md."
 devs_call: "The processed-event table's columns and the retryable status code."
 cites:
   - "specs/_shared/epics/STK-default-stack/technical.md"
@@ -46,7 +46,7 @@ planned_paths:
   - "tooling/check-client-bundle.ts"
   - "docs/engineering/tech-stack.md"
   - "yarn.lock"
-  - "docs/runbooks/remove-billing.md"
+  - "docs/runbooks/remove/billing.md"
   - "apps/web/proxy.ts"
 depends_on:
   - STK-13

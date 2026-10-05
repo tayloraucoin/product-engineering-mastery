@@ -3,13 +3,13 @@
 ## Shipped against the contract
 
 - **C1:** seven new runbooks with full frontmatter (`layer: runbooks`, `status: draft`, `thread: "STK-3"`, `role: Usher`) and kebab-case names:
-  - `docs/runbooks/new-project.md`;
-  - `remove-supabase-auth.md`, `remove-supabase-database.md`, `remove-billing.md`, `remove-api.md`, `remove-ai.md`, `remove-error-monitoring.md`.
+  - `docs/runbooks/new-project/README.md`;
+  - `remove/supabase-auth.md`, `remove/supabase-database.md`, `remove/billing.md`, `remove/api.md`, `remove/ai.md`, `remove/error-monitoring.md`.
 
   `yarn lint:docs` passes.
 
-- **C2:** every path and command the runbooks, the README and the amendment blocks name resolves. The only pending entry this ticket touches is `docs/runbooks/port.md`, which stays in `tooling/refs-pending.json`, reworded to "superseded by docs/runbooks/new-project.md (STK-3)" (non-negotiable 5). Unbuilt modules are named by their ticket only, never by a path (D-STK-19). `yarn check-refs` passes.
-- **C3:** `yarn directory-map` regenerated `docs/_generated/directory-map.md` and the table in `docs/runbooks/README.md`; the README's hand-written lines now point a new product repo at `new-project.md`. `yarn directory-map --check` passes.
+- **C2:** every path and command the runbooks, the README and the amendment blocks name resolves. The only pending entry this ticket touches is `docs/runbooks/port.md`, which stays in `tooling/refs-pending.json`, reworded to "superseded by docs/runbooks/new-project/README.md (STK-3)" (non-negotiable 5). Unbuilt modules are named by their ticket only, never by a path (D-STK-19). `yarn check-refs` passes.
+- **C3:** `yarn directory-map` regenerated `docs/_generated/directory-map.md` and the table in `docs/runbooks/README.md`; the README's hand-written lines now point a new product repo at `new-project/README.md`. `yarn directory-map --check` passes.
 - **C4:** two fresh-context cold readers, each holding only the guide and a synthetic one-paragraph briefing. The second named steps 0 to 7 and each closing check. The gaps both found were fixed in the guide or are listed for STK-20. Record: `evidence/C4.md`; after STK-9 filled the database runbook, step 4's line about which modules are built was corrected and the guide re-read (`evidence/C4-reread.md`, the recorded evidence).
 
 Against the non-negotiables:
@@ -18,7 +18,7 @@ Against the non-negotiables:
 2. **The six removal runbooks have identical sections**, in this order: Files to delete, Files to edit, Variables, Dependencies, Boundaries entries, Vendor-side steps, Verify.
 3. **No module is built,** so every list reads "Not built yet: STK-n fills this", naming the manifest field it will come from. Each header names the module from `technical.md`'s decisions and the ticket that builds it. Only Verify is live today: set `"removed": true` on the `stack` entry, then `yarn check-stack` and `yarn verify`, both of which exist.
 4. **Supabase Auth and the Supabase database each have their own runbook,** and each states what happens when both go. Auth is removed first, because it sits above the database in D-STK-1. With both gone, the vendor steps of both apply and the D-STK-18 guardrails guard nothing. The mirror and the policies are left to STK-11, STK-9 and STK-12.
-5. **The README's section is "Starting a product from this repo":** duplicate, then remove, pointing to the guide. `new-project.md` replaces the planned `port.md`, whose pending entry stays, reworded.
+5. **The README's section is "Starting a product from this repo":** duplicate, then remove, pointing to the guide. `new-project/README.md` replaces the planned `port.md`, whose pending entry stays, reworded.
 6. **`port-dry-run.md` and `engineering-layer.md` each gained one dated amendment block** (2026-10-03, STK-3, applying EN-10). Their bodies are unchanged. `engineering-layer.md`'s block sits where its own text says later rulings go.
 
 ## Deviations
@@ -36,7 +36,7 @@ Against the non-negotiables:
 - **Changed after the first vigil review (PASS, four should-fix):**
   - step 2's scope rename and its check now also leave `specs/` alone, so the check can print nothing without hand-editing recorded contracts;
   - the README's opening sentence states duplicate-then-remove;
-  - `remove-billing.md` reads "STK-16 and STK-21 fill this", and its Verify names both tickets;
+  - `remove/billing.md` reads "STK-16 and STK-21 fill this", and its Verify names both tickets;
   - the runbooks README carries `last_reviewed: 2026-10-03`.
 
   C1 to C3 were re-proven after these edits and the review re-run. On that re-run, C2 failed once on an environment change, not on STK-3. A `.claude/settings.local.json` appeared on Taylor's machine, and `check-refs` read its pending entry ("machine-local and untracked by design") as stale. At Taylor's choice, PJ commit `2287cea` makes a git-ignored pending entry never stale, with two tests, and C2 was re-proven. That fix lies outside STK-3's planned paths and is not STK-3's work.

@@ -31,7 +31,7 @@ planned_paths:
   - "apps/web/next.config.ts"
   - "packages/config/eslint/boundaries.js"
   - "docs/engineering/tech-stack.md"
-  - "docs/runbooks/remove-supabase-database.md"
+  - "docs/runbooks/remove/supabase-database.md"
   - "docs/engineering/codebase-conventions.md"
   - "yarn.lock"
 depends_on:

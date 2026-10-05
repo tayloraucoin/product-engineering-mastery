@@ -12,7 +12,7 @@
   - `env.ts` picks `STRIPE_SECRET_KEY` and `STRIPE_PRICE_ID` by tier, and refuses a key whose prefix does not fit the tier, through `keyModeProblem` (D-STK-4).
   - Under `yarn web:dev`, `STRIPE_WEBHOOK_SECRET_LOCAL` is always the secret read; anything that may serve real users (`productionRuntime`: a deployment or any production build) reads the tier's.
   - `yarn stripe:listen` forwards to `localhost:3000/api/webhooks/stripe`.
-  - `toolkit.json` has a `billing` entry (unlocked, runbook `remove-billing.md`). The runbook now lists this ticket's files, edits, variables, dependency, boundaries row and vendor steps; STK-21 adds its own.
+  - `toolkit.json` has a `billing` entry (unlocked, runbook `remove/billing.md`). The runbook now lists this ticket's files, edits, variables, dependency, boundaries row and vendor steps; STK-21 adds its own.
 
 ## Deviations
 
@@ -30,13 +30,13 @@
   - The event's `livemode` must match the tier (chancery): a signing secret carries no mode.
   - A missing secret answers `failed`, naming no configuration (warden).
   - The webhook secret keys on `productionRuntime`, not `deployed` (mason, warden, assay).
-  - `remove-billing.md` no longer claims the module is unbuilt (assay, mason).
+  - `remove/billing.md` no longer claims the module is unbuilt (assay, mason).
   - The ledger test is in the manifest (assay).
   - `/api/webhooks/stripe` is off the session proxy (chancery, vigil, mason).
   - Retention is stated: STK-21 prunes `processed` rows older than 30 days, and the runbook answers erasure (chancery, warden, mason).
   - The route imports through `@/`.
 - Left for the operator: C6's command is `yarn verify`, which `.claude/rules/specs.md` keeps out of criteria (assay, vigil). The frozen criteria can only grow, so the contract stays as cut.
-- Planned paths were added for `apps/web/lib/billing/**`, `packages/db/src/billing/**`, the schema index, `packages/db/package.json`, the ledger test, the boundaries test, the bundle check, `tech-stack.md`, `yarn.lock`, `remove-billing.md` and `apps/web/proxy.ts`.
+- Planned paths were added for `apps/web/lib/billing/**`, `packages/db/src/billing/**`, the schema index, `packages/db/package.json`, the ledger test, the boundaries test, the bundle check, `tech-stack.md`, `yarn.lock`, `remove/billing.md` and `apps/web/proxy.ts`.
 - The spine landed in `3ceeb8e`, under an STK-14 message, after a `git commit` in a parallel thread swept the shared index. `50fd186` carries the formatting fix-ups under STK-16. History was left alone.
 
 ## Not verified

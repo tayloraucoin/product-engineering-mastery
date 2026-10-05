@@ -6,7 +6,7 @@
 - C2: `tooling/check-catalog.ts` derives planned, present, storied and link-only from the tree; seven tests on synthetic trees cover each state, a missing story failing its ticket, a planned entry and an empty ticket, a wrong title, tag or provenance, an orphan story, a stale STATUS.md and four kinds of malformed entry.
 - C3: the button and theme toggle (kit, `source:custom`, `verdict:kit`) and the copy button (catalog, `verdict:unruled`) are storied; `packages/catalog/STATUS.md` is generated and current.
 - C4: the workshop and `yarn test` glob `packages/catalog/src/**/*.stories.tsx`; the copy button's four stories (idle, copied, failed, a caller's own words) run with their play and axe checks.
-- C5: `toolkit.json` has a `catalog` module (`locked: false`), `docs/runbooks/remove-catalog.md` lists every file, dependency and boundary entry to remove, and `new-project.md` step 4 lists it.
+- C5: `toolkit.json` has a `catalog` module (`locked: false`), `docs/runbooks/remove/catalog.md` lists every file, dependency and boundary entry to remove, and `new-project/README.md` step 4 lists it.
 - C6: the sidebar filter lists the tags with counts and narrows to `verdict:unruled`; the Provenance panel shows source, verdict, layer, upstream, licence and adaptation (evidence `C6-workshop.md`, two screenshots).
 
 ## Deviations

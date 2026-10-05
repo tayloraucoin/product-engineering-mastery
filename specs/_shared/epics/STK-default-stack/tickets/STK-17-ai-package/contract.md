@@ -9,7 +9,7 @@ non_negotiables:
   - "Three standard cases wired: a structured extraction with a Zod schema, a streamed chat route, and a one-shot generate; each with an eval fixture."
   - "Prompts live in packages/ai/src/prompts with a version string."
   - "Local tier can run with a recorded fixture when no key is set."
-  - "remove-ai.md and the manifest entry are complete."
+  - "remove/ai.md and the manifest entry are complete."
 devs_call: "Which eval runner and how fixtures are recorded."
 cites:
   - "specs/_shared/epics/STK-default-stack/technical.md"
@@ -36,7 +36,7 @@ planned_paths:
   - "turbo.json"
   - "packages/config/eslint/boundaries.js"
   - "toolkit.json"
-  - "docs/runbooks/remove-ai.md"
+  - "docs/runbooks/remove/ai.md"
   - "docs/engineering/tech-stack.md"
 depends_on:
   - STK-13

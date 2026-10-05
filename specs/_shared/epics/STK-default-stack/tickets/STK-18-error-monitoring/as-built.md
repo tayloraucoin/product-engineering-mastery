@@ -7,7 +7,7 @@
 - C3: `"@sentry/*": "app-web"` in `SDK_OWNERS`; probes in `tooling/boundaries.test.ts` ban it from packages and allow it in `apps/web`.
 - C4: `build.ts` uploads source maps and creates the release only on a deployment holding the token, the org and the tier's project. Every other build skips both, and `yarn build` without `SENTRY_AUTH_TOKEN` passes (`build.test.ts`).
 - NN3 and NN6: `options.ts` sets all eleven `dataCollection` categories (all off, five context lines) and `sendDefaultPii: false`. It sets no traces or profiles sample rate and `enableLogs: false`, drops the browser's default `BrowserTracing`, and the build tree-shakes tracing.
-- NN7: `docs/runbooks/remove-error-monitoring.md` and the `error-monitoring` entry in `toolkit.json`.
+- NN7: `docs/runbooks/remove/error-monitoring.md` and the `error-monitoring` entry in `toolkit.json`.
 - `@sentry/nextjs` 11.0.0 (verified 2026-10-04; the newest 11.x past the 7-day age gate, and the line that has `dataCollection`), pinned exactly in `apps/web`, with its row in `docs/engineering/tech-stack.md`.
 
 ## Deviations

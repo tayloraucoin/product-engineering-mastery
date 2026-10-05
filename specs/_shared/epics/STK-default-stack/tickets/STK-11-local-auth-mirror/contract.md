@@ -37,9 +37,9 @@ planned_paths:
   - ".env.example"
   - "packages/db/.env.example"
   - "turbo.json"
-  - "docs/runbooks/remove-supabase-auth.md"
-  - "docs/runbooks/remove-supabase-database.md"
-  - "docs/runbooks/new-project.md"
+  - "docs/runbooks/remove/supabase-auth.md"
+  - "docs/runbooks/remove/supabase-database.md"
+  - "docs/runbooks/new-project/README.md"
   - "docs/engineering/tech-stack.md"
   - "yarn.lock"
 depends_on:

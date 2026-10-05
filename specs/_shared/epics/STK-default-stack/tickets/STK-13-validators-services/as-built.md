@@ -36,12 +36,12 @@ Built under routed call 3 as ratified on 2026-10-03 (technical.md, "Calls routed
 - **`listNotes` filters on `ownerId = ctx.userId` explicitly**, not on RLS alone. On a table whose policy lets admins read every row, "my notes" must still mean the caller's (batch review, Consider 4); the test asserts the filter.
 - **From the batch review (`../../_batch-review-2026-10-04-STK-13.md`):**
   - The tech-stack's `drizzle-orm` row now names `@pem/services`.
-  - `remove-supabase-database.md` gains "When services stay".
+  - `remove/supabase-database.md` gains "When services stay".
   - `createNote` throws Forbidden, not NotFound, if an insert returns no row.
   - The limit's messages are in the product's voice, and the body limit reads "10,000 characters or fewer".
   - An input that is not an object reads "Check the input".
   - Not done: a lint ban on value imports of `@pem/db/client` in services (Consider 3); the services `ctx` type keeps the singleton out by construction.
-- **Paths added to `planned_paths`:** `docs/engineering/tech-stack.md`, `tooling/boundaries.test.ts`, `yarn.lock` and `docs/runbooks/remove-supabase-database.md`.
+- **Paths added to `planned_paths`:** `docs/engineering/tech-stack.md`, `tooling/boundaries.test.ts`, `yarn.lock` and `docs/runbooks/remove/supabase-database.md`.
 
 ## Not verified
 

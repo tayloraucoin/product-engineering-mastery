@@ -32,7 +32,7 @@ planned_paths:
   - "packages/config/eslint/boundaries.js"
   - "toolkit.json"
   - "yarn.lock"
-  - "docs/runbooks/new-project.md"
+  - "docs/runbooks/new-project/README.md"
   - "docs/engineering/tech-stack.md"
   - "docs/engineering/codebase-conventions.md"
 depends_on:

@@ -14,7 +14,7 @@
 - **[ASSUMPTION] "Before reading a URL" means before resolving one.** env.ts copies the URL variables into memory when it is imported, as it does for every db script; the refusal comes before `migrationUrl()` resolves, describes or connects to any of them.
 - **The reset leaves `auth`, the mirror's marker schema and the `public` schema's own grants and default privileges as they are.** It drops objects, not the schema, so Supabase's grants survive.
 - **Hook "ask" format**, verified 2026-10-04 against code.claude.com/docs/en/hooks: exit 0 with `hookSpecificOutput.permissionDecision: "ask"` and `permissionDecisionReason`, shown to the user. Whether a hook ask overrides a settings allow (`Bash(yarn *)`) is not stated there; the settings ask rules are the reason both layers carry the rule.
-- **Paths added to `planned_paths`:** the two reset tests, both `package.json` files (the script), and `docs/runbooks/remove-supabase-database.md` (its script list now names `db:local:reset`).
+- **Paths added to `planned_paths`:** the two reset tests, both `package.json` files (the script), and `docs/runbooks/remove/supabase-database.md` (its script list now names `db:local:reset`).
 
 ## Not verified
 

@@ -27,7 +27,7 @@ planned_paths:
   - "docs/engineering/tech-stack.md"
   - "tooling/boundaries.test.ts"
   - "yarn.lock"
-  - "docs/runbooks/remove-supabase-database.md"
+  - "docs/runbooks/remove/supabase-database.md"
 depends_on:
   - STK-12
 out_of_scope:

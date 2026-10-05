@@ -31,7 +31,7 @@ planned_paths:
   - "packages/db/test/reset-local-db.test.ts"
   - "packages/db/package.json"
   - "package.json"
-  - "docs/runbooks/remove-supabase-database.md"
+  - "docs/runbooks/remove/supabase-database.md"
   - "docs/engineering/templates/settings.template.json"
 depends_on:
   - STK-9

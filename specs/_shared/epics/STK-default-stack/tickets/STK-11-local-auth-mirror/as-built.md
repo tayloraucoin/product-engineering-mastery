@@ -21,7 +21,7 @@
 - Docs:
   - The manifest's `db` entry lists `supabase`.
   - Both removal runbooks: the database one adds the CLI, the volume and the new scripts; the auth one adds where the mirror goes.
-  - `new-project.md`: step 2, item 5, renames `project_id`; step 6, item 4, explains the two modes, the network exposure and how to wipe mirrored emails.
+  - `new-project/README.md`: step 2, item 5, renames `project_id`; step 6, item 4, explains the two modes, the network exposure and how to wipe mirrored emails.
   - `tech-stack.md`: the CLI row, and the image row now pinned by the CLI.
   - `.env.example` and `turbo.json`: `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in all three tier forms.
 
@@ -42,7 +42,7 @@
 - **Warden's first review (FAIL) and the fixes:**
   - `test/rls.test.ts` now asserts a loopback client before migrating or writing to `auth.users`, as its sibling tests do.
   - The network warning flags any binding that isn't loopback, a specific LAN address included (`nonLoopbackBindings`, tested).
-  - The exposure is now stated in `new-project.md` step 6 and in the `tech-stack.md` image row.
+  - The exposure is now stated in `new-project/README.md` step 6 and in the `tech-stack.md` image row.
   - The database runbook says to delete the two Supabase variables when there is no `auth` entry.
   - `scripts/auth-writers.test.ts` fails if any shipped file other than the mirror writes to `auth.users`.
   - The mirror documents the unique violation it throws for a re-created staging user.

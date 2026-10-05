@@ -22,7 +22,7 @@
   - Each procedure body is one service call (`routers/notes.ts`).
   - Query hooks live only at `@pem/api/react`, which re-exports TanStack Query's hooks, so an app never declares `@tanstack/react-query`.
   - Webhooks, AI streaming, cron and auth callbacks stay Route Handlers.
-  - The manifest has an `api` entry (not locked, `remove-api.md`).
+  - The manifest has an `api` entry (not locked, `remove/api.md`).
 - devs_call:
   - Routers: `src/routers/<domain>.ts`, merged in `src/root.ts`.
   - `src/trpc.ts` holds the instance and tiers, `src/server.ts` (`@pem/api/server`) the HTTP handler and `createApiCaller` for Server Components, and `src/react.tsx` the client.
@@ -37,7 +37,7 @@
 - **Procedures parse input with the validator schemas too**, for the client's types. The service parses again, so the service stays the guarantee for any other transport.
 - **Paths added to the plan:** `codebase-conventions.md` (its `@pem/api` row is now built), `lib/supabase/context.ts` (the bearer lookup shares the cookie resolver), `next.config.ts` (`transpilePackages`), `tooling/boundaries.test.ts`. `yarn.lock` was planned and then dropped: this ticket's lock entries arrived in other threads' commits, and every thread's install churns it.
 - **`@tanstack/react-query` 5.104.1 was first pinned and moved to 5.104.0**: 5.104.1 was under the 7-day age gate and broke `yarn install` for the other threads.
-- **The rehearsal found a gap in the runbook**: after the removal, `check-refs` named the deleted paths. `remove-api.md` Verify now parks them in `refs-pending.json`. The other removal runbooks likely share the gap; STK-20's dry-run covers them.
+- **The rehearsal found a gap in the runbook**: after the removal, `check-refs` named the deleted paths. `remove/api.md` Verify now parks them in `refs-pending.json`. The other removal runbooks likely share the gap; STK-20's dry-run covers them.
 - **From the batch review (`../../_batch-review-2026-10-04-STK-14.md`):**
   - C5 is re-recorded as deferred (Should-fix 1).
   - `@pem/api/react` re-exports `useQuery`, `useMutation`, `useSuspenseQuery`, `useInfiniteQuery` and `useQueryClient` (Should-fix 2).
@@ -49,7 +49,7 @@
 
 ## Not verified
 
-- C5 (manual, deferred): a person rehearses `remove-api.md` on a copy once STK-9 and STK-16 are green, since on the agent's copy `check-specs` and `check-client-bundle` still failed on their work.
+- C5 (manual, deferred): a person rehearses `remove/api.md` on a copy once STK-9 and STK-16 are green, since on the agent's copy `check-specs` and `check-client-bundle` still failed on their work.
 - No browser call goes through `ApiProvider` yet. No page queries the API, so the client half is proven by types and the build only.
 
 ## Test changes

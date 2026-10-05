@@ -10,7 +10,7 @@ non_negotiables:
   - "Local tier sends nothing by default; staging and production use separate projects and DSNs by tier."
   - "A build without SENTRY_AUTH_TOKEN skips upload and succeeds."
   - "No tracing, replay, logs, feedback or profiling."
-  - "remove-error-monitoring.md and the manifest entry are complete."
+  - "remove/error-monitoring.md and the manifest entry are complete."
 devs_call: "Tunnel route on or off."
 cites:
   - "specs/_shared/epics/STK-default-stack/technical.md"
@@ -40,7 +40,7 @@ planned_paths:
   - "turbo.json"
   - "packages/config/eslint/boundaries.js"
   - "toolkit.json"
-  - "docs/runbooks/remove-error-monitoring.md"
+  - "docs/runbooks/remove/error-monitoring.md"
   - "yarn.lock"
   - "docs/engineering/tech-stack.md"
   - "tooling/check-client-bundle.ts"
