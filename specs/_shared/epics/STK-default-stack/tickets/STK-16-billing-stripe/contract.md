@@ -39,6 +39,7 @@ planned_paths:
   - "toolkit.json"
   - "apps/web/lib/billing/**"
   - "packages/db/src/billing/**"
+  - "packages/db/test/stripe-event-ledger.test.ts"
   - "packages/db/src/schema/index.ts"
   - "packages/db/package.json"
   - "tooling/boundaries.test.ts"
