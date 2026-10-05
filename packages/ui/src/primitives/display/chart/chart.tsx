@@ -78,11 +78,42 @@ function ChartContainer({
         <RechartsPrimitive.ResponsiveContainer
           initialDimension={initialDimension}
         >
-          {children}
+          {withoutAnimation(children)}
         </RechartsPrimitive.ResponsiveContainer>
       </div>
     </ChartContext.Provider>
   );
+}
+
+/**
+ * The parts Recharts animates by default. A chart's values never tween (A-14),
+ * and its tooltip does not slide (A-15), so each starts still unless the
+ * caller sets `isAnimationActive` itself.
+ */
+const ANIMATED = new Set<unknown>([
+  RechartsPrimitive.Area,
+  RechartsPrimitive.Bar,
+  RechartsPrimitive.Funnel,
+  RechartsPrimitive.Line,
+  RechartsPrimitive.Pie,
+  RechartsPrimitive.Radar,
+  RechartsPrimitive.RadialBar,
+  RechartsPrimitive.Scatter,
+  RechartsPrimitive.Tooltip,
+]);
+
+/** Exported for the story that proves it; not part of the subpath's API. */
+export function withoutAnimation<T extends React.ReactNode>(chart: T): T {
+  if (!React.isValidElement<{ children?: React.ReactNode }>(chart))
+    return chart;
+  const still = React.Children.map(chart.props.children, (child) =>
+    React.isValidElement<{ isAnimationActive?: unknown }>(child) &&
+    ANIMATED.has(child.type) &&
+    child.props.isAnimationActive === undefined
+      ? React.cloneElement(child, { isAnimationActive: false })
+      : child,
+  );
+  return React.cloneElement(chart, undefined, still) as T;
 }
 
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {

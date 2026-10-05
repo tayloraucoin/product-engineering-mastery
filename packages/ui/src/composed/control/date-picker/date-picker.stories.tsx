@@ -26,7 +26,7 @@ type Story = StoryObj<typeof meta>;
 export const Empty: Story = {
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByRole("button", { name: "Start date" }),
+      canvas.getByRole("button", { name: /^Start date/ }),
     ).toHaveTextContent(DATE_PICKER_COPY.placeholder);
   },
 };
@@ -35,7 +35,7 @@ export const Chosen: Story = {
   args: { defaultValue: new Date(2026, 9, 14) },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByRole("button", { name: "Start date" }),
+      canvas.getByRole("button", { name: "Start date, October 14th, 2026" }),
     ).toHaveTextContent("October 14th, 2026");
   },
 };
@@ -44,7 +44,7 @@ export const Disabled: Story = {
   args: { disabled: true },
   play: async ({ canvas }) => {
     await expect(
-      canvas.getByRole("button", { name: "Start date" }),
+      canvas.getByRole("button", { name: /^Start date/ }),
     ).toBeDisabled();
   },
 };
@@ -53,7 +53,7 @@ export const Disabled: Story = {
 export const Choose: Story = {
   args: { defaultValue: new Date(2026, 9, 1) },
   play: async ({ canvas, canvasElement }) => {
-    const trigger = canvas.getByRole("button", { name: "Start date" });
+    const trigger = canvas.getByRole("button", { name: /^Start date/ });
     await userEvent.click(trigger);
     const body = within(canvasElement.ownerDocument.body);
     await userEvent.click(

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { expect } from "storybook/test";
+import { expect, fireEvent, waitFor, within } from "storybook/test";
 
 import {
   ContextMenu,
@@ -47,5 +47,24 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   play: async ({ canvas }) => {
     await expect(canvas.getByText("Right-click a row")).toBeInTheDocument();
+  },
+};
+
+/** A right-click opens the menu at the pointer; Escape closes it. */
+export const Open: Story = {
+  play: async ({ canvas, canvasElement }) => {
+    fireEvent.contextMenu(canvas.getByText("Right-click a row"), {
+      clientX: 40,
+      clientY: 40,
+    });
+    const body = within(canvasElement.ownerDocument.body);
+    await expect(await body.findByRole("menu")).toBeInTheDocument();
+    await expect(
+      body.getByRole("menuitem", { name: "Delete" }),
+    ).toBeInTheDocument();
+    fireEvent.keyDown(body.getByRole("menu"), { key: "Escape" });
+    await waitFor(() =>
+      expect(body.queryByRole("menu")).not.toBeInTheDocument(),
+    );
   },
 };

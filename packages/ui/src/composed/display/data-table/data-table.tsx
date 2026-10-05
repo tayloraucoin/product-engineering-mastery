@@ -46,6 +46,8 @@ type DataTableProps<TData, TValue> = {
   pageSize?: number;
   /** A leading checkbox column, with a count of the selection. */
   selectable?: boolean;
+  /** Names a row's checkbox ("Select INV-1042"); by default "Select row N". */
+  getRowLabel?: (row: TData) => string;
   className?: string;
 };
 
@@ -79,7 +81,9 @@ function DataTableColumnHeader<TData, TValue>({
   );
 }
 
-function selectColumn<TData>(): ColumnDef<TData> {
+function selectColumn<TData>(
+  getRowLabel?: (row: TData) => string,
+): ColumnDef<TData> {
   return {
     id: "select",
     enableSorting: false,
@@ -95,7 +99,10 @@ function selectColumn<TData>(): ColumnDef<TData> {
     ),
     cell: ({ row }) => (
       <Checkbox
-        aria-label={DATA_TABLE_COPY.selectRow}
+        aria-label={DATA_TABLE_COPY.selectRow(
+          getRowLabel?.(row.original) ??
+            DATA_TABLE_COPY.rowFallback(row.index + 1),
+        )}
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
       />
@@ -110,6 +117,7 @@ function DataTable<TData, TValue>({
   filterPlaceholder,
   pageSize = 10,
   selectable = false,
+  getRowLabel,
   className,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -120,9 +128,9 @@ function DataTable<TData, TValue>({
   const allColumns = React.useMemo(
     () =>
       selectable
-        ? [selectColumn<TData>(), ...(columns as ColumnDef<TData>[])]
+        ? [selectColumn<TData>(getRowLabel), ...(columns as ColumnDef<TData>[])]
         : (columns as ColumnDef<TData>[]),
-    [columns, selectable],
+    [columns, selectable, getRowLabel],
   );
 
   const table = useReactTable({
@@ -145,13 +153,15 @@ function DataTable<TData, TValue>({
       ? filter.columnDef.header
       : filterColumn;
   const pages = Math.max(table.getPageCount(), 1);
+  // With no data, a filter and a pager would act on nothing (C-P08).
+  const empty = data.length === 0;
 
   return (
     <div
       data-slot="data-table"
       className={cn("flex flex-col gap-4", className)}
     >
-      {filter ? (
+      {filter && !empty ? (
         <Input
           type="search"
           aria-label={DATA_TABLE_COPY.filterLabel(filterName ?? "")}
@@ -211,44 +221,46 @@ function DataTable<TData, TValue>({
                   colSpan={allColumns.length}
                   className="h-24 text-center text-muted-foreground"
                 >
-                  {DATA_TABLE_COPY.noResults}
+                  {empty ? DATA_TABLE_COPY.noData : DATA_TABLE_COPY.noResults}
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-between gap-4 text-sm text-muted-foreground">
-        <span>
-          {selectable
-            ? DATA_TABLE_COPY.selected(
-                table.getFilteredSelectedRowModel().rows.length,
-                table.getFilteredRowModel().rows.length,
-              )
-            : DATA_TABLE_COPY.page(
-                table.getState().pagination.pageIndex + 1,
-                pages,
-              )}
-        </span>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            {DATA_TABLE_COPY.previous}
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            {DATA_TABLE_COPY.next}
-          </Button>
+      {empty ? null : (
+        <div className="flex items-center justify-between gap-4 text-sm text-muted-foreground">
+          <span>
+            {selectable
+              ? DATA_TABLE_COPY.selected(
+                  table.getFilteredSelectedRowModel().rows.length,
+                  table.getFilteredRowModel().rows.length,
+                )
+              : DATA_TABLE_COPY.page(
+                  table.getState().pagination.pageIndex + 1,
+                  pages,
+                )}
+          </span>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+            >
+              {DATA_TABLE_COPY.previous}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              {DATA_TABLE_COPY.next}
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

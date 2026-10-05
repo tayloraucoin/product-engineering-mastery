@@ -4,13 +4,19 @@ import { expect } from "storybook/test";
 import { Checkbox } from "../../control/checkbox/checkbox";
 import { Input } from "../../control/input/input";
 import {
+  RadioGroup,
+  RadioGroupItem,
+} from "../../control/radio-group/radio-group";
+import {
   Field,
+  FieldContent,
   FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
   FieldLegend,
   FieldSet,
+  FieldTitle,
 } from "./field";
 
 type Args = {
@@ -117,5 +123,40 @@ export const Set: Story = {
     await expect(
       canvas.getByRole("checkbox", { name: "Mentions" }),
     ).toBeChecked();
+  },
+};
+
+/**
+ * Choice cards: the checked card is outlined in primary on the muted fill,
+ * and its radio is the marker; its description stays on an audited pair.
+ */
+export const ChoiceCardChecked: Story = {
+  render: () => (
+    <RadioGroup defaultValue="pro" aria-label="Plan" className="max-w-sm">
+      {[
+        {
+          value: "starter",
+          title: "Starter",
+          note: "One project, community help",
+        },
+        { value: "pro", title: "Pro", note: "Unlimited projects, email help" },
+      ].map((plan) => (
+        <FieldLabel key={plan.value} htmlFor={`plan-${plan.value}`}>
+          <Field orientation="horizontal">
+            <FieldContent>
+              <FieldTitle>{plan.title}</FieldTitle>
+              <FieldDescription>{plan.note}</FieldDescription>
+            </FieldContent>
+            <RadioGroupItem value={plan.value} id={`plan-${plan.value}`} />
+          </Field>
+        </FieldLabel>
+      ))}
+    </RadioGroup>
+  ),
+  play: async ({ canvas }) => {
+    await expect(canvas.getByRole("radio", { name: /Pro/ })).toBeChecked();
+    await expect(
+      canvas.getByRole("radio", { name: /Starter/ }),
+    ).not.toBeChecked();
   },
 };

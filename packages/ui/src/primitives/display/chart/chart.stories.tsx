@@ -1,3 +1,4 @@
+import * as React from "react";
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import { expect } from "storybook/test";
@@ -8,6 +9,7 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
+  withoutAnimation,
   type ChartConfig,
 } from "./chart";
 
@@ -34,7 +36,7 @@ const meta = {
         "ui.shadcn.com/r/styles/base-vega/chart.json, shadcn 4.21.0 (read 2026-10-04)",
       licence: "MIT",
       adapted:
-        "default grid, dot and sector strokes matched by :not([stroke^='var(']) instead of recharts' literal hex; the dashed indicator's 1.5px border on border-2; values never animate (A-14), so every series sets isAnimationActive={false}",
+        "default grid, dot and sector strokes matched by :not([stroke^='var(']) instead of recharts' literal hex; the dashed indicator's 1.5px border on border-2; values never animate (A-14), so every series sets",
     },
   },
   render: ({ legend }: Args) => (
@@ -49,18 +51,8 @@ const meta = {
         <XAxis dataKey="month" tickLine={false} axisLine={false} />
         <ChartTooltip content={<ChartTooltipContent />} />
         {legend ? <ChartLegend content={<ChartLegendContent />} /> : null}
-        <Bar
-          dataKey="signups"
-          fill="var(--color-signups)"
-          radius={4}
-          isAnimationActive={false}
-        />
-        <Bar
-          dataKey="upgrades"
-          fill="var(--color-upgrades)"
-          radius={4}
-          isAnimationActive={false}
-        />
+        <Bar dataKey="signups" fill="var(--color-signups)" radius={4} />
+        <Bar dataKey="upgrades" fill="var(--color-upgrades)" radius={4} />
       </BarChart>
     </ChartContainer>
   ),
@@ -82,3 +74,28 @@ export const Bars: Story = {
 };
 
 export const WithLegend: Story = { args: { legend: true } };
+
+/**
+ * Values never tween (A-14): every series and the tooltip start still unless
+ * the caller opts in. jsdom draws no bars, so this checks the props the kit
+ * hands Recharts.
+ */
+export const StillByDefault: Story = {
+  play: async () => {
+    const chart = withoutAnimation(
+      <BarChart data={data}>
+        <Bar dataKey="signups" />
+        <Bar dataKey="upgrades" isAnimationActive />
+        <ChartTooltip />
+        <XAxis dataKey="month" />
+      </BarChart>,
+    );
+    const [signups, upgrades, tooltip, axis] = React.Children.toArray(
+      (chart.props as { children: React.ReactNode }).children,
+    ) as React.ReactElement<Record<string, unknown>>[];
+    await expect(signups!.props.isAnimationActive).toBe(false);
+    await expect(upgrades!.props.isAnimationActive).toBe(true);
+    await expect(tooltip!.props.isAnimationActive).toBe(false);
+    await expect(axis!.props).not.toHaveProperty("isAnimationActive");
+  },
+};

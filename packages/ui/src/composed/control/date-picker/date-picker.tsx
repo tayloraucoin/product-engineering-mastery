@@ -42,11 +42,14 @@ function DatePicker({
   disabledDays,
   id,
   className,
-  ...aria
+  "aria-label": ariaLabel,
+  "aria-labelledby": ariaLabelledby,
 }: DatePickerProps) {
   const [open, setOpen] = React.useState(false);
   const [uncontrolled, setUncontrolled] = React.useState(defaultValue);
   const date = value ?? uncontrolled;
+  const shown = date ? format(date, "PPP") : placeholder;
+  const valueId = React.useId();
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -58,15 +61,20 @@ function DatePicker({
             disabled={disabled}
             data-empty={!date}
             className={cn(
-              "w-56 justify-start text-left font-normal data-[empty=true]:text-muted-foreground",
+              "w-56 justify-start text-left font-normal",
               className,
             )}
-            {...aria}
+            // The name carries the value, so it is heard without opening:
+            // "Start date, October 14th, 2026".
+            aria-label={ariaLabel ? `${ariaLabel}, ${shown}` : undefined}
+            aria-labelledby={
+              ariaLabelledby ? `${ariaLabelledby} ${valueId}` : undefined
+            }
           />
         }
       >
         <CalendarIcon aria-hidden="true" />
-        {date ? format(date, "PPP") : <span>{placeholder}</span>}
+        <span id={valueId}>{shown}</span>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar

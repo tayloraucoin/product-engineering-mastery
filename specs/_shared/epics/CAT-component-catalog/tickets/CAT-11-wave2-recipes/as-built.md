@@ -32,6 +32,15 @@
 - **use-mobile** reads the media query's own `matches` at `md` (47.99rem).
 - **Shims and inlining:** `vitest.setup.ts` shims `scrollIntoView` for cmdk, and Vitest inlines cmdk, Radix and react-table.
 
+## Batch review fixes
+
+- **B5:** the combobox popup's input is on `bg-muted/50`.
+- **B6:** the date picker's empty label is solid text, and its wording marks the empty state.
+- **S15:** the date picker's accessible name carries the date ("Start date, October 14th, 2026").
+- **S13:** each row checkbox is named from `getRowLabel` ("Select INV-1042").
+- **S14:** with no data, the table hides its filter and pager and says so; a filter that matches nothing says that instead.
+- **S10:** the chip remove button is named.
+
 ## Not verified
 
 - The sidebar's mobile sheet and its Ctrl/Cmd+B shortcut. jsdom's matchMedia reports desktop, and the shortcut's synthetic KeyboardEvent hits jsdom's realm quirk.

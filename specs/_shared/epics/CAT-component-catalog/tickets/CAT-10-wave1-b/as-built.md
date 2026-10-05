@@ -27,7 +27,7 @@
 ## Deviations
 
 - **The pagination link is a plain `<a>` styled with `buttonVariants`.** Base UI's Button gives a rendered anchor `role="button"`, so each page was announced as a button and its label was dropped.
-- **Charts do not animate values (A-14).** Recharts animates by default and a container cannot turn that off, so each series sets `isAnimationActive={false}`. This is a usage rule, written in the story and its provenance.
+- **Charts do not animate values (A-14), in the kit itself** (batch review B4). `ChartContainer` gives every series and the tooltip `isAnimationActive={false}` unless the caller sets it. The `StillByDefault` story proves it on the props, since jsdom draws no bars.
 - **Text at full strength:**
   - the calendar day's secondary line, which was 70% opacity;
   - the attachment's error description, which was 80% destructive.

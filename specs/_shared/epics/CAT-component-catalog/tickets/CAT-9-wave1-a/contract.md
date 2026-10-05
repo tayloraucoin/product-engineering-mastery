@@ -21,6 +21,7 @@ planned_paths:
   - "packages/ui/package.json"
   - "packages/catalog/STATUS.md"
   - "packages/ui/.storybook/preview.tsx"
+  - "packages/ui/src/styles/globals.css"
 depends_on:
   - CAT-4
 out_of_scope:

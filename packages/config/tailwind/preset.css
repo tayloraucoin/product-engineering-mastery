@@ -41,8 +41,10 @@
   --neutral-100: oklch(0.97 0 0);
   --neutral-200: oklch(0.922 0 0);
   --neutral-300: oklch(0.87 0 0);
+  --neutral-350: oklch(0.76 0 0);
   --neutral-400: oklch(0.645 0 0);
   --neutral-500: oklch(0.545 0 0);
+  --neutral-550: oklch(0.49 0 0);
   --neutral-600: oklch(0.439 0 0);
   --neutral-700: oklch(0.371 0 0);
   --neutral-800: oklch(0.269 0 0);
@@ -62,7 +64,7 @@
   --popover: var(--neutral-0);
   --popover-foreground: var(--neutral-950);
   --muted: var(--neutral-100);
-  --muted-foreground: var(--neutral-500);
+  --muted-foreground: var(--neutral-550); /* passes AA on --hover and --selected (CAT-7 review B1) */
   --border: var(--neutral-200);
   --input: var(--neutral-400);
   --primary: var(--neutral-900);
@@ -110,7 +112,7 @@
   --popover: var(--neutral-900);
   --popover-foreground: var(--neutral-50);
   --muted: var(--neutral-800);
-  --muted-foreground: var(--neutral-400);
+  --muted-foreground: var(--neutral-350); /* passes AA on --hover and --selected (CAT-7 review B1) */
   --border: var(--neutral-800);
   --input: var(--neutral-500);
   --primary: var(--neutral-200);

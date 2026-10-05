@@ -1,6 +1,7 @@
 /** The data table's strings. */
 export const DATA_TABLE_COPY = {
-  noResults: "No results.",
+  noResults: "No rows match the filter.",
+  noData: "Nothing here yet.",
   previous: "Previous",
   next: "Next",
   filterLabel: (column: string) => `Filter by ${column}`,
@@ -9,5 +10,6 @@ export const DATA_TABLE_COPY = {
   page: (page: number, pages: number) => `Page ${page} of ${pages}`,
   sortBy: (column: string) => `Sort by ${column}`,
   selectAll: "Select all rows on this page",
-  selectRow: "Select row",
+  selectRow: (name: string) => `Select ${name}`,
+  rowFallback: (index: number) => `row ${index}`,
 } as const;

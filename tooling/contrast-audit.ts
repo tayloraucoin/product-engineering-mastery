@@ -207,6 +207,19 @@ const PAIRS: Pair[] = [
     min: TEXT,
     use: "a selected item's label",
   },
+  // B1 of the CAT-7 to CAT-11 review: a muted cell in a hovered or selected row.
+  {
+    fg: "--muted-foreground",
+    bg: "--hover",
+    min: TEXT,
+    use: "muted text on a hovered row",
+  },
+  {
+    fg: "--muted-foreground",
+    bg: "--selected",
+    min: TEXT,
+    use: "muted text on a selected row",
+  },
   { fg: "--ring", bg: "--background", min: NON_TEXT, use: "focus ring" },
   {
     fg: "--ring",

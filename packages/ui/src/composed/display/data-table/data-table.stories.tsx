@@ -72,6 +72,7 @@ const meta = {
       filterColumn="customer"
       filterPlaceholder="Ada, Grace…"
       selectable={selectable}
+      getRowLabel={(invoice) => invoice.id}
       pageSize={pageSize}
       className="max-w-2xl"
     />
@@ -92,9 +93,11 @@ export const Default: Story = {
 export const Empty: Story = {
   args: { data: [] },
   play: async ({ canvas }) => {
+    await expect(canvas.getByText(DATA_TABLE_COPY.noData)).toBeInTheDocument();
+    await expect(canvas.queryByRole("searchbox")).not.toBeInTheDocument();
     await expect(
-      canvas.getByText(DATA_TABLE_COPY.noResults),
-    ).toBeInTheDocument();
+      canvas.queryByRole("button", { name: "Next" }),
+    ).not.toBeInTheDocument();
   },
 };
 
@@ -107,6 +110,20 @@ export const Filtered: Story = {
     );
     await expect(canvas.getAllByRole("row")).toHaveLength(2);
     await expect(canvas.getByText("Grace Hopper")).toBeInTheDocument();
+  },
+};
+
+/** A filter that matches nothing says so, and keeps the filter to change. */
+export const NoMatch: Story = {
+  play: async ({ canvas }) => {
+    const filter = canvas.getByRole("searchbox", {
+      name: "Filter by customer",
+    });
+    await userEvent.type(filter, "zzz");
+    await expect(
+      canvas.getByText(DATA_TABLE_COPY.noResults),
+    ).toBeInTheDocument();
+    await expect(filter).toBeInTheDocument();
   },
 };
 
@@ -126,11 +143,12 @@ export const Sorted: Story = {
 export const Selected: Story = {
   args: { selectable: true },
   play: async ({ canvas }) => {
-    const boxes = canvas.getAllByRole("checkbox", {
-      name: DATA_TABLE_COPY.selectRow,
-    });
-    await userEvent.click(boxes[0]!);
-    await expect(boxes[0]).toBeChecked();
+    const box = canvas.getByRole("checkbox", { name: "Select INV-1042" });
+    await userEvent.click(box);
+    await expect(box).toBeChecked();
+    await expect(
+      canvas.getByRole("checkbox", { name: "Select INV-1043" }),
+    ).not.toBeChecked();
     await expect(
       canvas.getByText("1 of 5 row(s) selected."),
     ).toBeInTheDocument();

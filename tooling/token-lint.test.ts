@@ -35,6 +35,10 @@ const FAILING: [classes: string, message: RegExp][] = [
   ["bg-[oklch(0.5_0_0)]", /Raw color function/],
   ["shadow-md", /Default shadow scale/],
   ["shadow-xs", /Default shadow scale/],
+  ["shadow", /Default shadow scale/],
+  ["supports-backdrop-filter:backdrop-blur-xs", /Blur is banned/],
+  ["backdrop-blur", /Blur is banned/],
+  ["blur-sm", /Blur is banned/],
   ["data-open:duration-200", /Raw duration/],
   ["ease-in", /ease-in is banned/],
   // Batch review B1, S1: _-joined literals, other units and case, names.
@@ -57,6 +61,7 @@ const PASSING = [
   "[--stack-step:0.05] h-[calc(100%-1px)] border-[1px] bg-[transparent] font-[var(--font-display)]",
   "transform-[translate3d(var(--translate-x,0px),var(--translate-y,0px),0)] [--x:max(0px,var(--y))]",
   "shadow-resting shadow-raised shadow-overlay shadow-modal shadow-none",
+  "blur-none backdrop-blur-none",
   "duration-(--motion-duration-base) ease-(--motion-ease-out) ease-in-out",
   "rounded-xl rounded-4xl ring-3 bg-destructive/10 text-sidebar-accent-foreground",
 ];

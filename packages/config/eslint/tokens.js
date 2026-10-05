@@ -40,6 +40,7 @@ const MESSAGES = {
     "Raw color function — colors live only in packages/config/tailwind/preset.css (canon C-P06).",
   shadow:
     "Default shadow scale — elevation is shadow-resting, -raised, -overlay or -modal (canon C-P06, rubric C-R07, CS-11).",
+  blur: "Blur is banned as a default and above 2px — no backdrop blur on scrims (canon A-12).",
   duration:
     "Raw duration — use a motion token, as duration-(--motion-duration-base) (canon C-P11, rubric C-R12, CS-12).",
   easeIn: "ease-in is banned; enter and exit use ease-out (canon C-P11).",
@@ -52,7 +53,9 @@ const PALETTE_RE = new RegExp(
 );
 const HEX_RE = /#[0-9a-fA-F]{3,8}\b/;
 const COLOR_FUNCTION_RE = /\b(oklch|oklab|lch|lab|rgba?|hsla?|hwb|color)\(/;
-const SHADOW_RE = /^shadow-(2xs|xs|sm|md|lg|xl|2xl|inner)\b/;
+const SHADOW_RE = /^shadow(-(2xs|xs|sm|md|lg|xl|2xl|inner))?$|^shadow-(2xs|xs|sm|md|lg|xl|2xl|inner)\b/;
+/** Tailwind's named blurs start at 4px (blur-xs) and bare blur is 8px; A-12 caps blur at 2px. */
+const BLUR_RE = /^(backdrop-)?blur(-(xs|sm|md|lg|xl|2xl|3xl))?$/;
 const DURATION_RE = /^(duration|delay)-\d+\b/;
 const EASE_IN_RE = /^ease-in(?!-out)\b/;
 /** A length or time literal, in any case; Tailwind's `_` (a space) is read as a space first. */
@@ -118,6 +121,7 @@ export function classProblems(value) {
     if (FONT_FAMILY_RE.test(utility)) problems.push("fontFamily");
     if (PALETTE_RE.test(utility)) problems.push("palette");
     if (SHADOW_RE.test(utility)) problems.push("shadow");
+    if (BLUR_RE.test(utility)) problems.push("blur");
     if (DURATION_RE.test(utility)) problems.push("duration");
     if (EASE_IN_RE.test(utility)) problems.push("easeIn");
   }

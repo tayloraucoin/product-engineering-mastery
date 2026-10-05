@@ -29,6 +29,14 @@
 - **Base UI hides the toast's close button from the reading cursor;** Escape dismisses the toast. The story finds it by its slot. Kept as upstream.
 - **Formatting:** the first commit missed the root prettier config, and `0485fc5` fixed it.
 
+## Batch review fixes
+
+- **B2:** no backdrop blur on the dialog, alert dialog and sheet scrims (A-12).
+- **B3:** the checked choice card is `bg-muted` with a primary border, and its radio is the marker. Its muted description stays on an audited pair, and a `ChoiceCardChecked` story covers it.
+- **S1:** under reduced motion, tw-animate's scale, slide and spin are neutralised for every popup (`globals.css`), leaving opacity.
+- **S2:** the alert dialog does not zoom.
+- **S3:** the toast runs at the moderate token (250ms), not 500ms.
+
 ## Not verified
 
 - Toast swipe and stacking in a browser. jsdom has no pointer gestures or layout.
