@@ -3,54 +3,54 @@
   "criteria_sha256": "8f455a45da04004605ab9885412df8165773b60c66d5043708abb2cd9c08f32c",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
       "run": {
         "command": "yarn test",
-        "exit": 1,
-        "at": "2026-10-05T03:20:29Z",
-        "head": "50fd186eecefe9263a93b089a3bdc0a97c00ee7f",
+        "exit": 0,
+        "at": "2026-10-05T03:30:32Z",
+        "head": "492e300cf852bb204b82dda793c6f8de5963faaf",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-16-billing-stripe/evidence/C1.log",
-        "evidence_sha256": "5b5295b70ae576a08b471ed8b1506200f496c1d6cb0c074955db6661406869a6",
-        "tests": 186
-      }
-    },
-    "C2": {
-      "status": "FAIL",
-      "evidence": "test",
-      "run": {
-        "command": "yarn test",
-        "exit": 1,
-        "at": "2026-10-05T03:20:45Z",
-        "head": "50fd186eecefe9263a93b089a3bdc0a97c00ee7f",
-        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-16-billing-stripe/evidence/C2.log",
-        "evidence_sha256": "0569b7102d4d2fc03ff0e612867d4c600296c7c0bdeb1818cb1b6037c9d40cd8",
+        "evidence_sha256": "cfb8d01a336649b33ab067f68921a7bb3df61723a0fb063524baad0092f1e289",
         "tests": 187
       }
     },
-    "C3": {
-      "status": "FAIL",
+    "C2": {
+      "status": "PASS",
       "evidence": "test",
       "run": {
         "command": "yarn test",
-        "exit": 1,
-        "at": "2026-10-05T03:21:06Z",
-        "head": "50fd186eecefe9263a93b089a3bdc0a97c00ee7f",
+        "exit": 0,
+        "at": "2026-10-05T03:30:39Z",
+        "head": "492e300cf852bb204b82dda793c6f8de5963faaf",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-16-billing-stripe/evidence/C2.log",
+        "evidence_sha256": "e08345894f8ab557c23d0e8f121772306e73df202a82c4644e6446caceef5428",
+        "tests": 186
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-05T03:30:45Z",
+        "head": "492e300cf852bb204b82dda793c6f8de5963faaf",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-16-billing-stripe/evidence/C3.log",
-        "evidence_sha256": "2df80f2783e0e943d07afaf1fac1fac3aef74a9c277a287bee2d75cee9c69ac0",
+        "evidence_sha256": "fe7de77beacfacebeddc68c471004b86c07b17b67e96476302000ca7610db5ae",
         "tests": 187
       }
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
       "run": {
         "command": "yarn test",
-        "exit": 1,
-        "at": "2026-10-05T03:21:23Z",
-        "head": "50fd186eecefe9263a93b089a3bdc0a97c00ee7f",
+        "exit": 0,
+        "at": "2026-10-05T03:30:51Z",
+        "head": "492e300cf852bb204b82dda793c6f8de5963faaf",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-16-billing-stripe/evidence/C4.log",
-        "evidence_sha256": "7d117e079ab868a50db2697d53f84da4dad3da8705791b0e1b7d2eba301007fb",
+        "evidence_sha256": "6b16467bd71068944c98e65a2a99dd2148cace1f47e05891f314fe9ae87be813",
         "tests": 187
       }
     },
@@ -60,10 +60,10 @@
       "run": {
         "command": "yarn lint:boundaries",
         "exit": 0,
-        "at": "2026-10-05T03:26:05Z",
-        "head": "0e30a591b8daa965246e8bf08a67f2409e3c5e9c",
+        "at": "2026-10-05T03:30:58Z",
+        "head": "492e300cf852bb204b82dda793c6f8de5963faaf",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-16-billing-stripe/evidence/C5.log",
-        "evidence_sha256": "bb995a57c2b39be4702025fe29d7f69001bb75f706e00b492ddf96bd2ffee47f"
+        "evidence_sha256": "6405398ffcb4bdec4a6d149bf28cd896734dff79e5a5c65a584b12f6e1a20153"
       }
     },
     "C6": {
@@ -72,10 +72,10 @@
       "run": {
         "command": "yarn verify",
         "exit": 1,
-        "at": "2026-10-05T03:21:50Z",
-        "head": "50fd186eecefe9263a93b089a3bdc0a97c00ee7f",
+        "at": "2026-10-05T03:31:07Z",
+        "head": "492e300cf852bb204b82dda793c6f8de5963faaf",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-16-billing-stripe/evidence/C6.log",
-        "evidence_sha256": "37f7b5e6efaa33a5cd6658e2b8cb7b011cbaa8a57dffaad6c7abb8b9544ba8d3"
+        "evidence_sha256": "4df342c4629c97edd36c2c0ccbd8af669527c2bba6ea52b2f1849af1490584eb"
       }
     },
     "review:assay": {
@@ -109,5 +109,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-05T03:26:09Z"
+  "updated_at": "2026-10-05T03:31:12Z"
 }

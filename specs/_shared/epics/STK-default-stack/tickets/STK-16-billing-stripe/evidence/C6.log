@@ -1,28 +1,37 @@
 command: yarn verify
 exit: 1
-at: 2026-10-05T03:21:50Z
-head: 50fd186eecefe9263a93b089a3bdc0a97c00ee7f
+at: 2026-10-05T03:31:07Z
+head: 492e300cf852bb204b82dda793c6f8de5963faaf
 ---
 Checking formatting...
+[warn] packages/ui/src/primitives/control/button-group/button-group.stories.tsx
 [warn] packages/ui/src/primitives/control/button-group/button-group.tsx
 [warn] packages/ui/src/primitives/control/button-group/button-group.variants.ts
 [warn] packages/ui/src/primitives/control/button-group/index.ts
 [warn] packages/ui/src/primitives/control/input-group/index.ts
+[warn] packages/ui/src/primitives/control/input-group/input-group.stories.tsx
 [warn] packages/ui/src/primitives/control/input-group/input-group.tsx
 [warn] packages/ui/src/primitives/control/input-group/input-group.variants.ts
+[warn] packages/ui/src/primitives/control/toggle-group/toggle-group.stories.tsx
 [warn] packages/ui/src/primitives/control/toggle-group/toggle-group.tsx
 [warn] packages/ui/src/primitives/display/item/index.ts
+[warn] packages/ui/src/primitives/display/item/item.stories.tsx
 [warn] packages/ui/src/primitives/display/item/item.tsx
 [warn] packages/ui/src/primitives/display/item/item.variants.ts
+[warn] packages/ui/src/primitives/feedback/alert-dialog/alert-dialog.stories.tsx
 [warn] packages/ui/src/primitives/feedback/alert-dialog/alert-dialog.tsx
 [warn] packages/ui/src/primitives/feedback/alert-dialog/index.ts
+[warn] packages/ui/src/primitives/feedback/dialog/dialog.stories.tsx
 [warn] packages/ui/src/primitives/feedback/dialog/dialog.tsx
 [warn] packages/ui/src/primitives/feedback/dialog/index.ts
 [warn] packages/ui/src/primitives/feedback/toast/index.ts
+[warn] packages/ui/src/primitives/feedback/toast/toast.stories.tsx
 [warn] packages/ui/src/primitives/feedback/toast/toast.tsx
+[warn] packages/ui/src/primitives/layout/field/field.stories.tsx
 [warn] packages/ui/src/primitives/layout/field/field.tsx
 [warn] packages/ui/src/primitives/layout/field/field.variants.ts
 [warn] packages/ui/src/primitives/layout/field/index.ts
 [warn] packages/ui/src/primitives/layout/sheet/index.ts
+[warn] packages/ui/src/primitives/layout/sheet/sheet.stories.tsx
 [warn] packages/ui/src/primitives/layout/sheet/sheet.tsx
-[warn] Code style issues found in 21 files. Run Prettier with --write to fix.
+[warn] Code style issues found in 30 files. Run Prettier with --write to fix.
