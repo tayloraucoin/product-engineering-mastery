@@ -7,6 +7,7 @@ The reply of one `vigil` subagent (claude-opus-5-5). It was given the contract, 
 **Verdict: Blocked.** There are two Blocking findings.
 
 **Checked and clean:**
+
 - every import goes through `@pem/ui` subpaths, lucide, react or a relative path;
 - no waivers, and no raw values slipped through;
 - the only translucent surfaces carry no text;
