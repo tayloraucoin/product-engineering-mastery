@@ -29,19 +29,37 @@ Work down the table. Nothing is committed until the end of the guide's step 2.
 | 5   | `docs/decisions/only-you.md`                             | Keep the file; delete the rows of its tables                                                                                                 | Open calls about the toolkit's build, waiting on its owner                                                              |
 | 6   | The demo page, `apps/web/app/page.tsx`                   | Replace with a placeholder page that names the product, built from the kit's components and tokens only                                      | It presents the toolkit. Product work starts with the product's first ticket, not here.                                 |
 
+## Cut down to what is cited
+
+The ledger, the conflicts file and the records are the memory of how the toolkit was built. A product keeps only the rulings its remaining files cite, and starts its own ledger above them. Do this after the deletions above, so files that are already gone do not count as citing anything.
+
+Measured in the toolkit on 2026-10-05: of 259 ledger rows about 30 are cited by a file a product keeps, of 49 conflicts 37 are, and of eleven records seven are.
+
+1. **List what is cited.** IDs first, then records:
+
+   ```sh
+   git grep -ohwE '(CF|CS|DC|EN|LB|ME|PO|PR|PU|SK|WT)-[0-9]+[a-z]?' -- . ':!docs/decisions' ':!docs/runbooks/new-project' | sort -u
+   git grep -ohE 'records/[0-9]{4}' -- . ':!docs/decisions' | sort -u
+   ```
+
+2. **`docs/decisions/ledger.md`.** Keep the frontmatter, the title and "How to read this file". Keep each row whose ID is on the list, under one heading, "Inherited from the toolkit at commit `<the commit noted in step 1>`". Delete every other row, the "Source codes" section and the emptied section headings. A row that names a package in `npmPreapprovedPackages` of `.yarnrc.yml` also stays: a test reads the ledger for it. The product's own rows go above the inherited ones, in its own ID families.
+3. **`docs/decisions/conflicts.md`.** Keep the frontmatter, the title and each conflict whose `CF` ID is on the list, under the same heading. Delete the rest.
+4. **`docs/decisions/records/`.** Delete each record whose number is not on the second list. Today that removes 0001, 0004, 0005 and 0007. If a kept record's `supersedes` field names a deleted one, empty the field. The product's first record takes the next number after the highest the toolkit used, never a freed one.
+5. Both files are in `.prettierignore`; leave them there.
+
+**Check:** `yarn check-refs`, `yarn lint:docs` and `yarn test:tooling` exit 0, and the first command in step 1, run again without the `':!docs/decisions'` exclusion, prints no ID that the first run did not.
+
 ## Keep, as inherited
 
-These are also this repo's history, but the files a product keeps cite them, so they stay.
+These came with the toolkit and a product goes on using them, so they stay whole.
 
-| What                                                         | Why it stays                                                                                   | What the product does                                                                                                                                     |
-| ------------------------------------------------------------ | ---------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `docs/decisions/records/`, records 0001 to 0011              | The practice links to them: the stack, file naming, the subagents, the catalog                 | Its first record takes the next number. Never renumber.                                                                                                   |
-| `docs/decisions/ledger.md` and `docs/decisions/conflicts.md` | Rules across the practice cite their IDs (CF, CS, EN and the rest)                             | Add one line under each title: "Inherited from the toolkit at commit `<the commit noted in step 1>`". The product's own rows go above the inherited ones. |
-| `docs/prompts/research/`                                     | Research prompts a product may still run: its first AI feature, its first instrumented feature | Nothing                                                                                                                                                   |
-| `docs/references/`                                           | The distilled library                                                                          | Nothing. Its `_meta/` folder names the toolkit owner's own sources and is never loaded; deleting it is optional.                                          |
-| `docs/engineering/tooling.md`                                | The reference for every check and hook the product inherits                                    | Nothing. Its timings were measured in the toolkit.                                                                                                        |
-| `docs/runbooks/`, this folder included                       | The remove recipes serve a later drop, and this guide is the record of how the repo was made   | Nothing                                                                                                                                                   |
-| `packages/catalog/`                                          | The components thread takes from it first ([`components.md`](components.md))                   | Nothing here                                                                                                                                              |
+| What                                   | Why it stays                                                                                   | What the product does                                                                                            |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `docs/prompts/research/`               | Research prompts a product may still run: its first AI feature, its first instrumented feature | Nothing                                                                                                          |
+| `docs/references/`                     | The distilled library                                                                          | Nothing. Its `_meta/` folder names the toolkit owner's own sources and is never loaded; deleting it is optional. |
+| `docs/engineering/tooling.md`          | The reference for every check and hook the product inherits                                    | Nothing. Its timings were measured in the toolkit.                                                               |
+| `docs/runbooks/`, this folder included | The remove recipes serve a later drop, and this guide is the record of how the repo was made   | Nothing                                                                                                          |
+| `packages/catalog/`                    | The components thread takes from it first ([`components.md`](components.md))                   | Nothing here                                                                                                     |
 
 **IDs that now point outside the repo.** Code comments and the remove recipes cite decisions by ID, such as D-STK-6 or D-CAT-7. Those were written in the two epics' technical files under `specs/`, which row 1 deletes. They resolve in the toolkit at the commit noted in step 1, and the set-up record names that commit so a reader can find them.
 

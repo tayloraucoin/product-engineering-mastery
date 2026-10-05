@@ -85,7 +85,7 @@ After the round, ask one more: **anything to add that is off by default?** Each 
 | # | Question | Options | What each does |
 | --- | --- | --- | --- |
 | D1 | Where does the database run on a developer's machine? | Hosted only, no Docker (Recommended, the default). Local, in Docker. | "Hosted only": step 5 points developer machines at a hosted project and nothing starts a container. "Local": step 5 follows [`add/docker-local-database.md`](../add/docker-local-database.md). |
-| D2 | (Hosted only) Which hosted project do developer machines use? | The staging project (Recommended for one developer before launch). A separate development project. | "Staging": one Supabase project fewer, and an unmerged migration is applied to the database a preview deployment also uses. "Separate": a second project to pay for and keep migrated, and staging only changes on merge. |
+| D2 | (Hosted only) Which hosted project do developer machines use? | The staging project (Recommended, the default). A separate development project. | "Staging": one Supabase project fewer, and an unmerged migration is applied to the database a preview deployment also uses. "Separate": a second project to pay for and keep migrated, and staging only changes on merge; on a developer's machine its values go in the `_STAGING` slots of `.env.local`, and the example file says so. |
 
 Say this plainly with D1: without Docker the database's own integration proofs (`yarn test:db`: row-level security, the billing ledger) cannot run on a developer's machine, because they refuse any database that is not on the machine itself. `yarn verify` does not run them and stays green either way.
 
@@ -177,7 +177,7 @@ Remove in this order, from the top of the package graph down, so nothing still p
 
 1. A removed part's variables are already gone: its recipe took them out.
 2. Where an example value names the toolkit, replace it with the product's. Keep every comment. A secret never goes in an example file.
-3. **Hosted only (D1, the default).** In both example files set `DATABASE_ENVIRONMENT=staging`, empty the values of `DATABASE_URL_LOCAL` and `DATABASE_MIGRATION_URL_LOCAL`, and add one comment line above the switch: this project runs no local database, so a developer's machine uses the staging tier; unset still means local, which has no database here. Leave `packages/db` as it is. Then read "What hosted only means" below to the operator.
+3. **Hosted only (D1, the default).** In both example files set `DATABASE_ENVIRONMENT=staging`, empty the values of `DATABASE_URL_LOCAL` and `DATABASE_MIGRATION_URL_LOCAL`, and add one comment line above the switch: this project runs no local database, so a developer's machine uses the staging tier, on the hosted project chosen in D2 (name which); unset still means local, which has no database here. The example file is what each developer copies to `.env.local`, so the choice travels with it. Leave `packages/db` as it is. Then read "What hosted only means" below to the operator.
 4. **Local, in Docker (D1).** Follow [`add/docker-local-database.md`](../add/docker-local-database.md).
 5. **Hand to the operator, by name (E2):** creating the hosted projects, and copying the example file to `.env.local` in `apps/web` and in `packages/db` with real values. The agent never asks for a value in the thread.
 
@@ -248,7 +248,7 @@ Read through on 2026-10-05 against the toolkit at commit `1c0fb5f`. Nothing was 
 
 **Step 1.** Remote and commit noted. Clone, fresh history, branch `agent/NW`, install, `yarn doctor`. The operator runs `yarn hooks:install` once. `yarn verify` is green before any change.
 
-**Step 2.** `strip.md`: `specs/`, the prompt archive and the research files go; the changelog and the open-calls file are emptied; ledger, conflicts and records stay as inherited; the demo page becomes a placeholder; `yarn check-refs` names the links into deleted research and each is cut or listed. `rename.md`: one replace pass turns the scope into `@nwl` across about 290 files, then `yarn install`, `yarn format`, the root package name, `toolkitPrefixes` to `["NW"]`, `project_id` to `northwind-ledger`. Its grep prints nothing. `yarn verify`.
+**Step 2.** `strip.md`: `specs/`, the prompt archive and the research files go; the changelog and the open-calls file are emptied; the ledger, the conflicts file and the records are cut down to the rulings the remaining files cite; the demo page becomes a placeholder; `yarn check-refs` names the links into deleted research and each is cut or listed. `rename.md`: one replace pass turns the scope into `@nwl` across about 290 files, then `yarn install`, `yarn format`, the root package name, `toolkitPrefixes` to `["NW"]`, `project_id` to `northwind-ledger`. Its grep prints nothing. `yarn verify`.
 
 **Step 3.** Brand exists, so the table in `branding.md` is filled here: the words in `brand.ts`, the two SVGs, the three font files, the primary pair as new raw steps in the token file with the two semantic names pointed at them and mirrored in `brand.ts`, then the product's `DESIGN.md` and `tokens.md` from the templates. `yarn test`, `yarn contrast-audit`, one Storybook page in both themes, `yarn verify`.
 
