@@ -4,7 +4,7 @@
 
 **At this layer.** Primitive: product-agnostic, no `copy.ts`, may import another primitive but nothing from `composed/`. Here that means the bare nav structure, with its active and collapsed states.
 
-**Examples** from the audited repos, Synapse `@syn/ui` (S) and Conscious Connections (CC): `sidebar`, `bottom-nav` (S, CC). This repo's own, shadcn's Vega (CAT-8, CAT-10): `navigation-menu`, `breadcrumb`, `menubar`, `pagination`.
+**Examples** from the audited repos, Synapse `@syn/ui` (S) and Conscious Connections (CC): `sidebar`, `bottom-nav` (S, CC). This repo's own, shadcn's Vega (CAT-8, CAT-10, CAT-11): `navigation-menu`, `breadcrumb`, `menubar`, `pagination`, `sidebar`.
 
 **Where the line is.** Tabs that switch panels on the same page are `control` (`tabs`); tabs that change the route are navigation. Its other layer: `../../composed/navigation/`.
 

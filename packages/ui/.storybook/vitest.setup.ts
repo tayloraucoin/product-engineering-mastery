@@ -46,6 +46,9 @@ window.IntersectionObserver ??= class {
   }
 } as unknown as typeof IntersectionObserver;
 
+/** jsdom has no scrollIntoView; cmdk scrolls the active option into view with it. */
+Element.prototype.scrollIntoView ??= function scrollIntoView() {};
+
 const project = setProjectAnnotations([a11yAnnotations, previewAnnotations]);
 
 beforeAll(project.beforeAll);

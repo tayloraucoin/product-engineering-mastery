@@ -76,9 +76,25 @@
       "types": "./src/primitives/layout/collapsible/index.ts",
       "default": "./src/primitives/layout/collapsible/index.ts"
     },
+    "./combobox": {
+      "types": "./src/primitives/control/combobox/index.ts",
+      "default": "./src/primitives/control/combobox/index.ts"
+    },
+    "./command": {
+      "types": "./src/primitives/control/command/index.ts",
+      "default": "./src/primitives/control/command/index.ts"
+    },
     "./context-menu": {
       "types": "./src/primitives/feedback/context-menu/index.ts",
       "default": "./src/primitives/feedback/context-menu/index.ts"
+    },
+    "./data-table": {
+      "types": "./src/composed/display/data-table/index.ts",
+      "default": "./src/composed/display/data-table/index.ts"
+    },
+    "./date-picker": {
+      "types": "./src/composed/control/date-picker/index.ts",
+      "default": "./src/composed/control/date-picker/index.ts"
     },
     "./dialog": {
       "types": "./src/primitives/feedback/dialog/index.ts",
@@ -195,6 +211,10 @@
     "./sheet": {
       "types": "./src/primitives/layout/sheet/index.ts",
       "default": "./src/primitives/layout/sheet/index.ts"
+    },
+    "./sidebar": {
+      "types": "./src/primitives/navigation/sidebar/index.ts",
+      "default": "./src/primitives/navigation/sidebar/index.ts"
     },
     "./skeleton": {
       "types": "./src/primitives/display/skeleton/index.ts",
