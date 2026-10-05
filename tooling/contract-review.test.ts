@@ -78,7 +78,7 @@ test("Vigil 9 and 10, Q3 epic ticket: pre-flight gates the start, review:run fol
   assert.match(
     read(
       repo,
-      "specs/web/epics/OB2-onboarding/tickets/OB2-1-welcome/contract.md",
+      "specs/web/epics/OB2-onboarding/tickets/OB2-001-welcome/contract.md",
     ),
     /review:vigil/,
   );
@@ -95,7 +95,7 @@ test("Vigil 9 and 10, Q3 epic ticket: pre-flight gates the start, review:run fol
   // Vigil 4: a review is never recorded by pointing at a file.
   write(
     repo,
-    "specs/web/epics/OB2-onboarding/tickets/OB2-1-welcome/my-review.md",
+    "specs/web/epics/OB2-onboarding/tickets/OB2-001-welcome/my-review.md",
     "VERDICT: PASS\n",
   );
   r = tool(repo, "contract.ts", [
@@ -103,14 +103,14 @@ test("Vigil 9 and 10, Q3 epic ticket: pre-flight gates the start, review:run fol
     "OB2-1",
     "review:vigil",
     "--evidence",
-    "specs/web/epics/OB2-onboarding/tickets/OB2-1-welcome/my-review.md",
+    "specs/web/epics/OB2-onboarding/tickets/OB2-001-welcome/my-review.md",
   ]);
   assert.notEqual(r.status, 0);
   assert.match(r.out, /yarn review:run vigil OB2-1/);
   rmSync(
     path.join(
       repo,
-      "specs/web/epics/OB2-onboarding/tickets/OB2-1-welcome/my-review.md",
+      "specs/web/epics/OB2-onboarding/tickets/OB2-001-welcome/my-review.md",
     ),
   );
 
@@ -120,7 +120,7 @@ test("Vigil 9 and 10, Q3 epic ticket: pre-flight gates the start, review:run fol
   assert.notEqual(r.status, 0);
   assert.match(r.out, /write .*as-built\.md first/);
   const asBuilt =
-    "specs/web/epics/OB2-onboarding/tickets/OB2-1-welcome/as-built.md";
+    "specs/web/epics/OB2-onboarding/tickets/OB2-001-welcome/as-built.md";
   write(repo, asBuilt, AS_BUILT("OB2-1"));
 
   // Vigil 7: closure with review:vigil FAIL fails.
@@ -139,7 +139,7 @@ test("Vigil 9 and 10, Q3 epic ticket: pre-flight gates the start, review:run fol
   assert.match(
     read(
       repo,
-      "specs/web/epics/OB2-onboarding/tickets/OB2-1-welcome/review-vigil.md",
+      "specs/web/epics/OB2-onboarding/tickets/OB2-001-welcome/review-vigil.md",
     ),
     /^- contract_sha256: [0-9a-f]{64}$/m,
   );
@@ -171,7 +171,11 @@ test("a fixture reviewer's PASS does not count outside the harness", () => {
     qa: "Q3",
   });
   buildAndProve(repo);
-  write(repo, "specs/web/one-offs/WEB-1-filter/as-built.md", AS_BUILT("WEB-1"));
+  write(
+    repo,
+    "specs/web/one-offs/WEB-001-filter/as-built.md",
+    AS_BUILT("WEB-1"),
+  );
   let r = tool(repo, "review-run.ts", ["vigil", "WEB-1"], {
     PEM_REVIEW_RUNNER: path.join(repo, "review-runner.ts"),
   });

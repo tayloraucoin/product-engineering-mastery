@@ -80,7 +80,7 @@ function one(id: string) {
   const state = readItemState(item, tree.specsRoot, { staleness: true });
   const qa = state.contract ? qaOf(state.contract) : null;
   const lines = [
-    `${item.id} ${item.slug} (${item.kind}${qa ? `, ${qa}` : ""}, ${state.stage}${state.merged ? ", merged" : ""}) — ${item.dir}/`,
+    `${item.id} ${item.slug} (${item.kind}${qa ? `, ${qa}` : ""}, ${state.stage}${state.merged ? ", merged" : ""}${item.archived ? `, archived ${item.archived}` : ""}) — ${item.dir}/`,
   ];
   if (qa && state.contract!.reviewers.length)
     lines.push(

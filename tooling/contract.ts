@@ -87,6 +87,7 @@ import {
   reviewCriterion,
   SLUG,
   splitCommand,
+  ticketFolder,
   writeRepoText,
   type Contract,
   type Criterion,
@@ -201,9 +202,12 @@ function printLeft(item: Item) {
 
 // ---------------------------------------------------------------- init
 
-/** The next free number for a prefix, counting every local branch, so parallel tickets never collide. */
+/**
+ * The next free number for a prefix, counting every local branch and the
+ * archive, so parallel tickets never collide and no number is reused.
+ */
 function nextNumber(prefix: string, tree: SpecsTree): number {
-  const pattern = new RegExp(`/${prefix}-([1-9][0-9]*)-[a-z0-9-]+/`);
+  const pattern = new RegExp(`/${prefix}-0*([1-9][0-9]*)-[a-z0-9-]+/`);
   const used = tree.items
     .filter((i) => i.prefix === prefix)
     .map((i) => i.number);
@@ -258,6 +262,10 @@ function init() {
           ", ",
         )}) nor an epic on disk. Start an epic with yarn spec:init <app> <EPIC> <slug>`,
     );
+  if (epic?.archived)
+    stop(
+      `${epic.prefix} is archived at ${epic.dir}/, so it takes no new tickets. Move it back to ${epic.origin}/ first, or start a new epic with yarn spec:init`,
+    );
   const prefix = appEntry ? appEntry[1].prefix : epic!.prefix;
   const container = appEntry
     ? `${toolkit.specsRoot}/${appEntry[0]}/one-offs`
@@ -273,7 +281,7 @@ function init() {
   if (!item) {
     const n = nextNumber(prefix, tree);
     const id = `${prefix}-${n}`;
-    const dir = `${container}/${id}-${slug}`;
+    const dir = `${container}/${ticketFolder(prefix, n, slug)}`;
     let text = contractFromTemplate(id, slug);
     if (fromFile) {
       const sourcePath = path.resolve(

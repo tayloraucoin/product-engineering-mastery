@@ -27,7 +27,7 @@ useScratchRepo();
 test("a merged as-built is immutable except applied:", () => {
   const repo = startOneOff();
   buildAndProve(repo);
-  const rel = "specs/web/one-offs/WEB-1-filter/as-built.md";
+  const rel = "specs/web/one-offs/WEB-001-filter/as-built.md";
   write(repo, rel, AS_BUILT("WEB-1"));
   tool(repo, "status.ts", []);
   commit(repo, "WEB-1: as-built");
@@ -81,7 +81,7 @@ test("A9 pre-commit: staging a hand-edited results.json is refused", () => {
   const repo = startOneOff();
   git(repo, "config", "core.hooksPath", "tooling/git-hooks");
   commit(repo, "WEB-1: start");
-  const rel = "specs/web/one-offs/WEB-1-filter/results.json";
+  const rel = "specs/web/one-offs/WEB-001-filter/results.json";
   write(
     repo,
     rel,

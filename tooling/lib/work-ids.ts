@@ -17,20 +17,29 @@ export type Layout = {
   readable: boolean;
 };
 
-/** An epic's prefix exists once its folder does: <specsRoot>/<app>/epics/<EPIC>-<slug>/ (A4). */
+const subdirs = (dir: string) =>
+  existsSync(dir) && statSync(dir).isDirectory()
+    ? readdirSync(dir).map((name) => path.join(dir, name))
+    : [];
+
+/**
+ * An epic's prefix exists once its folder does: <specsRoot>/<app>/epics/<EPIC>-<slug>/,
+ * or <specsRoot>/<app>/_archive/<YYYY>/<MM>/<EPIC>-<slug>/ once archived (A4).
+ * An archived one-off yields its app's prefix, already listed.
+ */
 export function findEpicPrefixes(root: string, specsRoot: string): string[] {
-  const found: string[] = [];
-  const dir = path.join(root, specsRoot);
-  if (!existsSync(dir)) return found;
-  for (const app of readdirSync(dir)) {
-    const epics = path.join(dir, app, "epics");
-    if (!existsSync(epics) || !statSync(epics).isDirectory()) continue;
-    for (const name of readdirSync(epics)) {
-      const prefix = name.match(/^([A-Z][A-Z0-9]{1,4})-/)?.[1];
-      if (prefix) found.push(prefix);
+  const found = new Set<string>();
+  for (const app of subdirs(path.join(root, specsRoot))) {
+    const folders = [
+      ...subdirs(path.join(app, "epics")),
+      ...subdirs(path.join(app, "_archive")).flatMap(subdirs).flatMap(subdirs),
+    ];
+    for (const folder of folders) {
+      const prefix = path.basename(folder).match(/^([A-Z][A-Z0-9]{1,4})-/)?.[1];
+      if (prefix) found.add(prefix);
     }
   }
-  return found;
+  return [...found];
 }
 
 /** Reads toolkit.json without validating it; a missing file yields readable: false. */

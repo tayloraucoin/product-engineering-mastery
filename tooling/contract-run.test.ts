@@ -31,7 +31,7 @@ test("contract:run refuses an uncommitted tree, then records run records with HE
   r = tool(repo, "contract.ts", ["run", "WEB-1"]);
   assert.equal(r.status, 0, r.out);
   const results = JSON.parse(
-    read(repo, "specs/web/one-offs/WEB-1-filter/results.json"),
+    read(repo, "specs/web/one-offs/WEB-001-filter/results.json"),
   );
   const c1 = results.criteria.C1;
   assert.equal(c1.status, "PASS");
@@ -54,7 +54,7 @@ test("contract:run FAILs a test criterion whose runner matched zero tests", () =
   assert.notEqual(r.status, 0);
   assert.match(r.out, /zero tests/);
   assert.equal(
-    JSON.parse(read(repo, "specs/web/one-offs/WEB-1-filter/results.json"))
+    JSON.parse(read(repo, "specs/web/one-offs/WEB-001-filter/results.json"))
       .criteria.C1.status,
     "FAIL",
   );
@@ -63,7 +63,11 @@ test("contract:run FAILs a test criterion whose runner matched zero tests", () =
 test("Vigil 10, one-off: init, run, as-built, status and check-specs close with nothing left", () => {
   const repo = startOneOff();
   buildAndProve(repo);
-  write(repo, "specs/web/one-offs/WEB-1-filter/as-built.md", AS_BUILT("WEB-1"));
+  write(
+    repo,
+    "specs/web/one-offs/WEB-001-filter/as-built.md",
+    AS_BUILT("WEB-1"),
+  );
   tool(repo, "status.ts", []);
   commit(repo, "WEB-1: as-built");
   const status = tool(repo, "status.ts", ["WEB-1"]);
@@ -72,8 +76,8 @@ test("Vigil 10, one-off: init, run, as-built, status and check-specs close with 
   assert.equal(r.status, 0, r.out);
 });
 
-const C1_LOG = "specs/web/one-offs/WEB-1-filter/evidence/C1.log";
-const RESULTS = "specs/web/one-offs/WEB-1-filter/results.json";
+const C1_LOG = "specs/web/one-offs/WEB-001-filter/evidence/C1.log";
+const RESULTS = "specs/web/one-offs/WEB-001-filter/results.json";
 
 /** The log's text with its `at:` line replaced, as another run would write it. */
 const withAt = (log: string, at: string) =>
@@ -99,7 +103,7 @@ test("C1 a criterion that runs check-specs passes on a second full run, after an
   assert.equal(r.status, 0, r.out);
   assert.equal(JSON.parse(read(repo, RESULTS)).criteria.C2.status, "PASS");
   // C2's check-specs saw C1 recorded: neither tampered nor in flight.
-  const c2 = read(repo, "specs/web/one-offs/WEB-1-filter/evidence/C2.log");
+  const c2 = read(repo, "specs/web/one-offs/WEB-001-filter/evidence/C2.log");
   assert.doesNotMatch(c2, /changed after it was recorded/);
   assert.doesNotMatch(c2, /C1's PASS no longer holds|newer run/);
 });
@@ -202,7 +206,11 @@ test("PR-19: criteria that share a command share one run", () => {
 test("PR-16: a closed ticket's proofs are frozen; a later change to its paths does not reopen it", () => {
   const repo = startOneOff();
   buildAndProve(repo);
-  write(repo, "specs/web/one-offs/WEB-1-filter/as-built.md", AS_BUILT("WEB-1"));
+  write(
+    repo,
+    "specs/web/one-offs/WEB-001-filter/as-built.md",
+    AS_BUILT("WEB-1"),
+  );
   tool(repo, "status.ts", []);
   commit(repo, "WEB-1: as-built");
   write(repo, "src/filter.ts", "export const keep = (n: number) => n >= 1;\n");
@@ -214,7 +222,7 @@ test("PR-16: a closed ticket's proofs are frozen; a later change to its paths do
 
 test("PR-16: operator_review adds a manual criterion; deferring it lists an operator check and still closes the ticket", () => {
   const repo = startOneOff({ operatorReview: true });
-  const dir = "specs/web/one-offs/WEB-1-filter";
+  const dir = "specs/web/one-offs/WEB-001-filter";
   assert.match(
     read(repo, `${dir}/contract.md`),
     /id: C3\n\s+statement: Taylor has looked this ticket over/,

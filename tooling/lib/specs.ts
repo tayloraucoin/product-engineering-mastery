@@ -96,9 +96,18 @@ export const FIXTURE_ENV = "PEM_SPECS_FIXTURE";
 
 const PREFIX = "[A-Z][A-Z0-9]{1,4}";
 export const WORK_ID = new RegExp(`^(${PREFIX})-([1-9][0-9]*)$`);
+/**
+ * A ticket folder is <PREFIX>-<n>-<slug>. New folders pad n to three digits
+ * (STK-007-slug), so a listing sorts in number order; the id stays STK-7.
+ * Folders filed before padding keep their names: results.json records paths
+ * into them, and a merged record never changes.
+ */
 const FOLDER = new RegExp(
-  `^(${PREFIX})-([1-9][0-9]*)-([a-z0-9]+(?:-[a-z0-9]+)*)$`,
+  `^(${PREFIX})-0*([1-9][0-9]*)-([a-z0-9]+(?:-[a-z0-9]+)*)$`,
 );
+export const FOLDER_DIGITS = 3;
+export const ticketFolder = (prefix: string, n: number, slug: string) =>
+  `${prefix}-${String(n).padStart(FOLDER_DIGITS, "0")}-${slug}`;
 const EPIC_FOLDER = new RegExp(`^(${PREFIX})-([a-z0-9]+(?:-[a-z0-9]+)*)$`);
 export const EPIC_PREFIX = new RegExp(`^${PREFIX}$`);
 /** What an app's specs folder may hold: truth, tickets, and the tracks' own records. */
@@ -109,7 +118,12 @@ const APP_FOLDERS = [
   "explorations",
   "audits",
   "reports",
+  "_archive",
 ];
+/** Closed one-offs and finished epics, by close month: <app>/_archive/<YYYY>/<MM>/<folder>/. */
+export const ARCHIVE = "_archive";
+const YEAR = /^\d{4}$/;
+const MONTH = /^(0[1-9]|1[0-2])$/;
 export const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
 // ---------------------------------------------------------------- types
@@ -181,6 +195,10 @@ export type Epic = {
   app: string;
   /** Repo-relative folder. */
   dir: string;
+  /** Where it was filed: dir, unless it is archived. */
+  origin: string;
+  /** The archive month, as in "2026/10"; null while it is live. */
+  archived: string | null;
 };
 
 export type Item = {
@@ -193,6 +211,10 @@ export type Item = {
   epic: Epic | null;
   /** Repo-relative folder. */
   dir: string;
+  /** Where it was filed: dir, unless it or its epic is archived. Records name paths there. */
+  origin: string;
+  /** The archive month, as in "2026/10"; null while it is live. */
+  archived: string | null;
 };
 
 export type SpecsTree = {
@@ -248,6 +270,15 @@ export const preflightPath = (epic: Epic) =>
   `${epic.dir}/tickets/_preflight.md`;
 export const statusPath = (specsRoot: string) => `${specsRoot}/_status.md`;
 
+/**
+ * Where a path a record names is now. Records are never rewritten: a path
+ * inside the folder an item was filed at follows the folder into the archive.
+ */
+export const relocate = (item: Item, recorded: string) =>
+  item.origin !== item.dir && recorded.startsWith(`${item.origin}/`)
+    ? `${item.dir}/${recorded.slice(item.origin.length + 1)}`
+    : recorded;
+
 export const compareIds = (a: string, b: string) => {
   const [pa, na] = a.split("-");
   const [pb, nb] = b.split("-");
@@ -298,20 +329,19 @@ export function readSpecsTree(
     }
 
     const appPrefix = toolkit.apps[app]?.prefix ?? null;
-    for (const name of listDir(`${appDir}/one-offs`)) {
-      const dir = `${appDir}/one-offs/${name}`;
+    const oneOff = (name: string, dir: string, archived: string | null) => {
       const match = name.match(FOLDER);
       if (!match || !isDir(dir)) {
         problems.push(
           `${dir} is not named <PREFIX>-<n>-<slug>; create one-offs with yarn contract:init`,
         );
-        continue;
+        return;
       }
       if (match[1] !== appPrefix) {
         problems.push(
           `${dir}: a one-off in ${app}/ uses the app's prefix ${appPrefix ?? "(none: _shared work is an epic)"}, not ${match[1]}`,
         );
-        continue;
+        return;
       }
       items.push({
         id: `${match[1]}-${match[2]}`,
@@ -322,19 +352,27 @@ export function readSpecsTree(
         kind: "one-off",
         epic: null,
         dir,
+        origin: `${appDir}/one-offs/${name}`,
+        archived,
       });
-    }
-
-    for (const name of listDir(`${appDir}/epics`)) {
-      const dir = `${appDir}/epics/${name}`;
+    };
+    const readEpic = (name: string, dir: string, archived: string | null) => {
       const match = name.match(EPIC_FOLDER);
       if (!match || !isDir(dir)) {
         problems.push(
           `${dir} is not named <EPIC>-<slug>; create epics with yarn spec:init`,
         );
-        continue;
+        return;
       }
-      const epic: Epic = { prefix: match[1]!, slug: match[2]!, app, dir };
+      const origin = `${appDir}/epics/${name}`;
+      const epic: Epic = {
+        prefix: match[1]!,
+        slug: match[2]!,
+        app,
+        dir,
+        origin,
+        archived,
+      };
       epics.push(epic);
       for (const ticket of listDir(`${dir}/tickets`)) {
         const tdir = `${dir}/tickets/${ticket}`;
@@ -361,7 +399,40 @@ export function readSpecsTree(
           kind: "epic ticket",
           epic,
           dir: tdir,
+          origin: `${origin}/tickets/${ticket}`,
+          archived,
         });
+      }
+    };
+
+    for (const name of listDir(`${appDir}/one-offs`))
+      oneOff(name, `${appDir}/one-offs/${name}`, null);
+    for (const name of listDir(`${appDir}/epics`))
+      readEpic(name, `${appDir}/epics/${name}`, null);
+
+    // The archive keeps every id and prefix in sight, so none is reused.
+    const archive = `${appDir}/${ARCHIVE}`;
+    for (const year of listDir(archive)) {
+      if (!YEAR.test(year) || !isDir(`${archive}/${year}`)) {
+        problems.push(
+          `${archive}/${year} is not part of the layout; the archive holds <YYYY>/<MM>/ folders, written by yarn specs:archive`,
+        );
+        continue;
+      }
+      for (const month of listDir(`${archive}/${year}`)) {
+        const monthDir = `${archive}/${year}/${month}`;
+        if (!MONTH.test(month) || !isDir(monthDir)) {
+          problems.push(
+            `${monthDir} is not part of the layout; the archive holds <YYYY>/<MM>/ folders, written by yarn specs:archive`,
+          );
+          continue;
+        }
+        for (const name of listDir(monthDir)) {
+          const dir = `${monthDir}/${name}`;
+          if (name.match(FOLDER)?.[1] === appPrefix)
+            oneOff(name, dir, `${year}/${month}`);
+          else readEpic(name, dir, `${year}/${month}`);
+        }
       }
     }
   }
@@ -820,7 +891,11 @@ function gitFacts(): Git {
 /** Whether an item's as-built is on the base branch: merged, so frozen rather than live. */
 export function isMerged(item: Item): boolean {
   const { base } = gitFacts();
-  return base !== null && readOnRef(base, asBuiltPath(item)) !== null;
+  return (
+    base !== null &&
+    (readOnRef(base, asBuiltPath(item)) ??
+      readOnRef(base, `${item.origin}/as-built.md`)) !== null
+  );
 }
 
 /** Whether a repo path is one of an item's planned paths: a file, a folder ending in "/", or a glob. */
@@ -925,18 +1000,19 @@ export function readItemState(
     }
     const isLog =
       criterion.evidence === "test" || criterion.evidence === "check";
-    const hasEvidence = fileExists(run.evidence_path);
+    const evidence = relocate(item, run.evidence_path);
+    const hasEvidence = fileExists(evidence);
     if (!hasEvidence && !isLog) {
-      fail(`evidence ${run.evidence_path} is missing`, "tampered");
+      fail(`evidence ${evidence} is missing`, "tampered");
       continue;
     }
-    if (hasEvidence && hashFile(run.evidence_path) !== run.evidence_sha256) {
+    if (hasEvidence && hashFile(evidence) !== run.evidence_sha256) {
       // A newer contract:run has written this log and not yet its result
       // (another thread on the shared branch, PR-14, or a run that stopped
       // between the two): work in flight, not an edit. A log whose header is
       // the recorded run's, an older one, none, one from the future or from a
       // commit outside this branch was edited. No run writes a merged log.
-      const header = !merged && isLog ? readRunHeader(run.evidence_path) : null;
+      const header = !merged && isLog ? readRunHeader(evidence) : null;
       const newer =
         header !== null &&
         header.command === run.command &&
@@ -946,14 +1022,11 @@ export function readItemState(
           (header.at === run.at && header.head !== run.head));
       if (newer)
         fail(
-          `evidence ${run.evidence_path} is from a newer run (${header.at}, ${header.head.slice(0, 7)}) than the one recorded (${run.at}); a contract:run is recording it, or stopped before it could`,
+          `evidence ${evidence} is from a newer run (${header.at}, ${header.head.slice(0, 7)}) than the one recorded (${run.at}); a contract:run is recording it, or stopped before it could`,
           "stale",
         );
       else
-        fail(
-          `evidence ${run.evidence_path} changed after it was recorded`,
-          "tampered",
-        );
+        fail(`evidence ${evidence} changed after it was recorded`, "tampered");
       continue;
     }
     if (run.exit !== 0) {
@@ -1055,24 +1128,55 @@ function recordedStage(state: ItemState): string {
 /** The generated view of every item (E-26). Deterministic: it reads files, never git or the clock. */
 export function renderStatusFile(tree: SpecsTree): string {
   const states = tree.items.map((item) => readItemState(item, tree.specsRoot));
-  const rows = states.map((state) => {
-    const left = recordedLeft(state);
-    return `| ${state.item.id} | ${state.item.kind} | ${recordedStage(state)} | ${left.length ? left.join(", ") : "none"} | [\`${state.item.slug}\`](${path.posix.relative(tree.specsRoot, state.item.dir)}/) |`;
-  });
+  const link = (dir: string) => `${path.posix.relative(tree.specsRoot, dir)}/`;
+  const rows = states
+    .filter((state) => !state.item.archived)
+    .map((state) => {
+      const left = recordedLeft(state);
+      return `| ${state.item.id} | ${state.item.kind} | ${recordedStage(state)} | ${left.length ? left.join(", ") : "none"} | [\`${state.item.slug}\`](${link(state.item.dir)}) |`;
+    });
   const operatorRows = states.flatMap((state) =>
     (state.contract?.criteria ?? [])
       .filter((c) => state.results?.criteria[c.id]?.run?.deferred === true)
       .map(
         (c) =>
-          `| ${state.item.id} | ${c.id} | ${c.statement.replaceAll("|", "\\|")} | \`${state.results!.criteria[c.id]!.run!.evidence_path}\` |`,
+          `| ${state.item.id} | ${c.id} | ${c.statement.replaceAll("|", "\\|")} | \`${relocate(state.item, state.results!.criteria[c.id]!.run!.evidence_path)}\` |`,
       ),
   );
-  const epicRows = tree.epics.map((epic) => {
-    const tickets = tree.items.filter(
-      (item) => item.epic?.prefix === epic.prefix,
+  const ticketsOf = (epic: Epic) =>
+    tree.items.filter((item) => item.epic?.prefix === epic.prefix);
+  const epicRows = tree.epics
+    .filter((epic) => !epic.archived)
+    .map(
+      (epic) =>
+        `| ${epic.prefix} | ${epic.app} | ${ticketsOf(epic).length} | [\`${epic.slug}\`](${link(epic.dir)}) |`,
     );
-    return `| ${epic.prefix} | ${epic.app} | ${tickets.length} | [\`${epic.slug}\`](${path.posix.relative(tree.specsRoot, epic.dir)}/) |`;
-  });
+  const archiveRows = [
+    ...tree.epics
+      .filter((epic) => epic.archived)
+      .map((epic) => ({
+        month: epic.archived!,
+        id: epic.prefix,
+        row: `| ${epic.archived} | ${epic.prefix} | epic, ${ticketsOf(epic).length} ticket(s) | [\`${epic.slug}\`](${link(epic.dir)}) |`,
+      })),
+    ...tree.items
+      .filter((item) => item.archived && item.kind === "one-off")
+      .map((item) => ({
+        month: item.archived!,
+        id: item.id,
+        row: `| ${item.archived} | ${item.id} | one-off | [\`${item.slug}\`](${link(item.dir)}) |`,
+      })),
+  ]
+    .sort(
+      (a, b) =>
+        b.month.localeCompare(a.month) ||
+        (EPIC_PREFIX.test(a.id) === EPIC_PREFIX.test(b.id)
+          ? compareIds(a.id, b.id)
+          : EPIC_PREFIX.test(a.id)
+            ? -1
+            : 1),
+    )
+    .map((entry) => entry.row);
   return [
     "# Status",
     "",
@@ -1098,6 +1202,18 @@ export function renderStatusFile(tree: SpecsTree): string {
     "| --- | --- | --- | --- |",
     ...(epicRows.length ? epicRows : ["| none | | | |"]),
     "",
+    ...(archiveRows.length
+      ? [
+          "## Archive",
+          "",
+          "Closed one-offs and finished epics, moved by `yarn specs:archive`, newest month first. Their ids stay taken; `yarn status <id>` still reads them.",
+          "",
+          "| Month | ID | What | Folder |",
+          "| --- | --- | --- | --- |",
+          ...archiveRows,
+          "",
+        ]
+      : []),
   ].join("\n");
 }
 
@@ -1153,6 +1269,14 @@ export function checkContract(
   const contract = file.contract;
   if (!contract) return problems;
   const bad = (text: string) => problems.push(`${rel}: ${text}`);
+  // An archived contract is a record of a closed ticket: it was checked
+  // against the tree it closed in, and the files and scripts it names may
+  // since have moved with it or changed.
+  if (item.archived) {
+    if (contract.id !== item.id)
+      bad(`id is ${contract.id}, but the folder is ${item.id}`);
+    return problems;
+  }
 
   if (/\[FILL/.test(file.text)) {
     if (options.started) bad("still holds [FILL] markers; fill every one");

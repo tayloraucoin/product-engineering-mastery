@@ -277,7 +277,7 @@ export function startOneOff(
   const repo = freshRepo();
   let r = tool(repo, "contract.ts", ["init", "web", "filter"]);
   assert.equal(r.status, 0, r.out);
-  const rel = "specs/web/one-offs/WEB-1-filter/contract.md";
+  const rel = "specs/web/one-offs/WEB-001-filter/contract.md";
   assert.match(read(repo, rel), /\[FILL/);
   write(repo, rel, oneOffContract("WEB-1", extra));
   r = tool(repo, "contract.ts", ["init", "web", "filter"]);

@@ -15,6 +15,13 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-05 — PEM: ticket folders sort in number order, and finished work moves to an archive
+
+`specs/` will hold hundreds of ticket and epic folders. Two changes keep it readable.
+
+- **Padded folders.** `contract:init` pads the number in a new ticket folder to three digits (`STK-026-slug`); the id stays `STK-26`. Folders filed before padding keep their names: a merged `results.json` names paths into them and is never rewritten, and other threads are building in some of them.
+- **`yarn specs:archive`.** Moves closed one-offs, and epics whose every ticket is closed, into `specs/<app>/_archive/<YYYY>/<MM>/` by close month; `--dry-run` prints the plan. Nothing open, draft, closing, migration-pending, uncommitted or with an unpromoted approved proposal moves. Paths a record names follow its folder when read, so no record is rewritten. Status, `check-specs`, `contract:init`, `spec:init` and the commit-message hook read the archive, so no id or prefix is reused. Rules in `.claude/rules/specs.md`; the plain-language account in `docs/workflows/README.md`. It has not been run on the real tree: the operator decides when.
+
 ## 2026-10-05 — PEM: the new-project guide opens with an interview, and Docker is off by default
 
 Taylor is about to duplicate this repo for two products, with an agent running the set-up and interviewing him. The guide was a list of steps fed by a briefing. `docs/runbooks/new-project/README.md` is rewritten: it opens with the interview, asked as option questions with a recommended answer (names and scope, apps, keep or remove for each part of the stack, the local database, who signs decisions, brand, UX spec), then seven steps, each with its proof, and a desk walk of one case.

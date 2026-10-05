@@ -101,14 +101,17 @@ specs/
    │  ├─ research/                  notes from research threads
    │  ├─ ux/                        proposed changes, mirroring ux/ paths
    │  ├─ technical.md               only what every ticket shares
-   │  └─ tickets/OB2-3-welcome-copy/   contract.md, results.json; as-built.md; at Q3 the reviews
-   ├─ one-offs/WEB-41-fix-filter/   a side quest that chose a ticket
+   │  └─ tickets/OB2-003-welcome-copy/ contract.md, results.json; as-built.md; at Q3 the reviews
+   ├─ one-offs/WEB-041-fix-filter/  a side quest that chose a ticket
    ├─ explorations/<slug>/          brief.md, research/, findings.md
    ├─ audits/<date>-<slug>.md       saved findings
-   └─ reports/<date>-<slug>.md      only reports the operator chose to save
+   ├─ reports/<date>-<slug>.md      only reports the operator chose to save
+   └─ _archive/2026/10/             finished work, by the month it closed
 ```
 
-Work that spans apps lives in `specs/_shared/` with the same shape. Nothing else is filed: no prompt files, no evidence logs, no review files below Q3.
+Work that spans apps lives in `specs/_shared/` with the same shape. Nothing else is filed: no prompt files, no evidence logs, no review files below Q3. Ticket numbers in folder names are padded to three digits, so a folder lists in order; the id stays short (`OB2-3`).
+
+**The archive.** Finished work leaves the live tree so it stays readable as tickets pile up. `yarn specs:archive` moves every closed one-off, and every epic whose tickets are all closed, into `_archive/<year>/<month>/` by the month it closed; `yarn specs:archive --dry-run` shows what would move and what is held back and why. Anything draft, open, closing or waiting on a migration stays put, and so does a folder another thread has uncommitted changes in. Nothing is lost: `yarn status <id>` still finds an archived ticket, `_status.md` lists the archive by month, and a number or epic prefix in the archive is never handed out again. You decide when it runs.
 
 ## Truth and records
 

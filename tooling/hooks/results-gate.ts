@@ -110,7 +110,7 @@ if (base === "results.json")
     "results",
     "results.json is written only by tooling, so the builder cannot grade itself. Run: yarn contract:run <id>   or   yarn contract:record <id> <criterion> --evidence <path>",
   );
-const inTicket = /^[A-Z][A-Z0-9]{1,4}-[1-9][0-9]*-/.test(
+const inTicket = /^[A-Z][A-Z0-9]{1,4}-[0-9]+-/.test(
   path.posix.basename(path.posix.dirname(rel)),
 );
 if (

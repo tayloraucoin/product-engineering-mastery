@@ -12,6 +12,10 @@
  * ticket closing with criteria left, _status.md out of date. Tickets share the
  * operator's branch, so one ticket's open close never fails another's verify.
  *
+ * Archived items (specs/<app>/_archive/<YYYY>/<MM>/) are read like any other,
+ * so their ids stay taken; their contracts are checked as records, and they
+ * must be closed.
+ *
  * Fails on: a layout or id problem; a contract that breaks its schema or its
  * rules; results that do not match the contract or its frozen criteria; a
  * PASS without a valid run record (always), or one the code has outrun (once
@@ -194,7 +198,16 @@ function checkItems(tree: SpecsTree, toolkit: Toolkit, report: Report) {
         );
     }
 
+    // The archive holds closed work only (yarn specs:archive).
+    if (item.archived && state.stage !== "closed")
+      report.errors.push(
+        `${item.id} is archived at ${item.dir}/ but is ${state.stage}; only closed work is archived. Move it back to ${item.origin}/`,
+      );
+
     // Merged records are immutable, except an as-built's applied: value (E-24).
+    // An archived record is compared with the file merged where it was filed.
+    const onBase = (record: string) =>
+      readOnRef(base!, record) ?? readOnRef(base!, relocateBack(item, record));
     if (base && state.merged) {
       for (const record of [
         contractPath(item),
@@ -203,7 +216,7 @@ function checkItems(tree: SpecsTree, toolkit: Toolkit, report: Report) {
           .filter((n) => n.startsWith("review-"))
           .map((n) => `${item.dir}/${n}`),
       ]) {
-        const merged = readOnRef(base, record);
+        const merged = onBase(record);
         if (
           merged !== null &&
           fileExists(record) &&
@@ -213,7 +226,7 @@ function checkItems(tree: SpecsTree, toolkit: Toolkit, report: Report) {
             `${record} is merged and immutable; git restore it. A new result belongs to a new item`,
           );
       }
-      const mergedAsBuilt = readOnRef(base, asBuiltPath(item))!;
+      const mergedAsBuilt = onBase(asBuiltPath(item))!;
       if (
         withoutApplied(readRepoText(asBuiltPath(item))) !==
         withoutApplied(mergedAsBuilt)
@@ -224,6 +237,12 @@ function checkItems(tree: SpecsTree, toolkit: Toolkit, report: Report) {
     }
   }
 }
+
+/** A path in an archived item's folder, at the folder it was filed at. */
+const relocateBack = (item: SpecsTree["items"][number], rel: string) =>
+  rel.startsWith(`${item.dir}/`)
+    ? `${item.origin}/${rel.slice(item.dir.length + 1)}`
+    : rel;
 
 function recordCommand(id: string, evidence: string, itemId: string) {
   if (id.startsWith("review:"))

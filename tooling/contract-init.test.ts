@@ -29,8 +29,8 @@ useScratchRepo();
 test("A4 contract:init allocates sequential ids, from the template, then starts with every criterion FAIL", () => {
   const repo = freshRepo();
   for (const [slug, id] of [
-    ["first", "WEB-1"],
-    ["second", "WEB-2"],
+    ["first", "WEB-001"],
+    ["second", "WEB-002"],
   ]) {
     const r = tool(repo, "contract.ts", ["init", "WEB", slug!]);
     assert.equal(r.status, 0, r.out);
@@ -43,13 +43,13 @@ test("A4 contract:init allocates sequential ids, from the template, then starts 
   }
   write(
     repo,
-    "specs/web/one-offs/WEB-2-second/contract.md",
+    "specs/web/one-offs/WEB-002-second/contract.md",
     oneOffContract("WEB-2"),
   );
   const r = tool(repo, "contract.ts", ["init", "web", "second"]);
   assert.equal(r.status, 0, r.out);
   const results = JSON.parse(
-    read(repo, "specs/web/one-offs/WEB-2-second/results.json"),
+    read(repo, "specs/web/one-offs/WEB-002-second/results.json"),
   );
   assert.deepEqual(
     Object.values(results.criteria).map((c: any) => c.status),
@@ -64,7 +64,7 @@ test("the protected branch refuses a start; the operator picks the work branch",
   tool(repo, "contract.ts", ["init", "web", "first"]);
   write(
     repo,
-    "specs/web/one-offs/WEB-1-first/contract.md",
+    "specs/web/one-offs/WEB-001-first/contract.md",
     oneOffContract("WEB-1"),
   );
   const r = tool(repo, "contract.ts", ["init", "web", "first"]);
@@ -77,7 +77,7 @@ test("parallel tickets: a second item starts on the same branch while the first 
   tool(repo, "contract.ts", ["init", "web", "other"]);
   write(
     repo,
-    "specs/web/one-offs/WEB-2-other/contract.md",
+    "specs/web/one-offs/WEB-002-other/contract.md",
     oneOffContract("WEB-2", { planned: ["src/other.ts"] }),
   );
   const r = tool(repo, "contract.ts", ["init", "web", "other"]);
@@ -115,7 +115,7 @@ test("stacking: a dependent ticket starts on the same branch once its predecesso
   tool(repo, "contract.ts", ["init", "web", "other"]);
   write(
     repo,
-    "specs/web/one-offs/WEB-2-other/contract.md",
+    "specs/web/one-offs/WEB-002-other/contract.md",
     oneOffContract("WEB-2", { depends: ["WEB-1"], planned: ["src/other.ts"] }),
   );
   const r = tool(repo, "contract.ts", ["init", "web", "other"]);
@@ -129,7 +129,7 @@ test("a dependency that has not started refuses the start", () => {
   tool(repo, "contract.ts", ["init", "web", "second"]);
   write(
     repo,
-    "specs/web/one-offs/WEB-2-second/contract.md",
+    "specs/web/one-offs/WEB-002-second/contract.md",
     oneOffContract("WEB-2", { depends: ["WEB-1"] }),
   );
   const r = tool(repo, "contract.ts", ["init", "web", "second"]);
@@ -162,7 +162,7 @@ test("A6: a cited file not approved, or holding a BLOCKING marker, is refused; a
     tool(repo, "contract.ts", ["init", "web", "filter"]);
     write(
       repo,
-      "specs/web/one-offs/WEB-1-filter/contract.md",
+      "specs/web/one-offs/WEB-001-filter/contract.md",
       oneOffContract("WEB-1", {
         cites: ["specs/web/ux/records/table.md", "REC-1"],
       }),
@@ -175,7 +175,7 @@ test("A6: a cited file not approved, or holding a BLOCKING marker, is refused; a
 
 test("PR-19 levels: a ticket starts at Q1 with no review criterion; contract:qa Q3 adds the reviewers named, and a lower level drops them", () => {
   const repo = startOneOff({ truth: ["specs/web/ux/records/table.md"] });
-  const rel = "specs/web/one-offs/WEB-1-filter/contract.md";
+  const rel = "specs/web/one-offs/WEB-001-filter/contract.md";
   assert.match(read(repo, rel), /^qa: Q1$/m);
   assert.doesNotMatch(read(repo, rel), /id: review:/);
   let r = tool(repo, "contract.ts", [
@@ -204,7 +204,7 @@ test("PR-19 levels: a ticket starts at Q1 with no review criterion; contract:qa 
 test("PR-19: a critical path below Q3 is flagged once at the start, never refused, and never assigns a reviewer", () => {
   const repo = freshRepo();
   tool(repo, "contract.ts", ["init", "web", "charge"]);
-  const rel = "specs/web/one-offs/WEB-1-charge/contract.md";
+  const rel = "specs/web/one-offs/WEB-001-charge/contract.md";
   write(
     repo,
     rel,
@@ -224,7 +224,11 @@ test("PR-19: a critical path below Q3 is flagged once at the start, never refuse
 test("PR-15: check-specs warns on a ticket still closing, and fails it only with --strict", () => {
   const repo = startOneOff();
   write(repo, "src/filter.ts", "export const keep = (n: number) => n > 1;\n");
-  write(repo, "specs/web/one-offs/WEB-1-filter/as-built.md", AS_BUILT("WEB-1"));
+  write(
+    repo,
+    "specs/web/one-offs/WEB-001-filter/as-built.md",
+    AS_BUILT("WEB-1"),
+  );
   tool(repo, "status.ts", []);
   commit(repo, "WEB-1: as-built before proof");
   const loose = tool(repo, "check-specs.ts", ["--skip-fixtures"]);
