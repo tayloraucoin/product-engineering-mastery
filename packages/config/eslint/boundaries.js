@@ -3,7 +3,7 @@
  *
  * Enforced via eslint-plugin-boundaries at the repo root (eslint.config.mjs).
  * Layer order (low → high), the built part of codebase-conventions §4:
- *   config → constants, env, brand, observability → db → auth → email → ui → apps
+ *   config → constants, env, brand, observability → validators → db → auth → email → services → ui → apps
  *
  * `ui-workshop` is `packages/ui/.storybook/`, the component workshop
  * (D-STK-10): it reads @pem/brand for fonts and assets, which @pem/ui's own
@@ -12,6 +12,10 @@
  * `catalog` is `packages/catalog`, the shelf (CS-07, record 0011): it may
  * import `config` and `ui`, and nothing may import it. No package lists it
  * and apps are kept off it below; the workshop reaches its stories by a glob.
+ *
+ * Each element in TRANSPORT_FREE imports no transport or framework: a service
+ * is called the same way by a tRPC procedure, a Route Handler or a webhook
+ * (D-STK-8), so `next`, `react` and `@trpc/*` never reach it.
  *
  * - apps/* → apps/*: hard ban
  * - packages/* → apps/*: hard ban
@@ -58,9 +62,11 @@ const ELEMENTS = [
   workspacePackage("env", "env"),
   workspacePackage("brand", "brand"),
   workspacePackage("observability", "observability"),
+  workspacePackage("validators", "validators"),
   workspacePackage("db", "db"),
   workspacePackage("auth", "auth"),
   workspacePackage("email", "email"),
+  workspacePackage("services", "services"),
   {
     type: "ui-workshop",
     pattern: ["packages/ui/.storybook/**"],
@@ -77,9 +83,11 @@ const PACKAGE_IMPORTS = {
   env: ["config"],
   brand: ["config"],
   observability: ["config"],
+  validators: ["config"],
   db: ["config", "env"],
   auth: ["config", "db", "observability"],
   email: ["config", "env", "brand", "observability"],
+  services: ["config", "validators", "db"],
   ui: ["config"],
   "ui-workshop": ["config", "brand", "ui"],
   catalog: ["config", "ui"],
@@ -92,6 +100,10 @@ const SDK_OWNERS = {
   "@supabase/*": "auth",
   resend: "email",
 };
+
+/** Elements that import no transport or framework (D-STK-8), and what they are kept off. */
+const TRANSPORT_FREE = ["services"];
+const TRANSPORTS = ["next", "react", "react-dom", "@trpc/*"];
 
 const APP_TYPES = ELEMENTS.map((element) => element.type).filter((type) =>
   type.startsWith("app-"),
@@ -113,14 +125,44 @@ const WORKSPACE_PATH_PATTERN = {
 };
 
 /** no-restricted-imports for files in `owner` (or in no owner): every SDK owned elsewhere is banned. */
-function restrictedImports(owner) {
+function restrictedImports(owner, extraPatterns = []) {
   const sdkPatterns = Object.entries(SDK_OWNERS)
     .filter(([, sdkOwner]) => sdkOwner !== owner)
     .map(([sdk, sdkOwner]) => ({
       group: [sdk, `${sdk}/*`],
       message: `${sdk} is owned by @pem/${sdkOwner} (D-STK-16); import what you need from @pem/${sdkOwner}.`,
     }));
-  return ["error", { patterns: [WORKSPACE_PATH_PATTERN, ...sdkPatterns] }];
+  return [
+    "error",
+    { patterns: [WORKSPACE_PATH_PATTERN, ...sdkPatterns, ...extraPatterns] },
+  ];
+}
+
+/** Source globs for an element's own files, not its node_modules link. */
+function sourceFiles(element) {
+  return element.pattern
+    .filter((pattern) => !pattern.startsWith("node_modules/"))
+    .map((pattern) => pattern.replace(/\*\*$/, SOURCE_FILES));
+}
+
+/** One override per transport-free element: the SDK bans, plus every transport. */
+function transportFreeOverrides() {
+  const transportPatterns = TRANSPORTS.map((name) => ({
+    group: [name, `${name}/*`],
+    message: `${name} is a transport or framework; a service takes ctx and input and is called the same way from any transport (D-STK-8). Keep it in @pem/api or the app.`,
+  }));
+  return TRANSPORT_FREE.map((type) => {
+    const element = ELEMENTS.find((candidate) => candidate.type === type);
+    if (!element) throw new Error(`${type} is not in ELEMENTS`);
+    if (Object.values(SDK_OWNERS).includes(type))
+      throw new Error(`${type} owns an SDK; merge its two overrides`);
+    return {
+      files: sourceFiles(element),
+      rules: {
+        "no-restricted-imports": restrictedImports(null, transportPatterns),
+      },
+    };
+  });
 }
 
 /** One override per SDK owner, so its own files may import what it owns. */
@@ -130,9 +172,7 @@ function ownerOverrides() {
     const element = ELEMENTS.find((candidate) => candidate.type === owner);
     if (!element) throw new Error(`SDK owner ${owner} is not in ELEMENTS`);
     return {
-      files: element.pattern
-        .filter((pattern) => !pattern.startsWith("node_modules/"))
-        .map((pattern) => pattern.replace(/\*\*$/, SOURCE_FILES)),
+      files: sourceFiles(element),
       rules: { "no-restricted-imports": restrictedImports(owner) },
     };
   });
@@ -243,4 +283,5 @@ export const boundariesConfig = [
     },
   },
   ...ownerOverrides(),
+  ...transportFreeOverrides(),
 ];

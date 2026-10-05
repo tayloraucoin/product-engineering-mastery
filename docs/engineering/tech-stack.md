@@ -38,8 +38,9 @@ The canonical choices and their versions. Exact pins are deliberate; a pin chang
 | `@base-ui/react`                                                                            | 1.8.0 (verified 2026-10-04)              | **exact** (`@pem/ui` only; the primitive base, CS-02)                                                     |
 | `lucide-react`                                                                              | 1.48.0 (verified 2026-10-04)             | **exact** (`@pem/ui`; the icon library, CS-10)                                                            |
 | `tw-animate-css`                                                                            | 1.4.0 (verified 2026-10-04)              | **exact** (`@pem/ui` styles; shadcn's enter and exit animations)                                          |
+| `input-otp`                                                                                 | 1.5.0 (verified 2026-10-04)              | **exact** (`@pem/ui` only; the one-time-code control, CAT-5)                                              |
 | `shadcn` CLI (`yarn shadcn`; edit A1)                                                       | 4.21.0 (verified 2026-10-04)             | **exact** (`@pem/ui` dev only; used for `add --dry-run --view`, never to write, CS-08)                    |
-| `@t3-oss/env-nextjs`, `zod`                                                                 | 0.13.11, 4.6.5 (verified 2026-10-03)     | caret (`apps/web`: `env.ts`; D-STK-3)                                                                     |
+| `@t3-oss/env-nextjs`, `zod`                                                                 | 0.13.11, 4.6.5 (verified 2026-10-03)     | caret in `apps/web` (`env.ts`; D-STK-3); `zod` **exact** in `@pem/validators` and `@pem/services`         |
 | `drizzle-orm`, `drizzle-kit`, `postgres`                                                    | 0.45.2, 0.31.10, 3.4.9 (2026-10-03)      | **exact** (`@pem/db` only; D-STK-5, D-STK-16)                                                             |
 | `supabase` CLI (`yarn db:local`, `db:local:full`; D-STK-6)                                  | 2.119.0 (verified 2026-10-04)            | **exact** (`@pem/db` devDependency; it pins the images below)                                             |
 | `supabase/postgres` image, from the CLI                                                     | 17.11.0.002 (verified 2026-10-04)        | by the CLI pin (`public.ecr.aws/supabase/postgres`); listens on every interface, so `yarn db:local` warns |
@@ -58,8 +59,7 @@ Next.js, React, and TypeScript are pinned exactly because a minor version of eac
 
 None of these exist yet. Every row but Tests is part of the default stack ([record 0010](../decisions/records/0010-starter-ships-default-stack.md)), and the ticket that lands one deletes its row and moves its pins into the tables above. The Synapse and Conscious Connections repos are the reference for how each is built here.
 
-| Concern    | House choice when it arrives                                                | Ticket |
-| ---------- | --------------------------------------------------------------------------- | ------ |
-| API        | tRPC, thin procedures over services                                         | STK-14 |
-| Validation | Zod (pinned above for `env.ts`) — one schema shared by forms and procedures | STK-13 |
-| Tests      | During the item, per evidence type (ruling (h); `.claude/rules/testing.md`) | —      |
+| Concern | House choice when it arrives                                                | Ticket |
+| ------- | --------------------------------------------------------------------------- | ------ |
+| API     | tRPC, thin procedures over services                                         | STK-14 |
+| Tests   | During the item, per evidence type (ruling (h); `.claude/rules/testing.md`) | —      |

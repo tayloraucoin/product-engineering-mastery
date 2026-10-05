@@ -35,6 +35,37 @@ const DISALLOWED: [file: string, code: string, message: RegExp][] = [
     'import "../../db/src/client";',
     /^env must not import db/,
   ],
+  // STK-13: services import no transport (D-STK-8); validators sit below db.
+  [
+    "packages/services/src/zz-probe.ts",
+    'import "next/server";',
+    /next is a transport or framework/,
+  ],
+  [
+    "packages/services/src/zz-probe.ts",
+    'import { useState } from "react";',
+    /react is a transport or framework/,
+  ],
+  [
+    "packages/services/src/zz-probe.ts",
+    'import "@trpc/server";',
+    /@trpc\/\* is a transport or framework/,
+  ],
+  [
+    "packages/services/src/zz-probe.ts",
+    'import "@pem/auth/context";',
+    /^services must not import auth/,
+  ],
+  [
+    "packages/validators/src/zz-probe.ts",
+    'import "@pem/db/schema";',
+    /^validators must not import db/,
+  ],
+  [
+    "packages/db/src/zz-probe.ts",
+    'import "@pem/services/notes";',
+    /^db must not import services/,
+  ],
   // STK-12: @supabase/* is owned by auth (D-STK-16); auth sits above db.
   [
     "packages/db/src/zz-probe.ts",
@@ -55,6 +86,17 @@ const DISALLOWED: [file: string, code: string, message: RegExp][] = [
     "packages/email/src/zz-probe.ts",
     'import "@pem/auth/server";',
     /^email must not import auth/,
+  ],
+  // STK-15: resend is owned by email (D-STK-16).
+  [
+    "apps/web/lib/zz-probe.ts",
+    'import "resend";',
+    /resend is owned by @pem\/email/,
+  ],
+  [
+    "packages/observability/src/zz-probe.ts",
+    'import { Resend } from "resend";',
+    /resend is owned by @pem\/email/,
   ],
   // CAT-3: the shelf is never imported (CS-07, record 0011).
   [
@@ -102,6 +144,16 @@ const ALLOWED: [file: string, code: string][] = [
     'import "@supabase/ssr"; import "@supabase/supabase-js"; import "@pem/db/rls"; import "@pem/observability/logger";',
   ],
   ["apps/web/lib/zz-probe.ts", 'import "@pem/auth/server";'],
+  [
+    "packages/services/src/zz-probe.ts",
+    'import "@pem/validators/notes"; import "@pem/db/schema"; import "drizzle-orm"; import "zod";',
+  ],
+  ["apps/web/lib/zz-probe.ts", 'import "@pem/services/notes";'],
+  [
+    "packages/email/src/zz-probe.ts",
+    'import "resend"; import "@pem/brand/brand"; import "@pem/observability/logger";',
+  ],
+  ["apps/web/lib/zz-probe.ts", 'import "@pem/email/mailer";'],
   ["packages/catalog/src/zz-probe.ts", 'import "@pem/ui/button";'],
   [
     "apps/web/app/zz-probe.ts",
