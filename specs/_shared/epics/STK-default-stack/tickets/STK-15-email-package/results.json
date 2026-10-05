@@ -58,12 +58,12 @@
       "run": {
         "command": "yarn review:run mason STK-15",
         "exit": 0,
-        "at": "2026-10-05T00:20:44Z",
-        "head": "dabf2b9e0ea844df38257f8ee5862cecaff0a1a1",
+        "at": "2026-10-05T00:43:28Z",
+        "head": "3e3b46840f915a7cf1866f35f74957847fb5c887",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/review-mason.md",
-        "evidence_sha256": "902e2b4bd4a0ba66f0c4f6c0c0dd382af680d2e1b862fba2e3cdd532170e200b",
+        "evidence_sha256": "b90802cc71fa9ed5b8ddd0d8b7797e6b69a0aa9d0cd646435d13bb6097bf2499",
         "contract_sha256": "b3afca1d007a01cc26be74a2c89661dfe0653d89eca8bbba832524b4f0965151",
-        "as_built_sha256": "27c12c58bb19151a6826544c5a1324a944cfef6439bd507dff8bca062078f780",
+        "as_built_sha256": "b54b3f09baac51ef4710b448dc9a10cf29216eaab3ce82408b9039ae0ac531f0",
         "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/mason-cto-principal-dev.md; tools Read,Grep,Glob)"
       }
     },
@@ -98,5 +98,5 @@
       }
     }
   },
-  "updated_at": "2026-10-05T00:43:19Z"
+  "updated_at": "2026-10-05T00:48:14Z"
 }
