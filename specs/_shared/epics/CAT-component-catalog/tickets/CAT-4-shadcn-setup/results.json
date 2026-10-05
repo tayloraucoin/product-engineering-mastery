@@ -1,6 +1,6 @@
 {
   "id": "CAT-4",
-  "criteria_sha256": "43b6d82eb93f5dc7009018b7a30351abf945cbb17c9e0a08f150467316c3cc8f",
+  "criteria_sha256": "93df002daaba297248f210bdcec53e010f755f2e048bd49882552618c01eb241",
   "criteria": {
     "C1": {
       "status": "PASS",
@@ -74,7 +74,19 @@
         "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-4-shadcn-setup/evidence/C6.log",
         "evidence_sha256": "b389da4a47aeab22f77b16537f53c3746dbb9e560def86c7372af0f00277e678"
       }
+    },
+    "C7": {
+      "status": "PASS",
+      "evidence": "capture",
+      "run": {
+        "command": "yarn contract:record CAT-4 C7 --evidence specs/_shared/epics/CAT-component-catalog/tickets/CAT-4-shadcn-setup/evidence/C7-source-filter.md",
+        "exit": 0,
+        "at": "2026-10-05T00:01:08Z",
+        "head": "4fe58efd80a040e58dd7ef72cb799e3474b5a54b",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-4-shadcn-setup/evidence/C7-source-filter.md",
+        "evidence_sha256": "e08a9b8a674929a55410b39591a95dfd9353113e0a1b5dae14dbfcc72a0be913"
+      }
     }
   },
-  "updated_at": "2026-10-04T23:44:03Z"
+  "updated_at": "2026-10-05T00:01:08Z"
 }
