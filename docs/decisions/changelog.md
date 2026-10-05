@@ -15,6 +15,15 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-05 — PEM: the new-project guide opens with an interview, and Docker is off by default
+
+Taylor is about to duplicate this repo for two products, with an agent running the set-up and interviewing him. The guide was a list of steps fed by a briefing. `docs/runbooks/new-project/README.md` is rewritten: it opens with the interview, asked as option questions with a recommended answer (names and scope, apps, keep or remove for each part of the stack, the local database, who signs decisions, brand, UX spec), then seven steps, each with its proof, and a desk walk of one case.
+
+- **New beside it:** `strip.md` (what a duplicate deletes as this repo's history, and what stays as inherited law), `rename.md` (every place the scope, the repo name, the prefixes and the owner's name appear, from a search, and the order that keeps `yarn verify` green), `branding.md` (the files a brand lands in, and the prompt for a branding thread), `components.md` (the prompt for the thread that cuts the kit and the catalog to the UX spec).
+- **First add recipe:** `docs/runbooks/add/docker-local-database.md`. A new project runs its database hosted-only unless the operator asks for Docker; hosted-only is the staging tier on a developer's machine, set in the example files.
+- **Order changed:** the strip now comes before the rename, which takes about 200 files out of the rename. Removing the parts is still step 4, so the remove recipes' "run from step 4" lines hold.
+- **No code changed.** Making the local database opt-in in `packages/db` is a follow-up. The docs app, a marketing app and a mobile app have no recipe; email is locked and has none. None of this has been run cold: STK-20 does that.
+
 ## 2026-10-05 — PEM: one front door, eight tracks, QA levels (PR-19)
 
 Taylor: two days of the contract loop cost most of two days and a quarter of a week's tokens for work he expected to take hours; the system must be faster than not using it or nobody will adopt it. An audit of `agent/STK-3` found 343 of 425 commits touching `specs/` against 108 touching product code, about 70 commits that only re-proved, and up to six fresh-context reviewers on one small ticket. The cause was proofs bound to file hashes in a checkout many threads share, and reviewers assigned by file glob.

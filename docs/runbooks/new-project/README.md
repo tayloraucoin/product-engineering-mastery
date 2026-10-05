@@ -1,143 +1,269 @@
 ---
-title: New project — duplicate this repo, then remove what the product does not use
-description: Follow when a product repo starts from this one, holding a briefing; duplicate, rename the scope and prefixes, set the brand, run a removal runbook per dropped module, clear the toolkit's own content, and end on yarn check-stack and yarn verify.
+title: New project — the interview, then the steps that turn a duplicate into a product repo
+description: Follow when a product repo starts from this one. The agent interviews the operator with option questions (names, apps, each part of the stack, the local database, the owner, brand, UX spec), then duplicates, strips, renames, brands, removes, sets the environment and verifies, and prints the prompts for the threads that follow.
 layer: runbooks
 status: draft
-thread: "STK-3"
+thread: "PEM"
 role: Usher
-date: 2026-10-03
-last_reviewed: 2026-10-03
+date: 2026-10-05
+last_reviewed: 2026-10-05
 supersedes:
 load_when:
 ---
 
 # New project
 
-> **Who runs it:** an agent or a person holding a one-paragraph briefing; Taylor reviews the result.
-> **When:** a product repo starts from this one. The rule is duplicate, then remove ([record 0010](../../decisions/records/0010-starter-ships-default-stack.md), D-STK-2): the product starts with the whole default stack and deletes what it does not use.
-> **Done means:** `yarn check-stack` and `yarn verify` exit 0 in the new repo, and the result is committed on its branch (step 7).
-> **Status:** draft until the dry-run ticket (STK-20) runs it cold on a duplicate and times each step.
+> **Who runs it:** an agent in Claude Code, with the operator answering questions. On the deepest model available: the interview is design work, and a smaller model turns it into a checklist.
+> **When:** a product repo starts from this one. The rule is duplicate, then remove ([record 0010](../../decisions/records/0010-starter-ships-default-stack.md)).
+> **Done means:** `yarn check-stack` and `yarn verify` exit 0 in the new repo, the set-up record is written, the work is committed on its branch, and the operator holds the prompts for the threads that follow (step 7).
+> **Status:** draft. No step here has been run cold on a duplicate; the dry-run ticket (STK-20) times each one. The desk walk at the end is a reading, not a trial.
 
-Every step ends on a check. A step whose check fails is fixed before the next one starts. Note the time each step starts; step 7 reports the minutes.
+This folder holds the guide and what it hands out:
 
-## 0. Read the briefing
+| File | What it is |
+| --- | --- |
+| This file | The interview, then the ordered steps |
+| [`strip.md`](strip.md) | What a duplicate deletes because it is this repo's own history (step 2) |
+| [`rename.md`](rename.md) | Every place the toolkit's names appear, and the order to change them (step 2) |
+| [`branding.md`](branding.md) | The files a brand must land in, and the prompt for a separate branding thread (step 3) |
+| [`components.md`](components.md) | The prompt for the components thread, run after the UX spec exists (step 7) |
 
-The briefing supplies eight inputs. If one is missing, ask before step 1. Never invent a name, a prefix or a vendor choice.
+## The interview
 
-| Input                       | Example (synthetic)                                                        | Step    |
-| --------------------------- | -------------------------------------------------------------------------- | ------- |
-| Product name                | Northwind Ledger                                                           | 3, 5    |
-| Repo slug, kebab-case       | `northwind-ledger`                                                         | 1, 2    |
-| Package scope               | `@northwind`                                                               | 2       |
-| Work-id prefix per app      | `NWL` for `web`, `NWD` for `docs`                                          | 2       |
-| Repo-wide work-id prefix    | `NW`, for changes that belong to no app                                    | 1, 2, 7 |
-| Primary colour and its text | light and dark values in OKLCH, for `--primary` and `--primary-foreground` | 3       |
-| Typeface and its reason     | a variable font file the product may ship, and one line on why             | 3       |
-| Modules the product drops   | billing, AI                                                                | 4       |
+Ask before anything is copied. Nothing below is guessed: a name, a prefix, a vendor choice or an owner the operator has not given is asked for.
 
-The apps are the keys of `apps` in `toolkit.json`: today `web` and `docs`. Each needs a prefix. The toolkit URL is this repo's remote (`git remote get-url origin`, run in the toolkit).
+**How to ask.**
 
-**Check:** every row has a value.
+- Use the question tool. Each question offers options, the recommended one first and marked "(Recommended)". The operator can always type their own answer.
+- Ask in rounds, several questions per round, as many rounds as the answers need. A question the briefing already answers is shown with that answer as the recommended option, so the operator confirms it in one click.
+- Every option says what will happen if it is chosen.
+- A recommendation follows the rule in its row. Where the row says "ask", there is no recommended option: these are the operator's own words.
+- Write the answers back as one table before step 1 and get a yes. That table goes into the set-up record (step 6).
 
-## 1. Duplicate
+### Round A: names
 
-Run these, with the slug and the repo-wide prefix from step 0:
+| # | Question | Options | Sets |
+| --- | --- | --- | --- |
+| A1 | What is the product called? | Ask. Free text. | The brand's `name`, the README, the agent contract's title |
+| A2 | The repo's folder name? | The product name in kebab-case (Recommended); the operator's own | The clone folder, the root package name |
+| A3 | The package scope that replaces `@pem`? | A short scope of two to five letters from the name, as `@syn` and `@cc` are (Recommended, [record 0002](../../decisions/records/0002-package-scope-pem.md)); the full name; the operator's own | Every workspace package name and import |
+| A4 | The work-id for changes that belong to no app? | Two or three capitals from the name (Recommended); the operator's own | The branch name, commit messages, the repo-wide prefix that replaces `PEM` and `PJ` |
+| A5 | Ticket prefixes for the apps? | Keep `WEB` and `DOC` (Recommended: tickets never leave the repo, so they cannot clash); one prefix per app from the product name | Each app's `prefix` in `toolkit.json` |
+
+The app folders keep their names (`web`, `docs`). Only the prefixes change.
+
+### Round B: apps
+
+The starter holds two apps. The web app always stays: it becomes the product.
+
+| # | Question | Options | What each does |
+| --- | --- | --- | --- |
+| B1 | Keep the docs app, which shows the practice files in a browser? | Keep (Recommended: it is how a person reads the rules, and it costs one build). Remove. | Remove has no recipe yet. The set-up leaves the app in place, records the choice, and step 7 prints a one-off to remove it. |
+| B2 | A marketing site? | Not now (Recommended). Pages inside the web app. Its own app. | "Inside the web app" needs nothing at set-up. "Its own app" has no add recipe: the choice is recorded and step 7 prints a line to open it through the prompt builder. |
+| B3 | A mobile app? | Not now (Recommended). Yes. | The starter has no mobile app and no recipe for one. "Yes" is recorded as the product's first open decision and step 7 prints a line to shape it through the prompt builder. |
+
+### Round C: the stack, one question per part
+
+For each part: **keep** or **remove**. Recommend "remove" only when the briefing names no use for the part in the first release. Otherwise recommend "keep" and say what keeping costs. "Remove" runs the part's recipe in step 4.
+
+| # | Part | What "keep" costs when unused | "Remove" runs | Depends on |
+| --- | --- | --- | --- | --- |
+| C1 | Database (Supabase Postgres, Drizzle) | A package with nothing to connect to until its URLs are set | [`remove/supabase-database.md`](../remove/supabase-database.md) | Removing it removes billing too (the event ledger lives in the database package) and the services' example domain |
+| C2 | Auth (Supabase Auth) | Every request is served signed out until its keys are set | [`remove/supabase-auth.md`](../remove/supabase-auth.md) | With the database kept, its recipe also clears the local auth mirror |
+| C3 | API layer (tRPC) | One provider around the app | [`remove/api.md`](../remove/api.md) | Services stay; pages call them directly |
+| C4 | Billing (Stripe) | Off until its keys are set; one table in the database | [`remove/billing.md`](../remove/billing.md) | Needs the database |
+| C5 | Email (Resend) | Nothing: without a key the local tier logs the message and sends nothing | No recipe: the part is locked in `toolkit.json` | Tell the operator it stays, and why |
+| C6 | AI (the AI SDK, Anthropic) | Nothing: without a key the local tier replays recorded answers | [`remove/ai.md`](../remove/ai.md) | None |
+| C7 | Error monitoring (Sentry) | Nothing: without a DSN errors are logged and not reported | [`remove/error-monitoring.md`](../remove/error-monitoring.md) | None |
+| C8 | Component catalog (the shelf beside the kit) | A folder no app imports | [`remove/catalog.md`](../remove/catalog.md) | Offer "keep until the components thread" (Recommended): that thread takes what the product needs from the shelf, then removes it |
+
+After the round, ask one more: **anything to add that is off by default?** Each needs a recipe in [`add/`](../add/README.md). Today there is one, the local Docker database, asked next.
+
+### Round D: the local database (only when C1 is "keep")
+
+| # | Question | Options | What each does |
+| --- | --- | --- | --- |
+| D1 | Where does the database run on a developer's machine? | Hosted only, no Docker (Recommended, the default). Local, in Docker. | "Hosted only": step 5 points developer machines at a hosted project and nothing starts a container. "Local": step 5 follows [`add/docker-local-database.md`](../add/docker-local-database.md). |
+| D2 | (Hosted only) Which hosted project do developer machines use? | The staging project (Recommended for one developer before launch). A separate development project. | "Staging": one Supabase project fewer, and an unmerged migration is applied to the database a preview deployment also uses. "Separate": a second project to pay for and keep migrated, and staging only changes on merge. |
+
+Say this plainly with D1: without Docker the database's own integration proofs (`yarn test:db`: row-level security, the billing ledger) cannot run on a developer's machine, because they refuse any database that is not on the machine itself. `yarn verify` does not run them and stays green either way.
+
+### Round E: ownership
+
+| # | Question | Options | Sets |
+| --- | --- | --- | --- |
+| E1 | Who signs decisions for this product? | Taylor Aucoin, no change (Recommended when Taylor owns the product). Another person, by name. | The default owner in the decision files, the templates and the messages agents see ([`rename.md`](rename.md), part 5) |
+| E2 | Where will the code live, and who sets up the accounts? | Ask. | The remote and the hosting, written into the record. A credential is never typed into a thread: the answer is who will set it. |
+| E3 | This repo's own history: its specs, build prompts, research and changelog? | Remove all of it (Recommended). Keep some, named. | What [`strip.md`](strip.md) deletes in step 2 |
+
+### Round F: brand
+
+| # | Question | Options | What happens |
+| --- | --- | --- | --- |
+| F1 | Does brand material exist? | Yes, complete: colours, a typeface and a logo. Partly: a name and a colour or two. No. | "Yes": ask for the attachments below, and step 3 applies them in this thread. "Partly" or "No": step 3 sets the name only, and step 7 prints the branding prompt for its own thread. |
+
+Never recommend an answer to F1: the operator knows what exists.
+
+When the answer is yes, ask for these as attachments, and say which are missing before step 3 starts:
+
+- The logo and the mark (the small square form), as SVG.
+- The typeface: a variable `woff2` file covering weights 400 to 600, the regular weight as TTF, OTF or WOFF, and its licence.
+- The colours, in any notation: the primary colour and the colour of text on it, for light and for dark, and the neutral greys if the brand has its own.
+- Brand guidelines, if written: the voice, what the brand never does.
+
+Where each lands is one table, [`branding.md`](branding.md) "The files a brand lands in".
+
+### Round G: the UX spec
+
+| # | Question | Options | What happens |
+| --- | --- | --- | --- |
+| G1 | Does a full UX spec exist: every area, surface and state of the first release? | Yes: attach it, or name where it is. Partly. No. | "Yes": step 7 prints the components prompt with the spec's location in it. "Partly" or "No": step 7 prints the UX-spec prompt, and the components prompt waits for the spec. |
+
+## The steps
+
+Each step ends on a check, and a failed check is fixed before the next step starts. From step 2 on, every step also ends with `yarn verify`, so a break is caught in the step that made it. Note when each step starts and ends: step 7 reports the minutes.
+
+### 1. Duplicate
+
+In the toolkit, note two things for the record: its remote (`git remote get-url origin`) and its commit (`git rev-parse HEAD`). Then, with the folder name (A2) and the repo-wide work-id (A4):
 
 ```sh
-git clone --branch main <toolkit-url> <repo-slug>
-cd <repo-slug>
+git clone --branch main <toolkit-url> <folder-name>
+cd <folder-name>
 rm -rf .git
 git init -b main
-git switch -c agent/<repo-wide-prefix>
+git switch -c agent/<work-id>
 corepack enable
 yarn install
 yarn hooks:install
 yarn doctor
 ```
 
-`yarn hooks:install` writes `.git/config`. From an agent's sandboxed shell it exits 1, saying so; a person runs that one line in their own terminal, and the agent goes on from `yarn doctor`.
+`yarn hooks:install` writes the git config. From an agent's sandboxed shell it exits 1 and says so; the operator runs that one line in their own terminal, and the agent goes on from `yarn doctor`. This is the only command in the guide a person must run.
 
-All work goes on the `agent/<repo-wide-prefix>` branch: the hooks refuse commits on `main`, the protected branch. Taylor makes `main` from it.
+All work goes on `agent/<work-id>`: the hooks refuse commits on `main`. Do not commit yet. The commit hook admits only the prefixes in `toolkit.json`, and step 2 changes them.
 
-[ASSUMPTION: the product starts its own history. Whether it keeps the toolkit as a second remote, to pull later fixes, and whether committing on a branch of an empty repo needs anything more, are for the dry-run (STK-20) to settle.]
+**Proof:** `yarn doctor` names nothing broken, and `yarn verify` exits 0 before anything is changed. A duplicate that is not green at the start is a toolkit defect: stop and report it.
 
-**Check:** `yarn doctor` names nothing broken.
+### 2. Strip, then rename
 
-## 2. Rename the scope and the prefixes
+Strip first. It deletes about 200 files that name the old scope, so the rename has less to touch.
 
-1. **Scope.** `git grep -l "@pem/"` lists every file that names the scope: package manifests, imports, the ESLint and Prettier configs, `toolkit.json`, and the rules and docs that state the convention. Replace `@pem/` with the briefing's scope in each. Leave `docs/decisions/`, `docs/prompts/`, `docs/research/` and `specs/` alone: they are history, byte-preserved, or cleared in step 5, and a recorded contract or `results.json` is never hand-edited. Then run `yarn install` so `yarn.lock` follows.
-2. **Root name.** The `name` in the root `package.json` becomes the repo slug.
-3. **App prefixes.** In `toolkit.json`, each app's `prefix` becomes the briefing's prefix for that app.
-4. **Repo-wide prefix.** `toolkitPrefixes` in `toolkit.json` becomes a list of one: the repo-wide prefix. `PEM` and `PJ` both go.
-5. **Local database name.** `project_id` in `packages/db/supabase/config.toml` becomes the repo slug. The Supabase CLI names the local containers and the data volume after it, so two repos that share an id share one local database.
+1. Follow [`strip.md`](strip.md), using the answer to E3.
+2. Follow [`rename.md`](rename.md), using A2 to A5.
 
-**Check:** `git grep -n "@pem/" -- . ':!docs/decisions' ':!docs/prompts' ':!docs/research' ':!specs'` prints nothing, and `yarn check-types` exits 0.
+**Proof:** each file ends on its own checks. Then `yarn verify` exits 0.
 
-## 3. Set the brand
+### 3. Brand
 
-The brand has one source, `@pem/brand` (D-STK-9). `packages/brand/src/brand.ts` holds the name, short name, description, URLs, contact, asset paths and the two theme colours; `packages/brand/assets/` holds the logo, the mark and the font. The web app's manifest, metadata, icon and Open Graph image, and the docs app's metadata, read it. No other file names the brand except the demo page, which step 5 replaces, so this step edits `brand.ts` and `assets/`, and the two colour tokens behind them.
+- **Brand material exists (F1 yes).** Apply it here: fill every row of the table in [`branding.md`](branding.md) "The files a brand lands in", in its order, from the attachments. Ask for a missing value; never pick a colour or a typeface for the operator.
+- **Otherwise.** Set the words only: in `packages/brand/src/brand.ts`, the `name`, `shortName`, `description`, `urls` and `contact` from the interview, and the text in `packages/brand/assets/logo.svg`. The grey placeholder colours and the placeholder typeface stay until the branding thread replaces them.
 
-1. **Words.** In `brand.ts`, set `name`, `shortName`, `description`, `urls` and `contact` from the briefing. The site URL per tier is not here: it is `NEXT_PUBLIC_SITE_URL` (step 6).
-2. **Logo and mark.** Replace `assets/logo.svg` and `assets/mark.svg`, keeping the file names. The mark is each app's icon.
-3. **Typeface.** Replace `assets/fonts/brand-sans.woff2` and its `LICENSE.txt` with the briefing's typeface, keeping the file name. It must be a variable font covering weights 400 to 600, or `src/font.ts` lists its files instead. Replace `assets/fonts/brand-sans-image.ttf` with the same typeface's regular weight as TTF, OTF or WOFF (keep the file name): the Open Graph image draws with it, and its renderer cannot read woff2. The placeholder is Geist; keeping it is the default-typeface tell (canon A-01).
-4. **Colours.** In `brand.ts`, set `theme.primary` and `theme.primaryForeground`, light and dark, to the briefing's OKLCH values. The tokens themselves stay in `packages/config/tailwind/preset.css` (D-STK-9, D-STK-17), which has three layers: a raw scale, semantic names set once under `:root` (light) and again under `.dark`, and the bridge that exposes them to Tailwind. Add the same values as new raw steps in layer 1, for example `--brand-500`, and point `--primary` and `--primary-foreground` at them in both layer-2 blocks. Apart from these two mirrored in `brand.ts`, a raw colour is written nowhere else; every other semantic name keeps its step unless the briefing names it; the bridge is not touched.
+**Proof:** `yarn test` exits 0 (the brand package's test compares `brand.ts` with the token file and checks that every asset path has a file), `yarn contrast-audit` exits 0, and `yarn verify` exits 0. With material applied, open `yarn ui:storybook` and look at one page of components in light and in dark.
 
-**Check:** `yarn test` exits 0: the brand package's test fails, naming the token, while `brand.ts` and the preset disagree, and when an asset path in `brand.ts` has no file. `yarn contrast-audit` and `yarn build` exit 0. `git grep -n -e "Product Engineering Mastery" -e "PEM" -- apps/web/app apps/docs/app/layout.tsx packages/brand ':!apps/web/app/page.tsx'` prints nothing. The demo page still names the toolkit until step 5.
+### 4. Remove the parts
 
-## 4. Choose the modules
+For each part answered "remove" in round C, follow its recipe from top to bottom. Its last section marks the part `"removed": true` in `toolkit.json` and runs its checks.
 
-`toolkit.json`'s `stack` block lists one entry per module: its `files`, `env`, `dependencies`, `boundaries` names, `locked` flag and `runbook` (D-STK-13). A `locked` module stays. For each module the briefing drops, follow the entry's `runbook` from top to bottom; its last section marks the entry `"removed": true` and runs the checks.
+Remove in this order, from the top of the package graph down, so nothing still present imports something already gone: billing, error monitoring, API layer, AI, auth, database, catalog. The catalog waits for the components thread unless C8 said "remove now".
 
-| Module                    | Runbook                                                         | Built by       |
-| ------------------------- | --------------------------------------------------------------- | -------------- |
-| Billing (Stripe)          | [`remove/billing.md`](../remove/billing.md)                     | STK-16, STK-21 |
-| Error monitoring (Sentry) | [`remove/error-monitoring.md`](../remove/error-monitoring.md)   | STK-18         |
-| API (tRPC)                | [`remove/api.md`](../remove/api.md)                             | STK-14         |
-| AI                        | [`remove/ai.md`](../remove/ai.md)                               | STK-17         |
-| Supabase Auth             | [`remove/supabase-auth.md`](../remove/supabase-auth.md)         | STK-12         |
-| Supabase database         | [`remove/supabase-database.md`](../remove/supabase-database.md) | STK-9          |
-| Component catalog         | [`remove/catalog.md`](../remove/catalog.md)                     | CAT-3          |
+**Proof:** `yarn check-stack` and `yarn verify` exit 0 after each recipe, and once at the end of the step even when no recipe ran.
 
-Remove in the table's order, from the top of the package graph down (D-STK-1), so no module still present imports one already gone.
+### 5. The environment and the database
 
-A module with no entry in the `stack` block is not in the duplicate: skip its row. Today one of the six is built: the Supabase database (STK-9) has a `db` entry that is not locked, so a briefing that drops the database follows its runbook. The other five have no entry yet, so their rows are skipped. Read the `stack` block itself rather than this line: each module ticket adds its entry.
+`.env.example` at the root lists every variable with a comment saying what breaks without it; `packages/db/.env.example` lists the database scripts' variables; `turbo.json` lists the same names.
 
-**Check:** `yarn check-stack` exits 0, once after each runbook and once at the end of the step, even when no runbook ran.
+1. A removed part's variables are already gone: its recipe took them out.
+2. Where an example value names the toolkit, replace it with the product's. Keep every comment. A secret never goes in an example file.
+3. **Hosted only (D1, the default).** In both example files set `DATABASE_ENVIRONMENT=staging`, empty the values of `DATABASE_URL_LOCAL` and `DATABASE_MIGRATION_URL_LOCAL`, and add one comment line above the switch: this project runs no local database, so a developer's machine uses the staging tier; unset still means local, which has no database here. Leave `packages/db` as it is. Then read "What hosted only means" below to the operator.
+4. **Local, in Docker (D1).** Follow [`add/docker-local-database.md`](../add/docker-local-database.md).
+5. **Hand to the operator, by name (E2):** creating the hosted projects, and copying the example file to `.env.local` in `apps/web` and in `packages/db` with real values. The agent never asks for a value in the thread.
 
-## 5. Clear the toolkit's own content
+**What hosted only means.** The tier switch selects every service at once, not only the database. On a developer's machine at the staging tier:
 
-1. **The demo.** `apps/web` becomes the product's app; what it holds as the toolkit's demo goes.
-   - Replace `apps/web/app/page.tsx` with a placeholder page that names the product, under the UI rules in `AGENTS.md` (components from the UI package, tokens only). Product work starts with the product's first ticket, not here.
-   - In `apps/web/AGENTS.md`, rewrite "What this app is" as one paragraph from the briefing, delete "The filled examples live here", and keep "App rules".
-   - If `apps/web/docs/design/` exists, the duplicate is past Phase 3: its demo routes, that design layer and its `specs/web/` go too, and the product fills its own design layer from `docs/design/templates/`.
-2. **Research.** Delete everything under `docs/research/` except its `README.md`. Then run `yarn check-refs`: it names each live file that still links to a deleted file. Remove the link where the sentence reads without it; otherwise add an entry to `tooling/refs-pending.json` keyed by the deleted path, exactly as `yarn check-refs` printed it: `"<deleted path>": "cleared by new-project/README.md step 5"`.
-3. **Specs.** Delete everything under `specs/`: this repo's epics, tickets and `_status.md`. The product's first `yarn spec:init` or `yarn contract:init` starts its own.
-4. **What describes the toolkit.** Rewrite the opening paragraph of `README.md`, and items 1 ("What this is") and 2 ("Current phase") of `AGENTS.md`'s Start here, for the product, from the briefing. The rest of both files is the practice the product keeps.
-5. **The generated map.** Run `yarn directory-map`: the deletions above left `docs/_generated/directory-map.md` and the landing-page tables stale.
+| Service | What changes from the local tier |
+| --- | --- |
+| Database | Reads and writes the hosted project. `yarn db:migrate` and `yarn db:setup` change it, and an agent stops for the operator's yes before either. |
+| Auth | Sign-in runs on the hosted project and its users are the database's users. The local auth mirror never runs. |
+| Email | A send is real when the staging key is set, and throws when it is not. |
+| AI | A call reaches the live model and spends when the staging key is set. No recorded answers. |
+| Billing | The staging keys, which are test keys. |
+| Error monitoring | Reports to the staging project when its DSN is set. |
+| Not available | `yarn db:local`, `yarn db:local:full`, `yarn db:stop`, `yarn db:local:reset`, `yarn db:seed-users` and `yarn test:db`. They stay in `package.json` and need Docker. |
 
-**Check:** `yarn check-refs`, `yarn check-specs` and `yarn directory-map --check` exit 0.
+**Proof:** `yarn check-stack` and `yarn check-client-bundle` exit 0, then `yarn verify`. The database itself is proven later, by the operator's first `yarn db:migrate` against the hosted project; say so in the report rather than claiming it.
 
-## 6. Fill `.env.example`
+### 6. The owner, the record, and the files that describe the toolkit
 
-`.env.example` (STK-4) lists every variable, each with a comment saying what breaks without it, in the tier forms of D-STK-3 (`_LOCAL`, `_STAGING`, unsuffixed for production). `turbo.json` lists the same names (`docs/engineering/codebase-conventions.md`).
+1. **The owner (E1).** When the answer is a new name, follow part 5 of [`rename.md`](rename.md).
+2. **What describes the toolkit.** Rewrite for the product, from the interview: the opening paragraph of the root `README.md`; items 1 and 2 of "Start here" in `AGENTS.md`; and "What this app is" in `apps/web/AGENTS.md`, deleting its "The filled examples live here" section. The rest of those files is the practice the product keeps.
+3. **The set-up record.** Fill [`decision.template.md`](../../decisions/decision.template.md) as the next numbered record under `docs/decisions/records/`: the interview table, every part removed and why, the database choice, the owner, the toolkit's remote and commit from step 1, and each choice that has no recipe yet (B1 to B3). Add its line to the ledger and the first entry of the product's own changelog.
+4. Run `yarn directory-map`.
 
-1. A removed module's variables are already gone: its runbook took them out of both files.
-2. Where an example value names the toolkit, replace it with the product's. A value the briefing does not give is asked for, never guessed.
-3. Keep every comment. A secret never goes in `.env.example`.
-4. The `_LOCAL` Supabase auth values pick how a developer runs locally (D-STK-6); there is no mode variable. Mode A, the default: the `_STAGING` values, so sign-in runs on hosted staging, `yarn db:local` starts the database only and the local auth mirror copies each signed-in user into it. Mode B: the local stack's values, from `yarn db:local:full`, with `yarn db:seed-users` for synthetic users. The comment in `.env.example` says which values go where. The local database listens on every network interface (the Supabase CLI has no setting for it), password `postgres`, and in Mode A it holds mirrored staging emails: on a shared network, set `"ip": "127.0.0.1"` in Docker's daemon settings. `yarn db:local` warns while it is exposed. `yarn db:local:reset` keeps `auth.users`; to wipe mirrored staging emails, run `yarn db:stop --no-backup`, which drops the whole local database.
+**Proof:** `yarn lint:docs`, `yarn check-refs` and `yarn directory-map --check` exit 0, then `yarn verify`.
 
-**Check:** `yarn check-stack` exits 0, so no variable of a removed module is left, and `yarn check-client-bundle` exits 0.
-
-## 7. Check and commit
+### 7. Verify, commit, hand over
 
 ```sh
 yarn check-stack
 yarn verify
 ```
 
-Both exit 0. Commit on `agent/<repo-wide-prefix>` as `<repo-wide-prefix>: new project from the toolkit`, and never push: Taylor pushes and makes `main`. Report to Taylor the date, the briefing and the minutes each step took. STK-20 turns those reports into this runbook's trial log.
+Both exit 0. Commit on `agent/<work-id>` as `<work-id>: new project from the toolkit`, and never push: the operator pushes and makes `main`.
 
-**Check:** both commands exited 0, and `git status` shows a clean tree after the commit.
+Then print, each in its own block so it can be copied whole:
+
+1. **The branding prompt** from [`branding.md`](branding.md), when F1 was not "yes".
+2. **The UX-spec prompt** below, when G1 was not "yes".
+3. **The components prompt** from [`components.md`](components.md), with a note that it runs once the UX spec exists, or now when one was attached.
+4. **One line per choice with no recipe** (B1 remove, B2 its own app, B3 yes): "Open a new thread and describe this to the prompt builder: …".
+
+The UX-spec prompt:
+
+```text
+Venue: Claude Code, in the new repo, on the branch that is checked out.
+Model: the deepest available (Fable 5.1 today). A smaller model writes screens and misses states.
+
+/tk-prompt
+
+Build the prompt for: a full UX spec for <product>, before any feature is built.
+Track: product spec. Lead: Vesper. Support: Compass for what the first release is for, Gloss for the words.
+What exists: <the briefing, in three lines>. Brand: <applied / in its own thread>. Stack kept: <the list from the set-up record>.
+The spec covers every area, surface and state of the first release and is written under specs/web/ux/, one overview per area and one file per surface, from docs/design/templates/ux-overview.template.md and ux-surface.template.md.
+Attach: <what the operator named: sketches, a competitor, notes, client emails>.
+Done when: a build thread could build any surface from its file without asking a question, and the components thread can list every component the product needs from it.
+```
+
+Report to the operator in eight lines or fewer: what was removed, what was kept, the minutes per step, each `[ASSUMPTION]` made, what waits for them (the hooks line, the accounts and `.env.local` files, the first migration, the push), and the prompts printed.
+
+**Proof:** both commands exited 0, and `git status` shows a clean tree after the commit.
+
+## Desk walk: a web-only app, no billing, no AI, hosted database, brand exists
+
+Read through on 2026-10-05 against the toolkit at commit `1c0fb5f`. Nothing was run on a duplicate, so no minutes are recorded.
+
+**The interview.** A1 "Northwind Ledger" (a made-up product). A2 `northwind-ledger`. A3 `@nwl`. A4 `NW`. A5 keep `WEB` and `DOC`. B1 remove the docs app (web-only). B2 not now. B3 not now. C1 keep. C2 keep. C3 keep. C4 remove. C5 stays, locked. C6 remove. C7 keep. C8 keep until the components thread. Nothing to add. D1 hosted only. D2 the staging project. E1 Taylor, no change. E2 the operator's GitHub and Vercel; the operator sets every credential. E3 remove all. F1 yes, complete: logo, mark, a variable font with its licence, a primary colour pair. G1 no. The table is confirmed.
+
+**Step 1.** Remote and commit noted. Clone, fresh history, branch `agent/NW`, install, `yarn doctor`. The operator runs `yarn hooks:install` once. `yarn verify` is green before any change.
+
+**Step 2.** `strip.md`: `specs/`, the prompt archive and the research files go; the changelog and the open-calls file are emptied; ledger, conflicts and records stay as inherited; the demo page becomes a placeholder; `yarn check-refs` names the links into deleted research and each is cut or listed. `rename.md`: one replace pass turns the scope into `@nwl` across about 290 files, then `yarn install`, `yarn format`, the root package name, `toolkitPrefixes` to `["NW"]`, `project_id` to `northwind-ledger`. Its grep prints nothing. `yarn verify`.
+
+**Step 3.** Brand exists, so the table in `branding.md` is filled here: the words in `brand.ts`, the two SVGs, the three font files, the primary pair as new raw steps in the token file with the two semantic names pointed at them and mirrored in `brand.ts`, then the product's `DESIGN.md` and `tokens.md` from the templates. `yarn test`, `yarn contrast-audit`, one Storybook page in both themes, `yarn verify`.
+
+**Step 4.** Two recipes, in order: `remove/billing.md`, then `remove/ai.md`. The billing recipe ends with a generated migration that drops its table. `yarn check-stack` and `yarn verify` after each.
+
+**Step 5.** The Stripe and Anthropic variables are already gone. Both example files get `DATABASE_ENVIRONMENT=staging`, empty `_LOCAL` database URLs and the comment. The "hosted only" table is read to the operator. Handed over: the Supabase staging and production projects, the two `.env.local` files. `yarn check-stack`, `yarn check-client-bundle`, `yarn verify`.
+
+**Step 6.** The owner is unchanged, so part 5 of `rename.md` is skipped. The README opening, the two "Start here" items and the web app's paragraph are rewritten. The set-up record is written, naming billing and AI as removed, the hosted database on the staging project, and the docs app as "remove, no recipe yet". `yarn directory-map`. The three docs checks, then `yarn verify`.
+
+**Step 7.** `yarn check-stack` and `yarn verify`, one commit, `NW: new project from the toolkit`. Printed: the UX-spec prompt; the components prompt, marked "after the UX spec"; one line to open the docs app's removal through the prompt builder. No branding prompt, because the brand was applied in step 3.
+
+**What the walk found.**
+
+- "Web-only" cannot be finished by this guide: the docs app has no remove recipe, so it is still in the repo at the end. Either a recipe is written, or the guide stops offering "remove".
+- Email was not on the operator's list of removals, and could not have been: it is locked.
+- The hosted database is the one part the agent cannot prove. Its first proof is the operator's migration, after the thread has reported.
+- The rename has never been run. Its counts are from a search of this repo, and whether the first `yarn verify` after it is green is exactly what the dry run must show.
 
 <!-- Generated by `yarn directory-map` from each file's frontmatter. Everything below this line is rewritten; edit above it. -->
 
@@ -145,3 +271,7 @@ Both exit 0. Commit on `agent/<repo-wide-prefix>` as `<repo-wide-prefix>: new pr
 
 | File | What it is for |
 | --- | --- |
+| [`branding.md`](branding.md) | Open from step 3 or step 7 of the new-project guide. Holds the one table of files a brand must fill (words, logo, typeface, colour tokens, the product design layer) with the check each must pass, and the prompt printed for a separate branding thread when no brand material exists yet. |
+| [`components.md`](components.md) | Open from step 7 of the new-project guide, once the product has a UX spec. Holds the prompt for the thread that reads the spec, decides which components of the kit and the catalog the product keeps, removes the rest safely, writes the product's component inventory, then checks the kit under the brand or prints the branding prompt. |
+| [`rename.md`](rename.md) | Follow from step 2 of the new-project guide, after the strip. Lists every place the toolkit's names appear (the package scope, the repo name, the work-id prefixes, the product name, the owner's name), which to change, which to leave, and the order that keeps yarn verify green. |
+| [`strip.md`](strip.md) | Follow from step 2 of the new-project guide, before the rename. Lists what belongs to this repo's own history (its specs, build prompts, research, changelog and demo), what to do with each, what stays as inherited law, and the checks that prove nothing live still points at a deleted file. |
