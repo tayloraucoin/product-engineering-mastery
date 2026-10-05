@@ -8,11 +8,11 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-05T03:50:23Z",
-        "head": "5cd5e9f32fab9f9f0afd1bd77a6ba5249e631e90",
+        "at": "2026-10-05T04:19:57Z",
+        "head": "66155eb771cc061d539b59c8e57266aabc776637",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-16-billing-stripe/evidence/C1.log",
-        "evidence_sha256": "e33ef3300d4419dcf74b53bec1970a5ee71016a4e9b8cee92f07ff54cd824dd5",
-        "tests": 193
+        "evidence_sha256": "795f60b4fd66e59d2b133b4a6be2f5e6dfe77c9b627ac64425dc5fa2794c2780",
+        "tests": 203
       }
     },
     "C2": {
@@ -21,11 +21,11 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-05T03:50:31Z",
-        "head": "5cd5e9f32fab9f9f0afd1bd77a6ba5249e631e90",
+        "at": "2026-10-05T04:20:02Z",
+        "head": "66155eb771cc061d539b59c8e57266aabc776637",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-16-billing-stripe/evidence/C2.log",
-        "evidence_sha256": "97a5bb80c5529a39782cb541efc2d9ff2616a59aea02dcdce27cf6a041fd50f9",
-        "tests": 194
+        "evidence_sha256": "b10405aa29a33dcc84e5edc44fa303489a14464bdc9222814c71a91414918635",
+        "tests": 203
       }
     },
     "C3": {
@@ -34,11 +34,11 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-05T03:50:39Z",
-        "head": "5cd5e9f32fab9f9f0afd1bd77a6ba5249e631e90",
+        "at": "2026-10-05T04:20:06Z",
+        "head": "66155eb771cc061d539b59c8e57266aabc776637",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-16-billing-stripe/evidence/C3.log",
-        "evidence_sha256": "fc8d43e204cc57beca482afefe1894523a2746e3443debacfddab163b7489326",
-        "tests": 194
+        "evidence_sha256": "650ad304cc5fe495532392f6ebf04333a00475673f2af644a40db8dac84b8095",
+        "tests": 203
       }
     },
     "C4": {
@@ -47,11 +47,11 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-05T03:50:47Z",
-        "head": "5cd5e9f32fab9f9f0afd1bd77a6ba5249e631e90",
+        "at": "2026-10-05T04:20:10Z",
+        "head": "66155eb771cc061d539b59c8e57266aabc776637",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-16-billing-stripe/evidence/C4.log",
-        "evidence_sha256": "82530c4c4e1aa5eb63ee35df055ac4dcf41fe31524fd00a21f5e4597326fb700",
-        "tests": 194
+        "evidence_sha256": "733f13f0a572bf48ecbeb6fe955c858c60b4d135e8a30c35e8b35957d00e358b",
+        "tests": 203
       }
     },
     "C5": {
@@ -60,10 +60,10 @@
       "run": {
         "command": "yarn lint:boundaries",
         "exit": 0,
-        "at": "2026-10-05T03:50:55Z",
-        "head": "5cd5e9f32fab9f9f0afd1bd77a6ba5249e631e90",
+        "at": "2026-10-05T04:20:15Z",
+        "head": "66155eb771cc061d539b59c8e57266aabc776637",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-16-billing-stripe/evidence/C5.log",
-        "evidence_sha256": "143a7713c1b5a78ccafc71e43730b658844cd08caafd3b71e8c500dfc7ff05fd"
+        "evidence_sha256": "a3da1f9fe745a5290034577caa56b4efe8de538dd7a6829f879960b3ec9bd9b4"
       }
     },
     "C6": {
@@ -72,10 +72,10 @@
       "run": {
         "command": "yarn verify",
         "exit": 0,
-        "at": "2026-10-05T03:51:05Z",
-        "head": "5cd5e9f32fab9f9f0afd1bd77a6ba5249e631e90",
+        "at": "2026-10-05T04:20:22Z",
+        "head": "66155eb771cc061d539b59c8e57266aabc776637",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-16-billing-stripe/evidence/C6.log",
-        "evidence_sha256": "354b4726a112162ce66b17f878cf509a1f1946711b05c0523880d063be56803c"
+        "evidence_sha256": "7f5fcf7ac861e0df60d8e7540c2606b1e11fd526fb36bf871c4bd51a86f6903f"
       }
     },
     "review:assay": {
@@ -104,10 +104,20 @@
       "run": null
     },
     "review:warden": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run warden STK-16",
+        "exit": 0,
+        "at": "2026-10-05T03:53:34Z",
+        "head": "bd92ecda60efee045413017ab20879db71836484",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-16-billing-stripe/review-warden.md",
+        "evidence_sha256": "c19577b75b8814d27ca5d4ad6b990e283666aa616db4108b780e967f690b5bfe",
+        "contract_sha256": "3c622be5458969cab8d59d00a42254d4d0568bb717d787b62a6ecc65f73d5535",
+        "as_built_sha256": "f5943ff0ae8cc154b8e377ac8150c402d1e96311fd5ff3b6311f1735c3eefaa4",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
+      }
     }
   },
-  "updated_at": "2026-10-05T03:52:58Z"
+  "updated_at": "2026-10-05T04:22:05Z"
 }
