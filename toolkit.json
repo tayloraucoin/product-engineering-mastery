@@ -353,21 +353,6 @@
       "locked": false,
       "runbook": "docs/runbooks/remove-error-monitoring.md"
     },
-    "api": {
-      "files": ["packages/api", "apps/web/app/api/trpc", "apps/web/lib/trpc"],
-      "env": [],
-      "dependencies": [
-        "@pem/api",
-        "@trpc/server",
-        "@trpc/client",
-        "@trpc/tanstack-react-query",
-        "@tanstack/react-query",
-        "superjson"
-      ],
-      "boundaries": ["api"],
-      "locked": false,
-      "runbook": "docs/runbooks/remove-api.md"
-    },
     "billing": {
       "files": [
         "apps/web/app/api/webhooks/stripe",
