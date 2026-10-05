@@ -778,7 +778,11 @@
       "kind": "display",
       "layer": "block",
       "wave": 4,
-      "ticket": "CAT-12"
+      "ticket": "CAT-12",
+      "linkOnly": {
+        "url": "https://ui.shadcn.com/blocks#dashboard-01",
+        "reason": "needs four @dnd-kit packages and sonner (CS-04 rules toast); the kit's data table and chart cover its parts; porting it is its own ticket"
+      }
     },
     {
       "id": "shadcn-login-01",

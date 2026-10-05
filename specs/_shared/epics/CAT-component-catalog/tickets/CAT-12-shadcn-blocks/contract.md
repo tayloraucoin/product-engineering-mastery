@@ -22,6 +22,9 @@ planned_paths:
   - "packages/catalog/manifest.json"
   - "packages/ui/package.json"
   - "packages/catalog/STATUS.md"
+  - "packages/catalog/package.json"
+  - "yarn.lock"
+  - "docs/engineering/tech-stack.md"
 depends_on:
   - CAT-11
 out_of_scope:

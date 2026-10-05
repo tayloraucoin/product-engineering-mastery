@@ -2461,6 +2461,7 @@ __metadata:
     "@types/react": "npm:^19"
     "@types/react-dom": "npm:^19"
     eslint: "npm:^9.39.1"
+    lucide-react: "npm:1.48.0"
     next: "npm:16.3.8"
     react: "npm:19.2.8"
     react-dom: "npm:19.2.8"

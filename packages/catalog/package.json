@@ -11,7 +11,8 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@pem/ui": "workspace:*"
+    "@pem/ui": "workspace:*",
+    "lucide-react": "1.48.0"
   },
   "peerDependencies": {
     "react": "^19.0.0",
