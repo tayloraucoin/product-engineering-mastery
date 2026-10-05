@@ -1,0 +1,1648 @@
+command: yarn test
+exit: 0
+at: 2026-10-05T04:01:00Z
+head: 12a9b07d40b1abfe6e3864387116bd889c077f81
+tests: 199
+---
+
+   • turbo 2.11.6
+   • Packages in scope: @pem/ai, @pem/api, @pem/auth, @pem/brand, @pem/catalog, @pem/config, @pem/constants, @pem/db, @pem/email, @pem/env, @pem/observability, @pem/services, @pem/ui, @pem/validators, docs, web
+   • Running test in 16 packages
+   • Remote caching disabled
+
+cache hit, replaying logs bee7892a673867b4
+TAP version 13
+# Subtest: C1: brand.ts theme colours equal the preset's values
+ok 1 - C1: brand.ts theme colours equal the preset's values
+  ---
+  duration_ms: 1.039958
+  type: 'test'
+  ...
+# Subtest: C1: a changed preset value is a mismatch
+ok 2 - C1: a changed preset value is a mismatch
+  ---
+  duration_ms: 0.208959
+  type: 'test'
+  ...
+# Subtest: C1: a changed brand.ts value is a mismatch
+ok 3 - C1: a changed brand.ts value is a mismatch
+  ---
+  duration_ms: 0.804125
+  type: 'test'
+  ...
+# Subtest: every asset path in brand.ts exists in the package
+ok 4 - every asset path in brand.ts exists in the package
+  ---
+  duration_ms: 0.165208
+  type: 'test'
+  ...
+# Subtest: white, black and the sRGB primaries
+ok 5 - white, black and the sRGB primaries
+  ---
+  duration_ms: 0.620375
+  type: 'test'
+  ...
+# Subtest: lightness as a percentage, and an alpha, are accepted
+ok 6 - lightness as a percentage, and an alpha, are accepted
+  ---
+  duration_ms: 0.070041
+  type: 'test'
+  ...
+# Subtest: the preset's neutral steps
+ok 7 - the preset's neutral steps
+  ---
+  duration_ms: 0.131333
+  type: 'test'
+  ...
+# Subtest: anything but oklch() is refused
+ok 8 - anything but oklch() is refused
+cache hit, replaying logs 0989a687da3b60d5
+TAP version 13
+# Subtest: C2: a live-mode key on local or staging fails with the variable named
+ok 1 - C2: a live-mode key on local or staging fails with the variable named
+  ---
+  duration_ms: 1.49375
+  type: 'test'
+  ...
+# Subtest: C2: a test-mode key on production fails with the variable named
+ok 2 - C2: a test-mode key on production fails with the variable named
+  ---
+  duration_ms: 0.8695
+  type: 'test'
+  ...
+# Subtest: C2: matching modes pass
+ok 3 - C2: matching modes pass
+  ---
+  duration_ms: 0.102459
+  type: 'test'
+  ...
+# Subtest: C2: a key with no mode prefix fails on every tier
+ok 4 - C2: a key with no mode prefix fails on every tier
+  ---
+  duration_ms: 0.200209
+  type: 'test'
+  ...
+# Subtest: public names pass, and unset values are left out
+ok 5 - public names pass, and unset values are left out
+  ---
+  duration_ms: 0.847917
+  type: 'test'
+  ...
+# Subtest: a server-only name is refused, by name
+ok 6 - a server-only name is refused, by name
+  ---
+  duration_ms: 0.250875
+  type: 'test'
+  ...
+# Subtest: C1: each tier reads its own variable
+ok 7 - C1: each tier reads its own variable
+  ---
+  duration_ms: 0.617
+  type: 'test'
+  ...
+# Subtest: C1: a tier whose own value is absent or empty reads the unsuffixed value
+ok 8 - C1: a tier whose own value is absent or empty reads the unsuffixed value
+  ---
+  duration_ms: 0.094375
+  type: 'test'
+  ...
+# Subtest: C1: nothing set picks undefined
+ok 9 - C1: nothing set picks undefined
+  ---
+  duration_ms: 0.068958
+  type: 'test'
+  ...
+# Subtest: C1: production never reads a suffixed value
+ok 10 - C1: production never reads a suffixed value
+  ---
+  duration_ms: 0.060917
+  type: 'test'
+  ...
+# Subtest: C1: the suffix grammar names each form
+ok 11 - C1: the suffix grammar names each form
+  ---
+  duration_ms: 0.379792
+  type: 'test'
+  ...
+# Subtest: C1: the switch defaults to local, never production, and names itself when wrong
+ok 12 - C1: the switch defaults to local, never production, and names itself when wrong
+  ---
+  duration_ms: 0.277708
+  type: 'test'
+  ...
+# Subtest: outside a deployment the site URL is localhost, whatever is configured
+ok 13 - outside a deployment the site URL is localhost, whatever is configured
+  ---
+  duration_ms: 1.448
+  type: 'test'
+  ...
+# Subtest: in a deployment the configured URL is used, without a trailing slash
+ok 14 - in a deployment the configured URL is used, without a trailing slash
+  ---
+  duration_ms: 0.151542
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 92.287292
+  ---
+  duration_ms: 0.191708
+  type: 'test'
+  ...
+1..8
+cache hit, replaying logs cef8206c37525025
+cache hit, replaying logs 1b4c4ba1c1c94edc
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+cache hit, replaying logs 69615e64e969cb4b
+# todo 0
+# duration_ms 77.12725
+cache hit, replaying logs e33b8d38c87a6e90
+cache hit, replaying logs f86e8ecfa216938d
+cache hit, replaying logs 043722a20e62ee6c
+TAP version 13
+
+ RUN  v5.0.3 ./packages/ui
+
+ ✓ .storybook/story-coverage.test.ts (5 tests) 11ms
+stderr | .storybook/stories.test.ts > Composed/Control/Theme toggle > System
+Encountered a script tag while rendering React component. Scripts inside React components are never executed when rendering on the client. Consider using template tag instead (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/template).
+TAP version 13
+TAP version 13
+# Subtest: C2: the HTML part carries the brand's name, support address, home URL and colours
+# Subtest: C1: getNote throws NotFound when the scoped db withholds the row
+# Subtest: track is a no-op until a vendor is wired
+TAP version 13
+
+# Subtest: the admin client holds no session: nothing persisted, refreshed or read from a URL
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 1 - C2: the HTML part carries the brand's name, support address, home URL and colours
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+TAP version 13
+ok 1 - the admin client holds no session: nothing persisted, refreshed or read from a URL
+ok 1 - C1: getNote throws NotFound when the scoped db withholds the row
+  ---
+ok 1 - track is a no-op until a vendor is wired
+# Subtest: a user's text turn is accepted
+  ---
+cache hit, replaying logs 952613b3706ce579
+  duration_ms: 15.657041
+  type: 'test'
+  ...
+# Subtest: every subpath is classed as client-safe or server
+ok 1 - a user's text turn is accepted
+  duration_ms: 0.734042
+  type: 'test'
+  ---
+  duration_ms: 3.364417
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  type: 'test'
+  ...
+# Subtest: C1: createNote throws Forbidden when a policy rejects the insert
+ok 2 - C1: createNote throws Forbidden when a policy rejects the insert
+  ---
+  duration_ms: 1.019084
+  type: 'test'
+  ...
+# Subtest: C1: a policy refusal wrapped by drizzle is still Forbidden
+ok 3 - C1: a policy refusal wrapped by drizzle is still Forbidden
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+  duration_ms: 0.353
+  type: 'test'
+  ...
+  ---
+TAP version 13
+  duration_ms: 6.612375
+# Subtest: C1: a cookie session and a bearer token for one user resolve to the same ctx.user
+  type: 'test'
+  ...
+# Subtest: a body with no messages, or malformed ones, is refused
+# Subtest: C1: createNote writes the caller as owner and returns the note
+ok 2 - a body with no messages, or malformed ones, is refused
+ok 4 - C1: createNote writes the caller as owner and returns the note
+ok 2 - every subpath is classed as client-safe or server
+  ...
+# Subtest: C2: the text part carries the brand and the action as a link
+ok 2 - C2: the text part carries the brand and the action as a link
+  ---
+  duration_ms: 1.519583
+  ---
+cache hit, replaying logs 9c65bbc395d8a0f1
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+  duration_ms: 0.120375
+  type: 'test'
+TAP version 13
+  ...
+# Subtest: C2: every caller value is escaped
+ok 3 - C2: every caller value is escaped
+  ---
+  duration_ms: 0.140209
+  type: 'test'
+  ...
+# Subtest: C2: an action URL that is not http(s) is refused
+# [billing] webhook.rejected {
+  ---
+#   reason: 'No signatures found matching the expected signature for payload. Are you passing the raw request body you received from Stripe? \\n' +
+  duration_ms: 2.225667
+  type: 'test'
+#     ' If a webhook request is being forwarded by a third-party tool, ensure that the exact request body, including JSON formatting and new line style, is preserved.\\n' +
+#     '\\n' +
+#     'Learn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature\\n'
+  type: 'test'
+# }
+  ...
+# [billing] webhook.rejected {
+#   reason: 'No signatures found matching the expected signature for payload. Are you passing the raw request body you received from Stripe? \\n' +
+#     ' If a webhook request is being forwarded by a third-party tool, ensure that the exact request body, including JSON formatting and new line style, is preserved.\\n' +
+ok 4 - C2: an action URL that is not http(s) is refused
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 1 - C1: a cookie session and a bearer token for one user resolve to the same ctx.user
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+#     '\\n' +
+  ---
+# Subtest: C1: logger.error passes the error, tags and user id to the registered reporter
+  duration_ms: 11.647083
+  ...
+#     'Learn more about webhook signing and explore webhook integration examples for various frameworks at https://docs.stripe.com/webhooks/signature\\n'
+# Subtest: file, tool and system content is refused
+# }
+ok 3 - file, tool and system content is refused
+# [billing] webhook.rejected { reason: 'no stripe-signature header' }
+  duration_ms: 0.423917
+# [billing] webhook.unconfigured {
+#   reason: 'STRIPE_WEBHOOK_SECRET is unset for this tier (STRIPE_WEBHOOK_SECRET_LOCAL off a deployment)'
+  type: 'test'
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# }
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# [billing] webhook.processed { eventId: 'evt_replayed', eventType: 'checkout.session.completed' }
+  ...
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 2 - C1: logger.error passes the error, tags and user id to the registered reporter
+  ---
+  duration_ms: 2.480458
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  type: 'test'
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ...
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Subtest: C1: logger.error with no error hands the reporter one named for the event
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 3 - C1: logger.error with no error hands the reporter one named for the event
+# [billing] webhook.duplicate { eventId: 'evt_replayed', eventType: 'checkout.session.completed' }
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  type: 'test'
+  duration_ms: 2.093708
+  ...
+# [billing] webhook.in_flight { eventId: 'evt_busy', eventType: 'checkout.session.completed' }
+# [billing] webhook.processed { eventId: 'evt_sub', eventType: 'customer.subscription.deleted' }
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+  type: 'test'
+  duration_ms: 0.27725
+  type: 'test'
+  ...
+# Subtest: C1: a reporter that throws is swallowed, and the line still prints
+# Subtest: C1: a Bearer header decides alone: a refused token is anonymous even beside a good cookie
+# Subtest: C1: getNote returns the row the scoped db shows; listNotes returns the list
+# [billing] webhook.processed { eventId: 'evt_cs', eventType: 'checkout.session.completed' }
+  duration_ms: 0.205333
+# [billing] webhook.ignored { eventId: 'evt_other', eventType: 'invoice.paid' }
+ok 4 - C1: a reporter that throws is swallowed, and the line still prints
+ok 5 - C1: getNote returns the row the scoped db shows; listNotes returns the list
+  ---
+  ---
+  duration_ms: 2.377542
+  duration_ms: 0.766416
+  type: 'test'
+  type: 'test'
+  ...
+# Subtest: C1: a reporter that rejects is swallowed
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 5 - C1: a reporter that rejects is swallowed
+  ...
+# Subtest: ./config reaches no server module, built-in or workspace package
+  type: 'test'
+ok 3 - ./config reaches no server module, built-in or workspace package
+  ...
+  ---
+  duration_ms: 0.416875
+  type: 'test'
+  ...
+# Subtest: ./browser reaches no server module, built-in or workspace package
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 4 - ./browser reaches no server module, built-in or workspace package
+  ---
+  duration_ms: 0.305875
+  type: 'test'
+  ...
+# Subtest: ./redirect reaches no server module, built-in or workspace package
+ok 5 - ./redirect reaches no server module, built-in or workspace package
+  ...
+  ---
+# Subtest: C2: invalid input throws Invalid naming the field, before any query
+ok 2 - C1: a Bearer header decides alone: a refused token is anonymous even beside a good cookie
+  ---
+  ---
+  duration_ms: 0.196
+# [billing] webhook.ignored { eventId: 'evt_proto', eventType: 'constructor' }
+  type: 'test'
+  duration_ms: 3.080834
+  ---
+  type: 'test'
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ...
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Subtest: C1: the default reporter is a no-op
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 6 - C1: the default reporter is a no-op
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  duration_ms: 0.9235
+  ---
+  duration_ms: 0.519125
+  type: 'test'
+  type: 'test'
+ok 6 - C2: invalid input throws Invalid naming the field, before any query
+  ...
+  ...
+# Subtest: C1: an empty Bearer token is anonymous even beside a good cookie
+# Subtest: C2: no source file in @pem/email writes a brand value or a colour literal
+ok 5 - C2: no source file in @pem/email writes a brand value or a colour literal
+  duration_ms: 0.105917
+  ---
+  type: 'test'
+# [billing] webhook.handler_failed {
+  duration_ms: 0.965416
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  type: 'test'
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 3 - C1: an empty Bearer token is anonymous even beside a good cookie
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ...
+# Subtest: the walk sees a server import when there is one
+  ---
+ok 6 - the walk sees a server import when there is one
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+  duration_ms: 0.547041
+  ...
+  type: 'test'
+# Subtest: C2: a subject with a line break stays one header line
+  ...
+ok 6 - C2: a subject with a line break stays one header line
+# Subtest: ./server is marked server-only, so a client component cannot import it
+  ---
+ok 7 - ./server is marked server-only, so a client component cannot import it
+  duration_ms: 0.08
+  ---
+  type: 'test'
+  duration_ms: 0.091583
+# Subtest: reasoning parts are refused: their text would escape the character cap
+  type: 'test'
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ...
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Subtest: ./admin is marked server-only, so a client component cannot import it
+#   eventId: 'evt_flaky',
+  ---
+#   eventType: 'checkout.session.completed',
+  ...
+#   error: {
+#     name: 'Error',
+#     message: 'synthetic failure',
+ok 8 - ./admin is marked server-only, so a client component cannot import it
+  duration_ms: 0.578625
+#     stack: 'Error: synthetic failure\\n' +
+  type: 'test'
+cache hit, replaying logs 5b1b6e07fe248d25
+  ...
+#       '    at checkout.session.completed (file://./apps/web/lib/billing/webhook/handle.test.ts:69:46)\\n' +
+# Subtest: an error that is no domain error is not turned into one
+ok 7 - an error that is no domain error is not turned into one
+# Subtest: C2: a secret-like key is redacted at any depth, whatever its case
+ok 7 - C2: a secret-like key is redacted at any depth, whatever its case
+  ---
+TAP version 13
+# Subtest: C2: an empty or whitespace body fails on body
+ok 1 - C2: an empty or whitespace body fails on body
+ok 4 - reasoning parts are refused: their text would escape the character cap
+  ---
+  ---
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ...
+  ---
+# Subtest: C1: a send on the local tier logs the rendered message and does not call the vendor
+  duration_ms: 0.127958
+  type: 'test'
+  ...
+# Subtest: the last turn must be the user's
+ok 5 - the last turn must be the user's
+  ---
+  duration_ms: 1.842416
+  duration_ms: 0.166083
+  type: 'test'
+  ...
+  duration_ms: 0.385792
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  type: 'test'
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+# Subtest: C2: a body over the limit fails on body
+  duration_ms: 0.306583
+ok 2 - C2: a body over the limit fails on body
+  type: 'test'
+  ---
+  ...
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Subtest: C2: request bodies and personal data are redacted too
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 8 - C2: request bodies and personal data are redacted too
+  duration_ms: 0.17775
+  ---
+  type: 'test'
+  duration_ms: 0.156375
+  ...
+# Subtest: C1: a scheme other than Bearer (a staging site's HTTP Basic) leaves the cookie session to decide
+  duration_ms: 0.140042
+  type: 'test'
+  ...
+# Subtest: ./session is marked server-only, so a client component cannot import it
+ok 4 - C1: a scheme other than Bearer (a staging site's HTTP Basic) leaves the cookie session to decide
+ok 9 - ./session is marked server-only, so a client component cannot import it
+  type: 'test'
+  ...
+  ...
+1..7
+# Subtest: too many turns or too much text is refused
+ok 7 - C1: a send on the local tier logs the rendered message and does not call the vendor
+ok 6 - too many turns or too much text is refused
+  ---
+  ---
+#       '    at handleStripeWebhook (file://./apps/web/lib/billing/webhook/handle.ts:125:11)\\n' +
+#       '    at async TestContext.<anonymous> (file://./apps/web/lib/billing/webhook/handle.test.ts:235:20)\\n' +
+  duration_ms: 0.2
+  type: 'test'
+  ...
+#       '    at async Test.run (node:internal/test_runner/test:1054:7)\\n' +
+#       '    at async Promise.all (index 0)\\n' +
+# Subtest: with a key and nobody signed in: 401, and the vendor is never called
+ok 7 - with a key and nobody signed in: 401, and the vendor is never called
+  ---
+  ---
+  duration_ms: 11.914917
+  type: 'test'
+  ...
+  duration_ms: 1.319958
+  duration_ms: 0.246792
+  type: 'test'
+  type: 'test'
+  ...
+  ---
+  duration_ms: 0.189791
+  type: 'test'
+cache hit, replaying logs 8ab33978f2ddbd56
+# Subtest: C1: a dashboard template on the local tier logs its id and variable names, not their values
+#       '    at async Suite.run (node:internal/test_runner/test:1442:7)\\n' +
+  duration_ms: 0.0735
+#       '    at async Test.processPendingSubtests (node:internal/test_runner/test:744:7)'
+  ...
+#   }
+# }
+  type: 'test'
+TAP version 13
+# [billing] webhook.processed { eventId: 'evt_flaky', eventType: 'checkout.session.completed' }
+# Subtest: each kind of DDL or write against auth is caught
+# [billing] webhook.ledger_failed {
+ok 1 - each kind of DDL or write against auth is caught
+#   eventId: 'evt_nodb',
+  ---
+  duration_ms: 1.121625
+  type: 'test'
+ok 8 - C1: a dashboard template on the local tier logs its id and variable names, not their values
+  ...
+  ---
+# Subtest: a foreign key to auth.users and a call to auth.uid() are allowed
+# Subtest: C2: a malformed id fails on id; a list limit out of range fails on limit
+# Subtest: with a key and a user: the call reaches the vendor and is logged with the user's id
+ok 2 - a foreign key to auth.users and a call to auth.uid() are allowed
+  ...
+#   eventType: 'checkout.session.completed',
+ok 3 - C2: a malformed id fails on id; a list limit out of range fails on limit
+#   error: {
+  type: 'test'
+#     name: 'Error',
+  ...
+#     message: 'synthetic: database unreachable',
+# Subtest: C2: the reporter's context is redacted; the error itself is passed as caught
+#     stack: 'Error: synthetic: database unreachable\\n' +
+  ---
+  duration_ms: 0.076958
+ok 8 - with a key and a user: the call reaches the vendor and is logged with the user's id
+# Subtest: ./context is marked server-only, so a client component cannot import it
+ok 10 - ./context is marked server-only, so a client component cannot import it
+  ---
+  ---
+  duration_ms: 27.332542
+  duration_ms: 0.309417
+  type: 'test'
+  type: 'test'
+  ...
+  ...
+# Subtest: fixtures answer anyone, without asking who is signed in
+# Subtest: a secret key in the public slot is refused, naming the variable
+ok 9 - fixtures answer anyone, without asking who is signed in
+ok 11 - a secret key in the public slot is refused, naming the variable
+  ---
+#       '    at Object.claim (file://./apps/web/lib/billing/webhook/handle.test.ts:263:15)\\n' +
+  duration_ms: 34.276584
+  ...
+  type: 'test'
+# Subtest: C1: a protected procedure refuses an anonymous caller with UNAUTHORIZED
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  duration_ms: 0.119292
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 5 - C1: a protected procedure refuses an anonymous caller with UNAUTHORIZED
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  duration_ms: 0.658542
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  type: 'test'
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ...
+  ...
+# Subtest: C1: a protected procedure hands the service a context for the caller, by cookie or by token
+ok 6 - C1: a protected procedure hands the service a context for the caller, by cookie or by token
+#       '    at handleStripeWebhook (file://./apps/web/lib/billing/webhook/handle.ts:110:31)\\n' +
+  ---
+#       '    at async TestContext.<anonymous> (file://./apps/web/lib/billing/webhook/handle.test.ts:266:20)\\n' +
+#       '    at async Test.run (node:internal/test_runner/test:1054:7)\\n' +
+#       '    at async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)'
+#   },
+#   step: 'claim'
+# }
+# Subtest: C1: an unverified webhook is rejected and a replay is ignored
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+ok 9 - C2: the reporter's context is redacted; the error itself is passed as caught
+# cancelled 0
+# skipped 0
+# todo 0
+  ---
+  duration_ms: 1.269958
+  type: 'test'
+  ...
+# Subtest: the publishable key and the legacy anon key pass
+ok 12 - the publishable key and the legacy anon key pass
+  ---
+  duration_ms: 0.175292
+  type: 'test'
+  ...
+  ---
+  duration_ms: 0.553166
+  type: 'test'
+  duration_ms: 0.234042
+# Subtest: a body the gate refuses is 400, before any model is called
+ok 10 - a body the gate refuses is 400, before any model is called
+  ---
+  duration_ms: 1.057833
+  type: 'test'
+  ...
+# Subtest: no key on a hosted tier is 503, naming nothing about the configuration
+  ---
+# duration_ms 455.375625
+# Subtest: the cookie stem the purge uses is the storage key the installed SDK writes
+ok 13 - the cookie stem the purge uses is the storage key the installed SDK writes
+  ---
+  duration_ms: 15.032458
+  type: 'test'
+  ...
+  type: 'test'
+  ...
+# Subtest: C1: the local tier needs no key
+ok 9 - C1: the local tier needs no key
+  ...
+  ---
+# Subtest: C1: an admin procedure refuses a non-admin with FORBIDDEN and serves an admin
+  duration_ms: 0.098375
+ok 7 - C1: an admin procedure refuses a non-admin with FORBIDDEN and serves an admin
+  type: 'test'
+  ---
+  ...
+  duration_ms: 0.3275
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  type: 'test'
+# Subtest: C1: staging and production call the vendor once, with the brand's sender and reply-to
+  ...
+ok 10 - C1: staging and production call the vendor once, with the brand's sender and reply-to
+# [api] api.fault {
+  ---
+#   error: {
+  duration_ms: 0.595584
+  type: 'test'
+  ...
+# Subtest: valid input parses, trimmed and defaulted
+ok 4 - valid input parses, trimmed and defaulted
+  ---
+  duration_ms: 0.212791
+ok 11 - no key on a hosted tier is 503, naming nothing about the configuration
+  type: 'test'
+  ---
+  duration_ms: 0.737292
+  type: 'test'
+  ...
+# Subtest: past the per-user window a vendor call is 429, before any model is called; the window then reopens
+ok 12 - past the per-user window a vendor call is 429, before any model is called; the window then reopens
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  duration_ms: 0.281041
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  type: 'test'
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ...
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Subtest: C1: a dashboard template is sent by its id, and EMAIL_FROM replaces the brand's address
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 11 - C1: a dashboard template is sent by its id, and EMAIL_FROM replaces the brand's address
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  duration_ms: 11.913292
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  type: 'test'
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+#     name: 'Error',
+# pass 4
+#     message: 'Failed query: select "id", "body", "created_at", "updated_at" from "notes" where "notes"."id" = $1 limit $2\\n' +
+# fail 0
+    # Subtest: a signature made with another secret is rejected before anything is read or written
+#       'params: 00000000-0000-4000-8000-0000000000aa,1',
+    ok 1 - a signature made with another secret is rejected before anything is read or written
+  ...
+# Using the user object as returned from supabase.auth.getSession() or from some supabase.auth.onAuthStateChange() events could be insecure! This value comes directly from the storage medium (usually cookies on the server) and may not be authentic. Use supabase.auth.getUser() instead which authenticates the data by contacting the Supabase Auth server.
+  duration_ms: 0.150375
+# cancelled 0
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  type: 'test'
+  ...
+# Subtest: C1: staging without a key refuses to send, naming the variable
+ok 12 - C1: staging without a key refuses to send, naming the variable
+      ---
+      duration_ms: 2.771917
+  ...
+# Subtest: a body over the size cap is 413, before it is parsed
+ok 13 - a body over the size cap is 413, before it is parsed
+  ---
+  duration_ms: 0.527417
+  type: 'test'
+  ...
+# Subtest: C1: each fixture answers its prompt's current version on the case's model
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Subtest: C2: personal data and request bodies are redacted under their common compound names
+ok 10 - C2: personal data and request bodies are redacted under their common compound names
+  ---
+  duration_ms: 0.328125
+# skipped 0
+# todo 0
+# duration_ms 113.7465
+ok 14 - C1: each fixture answers its prompt's current version on the case's model
+  ---
+  duration_ms: 0.5355
+  type: 'test'
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+  type: 'test'
+  duration_ms: 0.282875
+#     stack: 'Error: Failed query: select "id", "body", "created_at", "updated_at" from "notes" where "notes"."id" = $1 limit $2\\n' +
+  ...
+# Subtest: C1: a secret-like tag is redacted before it reaches the reporter
+#       'params: 00000000-0000-4000-8000-0000000000aa,1\\n' +
+ok 11 - C1: a secret-like tag is redacted before it reaches the reporter
+#       '    at PreparedQuery.queryWithCache (file://./node_modules/drizzle-orm/pg-core/session.js:41:15)\\n' +
+  ---
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+#       '    at async file://./node_modules/drizzle-orm/pg-proxy/session.js:80:33\\n' +
+  ...
+  duration_ms: 0.246792
+  type: 'test'
+  ...
+# Subtest: C2: free text is scrubbed of addresses, credentials, JWTs and OAuth codes
+ok 12 - C2: free text is scrubbed of addresses, credentials, JWTs and OAuth codes
+#       '    at async file://./node_modules/drizzle-orm/pg-proxy/session.js:75:20\\n' +
+  ---
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  type: 'test'
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+      type: 'test'
+      ...
+    # Subtest: a body changed after signing is rejected
+    ok 2 - a body changed after signing is rejected
+  ...
+# Subtest: C1: returns the user's id, email and app_metadata role from getUser
+  type: 'test'
+  ...
+# Subtest: C1: a vendor error is thrown, not swallowed
+ok 13 - C1: a vendor error is thrown, not swallowed
+  ---
+  duration_ms: 0.157583
+      ---
+      duration_ms: 0.507666
+#       '    at async file://./packages/services/src/notes/notes.ts:66:21\\n' +
+# Subtest: a migration with DDL against auth fails, numbered by statement
+#       '    at async guarded (file://./packages/services/src/notes/notes.ts:33:12)\\n' +
+ok 3 - a migration with DDL against auth fails, numbered by statement
+#       '    at async resolveMiddleware (file://./node_modules/@trpc/server/dist/initTRPC-B259os3T.mjs:203:17)\\n' +
+  ---
+#       '    at async callRecursive (file://./node_modules/@trpc/server/dist/initTRPC-B259os3T.mjs:238:10)\\n' +
+  type: 'test'
+  duration_ms: 0.66175
+  type: 'test'
+  ...
+# Subtest: the generated migration set passes, and it does reference auth.users
+ok 4 - the generated migration set passes, and it does reference auth.users
+  ---
+  duration_ms: 0.808666
+# Subtest: C1: extraction returns a Zod-validated contact that passes its eval
+ok 14 - C1: returns the user's id, email and app_metadata role from getUser
+  ---
+  duration_ms: 0.849958
+  type: 'test'
+  ...
+ok 15 - C1: extraction returns a Zod-validated contact that passes its eval
+  ---
+  duration_ms: 23.150042
+  type: 'test'
+  ...
+# Subtest: C1: an extraction answer that breaks the schema is refused
+ok 16 - C1: an extraction answer that breaks the schema is refused
+  ---
+  duration_ms: 2.398667
+#       '    at async callRecursive (file://./node_modules/@trpc/server/dist/initTRPC-B259os3T.mjs:238:10)\\n' +
+#       '    at async callRecursive (file://./node_modules/@trpc/server/dist/initTRPC-B259os3T.mjs:238:10)\\n' +
+#       '    at async file://./packages/api/src/trpc.ts:38:18',
+  type: 'test'
+  ...
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Subtest: only the local auth mirror writes to auth.users
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 5 - only the local auth mirror writes to auth.users
+# Subtest: C1: a user without a known app_metadata role is a user; user_metadata is never read
+#     cause: {
+ok 15 - C1: a user without a known app_metadata role is a user; user_metadata is never read
+#       name: 'Error',
+  ---
+#       message: 'relation "notes" does not exist',
+  ...
+  type: 'test'
+# Subtest: maskAddress keeps the first letter and the domain only
+  ...
+ok 14 - maskAddress keeps the first letter and the domain only
+# Subtest: C1: the one-shot generate returns a summary that passes its eval
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 17 - C1: the one-shot generate returns a summary that passes its eval
+  ---
+  duration_ms: 2.280625
+  ---
+  type: 'test'
+  ...
+# Subtest: C1: the chat streams a UI message response that passes its eval
+ok 18 - C1: the chat streams a UI message response that passes its eval
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+  duration_ms: 0.172458
+  duration_ms: 39.265292
+  type: 'test'
+  type: 'test'
+  ...
+      type: 'test'
+# Subtest: C2: an error's message and stack are scrubbed on the printed line
+      ...
+ok 13 - C2: an error's message and stack are scrubbed on the printed line
+    # Subtest: a delivery with no signature header is rejected
+  ---
+  duration_ms: 0.151
+#       stack: 'Error: relation "notes" does not exist\\n' +
+  ---
+#         '    at file://./packages/api/src/errors.test.ts:148:22\\n' +
+  duration_ms: 0.048917
+#         '    at file://./packages/api/src/test-helpers.ts:83:20\\n' +
+#         '    at file://./node_modules/drizzle-orm/pg-proxy/session.js:81:24\\n' +
+  duration_ms: 6.510625
+#         '    at PreparedQuery.queryWithCache (file://./node_modules/drizzle-orm/pg-core/session.js:39:22)\\n' +
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+#         '    at file://./node_modules/drizzle-orm/pg-proxy/session.js:80:44\\n' +
+    ok 3 - a delivery with no signature header is rejected
+#         '    at Object.startActiveSpan (file://./node_modules/drizzle-orm/tracing.js:8:14)\\n' +
+      ---
+#         '    at file://./node_modules/drizzle-orm/pg-proxy/session.js:75:33\\n' +
+      duration_ms: 0.267958
+      type: 'test'
+  type: 'test'
+  ...
+# Subtest: C1: a deployment left on the local tier neither sends nor logs the body
+ok 15 - C1: a deployment left on the local tier neither sends nor logs the body
+  ...
+      ...
+  type: 'test'
+  ...
+# Subtest: C2: no key on the local tier replays every fixture and never calls the vendor
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 19 - C2: no key on the local tier replays every fixture and never calls the vendor
+#         '    at Object.startActiveSpan (file://./node_modules/drizzle-orm/tracing.js:8:14)\\n' +
+  ---
+#         '    at PreparedQuery.execute (file://./node_modules/drizzle-orm/pg-proxy/session.js:59:19)\\n' +
+#         '    at file://./node_modules/drizzle-orm/pg-core/query-builders/select.js:797:30'
+  duration_ms: 15.932083
+  type: 'test'
+  type: 'test'
+  ...
+# Subtest: the pattern catches each kind of write
+ok 6 - the pattern catches each kind of write
+  ---
+  ...
+  ---
+# Subtest: C2: with a key, the same call goes to the vendor (the stand-in sees it)
+  duration_ms: 0.169584
+  type: 'test'
+  ...
+# Subtest: seedLocalUsers
+    # Subtest: refuses a non-loopback auth URL before sending anything
+    ok 1 - refuses a non-loopback auth URL before sending anything
+      ---
+      duration_ms: 0.959875
+      type: 'test'
+      ...
+# Subtest: C2: secret-named values in free text follow the key rule, in every common form
+#     }
+ok 20 - C2: with a key, the same call goes to the vendor (the stand-in sees it)
+  ---
+  duration_ms: 5.759041
+    # Subtest: a replayed event id is acknowledged and its handler does not run again
+  type: 'test'
+    ok 4 - a replayed event id is acknowledged and its handler does not run again
+  ...
+      ---
+# Subtest: C2: no key in a deployment or on a hosted tier throws, and never replays a fixture
+      duration_ms: 0.758208
+      type: 'test'
+#   },
+      ...
+    # Subtest: an event another delivery is still handling gets a retryable non-2xx
+    ok 5 - an event another delivery is still handling gets a retryable non-2xx
+      ---
+      duration_ms: 0.677833
+#   path: 'notes.get'
+# }
+# Subtest: C2: the mapper turns each domain error into its tRPC code and keeps the message
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 21 - C2: no key in a deployment or on a hosted tier throws, and never replays a fixture
+    # Subtest: refuses a missing service-role key before sending anything
+    ok 2 - refuses a missing service-role key before sending anything
+  duration_ms: 0.108209
+      ---
+  type: 'test'
+      duration_ms: 0.141083
+ok 8 - C2: the mapper turns each domain error into its tRPC code and keeps the message
+      type: 'test'
+  ---
+      ...
+  duration_ms: 0.409959
+    # Subtest: creates each synthetic user through the local admin API
+    ok 3 - creates each synthetic user through the local admin API
+  ...
+# Subtest: C1: refuses when getUser returns an error, even with a user beside it
+  ---
+ok 16 - C1: refuses when getUser returns an error, even with a user beside it
+ok 14 - C2: secret-named values in free text follow the key rule, in every common form
+  duration_ms: 0.351667
+  ---
+  type: 'test'
+  duration_ms: 2.444375
+  ...
+  type: 'test'
+  ...
+      type: 'test'
+# Subtest: C2: prose, versions and error codes survive the scrub
+      ...
+ok 15 - C2: prose, versions and error codes survive the scrub
+    # Subtest: with no signing secret configured nothing is verified, and Stripe is told to retry
+  ---
+  duration_ms: 0.120875
+  type: 'test'
+  type: 'test'
+    ok 6 - with no signing secret configured nothing is verified, and Stripe is told to retry
+      ---
+      ---
+      duration_ms: 21.696541
+      duration_ms: 0.3465
+      type: 'test'
+      type: 'test'
+      ...
+  ...
+    # Subtest: treats an existing email as done
+# Subtest: with a key, the request names the case's model, its effort, the output cap and the versioned prompt
+    ok 4 - treats an existing email as done
+ok 22 - with a key, the request names the case's model, its effort, the output cap and the versioned prompt
+      ---
+  ---
+      duration_ms: 1.457667
+  duration_ms: 0.59325
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  type: 'test'
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Subtest: C1: a send logs its Resend id and recipient count, never the address or body
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ...
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 16 - C1: a send logs its Resend id and recipient count, never the address or body
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Subtest: C2: scrubbing a long run without a match stays linear
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+ok 16 - C2: scrubbing a long run without a match stays linear
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  duration_ms: 8.450458
+  duration_ms: 0.349
+  ...
+# Subtest: C2: a service's domain error leaves a procedure as its tRPC code
+      type: 'test'
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+      ...
+    1..4
+  ---
+ok 7 - seedLocalUsers
+  duration_ms: 8.765875
+ok 9 - C2: a service's domain error leaves a procedure as its tRPC code
+  ---
+  ---
+  type: 'test'
+      ...
+  ...
+# Subtest: C1: an invalid Date is logged, never thrown
+ok 17 - C1: an invalid Date is logged, never thrown
+  duration_ms: 17.161583
+  duration_ms: 24.879333
+  ---
+  type: 'suite'
+  duration_ms: 0.160625
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  type: 'test'
+  type: 'test'
+  ...
+    1..6
+1..17
+  type: 'test'
+# tests 17
+ok 1 - C1: an unverified webhook is rejected and a replay is ignored
+  ...
+1..22
+# tests 22
+# suites 0
+# suites 0
+# pass 17
+# pass 22
+# fail 0
+# fail 0
+# cancelled 0
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# skipped 0
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# cancelled 0
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+  ---
+  duration_ms: 0.102125
+  type: 'test'
+  ...
+# Subtest: C1: a forged session cookie is refused when Supabase cannot fetch its user
+ok 17 - C1: a forged session cookie is refused when Supabase cannot fetch its user
+  ---
+  duration_ms: 15.502583
+  type: 'test'
+  ...
+# Subtest: db:local:reset
+    # Subtest: refuses staging before resolving a URL
+    ok 1 - refuses staging before resolving a URL
+  ...
+      ---
+# Subtest: formatSender keeps a display name and address on one line
+      duration_ms: 565.376917
+  ...
+# todo 0
+# duration_ms 296.879917
+  ---
+  duration_ms: 5.967125
+  type: 'suite'
+  ...
+# Subtest: C2: a signed event reaches the handler its type maps to
+      type: 'test'
+ok 17 - formatSender keeps a display name and address on one line
+      ...
+  ---
+  duration_ms: 0.103834
+# skipped 0
+  type: 'test'
+  ...
+# todo 0
+# duration_ms 105.60575
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Subtest: C1: the same cookie passes once Supabase returns its user, with the role from that answer
+1..17
+# tests 17
+# suites 0
+ok 18 - C1: the same cookie passes once Supabase returns its user, with the role from that answer
+  type: 'test'
+    # Subtest: refuses staging before connecting, with its URLs set
+    ok 2 - refuses staging before connecting, with its URLs set
+      ---
+      duration_ms: 322.689792
+      type: 'test'
+  ---
+    # Subtest: each type goes to its own handler, and the id is recorded only after
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# pass 17
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+      ...
+    # Subtest: refuses production before resolving a URL
+  duration_ms: 1.390792
+    ok 3 - refuses production before resolving a URL
+  type: 'test'
+      ---
+      duration_ms: 299.371458
+      type: 'test'
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+      ...
+    # Subtest: refuses production before connecting, with its URLs set
+    ok 1 - each type goes to its own handler, and the id is recorded only after
+    ok 4 - refuses production before connecting, with its URLs set
+      ---
+      duration_ms: 295.326625
+      type: 'test'
+  ...
+      ...
+# Subtest: C1: the mirror is called once per user per process, and again after a refusal, a failure or an email change
+      ---
+ok 19 - C1: the mirror is called once per user per process, and again after a refusal, a failure or an email change
+    # Subtest: refuses a local URL that is not this machine, before connecting
+  ...
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+      duration_ms: 9.177792
+# fail 0
+      type: 'test'
+  ---
+      ...
+    1..1
+ok 2 - C2: a signed event reaches the handler its type maps to
+  ---
+# cancelled 0
+  duration_ms: 9.397542
+# skipped 0
+# todo 0
+# duration_ms 94.684583
+  type: 'suite'
+  ...
+  duration_ms: 0.34475
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Subtest: C2: over HTTP, a note row-level security withholds is NOT_FOUND (404)
+    ok 5 - refuses a local URL that is not this machine, before connecting
+ok 10 - C2: over HTTP, a note row-level security withholds is NOT_FOUND (404)
+  ---
+  duration_ms: 6.737125
+# Subtest: C3: an event type with no handler is acknowledged and dispatched nowhere
+      ---
+      duration_ms: 312.285291
+  type: 'test'
+    # Subtest: a 2xx, no handler runs, and the ledger is not touched
+  ...
+    ok 1 - a 2xx, no handler runs, and the ledger is not touched
+  type: 'test'
+  ...
+# Subtest: C1: concurrent requests for one user share one mirror call
+      ---
+ok 20 - C1: concurrent requests for one user share one mirror call
+      duration_ms: 1.114292
+      type: 'test'
+      ...
+    # Subtest: refuses a malformed tier
+    ok 6 - refuses a malformed tier
+      ---
+      duration_ms: 314.229667
+      type: 'test'
+  ---
+  duration_ms: 12.431042
+  type: 'test'
+  ...
+# Subtest: C1: an anonymous or refused request never reaches the mirror
+ok 21 - C1: an anonymous or refused request never reaches the mirror
+  ---
+  duration_ms: 0.200958
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+# Subtest: C2: over HTTP, a policy's refusal is FORBIDDEN (403) and a unique violation CONFLICT (409)
+      type: 'test'
+      ...
+  type: 'test'
+    1..6
+  ...
+Not implemented: Window's getComputedStyle() method: with pseudo-elements
+stderr | .storybook/stories.test.ts > Primitives/Display/Chart > Bars
+# Subtest: a sign-in on localhost lands back on localhost, at next
+ok 22 - a sign-in on localhost lands back on localhost, at next
+ok 8 - db:local:reset
+      ...
+  ---
+  ---
+  duration_ms: 2110.332916
+  duration_ms: 0.555834
+  type: 'suite'
+The width(0) and height(0) of chart should be greater than 0,
+ok 11 - C2: over HTTP, a policy's refusal is FORBIDDEN (403) and a unique violation CONFLICT (409)
+    # Subtest: a type named like an object property is not a handler
+       please check the style of container, or the props width(100%) and height(100%),
+  type: 'test'
+  ---
+  ...
+    ok 2 - a type named like an object property is not a handler
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+      ---
+      duration_ms: 1.193709
+      type: 'test'
+       height and width.
+  ...
+  duration_ms: 3.000708
+      ...
+  type: 'test'
+    1..2
+ok 3 - C3: an event type with no handler is acknowledged and dispatched nowhere
+# Subtest: next that leaves the origin becomes /
+
+stderr | .storybook/stories.test.ts > Primitives/Display/Chart > WithLegend
+The width(0) and height(0) of chart should be greater than 0,
+       please check the style of container, or the props width(100%) and height(100%),
+  ---
+ok 23 - next that leaves the origin becomes /
+  duration_ms: 2.509042
+  type: 'suite'
+  ...
+# Subtest: C4: a handler that throws gets a retryable 5xx and is not recorded
+    # Subtest: the claim is released, the id is not processed, and the retry runs the handler
+  ...
+# Subtest: C2: over HTTP, input that fails its validator is BAD_REQUEST (400) with the failed fields
+ok 12 - C2: over HTTP, input that fails its validator is BAD_REQUEST (400) with the failed fields
+  ---
+  ---
+# Subtest: nonLoopbackBindings
+    # Subtest: names every interface and a specific LAN address
+    ok 1 - the claim is released, the id is not processed, and the retry runs the handler
+      ---
+      duration_ms: 4.241
+      type: 'test'
+  duration_ms: 0.19025
+    ok 1 - names every interface and a specific LAN address
+       or add a minWidth(0) or minHeight(undefined) or use aspect(undefined) to control the
+       height and width.
+
+ ✓ .storybook/stories.test.ts (324 tests) 12490ms
+      ...
+  type: 'test'
+  ...
+# Subtest: the callback URL is on the site's origin and carries next only when it is a path
+   ✓ Catalog/Navigation/Sidebar 10/shadcn (1)
+    # Subtest: a ledger that cannot be written is retryable too
+  duration_ms: 1.628084
+  type: 'test'
+      ---
+     ✓ Default 335ms
+    ok 2 - a ledger that cannot be written is retryable too
+      ---
+      duration_ms: 1.774542
+  ...
+# Subtest: C2: a fault is INTERNAL_SERVER_ERROR (500) and neither its message nor its stack leaves the server
+      type: 'test'
+ok 13 - C2: a fault is INTERNAL_SERVER_ERROR (500) and neither its message nor its stack leaves the server
+  ---
+  duration_ms: 4.264875
+      ...
+    1..2
+ok 4 - C4: a handler that throws gets a retryable 5xx and is not recorded
+  ---
+  duration_ms: 6.105
+      duration_ms: 1.502792
+  type: 'test'
+  ...
+   ✓ Catalog/Navigation/Sidebar 15/shadcn (1)
+  type: 'suite'
+  ...
+1..13
+# Subtest: a build without SENTRY_AUTH_TOKEN skips the upload and names no credential
+ok 24 - the callback URL is on the site's origin and carries next only when it is a path
+ok 5 - a build without SENTRY_AUTH_TOKEN skips the upload and names no credential
+  ---
+  duration_ms: 0.100417
+  type: 'test'
+  ...
+# @supabase/ssr: chunked cookie decoded to invalid JSON, treating as absent. This usually indicates that cookie chunks from different writes were combined (e.g. response committed before all Set-Cookie headers were sent).
+      type: 'test'
+  ---
+     ✓ Default 423ms
+
+ Test Files  2 passed (2)
+      Tests  329 passed (329)
+   Start at  21:00:01
+# @supabase/ssr: chunked cookie decoded to invalid JSON, treating as absent. This usually indicates that cookie chunks from different writes were combined (e.g. response committed before all Set-Cookie headers were sent).
+   Duration  19.71s (tests 58%, transform 22%, import 10%, environment 7%, setup 3%)
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+
+      ...
+    # Subtest: passes loopback-only bindings
+  duration_ms: 0.540083
+  type: 'test'
+  ...
+# @supabase/ssr: chunked cookie decoded to invalid JSON, treating as absent. This usually indicates that cookie chunks from different writes were combined (e.g. response committed before all Set-Cookie headers were sent).
+# Subtest: C2: on the local stack, updateSession deletes every staging session cookie and nothing else
+# Subtest: a local build with a token still skips the upload
+ok 6 - a local build with a token still skips the upload
+    ok 2 - passes loopback-only bindings
+      ---
+      duration_ms: 0.07825
+ok 25 - C2: on the local stack, updateSession deletes every staging session cookie and nothing else
+  ---
+      type: 'test'
+  ---
+  duration_ms: 0.0765
+  type: 'test'
+  ...
+# Subtest: a deployment with the token, org and project uploads under the commit release
+  duration_ms: 16.852208
+  type: 'test'
+  ...
+# Subtest: C2: the project's own cookies are never purged
+# cancelled 0
+# skipped 0
+ok 26 - C2: the project's own cookies are never purged
+      ...
+ok 7 - a deployment with the token, org and project uploads under the commit release
+  ---
+# todo 0
+# duration_ms 590.645084
+    1..2
+ok 9 - nonLoopbackBindings
+  ---
+  duration_ms: 2.990334
+  type: 'suite'
+  ...
+# Subtest: runtime takes the transaction pooler on a hosted tier
+ok 10 - runtime takes the transaction pooler on a hosted tier
+  ---
+  duration_ms: 0.7465
+  type: 'test'
+  ...
+# Subtest: migrations take the session pooler on a hosted tier
+ok 11 - migrations take the session pooler on a hosted tier
+  ---
+  duration_ms: 0.461959
+  type: 'test'
+  ...
+# Subtest: the local tier is not checked beyond the scheme
+  ---
+  duration_ms: 0.87975
+  type: 'test'
+  ...
+# Subtest: C2: switching back to staging purges the local stack's cookies
+ok 27 - C2: switching back to staging purges the local stack's cookies
+  ---
+  duration_ms: 0.469625
+  type: 'test'
+  ...
+# Subtest: C2: with no foreign cookie, nothing is written
+ok 28 - C2: with no foreign cookie, nothing is written
+  ---
+  duration_ms: 0.3305
+  type: 'test'
+  ...
+ok 12 - the local tier is not checked beyond the scheme
+  ---
+  duration_ms: 0.39825
+  type: 'test'
+  ...
+# Subtest: errors and descriptions never carry credentials
+ok 13 - errors and descriptions never carry credentials
+  ---
+  duration_ms: 2.845417
+  type: 'test'
+  ...
+# Subtest: applyLocalAuthMirror
+    # Subtest: refuses a non-loopback host before connecting
+    ok 1 - refuses a non-loopback host before connecting
+      ---
+      duration_ms: 5.675208
+      type: 'test'
+# Subtest: C2: the purge reads every cookie form Supabase writes
+ok 29 - C2: the purge reads every cookie form Supabase writes
+      ...
+    # Subtest: passes the host check on loopback and only then connects
+    ok 2 - passes the host check on loopback and only then connects
+  duration_ms: 0.070458
+  type: 'test'
+  ...
+# Subtest: there is no tunnel route, so the app relays no one's events
+ok 8 - there is no tunnel route, so the app relays no one's events
+      ---
+      duration_ms: 2.64
+      type: 'test'
+      ...
+    1..2
+ok 14 - applyLocalAuthMirror
+  ---
+  duration_ms: 9.782125
+  ---
+  duration_ms: 0.079166
+  type: 'test'
+  ...
+# Subtest: C2: switching to a tier with no project clears every Supabase session cookie
+ok 30 - C2: switching to a tier with no project clears every Supabase session cookie
+  ---
+  duration_ms: 0.096375
+  type: 'test'
+  ...
+1..30
+# tests 30
+# suites 0
+# pass 30
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+  type: 'suite'
+  ---
+  duration_ms: 0.109209
+  type: 'test'
+  ...
+# Subtest: on local nothing registers, though production's and staging's DSNs are set
+ok 9 - on local nothing registers, though production's and staging's DSNs are set
+  ---
+  duration_ms: 0.901125
+  type: 'test'
+  ...
+# Subtest: isLoopbackHost
+    # Subtest: accepts localhost, 127.0.0.0/8 and ::1
+    ok 1 - accepts localhost, 127.0.0.0/8 and ::1
+      ---
+      duration_ms: 0.686917
+      type: 'test'
+      ...
+    # Subtest: refuses every other host, including look-alikes
+    ok 2 - refuses every other host, including look-alikes
+      ---
+      duration_ms: 0.076792
+      type: 'test'
+      ...
+    # Subtest: isLoopbackUrl reads the URL's host and refuses an unparseable URL
+# duration_ms 306.687583
+    ok 3 - isLoopbackUrl reads the URL's host and refuses an unparseable URL
+      ---
+      duration_ms: 2.22575
+      type: 'test'
+      ...
+    1..3
+ok 15 - isLoopbackHost
+  ---
+  duration_ms: 3.524375
+  type: 'suite'
+  ...
+# Subtest: the bridge accepts a UUID user and a known role
+ok 16 - the bridge accepts a UUID user and a known role
+  ---
+  duration_ms: 0.831208
+  type: 'test'
+  ...
+# Subtest: the bridge refuses a partial or forged identity before any SQL
+ok 17 - the bridge refuses a partial or forged identity before any SQL
+  ---
+  duration_ms: 0.31
+  type: 'test'
+  ...
+# Subtest: the schema exports tables, and none of them outside public
+ok 18 - the schema exports tables, and none of them outside public
+  ---
+  duration_ms: 0.810125
+  type: 'test'
+  ...
+# Subtest: authUsers is never exported from the schema
+ok 19 - authUsers is never exported from the schema
+  ---
+  duration_ms: 0.061375
+  type: 'test'
+  ...
+# Subtest: every table carries its policies beside it
+ok 20 - every table carries its policies beside it
+  ---
+  duration_ms: 0.188708
+  type: 'test'
+  ...
+1..20
+# tests 32
+# suites 5
+# pass 32
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2262.144625
+  ...
+# Subtest: each tier reads only its own DSN, never production's
+ok 10 - each tier reads only its own DSN, never production's
+  ---
+  duration_ms: 0.232209
+  type: 'test'
+  ...
+# Subtest: a local DSN set on purpose registers
+ok 11 - a local DSN set on purpose registers
+  ---
+  duration_ms: 0.212792
+  type: 'test'
+  ...
+# Subtest: with a DSN, the SDK starts with every data category off and the reporter is registered
+ok 12 - with a DSN, the SDK starts with every data category off and the reporter is registered
+  ---
+  duration_ms: 0.694958
+  type: 'test'
+  ...
+# Subtest: every dataCollection category is set explicitly
+ok 13 - every dataCollection category is set explicitly
+  ---
+  duration_ms: 0.081417
+  type: 'test'
+  ...
+# Subtest: beforeSend drops cookies, body, headers and query, keeping url path and method
+ok 14 - beforeSend drops cookies, body, headers and query, keeping url path and method
+  ---
+  duration_ms: 1.498416
+  type: 'test'
+  ...
+# Subtest: the user is reduced to an opaque id
+ok 15 - the user is reduced to an opaque id
+  ---
+  duration_ms: 0.113875
+  type: 'test'
+  ...
+# Subtest: a user without an id is dropped whole
+ok 16 - a user without an id is dropped whole
+  ---
+  duration_ms: 0.148208
+  type: 'test'
+  ...
+# Subtest: free text is scrubbed and extra and breadcrumb data are dropped
+ok 17 - free text is scrubbed and extra and breadcrumb data are dropped
+  ---
+  duration_ms: 0.135125
+  type: 'test'
+  ...
+# Subtest: the input event is not mutated
+ok 18 - the input event is not mutated
+  ---
+  duration_ms: 0.080125
+  type: 'test'
+  ...
+# Subtest: stack frames keep their place but lose their local variables
+ok 19 - stack frames keep their place but lose their local variables
+  ---
+  duration_ms: 0.081042
+  type: 'test'
+  ...
+1..19
+# tests 26
+# suites 4
+# pass 26
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 269.733
+
+ Tasks:    12 successful, 12 total
+Cached:    12 cached, 12 total
+  Time:    252ms >>> FULL TURBO
+

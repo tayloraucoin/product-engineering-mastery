@@ -3,30 +3,68 @@
   "criteria_sha256": "8b649d33a19cc2bb2ef03586ea9948aee65eefd9e7e208c2b7c5406781b1bfc3",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-05T04:00:54Z",
+        "head": "12a9b07d40b1abfe6e3864387116bd889c077f81",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-14-api-trpc/evidence/C1.log",
+        "evidence_sha256": "30ba056183ca3452a256422c0f6318bd35a7b5dc1df34be9d13d4505d1e41143",
+        "tests": 199
+      }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-05T04:01:00Z",
+        "head": "12a9b07d40b1abfe6e3864387116bd889c077f81",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-14-api-trpc/evidence/C2.log",
+        "evidence_sha256": "216f2f2bf5bcb897dbf772d486e9f02eee33e2a4e7b8b4272f0a1fe922a13dae",
+        "tests": 199
+      }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn lint:boundaries",
+        "exit": 0,
+        "at": "2026-10-05T04:01:04Z",
+        "head": "12a9b07d40b1abfe6e3864387116bd889c077f81",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-14-api-trpc/evidence/C3.log",
+        "evidence_sha256": "4e8c4f6db72c505123bed0227ae2cf50d25259df5ac5d00362aa50be8c18e422"
+      }
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn verify",
+        "exit": 0,
+        "at": "2026-10-05T04:01:13Z",
+        "head": "12a9b07d40b1abfe6e3864387116bd889c077f81",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-14-api-trpc/evidence/C4.log",
+        "evidence_sha256": "75c11244e01b9e500cf8f0fef52b23d23aecd52fc837abedcb64940fae0bd91d"
+      }
     },
     "C5": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn contract:record STK-14 C5 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-14-api-trpc/evidence/C5.md --verdict deferred",
+        "exit": 0,
+        "at": "2026-10-05T03:55:10Z",
+        "head": "bd92ecda60efee045413017ab20879db71836484",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-14-api-trpc/evidence/C5.md",
+        "evidence_sha256": "cc835e129d6003b7d63bf6a246713770e5fa4c416612efa198b0a83b2e9d9cb1",
+        "deferred": true
+      }
     }
   },
-  "updated_at": "2026-10-05T01:53:18Z"
+  "updated_at": "2026-10-05T04:02:58Z"
 }
