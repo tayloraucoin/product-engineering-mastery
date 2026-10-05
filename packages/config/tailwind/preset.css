@@ -71,6 +71,9 @@
   --secondary-foreground: var(--neutral-900);
   --accent: var(--neutral-100);
   --accent-foreground: var(--neutral-900);
+  --hover: var(--neutral-200);
+  --selected: var(--neutral-200);
+  --selected-foreground: var(--neutral-950);
   --destructive: var(--red-800);
   --ring: var(--neutral-700);
   --chart-1: var(--neutral-300);
@@ -116,6 +119,9 @@
   --secondary-foreground: var(--neutral-50);
   --accent: var(--neutral-800);
   --accent-foreground: var(--neutral-50);
+  --hover: var(--neutral-700);
+  --selected: var(--neutral-700);
+  --selected-foreground: var(--neutral-50);
   --destructive: var(--red-300);
   --ring: var(--neutral-300);
   --sidebar: var(--neutral-900);
@@ -151,6 +157,9 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-hover: var(--hover);
+  --color-selected: var(--selected);
+  --color-selected-foreground: var(--selected-foreground);
   --color-destructive: var(--destructive);
   --color-ring: var(--ring);
   --color-chart-1: var(--chart-1);

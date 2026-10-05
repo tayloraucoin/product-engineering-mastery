@@ -27,6 +27,10 @@ On 2026-10-04 STK-2's `yarn verify` failed twice with "C1 is PASS, but evidence 
 
 STK-11 moved `yarn db:local` from STK-9's `docker run`, which bound `127.0.0.1:54322`, to the Supabase CLI that D-STK-6 names. The CLI (2.119.0) publishes the database port on every interface and has no setting to change that. The local database therefore answers on the network with the password `postgres`, and in Mode A it holds the emails of staging users the mirror copies. Taylor accepted this on 2026-10-04 (ledger EN-13). The controls: `db:local` and `db:local:full` warn whenever the port is bound to anything but loopback; `new-project.md` step 6 and the `tech-stack.md` image row name Docker's `"ip": "127.0.0.1"` daemon setting; and `yarn db:stop --no-backup` wipes the mirrored emails.
 
+## 2026-10-04 — CAT-7: hover and selected roles, indeterminate progress, the skeleton pulse
+
+Taylor approved three calls from the CAT-6 review. CS-14: the preset gains `--hover` and `--selected` (with `--selected-foreground`), audited, and the button's secondary hover, the bubble's secondary and muted hovers and the table's selected row move onto them from a 5% colour mix (about 1.1:1, canon A-04); a selection keeps a marker beside its fill (C-P07). CS-15: indeterminate progress is a static dimmed full-width bar, never a loop. CS-16: the skeleton keeps its slow pulse, stopped under reduced motion.
+
 ## 2026-10-04 — CAT-5, CAT-6: the install age gate and its one exception
 
 `deps.md` said an age gate waited out new releases, but `.yarnrc.yml` set none. CAT-5 set `npmMinimalAgeGate: 7d`; a probe for a same-day release was quarantined. On review, Taylor asked for one written exception so the gate is never quietly lowered under pressure (EN-14): a security fix younger than a week enters as one exact `name@x.y.z` in `npmPreapprovedPackages`, with a ledger line naming the advisory, and comes out once the version is a week old. `tooling/age-gate.test.ts` holds the gate at a week and every pre-approval to one exact version with its ledger line.

@@ -49,6 +49,9 @@ function preset(overrides: { light?: string; dark?: string } = {}): string {
   --sidebar-primary: var(--step-black);
   --sidebar-primary-foreground: var(--step-white);
   --input: var(--step-gray);
+  --hover: var(--step-white);
+  --selected: var(--step-white);
+  --selected-foreground: var(--step-black);
   --ring: var(--step-black);
   ${overrides.light ?? ""}
 }
@@ -75,6 +78,9 @@ function preset(overrides: { light?: string; dark?: string } = {}): string {
   --sidebar-primary: var(--step-white);
   --sidebar-primary-foreground: var(--step-black);
   --input: var(--step-gray);
+  --hover: var(--step-black);
+  --selected: var(--step-black);
+  --selected-foreground: var(--step-white);
   --ring: var(--step-white);
   ${overrides.dark ?? ""}
 }`;
@@ -97,7 +103,7 @@ function audit(css?: string) {
 test("C1: the repo's preset passes every pair in both themes", () => {
   const { status, out } = audit();
   assert.equal(status, 0, out);
-  assert.match(out, /all 49 pairs pass/);
+  assert.match(out, /all 53 pairs pass/);
 });
 
 test("C1: black on white measures 21:1, the WCAG maximum", () => {
@@ -119,7 +125,7 @@ test("C1: a text pair below 4.5:1 fails and is named", () => {
     out,
     /FAIL\s+light --muted-foreground on --background \(muted text\): 4\.48:1, needs 4\.5:1/,
   );
-  assert.match(out, /5 of 49 pairs/);
+  assert.match(out, /5 of 53 pairs/);
 });
 
 test("C1: a focus ring below 3:1 fails in the theme it is set in", () => {

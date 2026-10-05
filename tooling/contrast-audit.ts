@@ -194,6 +194,19 @@ const PAIRS: Pair[] = [
     min: TEXT,
     use: "a placeholder in a dark field",
   },
+  // CAT-7 (CS-14): text on a hovered surface, and a selected item's label.
+  {
+    fg: "--foreground",
+    bg: "--hover",
+    min: TEXT,
+    use: "text on a hovered surface",
+  },
+  {
+    fg: "--selected-foreground",
+    bg: "--selected",
+    min: TEXT,
+    use: "a selected item's label",
+  },
   { fg: "--ring", bg: "--background", min: NON_TEXT, use: "focus ring" },
   {
     fg: "--ring",
