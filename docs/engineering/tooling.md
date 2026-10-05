@@ -821,7 +821,7 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
 
 - **What:** `yarn review:run` starts a reviewer as `claude -p` with Read, Grep and Glob only, prompted from the contract, results and evidence index rather than the builder's words, and records its verdict as `review-<role>.md` and `review:<role>`. Its `vigil <EPIC>` form pre-flights an epic's drafted tickets.
 - **Area:** `specs/`, the generated subagents (`tooling/review-run.ts`).
-- **Trigger:** by an agent for every reviewer a tier 2 ticket requires (and once per batch at tier 1).
+- **Trigger:** by an agent for each reviewer the operator confirmed on a Q3 ticket (PR-19); below Q3 a review happens in the thread, without this command.
 - **Scores:**
   - Importance **5.0**: the builder never grades its own work, and the reviewer's tools are read-only by construction.
   - Token cost **6.0**: each review is a full model session (_estimate_ tens of thousands of tokens per role per ticket, billed). It needs the network, so it runs outside the sandbox, and it reruns whenever a planned path changes.

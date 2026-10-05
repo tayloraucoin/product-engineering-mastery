@@ -27,7 +27,7 @@ The rules people and agents build by, a library loaded on demand, and a demo app
 | Engineering   | `docs/engineering/`                        | What code is placed and shipped by: conventions, the stack, harness templates; checks in `tooling/` | on request; checks always |
 | Product       | `docs/product/`                            | How work is framed: cycle-charter, brief, package, glossary templates | when shaping |
 | Measurement   | `docs/measurement/`                        | How a change is proven: `metrics/` (events, definitions, readout, experiment), `evals/` (surface, failure modes, judge) | when instrumenting; evals for an AI surface |
-| Runbooks      | `docs/runbooks/`                           | Procedures a person follows: onboard-agent, variant testing, release, postmortem | on request |
+| Runbooks      | `docs/runbooks/`                           | Procedures: new-project, remove, add, postmortem, onboard-agent, release | on request |
 | References    | `docs/references/`                         | The distilled library: `README.md` router; laws-of-ux, canons, practitioners, books; `_meta/` | by router, at most 3 files |
 | Skills        | `.claude/skills/`                          | Procedures an agent runs: `tk-ui-critic`, `tk-ui-diverge`, `tk-motion`, `tk-ui-code-lint`, `shadcn`; `REGISTRY.md` | listing always; body on trigger |
 | Prompts       | `docs/prompts/`                            | Prompts kept for reuse: shared context, `research/` threads to commission; `archive/` is history | injected by you |
