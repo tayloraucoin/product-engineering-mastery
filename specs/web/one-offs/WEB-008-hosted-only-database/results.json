@@ -34,10 +34,10 @@
       "run": {
         "command": "yarn contract:record WEB-8 C3 --evidence specs/web/one-offs/WEB-008-hosted-only-database/evidence/C3-verify-no-docker.md",
         "exit": 0,
-        "at": "2026-10-05T22:39:35Z",
-        "head": "d002522f568a54b9ae0f2c000a12eaab1d4e4473",
+        "at": "2026-10-05T22:48:27Z",
+        "head": "4f9bbb06ad1cd6782b7293aa187b0bb0ff6b14bc",
         "evidence_path": "specs/web/one-offs/WEB-008-hosted-only-database/evidence/C3-verify-no-docker.md",
-        "evidence_sha256": "1affe061d2dbfdb6c0024d92f76247b10c20fcc128e672129d266d889ae3955a"
+        "evidence_sha256": "227845c601b4da7f6b6dca6eafb89719d4b935522bcd664fa78c035ec104f462"
       }
     },
     "C4": {
@@ -81,5 +81,5 @@
       }
     }
   },
-  "updated_at": "2026-10-05T22:47:10Z"
+  "updated_at": "2026-10-05T22:48:27Z"
 }
