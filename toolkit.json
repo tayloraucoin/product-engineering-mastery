@@ -230,7 +230,13 @@
         "tw-animate-css",
         "shadcn",
         "input-otp",
-        "react-resizable-panels"
+        "react-resizable-panels",
+        "react-day-picker",
+        "date-fns",
+        "embla-carousel-react",
+        "recharts",
+        "react-is",
+        "@shadcn/react"
       ],
       "boundaries": ["ui"],
       "locked": true,
