@@ -28,10 +28,17 @@
       }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn contract:record STK-19 C3 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-19-helpers-deploy/evidence/C3.md",
+        "exit": 0,
+        "at": "2026-10-04T06:43:00Z",
+        "head": "ed3012c471b7a6bf6f67ec5162a68e980280c1c0",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-19-helpers-deploy/evidence/C3.md",
+        "evidence_sha256": "9118105931bb9b4cd712a14c6b6b8352836eba61734cd2d69e2443ab5121a498"
+      }
     }
   },
-  "updated_at": "2026-10-04T06:40:07Z"
+  "updated_at": "2026-10-04T06:43:00Z"
 }
