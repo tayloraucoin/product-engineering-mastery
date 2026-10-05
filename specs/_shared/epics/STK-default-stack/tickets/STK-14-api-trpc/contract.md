@@ -32,7 +32,6 @@ planned_paths:
   - "apps/web/lib/supabase/context.ts"
   - "apps/web/next.config.ts"
   - "tooling/boundaries.test.ts"
-  - "yarn.lock"
 depends_on:
   - STK-13
 out_of_scope:
