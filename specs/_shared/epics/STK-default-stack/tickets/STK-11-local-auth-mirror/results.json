@@ -101,15 +101,15 @@
       "run": {
         "command": "yarn review:run warden STK-11",
         "exit": 0,
-        "at": "2026-10-04T23:30:07Z",
-        "head": "c19369cb0d0de39268cbc0fb5f65e212e6f9acd2",
+        "at": "2026-10-05T00:45:04Z",
+        "head": "0d2d5c73b3d64754ef6768e6f1d6ca9227c39c6f",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/review-warden.md",
-        "evidence_sha256": "633cb65649c0a15a51e558c53cf25e074e971cb34e17d8d468524a8ad4748942",
-        "contract_sha256": "efd2f37963742150cd7b8f01b4b37485de98411896332a3152159dab5e08ec04",
-        "as_built_sha256": "d7f32fbd5ae3d707719fa92474504b10eb789521753211db0c0deab2224a32c2",
+        "evidence_sha256": "6933ac938c6bf8c7e661f9eddd00fca85a100f63e3e06e7335a1f16e6611572c",
+        "contract_sha256": "e7cc2fb8716af0f91ca85d99149fd2a7b79384c8741b334879d78bbd2fa04893",
+        "as_built_sha256": "182380d23a6355cfe77c624a8bc2d8889b4c21e148af1e08a67ae1a526513998",
         "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
       }
     }
   },
-  "updated_at": "2026-10-05T00:45:01Z"
+  "updated_at": "2026-10-05T00:50:40Z"
 }
