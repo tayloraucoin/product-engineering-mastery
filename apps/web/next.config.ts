@@ -1,10 +1,9 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { NextConfig } from "next";
-
-import { getLocalDevOrigins } from "../../tooling/local-dev-origins";
 import { withSentryConfig } from "@sentry/nextjs/config";
 
+import { getLocalDevOrigins } from "../../tooling/local-dev-origins";
 import { errorReportingBuild, nextConfigEnv } from "./env";
 import { sentryBuildOptions } from "./lib/error-reporting/build";
 
