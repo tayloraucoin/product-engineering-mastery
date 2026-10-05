@@ -3,7 +3,7 @@
 /**
  * The last error boundary: it replaces the root layout, so it brings its own
  * html, body, styles and font (STK-18). The error goes to the logger, which
- * hands it to the registered reporter (Sentry, when the tier has a DSN).
+ * hands it to whatever error reporter the app registered, if any.
  * Reachable on local and staging by `/?state=error`.
  */
 import { useEffect } from "react";

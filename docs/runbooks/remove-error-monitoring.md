@@ -35,6 +35,7 @@ load_when:
 - `tooling/check-client-bundle.ts`: `VERCEL_GIT_COMMIT_SHA` and `NEXT_RUNTIME` in `UNPLANTABLE`, and the comment's Sentry clause.
 - `packages/config/eslint/boundaries.js` and `tooling/boundaries.test.ts`: see Boundaries entries.
 - `docs/engineering/tech-stack.md`: the `@sentry/nextjs` row.
+- `packages/observability/src/error-reporter.ts`: the comment's "STK-18 registers Sentry in apps/web" clause; the seam itself stays.
 
 ## Variables
 
