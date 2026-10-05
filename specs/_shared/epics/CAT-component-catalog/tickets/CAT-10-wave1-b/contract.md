@@ -24,6 +24,8 @@ planned_paths:
   - "yarn.lock"
   - "toolkit.json"
   - "docs/engineering/tech-stack.md"
+  - "packages/ui/.storybook/vitest.config.ts"
+  - "packages/ui/.storybook/vitest.setup.ts"
 depends_on:
   - CAT-4
 out_of_scope:

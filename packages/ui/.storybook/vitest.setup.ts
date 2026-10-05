@@ -33,6 +33,19 @@ window.ResizeObserver ??= class {
   disconnect() {}
 };
 
+/** jsdom has no IntersectionObserver; the carousel (Embla) watches its slides with one. */
+window.IntersectionObserver ??= class {
+  readonly root = null;
+  readonly rootMargin = "";
+  readonly thresholds = [];
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+  takeRecords() {
+    return [];
+  }
+} as unknown as typeof IntersectionObserver;
+
 const project = setProjectAnnotations([a11yAnnotations, previewAnnotations]);
 
 beforeAll(project.beforeAll);

@@ -4,7 +4,7 @@
 
 **At this layer.** Primitive: product-agnostic, no `copy.ts`, may import another primitive but nothing from `composed/`. Here that means one media element with its loading, missing and aspect-ratio states.
 
-**Examples** from the audited repos, Synapse `@syn/ui` (S) and Conscious Connections (CC): `full-bleed-image`, `optional-image` (CC).
+**Examples** from the audited repos, Synapse `@syn/ui` (S) and Conscious Connections (CC): `full-bleed-image`, `optional-image` (CC). This repo's own, shadcn's Vega (CAT-10): `carousel`.
 
 **Where the line is.** An image cropper is `control` (S): a person operates it. An icon or a logo is not media: an icon is passed into the component that uses it, and the brand mark comes from `@pem/brand`. Its other layer: `../../composed/media/`.
 

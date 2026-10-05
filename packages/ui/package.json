@@ -20,6 +20,10 @@
       "types": "./src/primitives/layout/aspect-ratio/index.ts",
       "default": "./src/primitives/layout/aspect-ratio/index.ts"
     },
+    "./attachment": {
+      "types": "./src/primitives/display/attachment/index.ts",
+      "default": "./src/primitives/display/attachment/index.ts"
+    },
     "./avatar": {
       "types": "./src/primitives/display/avatar/index.ts",
       "default": "./src/primitives/display/avatar/index.ts"
@@ -44,9 +48,21 @@
       "types": "./src/primitives/control/button-group/index.ts",
       "default": "./src/primitives/control/button-group/index.ts"
     },
+    "./calendar": {
+      "types": "./src/primitives/control/calendar/index.ts",
+      "default": "./src/primitives/control/calendar/index.ts"
+    },
     "./card": {
       "types": "./src/primitives/layout/card/index.ts",
       "default": "./src/primitives/layout/card/index.ts"
+    },
+    "./carousel": {
+      "types": "./src/primitives/media/carousel/index.ts",
+      "default": "./src/primitives/media/carousel/index.ts"
+    },
+    "./chart": {
+      "types": "./src/primitives/display/chart/index.ts",
+      "default": "./src/primitives/display/chart/index.ts"
     },
     "./checkbox": {
       "types": "./src/primitives/control/checkbox/index.ts",
@@ -120,9 +136,17 @@
       "types": "./src/primitives/display/marker/index.ts",
       "default": "./src/primitives/display/marker/index.ts"
     },
+    "./menubar": {
+      "types": "./src/primitives/navigation/menubar/index.ts",
+      "default": "./src/primitives/navigation/menubar/index.ts"
+    },
     "./message": {
       "types": "./src/primitives/display/message/index.ts",
       "default": "./src/primitives/display/message/index.ts"
+    },
+    "./message-scroller": {
+      "types": "./src/primitives/layout/message-scroller/index.ts",
+      "default": "./src/primitives/layout/message-scroller/index.ts"
     },
     "./native-select": {
       "types": "./src/primitives/control/native-select/index.ts",
@@ -132,6 +156,10 @@
       "types": "./src/primitives/navigation/navigation-menu/index.ts",
       "default": "./src/primitives/navigation/navigation-menu/index.ts"
     },
+    "./pagination": {
+      "types": "./src/primitives/navigation/pagination/index.ts",
+      "default": "./src/primitives/navigation/pagination/index.ts"
+    },
     "./popover": {
       "types": "./src/primitives/feedback/popover/index.ts",
       "default": "./src/primitives/feedback/popover/index.ts"
@@ -139,6 +167,10 @@
     "./progress": {
       "types": "./src/primitives/display/progress/index.ts",
       "default": "./src/primitives/display/progress/index.ts"
+    },
+    "./questionnaire": {
+      "types": "./src/primitives/control/questionnaire/index.ts",
+      "default": "./src/primitives/control/questionnaire/index.ts"
     },
     "./radio-group": {
       "types": "./src/primitives/control/radio-group/index.ts",
