@@ -71,10 +71,13 @@ const preview: Preview = {
           // Base UI's popups (select, menus, dialogs) bracket their content
           // with focus guards: aria-hidden spans that are focusable on purpose,
           // so Tab into one moves focus back inside. The rule still runs on
-          // every other element.
+          // every other element. A modal popup hides the page behind it with
+          // aria-hidden (marked data-base-ui-inert) while its focus trap keeps
+          // Tab inside, so the hidden page's controls cannot be reached.
           {
             id: "aria-hidden-focus",
-            selector: '[aria-hidden="true"]:not([data-base-ui-focus-guard])',
+            selector:
+              '[aria-hidden="true"]:not([data-base-ui-focus-guard]):not([data-base-ui-inert])',
           },
         ],
       },

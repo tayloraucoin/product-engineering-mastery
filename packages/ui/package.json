@@ -12,6 +12,10 @@
       "types": "./src/primitives/display/alert/index.ts",
       "default": "./src/primitives/display/alert/index.ts"
     },
+    "./alert-dialog": {
+      "types": "./src/primitives/feedback/alert-dialog/index.ts",
+      "default": "./src/primitives/feedback/alert-dialog/index.ts"
+    },
     "./aspect-ratio": {
       "types": "./src/primitives/layout/aspect-ratio/index.ts",
       "default": "./src/primitives/layout/aspect-ratio/index.ts"
@@ -36,6 +40,10 @@
       "types": "./src/primitives/control/button/index.ts",
       "default": "./src/primitives/control/button/index.ts"
     },
+    "./button-group": {
+      "types": "./src/primitives/control/button-group/index.ts",
+      "default": "./src/primitives/control/button-group/index.ts"
+    },
     "./card": {
       "types": "./src/primitives/layout/card/index.ts",
       "default": "./src/primitives/layout/card/index.ts"
@@ -56,6 +64,10 @@
       "types": "./src/primitives/feedback/context-menu/index.ts",
       "default": "./src/primitives/feedback/context-menu/index.ts"
     },
+    "./dialog": {
+      "types": "./src/primitives/feedback/dialog/index.ts",
+      "default": "./src/primitives/feedback/dialog/index.ts"
+    },
     "./direction": {
       "types": "./src/providers/direction/index.ts",
       "default": "./src/providers/direction/index.ts"
@@ -72,6 +84,10 @@
       "types": "./src/primitives/display/empty/index.ts",
       "default": "./src/primitives/display/empty/index.ts"
     },
+    "./field": {
+      "types": "./src/primitives/layout/field/index.ts",
+      "default": "./src/primitives/layout/field/index.ts"
+    },
     "./hover-card": {
       "types": "./src/primitives/feedback/hover-card/index.ts",
       "default": "./src/primitives/feedback/hover-card/index.ts"
@@ -80,9 +96,17 @@
       "types": "./src/primitives/control/input/index.ts",
       "default": "./src/primitives/control/input/index.ts"
     },
+    "./input-group": {
+      "types": "./src/primitives/control/input-group/index.ts",
+      "default": "./src/primitives/control/input-group/index.ts"
+    },
     "./input-otp": {
       "types": "./src/primitives/control/input-otp/index.ts",
       "default": "./src/primitives/control/input-otp/index.ts"
+    },
+    "./item": {
+      "types": "./src/primitives/display/item/index.ts",
+      "default": "./src/primitives/display/item/index.ts"
     },
     "./kbd": {
       "types": "./src/primitives/display/kbd/index.ts",
@@ -136,6 +160,10 @@
       "types": "./src/primitives/layout/separator/index.ts",
       "default": "./src/primitives/layout/separator/index.ts"
     },
+    "./sheet": {
+      "types": "./src/primitives/layout/sheet/index.ts",
+      "default": "./src/primitives/layout/sheet/index.ts"
+    },
     "./skeleton": {
       "types": "./src/primitives/display/skeleton/index.ts",
       "default": "./src/primitives/display/skeleton/index.ts"
@@ -173,9 +201,17 @@
       "types": "./src/composed/control/theme-toggle/index.ts",
       "default": "./src/composed/control/theme-toggle/index.ts"
     },
+    "./toast": {
+      "types": "./src/primitives/feedback/toast/index.ts",
+      "default": "./src/primitives/feedback/toast/index.ts"
+    },
     "./toggle": {
       "types": "./src/primitives/control/toggle/index.ts",
       "default": "./src/primitives/control/toggle/index.ts"
+    },
+    "./toggle-group": {
+      "types": "./src/primitives/control/toggle-group/index.ts",
+      "default": "./src/primitives/control/toggle-group/index.ts"
     },
     "./tooltip": {
       "types": "./src/primitives/feedback/tooltip/index.ts",

@@ -20,6 +20,7 @@ planned_paths:
   - "packages/ui/src/primitives/**"
   - "packages/ui/package.json"
   - "packages/catalog/STATUS.md"
+  - "packages/ui/.storybook/preview.tsx"
 depends_on:
   - CAT-4
 out_of_scope:
