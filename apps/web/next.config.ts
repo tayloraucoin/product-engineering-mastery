@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 import type { NextConfig } from "next";
 
 import { getLocalDevOrigins } from "../../tooling/local-dev-origins";
-import { withSentryConfig } from "@sentry/nextjs/config";
+import { withSentryConfig } from "@sentry/nextjs";
 
 import { errorReportingBuild, nextConfigEnv } from "./env";
 import { sentryBuildOptions } from "./lib/error-reporting/build";

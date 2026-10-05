@@ -44,10 +44,8 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Every page and route, but not static files or images, which carry no
-  // session, nor Sentry's tunnel (lib/error-reporting/build.ts TUNNEL_ROUTE),
-  // whose browser events need no session refresh.
+  // Every page and route, but not static files or images, which carry no session.
   matcher: [
-    "/((?!_next/static|_next/image|monitoring$|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff2?)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff2?)$).*)",
   ],
 };

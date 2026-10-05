@@ -1,21 +1,6 @@
 import { buttonVariants } from "@pem/ui/button";
 
-import { env } from "../env";
-
-/**
- * `?state=error` throws, so the error page (global-error.tsx) and the error
- * reporting behind it can be reached on purpose (STK-18 C5). Never in
- * production, where anyone could fill the error inbox.
- */
-export default async function HomePage({
-  searchParams,
-}: {
-  searchParams: Promise<{ state?: string | string[] }>;
-}) {
-  const { state } = await searchParams;
-  if (state === "error" && env.DATABASE_ENVIRONMENT !== "production")
-    throw new Error("Synthetic render error from ?state=error");
-
+export default function HomePage() {
   return (
     <main className="mx-auto flex min-h-dvh max-w-2xl flex-col justify-center gap-6 px-6">
       <h1 className="text-3xl font-semibold tracking-tight">

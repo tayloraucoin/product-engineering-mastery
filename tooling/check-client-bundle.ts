@@ -32,22 +32,8 @@ import { REPO_ROOT } from "./lib/docs.ts";
 
 const WEB = "apps/web";
 const PUBLIC_PREFIX = "NEXT_PUBLIC_";
-/**
- * Never secret, and set by the platform or by Next: enum words a sentinel would
- * fail validation on, the commit Vercel builds (public by design: it is the
- * Sentry release every bundle carries), and the runtime Next compiles for.
- */
-const UNPLANTABLE = new Set([
-  "NODE_ENV",
-  "DATABASE_ENVIRONMENT",
-  "VERCEL_ENV",
-  "VERCEL_GIT_COMMIT_SHA",
-  "NEXT_RUNTIME",
-]);
-/** Values env.ts checks by prefix: the sentinel carries one that fits the local tier the build runs on. */
-const SENTINEL_PREFIX: Readonly<Record<string, string>> = {
-  STRIPE_SECRET_KEY: "sk_test_",
-};
+/** Enum-valued, never secret: a sentinel would fail validation, and the values are public words. */
+const UNPLANTABLE = new Set(["NODE_ENV", "DATABASE_ENVIRONMENT", "VERCEL_ENV"]);
 
 function stop(message: string): never {
   console.error(`check-client-bundle — ${message}`);
@@ -189,7 +175,7 @@ if (args.includes("--plan")) {
   const sentinels = new Map(
     names.map((name) => [
       name,
-      `${SENTINEL_PREFIX[name] ?? ""}pem-sentinel-${name.toLowerCase()}-${randomBytes(8).toString("hex")}`,
+      `pem-sentinel-${name.toLowerCase()}-${randomBytes(8).toString("hex")}`,
     ]),
   );
   const env: NodeJS.ProcessEnv = {
