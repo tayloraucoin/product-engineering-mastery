@@ -109,15 +109,15 @@
       "run": {
         "command": "yarn review:run warden STK-16",
         "exit": 0,
-        "at": "2026-10-05T04:22:21Z",
-        "head": "f47897ca3cec2a6fe3667a417d0061ae1a26206c",
+        "at": "2026-10-05T03:53:34Z",
+        "head": "bd92ecda60efee045413017ab20879db71836484",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-16-billing-stripe/review-warden.md",
-        "evidence_sha256": "b9eadcc8a34ea515550d01bdc3cf3bbe662563730f34a9e22184d9abc7c972d6",
-        "contract_sha256": "d874b6df3d5cfc74b9e48668fc27a128b90107279ec073eb86899ecb11f8e1db",
-        "as_built_sha256": "717785f033ae506d9e465d8128a1a514622e3515d93780cf50e415773272a549",
+        "evidence_sha256": "c19577b75b8814d27ca5d4ad6b990e283666aa616db4108b780e967f690b5bfe",
+        "contract_sha256": "3c622be5458969cab8d59d00a42254d4d0568bb717d787b62a6ecc65f73d5535",
+        "as_built_sha256": "f5943ff0ae8cc154b8e377ac8150c402d1e96311fd5ff3b6311f1735c3eefaa4",
         "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
       }
     }
   },
-  "updated_at": "2026-10-05T04:26:46Z"
+  "updated_at": "2026-10-05T04:22:05Z"
 }
