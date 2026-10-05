@@ -46,8 +46,8 @@
       "run": {
         "command": "yarn contract:record STK-5 C4 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-5-constants-observability/evidence/C4.md",
         "exit": 0,
-        "at": "2026-10-05T00:17:02Z",
-        "head": "11e01251b070afaf5e708b4269062e6b24541b27",
+        "at": "2026-10-05T00:26:09Z",
+        "head": "e24207de902ff60bd5c5d98c715975591f8e1493",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-5-constants-observability/evidence/C4.md",
         "evidence_sha256": "195854de87e54be2af81cdc6ded30c9dd9f813f8f53195604a43f37c04854f55"
       }
@@ -65,5 +65,5 @@
       }
     }
   },
-  "updated_at": "2026-10-05T00:26:06Z"
+  "updated_at": "2026-10-05T00:26:09Z"
 }
