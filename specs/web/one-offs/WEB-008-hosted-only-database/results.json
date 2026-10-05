@@ -3,14 +3,30 @@
   "criteria_sha256": "fdfafd561548cd964808dd3ae6216857179133052f5d3d734adb5031aff87f09",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace @pem/db test",
+        "exit": 0,
+        "at": "2026-10-05T22:33:47Z",
+        "head": "07a3ff0d716f38c42606aaa64d8ac6d6d3dfd03a",
+        "evidence_path": "specs/web/one-offs/WEB-008-hosted-only-database/evidence/C1.log",
+        "evidence_sha256": "8cad7d6fdf78b81f2cf0e97737300bfdf252c0129e3ee2bc5b69b57a7ad5a77c",
+        "tests": 55
+      }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace @pem/db test",
+        "exit": 0,
+        "at": "2026-10-05T22:33:47Z",
+        "head": "07a3ff0d716f38c42606aaa64d8ac6d6d3dfd03a",
+        "evidence_path": "specs/web/one-offs/WEB-008-hosted-only-database/evidence/C2.log",
+        "evidence_sha256": "8cad7d6fdf78b81f2cf0e97737300bfdf252c0129e3ee2bc5b69b57a7ad5a77c",
+        "tests": 55
+      }
     },
     "C3": {
       "status": "FAIL",
@@ -25,7 +41,14 @@
     "C5": {
       "status": "FAIL",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn check-types",
+        "exit": 1,
+        "at": "2026-10-05T22:33:58Z",
+        "head": "07a3ff0d716f38c42606aaa64d8ac6d6d3dfd03a",
+        "evidence_path": "specs/web/one-offs/WEB-008-hosted-only-database/evidence/C5.log",
+        "evidence_sha256": "391d4ed93eb710598ab0c5a6ef0768f436fa0919c0ca1ab255d6275868fb9086"
+      }
     },
     "review:warden": {
       "status": "FAIL",
@@ -33,5 +56,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-05T22:28:10Z"
+  "updated_at": "2026-10-05T22:33:59Z"
 }
