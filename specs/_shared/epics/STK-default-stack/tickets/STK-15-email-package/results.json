@@ -46,10 +46,10 @@
       "run": {
         "command": "yarn verify",
         "exit": 0,
-        "at": "2026-10-05T00:19:26Z",
-        "head": "cf6d3a7a448dbc5fcedd817d3a81571a0efc5e17",
+        "at": "2026-10-05T00:42:10Z",
+        "head": "e486e8c80d663e57f57239edc34f1113a9ac7777",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/evidence/C4.log",
-        "evidence_sha256": "ae26f08b2a8e9857750281b76310e770d6632af1f46906ee31987499b4ee8f6a"
+        "evidence_sha256": "585df8bb7fdde3a0b5bda9e192fe62e71bed02b9399f1917bce53aa50ea7f193"
       }
     },
     "review:mason": {
@@ -98,5 +98,5 @@
       }
     }
   },
-  "updated_at": "2026-10-05T00:42:07Z"
+  "updated_at": "2026-10-05T00:43:19Z"
 }
