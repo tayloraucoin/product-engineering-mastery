@@ -15,7 +15,7 @@ load_when:
 
 > **Module:** `@pem/catalog`, the shelf beside the kit (CS-07, record 0011): shadcn blocks, ecosystem items, custom lifts and alternate tracks, shown in the workshop and imported by nothing.
 > **Built by:** CAT-3; its items arrive ticket by ticket in the CAT epic.
-> **Run from:** step 4 of [`new-project.md`](new-project.md), after the product has copied what it keeps into its own code or into `@pem/ui`. Nothing outside the workshop imports the catalog, so removing it changes no app.
+> **Run from:** step 4 of [`new-project.md`](new-project.md), after the product has copied what it keeps into its own code or into `@pem/ui`. Nothing outside the workshop imports the catalog, so removing it changes no app. The manifest is also the kit's check-off: once the catalog is gone, the kit's components are tracked by their stories alone, and step 7 of `docs/design/component-sources.md` no longer applies.
 
 ## Files to delete
 

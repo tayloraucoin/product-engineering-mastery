@@ -91,13 +91,18 @@ const ENTRIES = [
   },
 ];
 
-function story(title: string, tags: string[], provenance = true) {
+function story(
+  title: string,
+  tags: string[],
+  provenance = true,
+  licence = "house",
+) {
   return [
     "const meta = {",
     `  title: "${title}",`,
     `  tags: [${tags.map((t) => `"${t}"`).join(", ")}],`,
     provenance
-      ? '  parameters: { provenance: { upstream: "synthetic@0000000", licence: "house" } },'
+      ? `  parameters: { provenance: { upstream: "synthetic@0000000", licence: "${licence}" } },`
       : "",
     "};",
     "export default meta;",
@@ -127,11 +132,12 @@ const DIAL = "packages/ui/src/primitives/control/probe-dial";
 const METER = "packages/catalog/src/custom/display/probe-meter";
 const GOOD = {
   [`${DIAL}/probe-dial.tsx`]: "export const Dial = () => null;\n",
-  [`${DIAL}/probe-dial.stories.tsx`]: story("Primitives/Control/Probe dial", [
-    "source:shadcn",
-    "verdict:kit",
-    "layer:primitive",
-  ]),
+  [`${DIAL}/probe-dial.stories.tsx`]: story(
+    "Primitives/Control/Probe dial",
+    ["source:shadcn", "verdict:kit", "layer:primitive"],
+    true,
+    "MIT",
+  ),
   [`${METER}/probe-meter.tsx`]: "export const Meter = () => null;\n",
   [`${METER}/probe-meter.stories.tsx`]: story(
     "Catalog/Display/Probe meter/Custom",
@@ -275,4 +281,40 @@ test("C2: a malformed entry is named: unknown source, kind outside KINDS, a bloc
       ),
     ),
   );
+});
+
+test("C2: a conflicting or negated tag anywhere in the story, and a licence unlike the source's, are each named (batch review B3)", () => {
+  const file = `${DIAL}/probe-dial.stories.tsx`;
+  const root = repo({
+    ...GOOD,
+    [file]:
+      story("Primitives/Control/Probe dial", [
+        "source:shadcn",
+        "source:custom",
+        "verdict:kit",
+        "layer:primitive",
+      ]) + 'export const Other = { tags: ["!verdict:kit"] };\n',
+    [`${METER}/probe-meter.stories.tsx`]: story(
+      "Catalog/Display/Probe meter/Custom",
+      ["source:custom", "verdict:unruled", "layer:composed"],
+    ).replace('licence: "house"', 'licence: "GPL-3.0"'),
+  });
+  const { problems, states } = checkCatalog(root, { write: true });
+  assert.ok(
+    problems.some((p) =>
+      p.includes(
+        'tag "source:custom" disagrees with the manifest\'s probe-dial',
+      ),
+    ),
+  );
+  assert.ok(problems.some((p) => p.includes('tag "!verdict:kit" disagrees')));
+  assert.ok(
+    problems.some((p) =>
+      p.includes(
+        'provenance licence is "GPL-3.0"; the manifest\'s source custom says "house"',
+      ),
+    ),
+  );
+  assert.equal(states.get("probe-dial"), "present");
+  assert.equal(states.get("probe-meter"), "present");
 });

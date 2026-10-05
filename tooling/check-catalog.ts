@@ -184,18 +184,34 @@ function checkStory(
     problems.push(
       `${file}: title is ${title ? `"${title}"` : "missing"}; it must be "${want}"`,
     );
-  const tags = /\btags:\s*\[([^\]]*)\]/.exec(text)?.[1] ?? "";
-  for (const tag of [
+  const expected = [
     `source:${entry.source}`,
     `verdict:${verdictOf(entry, sources)}`,
     `layer:${entry.layer}`,
-  ])
-    if (!tags.includes(`"${tag}"`))
+  ];
+  const meta = /\btags:\s*\[([^\]]*)\]/.exec(text)?.[1] ?? "";
+  for (const tag of expected)
+    if (!meta.includes(`"${tag}"`))
       problems.push(`${file}: tags lack "${tag}" (the manifest's ${entry.id})`);
+  // Every source, verdict or layer tag anywhere in the file, negated or not,
+  // must be the manifest's: a second one would win the sidebar or the panel.
+  for (const match of text.matchAll(
+    /["'](!?)((?:source|verdict|layer):[\w-]+)["']/g,
+  ))
+    if (match[1] || !expected.includes(match[2]!))
+      problems.push(
+        `${file}: tag "${match[1]}${match[2]}" disagrees with the manifest's ${entry.id} (${expected.join(", ")})`,
+      );
   const provenance = /\bprovenance:\s*\{([\s\S]*?)\}/.exec(text)?.[1] ?? "";
   for (const field of ["upstream", "licence"])
     if (!new RegExp(`\\b${field}:`).test(provenance))
       problems.push(`${file}: parameters.provenance needs ${field}`);
+  const licence = /\blicence:\s*["']([^"']+)["']/.exec(provenance)?.[1];
+  const sourceLicence = sources[entry.source]!.licence;
+  if (licence !== undefined && licence !== sourceLicence)
+    problems.push(
+      `${file}: provenance licence is "${licence}"; the manifest's source ${entry.source} says "${sourceLicence}"`,
+    );
   return problems;
 }
 

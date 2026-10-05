@@ -10,7 +10,9 @@ import { COPY_BUTTON_COPY } from "./copy";
  * Copies text and says so, in words, beside the button.
  *
  * The result line is a live region, so the confirmation reaches a screen
- * reader, and it clears itself so a second press reads as a second copy.
+ * reader. A success clears itself so a second press reads as a second copy;
+ * a failure stays until the next press, because it tells the person what to
+ * do instead.
  * `copiedMessage` lets a caller say more than "Copied", for instance naming
  * what could not be filled in.
  *
@@ -18,7 +20,7 @@ import { COPY_BUTTON_COPY } from "./copy";
  * the house Button and tokens.
  */
 
-/** How long the result line stays before it clears; not a motion value. */
+/** How long a success stays before it clears; not a motion value. */
 const CLEAR_AFTER_MS = 2400;
 
 type CopyState = "idle" | "copied" | "failed";
@@ -55,10 +57,10 @@ export function CopyButton({
     try {
       await navigator.clipboard.writeText(text);
       setState("copied");
+      timer.current = setTimeout(() => setState("idle"), CLEAR_AFTER_MS);
     } catch {
       setState("failed");
     }
-    timer.current = setTimeout(() => setState("idle"), CLEAR_AFTER_MS);
   }
 
   return (

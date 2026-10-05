@@ -42,3 +42,9 @@ Chosen: option 3. Option 1 would carry every vendor's dependencies and tells int
 ## Revisit trigger
 
 A product imports from the catalog by any route, or a year passes with no item promoted or copied from it.
+
+## Amendment — 2026-10-04 (CAT-3, the CAT batch review)
+
+- **Provenance is a panel, not a strip.** The workshop shows each story's source, verdict, layer, upstream, licence and adaptation in a Provenance panel beside Controls, read from `parameters.provenance` and the story's tags, so the canvas and its axe pass see only the component.
+- **No workshop edge to the catalog.** `@pem/ui` taking `@pem/catalog` as a dependency would cycle with the catalog's own on `@pem/ui`, so the workshop reaches catalog stories by a stories glob, and `@pem/ui`'s test task lists the catalog's sources among its turbo inputs.
+- **check-catalog holds every tag and the licence to the manifest**: a second or negated `source:`, `verdict:` or `layer:` tag, or a provenance licence unlike the source's, fails it.

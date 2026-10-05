@@ -61,7 +61,7 @@ export const Copied: Story = {
   },
 };
 
-/** After a press the browser refused: the region says what to do instead. */
+/** After a press the browser refused: the region says what to do instead, and stays until the next press. */
 export const Failed: Story = {
   beforeEach: withClipboard(false),
   play: async ({ canvas }) => {
@@ -72,17 +72,17 @@ export const Failed: Story = {
   },
 };
 
-/** A caller's own words, and an accessible name that says what is copied. */
+/** A caller's own words; the accessible name starts with the visible label (WCAG 2.5.3). */
 export const CustomMessage: Story = {
   args: {
     label: "Copy invite",
-    accessibleLabel: "Copy the invite code",
+    accessibleLabel: "Copy invite code",
     copiedMessage: "Invite code copied; two fields were left blank",
   },
   beforeEach: withClipboard(true),
   play: async ({ canvas }) => {
     await userEvent.click(
-      canvas.getByRole("button", { name: "Copy the invite code" }),
+      canvas.getByRole("button", { name: "Copy invite code" }),
     );
     await expect(
       await canvas.findByText(/two fields were left blank/),

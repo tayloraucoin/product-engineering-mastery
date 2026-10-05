@@ -28,6 +28,8 @@ planned_paths:
   - "packages/config/eslint/tokens.js"
   - "eslint.config.mjs"
   - "packages/ui/.storybook/main.ts"
+  - "packages/ui/turbo.json"
+  - "docs/decisions/records/0011-component-kit-and-catalog.md"
   - "packages/ui/.storybook/manager.ts"
   - "packages/ui/.storybook/provenance-panel.ts"
   - "packages/ui/.storybook/preview.css"
