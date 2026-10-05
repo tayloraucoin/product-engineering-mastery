@@ -39,6 +39,11 @@ planned_paths:
   - "packages/config/eslint/boundaries.js"
   - "toolkit.json"
   - "docs/runbooks/remove-error-monitoring.md"
+  - "yarn.lock"
+  - "docs/engineering/tech-stack.md"
+  - "tooling/check-client-bundle.ts"
+  - "tooling/boundaries.test.ts"
+  - "specs/_shared/epics/STK-default-stack/technical.md"
 depends_on:
   - STK-5
   - STK-12
