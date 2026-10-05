@@ -53,17 +53,17 @@
       }
     },
     "C5": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
       "run": {
         "command": "yarn verify",
-        "exit": 1,
-        "at": "2026-10-05T00:30:57Z",
-        "head": "56862d831570a75c225152e15fc818b2e0eeb2a3",
+        "exit": 0,
+        "at": "2026-10-05T00:33:28Z",
+        "head": "4ac5cf93e5eaa1e3b1368e9344c28e7f89ff6fbd",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-5-constants-observability/evidence/C5.log",
-        "evidence_sha256": "81965faf250f67e46f8f19d8683236cae58c975e8bb7f4f125ee9d7a9bfc1256"
+        "evidence_sha256": "9b2eba3c63d384c23fa9b65c0a66e4715dbf4f2bcc73787766dd7a00a6561246"
       }
     }
   },
-  "updated_at": "2026-10-05T00:32:09Z"
+  "updated_at": "2026-10-05T00:34:32Z"
 }
