@@ -27,10 +27,9 @@ export type ScrubbableEvent = {
   exception?: { values?: { value?: string }[] };
   breadcrumbs?: { message?: string; data?: unknown }[];
   extra?: unknown;
-  [field: string]: unknown;
 };
 
-/** `url` without its query string or fragment; unparseable text is scrubbed instead. */
+/** `url` without its query string or fragment, its text scrubbed. */
 function stripQuery(url: string): string {
   const cut = url.search(/[?#]/);
   return scrubText(cut === -1 ? url : url.slice(0, cut));
@@ -38,7 +37,7 @@ function stripQuery(url: string): string {
 
 /** The event with request data dropped, the user reduced to an id, and every free-text field scrubbed. */
 export function scrubEvent<E extends ScrubbableEvent>(event: E): E {
-  const scrubbed: E = { ...event };
+  const scrubbed: ScrubbableEvent = { ...event };
 
   if (event.request) {
     const { url, method } = event.request;
@@ -69,13 +68,14 @@ export function scrubEvent<E extends ScrubbableEvent>(event: E): E {
 
   // A breadcrumb's data holds URLs and arguments; only its scrubbed message stays.
   if (event.breadcrumbs) {
-    scrubbed.breadcrumbs = event.breadcrumbs.map(({ data: _data, ...crumb }) =>
-      crumb.message === undefined
-        ? crumb
-        : { ...crumb, message: scrubText(crumb.message) },
-    );
+    scrubbed.breadcrumbs = event.breadcrumbs.map((crumb) => {
+      const kept = { ...crumb };
+      delete kept.data;
+      if (kept.message !== undefined) kept.message = scrubText(kept.message);
+      return kept;
+    });
   }
 
   delete scrubbed.extra;
-  return scrubbed;
+  return scrubbed as E;
 }
