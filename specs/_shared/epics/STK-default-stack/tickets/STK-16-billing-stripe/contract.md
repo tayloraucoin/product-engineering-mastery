@@ -18,7 +18,13 @@ cites:
   - "D-STK-4"
   - "D-STK-13"
 truth_files: "none: no living UX file covers the starter's own stack"
-reviewers: []
+reviewers:
+  - assay
+  - chancery
+  - mason
+  - threshold
+  - vigil
+  - warden
 planned_paths:
   - "apps/web/app/api/webhooks/stripe/**"
   - "apps/web/lib/billing/webhook/**"
@@ -62,6 +68,31 @@ criteria:
     statement: "Types, build and the full chain pass, including check-migrations on the processed-event migration."
     evidence: check
     command: "yarn verify"
+  - id: review:assay
+    statement: Assay reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run assay <id>
+  - id: review:chancery
+    statement: Chancery reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run chancery <id>
+  - id: review:mason
+    statement: Mason reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run mason <id>
+  - id: review:threshold
+    statement: Threshold reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run threshold <id>
+  - id: review:vigil
+    statement: Vigil reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run vigil <id>
+  - id: review:warden
+    statement: Warden reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
+tier: 2
 ---
 
 # Contract — STK-16 billing-stripe
