@@ -3,35 +3,78 @@
   "criteria_sha256": "98949569bf549f8967653a2dcb9083246edb77aa4691ef7efe1566198a59535b",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn check-catalog --ticket CAT-8",
+        "exit": 0,
+        "at": "2026-10-05T03:09:11Z",
+        "head": "24318b426a1fd77f1a5c498e873db157e4277bf1",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-8-wave0-overlay-nav/evidence/C1.log",
+        "evidence_sha256": "94be34eebbdb572ed8ad0cd778a8b8c6cd66bfba970dd6fa1cb813784f8d72ce"
+      }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-05T03:09:14Z",
+        "head": "24318b426a1fd77f1a5c498e873db157e4277bf1",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-8-wave0-overlay-nav/evidence/C2.log",
+        "evidence_sha256": "00ce993969c2ee96a41e095d18ee885d1b2f76dbf89c3fc91878ef7aa1c2f3c2",
+        "tests": 187
+      }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn lint",
+        "exit": 0,
+        "at": "2026-10-05T03:09:34Z",
+        "head": "24318b426a1fd77f1a5c498e873db157e4277bf1",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-8-wave0-overlay-nav/evidence/C3.log",
+        "evidence_sha256": "d9b53eee3f2c737034df3dcc4ff6bd7f74fee1878a1880caeadc08709d88daca"
+      }
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn check-ui-layout",
+        "exit": 0,
+        "at": "2026-10-05T03:09:45Z",
+        "head": "24318b426a1fd77f1a5c498e873db157e4277bf1",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-8-wave0-overlay-nav/evidence/C4.log",
+        "evidence_sha256": "2e8716e170c407334ee806dad3d7ec3b3b173bad48bc9ee995157c51b6c77156"
+      }
     },
     "C5": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn contrast-audit",
+        "exit": 0,
+        "at": "2026-10-05T03:09:47Z",
+        "head": "24318b426a1fd77f1a5c498e873db157e4277bf1",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-8-wave0-overlay-nav/evidence/C5.log",
+        "evidence_sha256": "be8f7ed80c56b9413b367b076881ef71e60046476127b62390c4a907a6313821"
+      }
     },
     "C6": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn check-types",
+        "exit": 0,
+        "at": "2026-10-05T03:09:50Z",
+        "head": "24318b426a1fd77f1a5c498e873db157e4277bf1",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-8-wave0-overlay-nav/evidence/C6.log",
+        "evidence_sha256": "a2bc3929e69c7864f41120a58cf8f3fa2c8b034d28a4228c47ae77735e9405c9"
+      }
     }
   },
-  "updated_at": "2026-10-05T03:07:07Z"
+  "updated_at": "2026-10-05T03:10:02Z"
 }

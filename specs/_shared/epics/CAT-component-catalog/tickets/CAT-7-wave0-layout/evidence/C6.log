@@ -1,7 +1,7 @@
 command: yarn check-types
-exit: 1
-at: 2026-10-05T03:05:42Z
-head: 2707c4773dfd687e90ef49027b91d6935fe74ef6
+exit: 0
+at: 2026-10-05T03:10:41Z
+head: 3ceeb8e719b4c24e28ddd406d2d8da2ab20aea02
 ---
 
    • turbo 2.11.6
@@ -9,33 +9,27 @@ head: 2707c4773dfd687e90ef49027b91d6935fe74ef6
    • Running check-types in 16 packages
    • Remote caching disabled
 
-@pem/env:check-types: cache miss, executing 53eb2b9019fc2281
-@pem/constants:check-types: cache miss, executing ee188cdc5876567a
-@pem/brand:check-types: cache miss, executing 5e4eba0dd0cafd10
-@pem/observability:check-types: cache miss, executing 8b4240e8053d9dbc
-@pem/validators:check-types: cache miss, executing a060ea1a89ea8a0c
-@pem/ai:check-types: cache miss, executing 99d3c18b36f76271
-@pem/db:check-types: cache miss, executing 16d4020b265adc60
-@pem/email:check-types: cache miss, executing 580f7d76ac3e2a98
-@pem/ui:check-types: cache miss, executing 713d3a20219ee881
-@pem/services:check-types: cache miss, executing 9a9dc38f1a28593a
-@pem/auth:check-types: cache miss, executing 0bedea63633936fd
-@pem/api:check-types: cache miss, executing 2f724abebd8d6c04
-@pem/catalog:check-types: cache miss, executing d2dd5c029971434d
-docs:check-types: cache miss, executing b7eabfa8bf5d3598
+@pem/constants:check-types: cache hit, replaying logs d17109e555bd039a
+@pem/brand:check-types: cache hit, replaying logs c3dc24dac72579c6
+@pem/env:check-types: cache hit, replaying logs bda15ec56fb9a482
+@pem/observability:check-types: cache hit, replaying logs 98d7bed8654c8c4b
+@pem/validators:check-types: cache hit, replaying logs b6fe24ce6e56d00e
+@pem/db:check-types: cache miss, executing 15f841435b4da444
+@pem/ui:check-types: cache hit, replaying logs 5afb7b7e7f72d95b
+@pem/ai:check-types: cache hit, replaying logs 00028a79bd973e5f
+@pem/email:check-types: cache hit, replaying logs 27e35d253972ecfd
+docs:check-types: cache hit, replaying logs ef1d74ae57611a82
 docs:check-types: Generating route types...
 docs:check-types: ✓ Types generated successfully
-web:check-types: cache miss, executing 41391b2d1b211783
-web:check-types: 
-web:check-types: > Unexpected error while generating route types. Original error:
-web:check-types: 
-web:check-types: TypeError: (0 , _nextjs.withSentryConfig) is not a function
-web:check-types:     at Object.<anonymous> (next.config.compiled.js:59:47)
+@pem/catalog:check-types: cache hit, replaying logs 57a8495eba2531f3
+@pem/auth:check-types: cache miss, executing a61c44f06d7a730c
+@pem/services:check-types: cache miss, executing cb24be4dcc0a1af0
+@pem/api:check-types: cache miss, executing bdd8fa7fc2229039
+web:check-types: cache miss, executing e632ada17cd74eae
+web:check-types: Generating route types...
+web:check-types: ✓ Types generated successfully
 
- Tasks:    13 successful, 15 total
-Cached:    0 cached, 15 total
-  Time:    7.962s 
-Failed:    web#check-types
+ Tasks:    15 successful, 15 total
+Cached:    10 cached, 15 total
+  Time:    10.929s 
 
-web#check-types:  ERROR  command (./apps/web) /private/var/folders/q7/r3bzpkmj5zn1nhwcb4j4fhkh0000gn/T/xfs-5edd572c/yarn run check-types exited (1)
- ERROR  run failed: command  exited (1)

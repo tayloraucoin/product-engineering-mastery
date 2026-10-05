@@ -1,0 +1,31 @@
+command: yarn lint
+exit: 0
+at: 2026-10-05T03:30:05Z
+head: 02f5fb784a3e320034fce2b06d02020f4e5eae50
+---
+
+   • turbo 2.11.6
+   • Packages in scope: @pem/ai, @pem/api, @pem/auth, @pem/brand, @pem/catalog, @pem/config, @pem/constants, @pem/db, @pem/email, @pem/env, @pem/observability, @pem/services, @pem/ui, @pem/validators, docs, web
+   • Running lint in 16 packages
+   • Remote caching disabled
+
+@pem/validators:lint: cache hit, replaying logs ba74a3a1f55cad48
+@pem/env:lint: cache hit, replaying logs b2c61f273dab9d39
+@pem/brand:lint: cache hit, replaying logs a2a1a027d5378531
+@pem/observability:lint: cache hit, replaying logs fa0dfa00588e1e33
+@pem/ui:lint: cache hit, replaying logs 4ba14582868a608b
+@pem/db:lint: cache hit, replaying logs 479829af539ec179
+@pem/email:lint: cache hit, replaying logs 798ed872177d39a9
+@pem/ai:lint: cache hit, replaying logs c8d4d9d36419f3c7
+docs:lint: cache miss, executing e69553859bb08958
+@pem/auth:lint: cache hit, replaying logs b505a97035251c9b
+@pem/services:lint: cache hit, replaying logs 361440e8b745c5c6
+@pem/catalog:lint: cache miss, executing be9d8a5472f0c1aa
+@pem/constants:lint: cache hit, replaying logs c034f28f4df24423
+@pem/api:lint: cache hit, replaying logs 2ffa4e9ce8e09518
+web:lint: cache hit, replaying logs eaff6723acf61ba0
+
+ Tasks:    15 successful, 15 total
+Cached:    13 cached, 15 total
+  Time:    1.98s 
+

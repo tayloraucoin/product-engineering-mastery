@@ -1,7 +1,7 @@
 command: yarn contrast-audit
 exit: 0
-at: 2026-10-05T03:10:38Z
-head: 3ceeb8e719b4c24e28ddd406d2d8da2ab20aea02
+at: 2026-10-05T03:39:17Z
+head: 3595c47668be15b12997c568c5f1d0848307897a
 ---
 PASS  light --foreground on --background (body text): 19.79:1, needs 4.5:1
 PASS  light --foreground on --muted (text on a muted panel): 18.15:1, needs 4.5:1
