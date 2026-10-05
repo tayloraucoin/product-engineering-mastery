@@ -1,7 +1,7 @@
 command: yarn lint
 exit: 0
-at: 2026-10-05T03:10:24Z
-head: 3ceeb8e719b4c24e28ddd406d2d8da2ab20aea02
+at: 2026-10-05T04:18:25Z
+head: 5dc10f2c2b601501d546f4b426590386d9b0f6a6
 ---
 
    • turbo 2.11.6
@@ -9,23 +9,23 @@ head: 3ceeb8e719b4c24e28ddd406d2d8da2ab20aea02
    • Running lint in 16 packages
    • Remote caching disabled
 
-@pem/observability:lint: cache hit, replaying logs fa0dfa00588e1e33
-@pem/constants:lint: cache hit, replaying logs c034f28f4df24423
-@pem/brand:lint: cache hit, replaying logs a2a1a027d5378531
-@pem/validators:lint: cache hit, replaying logs ba74a3a1f55cad48
-@pem/env:lint: cache hit, replaying logs b2c61f273dab9d39
-@pem/db:lint: cache miss, executing c7e1f63476ef3877
-@pem/ui:lint: cache hit, replaying logs 33d007807d7b989f
-@pem/ai:lint: cache hit, replaying logs c8d4d9d36419f3c7
-@pem/email:lint: cache hit, replaying logs 798ed872177d39a9
-docs:lint: cache hit, replaying logs 820830c131d6a545
-@pem/catalog:lint: cache hit, replaying logs 6e16bfbc493be1af
-@pem/services:lint: cache miss, executing a027fa0f764ffef2
-@pem/auth:lint: cache miss, executing 7e18fc6743badb12
-@pem/api:lint: cache miss, executing 66a7ec2c07f5f565
-web:lint: cache miss, executing 56c5b7ffbd91f72e
+@pem/constants:lint: cache miss, executing 144e7d275300f332
+@pem/env:lint: cache miss, executing f21f16e7313f65f2
+@pem/observability:lint: cache miss, executing 72b82532d0ed72bc
+@pem/validators:lint: cache miss, executing b8609b6a530eda3c
+@pem/brand:lint: cache miss, executing c22b2055218c3698
+@pem/ui:lint: cache miss, executing 719f6bceb12302a8
+@pem/email:lint: cache miss, executing 631127b4b71cd530
+@pem/db:lint: cache miss, executing dd12100c5d8fc4f2
+@pem/ai:lint: cache miss, executing 011eb3115f900dc8
+@pem/auth:lint: cache miss, executing 141f8e9856bccd62
+@pem/services:lint: cache miss, executing 7144032f3c0336a6
+@pem/catalog:lint: cache miss, executing 312905f989ba4c37
+docs:lint: cache miss, executing 90c9b7e2a1f95c77
+@pem/api:lint: cache miss, executing a5bfab68031f06bd
+web:lint: cache miss, executing e1eafaa4168b6bc6
 
  Tasks:    15 successful, 15 total
-Cached:    10 cached, 15 total
-  Time:    5.888s 
+Cached:    0 cached, 15 total
+  Time:    7.204s 
 

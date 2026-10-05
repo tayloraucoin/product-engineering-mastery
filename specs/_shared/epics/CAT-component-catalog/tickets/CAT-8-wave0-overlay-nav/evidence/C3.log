@@ -1,7 +1,7 @@
 command: yarn lint
 exit: 0
-at: 2026-10-05T03:09:34Z
-head: 24318b426a1fd77f1a5c498e873db157e4277bf1
+at: 2026-10-05T04:19:13Z
+head: 148dc2b54ea0bb470ab9310b97e0db79a13d3a67
 ---
 
    • turbo 2.11.6
@@ -9,23 +9,23 @@ head: 24318b426a1fd77f1a5c498e873db157e4277bf1
    • Running lint in 16 packages
    • Remote caching disabled
 
-@pem/env:lint: cache miss, executing b2c61f273dab9d39
-@pem/constants:lint: cache miss, executing c034f28f4df24423
-@pem/observability:lint: cache miss, executing fa0dfa00588e1e33
-@pem/brand:lint: cache miss, executing a2a1a027d5378531
-@pem/validators:lint: cache miss, executing ba74a3a1f55cad48
-@pem/ui:lint: cache miss, executing 33d007807d7b989f
-@pem/db:lint: cache miss, executing bae260a6393b6075
-@pem/email:lint: cache miss, executing 798ed872177d39a9
-@pem/ai:lint: cache miss, executing c8d4d9d36419f3c7
-@pem/services:lint: cache miss, executing 79b943aee0ea68f2
-@pem/auth:lint: cache miss, executing 5436f101f8660cd0
-@pem/catalog:lint: cache miss, executing 6e16bfbc493be1af
-docs:lint: cache miss, executing 820830c131d6a545
-@pem/api:lint: cache miss, executing 39e70fd1ff7afa57
-web:lint: cache miss, executing 0725337f01abf65a
+@pem/validators:lint: cache hit, replaying logs b8609b6a530eda3c
+@pem/brand:lint: cache hit, replaying logs c22b2055218c3698
+@pem/env:lint: cache hit, replaying logs f21f16e7313f65f2
+@pem/constants:lint: cache hit, replaying logs 144e7d275300f332
+@pem/observability:lint: cache hit, replaying logs 72b82532d0ed72bc
+@pem/ui:lint: cache hit, replaying logs 719f6bceb12302a8
+@pem/db:lint: cache hit, replaying logs dd12100c5d8fc4f2
+@pem/ai:lint: cache hit, replaying logs 011eb3115f900dc8
+@pem/email:lint: cache hit, replaying logs 631127b4b71cd530
+docs:lint: cache hit, replaying logs 90c9b7e2a1f95c77
+@pem/auth:lint: cache hit, replaying logs 141f8e9856bccd62
+@pem/catalog:lint: cache hit, replaying logs 312905f989ba4c37
+@pem/services:lint: cache hit, replaying logs 7144032f3c0336a6
+@pem/api:lint: cache hit, replaying logs a5bfab68031f06bd
+web:lint: cache hit, replaying logs e1eafaa4168b6bc6
 
  Tasks:    15 successful, 15 total
-Cached:    0 cached, 15 total
-  Time:    7.785s 
+Cached:    15 cached, 15 total
+  Time:    236ms >>> FULL TURBO
 

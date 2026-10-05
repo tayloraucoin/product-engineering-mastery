@@ -1,7 +1,7 @@
 command: yarn check-types
 exit: 0
-at: 2026-10-05T03:49:54Z
-head: 5cd5e9f32fab9f9f0afd1bd77a6ba5249e631e90
+at: 2026-10-05T04:23:06Z
+head: f47897ca3cec2a6fe3667a417d0061ae1a26206c
 ---
 
    • turbo 2.11.6
@@ -9,27 +9,27 @@ head: 5cd5e9f32fab9f9f0afd1bd77a6ba5249e631e90
    • Running check-types in 16 packages
    • Remote caching disabled
 
-@pem/validators:check-types: cache miss, executing 74c756f82ec2f0d3
-@pem/brand:check-types: cache miss, executing 606b68509f5a6316
-@pem/env:check-types: cache miss, executing 4e2f6ec96a2bb6c2
-@pem/observability:check-types: cache miss, executing 5e1a1839d3dfe809
-@pem/constants:check-types: cache miss, executing 22bf96aa7b79e4a1
-@pem/ui:check-types: cache miss, executing b96ac2b18d1eed45
-@pem/db:check-types: cache miss, executing 6cc5847de513172b
-@pem/email:check-types: cache miss, executing 3ff8fee0da889589
-@pem/ai:check-types: cache miss, executing 9e6cfde0617a8cac
-@pem/services:check-types: cache miss, executing da61e2321e1af313
-@pem/auth:check-types: cache miss, executing 824079890a70e5d5
-@pem/api:check-types: cache miss, executing 8bdc5c3c29f03478
-docs:check-types: cache miss, executing 38b9f4dc01eaee24
-@pem/catalog:check-types: cache miss, executing 9469fea4edf4cb3b
-web:check-types: cache miss, executing 534339022f0d6ddc
+@pem/env:check-types: cache hit, replaying logs 2b911f57924be938
+@pem/observability:check-types: cache hit, replaying logs dd8230170adf4986
+@pem/validators:check-types: cache hit, replaying logs 2cf7742efc9f5dbd
+@pem/brand:check-types: cache hit, replaying logs e7a85f6ae4cf055d
+@pem/constants:check-types: cache hit, replaying logs 945ad834d726bdab
+@pem/db:check-types: cache hit, replaying logs 82616a68076d6b55
+@pem/email:check-types: cache hit, replaying logs 53755a49cf2fe8fc
+@pem/ai:check-types: cache hit, replaying logs e8fd95224f7b99a9
+@pem/ui:check-types: cache hit, replaying logs 6333191ef055cd39
+@pem/services:check-types: cache hit, replaying logs d27a84fd0577d23c
+@pem/auth:check-types: cache hit, replaying logs cfc35a63da79db1a
+@pem/api:check-types: cache hit, replaying logs dcfa16a3f5a196b7
+docs:check-types: cache hit, replaying logs 404bfc7066f6821e
+@pem/catalog:check-types: cache hit, replaying logs 4fdacbcf3377e586
 docs:check-types: Generating route types...
 docs:check-types: ✓ Types generated successfully
+web:check-types: cache hit, replaying logs 87c5ea9f86be4f23
 web:check-types: Generating route types...
 web:check-types: ✓ Types generated successfully
 
  Tasks:    15 successful, 15 total
-Cached:    0 cached, 15 total
-  Time:    12.227s 
+Cached:    15 cached, 15 total
+  Time:    236ms >>> FULL TURBO
 

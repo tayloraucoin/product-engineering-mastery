@@ -1,19 +1,19 @@
 command: yarn contrast-audit
 exit: 0
-at: 2026-10-05T03:30:18Z
-head: 02f5fb784a3e320034fce2b06d02020f4e5eae50
+at: 2026-10-05T04:19:48Z
+head: 66155eb771cc061d539b59c8e57266aabc776637
 ---
 PASS  light --foreground on --background (body text): 19.79:1, needs 4.5:1
 PASS  light --foreground on --muted (text on a muted panel): 18.15:1, needs 4.5:1
-PASS  light --muted-foreground on --background (muted text): 4.96:1, needs 4.5:1
-PASS  light --muted-foreground on --muted (muted text on a muted panel): 4.54:1, needs 4.5:1
-PASS  light --muted-foreground on --accent (muted text on a hovered row): 4.54:1, needs 4.5:1
+PASS  light --muted-foreground on --background (muted text): 6.26:1, needs 4.5:1
+PASS  light --muted-foreground on --muted (muted text on a muted panel): 5.74:1, needs 4.5:1
+PASS  light --muted-foreground on --accent (muted text on a hovered row): 5.74:1, needs 4.5:1
 PASS  light --primary-foreground on --primary (primary button label): 17.16:1, needs 4.5:1
 PASS  light --accent-foreground on --accent (selected or hovered label): 16.42:1, needs 4.5:1
 PASS  light --card-foreground on --card (text on a card): 19.79:1, needs 4.5:1
-PASS  light --muted-foreground on --card (a card's description): 4.96:1, needs 4.5:1
+PASS  light --muted-foreground on --card (a card's description): 6.26:1, needs 4.5:1
 PASS  light --popover-foreground on --popover (a menu or popover item): 19.79:1, needs 4.5:1
-PASS  light --muted-foreground on --popover (a menu shortcut or hint): 4.96:1, needs 4.5:1
+PASS  light --muted-foreground on --popover (a menu shortcut or hint): 6.26:1, needs 4.5:1
 PASS  light --secondary-foreground on --secondary (secondary button label): 16.42:1, needs 4.5:1
 PASS  light --destructive on --background (destructive text and error messages): 8.37:1, needs 4.5:1
 PASS  light --destructive on --popover (a destructive menu item): 8.37:1, needs 4.5:1
@@ -27,19 +27,21 @@ PASS  light --ring on --input (a focused control's boundary against its resting 
 PASS  light --primary on --background (a pressed toggle's fill): 17.91:1, needs 3:1
 PASS  light --foreground on --hover (text on a hovered surface): 15.72:1, needs 4.5:1
 PASS  light --selected-foreground on --selected (a selected item's label): 15.72:1, needs 4.5:1
+PASS  light --muted-foreground on --hover (muted text on a hovered row): 4.97:1, needs 4.5:1
+PASS  light --muted-foreground on --selected (muted text on a selected row): 4.97:1, needs 4.5:1
 PASS  light --ring on --background (focus ring): 10.39:1, needs 3:1
 PASS  light --ring on --muted (focus ring on a muted panel): 9.53:1, needs 3:1
 PASS  dark --foreground on --background (body text): 18.96:1, needs 4.5:1
 PASS  dark --foreground on --muted (text on a muted panel): 14.48:1, needs 4.5:1
-PASS  dark --muted-foreground on --background (muted text): 6.00:1, needs 4.5:1
-PASS  dark --muted-foreground on --muted (muted text on a muted panel): 4.58:1, needs 4.5:1
-PASS  dark --muted-foreground on --accent (muted text on a hovered row): 4.58:1, needs 4.5:1
+PASS  dark --muted-foreground on --background (muted text): 9.22:1, needs 4.5:1
+PASS  dark --muted-foreground on --muted (muted text on a muted panel): 7.04:1, needs 4.5:1
+PASS  dark --muted-foreground on --accent (muted text on a hovered row): 7.04:1, needs 4.5:1
 PASS  dark --primary-foreground on --primary (primary button label): 14.22:1, needs 4.5:1
 PASS  dark --accent-foreground on --accent (selected or hovered label): 14.48:1, needs 4.5:1
 PASS  dark --card-foreground on --card (text on a card): 17.16:1, needs 4.5:1
-PASS  dark --muted-foreground on --card (a card's description): 5.43:1, needs 4.5:1
+PASS  dark --muted-foreground on --card (a card's description): 8.34:1, needs 4.5:1
 PASS  dark --popover-foreground on --popover (a menu or popover item): 17.16:1, needs 4.5:1
-PASS  dark --muted-foreground on --popover (a menu shortcut or hint): 5.43:1, needs 4.5:1
+PASS  dark --muted-foreground on --popover (a menu shortcut or hint): 8.34:1, needs 4.5:1
 PASS  dark --secondary-foreground on --secondary (secondary button label): 14.48:1, needs 4.5:1
 PASS  dark --destructive on --background (destructive text and error messages): 10.30:1, needs 4.5:1
 PASS  dark --destructive on --popover (a destructive menu item): 9.33:1, needs 4.5:1
@@ -51,10 +53,12 @@ PASS  dark --destructive on --destructive/30 (destructive button label, hovered)
 PASS  dark --input on --background (a control's boundary): 3.99:1, needs 3:1
 PASS  dark --ring on --input (a focused control's boundary against its resting one): 3.34:1, needs 3:1
 PASS  dark --primary on --background (a pressed toggle's fill): 15.72:1, needs 3:1
-PASS  dark --muted-foreground on --muted/50 (a placeholder in a dark field): 5.38:1, needs 4.5:1
+PASS  dark --muted-foreground on --muted/50 (a placeholder in a dark field): 8.26:1, needs 4.5:1
 PASS  dark --foreground on --hover (text on a hovered surface): 9.95:1, needs 4.5:1
 PASS  dark --selected-foreground on --selected (a selected item's label): 9.95:1, needs 4.5:1
+PASS  dark --muted-foreground on --hover (muted text on a hovered row): 4.84:1, needs 4.5:1
+PASS  dark --muted-foreground on --selected (muted text on a selected row): 4.84:1, needs 4.5:1
 PASS  dark --ring on --background (focus ring): 13.36:1, needs 3:1
 PASS  dark --ring on --muted (focus ring on a muted panel): 10.20:1, needs 3:1
 
-contrast-audit: all 53 pairs pass WCAG 2.2 AA.
+contrast-audit: all 57 pairs pass WCAG 2.2 AA.

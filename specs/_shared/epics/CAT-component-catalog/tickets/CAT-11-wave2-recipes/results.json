@@ -8,10 +8,10 @@
       "run": {
         "command": "yarn check-catalog --ticket CAT-11",
         "exit": 0,
-        "at": "2026-10-05T03:48:48Z",
-        "head": "5cd5e9f32fab9f9f0afd1bd77a6ba5249e631e90",
+        "at": "2026-10-05T04:22:44Z",
+        "head": "f47897ca3cec2a6fe3667a417d0061ae1a26206c",
         "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-11-wave2-recipes/evidence/C1.log",
-        "evidence_sha256": "da24ec458fe8ac3f88baae95c1b277986d89017d550afa14e424f906a0cda639"
+        "evidence_sha256": "fe9fbebacbc9c80f42061565fa07ba29c8afb479be743360cc3dd32859fd56d7"
       }
     },
     "C2": {
@@ -20,11 +20,11 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-05T03:48:55Z",
-        "head": "5cd5e9f32fab9f9f0afd1bd77a6ba5249e631e90",
+        "at": "2026-10-05T04:22:49Z",
+        "head": "f47897ca3cec2a6fe3667a417d0061ae1a26206c",
         "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-11-wave2-recipes/evidence/C2.log",
-        "evidence_sha256": "3d0a85e6811fc01b8fa53f5982313a8461519b2af0a311f58569a2bb070fad96",
-        "tests": 194
+        "evidence_sha256": "99f512ab126abdc8fb87ee362158bf7e778e7c2a90b2a7adc6cbd0559aff8068",
+        "tests": 204
       }
     },
     "C3": {
@@ -33,10 +33,10 @@
       "run": {
         "command": "yarn lint",
         "exit": 0,
-        "at": "2026-10-05T03:49:21Z",
-        "head": "5cd5e9f32fab9f9f0afd1bd77a6ba5249e631e90",
+        "at": "2026-10-05T04:22:53Z",
+        "head": "f47897ca3cec2a6fe3667a417d0061ae1a26206c",
         "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-11-wave2-recipes/evidence/C3.log",
-        "evidence_sha256": "4f1582e4438e4de86cdc53e010f4f5086877bfc7a8534b874a4dfe8dd4aa387f"
+        "evidence_sha256": "af189382aac6325edef3e7f510f683deb270f3812630ef8438142dca29daf3c4"
       }
     },
     "C4": {
@@ -45,10 +45,10 @@
       "run": {
         "command": "yarn check-ui-layout",
         "exit": 0,
-        "at": "2026-10-05T03:49:37Z",
-        "head": "5cd5e9f32fab9f9f0afd1bd77a6ba5249e631e90",
+        "at": "2026-10-05T04:22:58Z",
+        "head": "f47897ca3cec2a6fe3667a417d0061ae1a26206c",
         "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-11-wave2-recipes/evidence/C4.log",
-        "evidence_sha256": "b90b80d39d1ca00c9dd4dd88badcd5e0024df2d3af1858cfea97de3a1c4a0e9e"
+        "evidence_sha256": "4585c7a9853a8618f78e905694946a0dff3990a88348d797b7649de77147a957"
       }
     },
     "C5": {
@@ -57,10 +57,10 @@
       "run": {
         "command": "yarn contrast-audit",
         "exit": 0,
-        "at": "2026-10-05T03:49:46Z",
-        "head": "5cd5e9f32fab9f9f0afd1bd77a6ba5249e631e90",
+        "at": "2026-10-05T04:23:02Z",
+        "head": "f47897ca3cec2a6fe3667a417d0061ae1a26206c",
         "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-11-wave2-recipes/evidence/C5.log",
-        "evidence_sha256": "af4011cf4554b055594ad041408642b1c2a90c8191785afee8561173313ad0c6"
+        "evidence_sha256": "ea31b0f13a4add215238065ed690ca02793d9c7e35a9360e612baf141986facf"
       }
     },
     "C6": {
@@ -69,10 +69,10 @@
       "run": {
         "command": "yarn check-types",
         "exit": 0,
-        "at": "2026-10-05T03:49:54Z",
-        "head": "5cd5e9f32fab9f9f0afd1bd77a6ba5249e631e90",
+        "at": "2026-10-05T04:23:06Z",
+        "head": "f47897ca3cec2a6fe3667a417d0061ae1a26206c",
         "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-11-wave2-recipes/evidence/C6.log",
-        "evidence_sha256": "6308d291c80f9846e180c364e4c8584f0c84484db82b20700339966c674186fb"
+        "evidence_sha256": "04cb5d93703ca2f06664b7c3a1aa14dbfffbd9545582e3edd46ae7e9438519f4"
       }
     },
     "C7": {
@@ -81,12 +81,12 @@
       "run": {
         "command": "yarn check-stack",
         "exit": 0,
-        "at": "2026-10-05T03:50:13Z",
-        "head": "5cd5e9f32fab9f9f0afd1bd77a6ba5249e631e90",
+        "at": "2026-10-05T04:23:11Z",
+        "head": "f47897ca3cec2a6fe3667a417d0061ae1a26206c",
         "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-11-wave2-recipes/evidence/C7.log",
-        "evidence_sha256": "fd7f0798ce948f94ff1a011ecfbade56968c92061ee38e8ae18f86f58522dc92"
+        "evidence_sha256": "bfdcfc7ddab384ff4503526e9601fa2417c1b28bc4a2fb7ef3bf2db34a0968c6"
       }
     }
   },
-  "updated_at": "2026-10-05T03:50:14Z"
+  "updated_at": "2026-10-05T04:23:11Z"
 }
