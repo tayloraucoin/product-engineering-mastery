@@ -81,7 +81,7 @@ test("C2: every Vega colour role is a Tailwind colour, set in light and in dark"
     assert.ok(theme.has(`--color-${role}`), `--color-${role} is not bridged`);
     assert.ok(light.has(`--${role}`), `--${role} is not set under :root`);
   }
-  for (const role of VEGA_ROLES)
+  for (const role of [...VEGA_ROLES, ...CHARTS])
     assert.ok(dark.has(`--${role}`), `--${role} is not set under .dark`);
 });
 
@@ -89,7 +89,7 @@ test("C2: the radius steps and the four elevation levels are tokens", () => {
   const theme = declared("@theme inline");
   for (const step of ["sm", "md", "lg", "xl", "2xl", "3xl", "4xl"])
     assert.ok(theme.has(`--radius-${step}`), `--radius-${step} missing`);
-  for (const level of ["control", "raised", "overlay", "floating"])
+  for (const level of ["resting", "raised", "overlay", "modal"])
     assert.ok(theme.has(`--shadow-${level}`), `--shadow-${level} missing`);
 });
 

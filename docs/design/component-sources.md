@@ -13,7 +13,7 @@ load_when: on request
 
 # Component sources
 
-Lifted from Quartermaster's component-sourcing ledger ([`react-ui-libraries.md`](../research/design-tools/react-ui-libraries.md), read 2026-10-03; the evidence and dates for every verdict are there), with Taylor's approval of 2026-10-04 (CAT epic, `specs/_shared/epics/CAT-component-catalog/technical.md`). Ledger lines CS-01 to CS-10. The two shelves are record [0011](../decisions/records/0011-component-kit-and-catalog.md).
+Lifted from Quartermaster's component-sourcing ledger ([`react-ui-libraries.md`](../research/design-tools/react-ui-libraries.md), read 2026-10-03; the evidence and dates for every verdict are there), with Taylor's approval of 2026-10-04 (CAT epic, `specs/_shared/epics/CAT-component-catalog/technical.md`). Ledger lines CS-01 to CS-13. The two shelves are record [0011](../decisions/records/0011-component-kit-and-catalog.md).
 
 ## The ruling
 
@@ -58,10 +58,10 @@ shadcn's Vega classes enter on house tokens. The token lint judges only the util
 
 | Vega writes                                    | The kit writes                                                                                                      |
 | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `shadow-xs`                                    | `shadow-control` (inputs, buttons, toggles, cards)                                                                  |
+| `shadow-xs`                                    | `shadow-resting` (inputs, buttons, toggles, cards)                                                                  |
 | `shadow-sm`                                    | `shadow-raised` (slider thumb, active tab)                                                                          |
 | `shadow-md`, `shadow-xl`                       | `shadow-overlay` (popovers, menus, select, hover card, chart tooltip)                                               |
-| `shadow-lg`                                    | `shadow-floating` (sheets, toasts, submenus)                                                                        |
+| `shadow-lg`                                    | `shadow-modal` (sheets, toasts, submenus)                                                                           |
 | `duration-100`, `duration-150`                 | `duration-(--motion-duration-fast)`                                                                                 |
 | `duration-200`                                 | `duration-(--motion-duration-base)`                                                                                 |
 | `duration-250`, `duration-300`, `duration-400` | `duration-(--motion-duration-moderate)`                                                                             |
@@ -158,3 +158,4 @@ The scout's first cut for a new product. The product's `components.md` keeps wha
 ## Changelog
 
 - 2026-10-04: v0.1, from the P-M research and Taylor's approval (CAT-1).
+- 2026-10-04: v0.2, the copy-in mapping (CS-11 to CS-13, CAT-2) and the import steps (CAT-4); elevation renamed to the canon's closed scale, resting, raised, overlay, modal (C-P06), after the CAT batch review.

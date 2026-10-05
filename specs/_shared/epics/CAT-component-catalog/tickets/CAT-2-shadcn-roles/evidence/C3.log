@@ -1,0 +1,26 @@
+command: yarn lint
+exit: 0
+at: 2026-10-04T23:18:27Z
+head: 02c09c89390bc71b5c92d03d66e13f01f6b0b6ee
+---
+
+   • turbo 2.11.6
+   • Packages in scope: @pem/auth, @pem/brand, @pem/config, @pem/constants, @pem/db, @pem/email, @pem/env, @pem/observability, @pem/ui, docs, web
+   • Running lint in 11 packages
+   • Remote caching disabled
+
+@pem/brand:lint: cache hit, replaying logs dbb08fa79efe9df2
+@pem/observability:lint: cache hit, replaying logs 0fce317b59142a99
+@pem/env:lint: cache hit, replaying logs 226a992d5036b95f
+@pem/constants:lint: cache hit, replaying logs 6ac2ce845daf8be7
+@pem/db:lint: cache hit, replaying logs aad85e258e959856
+@pem/email:lint: cache hit, replaying logs 9238de1ce343d970
+@pem/ui:lint: cache hit, replaying logs b9daa7875ce04efd
+@pem/auth:lint: cache hit, replaying logs 7dd8cb66841bbc7b
+docs:lint: cache hit, replaying logs 7ba4ce3d26612f9d
+web:lint: cache miss, executing 79b52be1183bacce
+
+ Tasks:    10 successful, 10 total
+Cached:    9 cached, 10 total
+  Time:    2.125s 
+

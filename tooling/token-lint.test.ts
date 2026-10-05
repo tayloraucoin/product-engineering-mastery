@@ -37,6 +37,16 @@ const FAILING: [classes: string, message: RegExp][] = [
   ["shadow-xs", /Default shadow scale/],
   ["data-open:duration-200", /Raw duration/],
   ["ease-in", /ease-in is banned/],
+  // Batch review B1, S1: _-joined literals, other units and case, names.
+  ["shadow-[0_8px_24px_var(--x)]", /raw length, time or curve/],
+  ["p-[13px_20px]", /raw length, time or curve/],
+  ["grid-cols-[240px_1fr]", /raw length, time or curve/],
+  ["[box-shadow:0_8px_24px_var(--x)]", /raw length, time or curve/],
+  ["text-[12pt]", /raw length, time or curve/],
+  ["p-[13PX]", /raw length, time or curve/],
+  ["bg-[red]", /Raw colour name/],
+  ["text-[black]", /Raw colour name/],
+  ["font-['Inter']", /Raw font family/],
 ];
 
 const PASSING = [
@@ -44,8 +54,8 @@ const PASSING = [
   "active:not-aria-[haspopup]:translate-y-px aria-invalid:ring-destructive/20",
   "grid-rows-[auto_1fr] transition-[color,box-shadow] max-w-[80%] min-w-[14ch]",
   "w-[calc(var(--sidebar-width-icon)+(--spacing(4)))] translate-x-[calc(100%-2px)]",
-  "[--stack-step:0.05] h-[calc(100%-1px)] border-[1px]",
-  "shadow-control shadow-raised shadow-overlay shadow-floating shadow-none",
+  "[--stack-step:0.05] h-[calc(100%-1px)] border-[1px] bg-[transparent] font-[var(--font-display)]",
+  "shadow-resting shadow-raised shadow-overlay shadow-modal shadow-none",
   "duration-(--motion-duration-base) ease-(--motion-ease-out) ease-in-out",
   "rounded-xl rounded-4xl ring-3 bg-destructive/10 text-sidebar-accent-foreground",
 ];

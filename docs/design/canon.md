@@ -92,7 +92,7 @@ This is the universal floor of design law. A product's `DESIGN.md`, `tokens.md`,
 - **Example.** The destructive dialog sits at `modal` with the large-tier radius; the table surface is `resting`. The font token reads "system stack — native rendering, no load cost".
 - **Counter-example.** `bg-[#3b82f6]`; `shadow-2xl` on a static card "to make it pop"; four radii on one card; a chroma-zero gray ramp nobody chose.
 - **Target:** tokens.
-- **Enforced by:** lint bans raw color, arbitrary values, and any font-family, shadow or duration outside tokens; C-R08.
+- **Enforced by:** lint bans raw color, arbitrary values holding a raw length, time, curve, colour or font (CS-13), and any font-family, shadow or duration outside tokens; C-R08.
 - **Sources:** R08 R6, R9, R10, R12; R06b #7, #8; R04 (Cream alternative); R07b values.md; CF-36, CF-37.
 
 ### C-P07 — States are obvious

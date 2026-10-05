@@ -3,25 +3,55 @@
   "criteria_sha256": "9a7a52f3ef62a4a06c9b2c72f1bddd850dd1140b9795364380481c0d2d6cae68",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn contrast-audit",
+        "exit": 0,
+        "at": "2026-10-04T23:17:51Z",
+        "head": "02c09c89390bc71b5c92d03d66e13f01f6b0b6ee",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-2-shadcn-roles/evidence/C1.log",
+        "evidence_sha256": "28577febadd51a75adac0c677767f16c54b3c8daaef34b1bef96f38222d63ce5"
+      }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-04T23:17:54Z",
+        "head": "02c09c89390bc71b5c92d03d66e13f01f6b0b6ee",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-2-shadcn-roles/evidence/C2.log",
+        "evidence_sha256": "f61642515c42821ec4b890d0b677d2550fbcfd575c36ffcb96c080b3a680f79e",
+        "tests": 95
+      }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn lint",
+        "exit": 0,
+        "at": "2026-10-04T23:18:27Z",
+        "head": "02c09c89390bc71b5c92d03d66e13f01f6b0b6ee",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-2-shadcn-roles/evidence/C3.log",
+        "evidence_sha256": "9cc4d5ead4830bee18404c0a3eabc1edd5ba76631b8c4b611bd218bfb77e3295"
+      }
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-04T23:18:32Z",
+        "head": "02c09c89390bc71b5c92d03d66e13f01f6b0b6ee",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-2-shadcn-roles/evidence/C4.log",
+        "evidence_sha256": "a98219d749dd27692bc730d858da6fdf60669ebde7f9e1374d8c9f05c67ad483",
+        "tests": 114
+      }
     }
   },
-  "updated_at": "2026-10-04T23:13:31Z"
+  "updated_at": "2026-10-04T23:18:33Z"
 }

@@ -32,10 +32,14 @@ const MESSAGES = {
   palette:
     "Palette utility bypasses the semantic color tokens — use a role token such as bg-primary (canon C-P05, C-P06).",
   hex: "Raw hex color — colors live only in packages/config/tailwind/preset.css (canon C-P06).",
+  colorName:
+    "Raw colour name — colors live only in packages/config/tailwind/preset.css; use a role token such as bg-primary (canon C-P06).",
+  fontFamily:
+    "Raw font family — the typeface comes from the font token, as font-sans (canon C-P06).",
   colorFunction:
     "Raw color function — colors live only in packages/config/tailwind/preset.css (canon C-P06).",
   shadow:
-    "Default shadow scale — elevation is shadow-control, -raised, -overlay or -floating (canon C-P06, rubric C-R07, CS-11).",
+    "Default shadow scale — elevation is shadow-resting, -raised, -overlay or -modal (canon C-P06, rubric C-R07, CS-11).",
   duration:
     "Raw duration — use a motion token, as duration-(--motion-duration-base) (canon C-P11, rubric C-R12, CS-12).",
   easeIn: "ease-in is banned; enter and exit use ease-out (canon C-P11).",
@@ -51,8 +55,26 @@ const COLOR_FUNCTION_RE = /\b(oklch|oklab|lch|lab|rgba?|hsla?|hwb|color)\(/;
 const SHADOW_RE = /^shadow-(2xs|xs|sm|md|lg|xl|2xl|inner)\b/;
 const DURATION_RE = /^(duration|delay)-\d+\b/;
 const EASE_IN_RE = /^ease-in(?!-out)\b/;
-const LITERAL_UNIT_RE = /(?<![\w.-])-?(?:\d*\.)?\d+(?:px|rem|em|ms|s)\b/g;
-const HAIRLINE_RE = /^-?[12]px$/;
+/** A length or time literal, in any case; Tailwind's `_` (a space) is read as a space first. */
+const LITERAL_UNIT_RE =
+  /(?<![\w.-])-?(?:\d*\.)?\d+(?:px|rem|em|ms|s|pt|pc|in|cm|mm|q)(?![\w-])/gi;
+const HAIRLINE_RE = /^-?[12]px$/i;
+/** A colour utility whose arbitrary value is a bare word: a CSS colour name. */
+const COLOR_NAME_RE = new RegExp(
+  String.raw`^-?(${COLOR_UTILITIES})-\[([a-z]+)\]`,
+  "i",
+);
+const COLOR_KEYWORDS = new Set([
+  "transparent",
+  "currentcolor",
+  "inherit",
+  "initial",
+  "unset",
+  "revert",
+  "none",
+]);
+/** A font family in an arbitrary value: anything but a variable or a weight. */
+const FONT_FAMILY_RE = /^font-\[(?!var\(|--|\d+\])/;
 
 /** The utility of one class: what follows the last `:` outside brackets. */
 export function utilityOf(token) {
@@ -71,7 +93,9 @@ export function utilityOf(token) {
 function rawArbitrary(utility) {
   const open = utility.indexOf("[");
   if (open === -1) return false;
-  const inner = utility.slice(open + 1, utility.lastIndexOf("]"));
+  const inner = utility
+    .slice(open + 1, utility.lastIndexOf("]"))
+    .replaceAll("_", " ");
   if (/cubic-bezier\(/.test(inner)) return true;
   return [...inner.matchAll(LITERAL_UNIT_RE)].some(
     (match) => !HAIRLINE_RE.test(match[0]),
@@ -86,6 +110,10 @@ export function classProblems(value) {
   for (const token of value.split(/\s+/).filter(Boolean)) {
     const utility = utilityOf(token);
     if (rawArbitrary(utility)) problems.push("arbitrary");
+    const colorName = COLOR_NAME_RE.exec(utility)?.[2];
+    if (colorName && !COLOR_KEYWORDS.has(colorName.toLowerCase()))
+      problems.push("colorName");
+    if (FONT_FAMILY_RE.test(utility)) problems.push("fontFamily");
     if (PALETTE_RE.test(utility)) problems.push("palette");
     if (SHADOW_RE.test(utility)) problems.push("shadow");
     if (DURATION_RE.test(utility)) problems.push("duration");

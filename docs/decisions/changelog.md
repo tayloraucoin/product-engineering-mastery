@@ -15,6 +15,10 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-04 — CAT: the batch review of CAT-2 to CAT-4
+
+A `vigil` review (`specs/_shared/epics/CAT-component-catalog/_batch-review-2026-10-04.md`) found four Blocking items, all fixed: the token lint missed `_`-joined literals (B1); the chart roles were missing under `.dark` (B2); check-catalog passed a conflicting tag or a wrong licence (B3); the destructive Button's label sat at 3.99:1 on its tint (B4), which contrast-audit could not see until it learned to composite a tinted background. The destructive step moved to red-800 in light and red-300 in dark, and all 42 pairs pass. The lint now also rejects other absolute units, any unit case, bare colour names and font families (CS-13 amended). Elevation takes the canon's own closed scale, resting, raised, overlay, modal (CS-11 amended; C-P06 already named it). Canon C-P06's "Enforced by" line now says which arbitrary values the lint bans. Record 0011 gains an amendment block.
+
 ## 2026-10-04 — CAT-2: the tokens shadcn's Vega style needs, and a lint that judges values
 
 Measured on the 62 resolved base-vega components: copied raw, 49 would fail the token lint, 641 times on variant selectors such as `data-[size=sm]:` that are not values, and the preset named no elevation and no motion tokens though the canon requires both. Taylor approved the addendum. New in the preset: card, popover, secondary, destructive, input, sidebar and chart roles (neutral placeholders); radius xl to 4xl on the house radius; elevation `shadow-control|raised|overlay|floating` (CS-11); the tk-motion tokens verbatim (CS-12). The token lint (CS-13) judges only the utility after the last variant, and rejects an arbitrary value only when it holds a raw length, time or curve; `shadow-xs` is now banned. The copy-in mapping is in `docs/design/component-sources.md`. P-K may rename or retune these with a brand, never remove them.

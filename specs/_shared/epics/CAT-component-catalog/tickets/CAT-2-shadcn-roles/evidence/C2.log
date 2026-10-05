@@ -1,0 +1,586 @@
+command: yarn test:tooling
+exit: 0
+at: 2026-10-04T23:17:54Z
+head: 02c09c89390bc71b5c92d03d66e13f01f6b0b6ee
+tests: 95
+---
+TAP version 13
+# Subtest: C1: import "@pem/db/client"; in packages/ui/src/zz-probe.ts fails the boundaries lint
+ok 1 - C1: import "@pem/db/client"; in packages/ui/src/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 1032.036083
+  type: 'test'
+  ...
+# Subtest: C1: import "@pem/brand/brand"; in packages/env/src/zz-probe.ts fails the boundaries lint
+ok 2 - C1: import "@pem/brand/brand"; in packages/env/src/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 6.268375
+  type: 'test'
+  ...
+# Subtest: C1: import "../../db/src/client"; in packages/env/src/zz-probe.ts fails the boundaries lint
+ok 3 - C1: import "../../db/src/client"; in packages/env/src/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 10.22325
+  type: 'test'
+  ...
+# Subtest: C1: import "@supabase/ssr"; in packages/db/src/zz-probe.ts fails the boundaries lint
+ok 4 - C1: import "@supabase/ssr"; in packages/db/src/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 5.98775
+  type: 'test'
+  ...
+# Subtest: C1: import "@supabase/supabase-js"; in apps/web/lib/zz-probe.ts fails the boundaries lint
+ok 5 - C1: import "@supabase/supabase-js"; in apps/web/lib/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 3.559583
+  type: 'test'
+  ...
+# Subtest: C1: import "@pem/auth/context"; in packages/db/src/zz-probe.ts fails the boundaries lint
+ok 6 - C1: import "@pem/auth/context"; in packages/db/src/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 3.08425
+  type: 'test'
+  ...
+# Subtest: C1: import "@pem/auth/server"; in packages/email/src/zz-probe.ts fails the boundaries lint
+ok 7 - C1: import "@pem/auth/server"; in packages/email/src/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 8.048166
+  type: 'test'
+  ...
+# Subtest: C2: @pem/env/not-exported, which its package does not export, is a resolve error with no stack
+ok 8 - C2: @pem/env/not-exported, which its package does not export, is a resolve error with no stack
+  ---
+  duration_ms: 1.934667
+  type: 'test'
+  ...
+# Subtest: C2: @pem/db, which its package does not export, is a resolve error with no stack
+ok 9 - C2: @pem/db, which its package does not export, is a resolve error with no stack
+  ---
+  duration_ms: 3.74375
+  type: 'test'
+  ...
+# Subtest: C2: import type { Tier } from "@pem/env/tier"; in packages/db/src/zz-probe.ts still passes
+ok 10 - C2: import type { Tier } from "@pem/env/tier"; in packages/db/src/zz-probe.ts still passes
+  ---
+  duration_ms: 4.081209
+  type: 'test'
+  ...
+# Subtest: C2: import "next-themes"; import "react"; in packages/ui/src/zz-probe.ts still passes
+ok 11 - C2: import "next-themes"; import "react"; in packages/ui/src/zz-probe.ts still passes
+  ---
+  duration_ms: 4.688792
+  type: 'test'
+  ...
+# Subtest: C2: import "@supabase/ssr"; import "@supabase/supabase-js"; import "@pem/db/rls"; import "@pem/observability/logger"; in packages/auth/src/zz-probe.ts still passes
+ok 12 - C2: import "@supabase/ssr"; import "@supabase/supabase-js"; import "@pem/db/rls"; import "@pem/observability/logger"; in packages/auth/src/zz-probe.ts still passes
+  ---
+  duration_ms: 6.548458
+  type: 'test'
+  ...
+# Subtest: C2: import "@pem/auth/server"; in apps/web/lib/zz-probe.ts still passes
+ok 13 - C2: import "@pem/auth/server"; in apps/web/lib/zz-probe.ts still passes
+  ---
+  duration_ms: 1.748459
+  type: 'test'
+  ...
+# Subtest: C2: import "@pem/ui/button"; import "@pem/ui/styles/globals.css"; import "@pem/brand/assets/logo.svg"; import "@/app/layout"; in apps/web/app/zz-probe.ts still passes
+ok 14 - C2: import "@pem/ui/button"; import "@pem/ui/styles/globals.css"; import "@pem/brand/assets/logo.svg"; import "@/app/layout"; in apps/web/app/zz-probe.ts still passes
+  ---
+  duration_ms: 5.813833
+  type: 'test'
+  ...
+# Subtest: C5: a client chunk holding a server-only sentinel fails, naming the variable and the chunk
+ok 15 - C5: a client chunk holding a server-only sentinel fails, naming the variable and the chunk
+  ---
+  duration_ms: 102.601583
+  type: 'test'
+  ...
+# Subtest: C5: no build output fails
+ok 16 - C5: no build output fails
+  ---
+  duration_ms: 283.083292
+  type: 'test'
+  ...
+# Subtest: C5: clean client chunks pass
+ok 17 - C5: clean client chunks pass
+  ---
+  duration_ms: 110.460333
+  type: 'test'
+  ...
+# Subtest: C5: a scan with no sentinel named is refused
+ok 18 - C5: a scan with no sentinel named is refused
+  ---
+  duration_ms: 80.134
+  type: 'test'
+  ...
+# Subtest: the plan plants server-only names from .env.example and turbo.json, and fails on drift, naming it
+ok 19 - the plan plants server-only names from .env.example and turbo.json, and fails on drift, naming it
+  ---
+  duration_ms: 94.925292
+  type: 'test'
+  ...
+# Subtest: a pending entry that now exists is stale
+ok 20 - a pending entry that now exists is stale
+  ---
+  duration_ms: 286.035334
+  type: 'test'
+  ...
+# Subtest: a git-ignored pending entry is machine-local and never stale
+ok 21 - a git-ignored pending entry is machine-local and never stale
+  ---
+  duration_ms: 226.067625
+  type: 'test'
+  ...
+# Subtest: C1: a present module missing a listed file fails, naming the module and the file
+ok 22 - C1: a present module missing a listed file fails, naming the module and the file
+  ---
+  duration_ms: 99.351
+  type: 'test'
+  ...
+# Subtest: C2: a removed module with a leftover file, variable or dependency fails, naming each leftover
+ok 23 - C2: a removed module with a leftover file, variable or dependency fails, naming each leftover
+  ---
+  duration_ms: 483.456375
+  type: 'test'
+  ...
+# Subtest: C2: a clean removal passes, and near-miss names are not leftovers
+ok 24 - C2: a clean removal passes, and near-miss names are not leftovers
+  ---
+  duration_ms: 87.017
+  type: 'test'
+  ...
+# Subtest: C3: a locked module marked removed fails
+ok 25 - C3: a locked module marked removed fails
+  ---
+  duration_ms: 93.710833
+  type: 'test'
+  ...
+# Subtest: C4: an entry missing any of files, env, dependencies, boundaries, locked or runbook fails, naming the field
+ok 26 - C4: an entry missing any of files, env, dependencies, boundaries, locked or runbook fails, naming the field
+  ---
+  duration_ms: 103.409917
+  type: 'test'
+  ...
+# Subtest: C5: a runbook path that does not exist fails, naming the path
+ok 27 - C5: a runbook path that does not exist fails, naming the path
+  ---
+  duration_ms: 106.234042
+  type: 'test'
+  ...
+# Subtest: C1: a conforming tree passes
+ok 28 - C1: a conforming tree passes
+  ---
+  duration_ms: 17.721458
+  type: 'test'
+  ...
+# Subtest: C1: a stray top-level folder fails, naming it
+ok 29 - C1: a stray top-level folder fails, naming it
+  ---
+  duration_ms: 7.679292
+  type: 'test'
+  ...
+# Subtest: C1: an unknown kind fails, naming it
+ok 30 - C1: an unknown kind fails, naming it
+  ---
+  duration_ms: 8.021833
+  type: 'test'
+  ...
+# Subtest: C1: a component folder without <name>.tsx fails, naming it
+ok 31 - C1: a component folder without <name>.tsx fails, naming it
+  ---
+  duration_ms: 14.1735
+  type: 'test'
+  ...
+# Subtest: C1: a component folder without index.ts fails, naming it
+ok 32 - C1: a component folder without index.ts fails, naming it
+  ---
+  duration_ms: 5.298834
+  type: 'test'
+  ...
+# Subtest: C1: a cva() in the component file fails, naming the file
+ok 33 - C1: a cva() in the component file fails, naming the file
+  ---
+  duration_ms: 5.730291
+  type: 'test'
+  ...
+# Subtest: C1: an export whose target is missing fails, naming the export
+ok 34 - C1: an export whose target is missing fails, naming the export
+  ---
+  duration_ms: 4.514
+  type: 'test'
+  ...
+# Subtest: review S1: cva in a second file of the folder fails; a comment naming cva() passes
+ok 35 - review S1: cva in a second file of the folder fails; a comment naming cva() passes
+  ---
+  duration_ms: 9.366167
+  type: 'test'
+  ...
+# Subtest: review S3: a primitive with copy.ts fails
+ok 36 - review S3: a primitive with copy.ts fails
+  ---
+  duration_ms: 10.307625
+  type: 'test'
+  ...
+# Subtest: review S3: a primitive importing a composed component fails
+ok 37 - review S3: a primitive importing a composed component fails
+  ---
+  duration_ms: 8.817209
+  type: 'test'
+  ...
+# Subtest: review N6: conditional exports resolve; a wildcard export fails
+ok 38 - review N6: conditional exports resolve; a wildcard export fails
+  ---
+  duration_ms: 10.535375
+  type: 'test'
+  ...
+# Subtest: review N7: the command exits 1 and names the path
+ok 39 - review N7: the command exits 1 and names the path
+  ---
+  duration_ms: 115.30575
+  type: 'test'
+  ...
+# Subtest: STK-23 C1: a missing kind folder fails, naming it
+ok 40 - STK-23 C1: a missing kind folder fails, naming it
+  ---
+  duration_ms: 8.392166
+  type: 'test'
+  ...
+# Subtest: STK-23 C1: a kind folder without README.md fails, naming it
+ok 41 - STK-23 C1: a kind folder without README.md fails, naming it
+  ---
+  duration_ms: 5.429583
+  type: 'test'
+  ...
+# Subtest: STK-23 C1: an AGENTS.md kinds table that differs from KINDS fails
+ok 42 - STK-23 C1: an AGENTS.md kinds table that differs from KINDS fails
+  ---
+  duration_ms: 8.583
+  type: 'test'
+  ...
+# Subtest: STK-23 review: a primitive may import another primitive, and a story may import anything
+ok 43 - STK-23 review: a primitive may import another primitive, and a story may import anything
+  ---
+  duration_ms: 12.344584
+  type: 'test'
+  ...
+# Subtest: a merged as-built is immutable except applied:
+ok 44 - a merged as-built is immutable except applied:
+  ---
+  duration_ms: 4701.214666
+  type: 'test'
+  ...
+# Subtest: A9 commit-msg: an agent branch needs a work-id; another branch does not
+ok 45 - A9 commit-msg: an agent branch needs a work-id; another branch does not
+  ---
+  duration_ms: 1782.764125
+  type: 'test'
+  ...
+# Subtest: A9 pre-commit: staging a hand-edited results.json is refused
+ok 46 - A9 pre-commit: staging a hand-edited results.json is refused
+  ---
+  duration_ms: 1878.996292
+  type: 'test'
+  ...
+# Subtest: A4 contract:init allocates sequential ids, from the template, then starts with every criterion FAIL
+ok 47 - A4 contract:init allocates sequential ids, from the template, then starts with every criterion FAIL
+  ---
+  duration_ms: 1459.708041
+  type: 'test'
+  ...
+# Subtest: the protected branch refuses a start; the operator picks the work branch
+ok 48 - the protected branch refuses a start; the operator picks the work branch
+  ---
+  duration_ms: 734.53525
+  type: 'test'
+  ...
+# Subtest: parallel tickets: a second item starts on the same branch while the first is open
+ok 49 - parallel tickets: a second item starts on the same branch while the first is open
+  ---
+  duration_ms: 2019.492875
+  type: 'test'
+  ...
+# Subtest: parallel tickets: another ticket's uncommitted file does not block a run, its own does
+ok 50 - parallel tickets: another ticket's uncommitted file does not block a run, its own does
+  ---
+  duration_ms: 2911.119125
+  type: 'test'
+  ...
+# Subtest: parallel tickets: another ticket's commit leaves this ticket's proof fresh
+ok 51 - parallel tickets: another ticket's commit leaves this ticket's proof fresh
+  ---
+  duration_ms: 3311.63675
+  type: 'test'
+  ...
+# Subtest: stacking: a dependent ticket starts on the same branch once its predecessor is built, before any as-built or review
+ok 52 - stacking: a dependent ticket starts on the same branch once its predecessor is built, before any as-built or review
+  ---
+  duration_ms: 3889.922625
+  type: 'test'
+  ...
+# Subtest: a dependency that has not started refuses the start
+ok 53 - a dependency that has not started refuses the start
+  ---
+  duration_ms: 1068.017542
+  type: 'test'
+  ...
+# Subtest: A6: a cited file not approved, or holding a BLOCKING marker, is refused; a plain open marker is listed
+ok 54 - A6: a cited file not approved, or holding a BLOCKING marker, is refused; a plain open marker is listed
+  ---
+  duration_ms: 2700.322542
+  type: 'test'
+  ...
+# Subtest: PR-15 tiers: code is tier 1 with no reviewer; contract:tier 2 adds the review, and a lower tier drops it
+ok 55 - PR-15 tiers: code is tier 1 with no reviewer; contract:tier 2 adds the review, and a lower tier drops it
+  ---
+  duration_ms: 5434.882167
+  type: 'test'
+  ...
+# Subtest: PR-15: check-specs warns on a ticket still closing, and fails it only with --strict
+ok 56 - PR-15: check-specs warns on a ticket still closing, and fails it only with --strict
+  ---
+  duration_ms: 2445.598541
+  type: 'test'
+  ...
+# Subtest: Vigil 9 and 10, tier 2 epic ticket: pre-flight gates the start, review:run follows the as-built, truth:promote follows
+ok 57 - Vigil 9 and 10, tier 2 epic ticket: pre-flight gates the start, review:run follows the as-built, truth:promote follows
+  ---
+  duration_ms: 8641.246625
+  type: 'test'
+  ...
+# Subtest: a fixture reviewer's PASS does not count outside the harness
+ok 58 - a fixture reviewer's PASS does not count outside the harness
+  ---
+  duration_ms: 3965.164041
+  type: 'test'
+  ...
+# Subtest: a pre-flight written by the fixture reviewer does not start a ticket outside the harness
+ok 59 - a pre-flight written by the fixture reviewer does not start a ticket outside the harness
+  ---
+  duration_ms: 1108.334917
+  type: 'test'
+  ...
+# Subtest: contract:run refuses an uncommitted tree, then records run records with HEAD and evidence hashes
+ok 60 - contract:run refuses an uncommitted tree, then records run records with HEAD and evidence hashes
+  ---
+  duration_ms: 3117.140958
+  type: 'test'
+  ...
+# Subtest: contract:run FAILs a test criterion whose runner matched zero tests
+ok 61 - contract:run FAILs a test criterion whose runner matched zero tests
+  ---
+  duration_ms: 1913.951083
+  type: 'test'
+  ...
+# Subtest: Vigil 10, one-off: init, run, as-built, status and check-specs close with nothing left
+ok 62 - Vigil 10, one-off: init, run, as-built, status and check-specs close with nothing left
+  ---
+  duration_ms: 3926.912917
+  type: 'test'
+  ...
+# Subtest: Vigil 3: an open ticket's PASS recorded at X goes stale when a planned path changes at X+1
+ok 63 - Vigil 3: an open ticket's PASS recorded at X goes stale when a planned path changes at X+1
+  ---
+  duration_ms: 3227.619625
+  type: 'test'
+  ...
+# Subtest: PR-16: a closed ticket's proofs are frozen; a later change to its paths does not reopen it
+ok 64 - PR-16: a closed ticket's proofs are frozen; a later change to its paths does not reopen it
+  ---
+  duration_ms: 4019.777542
+  type: 'test'
+  ...
+# Subtest: PR-16: operator_review adds a manual criterion; deferring it lists an operator check and still closes the ticket
+ok 65 - PR-16: operator_review adds a manual criterion; deferring it lists an operator check and still closes the ticket
+  ---
+  duration_ms: 6545.14075
+  type: 'test'
+  ...
+# Subtest: C1: the repo's preset passes every pair in both themes
+ok 66 - C1: the repo's preset passes every pair in both themes
+  ---
+  duration_ms: 91.171792
+  type: 'test'
+  ...
+# Subtest: C1: black on white measures 21:1, the WCAG maximum
+ok 67 - C1: black on white measures 21:1, the WCAG maximum
+  ---
+  duration_ms: 97.969167
+  type: 'test'
+  ...
+# Subtest: C1: a text pair below 4.5:1 fails and is named
+ok 68 - C1: a text pair below 4.5:1 fails and is named
+  ---
+  duration_ms: 89.700333
+  type: 'test'
+  ...
+# Subtest: C1: a focus ring below 3:1 fails in the theme it is set in
+ok 69 - C1: a focus ring below 3:1 fails in the theme it is set in
+  ---
+  duration_ms: 95.594042
+  type: 'test'
+  ...
+# Subtest: C1: see-through text is composited as the browser does
+ok 70 - C1: see-through text is composited as the browser does
+  ---
+  duration_ms: 123.546084
+  type: 'test'
+  ...
+# Subtest: C1: a missing token fails rather than passing silently
+ok 71 - C1: a missing token fails rather than passing silently
+  ---
+  duration_ms: 87.774458
+  type: 'test'
+  ...
+# Subtest: C2: every Vega colour role is a Tailwind colour, set in light and in dark
+ok 72 - C2: every Vega colour role is a Tailwind colour, set in light and in dark
+  ---
+  duration_ms: 0.77525
+  type: 'test'
+  ...
+# Subtest: C2: the radius steps and the four elevation levels are tokens
+ok 73 - C2: the radius steps and the four elevation levels are tokens
+  ---
+  duration_ms: 0.106417
+  type: 'test'
+  ...
+# Subtest: C2: the tk-motion tokens carry their values verbatim
+ok 74 - C2: the tk-motion tokens carry their values verbatim
+  ---
+  duration_ms: 0.349958
+  type: 'test'
+  ...
+# Subtest: C2: "px-[13px]" is rejected
+ok 75 - C2: "px-[13px]" is rejected
+  ---
+  duration_ms: 846.26025
+  type: 'test'
+  ...
+# Subtest: C2: "focus-visible:ring-[3px]" is rejected
+ok 76 - C2: "focus-visible:ring-[3px]" is rejected
+  ---
+  duration_ms: 7.025417
+  type: 'test'
+  ...
+# Subtest: C2: "duration-[0.35s]" is rejected
+ok 77 - C2: "duration-[0.35s]" is rejected
+  ---
+  duration_ms: 7.545333
+  type: 'test'
+  ...
+# Subtest: C2: "ease-[cubic-bezier(0.2,0,0,1)]" is rejected
+ok 78 - C2: "ease-[cubic-bezier(0.2,0,0,1)]" is rejected
+  ---
+  duration_ms: 6.151583
+  type: 'test'
+  ...
+# Subtest: C2: "bg-red-500" is rejected
+ok 79 - C2: "bg-red-500" is rejected
+  ---
+  duration_ms: 4.485875
+  type: 'test'
+  ...
+# Subtest: C2: "dark:bg-black/10" is rejected
+ok 80 - C2: "dark:bg-black/10" is rejected
+  ---
+  duration_ms: 3.884917
+  type: 'test'
+  ...
+# Subtest: C2: "text-[\#ffffff]" is rejected
+ok 81 - C2: "text-[\#ffffff]" is rejected
+  ---
+  duration_ms: 5.388083
+  type: 'test'
+  ...
+# Subtest: C2: "bg-[oklch(0.5_0_0)]" is rejected
+ok 82 - C2: "bg-[oklch(0.5_0_0)]" is rejected
+  ---
+  duration_ms: 3.627458
+  type: 'test'
+  ...
+# Subtest: C2: "shadow-md" is rejected
+ok 83 - C2: "shadow-md" is rejected
+  ---
+  duration_ms: 7.716291
+  type: 'test'
+  ...
+# Subtest: C2: "shadow-xs" is rejected
+ok 84 - C2: "shadow-xs" is rejected
+  ---
+  duration_ms: 7.380209
+  type: 'test'
+  ...
+# Subtest: C2: "data-open:duration-200" is rejected
+ok 85 - C2: "data-open:duration-200" is rejected
+  ---
+  duration_ms: 3.658375
+  type: 'test'
+  ...
+# Subtest: C2: "ease-in" is rejected
+ok 86 - C2: "ease-in" is rejected
+  ---
+  duration_ms: 3.02175
+  type: 'test'
+  ...
+# Subtest: C2: "data-[size=sm]:px-2 has-[>svg]:px-2.5 group-data-[orientation=vertical]:flex-col" passes
+ok 87 - C2: "data-[size=sm]:px-2 has-[>svg]:px-2.5 group-data-[orientation=vertical]:flex-col" passes
+  ---
+  duration_ms: 4.795375
+  type: 'test'
+  ...
+# Subtest: C2: "active:not-aria-[haspopup]:translate-y-px aria-invalid:ring-destructive/20" passes
+ok 88 - C2: "active:not-aria-[haspopup]:translate-y-px aria-invalid:ring-destructive/20" passes
+  ---
+  duration_ms: 3.112667
+  type: 'test'
+  ...
+# Subtest: C2: "grid-rows-[auto_1fr] transition-[color,box-shadow] max-w-[80%] min-w-[14ch]" passes
+ok 89 - C2: "grid-rows-[auto_1fr] transition-[color,box-shadow] max-w-[80%] min-w-[14ch]" passes
+  ---
+  duration_ms: 2.964
+  type: 'test'
+  ...
+# Subtest: C2: "w-[calc(var(--sidebar-width-icon)+(--spacing(4)))] translate-x-[calc(100%-2px)]" passes
+ok 90 - C2: "w-[calc(var(--sidebar-width-icon)+(--spacing(4)))] translate-x-[calc(100%-2px)]" passes
+  ---
+  duration_ms: 3.328875
+  type: 'test'
+  ...
+# Subtest: C2: "[--stack-step:0.05] h-[calc(100%-1px)] border-[1px]" passes
+ok 91 - C2: "[--stack-step:0.05] h-[calc(100%-1px)] border-[1px]" passes
+  ---
+  duration_ms: 4.23075
+  type: 'test'
+  ...
+# Subtest: C2: "shadow-control shadow-raised shadow-overlay shadow-floating shadow-none" passes
+ok 92 - C2: "shadow-control shadow-raised shadow-overlay shadow-floating shadow-none" passes
+  ---
+  duration_ms: 2.702542
+  type: 'test'
+  ...
+# Subtest: C2: "duration-(--motion-duration-base) ease-(--motion-ease-out) ease-in-out" passes
+ok 93 - C2: "duration-(--motion-duration-base) ease-(--motion-ease-out) ease-in-out" passes
+  ---
+  duration_ms: 2.365792
+  type: 'test'
+  ...
+# Subtest: C2: "rounded-xl rounded-4xl ring-3 bg-destructive/10 text-sidebar-accent-foreground" passes
+ok 94 - C2: "rounded-xl rounded-4xl ring-3 bg-destructive/10 text-sidebar-accent-foreground" passes
+  ---
+  duration_ms: 3.816375
+  type: 'test'
+  ...
+# Subtest: C2: a raw value inside cn() is reported once, and an inline style value is rejected
+ok 95 - C2: a raw value inside cn() is reported once, and an inline style value is rejected
+  ---
+  duration_ms: 6.174291
+  type: 'test'
+  ...
+1..95
+# tests 95
+# suites 0
+# pass 95
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 27584.627208

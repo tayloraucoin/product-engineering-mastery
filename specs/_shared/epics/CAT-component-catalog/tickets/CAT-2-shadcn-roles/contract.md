@@ -28,6 +28,7 @@ planned_paths:
   - "apps/web/app/opengraph-image.tsx"
   - "docs/design/component-sources.md"
   - "docs/decisions/ledger.md"
+  - "docs/design/canon.md"
   - "docs/decisions/changelog.md"
 depends_on:
   - CAT-1
