@@ -366,7 +366,8 @@
         "apps/web/app/api/webhooks/stripe",
         "apps/web/lib/billing",
         "packages/db/src/schema/billing",
-        "packages/db/src/billing"
+        "packages/db/src/billing",
+        "packages/db/test/stripe-event-ledger.test.ts"
       ],
       "env": ["STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET", "STRIPE_PRICE_ID"],
       "dependencies": ["stripe"],

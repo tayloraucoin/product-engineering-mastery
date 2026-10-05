@@ -15,7 +15,7 @@ const SECRET = "whsec_synthetic_test_secret";
 
 /** A synthetic event, signed the way Stripe signs a delivery. */
 function signedDelivery(
-  event: { id: string; type: string },
+  event: { id: string; type: string; livemode?: boolean },
   secret: string = SECRET,
 ) {
   const body = JSON.stringify({
@@ -24,7 +24,7 @@ function signedDelivery(
     type: event.type,
     api_version: "2026-01-01",
     created: 1_790_000_000,
-    livemode: false,
+    livemode: event.livemode ?? false,
     pending_webhooks: 1,
     request: { id: null, idempotency_key: null },
     data: { object: { id: "cs_synthetic", object: "checkout.session" } },
@@ -90,6 +90,7 @@ describe("C1: an unverified webhook is rejected and a replay is ignored", () => 
     );
     const result = await handleStripeWebhook(delivery, {
       webhookSecret: SECRET,
+      livemode: false,
       handlers,
       ledger: store.ledger,
     });
@@ -107,7 +108,12 @@ describe("C1: an unverified webhook is rejected and a replay is ignored", () => 
     });
     const result = await handleStripeWebhook(
       { ...delivery, body: delivery.body.replace("cs_synthetic", "cs_other") },
-      { webhookSecret: SECRET, handlers, ledger: store.ledger },
+      {
+        webhookSecret: SECRET,
+        livemode: false,
+        handlers,
+        ledger: store.ledger,
+      },
     );
     assert.equal(result.status, 400);
     assert.deepEqual(seen, []);
@@ -122,7 +128,12 @@ describe("C1: an unverified webhook is rejected and a replay is ignored", () => 
     });
     const result = await handleStripeWebhook(
       { body, signature: null },
-      { webhookSecret: SECRET, handlers, ledger: store.ledger },
+      {
+        webhookSecret: SECRET,
+        livemode: false,
+        handlers,
+        ledger: store.ledger,
+      },
     );
     assert.equal(result.status, 400);
     assert.deepEqual(store.calls, []);
@@ -134,7 +145,12 @@ describe("C1: an unverified webhook is rejected and a replay is ignored", () => 
       id: "evt_replayed",
       type: "checkout.session.completed",
     });
-    const deps = { webhookSecret: SECRET, handlers, ledger: store.ledger };
+    const deps = {
+      webhookSecret: SECRET,
+      livemode: false,
+      handlers,
+      ledger: store.ledger,
+    };
 
     const first = await handleStripeWebhook(delivery, deps);
     const replay = await handleStripeWebhook(delivery, deps);
@@ -151,19 +167,55 @@ describe("C1: an unverified webhook is rejected and a replay is ignored", () => 
     store.rows.set("evt_busy", "processing");
     const result = await handleStripeWebhook(
       signedDelivery({ id: "evt_busy", type: "checkout.session.completed" }),
-      { webhookSecret: SECRET, handlers, ledger: store.ledger },
+      {
+        webhookSecret: SECRET,
+        livemode: false,
+        handlers,
+        ledger: store.ledger,
+      },
     );
     assert.equal(result.status, 409);
     assert.deepEqual(seen, []);
   });
 
-  test("with no signing secret configured nothing is verified, and Stripe is told to retry", async () => {
+  test("an event whose mode is not the tier's is rejected before anything is written", async () => {
+    const { handlers, seen } = fixtureHandlers();
+    const live = await handleStripeWebhook(
+      signedDelivery({
+        id: "evt_live",
+        type: "checkout.session.completed",
+        livemode: true,
+      }),
+      {
+        webhookSecret: SECRET,
+        livemode: false,
+        handlers,
+        ledger: store.ledger,
+      },
+    );
+    const test = await handleStripeWebhook(
+      signedDelivery({ id: "evt_test", type: "checkout.session.completed" }),
+      { webhookSecret: SECRET, livemode: true, handlers, ledger: store.ledger },
+    );
+    assert.equal(live.status, 400);
+    assert.equal(test.status, 400);
+    assert.deepEqual(seen, []);
+    assert.deepEqual(store.calls, []);
+  });
+
+  test("with no signing secret configured nothing is verified, Stripe is told to retry, and the response names no configuration", async () => {
     const { handlers, seen } = fixtureHandlers();
     const result = await handleStripeWebhook(
       signedDelivery({ id: "evt_early", type: "checkout.session.completed" }),
-      { webhookSecret: undefined, handlers, ledger: store.ledger },
+      {
+        webhookSecret: undefined,
+        livemode: false,
+        handlers,
+        ledger: store.ledger,
+      },
     );
     assert.equal(result.status, RETRYABLE_STATUS);
+    assert.equal(result.body.outcome, "failed");
     assert.deepEqual(seen, []);
     assert.deepEqual(store.calls, []);
   });
@@ -172,7 +224,12 @@ describe("C1: an unverified webhook is rejected and a replay is ignored", () => 
 describe("C2: a signed event reaches the handler its type maps to", () => {
   test("each type goes to its own handler, and the id is recorded only after", async () => {
     const { handlers, seen } = fixtureHandlers();
-    const deps = { webhookSecret: SECRET, handlers, ledger: store.ledger };
+    const deps = {
+      webhookSecret: SECRET,
+      livemode: false,
+      handlers,
+      ledger: store.ledger,
+    };
 
     const subscription = await handleStripeWebhook(
       signedDelivery({ id: "evt_sub", type: "customer.subscription.deleted" }),
@@ -204,7 +261,12 @@ describe("C3: an event type with no handler is acknowledged and dispatched nowhe
     const { handlers, seen } = fixtureHandlers();
     const result = await handleStripeWebhook(
       signedDelivery({ id: "evt_other", type: "invoice.paid" }),
-      { webhookSecret: SECRET, handlers, ledger: store.ledger },
+      {
+        webhookSecret: SECRET,
+        livemode: false,
+        handlers,
+        ledger: store.ledger,
+      },
     );
     assert.ok(result.status >= 200 && result.status < 300);
     assert.equal(result.body.outcome, "ignored");
@@ -216,7 +278,12 @@ describe("C3: an event type with no handler is acknowledged and dispatched nowhe
     const { handlers, seen } = fixtureHandlers();
     const result = await handleStripeWebhook(
       signedDelivery({ id: "evt_proto", type: "constructor" }),
-      { webhookSecret: SECRET, handlers, ledger: store.ledger },
+      {
+        webhookSecret: SECRET,
+        livemode: false,
+        handlers,
+        ledger: store.ledger,
+      },
     );
     assert.equal(result.status, 200);
     assert.equal(result.body.outcome, "ignored");
@@ -234,6 +301,7 @@ describe("C4: a handler that throws gets a retryable 5xx and is not recorded", (
 
     const failed = await handleStripeWebhook(delivery, {
       webhookSecret: SECRET,
+      livemode: false,
       handlers: failing.handlers,
       ledger: store.ledger,
     });
@@ -247,6 +315,7 @@ describe("C4: a handler that throws gets a retryable 5xx and is not recorded", (
     const healthy = fixtureHandlers();
     const retried = await handleStripeWebhook(delivery, {
       webhookSecret: SECRET,
+      livemode: false,
       handlers: healthy.handlers,
       ledger: store.ledger,
     });
@@ -265,7 +334,7 @@ describe("C4: a handler that throws gets a retryable 5xx and is not recorded", (
     };
     const result = await handleStripeWebhook(
       signedDelivery({ id: "evt_nodb", type: "checkout.session.completed" }),
-      { webhookSecret: SECRET, handlers, ledger: broken },
+      { webhookSecret: SECRET, livemode: false, handlers, ledger: broken },
     );
     assert.equal(result.status, RETRYABLE_STATUS);
     assert.deepEqual(seen, []);

@@ -7,10 +7,10 @@
  * `yarn stripe:listen` forwards test events here.
  */
 
-import { env } from "../../../../env";
-import { handleStripeWebhook } from "../../../../lib/billing/webhook/handle";
-import { handlers } from "../../../../lib/billing/webhook/handlers";
-import { databaseLedger } from "../../../../lib/billing/webhook/ledger";
+import { env } from "@/env";
+import { handleStripeWebhook } from "@/lib/billing/webhook/handle";
+import { handlers } from "@/lib/billing/webhook/handlers";
+import { databaseLedger } from "@/lib/billing/webhook/ledger";
 
 /** Shorter than the ledger's lease (STRIPE_EVENT_LEASE_SECONDS), so a live claim is never taken over. */
 export const maxDuration = 60;
@@ -23,6 +23,7 @@ export async function POST(request: Request) {
     },
     {
       webhookSecret: env.STRIPE_WEBHOOK_SECRET,
+      livemode: env.DATABASE_ENVIRONMENT === "production",
       handlers,
       ledger: databaseLedger,
     },

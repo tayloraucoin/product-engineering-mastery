@@ -4,7 +4,10 @@
  * dependencies, and sends back the status this returns.
  *
  *   1. Verify the signature on the raw body. Unsigned or forged: 400, and
- *      nothing is read or written.
+ *      nothing is read or written. An event whose mode is not the tier's (a
+ *      test event on production, a live one elsewhere) is refused the same
+ *      way: a signing secret carries no mode, so the event's own flag is the
+ *      only guard against a secret pasted into the wrong tier.
  *   2. Look the type up in the handler map. No handler: 200, nothing written.
  *   3. Claim the event id in the ledger. Already processed: 200. Held by a live
  *      delivery: 409, so Stripe retries once that one has finished.
@@ -43,18 +46,15 @@ export type WebhookDelivery = {
 export type WebhookDeps = {
   /** The endpoint's signing secret (`whsec_...`); undefined when billing is not configured. */
   webhookSecret: string | undefined;
+  /** Whether this tier takes live-mode events: production only. */
+  livemode: boolean;
   handlers: WebhookHandlers;
   ledger: WebhookLedger;
 };
 
+/** What the response says; it names no configuration state, which the log carries. */
 export type WebhookOutcome =
-  | "rejected"
-  | "unconfigured"
-  | "ignored"
-  | "duplicate"
-  | "in-flight"
-  | "failed"
-  | "processed";
+  "rejected" | "ignored" | "duplicate" | "in-flight" | "failed" | "processed";
 
 export type WebhookResult = {
   status: number;
@@ -77,7 +77,7 @@ export async function handleStripeWebhook(
       reason:
         "STRIPE_WEBHOOK_SECRET is unset for this tier (STRIPE_WEBHOOK_SECRET_LOCAL off a deployment)",
     });
-    return result(RETRYABLE_STATUS, "unconfigured");
+    return result(RETRYABLE_STATUS, "failed");
   }
   if (!delivery.signature) {
     log.warn("webhook.rejected", { reason: "no stripe-signature header" });
@@ -99,6 +99,15 @@ export async function handleStripeWebhook(
   }
 
   const fields = { eventId: event.id, eventType: event.type };
+  if (event.livemode !== deps.livemode) {
+    log.error("webhook.wrong_mode", {
+      ...fields,
+      reason: event.livemode
+        ? "a live-mode event reached a test tier; this endpoint's secret belongs to production"
+        : "a test-mode event reached production; this endpoint's secret is a test endpoint's",
+    });
+    return result(400, "rejected");
+  }
   const handler = handlerFor(deps.handlers, event);
   if (!handler) {
     log.info("webhook.ignored", fields);

@@ -44,8 +44,9 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Every page and route, but not static files or images, which carry no session.
+  // Every page and route, but not static files, images or Stripe's webhook,
+  // which carry no session: the money path never waits on the auth seam.
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff2?)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|api/webhooks/stripe|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|woff2?)$).*)",
   ],
 };

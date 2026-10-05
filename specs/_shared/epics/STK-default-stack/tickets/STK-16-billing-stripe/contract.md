@@ -46,6 +46,8 @@ planned_paths:
   - "tooling/check-client-bundle.ts"
   - "docs/engineering/tech-stack.md"
   - "yarn.lock"
+  - "docs/runbooks/remove-billing.md"
+  - "apps/web/proxy.ts"
 depends_on:
   - STK-13
 out_of_scope:

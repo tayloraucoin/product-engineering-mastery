@@ -5,6 +5,10 @@
  * succeeded; a failed handler deletes the row, so Stripe's retry runs it
  * again. Nothing else about the event is kept: the payload stays in Stripe.
  * No user reaches the table; the route writes it on the singleton.
+ *
+ * Retention: each row points, through Stripe, at a person's payment, so it is
+ * kept no longer than it is needed. STK-21 prunes `processed` rows older than
+ * 30 days, well past Stripe's three-day retries (remove-billing.md).
  */
 
 import { sql } from "drizzle-orm";

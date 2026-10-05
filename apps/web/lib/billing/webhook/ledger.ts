@@ -15,7 +15,7 @@ import {
 } from "@pem/db/stripe-event-ledger";
 
 import { env } from "../../../env";
-import type { WebhookLedger } from "./handle";
+import type { WebhookLedger } from "./handle.ts";
 
 function db() {
   if (!env.DATABASE_URL)

@@ -110,11 +110,13 @@ const supabasePublishableKey = pickTiered(
 );
 
 /**
- * The webhook signing secret. Off a deployment, Stripe's events arrive through
- * `yarn stripe:listen`, which signs with its own secret whatever the tier, so
- * the local secret is picked; a deployment reads its tier's endpoint secret.
+ * The webhook signing secret. On a developer's machine, Stripe's events arrive
+ * through `yarn stripe:listen`, which signs with its own secret whatever the
+ * tier, so the local secret is picked. Anything that may serve real users (a
+ * deployment, or a production build on any host) reads its tier's endpoint
+ * secret, so a local `next start` needs the tiered variable too.
  */
-const stripeWebhookSecret = deployed
+const stripeWebhookSecret = productionRuntime
   ? pickTiered(raw, "STRIPE_WEBHOOK_SECRET", tier)
   : raw.STRIPE_WEBHOOK_SECRET_LOCAL?.trim() || undefined;
 
