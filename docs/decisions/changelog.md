@@ -22,6 +22,7 @@ Taylor is about to duplicate this repo for two products, with an agent running t
 - **New beside it:** `strip.md` (what a duplicate deletes as this repo's history, and what stays as inherited law), `rename.md` (every place the scope, the repo name, the prefixes and the owner's name appear, from a search, and the order that keeps `yarn verify` green), `branding.md` (the files a brand lands in, and the prompt for a branding thread), `components.md` (the prompt for the thread that cuts the kit and the catalog to the UX spec).
 - **First add recipe:** `docs/runbooks/add/docker-local-database.md`. A new project runs its database hosted-only unless the operator asks for Docker; hosted-only is the staging tier on a developer's machine, set in the example files.
 - **Order changed:** the strip now comes before the rename, which takes about 200 files out of the rename. Removing the parts is still step 4, so the remove recipes' "run from step 4" lines hold.
+- **Added the same day:** `branding-process.md`, Taylor's three-circle pillars method, is the source for the branding thread's interview; its pillar card is row 0 of the files a brand lands in. The Drummer role is deleted: it was written for one business's sales funnel, and Taylor will recraft it.
 - **No code changed.** Making the local database opt-in in `packages/db` is a follow-up. The docs app, a marketing app and a mobile app have no recipe; email is locked and has none. None of this has been run cold: STK-20 does that.
 
 ## 2026-10-05 — PEM: one front door, eight tracks, QA levels (PR-19)

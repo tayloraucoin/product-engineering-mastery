@@ -25,6 +25,7 @@ This folder holds the guide and what it hands out:
 | This file | The interview, then the ordered steps |
 | [`strip.md`](strip.md) | What a duplicate deletes because it is this repo's own history (step 2) |
 | [`rename.md`](rename.md) | Every place the toolkit's names appear, and the order to change them (step 2) |
+| [`branding-process.md`](branding-process.md) | The three-circle pillars method: what the brand is, settled before any colour or typeface (step 3) |
 | [`branding.md`](branding.md) | The files a brand must land in, and the prompt for a separate branding thread (step 3) |
 | [`components.md`](components.md) | The prompt for the components thread, run after the UX spec exists (step 7) |
 
@@ -110,6 +111,7 @@ When the answer is yes, ask for these as attachments, and say which are missing 
 - The typeface: a variable `woff2` file covering weights 400 to 600, the regular weight as TTF, OTF or WOFF, and its licence.
 - The colours, in any notation: the primary colour and the colour of text on it, for light and for dark, and the neutral greys if the brand has its own.
 - Brand guidelines, if written: the voice, what the brand never does.
+- The pillar card, if [`branding-process.md`](branding-process.md) has been run. If it has not, the colours and typeface can still be applied in step 3, and step 7 prints the branding prompt so the pillars are settled in their own thread.
 
 Where each lands is one table, [`branding.md`](branding.md) "The files a brand lands in".
 
@@ -213,7 +215,7 @@ Both exit 0. Commit on `agent/<work-id>` as `<work-id>: new project from the too
 
 Then print, each in its own block so it can be copied whole:
 
-1. **The branding prompt** from [`branding.md`](branding.md), when F1 was not "yes".
+1. **The branding prompt** from [`branding.md`](branding.md), when F1 was not "yes", or when it was "yes" and no pillar card came with the material.
 2. **The UX-spec prompt** below, when G1 was not "yes".
 3. **The components prompt** from [`components.md`](components.md), with a note that it runs once the UX spec exists, or now when one was attached.
 4. **One line per choice with no recipe** (B1 remove, B2 its own app, B3 yes): "Open a new thread and describe this to the prompt builder: …".
@@ -271,6 +273,7 @@ Read through on 2026-10-05 against the toolkit at commit `1c0fb5f`. Nothing was 
 
 | File | What it is for |
 | --- | --- |
+| [`branding-process.md`](branding-process.md) | Run before any colour, typeface or logo is chosen for a product: ground the brand, dump the words, cut the ones anyone could claim, cluster the rest into three ranked pillars with guardrails, and fill the pillar card every brand, design and copy thread then reads. The source for the branding thread's interview. |
 | [`branding.md`](branding.md) | Open from step 3 or step 7 of the new-project guide. Holds the one table of files a brand must fill (words, logo, typeface, colour tokens, the product design layer) with the check each must pass, and the prompt printed for a separate branding thread when no brand material exists yet. |
 | [`components.md`](components.md) | Open from step 7 of the new-project guide, once the product has a UX spec. Holds the prompt for the thread that reads the spec, decides which components of the kit and the catalog the product keeps, removes the rest safely, writes the product's component inventory, then checks the kit under the brand or prints the branding prompt. |
 | [`rename.md`](rename.md) | Follow from step 2 of the new-project guide, after the strip. Lists every place the toolkit's names appear (the package scope, the repo name, the work-id prefixes, the product name, the owner's name), which to change, which to leave, and the order that keeps yarn verify green. |

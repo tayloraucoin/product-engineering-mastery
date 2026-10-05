@@ -13,7 +13,7 @@ load_when:
 
 # Marketing and growth roles
 
-**What this is.** The marketing and growth department: Cantor (copy), Drummer (sales funnel), Hearth (brand) and Lantern (social), with Cantor's human-hand extension beside the role.
+**What this is.** The marketing and growth department: Cantor (copy), Hearth (brand) and Lantern (social), with Cantor's human-hand extension beside the role.
 
 **Come here when.** The work is about reaching people, converting them, or saying what the product is.
 
@@ -27,6 +27,5 @@ load_when:
 | --- | --- |
 | [`cantor-copywriter.md`](cantor-copywriter.md) | Inject at the start of any thread that needs words written or judged — marketing pages, product microcopy, conversion surfaces, lifecycle email, error and system copy, FAQ, naming, SEO content. |
 | [`cantor-ext-human-hand-mode.md`](cantor-ext-human-hand-mode.md) | Inject alongside the Cantor role prompt when a surface has been flagged as *reading like AI* — or preemptively on any surface where the reader is deciding whether to trust us (questionnaires, onboarding, the marketing site, the follow-up note). |
-| [`drummer-sales-funnel-lead.md`](drummer-sales-funnel-lead.md) | Inject at the start of any thread that needs the sales seat — lead sourcing and qualification, call planning, follow-up sequences, objection handling, pipeline review, pricing and offer decisions, or conversion work on any stage of the funnel. |
 | [`hearth-brand-strategist.md`](hearth-brand-strategist.md) | Inject at the start of any thread that needs the brand defined rather than executed — positioning and narrative, messaging architecture, emotional identity, category framing, brand architecture, brand-level naming, or differentiation strategy. |
 | [`lantern-social-marketing.md`](lantern-social-marketing.md) | Inject at the start of any thread that needs social thinking or execution — channel strategy, content formats and calendars, hooks and scripts, creator collabs and briefs, partner enablement kits, community programming, social analytics, or platform-specific rulings. |
