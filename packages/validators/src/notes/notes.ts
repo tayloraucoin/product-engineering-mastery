@@ -21,7 +21,7 @@ export const createNoteInput = z.object({
     .trim()
     .min(1, { error: "Write the note." })
     .max(NOTE_BODY_MAX, {
-      error: `Keep the note under ${NOTE_BODY_MAX.toLocaleString("en-US")} characters.`,
+      error: `Keep the note to ${NOTE_BODY_MAX.toLocaleString("en-US")} characters or fewer.`,
     }),
 });
 
@@ -29,9 +29,9 @@ export const getNoteInput = z.object({ id: noteId });
 
 export const listNotesInput = z.object({
   limit: z
-    .number()
-    .int()
-    .min(1)
+    .number({ error: "Ask for a number of notes." })
+    .int({ error: "Ask for a whole number of notes." })
+    .min(1, { error: "Ask for at least one note." })
     .max(NOTE_LIST_MAX, {
       error: `Ask for at most ${NOTE_LIST_MAX} notes at a time.`,
     })

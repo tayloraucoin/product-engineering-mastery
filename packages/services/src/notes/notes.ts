@@ -17,7 +17,7 @@ import {
 } from "@pem/validators/notes";
 
 import type { ServiceContext } from "../context.ts";
-import { NotFound, toDomainError } from "../errors.ts";
+import { Forbidden, NotFound, toDomainError } from "../errors.ts";
 import { parseInput } from "../parse-input.ts";
 
 /** The columns a note is returned with; the owner is the caller. */
@@ -48,7 +48,8 @@ export async function createNote(
         .insert(notes)
         .values({ ownerId: ctx.userId, body })
         .returning(noteColumns);
-      if (!row) throw new NotFound("The note was not saved.");
+      // RLS raises 42501 for a refused insert; an empty return is refused all the same.
+      if (!row) throw new Forbidden("You cannot add this note.");
       return row;
     }),
   );
@@ -73,7 +74,11 @@ export async function getNote(
   );
 }
 
-/** The caller's notes, newest first. */
+/**
+ * The caller's notes, newest first. The owner filter is explicit, not left to
+ * row-level security: on a table whose policy lets admins read every row
+ * (`ownerRowPolicies`), "my notes" must still mean the caller's.
+ */
 export async function listNotes(
   ctx: ServiceContext,
   input: unknown = {},
@@ -84,6 +89,7 @@ export async function listNotes(
       tx
         .select(noteColumns)
         .from(notes)
+        .where(eq(notes.ownerId, ctx.userId))
         .orderBy(desc(notes.createdAt))
         .limit(limit),
     ),

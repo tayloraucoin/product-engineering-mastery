@@ -74,8 +74,9 @@ test("C1: getNote returns the row the scoped db shows; listNotes returns the lis
   );
   assert.match(
     many.calls[0]!.sql,
-    /order by "notes"\."created_at" desc limit \$1/,
+    /where "notes"\."owner_id" = \$1 order by "notes"\."created_at" desc limit \$2/,
   );
+  assert.equal(many.calls[0]!.params[0], USER_ID, "filtered to the caller");
 });
 
 test("C2: invalid input throws Invalid naming the field, before any query", async () => {

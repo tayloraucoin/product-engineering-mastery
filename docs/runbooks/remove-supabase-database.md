@@ -54,9 +54,17 @@ From `.env.example` and `turbo.json`'s `globalEnv`, each with its `_LOCAL` and `
 
 Keep `DATABASE_ENVIRONMENT`: it is the tier switch every module reads (D-STK-3), not this module's. Keep `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` while Supabase Auth stays: STK-11 declared them for `db:seed-users`, but they are the auth module's, and its runbook removes them. When `toolkit.json`'s `stack` block has no `auth` entry, nothing else reads them: delete both, with their `_LOCAL` and `_STAGING` forms and their comment block, from `.env.example` and `turbo.json`'s `globalEnv`. A service-role key name with no reader invites a live key where nothing uses it.
 
+## When services stay
+
+`@pem/services` (STK-13) queries the database through `@pem/db`: `src/context.ts` scopes it with `@pem/db/rls`, and the example domain `src/notes/` reads `@pem/db/schema`.
+
+- Delete `packages/services/src/notes/` and `packages/services/src/test-context.ts`, and the `./notes` export in `packages/services/package.json`; a product rewrites its domains against whatever data layer replaces this one.
+- `packages/services/src/context.ts`: replace `db: RlsClient` and `createServiceContext` with the new data layer's scoped client, and take `AppRole` from wherever roles now live.
+- `packages/services/package.json`: delete `@pem/db` and `drizzle-orm`. `packages/config/eslint/boundaries.js`: delete `db` from the `services` row of `PACKAGE_IMPORTS`.
+
 ## Dependencies
 
-`@pem/db`, `drizzle-orm`, `drizzle-kit`, `postgres` and `supabase` (the CLI). After deleting the folder, run `yarn install` so `yarn.lock` drops them; no other workspace lists them.
+`@pem/db`, `drizzle-orm`, `drizzle-kit`, `postgres` and `supabase` (the CLI). After deleting the folder, run `yarn install` so `yarn.lock` drops them; with "When services stay" done, no other workspace lists them.
 
 ## Boundaries entries
 

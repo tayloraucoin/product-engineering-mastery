@@ -33,7 +33,15 @@ Built under routed call 3 as ratified on 2026-10-03 (technical.md, "Calls routed
 - **`@pem/services` imports `drizzle-orm`** to build queries on the RLS transaction. D-STK-16 pins no owner for it; `postgres` and `drizzle-kit` stay `db`'s.
 - **drizzle 0.45.2 wraps every query error in its own error, with the driver's as `cause`** (seen in this ticket's test on 2026-10-04). `toDomainError` walks up to three causes for the Postgres code.
 - **`notes.createdAt` and `updatedAt` are returned as `Date`.** A transport serializes them; STK-14's tRPC transformer decides how.
-- **Paths added to `planned_paths`:** `docs/engineering/tech-stack.md`, `tooling/boundaries.test.ts` and `yarn.lock`.
+- **`listNotes` filters on `ownerId = ctx.userId` explicitly**, not on RLS alone. On a table whose policy lets admins read every row, "my notes" must still mean the caller's (batch review, Consider 4); the test asserts the filter.
+- **From the batch review (`../../_batch-review-2026-10-04-STK-13.md`):**
+  - The tech-stack's `drizzle-orm` row now names `@pem/services`.
+  - `remove-supabase-database.md` gains "When services stay".
+  - `createNote` throws Forbidden, not NotFound, if an insert returns no row.
+  - The limit's messages are in the product's voice, and the body limit reads "10,000 characters or fewer".
+  - An input that is not an object reads "Check the input".
+  - Not done: a lint ban on value imports of `@pem/db/client` in services (Consider 3); the services `ctx` type keeps the singleton out by construction.
+- **Paths added to `planned_paths`:** `docs/engineering/tech-stack.md`, `tooling/boundaries.test.ts`, `yarn.lock` and `docs/runbooks/remove-supabase-database.md`.
 
 ## Not verified
 

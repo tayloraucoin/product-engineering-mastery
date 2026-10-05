@@ -13,8 +13,10 @@ export function parseInput<Schema extends z.ZodType>(
   const result = schema.safeParse(input);
   if (result.success) return result.data;
   const fields = fieldErrors(result.error);
+  const named = Object.keys(fields).filter((field) => field !== "_");
+  const subject = named.length ? named.join(", ") : "the input";
   throw new Invalid(
-    `Check ${Object.keys(fields).join(", ")}: ${Object.values(fields).flat().join(" ")}`,
+    `Check ${subject}: ${Object.values(fields).flat().join(" ")}`,
     fields,
   );
 }

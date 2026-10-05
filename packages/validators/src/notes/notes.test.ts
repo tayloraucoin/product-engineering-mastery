@@ -28,7 +28,7 @@ test("C2: a body over the limit fails on body", () => {
   const errors = failedFields(
     createNoteInput.safeParse({ body: "a".repeat(NOTE_BODY_MAX + 1) }),
   );
-  assert.match(errors.body?.[0] ?? "", /under 10,000 characters/);
+  assert.match(errors.body?.[0] ?? "", /to 10,000 characters or fewer/);
 });
 
 test("C2: a malformed id fails on id; a list limit out of range fails on limit", () => {
