@@ -77,4 +77,18 @@ Verification plan was written from the three contracts before reading code. Lint
 
 ## Disposition
 
-Filled in after the fixes.
+Every Blocking item is fixed, and CAT-2, CAT-3 and CAT-4 re-prove on 27b204c and after.
+
+- **B1, S1 fixed** (19aac09): `rawArbitrary` reads `_` as a space; the unit list adds pt, pc, in, cm, mm, q in any case; a bare colour name in a colour utility and a font family in `font-[…]` are rejected. Nine new failing cases and two new passing ones in `token-lint.test.ts`. CS-13 amended.
+- **B2 fixed** (19aac09): `--chart-1` to `--chart-5` are set under `.dark` (the light steps reversed), and the dark assertion loops the charts.
+- **B3 fixed** (437ab63): every `source:`, `verdict:` or `layer:` tag anywhere in a story file, negated or not, must be the manifest's, and the provenance licence must equal its source's; one new test case.
+- **B4 fixed** (19aac09): contrast-audit composites a tinted background over `--background` and audits the destructive label at rest and hovered in both themes. It measured 3.99:1, as the review computed; `--destructive` moved to red-800 in light and red-300 in dark, and all 42 pairs pass (6.94:1 light at rest).
+- **S2 fixed** (19aac09, plan-mode approval): elevation takes the canon's closed scale, `shadow-resting`, `-raised`, `-overlay`, `-modal` (CS-11 amended); canon C-P06's "Enforced by" line names the arbitrary values the lint bans.
+- **S3 fixed** (437ab63): `packages/ui/turbo.json` adds the catalog's sources to `@pem/ui#test`'s inputs; an edit to a catalog file alone is now a cache miss.
+- **S4 fixed** (27b204c): `IconExtraSmall` and `IconLarge` stories.
+- **S5 fixed**: CAT-4 C7, a capture of `source:shadcn` and `source:custom` each narrowing the sidebar.
+- **S6 fixed** (437ab63): the accessible label is "Copy invite code".
+- **Conversation, taken**: a copy failure now stays until the next press; only a success clears itself.
+- **Consider, doc drift fixed**: technical.md's verdict list, record 0011's amendment block, component-sources.md's ruling range and changelog, tech-stack.md's CLI row, the Button story's citation, remove-catalog.md's note on the kit's check-off.
+- **Consider, left for later**: other shadow scales (drop-, inset-, text-shadow), arbitrary breakpoint variants, conditional class strings and `tv()`, the 2px hairline radius, the secondary hover's 5% mix, the half-opacity focus ring, dark elevation values, accordion height animation (its own ticket, CAT-7), wider boundary probes, the unguarded `yarn shadcn`.
+- **Raised to Taylor**: the contract tooling records `tests: 114` for every `yarn test` run whatever vitest counted (a count-parser defect in PJ's tooling), and `.yarnrc.yml` sets no age gate though `deps.md` says one exists.
