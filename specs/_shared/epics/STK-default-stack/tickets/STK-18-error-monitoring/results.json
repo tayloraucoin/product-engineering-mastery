@@ -1,0 +1,57 @@
+{
+  "id": "STK-18",
+  "criteria_sha256": "14384488a4d2603572f304017bd251d603c0f5c51041038ed48c40666dc6ac73",
+  "criteria": {
+    "C1": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C2": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C3": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    },
+    "C4": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    },
+    "C5": {
+      "status": "FAIL",
+      "evidence": "manual",
+      "run": null
+    },
+    "C6": {
+      "status": "FAIL",
+      "evidence": "manual",
+      "run": null
+    },
+    "review:assay": {
+      "status": "FAIL",
+      "evidence": "manual",
+      "run": null
+    },
+    "review:mason": {
+      "status": "FAIL",
+      "evidence": "manual",
+      "run": null
+    },
+    "review:vigil": {
+      "status": "FAIL",
+      "evidence": "manual",
+      "run": null
+    },
+    "review:warden": {
+      "status": "FAIL",
+      "evidence": "manual",
+      "run": null
+    }
+  },
+  "updated_at": "2026-10-05T01:54:10Z"
+}
