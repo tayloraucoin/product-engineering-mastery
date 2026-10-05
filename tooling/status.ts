@@ -18,6 +18,7 @@ import {
   findItem,
   openDecisions,
   parseAsBuilt,
+  qaOf,
   readItemState,
   readRepoText,
   readSpecsTree,
@@ -74,10 +75,19 @@ function one(id: string) {
     console.error(`status — no item ${id} under ${toolkit.specsRoot}/`);
     process.exit(1);
   }
-  const state = readItemState(item, tree.specsRoot);
+  // One ticket, asked for by name: the one place staleness is shown while a
+  // ticket is in build, and only a Q3 ticket's proofs can be stale (PR-19).
+  const state = readItemState(item, tree.specsRoot, { staleness: true });
+  const qa = state.contract ? qaOf(state.contract) : null;
   const lines = [
-    `${item.id} ${item.slug} (${item.kind}, ${state.stage}${state.merged ? ", merged" : ""}) — ${item.dir}/`,
+    `${item.id} ${item.slug} (${item.kind}${qa ? `, ${qa}` : ""}, ${state.stage}${state.merged ? ", merged" : ""}) — ${item.dir}/`,
   ];
+  if (qa && state.contract!.reviewers.length)
+    lines.push(
+      `Reviewers: ${state.contract!.reviewers.join(", ")}${qa === "Q3" ? "" : " (in the thread)"}.`,
+    );
+  if (state.contract?.focus?.length)
+    lines.push(`Focus: ${state.contract.focus.join("; ")}.`);
   const left = leftOf(state);
   lines.push(
     left.length ? `Left to go:\n  ${left.join("\n  ")}` : "Left to go: none.",

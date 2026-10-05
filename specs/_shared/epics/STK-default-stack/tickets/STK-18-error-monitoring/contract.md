@@ -19,10 +19,6 @@ cites:
   - "D-STK-13"
 truth_files: "none: no living UX file covers the starter's own stack"
 reviewers:
-  - assay
-  - mason
-  - threshold
-  - vigil
   - warden
 planned_paths:
   - "apps/web/instrumentation.ts"
@@ -77,27 +73,13 @@ criteria:
     statement: "Following remove-error-monitoring.md on a scratch copy leaves grep for sentry empty and verify green."
     evidence: manual
     reason: "a removal rehearsal on a copy is done by a person"
-  - id: review:assay
-    statement: Assay reviews this ticket in fresh context against its contract and evidence.
-    evidence: manual
-    reason: a reviewer's judgment, recorded only by yarn review:run assay <id>
-  - id: review:mason
-    statement: Mason reviews this ticket in fresh context against its contract and evidence.
-    evidence: manual
-    reason: a reviewer's judgment, recorded only by yarn review:run mason <id>
-  - id: review:vigil
-    statement: Vigil reviews this ticket in fresh context against its contract and evidence.
-    evidence: manual
-    reason: a reviewer's judgment, recorded only by yarn review:run vigil <id>
   - id: review:warden
     statement: Warden reviews this ticket in fresh context against its contract and evidence.
     evidence: manual
     reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
-  - id: review:threshold
-    statement: Threshold reviews this ticket in fresh context against its contract and evidence.
-    evidence: manual
-    reason: a reviewer's judgment, recorded only by yarn review:run threshold <id>
-tier: 2
+qa: Q3
+focus:
+  - "the scrub: no personal data leaves in an error report (warden)"
 ---
 
 # Contract — STK-18 error-monitoring

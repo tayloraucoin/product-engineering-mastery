@@ -43,7 +43,7 @@ criteria:
     statement: "The generated directory map and folder indexes include the new files and are current."
     evidence: check
     command: "yarn directory-map --check"
-tier: 0
+qa: Q1
 ---
 
 # Contract — CAT-1 rulings-and-filing

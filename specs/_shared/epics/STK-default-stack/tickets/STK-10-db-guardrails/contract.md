@@ -67,7 +67,7 @@ criteria:
     statement: Warden reviews this ticket in fresh context against its contract and evidence.
     evidence: manual
     reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
-tier: 2
+qa: Q3
 ---
 
 # Contract — STK-10 db-guardrails

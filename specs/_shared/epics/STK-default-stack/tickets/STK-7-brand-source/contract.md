@@ -58,7 +58,7 @@ criteria:
     statement: "The manifest and the Open Graph image show the brand name and colours."
     evidence: capture
     path: "specs/_shared/epics/STK-default-stack/tickets/STK-7-brand-source/evidence/og.png"
-tier: 1
+qa: Q1
 ---
 
 # Contract — STK-7 brand-source

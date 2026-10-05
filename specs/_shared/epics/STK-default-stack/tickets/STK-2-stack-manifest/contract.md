@@ -60,7 +60,7 @@ criteria:
     statement: The full verify chain passes with check-stack in it.
     evidence: check
     command: yarn verify
-tier: 1
+qa: Q1
 ---
 
 # Contract — STK-2 stack-manifest

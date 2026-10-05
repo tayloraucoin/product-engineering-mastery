@@ -21,10 +21,14 @@
  *   yarn contract:add <id> <criterion> --evidence <type> --statement <text> [--command | --path | --reason <text>]
  *   yarn contract:add <id> review:<role>
  *       Adds a criterion at FAIL: the only way the frozen set grows.
- *   yarn contract:tier <id> [0 | 1 | 2]
- *       Sets a started ticket's tier (computed from its planned paths when
- *       none is named) and makes its review criteria match: the required
- *       reviewers at tier 2, none below it (PR-15).
+ *   yarn contract:qa <id> <Q0 | Q1 | Q2 | Q3> [--reviewers <role,role>]
+ *       Sets a started ticket's QA level and reviewers, as the operator asked
+ *       (PR-19). At Q3 each reviewer gets a review:<role> criterion; below Q3
+ *       the review criteria are dropped and the review happens in the thread.
+ *
+ * The level is the operator's choice, never computed. contract:init reads
+ * `qa:` from the contract (Q1 when absent) and flags once any planned path
+ * that reaches a critical path below Q3.
  */
 
 import { spawnSync } from "node:child_process";
@@ -55,10 +59,12 @@ import {
   checkContract,
   CONTRACT_TEMPLATE,
   contractPath,
+  criticalPathsOf,
   EVIDENCE_TYPES,
   evidenceDir,
   fileExists,
   findItem,
+  findRoleFile,
   formatResults,
   hashCriteria,
   hashFile,
@@ -69,23 +75,24 @@ import {
   now,
   openDecisions,
   preflightPath,
+  QA_LEVELS,
+  qaOf,
   readContract,
   readItemState,
   readRepoText,
   readResults,
   readSpecsTree,
   refreshStatusFile,
-  requiredReviewers,
   resultsPath,
   reviewCriterion,
   SLUG,
   splitCommand,
-  tierOf,
   writeRepoText,
   type Contract,
   type Criterion,
   type EvidenceType,
   type Item,
+  type Qa,
   type Results,
   type RunRecord,
   type SpecsTree,
@@ -339,11 +346,18 @@ function start(item: Item, tree: SpecsTree) {
       `${cited} holds [NEEDS DECISION — BLOCKING]; decide it in the file, then start`,
     );
 
-  // A13.2, PR-15: a tier 2 epic ticket starts only with its pre-flight PASS.
-  // A contract edited since (a build note, a planned path) is named, not refused.
-  const tier = tierOf(contract, toolkit);
+  // The level is the operator's (PR-19): read, never computed. A critical
+  // path below Q3 is said once, here, and the start goes ahead.
+  const qa = qaOf(contract);
   const notes: string[] = [];
-  if (item.epic && tier === 2) {
+  const critical = qa === "Q3" ? [] : criticalPathsOf(contract);
+  if (critical.length)
+    notes.push(
+      `${critical.slice(0, 3).join(", ")}${critical.length > 3 ? ` and ${critical.length - 3} more` : ""} ${critical.length === 1 ? "is a critical path" : "are critical paths"} and this ticket is ${qa}, below Q3; tell the operator once, and raise it with yarn contract:qa ${item.id} Q3 if they say so`,
+    );
+  // A13.2: a Q3 epic ticket starts only with its pre-flight PASS. A contract
+  // edited since (a build note, a planned path) is named, not refused.
+  if (item.epic && qa === "Q3") {
     const pre = preflightPath(item.epic);
     const contractHash = hashText(file.text);
     const line = fileExists(pre)
@@ -404,10 +418,19 @@ function start(item: Item, tree: SpecsTree) {
   if (refusals.length)
     stop(`${item.id} cannot start:\n  ${refusals.join("\n  ")}`);
 
-  // Reviewers by tier (A7, PR-15), then freeze.
-  const roles = [...requiredReviewers(contract, item, toolkit).keys()].sort();
+  // Reviewers as the contract names them (PR-19), then freeze. Q3 with none
+  // named gets Vigil; only Q3 reviewers become criteria.
+  const roles = [
+    ...new Set(
+      qa === "Q3" && contract.reviewers.length === 0
+        ? ["vigil"]
+        : contract.reviewers,
+    ),
+  ].sort();
+  const reviewRoles = qa === "Q3" ? roles : [];
   setFrontmatter(contractPath(item), (doc) => {
-    doc.set("tier", tier);
+    doc.set("qa", qa);
+    doc.delete("tier");
     doc.set("reviewers", roles);
     const criteria = doc.get("criteria") as YAML.YAMLSeq;
     const have = new Set(contract.criteria.map((c) => c.id));
@@ -432,7 +455,7 @@ function start(item: Item, tree: SpecsTree) {
         }),
       );
     }
-    for (const role of roles)
+    for (const role of reviewRoles)
       if (!have.has(`review:${role}`))
         criteria.add(doc.createNode(reviewCriterion(role)));
   });
@@ -450,12 +473,11 @@ function start(item: Item, tree: SpecsTree) {
   };
   writeResults(item, results);
   console.log(
-    `contract:init — ${item.id} started on ${branch}, tier ${tier}: ${frozen.criteria.length} criteria at FAIL` +
+    `contract:init — ${item.id} started on ${branch}, ${qa}: ${frozen.criteria.length} criteria at FAIL` +
       (roles.length
-        ? `; reviewers ${roles.join(", ")}`
-        : tier === 1
-          ? "; reviewed with its batch"
-          : "; no reviewer") +
+        ? `; reviewers ${roles.join(", ")}${qa === "Q3" ? "" : " (in the thread)"}`
+        : "; no reviewer") +
+      (frozen.focus?.length ? `; focus: ${frozen.focus.join("; ")}` : "") +
       (notes.length ? `. Note: ${notes.join("; ")}` : "") +
       (decisions.open.length
         ? `. Open decisions (not blocking): ${decisions.open.join(", ")}`
@@ -592,22 +614,38 @@ function run() {
 
   takeRunLock();
   let failed = 0;
+  // Criteria that share a command share its run (PR-19): four criteria proven
+  // by `yarn test` run it once, not four times.
+  const ran = new Map<
+    string,
+    { output: string; exit: number; at: string; seconds: string }
+  >();
   for (const criterion of selected) {
     const problem = checkCommand(criterion.command ?? "");
     if (problem) stop(`${criterion.id}: ${problem}`);
     const words = splitCommand(criterion.command!);
-    const at = now();
+    const shared = ran.get(criterion.command!);
     const started = Date.now();
-    const result = spawnSync(words[0]!, words.slice(1), {
-      cwd: REPO_ROOT,
-      encoding: "utf8",
-      maxBuffer: 64 * 1024 * 1024,
-      env: criterionEnv(),
-    });
-    const output = `${result.stdout ?? ""}${result.stderr ?? ""}`
-      .split(REPO_ROOT)
-      .join(".");
-    const exit = result.status ?? 1;
+    let run = shared;
+    if (!run) {
+      const at = now();
+      const result = spawnSync(words[0]!, words.slice(1), {
+        cwd: REPO_ROOT,
+        encoding: "utf8",
+        maxBuffer: 64 * 1024 * 1024,
+        env: criterionEnv(),
+      });
+      run = {
+        output: `${result.stdout ?? ""}${result.stderr ?? ""}`
+          .split(REPO_ROOT)
+          .join("."),
+        exit: result.status ?? 1,
+        at,
+        seconds: ((Date.now() - started) / 1000).toFixed(1),
+      };
+      ran.set(criterion.command!, run);
+    }
+    const { output, exit, at } = run;
     const tests =
       criterion.evidence === "test" ? (countTests(output) ?? 0) : undefined;
     // The log lands by rename, and its result is written at once: a check-specs
@@ -639,9 +677,8 @@ function run() {
     renameSync(path.join(REPO_ROOT, pending), path.join(REPO_ROOT, log));
     writeResults(item, results);
     if (!pass) failed++;
-    const seconds = ((Date.now() - started) / 1000).toFixed(1);
     console.log(
-      `${pass ? "PASS" : "FAIL"} ${criterion.id} ${criterion.evidence}  ${criterion.command}  (${seconds} s` +
+      `${pass ? "PASS" : "FAIL"} ${criterion.id} ${criterion.evidence}  ${criterion.command}  (${shared ? "shared run" : `${run.seconds} s`}` +
         (tests !== undefined ? `, ${tests} tests` : "") +
         `)${!pass && tests === 0 && exit === 0 ? "  the runner matched zero tests: name a test after the criterion" : ""}`,
     );
@@ -687,6 +724,10 @@ function record() {
     );
   if (!fileExists(rel) || readFileSync(path.join(REPO_ROOT, rel)).length === 0)
     stop(`${rel} does not exist or is empty; write the evidence first`);
+  if (/\/evidence\/[^/]+\.log$/.test(rel))
+    stop(
+      `${rel} is a .log, and git ignores logs under evidence/ (PR-19); save recorded evidence as .md or .txt so it is committed`,
+    );
   if (
     criterion.evidence === "capture" &&
     criterion.path &&
@@ -782,11 +823,12 @@ function add() {
   console.log(`contract:add — ${item.id} gains ${name} at FAIL.`);
 }
 
-// ---------------------------------------------------------------- tier
+// ---------------------------------------------------------------- qa
 
-function setTier() {
+function setQa() {
+  const named = option("--reviewers");
   const tree = readSpecsTree(toolkit);
-  const [id, named] = argv;
+  const [id, level] = argv;
   const item = requireItem(tree, id);
   const results = requireResults(item);
   if (isMerged(item))
@@ -794,16 +836,27 @@ function setTier() {
   const contract = readContract(item).contract;
   if (!contract) stop(`${contractPath(item)} is not a valid contract`);
   requireFrozen(item, contract, results);
-  if (named !== undefined && !["0", "1", "2"].includes(named))
-    stop("a tier is 0, 1 or 2");
-  const tier =
+  if (!level || !(QA_LEVELS as readonly string[]).includes(level))
+    stop(
+      `name the level: yarn contract:qa ${item.id} <${QA_LEVELS.join(" | ")}> [--reviewers <role,role>]`,
+    );
+  const qa = level as Qa;
+  const given =
     named !== undefined
-      ? (Number(named) as 0 | 1 | 2)
-      : tierOf({ planned_paths: contract.planned_paths }, toolkit);
+      ? named
+          .split(",")
+          .map((r) => r.trim())
+          .filter(Boolean)
+      : contract.reviewers;
+  for (const role of given)
+    if (!findRoleFile(role)) stop(`no role file for ${role} under docs/roles/`);
   const roles = [
-    ...requiredReviewers({ ...contract, tier }, item, toolkit).keys(),
+    ...new Set(qa === "Q3" && given.length === 0 ? ["vigil"] : given),
   ].sort();
-  const wanted = new Set(roles.map((role) => `review:${role}`));
+  // Only Q3 reviewers are criteria; below Q3 the review happens in the thread.
+  const wanted = new Set(
+    qa === "Q3" ? roles.map((role) => `review:${role}`) : [],
+  );
   const dropped = contract.criteria
     .filter((c) => isReview(c) && !wanted.has(c.id))
     .map((c) => c.id);
@@ -811,7 +864,8 @@ function setTier() {
     (id) => !contract.criteria.some((c) => c.id === id),
   );
   setFrontmatter(contractPath(item), (doc) => {
-    doc.set("tier", tier);
+    doc.set("qa", qa);
+    doc.delete("tier");
     doc.set("reviewers", roles);
     const criteria = doc.get("criteria") as YAML.YAMLSeq;
     criteria.items = criteria.items.filter(
@@ -827,7 +881,10 @@ function setTier() {
     results.criteria[id] = { status: "FAIL", evidence: "manual", run: null };
   writeResults(item, results);
   console.log(
-    `contract:tier — ${item.id} is tier ${tier}` +
+    `contract:qa — ${item.id} is ${qa}` +
+      (roles.length
+        ? `; reviewers ${roles.join(", ")}${qa === "Q3" ? "" : " (in the thread)"}`
+        : "") +
       (dropped.length ? `; dropped ${dropped.join(", ")}` : "") +
       (added.length ? `; added ${added.join(", ")} at FAIL` : "") +
       ".",
@@ -841,6 +898,5 @@ if (command === "init") init();
 else if (command === "run") run();
 else if (command === "record") record();
 else if (command === "add") add();
-else if (command === "tier") setTier();
-else
-  stop("usage: node tooling/contract.ts <init | run | record | add | tier> …");
+else if (command === "qa") setQa();
+else stop("usage: node tooling/contract.ts <init | run | record | add | qa> …");

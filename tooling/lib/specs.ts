@@ -60,15 +60,21 @@ export const AS_BUILT_SECTIONS = [
 ] as const;
 
 /**
- * The QA tier a ticket's planned paths put it in (PR-15):
- *   0  docs and data only: its scripted criteria, no reviewer;
- *   1  code: its criteria, and one review of the whole batch at batch close;
- *   2  a one-way door (the paths below): the pre-flight, and Vigil plus the
- *      toolkit.json specialists on the ticket itself.
- * A contract's own `tier:` wins; contract:tier sets it.
+ * The QA level the operator confirmed for a ticket (PR-19;
+ * docs/workflows/qa-levels.md). It sets proof, review and paperwork:
+ *   Q0  nothing extra (work at Q0 rarely has a ticket);
+ *   Q1  the builder runs the criteria; no reviewer;
+ *   Q2  plus one reviewer in the thread; no review criterion, no review file;
+ *   Q3  recorded proofs that can go stale, and a review:<role> criterion and
+ *       kept review file for each listed reviewer.
+ * The level is never computed. Planned paths that reach a critical path below
+ * Q3 are flagged once, at the start. `tier` is the pre-PR-19 field, read only
+ * for a contract that has no `qa` yet.
  */
+export const QA_LEVELS = ["Q0", "Q1", "Q2", "Q3"] as const;
+export type Qa = (typeof QA_LEVELS)[number];
 export type Tier = 0 | 1 | 2;
-export const TIER_2_PATHS = [
+export const CRITICAL_PATHS = [
   /(^|\/)(migrations|schema|policies|db|auth|billing|webhooks)(\/|$)/,
   /(^|\/)(env|proxy)\.ts$/,
   /\.sql$/,
@@ -95,6 +101,15 @@ const FOLDER = new RegExp(
 );
 const EPIC_FOLDER = new RegExp(`^(${PREFIX})-([a-z0-9]+(?:-[a-z0-9]+)*)$`);
 export const EPIC_PREFIX = new RegExp(`^${PREFIX}$`);
+/** What an app's specs folder may hold: truth, tickets, and the tracks' own records. */
+const APP_FOLDERS = [
+  "ux",
+  "epics",
+  "one-offs",
+  "explorations",
+  "audits",
+  "reports",
+];
 export const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
 // ---------------------------------------------------------------- types
@@ -123,6 +138,10 @@ export type Contract = {
   depends_on: string[];
   out_of_scope: string[];
   criteria: Criterion[];
+  qa?: Qa;
+  /** Named parts raised to a higher level on the operator's request. */
+  focus?: string[];
+  /** Pre-PR-19; read only when `qa` is absent. */
   tier?: Tier;
   /** Taylor looks the ticket over himself: contract:init adds a manual criterion for it (PR-16). */
   operator_review?: boolean;
@@ -272,9 +291,9 @@ export function readSpecsTree(
       continue;
     }
     for (const part of listDir(appDir)) {
-      if (!["ux", "epics", "one-offs"].includes(part))
+      if (!APP_FOLDERS.includes(part))
         problems.push(
-          `${appDir}/${part} is not part of the layout; an app folder holds ux/, epics/ and one-offs/`,
+          `${appDir}/${part} is not part of the layout; an app folder holds ${APP_FOLDERS.map((f) => `${f}/`).join(", ")}`,
         );
     }
 
@@ -574,21 +593,18 @@ export type RequiredReviewers = Map<string, string[]>;
 let trackedCache: string[] | null = null;
 
 /**
- * The reviewers a contract needs (A7, A13.2): every toolkit.json row whose
- * glob its planned paths reach, plus Vigil for every epic ticket and for a
- * one-off that touches a one-way door (a Mason row), names truth files, or
- * reports test changes. Globs are compared by sampling; J8's risk-tier reads
- * the real diff.
+ * The reviewers a contract's planned paths suggest (PR-19): every toolkit.json
+ * row whose glob they reach. Evidence for the builder's recommendation and
+ * for a warning, never an assignment: the operator confirms who reviews.
+ * Globs are compared by sampling.
  */
-export function computeReviewers(
-  contract: Pick<Contract, "planned_paths" | "truth_files">,
-  item: Pick<Item, "kind">,
+export function suggestReviewers(
+  contract: Pick<Contract, "planned_paths">,
   toolkit: Toolkit,
-  options: { testChanges?: boolean } = {},
 ): RequiredReviewers {
-  const required: RequiredReviewers = new Map();
+  const suggested: RequiredReviewers = new Map();
   const add = (role: string, why: string) =>
-    required.set(role, [...(required.get(role) ?? []), why]);
+    suggested.set(role, [...(suggested.get(role) ?? []), why]);
   trackedCache ??= (runGit(["ls-files"]) ?? "").split("\n").filter(Boolean);
   const tracked = trackedCache;
 
@@ -598,57 +614,37 @@ export function computeReviewers(
       if (samples.some((sample) => matchesGlob(sample, row.glob)))
         add(row.role, `${planned} reaches ${row.glob}`);
   }
-  if (item.kind === "epic ticket") add("vigil", "every epic ticket");
-  else {
-    if (required.has("mason"))
-      add("vigil", "a one-off touching a one-way door");
-    if (Array.isArray(contract.truth_files) && contract.truth_files.length > 0)
-      add("vigil", "a one-off that changes living truth files");
-    if (options.testChanges) add("vigil", "a one-off with test changes");
-  }
-  return required;
+  return suggested;
 }
 
-const isNonCode = (planned: string) =>
-  planned.startsWith("docs/") ||
-  planned.startsWith("specs/") ||
-  (/\.(md|mdx|json|txt)$/.test(planned) && !planned.endsWith("package.json"));
+/** A ticket's QA level: its contract's `qa:`, else the old `tier:` read across, else Q1. */
+export function qaOf(contract: Pick<Contract, "qa" | "tier">): Qa {
+  if (contract.qa) return contract.qa;
+  return contract.tier === 2 ? "Q3" : "Q1";
+}
 
-/** A ticket's tier: its contract's `tier:`, or computed from its planned paths. */
-export function tierOf(
-  contract: Pick<Contract, "planned_paths" | "tier">,
-  toolkit: Toolkit,
-): Tier {
-  if (contract.tier !== undefined) return contract.tier;
-  // A planned path reaches a door when it names one, or when it is a glob
-  // that holds a tracked door file. Never by sampling: a folder glob does not
-  // become a door because an env.ts could one day sit in it.
+/**
+ * The planned paths that reach a critical path (money, auth, schema, personal
+ * data, agent permissions). A planned path reaches one when it names one, or
+ * when it is a glob that holds a tracked critical file. Never by sampling: a
+ * folder glob is not critical because an env.ts could one day sit in it.
+ */
+export function criticalPathsOf(
+  contract: Pick<Contract, "planned_paths">,
+): string[] {
   trackedCache ??= (runGit(["ls-files"]) ?? "").split("\n").filter(Boolean);
   const tracked = trackedCache;
-  const isDoor = (file: string) => TIER_2_PATHS.some((door) => door.test(file));
-  const reachesDoor = contract.planned_paths.some(
+  const isCritical = (file: string) =>
+    CRITICAL_PATHS.some((door) => door.test(file));
+  return contract.planned_paths.filter(
     (planned) =>
-      isDoor(planned) ||
+      isCritical(planned) ||
       (/[*?[{]/.test(planned) || planned.endsWith("/")
         ? tracked.some(
-            (file) => inPlannedPaths(file, [planned]) && isDoor(file),
+            (file) => inPlannedPaths(file, [planned]) && isCritical(file),
           )
         : false),
   );
-  if (reachesDoor) return 2;
-  return contract.planned_paths.every(isNonCode) ? 0 : 1;
-}
-
-/** The reviewers a ticket must carry: computeReviewers' set at tier 2, none below it (PR-15). */
-export function requiredReviewers(
-  contract: Pick<Contract, "planned_paths" | "truth_files" | "tier">,
-  item: Pick<Item, "kind">,
-  toolkit: Toolkit,
-  options: { testChanges?: boolean } = {},
-): RequiredReviewers {
-  return tierOf(contract, toolkit) === 2
-    ? computeReviewers(contract, item, toolkit, options)
-    : new Map();
 }
 
 export function reviewCriterion(role: string): Criterion {
@@ -860,9 +856,20 @@ function changedAfter(
  * needs a run record, an evidence file whose hash matches, the contract's
  * command, at least one test for a test criterion, and no later change to
  * its planned paths in the branch's diff.
+ *
+ * Staleness is asked for, never assumed (PR-19): only a Q3 ticket's proofs go
+ * stale, and only the pre-merge check and `yarn status <id>` look. A commit to
+ * a shared file reopens nothing while tickets are in build. A test or check
+ * log is local (never committed), so a missing one is not a defect.
  */
-export function readItemState(item: Item, specsRoot: string): ItemState {
+export function readItemState(
+  item: Item,
+  specsRoot: string,
+  options: { staleness?: boolean } = {},
+): ItemState {
   const { contract } = readContract(item);
+  const checkStaleness =
+    options.staleness === true && contract !== null && qaOf(contract) === "Q3";
   const { results } = readResults(item);
   const hasAsBuilt = fileExists(asBuiltPath(item));
   const merged = hasAsBuilt && isMerged(item);
@@ -916,21 +923,20 @@ export function readItemState(item: Item, specsRoot: string): ItemState {
       );
       continue;
     }
-    if (!fileExists(run.evidence_path)) {
+    const isLog =
+      criterion.evidence === "test" || criterion.evidence === "check";
+    const hasEvidence = fileExists(run.evidence_path);
+    if (!hasEvidence && !isLog) {
       fail(`evidence ${run.evidence_path} is missing`, "tampered");
       continue;
     }
-    if (hashFile(run.evidence_path) !== run.evidence_sha256) {
+    if (hasEvidence && hashFile(run.evidence_path) !== run.evidence_sha256) {
       // A newer contract:run has written this log and not yet its result
       // (another thread on the shared branch, PR-14, or a run that stopped
       // between the two): work in flight, not an edit. A log whose header is
       // the recorded run's, an older one, none, one from the future or from a
       // commit outside this branch was edited. No run writes a merged log.
-      const header =
-        !merged &&
-        (criterion.evidence === "test" || criterion.evidence === "check")
-          ? readRunHeader(run.evidence_path)
-          : null;
+      const header = !merged && isLog ? readRunHeader(run.evidence_path) : null;
       const newer =
         header !== null &&
         header.command === run.command &&
@@ -987,7 +993,7 @@ export function readItemState(item: Item, specsRoot: string): ItemState {
       // as-built wording fix does not cost a second review (PR-15).
     }
     state.deferred = run.deferred === true;
-    if (!merged && !frozen && head) {
+    if (checkStaleness && !merged && !frozen && head) {
       if (!isAncestor(run.head, head)) {
         fail(
           `recorded on ${run.head.slice(0, 7)}, which is not in this branch`,
@@ -1225,27 +1231,27 @@ export function checkContract(
 
   if (!options.started) return problems;
 
+  // Reviewers are the operator's choice (PR-19). At Q3 each one reviews
+  // through a criterion and a kept file; below Q3 the review happens in the
+  // thread, and a review criterion exists only where one was asked for.
+  const qa = qaOf(contract);
   const listed = new Set(contract.reviewers);
   for (const role of listed) {
-    if (!ids.has(`review:${role}`))
+    if (qa === "Q3" && !ids.has(`review:${role}`))
       bad(
-        `lists the reviewer ${role} but has no review:${role} criterion; run yarn contract:add ${item.id} review:${role}`,
+        `is Q3 and lists the reviewer ${role} but has no review:${role} criterion; run yarn contract:add ${item.id} review:${role}`,
       );
     if (!findRoleFile(role))
       bad(
         `lists the reviewer ${role}, which has no role file under docs/roles/`,
       );
   }
+  if (qa === "Q3" && listed.size === 0)
+    bad(
+      `is Q3 with no reviewer; name who reviews it: yarn contract:qa ${item.id} Q3 --reviewers <role,role>`,
+    );
   for (const id of ids)
     if (id.startsWith("review:") && !listed.has(reviewRole(id)))
       bad(`has ${id} but does not list ${reviewRole(id)} under reviewers`);
-  const required = requiredReviewers(contract, item, toolkit, {
-    testChanges: options.testChanges,
-  });
-  for (const [role, why] of required)
-    if (!listed.has(role))
-      bad(
-        `needs the reviewer ${role} (${why[0]}); run yarn contract:add ${item.id} review:${role}`,
-      );
   return problems;
 }

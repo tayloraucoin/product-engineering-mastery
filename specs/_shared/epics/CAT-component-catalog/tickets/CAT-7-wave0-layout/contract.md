@@ -71,7 +71,7 @@ criteria:
     statement: "Every new dependency is listed in the ui module with its pin."
     evidence: check
     command: "yarn check-stack"
-tier: 1
+qa: Q1
 ---
 
 # Contract — CAT-7 wave0-layout

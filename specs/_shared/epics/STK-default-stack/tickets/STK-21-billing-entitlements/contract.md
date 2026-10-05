@@ -16,7 +16,9 @@ cites:
   - "D-STK-11"
   - "D-STK-13"
 truth_files: "none: no living UX file covers the starter's own stack"
-reviewers: []
+reviewers:
+  - vigil
+  - warden
 planned_paths:
   - "apps/web/lib/billing/webhook/handlers/**"
   - "packages/services/src/billing/**"
@@ -48,6 +50,7 @@ criteria:
     statement: "stripe listen delivers a test event that changes a local user's entitlement end to end."
     evidence: manual
     reason: "needs the Stripe CLI and a test account"
+qa: Q3
 ---
 
 # Contract — STK-21 billing-entitlements

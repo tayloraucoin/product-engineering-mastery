@@ -54,6 +54,7 @@ criteria:
     evidence: check
     command: "yarn check-stack"
 id: CAT-13
+qa: Q1
 ---
 
 # Contract — shadcn dashboard block

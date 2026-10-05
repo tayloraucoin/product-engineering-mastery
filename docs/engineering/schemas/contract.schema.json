@@ -46,12 +46,21 @@
       ]
     },
     "reviewers": {
-      "description": "Computed by contract:init from planned_paths and toolkit.json; each has a review:<role> criterion.",
+      "description": "Who reviews, as the operator confirmed (PR-19). At Q3 each has a review:<role> criterion and a kept review file; below Q3 the review happens in the thread.",
       "type": "array",
       "items": { "type": "string", "pattern": "^[a-z]+$" }
     },
+    "qa": {
+      "description": "The QA level the operator confirmed (docs/workflows/qa-levels.md). Q1: the builder proves it. Q2: plus one reviewer in the thread. Q3: recorded proofs and reviewers on the ticket. Never computed; Q1 when absent. Changed after the start with yarn contract:qa.",
+      "enum": ["Q0", "Q1", "Q2", "Q3"]
+    },
+    "focus": {
+      "description": "Named parts raised to a higher level on the operator's request, one line each: what to examine, who looks, and at which level.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/line" }
+    },
     "tier": {
-      "description": "QA tier (PR-15). 0: docs and data, checks only. 1: code, reviewed with its batch. 2: a one-way door, pre-flighted and reviewed on the ticket. Written by contract:init from planned_paths; changed with contract:tier.",
+      "description": "Before PR-19. Read only when qa is absent (2 as Q3, otherwise Q1); contract:init and contract:qa remove it.",
       "enum": [0, 1, 2]
     },
     "operator_review": {

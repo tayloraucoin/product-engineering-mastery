@@ -55,7 +55,7 @@ criteria:
     statement: "The kit, the catalog and both apps type-check."
     evidence: check
     command: "yarn check-types"
-tier: 1
+qa: Q1
 ---
 
 # Contract — CAT-12 shadcn-blocks

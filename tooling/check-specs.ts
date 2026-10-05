@@ -36,7 +36,6 @@ import {
   AS_BUILT_SECTIONS,
   asBuiltPath,
   checkContract,
-  computeReviewers,
   contractPath,
   disableGit,
   enableGit,
@@ -54,6 +53,7 @@ import {
   resultsPath,
   SPEC_FILE_CAPS,
   statusPath,
+  suggestReviewers,
   withoutApplied,
   type SpecsTree,
 } from "./lib/specs.ts";
@@ -135,7 +135,8 @@ function checkItems(tree: SpecsTree, toolkit: Toolkit, report: Report) {
       );
 
     // Every PASS still holds (A9, B1, B2).
-    const state = readItemState(item, tree.specsRoot);
+    // Staleness is the pre-merge check's question, and only of Q3 (PR-19).
+    const state = readItemState(item, tree.specsRoot, { staleness: strict });
     for (const c of state.criteria) {
       if (c.tampered)
         report.errors.push(
@@ -182,23 +183,11 @@ function checkItems(tree: SpecsTree, toolkit: Toolkit, report: Report) {
         (strict ? report.errors : report.warnings).push(
           `${item.id} has an as-built, so it is closing, but ${left.map((c) => `${c.id} (${c.reason})`).join(", ")} ${left.length === 1 ? "is" : "are"} not PASS. ${left.some((c) => c.id.startsWith("review:")) ? `Run: yarn review:run ${left.find((c) => c.id.startsWith("review:"))!.id.slice(7)} ${item.id}` : `Run: yarn status ${item.id}`}`,
         );
-      if (
-        testChanges &&
-        item.kind === "one-off" &&
-        !contract.reviewers.includes("vigil")
-      )
-        report.errors.push(
-          `${at} reports test changes, so ${item.id} needs review:vigil (A13.2). Run: yarn contract:add ${item.id} review:vigil`,
-        );
     }
 
     // A8: a one-off whose planned paths reach UI while its truth_files are none.
     if (item.kind === "one-off" && !Array.isArray(contract.truth_files)) {
-      const reach = computeReviewers(
-        { ...contract, truth_files: [] },
-        item,
-        toolkit,
-      );
+      const reach = suggestReviewers(contract, toolkit);
       if (reach.has("assay"))
         report.warnings.push(
           `${contractPath(item)}: planned paths reach UI, and truth_files is "${contract.truth_files}"; if behavior changes, name the living UX file (A8)`,

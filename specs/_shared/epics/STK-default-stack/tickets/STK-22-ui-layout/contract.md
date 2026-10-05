@@ -55,7 +55,7 @@ criteria:
     statement: "Both apps build against the moved package."
     evidence: check
     command: "yarn build"
-tier: 1
+qa: Q1
 ---
 
 # Contract — STK-22 ui-layout

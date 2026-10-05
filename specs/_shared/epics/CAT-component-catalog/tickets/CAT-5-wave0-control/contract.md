@@ -65,7 +65,7 @@ criteria:
     statement: "input-otp is a listed dependency of the ui module with its pin."
     evidence: check
     command: "yarn check-stack"
-tier: 1
+qa: Q1
 ---
 
 # Contract — CAT-5 wave0-control

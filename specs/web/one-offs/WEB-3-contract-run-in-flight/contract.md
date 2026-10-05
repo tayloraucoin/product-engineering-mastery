@@ -52,7 +52,7 @@ criteria:
     statement: "Tooling types pass."
     evidence: check
     command: "yarn check-types:tooling"
-tier: 1
+qa: Q1
 ---
 
 # Contract — WEB-3 contract-run-in-flight

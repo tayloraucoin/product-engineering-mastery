@@ -67,7 +67,7 @@ criteria:
     statement: In the running workshop, selecting source:shadcn narrows the sidebar to the shadcn kit stories and source:custom to the custom ones (batch review S5).
     evidence: capture
     path: specs/_shared/epics/CAT-component-catalog/tickets/CAT-4-shadcn-setup/evidence/C7-source-filter.md
-tier: 1
+qa: Q1
 ---
 
 # Contract — CAT-4 shadcn-setup

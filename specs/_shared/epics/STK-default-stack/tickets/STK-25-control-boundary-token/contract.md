@@ -31,6 +31,7 @@ criteria:
     statement: "The sign-in field's unfocused boundary is visible at 3:1 in both themes."
     evidence: manual
     reason: "needs a person's eyes on the rendered field until P-C's captures land"
+qa: Q1
 ---
 
 # Contract — STK-25 control-boundary-token

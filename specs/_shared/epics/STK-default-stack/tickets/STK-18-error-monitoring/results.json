@@ -1,6 +1,6 @@
 {
   "id": "STK-18",
-  "criteria_sha256": "41b7d369e36788c3228e4b5eb05c376a9ab6949c4e8b01db4c30927ea6556de4",
+  "criteria_sha256": "4a499929cab4bb51e7a2421d744332dc938c422050d943cee4976606dd490b8c",
   "criteria": {
     "C1": {
       "status": "FAIL",
@@ -32,27 +32,7 @@
       "evidence": "manual",
       "run": null
     },
-    "review:assay": {
-      "status": "FAIL",
-      "evidence": "manual",
-      "run": null
-    },
-    "review:mason": {
-      "status": "FAIL",
-      "evidence": "manual",
-      "run": null
-    },
-    "review:vigil": {
-      "status": "FAIL",
-      "evidence": "manual",
-      "run": null
-    },
     "review:warden": {
-      "status": "FAIL",
-      "evidence": "manual",
-      "run": null
-    },
-    "review:threshold": {
       "status": "FAIL",
       "evidence": "manual",
       "run": null

@@ -55,7 +55,7 @@ criteria:
     statement: "Types and build pass."
     evidence: check
     command: "yarn verify"
-tier: 1
+qa: Q1
 ---
 
 # Contract — STK-5 constants-observability

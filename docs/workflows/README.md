@@ -15,8 +15,6 @@ load_when: on request
 
 > **The whole thing in one breath.** Every piece of work starts at one front door: you describe it, the prompt builder asks what it needs to know once, and prints a prompt for a new thread. The track decides what happens next, the QA level decides how carefully it is checked, and the thread finishes on its own and tells you in a few lines what needs you.
 
-> **State as of 2026-10-05 (PR-19).** The workflow layer on this page is in force. The tooling still computes the older tiers (0, 1, 2) until the tooling change lands; read tier 0 as Q1 for docs, tier 1 as Q1 or Q2, tier 2 as Q3.
-
 ## The game you're playing
 
 Think of the repo as a game world with five systems.
@@ -103,7 +101,7 @@ specs/
    │  ├─ research/                  notes from research threads
    │  ├─ ux/                        proposed changes, mirroring ux/ paths
    │  ├─ technical.md               only what every ticket shares
-   │  └─ tickets/OB2-3-welcome-copy/   contract.md; as-built.md; at Q3 results.json and reviews
+   │  └─ tickets/OB2-3-welcome-copy/   contract.md, results.json; as-built.md; at Q3 the reviews
    ├─ one-offs/WEB-41-fix-filter/   a side quest that chose a ticket
    ├─ explorations/<slug>/          brief.md, research/, findings.md
    ├─ audits/<date>-<slug>.md       saved findings

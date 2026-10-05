@@ -55,7 +55,7 @@ No lead role: the thread is the builder. Default Q1. The builder recommends Q2 o
 | With a ticket (`specs/<app>/one-offs/<APP-n>-<slug>/`)                    | Without a ticket                                     |
 | ------------------------------------------------------------------------- | ---------------------------------------------------- |
 | `contract.md`; an as-built at Q2 and Q3, or at Q1 when something deviated | The code, and the UX truth file if behaviour changed |
-| At Q3: `results.json` and the review files                                | The closing report in the thread is the record       |
+| `results.json`; at Q3 also the review files                               | The closing report in the thread is the record       |
 
 ## What stops the thread, and the right move
 

@@ -1,6 +1,6 @@
 {
   "id": "WEB-2",
-  "criteria_sha256": "5c5fd99c7bb42969e94a9004cd3fb7ca45d751047cf904282b412b23d7479bb5",
+  "criteria_sha256": "599b76f76431119a589171b69c2c13f15d9e0366eedf64dc9569fb88f23c9cbf",
   "criteria": {
     "C1": {
       "status": "PASS",
@@ -38,51 +38,6 @@
         "head": "1dec187aa7321aa81bc86369df66aa3bd13d37c4",
         "evidence_path": "specs/web/one-offs/WEB-2-boundaries-subpath-resolve/evidence/C3.log",
         "evidence_sha256": "9907a0be68969ffd4280a992f1849992bbebabdfb5afc861c4a0d6d93da03233"
-      }
-    },
-    "review:mason": {
-      "status": "PASS",
-      "evidence": "manual",
-      "run": {
-        "command": "yarn review:run mason WEB-2",
-        "exit": 0,
-        "at": "2026-10-04T08:01:19Z",
-        "head": "7b66fdb22b32cb13f32fdb7769c552ab58f5befd",
-        "evidence_path": "specs/web/one-offs/WEB-2-boundaries-subpath-resolve/review-mason.md",
-        "evidence_sha256": "67d51ce0ae507c22849d024f468f85fd591b8d1962e91c911ff00f73860d4225",
-        "contract_sha256": "ce45839c4387ad272bd390087ad5c8b64a899d13c323834ffa9fd0a520250d99",
-        "as_built_sha256": "90e9dfc89a4e46863a29e5bff637391805f5c0e6a86c200f604e6eeccae72968",
-        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/mason-cto-principal-dev.md; tools Read,Grep,Glob)"
-      }
-    },
-    "review:vigil": {
-      "status": "PASS",
-      "evidence": "manual",
-      "run": {
-        "command": "yarn review:run vigil WEB-2",
-        "exit": 0,
-        "at": "2026-10-04T08:06:57Z",
-        "head": "36d354d09adf5bd5b040a316f82579f73ffb0d99",
-        "evidence_path": "specs/web/one-offs/WEB-2-boundaries-subpath-resolve/review-vigil.md",
-        "evidence_sha256": "4fbd860318f989b20aac5c089c2b40c2371151c6659f94637d0ac8f970b8da10",
-        "contract_sha256": "ce45839c4387ad272bd390087ad5c8b64a899d13c323834ffa9fd0a520250d99",
-        "as_built_sha256": "90e9dfc89a4e46863a29e5bff637391805f5c0e6a86c200f604e6eeccae72968",
-        "runner": "claude 2.1.232 (Claude Code) (agent vigil; tools Read,Grep,Glob)"
-      }
-    },
-    "review:warden": {
-      "status": "PASS",
-      "evidence": "manual",
-      "run": {
-        "command": "yarn review:run warden WEB-2",
-        "exit": 0,
-        "at": "2026-10-04T08:11:43Z",
-        "head": "2d2d40aaf4686cfab660dc14fa2a2e14edb41d78",
-        "evidence_path": "specs/web/one-offs/WEB-2-boundaries-subpath-resolve/review-warden.md",
-        "evidence_sha256": "6c1e59fda81e0c10457a0614d1c272dd76caa75268e9c24b56e16ae8d979f4eb",
-        "contract_sha256": "ce45839c4387ad272bd390087ad5c8b64a899d13c323834ffa9fd0a520250d99",
-        "as_built_sha256": "90e9dfc89a4e46863a29e5bff637391805f5c0e6a86c200f604e6eeccae72968",
-        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
       }
     }
   },

@@ -23,8 +23,9 @@ The branch that is checked out. Only when the operator or the prompt says "on it
 1. **Start.** `yarn contract:init <EPIC | app> <slug>`, unless it has started. Read the contract: its Build notes, its QA level, reviewers and `focus` lines, and the one file it cites.
 2. **Build** in small commits, `<id>: <outcome>`, staging only this ticket's paths; never `git add -A`.
 3. **Prove at the level.**
-   - Q1 and Q2: run each criterion's command once (criteria that share a command share the run). Do capture and manual checks yourself wherever a tool can.
-   - Q3: `yarn contract:run <id>`, and `yarn contract:record <id> <criterion> --evidence <path>` for capture and manual criteria. A check that truly needs a person is recorded `--verdict deferred` with the steps to take.
+   - `yarn contract:run <id>` (it runs each distinct command once), and `yarn contract:record <id> <criterion> --evidence <path>` for capture and manual criteria. Do those checks yourself wherever a tool can; one that truly needs a person is recorded `--verdict deferred` with the steps to take.
+   - Below Q3 nothing recorded goes stale: never re-run a proof because a shared file changed.
+   - To change the level or reviewers when the operator asks: `yarn contract:qa <id> <Q0 | Q1 | Q2 | Q3> [--reviewers <role,role>]`.
    - Anything that fails: fix, commit, prove again. Give up on one failure only after three different fixes, and say what you tried.
 4. **Write down what the level asks for.** An as-built at Q2 and Q3, or at Q1 when something deviated. Nothing else.
 5. **Review at the level.** Q2: one subagent given the contract, the changed files and the reviewer's role, never your summary; its findings stay in the thread. Q3: `yarn review:run <role> <id>` for each confirmed reviewer, unsandboxed. A `focus` line is reviewed at the level it names. Fix black and red findings and cheap orange ones, prove again; draft the rest as follow-ups.

@@ -70,6 +70,6 @@ The builder fixes black and red findings and any orange one that is cheap, then 
 
 ## What is never written down
 
-- Evidence logs are not committed. A Q3 proof keeps the command, its exit code and a short tail.
+- Evidence logs are not committed. A ticket's `results.json` keeps each command, its exit code and the test count. Below Q3 that file is only a status note (it is how `specs/_status.md` knows a ticket is done) and nothing in it goes stale; at Q3 it is the ledger, checked once before a merge.
 - Review output below Q3 lives in the thread and its closing report.
 - Prompts are printed, never saved ([`prompt-builder.md`](prompt-builder.md)).

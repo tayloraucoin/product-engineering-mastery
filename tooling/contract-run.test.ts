@@ -158,13 +158,45 @@ test("C3 a log edited after its run fails check-specs as changed after it was re
   }
 });
 
-test("Vigil 3: an open ticket's PASS recorded at X goes stale when a planned path changes at X+1", () => {
-  const repo = startOneOff();
-  buildAndProve(repo);
-  write(repo, "src/filter.ts", "export const keep = (n: number) => n >= 1;\n");
-  commit(repo, "WEB-1: change after proof");
-  const status = tool(repo, "status.ts", ["WEB-1"]);
-  assert.match(status.out, /src\/filter\.ts changed after it was recorded/);
+test("PR-19: only a Q3 ticket's PASS goes stale when a planned path changes after it was recorded", () => {
+  const change = (repo: string) => {
+    buildAndProve(repo);
+    write(
+      repo,
+      "src/filter.ts",
+      "export const keep = (n: number) => n >= 1;\n",
+    );
+    commit(repo, "WEB-1: change after proof");
+    return tool(repo, "status.ts", ["WEB-1"]).out;
+  };
+  assert.match(change(startOneOff()), /Left to go: none/);
+  assert.match(
+    change(startOneOff({ qa: "Q3" })),
+    /src\/filter\.ts changed after it was recorded/,
+  );
+});
+
+test("PR-19: criteria that share a command share one run", () => {
+  const repo = startOneOff({
+    criteria: [
+      "  - id: C1",
+      "    statement: The filter keeps matching rows.",
+      "    evidence: test",
+      "    command: yarn test:sample",
+      "  - id: C2",
+      "    statement: The filter drops the rest.",
+      "    evidence: test",
+      "    command: yarn test:sample",
+    ].join("\n"),
+  });
+  write(repo, "src/filter.ts", "export const keep = (n: number) => n > 1;\n");
+  commit(repo, "WEB-1: filter");
+  const r = tool(repo, "contract.ts", ["run", "WEB-1"]);
+  assert.equal(r.status, 0, r.out);
+  assert.match(r.out, /PASS C1 test {2}yarn test:sample {2}\(\d/);
+  assert.match(r.out, /PASS C2 test {2}yarn test:sample {2}\(shared run/);
+  const results = JSON.parse(read(repo, RESULTS)).criteria;
+  assert.equal(results.C1.run.at, results.C2.run.at);
 });
 
 test("PR-16: a closed ticket's proofs are frozen; a later change to its paths does not reopen it", () => {

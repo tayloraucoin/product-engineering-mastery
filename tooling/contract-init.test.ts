@@ -173,22 +173,52 @@ test("A6: a cited file not approved, or holding a BLOCKING marker, is refused; a
   }
 });
 
-test("PR-15 tiers: code is tier 1 with no reviewer; contract:tier 2 adds the review, and a lower tier drops it", () => {
+test("PR-19 levels: a ticket starts at Q1 with no review criterion; contract:qa Q3 adds the reviewers named, and a lower level drops them", () => {
   const repo = startOneOff({ truth: ["specs/web/ux/records/table.md"] });
   const rel = "specs/web/one-offs/WEB-1-filter/contract.md";
-  assert.match(read(repo, rel), /^tier: 1$/m);
-  assert.doesNotMatch(read(repo, rel), /review:/);
-  let r = tool(repo, "contract.ts", ["tier", "WEB-1", "2"]);
+  assert.match(read(repo, rel), /^qa: Q1$/m);
+  assert.doesNotMatch(read(repo, rel), /id: review:/);
+  let r = tool(repo, "contract.ts", [
+    "qa",
+    "WEB-1",
+    "Q3",
+    "--reviewers",
+    "vigil",
+  ]);
   assert.equal(r.status, 0, r.out);
-  assert.match(read(repo, rel), /^tier: 2$/m);
-  assert.match(read(repo, rel), /review:vigil/);
-  r = tool(repo, "contract.ts", ["tier", "WEB-1"]);
+  assert.match(read(repo, rel), /^qa: Q3$/m);
+  assert.match(read(repo, rel), /id: review:vigil/);
+  r = tool(repo, "contract.ts", ["qa", "WEB-1", "Q2"]);
   assert.equal(r.status, 0, r.out);
-  assert.match(r.out, /tier 1; dropped review:vigil/);
-  assert.doesNotMatch(read(repo, rel), /review:/);
+  assert.match(
+    r.out,
+    /Q2; reviewers vigil \(in the thread\); dropped review:vigil/,
+  );
+  assert.doesNotMatch(read(repo, rel), /id: review:/);
   buildAndProve(repo);
   const status = tool(repo, "status.ts", ["WEB-1"]);
   assert.match(status.out, /Left to go: none/);
+  assert.match(status.out, /Reviewers: vigil \(in the thread\)/);
+});
+
+test("PR-19: a critical path below Q3 is flagged once at the start, never refused, and never assigns a reviewer", () => {
+  const repo = freshRepo();
+  tool(repo, "contract.ts", ["init", "web", "charge"]);
+  const rel = "specs/web/one-offs/WEB-1-charge/contract.md";
+  write(
+    repo,
+    rel,
+    oneOffContract("WEB-1", { planned: ["src/billing/charge.ts"] }),
+  );
+  const r = tool(repo, "contract.ts", ["init", "web", "charge"]);
+  assert.equal(r.status, 0, r.out);
+  assert.match(
+    r.out,
+    /src\/billing\/charge\.ts is a critical path and this ticket is Q1, below Q3/,
+  );
+  assert.match(read(repo, rel), /^reviewers: \[\]$/m);
+  assert.doesNotMatch(read(repo, rel), /id: review:/);
+  assert.equal(checkSpecs(repo).status, 0);
 });
 
 test("PR-15: check-specs warns on a ticket still closing, and fails it only with --strict", () => {

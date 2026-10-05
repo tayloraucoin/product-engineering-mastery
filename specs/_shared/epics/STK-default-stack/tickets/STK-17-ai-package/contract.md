@@ -18,8 +18,6 @@ cites:
   - "D-STK-13"
 truth_files: "none: no living UX file covers the starter's own stack"
 reviewers:
-  - mason
-  - vigil
   - warden
 planned_paths:
   - "packages/ai/**"
@@ -60,14 +58,6 @@ criteria:
     statement: "Types and build pass with the streaming route mounted."
     evidence: check
     command: "yarn verify"
-  - id: review:mason
-    statement: Mason reviews this ticket in fresh context against its contract and evidence.
-    evidence: manual
-    reason: a reviewer's judgment, recorded only by yarn review:run mason <id>
-  - id: review:vigil
-    statement: Vigil reviews this ticket in fresh context against its contract and evidence.
-    evidence: manual
-    reason: a reviewer's judgment, recorded only by yarn review:run vigil <id>
   - id: review:warden
     statement: Warden reviews this ticket in fresh context against its contract and evidence.
     evidence: manual
@@ -76,7 +66,9 @@ criteria:
     statement: "Before a key reaches a hosted tier: a monthly spend limit is set on each tier's Anthropic key, the account's data retention and training settings are checked against the privacy notice, and yarn workspace @pem/ai record has replaced the synthetic fixtures with recordings that pass their evals."
     evidence: manual
     reason: needs Taylor's Anthropic account and a staging key
-tier: 2
+qa: Q3
+focus:
+  - keys by tier, spend limits and what is sent to the model (warden)
 ---
 
 # Contract — STK-17 ai-package

@@ -59,7 +59,7 @@ criteria:
     statement: "The toggle offers light, dark and system and shows a visible focus ring, captured on the demo home."
     evidence: capture
     path: "specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/toggle-states.png"
-tier: 1
+qa: Q1
 ---
 
 # Contract — STK-6 theme-switch

@@ -36,7 +36,7 @@
     "contract:run": "node tooling/contract.ts run",
     "contract:record": "node tooling/contract.ts record",
     "contract:add": "node tooling/contract.ts add",
-    "contract:tier": "node tooling/contract.ts tier",
+    "contract:qa": "node tooling/contract.ts qa",
     "review:run": "node tooling/review-run.ts",
     "status": "node tooling/status.ts",
     "truth:promote": "node tooling/truth-promote.ts",

@@ -46,19 +46,7 @@ criteria:
     statement: "The real tree passes the boundaries lint with subpaths resolved."
     evidence: check
     command: "yarn lint:boundaries"
-  - id: review:mason
-    statement: Mason reviews this ticket in fresh context against its contract and evidence.
-    evidence: manual
-    reason: a reviewer's judgment, recorded only by yarn review:run mason <id>
-  - id: review:vigil
-    statement: Vigil reviews this ticket in fresh context against its contract and evidence.
-    evidence: manual
-    reason: a reviewer's judgment, recorded only by yarn review:run vigil <id>
-  - id: review:warden
-    statement: Warden reviews this ticket in fresh context against its contract and evidence.
-    evidence: manual
-    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
-tier: 2
+qa: Q2
 ---
 
 # Contract — WEB-2 boundaries-subpath-resolve

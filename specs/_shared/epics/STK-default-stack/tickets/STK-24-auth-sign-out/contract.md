@@ -12,7 +12,8 @@ cites:
   - "specs/_shared/epics/STK-default-stack/technical.md"
   - "D-STK-7"
 truth_files: "none: no living UX file covers the starter's own stack"
-reviewers: []
+reviewers:
+  - warden
 planned_paths:
   - "apps/web/app/auth/**"
   - "apps/web/lib/supabase/**"
@@ -30,6 +31,7 @@ criteria:
     statement: "A staging session signed out on localhost is refused by getUser on the next request."
     evidence: manual
     reason: "needs the hosted staging project"
+qa: Q2
 ---
 
 # Contract — STK-24 auth-sign-out

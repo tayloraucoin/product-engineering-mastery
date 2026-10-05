@@ -53,6 +53,7 @@ criteria:
     statement: "A second cold run after the fixes completes with no stop; the log holds its per-step timings."
     evidence: capture
     path: "specs/_shared/epics/STK-default-stack/tickets/STK-20-removal-dry-run/evidence/dry-run-2.txt"
+qa: Q1
 ---
 
 # Contract — STK-20 removal-dry-run

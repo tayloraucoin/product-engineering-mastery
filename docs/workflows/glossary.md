@@ -48,8 +48,8 @@ One line per term, grouped by system. If a term needs more than a line, it links
 | **Evidence type** | How a criterion is proven: `test` (an automated test), `check` (lint, types, boundaries), `capture` (a screenshot of a UI state) or `manual` (a human check, reported as not verified). |
 | **QA level** | Q0 to Q3: how the work is proven, who reviews it and what is written down. Recommended by the builder, confirmed by the operator, set per ticket. See [`qa-levels.md`](qa-levels.md). |
 | **Focus** | A named part of the work raised to a higher level on request ("the webhook handling"), without raising the rest. |
-| **Ledger** | The recorded proofs of a Q3 ticket: `results.json`. Only Q3 work keeps one. |
-| **`results.json`** | A Q3 ticket's PASS or FAIL per criterion. It starts at FAIL, and only scripts write it, each with a run record. |
+| **Ledger** | A Q3 ticket's `results.json` and kept review files: proofs that are checked for staleness before a merge. |
+| **`results.json`** | A ticket's PASS or FAIL per criterion, written only by scripts. Below Q3 it is a status note that never goes stale; at Q3 it is the ledger. |
 | **Run record** | Proof stamped into each Q3 result: the command, its exit code and the time. |
 | **As-built** | The closing record: what shipped, deviations and why, what wasn't verified, and the next step. Written at Q2 and Q3, or when something deviated. |
 | **Reviewer** | A role that checks work in fresh context. Recommended from what the work touches, confirmed by the operator. |

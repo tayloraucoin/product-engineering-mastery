@@ -70,19 +70,7 @@ criteria:
     statement: "The full chain passes; its bundle check builds apps/web with each server-only variable set to a unique sentinel and finds none in a client chunk."
     evidence: check
     command: "yarn verify"
-  - id: review:mason
-    statement: Mason reviews this ticket in fresh context against its contract and evidence.
-    evidence: manual
-    reason: a reviewer's judgment, recorded only by yarn review:run mason <id>
-  - id: review:vigil
-    statement: Vigil reviews this ticket in fresh context against its contract and evidence.
-    evidence: manual
-    reason: a reviewer's judgment, recorded only by yarn review:run vigil <id>
-  - id: review:warden
-    statement: Warden reviews this ticket in fresh context against its contract and evidence.
-    evidence: manual
-    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
-tier: 2
+qa: Q2
 ---
 
 # Contract — STK-4 env-module

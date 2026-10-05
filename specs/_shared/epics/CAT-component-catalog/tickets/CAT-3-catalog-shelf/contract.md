@@ -79,7 +79,7 @@ criteria:
     statement: "In the running workshop, the sidebar's tag filter shows source, verdict and layer tags, selecting source:custom narrows the sidebar to the custom stories, and the Provenance panel names the selected story's source, upstream and licence."
     evidence: capture
     path: "specs/_shared/epics/CAT-component-catalog/tickets/CAT-3-catalog-shelf/evidence/C6-workshop.md"
-tier: 1
+qa: Q1
 ---
 
 # Contract — CAT-3 catalog-shelf

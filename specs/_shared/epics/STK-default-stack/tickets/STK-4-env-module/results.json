@@ -1,6 +1,6 @@
 {
   "id": "STK-4",
-  "criteria_sha256": "716da9c48d921a609766f6ee544fdc61b342f7e05abde96b1841600ad0277d6b",
+  "criteria_sha256": "eeb3ce06ede5b17361705659b6042d78ae584f077f1ad1cd8d11cfed7b257860",
   "criteria": {
     "C1": {
       "status": "PASS",
@@ -75,51 +75,6 @@
         "head": "52541804cfcf059cd2b03f1e94e36ca7e7177ecf",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C6.log",
         "evidence_sha256": "6879d3d43dec36d28ccca20347301a98ebee3fb3b1892c228d9e6009713ed6db"
-      }
-    },
-    "review:mason": {
-      "status": "PASS",
-      "evidence": "manual",
-      "run": {
-        "command": "yarn review:run mason STK-4",
-        "exit": 0,
-        "at": "2026-10-04T05:04:22Z",
-        "head": "4561b04bcb7302b92dfc376dbbec4421ff576eb9",
-        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/review-mason.md",
-        "evidence_sha256": "c888e5609923a9049fe09ec320ef629eea0d85aa722553b62926cd3941efeeea",
-        "contract_sha256": "db07be97c45119b2c225fa5d746d1be093caf2258b16bc12bda576e1db822d2b",
-        "as_built_sha256": "35661d08540697a80b9ab41bd6b2ecfcd9b5efad141be7248cba3ba76cd9834a",
-        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/mason-cto-principal-dev.md; tools Read,Grep,Glob)"
-      }
-    },
-    "review:vigil": {
-      "status": "PASS",
-      "evidence": "manual",
-      "run": {
-        "command": "yarn review:run vigil STK-4",
-        "exit": 0,
-        "at": "2026-10-04T05:09:54Z",
-        "head": "4561b04bcb7302b92dfc376dbbec4421ff576eb9",
-        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/review-vigil.md",
-        "evidence_sha256": "46d877200fe35b169755135abc5a19a79634925a1d802452d3cd58db5d700d90",
-        "contract_sha256": "db07be97c45119b2c225fa5d746d1be093caf2258b16bc12bda576e1db822d2b",
-        "as_built_sha256": "35661d08540697a80b9ab41bd6b2ecfcd9b5efad141be7248cba3ba76cd9834a",
-        "runner": "claude 2.1.232 (Claude Code) (agent vigil; tools Read,Grep,Glob)"
-      }
-    },
-    "review:warden": {
-      "status": "PASS",
-      "evidence": "manual",
-      "run": {
-        "command": "yarn review:run warden STK-4",
-        "exit": 0,
-        "at": "2026-10-04T05:14:46Z",
-        "head": "4561b04bcb7302b92dfc376dbbec4421ff576eb9",
-        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/review-warden.md",
-        "evidence_sha256": "203a1615f51c855eee524a1ec9a35add18636af63193b6adaf0455656e67520b",
-        "contract_sha256": "db07be97c45119b2c225fa5d746d1be093caf2258b16bc12bda576e1db822d2b",
-        "as_built_sha256": "35661d08540697a80b9ab41bd6b2ecfcd9b5efad141be7248cba3ba76cd9834a",
-        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
       }
     }
   },

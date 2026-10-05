@@ -50,7 +50,7 @@ criteria:
     statement: "Types and build pass."
     evidence: check
     command: "yarn verify"
-tier: 1
+qa: Q1
 ---
 
 # Contract — STK-13 validators-services

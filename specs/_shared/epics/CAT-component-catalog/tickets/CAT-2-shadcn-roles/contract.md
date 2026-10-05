@@ -52,7 +52,7 @@ criteria:
     statement: "Every existing story still passes its axe and interaction checks on the new preset."
     evidence: test
     command: "yarn test"
-tier: 1
+qa: Q1
 ---
 
 # Contract — CAT-2 shadcn-roles

@@ -190,7 +190,8 @@ export function oneOffContract(
     planned?: string[];
     criteria?: string;
     depends?: string[];
-    tier?: 0 | 1 | 2;
+    qa?: "Q0" | "Q1" | "Q2" | "Q3";
+    reviewers?: string[];
     operatorReview?: boolean;
   } = {},
 ) {
@@ -205,8 +206,8 @@ export function oneOffContract(
     "devs_call: The function's name.",
     `cites: ${JSON.stringify(extra.cites ?? [])}`,
     `truth_files: ${JSON.stringify(extra.truth ?? "none: no living UX file in the scratch repo")}`,
-    "reviewers: []",
-    ...(extra.tier === undefined ? [] : [`tier: ${extra.tier}`]),
+    `reviewers: ${JSON.stringify(extra.reviewers ?? [])}`,
+    ...(extra.qa === undefined ? [] : [`qa: ${extra.qa}`]),
     ...(extra.operatorReview ? ["operator_review: true"] : []),
     `planned_paths: ${JSON.stringify(extra.planned ?? ["src/filter.ts"])}`,
     `depends_on: ${JSON.stringify(extra.depends ?? [])}`,

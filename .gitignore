@@ -17,6 +17,8 @@ coverage
 
 # A contract:run log before its rename (tooling/contract.ts)
 specs/**/evidence/.*.tmp
+# contract:run logs are local: results.json keeps the command, exit and test count (PR-19)
+specs/**/evidence/*.log
 
 # Turbo
 .turbo

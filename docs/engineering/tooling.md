@@ -781,13 +781,13 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - A long argument list.
 - **Verdict:** **keep until the overhaul lands.**
 
-#### contract:tier
+#### contract:qa
 
-**[changing in the workflow overhaul]**
+**[changed in the workflow overhaul, PR-19: replaces `contract:tier`]**
 
-- **What:** `yarn contract:tier` sets a started ticket's tier (0 docs, 1 code, 2 one-way door), computed from its planned paths when none is named. It then makes the review criteria match: the required reviewers at tier 2, none below it (PR-15).
-- **Area:** `specs/`, `toolkit.json` reviewers (`tooling/contract.ts`).
-- **Trigger:** by an agent when a ticket's scope changes tier.
+- **What:** `yarn contract:qa <id> <Q0 | Q1 | Q2 | Q3> [--reviewers <role,role>]` sets a started ticket's QA level and reviewers as the operator asked. Nothing is computed. At Q3 each reviewer gets a `review:<role>` criterion; below Q3 the review criteria are dropped and the review happens in the thread.
+- **Area:** `specs/` (`tooling/contract.ts`).
+- **Trigger:** by an agent when the operator raises or lowers a ticket's level, or changes who reviews it.
 - **Scores:**
   - Importance **3.0**: it decides how much review a change gets.
   - Token cost **0.5**: one line.
@@ -1292,7 +1292,7 @@ Net = importance − (token cost + wall time) ÷ 2, lowest first. A low net with
 |  36 | format:check              |        4.0 |   0.5 |  3.0 |  2.3 | keep                                                         |
 |  37 | db:stop                   |        2.5 |   0.0 |  0.0 |  2.5 | keep                                                         |
 |  38 | lib/json-schema.ts        |        2.5 |   0.0 |  0.0 |  2.5 | keep while lib/specs.ts uses it                              |
-|  39 | contract:tier †           |        3.0 |   0.5 |  0.5 |  2.5 | keep until the overhaul lands                                |
+|  39 | contract:qa †             |        3.0 |   0.5 |  0.5 |  2.5 | keep until the overhaul lands                                |
 |  40 | results-gate †            |        3.5 |   1.0 |  1.0 |  2.5 | keep until the overhaul lands                                |
 |  41 | check-refs                |        4.0 |   1.0 |  2.0 |  2.5 | keep                                                         |
 |  42 | db:setup                  |        3.0 |   0.5 |  0.0 |  2.8 | keep                                                         |

@@ -47,7 +47,7 @@ criteria:
     statement: "A phone on the same network opens the dev server at the printed URL."
     evidence: manual
     reason: "needs a second device"
-tier: 1
+qa: Q1
 ---
 
 # Contract — STK-19 helpers-deploy

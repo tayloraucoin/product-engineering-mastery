@@ -57,7 +57,7 @@ criteria:
     statement: "A fixture @pem/ui component with no story fails the story-coverage check, naming the component."
     evidence: test
     command: "yarn test"
-tier: 1
+qa: Q1
 ---
 
 # Contract — STK-8 component-workshop

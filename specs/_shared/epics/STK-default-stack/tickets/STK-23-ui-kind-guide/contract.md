@@ -41,7 +41,7 @@ criteria:
     statement: "The story checks still pass with the README files in the kind folders."
     evidence: test
     command: "yarn test"
-tier: 1
+qa: Q1
 ---
 
 # Contract — STK-23 ui-kind-guide

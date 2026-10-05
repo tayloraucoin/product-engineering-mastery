@@ -47,6 +47,7 @@ criteria:
     evidence: check
     command: "yarn check-types"
 id: CAT-14
+qa: Q1
 ---
 
 # Contract — state contrast and markers

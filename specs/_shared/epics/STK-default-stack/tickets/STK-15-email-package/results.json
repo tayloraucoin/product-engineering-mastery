@@ -1,6 +1,6 @@
 {
   "id": "STK-15",
-  "criteria_sha256": "68d097c820842cb711c5312d7427e94f3a654cac49985544c8fd3ed8381f023c",
+  "criteria_sha256": "637a61237566b5efea6c08fc818f46748c019f207b1f57b717acb580422130a3",
   "criteria": {
     "C1": {
       "status": "PASS",
@@ -50,51 +50,6 @@
         "head": "e486e8c80d663e57f57239edc34f1113a9ac7777",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/evidence/C4.log",
         "evidence_sha256": "585df8bb7fdde3a0b5bda9e192fe62e71bed02b9399f1917bce53aa50ea7f193"
-      }
-    },
-    "review:mason": {
-      "status": "PASS",
-      "evidence": "manual",
-      "run": {
-        "command": "yarn review:run mason STK-15",
-        "exit": 0,
-        "at": "2026-10-05T00:43:28Z",
-        "head": "3e3b46840f915a7cf1866f35f74957847fb5c887",
-        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/review-mason.md",
-        "evidence_sha256": "b90802cc71fa9ed5b8ddd0d8b7797e6b69a0aa9d0cd646435d13bb6097bf2499",
-        "contract_sha256": "b3afca1d007a01cc26be74a2c89661dfe0653d89eca8bbba832524b4f0965151",
-        "as_built_sha256": "b54b3f09baac51ef4710b448dc9a10cf29216eaab3ce82408b9039ae0ac531f0",
-        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/mason-cto-principal-dev.md; tools Read,Grep,Glob)"
-      }
-    },
-    "review:vigil": {
-      "status": "PASS",
-      "evidence": "manual",
-      "run": {
-        "command": "yarn review:run vigil STK-15",
-        "exit": 0,
-        "at": "2026-10-05T00:48:16Z",
-        "head": "2d0bdc5c98a9a2ed8b2fa33411bdc2eda537c8db",
-        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/review-vigil.md",
-        "evidence_sha256": "20817e2ad2286be24d6883569641a2f3748bb8797bf045b5fc3d78cce0ce5fcf",
-        "contract_sha256": "b3afca1d007a01cc26be74a2c89661dfe0653d89eca8bbba832524b4f0965151",
-        "as_built_sha256": "b54b3f09baac51ef4710b448dc9a10cf29216eaab3ce82408b9039ae0ac531f0",
-        "runner": "claude 2.1.232 (Claude Code) (agent vigil; tools Read,Grep,Glob)"
-      }
-    },
-    "review:warden": {
-      "status": "PASS",
-      "evidence": "manual",
-      "run": {
-        "command": "yarn review:run warden STK-15",
-        "exit": 0,
-        "at": "2026-10-05T00:53:45Z",
-        "head": "9ca66f63d3a72b9b67bdacbd44807ddda7ac7a10",
-        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-15-email-package/review-warden.md",
-        "evidence_sha256": "6a94cfa4db2d23f8be25eaafdd48fc65cbfe6d264dea9237cadab18061ae31d8",
-        "contract_sha256": "b3afca1d007a01cc26be74a2c89661dfe0653d89eca8bbba832524b4f0965151",
-        "as_built_sha256": "b54b3f09baac51ef4710b448dc9a10cf29216eaab3ce82408b9039ae0ac531f0",
-        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
       }
     }
   },

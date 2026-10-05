@@ -46,7 +46,7 @@ criteria:
     statement: Record 0010 states the decision, the options weighed and a revisit trigger; conventions rule 9, section 4 and section 5 agree with D-STK-1 and D-STK-3; and ledger.md and changelog.md each gain one entry per changed rule.
     evidence: manual
     reason: agreement between prose documents is a reading judgment
-tier: 0
+qa: Q1
 ---
 
 # Contract — STK-1 rulings-on-record

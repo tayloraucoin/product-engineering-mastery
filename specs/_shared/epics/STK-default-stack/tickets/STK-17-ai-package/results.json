@@ -1,6 +1,6 @@
 {
   "id": "STK-17",
-  "criteria_sha256": "37d13965c1ae86ce22d5eb250b9fe7203d887dc316d01d3ec2afee6b721bda2f",
+  "criteria_sha256": "d71179faa0884f14abff16fe35c15d2157f191762d39373612fddbe53f08d57e",
   "criteria": {
     "C1": {
       "status": "PASS",
@@ -51,16 +51,6 @@
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-17-ai-package/evidence/C4.log",
         "evidence_sha256": "8c0027dd935c1e32507a20bde131b29a6cff0f6bada97dace8c4fbea5af24542"
       }
-    },
-    "review:mason": {
-      "status": "FAIL",
-      "evidence": "manual",
-      "run": null
-    },
-    "review:vigil": {
-      "status": "FAIL",
-      "evidence": "manual",
-      "run": null
     },
     "review:warden": {
       "status": "FAIL",

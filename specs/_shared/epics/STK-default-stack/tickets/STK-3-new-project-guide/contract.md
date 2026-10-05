@@ -55,10 +55,7 @@ criteria:
     statement: A reader holding only the guide and a one-paragraph briefing can name every step and the check that ends it.
     evidence: manual
     reason: followability by a cold reader is a reading judgment until the dry-run ticket times it
-  - id: review:vigil
-    statement: Vigil reviews this ticket in fresh context against its contract and evidence.
-    evidence: manual
-    reason: a reviewer's judgment, recorded only by yarn review:run vigil <id>
+qa: Q2
 ---
 
 # Contract — STK-3 new-project-guide
