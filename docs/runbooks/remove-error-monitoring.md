@@ -64,5 +64,6 @@ The module holds no element. In `packages/config/eslint/boundaries.js`, delete t
 
 1. In `toolkit.json`, set `"removed": true` on the `error-monitoring` entry of the `stack` block.
 2. `yarn check-stack` exits 0: no listed file, variable or dependency of the module is left.
-3. A case-insensitive search for `sentry` outside `node_modules`, `docs/`, `specs/` and `toolkit.json` (whose removed entry still names the variables) finds nothing.
-4. `yarn verify` exits 0.
+3. `git grep -il sentry -- apps packages tooling turbo.json .env.example ':!tooling/refs-pending.json'` prints nothing.
+4. `yarn check-refs` names the deleted paths this runbook still lists. Add each to `tooling/refs-pending.json`, keyed exactly as printed: `"<deleted path>": "removed by docs/runbooks/remove-error-monitoring.md"`.
+5. `yarn verify` exits 0.
