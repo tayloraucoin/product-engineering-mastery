@@ -92,10 +92,11 @@ async function request(
     new Request(url, init),
     sources({ cookie: null, db }),
   );
-  const payload = (await response.json()) as {
+  const text = await response.text();
+  const payload = JSON.parse(text) as {
     error: { json: { message: string; data: Record<string, unknown> } };
   };
-  return { status: response.status, error: payload.error.json };
+  return { status: response.status, text, error: payload.error.json };
 }
 
 test("C2: over HTTP, a note row-level security withholds is NOT_FOUND (404)", async () => {
@@ -140,12 +141,14 @@ test("C2: over HTTP, input that fails its validator is BAD_REQUEST (400) with th
   assert.deepEqual(error.data.fields, { body: ["Write the note."] });
 });
 
-test("C2: a fault is INTERNAL_SERVER_ERROR (500) and its message stays on the server", async () => {
-  const { status, error } = await request(
+test("C2: a fault is INTERNAL_SERVER_ERROR (500) and neither its message nor its stack leaves the server", async () => {
+  const { status, text, error } = await request(
     "notes.get",
     { input: { id: NOTE_ID } },
     scriptedDb(() => new Error('relation "notes" does not exist')),
   );
   assert.equal(status, 500);
-  assert.doesNotMatch(error.message, /relation/);
+  assert.equal(error.data.code, "INTERNAL_SERVER_ERROR");
+  assert.equal(error.data.stack, undefined);
+  assert.doesNotMatch(text, /relation/);
 });

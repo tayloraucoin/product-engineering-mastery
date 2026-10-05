@@ -17,15 +17,15 @@ import { failedFields, toTRPCError } from "./errors.ts";
 const t = initTRPC.context<ApiContext>().create({
   transformer: superjson,
   errorFormatter({ shape, error }) {
-    // A fault's message may carry SQL or a vendor's words; the client gets a plain one, the log the cause.
-    const message =
-      error.code === "INTERNAL_SERVER_ERROR"
-        ? "Something went wrong on our side. Try again."
-        : shape.message;
+    const data = { ...shape.data, fields: failedFields(error) };
+    if (error.code !== "INTERNAL_SERVER_ERROR") return { ...shape, data };
+    // A fault's message and stack may carry SQL or a vendor's words, in any
+    // environment; the client gets a plain message, the log the cause.
+    delete data.stack;
     return {
       ...shape,
-      message,
-      data: { ...shape.data, fields: failedFields(error) },
+      message: "Something went wrong on our side. Try again.",
+      data,
     };
   },
 });

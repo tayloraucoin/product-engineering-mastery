@@ -13,17 +13,16 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { createLogger } from "@pem/observability/logger";
 
 import { createApiContext, type ApiContextSources } from "./context.ts";
+import { API_ENDPOINT } from "./endpoint.ts";
 import { appRouter } from "./root.ts";
 import { createCallerFactory } from "./trpc.ts";
 
 export type { ApiContextSources } from "./context.ts";
 export type { AppRouter } from "./root.ts";
+export { API_ENDPOINT } from "./endpoint.ts";
 export { appRouter };
 
 const log = createLogger("api");
-
-/** The path the route is mounted at and the client links to. */
-export const API_ENDPOINT = "/api/trpc";
 
 /** Answers one HTTP request to the API. Mount it as GET and POST at `app/api/trpc/[trpc]/route.ts`. */
 export function handleApiRequest(

@@ -35,9 +35,11 @@ export function bearerToken(header: string): string | null {
 }
 
 /**
- * The context for one request. An `Authorization` header decides alone: a
- * token Supabase refuses makes the request anonymous, and the cookie session
- * is never read in its place, so a caller always gets the identity it sent.
+ * The context for one request. A Bearer header decides alone: a token
+ * Supabase refuses, or an empty one, makes the request anonymous, and the
+ * cookie session is never read in its place, so a caller always gets the
+ * identity it sent. Any other scheme (a staging site's HTTP Basic, which the
+ * browser adds to every same-origin fetch) is not ours, so the cookie decides.
  */
 export async function createApiContext(
   headers: Headers,
@@ -45,11 +47,11 @@ export async function createApiContext(
 ): Promise<ApiContext> {
   const header = headers.get("authorization");
   let user: AuthContext | null;
-  if (header === null) {
-    user = await sources.fromCookies();
-  } else {
+  if (header !== null && /^Bearer(?:[ \t]|$)/i.test(header)) {
     const token = bearerToken(header);
     user = token ? await sources.fromBearer(token) : null;
+  } else {
+    user = await sources.fromCookies();
   }
   return { user, serviceContextFor: sources.serviceContextFor };
 }

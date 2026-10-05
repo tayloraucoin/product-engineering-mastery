@@ -69,7 +69,7 @@ test("C1: a cookie session and a bearer token for one user resolve to the same c
   assert.deepEqual(fromBearer.user, expected);
 });
 
-test("C1: an Authorization header decides alone: a refused token is anonymous even beside a good cookie", async () => {
+test("C1: a Bearer header decides alone: a refused token is anonymous even beside a good cookie", async () => {
   const context = await createApiContext(
     headers({ cookie: SESSION_COOKIE, authorization: "Bearer forged" }),
     sources({ cookie: SESSION_COOKIE }),
@@ -77,15 +77,28 @@ test("C1: an Authorization header decides alone: a refused token is anonymous ev
   assert.equal(context.user, null);
 });
 
-test("C1: a scheme other than Bearer, or an empty token, is anonymous", async () => {
-  for (const authorization of [`Basic ${ACCESS_TOKEN}`, "Bearer", "Bearer  "]) {
+test("C1: an empty Bearer token is anonymous even beside a good cookie", async () => {
+  for (const authorization of ["Bearer", "Bearer  "]) {
     const context = await createApiContext(
-      headers({ authorization }),
+      headers({ cookie: SESSION_COOKIE, authorization }),
       sources({ cookie: SESSION_COOKIE }),
     );
     assert.equal(context.user, null, authorization);
   }
   assert.equal(bearerToken(`bearer ${ACCESS_TOKEN}`), ACCESS_TOKEN);
+});
+
+test("C1: a scheme other than Bearer (a staging site's HTTP Basic) leaves the cookie session to decide", async () => {
+  const signedIn = await createApiContext(
+    headers({ cookie: SESSION_COOKIE, authorization: "Basic dGVzdDp0ZXN0" }),
+    sources({ cookie: SESSION_COOKIE }),
+  );
+  assert.equal(signedIn.user?.userId, USER_ID);
+  const anonymous = await createApiContext(
+    headers({ authorization: `Basic ${ACCESS_TOKEN}` }),
+    sources({ cookie: null }),
+  );
+  assert.equal(anonymous.user, null);
 });
 
 test("C1: a protected procedure refuses an anonymous caller with UNAUTHORIZED", async () => {
