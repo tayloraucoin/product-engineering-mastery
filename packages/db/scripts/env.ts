@@ -1,7 +1,8 @@
 /**
  * The package's only process.env reader (codebase-conventions §5; D-STK-3).
- * drizzle.config.ts, the db:* scripts and the integration tests import it; the
- * runtime client never does, because an app hands it its URL.
+ * The db:* scripts and the integration tests import it; drizzle.config.ts
+ * reads no environment, and the runtime client never does, because an app
+ * hands it its URL.
  *
  * The tier is read on demand, never at import, so importing a script in a
  * unit test throws nothing. An unset DATABASE_ENVIRONMENT is refused, naming

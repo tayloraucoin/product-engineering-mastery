@@ -97,6 +97,18 @@ describe("C2: a hosted tier never reaches Docker or the local address", () => {
     });
   }
 
+  test("seed-users.ts on staging refuses a hosted auth URL, never calling it", () => {
+    const result = runScript("seed-users.ts", {
+      DATABASE_ENVIRONMENT: "staging",
+      NEXT_PUBLIC_SUPABASE_URL_STAGING: "https://203.0.113.10",
+      SUPABASE_SERVICE_ROLE_KEY_STAGING: "synthetic",
+    });
+    assert.equal(result.status, 1, result.stderr);
+    assert.match(result.stderr, /NEXT_PUBLIC_SUPABASE_URL_STAGING/);
+    assert.doesNotMatch(result.stdout + result.stderr, /54322/);
+    assert.ok(result.ms < 5_000, `took ${result.ms} ms`);
+  });
+
   for (const script of ["migrate.ts", "setup.ts"]) {
     test(`${script} on staging with only _LOCAL URLs set refuses naming the _STAGING variable`, () => {
       const result = runScript(script, {

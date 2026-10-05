@@ -191,7 +191,7 @@ Remove in this order, from the top of the package graph down, so nothing still p
 | AI | A call reaches the live model and spends when the staging key is set. No recorded answers. |
 | Billing | The staging keys, which are test keys. |
 | Error monitoring | Reports to the staging project when its DSN is set. |
-| Not available | `yarn db:local`, `yarn db:local:full`, `yarn db:stop`, `yarn db:local:reset`, `yarn db:seed-users` and `yarn test:db`. They stay in `package.json`; each refuses in its first line, naming the add recipe, until the tier is local. |
+| Not available | `yarn db:local`, `yarn db:local:full`, `yarn db:local:reset` and `yarn test:db` refuse in their first line, naming the add recipe, until the tier is local. `yarn db:stop` (the bare CLI) and `yarn db:seed-users` (which refuses any auth URL that is not this machine) stay in `package.json` too and need Docker. |
 
 **Proof:** `yarn check-stack` and `yarn check-client-bundle` exit 0, then `yarn verify`. The database itself is proven later, by the operator's first `yarn db:migrate` against the hosted project; say so in the report rather than claiming it.
 
