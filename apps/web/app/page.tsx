@@ -1,11 +1,12 @@
 import { buttonVariants } from "@pem/ui/button";
 
-import { env } from "../env";
+import { productionRuntime } from "../env";
 
 /**
  * `?state=error` throws, so the error page (global-error.tsx) and the error
- * reporting behind it can be reached on purpose (STK-18 C5). Never in
- * production, where anyone could fill the error inbox.
+ * reporting behind it can be reached on purpose (STK-18 C5). Never where real
+ * users may be served (`productionRuntime`, which holds even when the tier is
+ * unset), since anyone could fill the error inbox.
  */
 export default async function HomePage({
   searchParams,
@@ -13,7 +14,7 @@ export default async function HomePage({
   searchParams: Promise<{ state?: string | string[] }>;
 }) {
   const { state } = await searchParams;
-  if (state === "error" && env.DATABASE_ENVIRONMENT !== "production")
+  if (state === "error" && !productionRuntime)
     throw new Error("Synthetic render error from ?state=error");
 
   return (

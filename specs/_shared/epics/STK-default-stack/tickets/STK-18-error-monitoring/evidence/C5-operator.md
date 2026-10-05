@@ -11,7 +11,7 @@ Handed to the operator: it needs the Sentry organization (US region, ratified 20
 
 ## Steps for the operator
 
-1. In Sentry, create the organization in the **US** region. Create two Next.js projects, one for staging and one for production. Turn off session replay, performance and profiling in both.
+1. In Sentry, create the organization in the **US** region. Create two Next.js projects, one for staging and one for production. Turn off session replay, performance and profiling in both. In each project's Security & Privacy settings, turn on "Prevent Storing of IP Addresses" (Sentry reads the client IP from the ingest request itself, which no code setting reaches) and the server-side data scrubber, and set the shortest retention the plan allows.
 2. Create an organization auth token with the `project:releases` and `org:read` scopes.
 3. In Vercel, for the Preview environment (staging): `DATABASE_ENVIRONMENT=staging`, `NEXT_PUBLIC_SENTRY_DSN_STAGING` (the staging project's DSN), `SENTRY_PROJECT_STAGING` (its slug), `SENTRY_ORG` and `SENTRY_AUTH_TOKEN`. For Production: `NEXT_PUBLIC_SENTRY_DSN` and `SENTRY_PROJECT` (the production project's), plus the same org and token.
 4. Deploy a preview, and confirm in the build log that source maps uploaded.

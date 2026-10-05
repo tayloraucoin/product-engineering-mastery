@@ -3,9 +3,9 @@
  * only: no tracing, replay, logs, feedback or profiling (NN6), so no sample
  * rate is set, no such integration is added, and the browser's default
  * tracing integration is dropped. Every dataCollection category is set here,
- * none left to the SDK's default (NN3, verified against @sentry/core 11.0.0's
- * `DataCollection` on 2026-10-04); `beforeSend` then scrubs whatever still
- * arrives.
+ * none left to the SDK's default (NN3): `Required<…>` below fails the type
+ * check when an SDK upgrade adds a category. `beforeSend` then scrubs whatever
+ * still arrives.
  */
 
 import type { BrowserOptions, ErrorEvent } from "@sentry/nextjs";
@@ -36,7 +36,7 @@ export const DATA_COLLECTION = {
   queues: false,
   stackFrameVariables: false,
   frameContextLines: 5,
-} as const satisfies NonNullable<BrowserOptions["dataCollection"]>;
+} as const satisfies Required<NonNullable<BrowserOptions["dataCollection"]>>;
 
 export function sentryOptions({ dsn, environment }: ReportingTarget) {
   return {
