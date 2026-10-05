@@ -5,7 +5,7 @@ import { afterEach, mock, test } from "node:test";
 
 import { registerErrorReporter, type ErrorReport } from "./error-reporter.ts";
 import { createLogger } from "./logger.ts";
-import { REDACTED } from "./redact.ts";
+import { REDACTED, scrubText } from "./redact.ts";
 
 let restore: (() => void) | undefined;
 
@@ -218,4 +218,44 @@ test("C1: a secret-like tag is redacted before it reaches the reporter", () => {
     namespace: "billing",
     event: "checkout.failed",
   });
+});
+
+test("C2: free text is scrubbed of addresses, bearer credentials, JWTs and secret query values", () => {
+  assert.equal(scrubText("sent to person@example.test"), `sent to ${REDACTED}`);
+  assert.equal(
+    scrubText("Authorization: Bearer abc.def-123"),
+    `Authorization: Bearer ${REDACTED}`,
+  );
+  assert.equal(
+    scrubText("jwt eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.c2lnbmF0dXJl here"),
+    `jwt ${REDACTED} here`,
+  );
+  assert.equal(
+    scrubText("GET /auth/callback?code=abc123&next=/home&token=xyz"),
+    `GET /auth/callback?code=${REDACTED}&next=/home&token=${REDACTED}`,
+  );
+  assert.equal(
+    scrubText("checkout.failed for plan pro"),
+    "checkout.failed for plan pro",
+  );
+});
+
+test("C2: an error's message and stack are scrubbed on the printed line", () => {
+  const printed = capture("error");
+
+  createLogger("auth").error("reset.failed", {
+    error: new Error("no user person@example.test for token=abc123"),
+    note: "reply to person@example.test",
+  });
+
+  const fields = printed.mock.calls[0]?.arguments[1] as {
+    error: { message: string; stack: string };
+    note: string;
+  };
+  assert.equal(
+    fields.error.message,
+    `no user ${REDACTED} for token=${REDACTED}`,
+  );
+  assert.ok(!fields.error.stack.includes("person@example.test"));
+  assert.equal(fields.note, `reply to ${REDACTED}`);
 });

@@ -11,8 +11,14 @@
  * (`redact.ts`): no secret, request body or personal data reaches a log, so
  * identify a person by `userId` only.
  *
+ * Every string, an error's message and stack included, is also scrubbed of
+ * addresses, bearer credentials, JWTs and secret query values.
+ *
  * `error` hands `fields.error` (or, when absent, an Error named for the event),
- * `tags` and `userId` to the registered error reporter (`error-reporter.ts`).
+ * redacted `tags` and `userId` to the registered error reporter
+ * (`error-reporter.ts`). The error goes as caught, since a reporter needs its
+ * stack frames; a reporter that ships it off the host scrubs its text with
+ * `scrubText` first (STK-18).
  */
 
 import { reportError } from "./error-reporter.ts";

@@ -12,6 +12,10 @@
       "types": "./src/error-reporter.ts",
       "default": "./src/error-reporter.ts"
     },
+    "./redact": {
+      "types": "./src/redact.ts",
+      "default": "./src/redact.ts"
+    },
     "./analytics": {
       "types": "./src/analytics.ts",
       "default": "./src/analytics.ts"
