@@ -25,7 +25,7 @@ const synthetic = (): ScrubbableEvent => ({
   breadcrumbs: [
     { message: "fetch to ada@example.test", data: { url: "/x?token=1" } },
   ],
-  extra: { body: "{\"password\":\"hunter2\"}" },
+  extra: { body: '{"password":"hunter2"}' },
 });
 
 test("beforeSend drops cookies, body, headers and query, keeping url path and method", () => {
