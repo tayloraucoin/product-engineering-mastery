@@ -1,7 +1,7 @@
 command: yarn lint
 exit: 0
-at: 2026-10-05T00:16:06Z
-head: b6a1d67cb423d2bf7fd01ea0c7bd1b4cd4e0b929
+at: 2026-10-05T00:30:34Z
+head: 56862d831570a75c225152e15fc818b2e0eeb2a3
 ---
 
    • turbo 2.11.6
@@ -9,21 +9,21 @@ head: b6a1d67cb423d2bf7fd01ea0c7bd1b4cd4e0b929
    • Running lint in 14 packages
    • Remote caching disabled
 
-@pem/env:lint: cache hit, replaying logs 4c58f527123bf9ef
-@pem/observability:lint: cache hit, replaying logs 121294f91bde48a2
-@pem/validators:lint: cache hit, replaying logs 5bdf1c4f00a7f37f
-@pem/brand:lint: cache hit, replaying logs 0275ad476c71eb82
-@pem/constants:lint: cache hit, replaying logs 8d07b390be670e26
-@pem/ui:lint: cache hit, replaying logs 55ee1f696c7b83ce
-@pem/email:lint: cache hit, replaying logs b30e98aef9942b51
-@pem/db:lint: cache hit, replaying logs 7f04daeb0280f8ac
-docs:lint: cache hit, replaying logs 5a158f73ac7ca99f
-@pem/catalog:lint: cache hit, replaying logs c0c21ab26ecae6b1
-@pem/services:lint: cache hit, replaying logs 68349612dd9e7540
-@pem/auth:lint: cache hit, replaying logs 0345af332e633530
-web:lint: cache hit, replaying logs c6288aed01d83dd2
+@pem/validators:lint: cache hit, replaying logs b08574947a810797
+@pem/env:lint: cache hit, replaying logs d61e55b0c68256ac
+@pem/brand:lint: cache hit, replaying logs 9e4d62e59f6ce8e4
+@pem/constants:lint: cache hit, replaying logs 75719c418dff97a5
+@pem/observability:lint: cache hit, replaying logs 546fdb1ffdbd96b9
+@pem/ui:lint: cache miss, executing 9da1c39508b48db2
+@pem/db:lint: cache hit, replaying logs 12e22b09e3eb5e11
+@pem/email:lint: cache hit, replaying logs 53e9a850af80d761
+@pem/auth:lint: cache hit, replaying logs eb910f49399aadc9
+@pem/services:lint: cache hit, replaying logs 4435b7dbf83292c3
+web:lint: cache miss, executing 543683a2dfcf7281
+docs:lint: cache miss, executing 7f82bb2b1d408847
+@pem/catalog:lint: cache miss, executing f9b202c835368e20
 
  Tasks:    13 successful, 13 total
-Cached:    13 cached, 13 total
-  Time:    136ms >>> FULL TURBO
+Cached:    9 cached, 13 total
+  Time:    3.718s 
 
