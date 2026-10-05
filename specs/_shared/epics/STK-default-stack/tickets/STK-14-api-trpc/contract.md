@@ -54,6 +54,7 @@ criteria:
     statement: "Following remove-api.md on a scratch copy leaves grep for trpc empty and verify green."
     evidence: manual
     reason: "a removal rehearsal on a copy is done by a person"
+tier: 1
 ---
 
 # Contract — STK-14 api-trpc

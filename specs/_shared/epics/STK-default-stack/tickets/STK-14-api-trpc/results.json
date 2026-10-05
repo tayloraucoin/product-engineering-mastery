@@ -1,0 +1,32 @@
+{
+  "id": "STK-14",
+  "criteria_sha256": "8b649d33a19cc2bb2ef03586ea9948aee65eefd9e7e208c2b7c5406781b1bfc3",
+  "criteria": {
+    "C1": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C2": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C3": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    },
+    "C4": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    },
+    "C5": {
+      "status": "FAIL",
+      "evidence": "manual",
+      "run": null
+    }
+  },
+  "updated_at": "2026-10-05T01:53:18Z"
+}
