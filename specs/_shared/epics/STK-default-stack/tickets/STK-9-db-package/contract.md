@@ -18,6 +18,7 @@ cites:
   - "D-STK-16"
 truth_files: "none: no living UX file covers the starter's own stack"
 reviewers:
+  - chancery
   - mason
   - vigil
   - warden
@@ -73,6 +74,10 @@ criteria:
     statement: Warden reviews this ticket in fresh context against its contract and evidence.
     evidence: manual
     reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
+  - id: review:chancery
+    statement: Chancery reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run chancery <id>
 tier: 2
 ---
 

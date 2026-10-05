@@ -1,6 +1,6 @@
 {
   "id": "STK-9",
-  "criteria_sha256": "b9acd3605607e8812f72239acf727b8cb07e4f5da733cab0ea0f1996df35b4ff",
+  "criteria_sha256": "fa310d9b1f02dc9046e39d45053d91cce3de275d841fd5f389e9b2d77f98484e",
   "criteria": {
     "C1": {
       "status": "PASS",
@@ -107,7 +107,12 @@
         "as_built_sha256": "e18ddc8962f9f4ff68390f8b8f21cf126c4eb28868162b0d0b37af4d91f75a0d",
         "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
       }
+    },
+    "review:chancery": {
+      "status": "FAIL",
+      "evidence": "manual",
+      "run": null
     }
   },
-  "updated_at": "2026-10-04T06:53:07Z"
+  "updated_at": "2026-10-05T03:25:00Z"
 }
