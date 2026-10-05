@@ -57,13 +57,13 @@
       "evidence": "check",
       "run": {
         "command": "yarn verify",
-        "exit": 2,
-        "at": "2026-10-05T00:26:12Z",
-        "head": "0c9a2aa94ae45acb0cdf9f8f759ff92ce717d936",
+        "exit": 1,
+        "at": "2026-10-05T00:30:57Z",
+        "head": "56862d831570a75c225152e15fc818b2e0eeb2a3",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-5-constants-observability/evidence/C5.log",
-        "evidence_sha256": "b1d2c1ac3e2a744abadacdc2573f34f182fb9d92516501910bf01f805ca0b6d2"
+        "evidence_sha256": "81965faf250f67e46f8f19d8683236cae58c975e8bb7f4f125ee9d7a9bfc1256"
       }
     }
   },
-  "updated_at": "2026-10-05T00:27:31Z"
+  "updated_at": "2026-10-05T00:32:09Z"
 }
