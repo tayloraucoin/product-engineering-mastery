@@ -11,7 +11,11 @@ import { FIXTURES } from "./fixtures/index.ts";
 const LOCAL: AiConfig = { tier: "local", deployed: false };
 const KEYED: AiConfig = { ...LOCAL, apiKey: "sk-ant-synthetic" };
 
-function setup(config: AiConfig, userId: string | null) {
+function setup(
+  config: AiConfig,
+  userId: string | null,
+  rate?: { requests: number; windowMs: number },
+) {
   const calls: string[] = [];
   const fetch: typeof globalThis.fetch = async (input) => {
     calls.push(String(input instanceof Request ? input.url : input));
@@ -24,14 +28,26 @@ function setup(config: AiConfig, userId: string | null) {
   const logger: Logger = { info: keep, warn: keep, error: keep };
   const ai = createAi(config, { fetch, logger });
   let asked = 0;
+  let clock = 0;
   const handler = createChatHandler({
     ai,
+    logger,
+    rate,
+    now: () => clock,
     currentUserId: async () => {
       asked += 1;
       return userId;
     },
   });
-  return { calls, lines, handler, asked: () => asked };
+  return {
+    calls,
+    lines,
+    handler,
+    asked: () => asked,
+    advance: (ms: number) => {
+      clock += ms;
+    },
+  };
 }
 
 function post(body: unknown): Request {
@@ -103,4 +119,33 @@ test("no key on a hosted tier is 503, naming nothing about the configuration", a
   const response = await handler(post(chat));
   assert.equal(response.status, 503);
   assert.deepEqual(await response.json(), { error: "AI is not configured" });
+});
+
+test("past the per-user window a vendor call is 429, before any model is called; the window then reopens", async () => {
+  const { calls, lines, handler, advance } = setup(KEYED, "user-synthetic", {
+    requests: 2,
+    windowMs: 60_000,
+  });
+  for (let i = 0; i < 2; i += 1) {
+    const response = await handler(post(chat));
+    assert.equal(response.status, 200);
+    await response.text();
+  }
+  const before = calls.length;
+  const limited = await handler(post(chat));
+  assert.equal(limited.status, 429);
+  assert.equal(limited.headers.get("retry-after"), "60");
+  assert.equal(calls.length, before);
+  assert.ok(lines.some((line) => line.event === "chat.limited"));
+  advance(60_000);
+  const reopened = await handler(post(chat));
+  assert.equal(reopened.status, 200);
+  await reopened.text();
+});
+
+test("a body over the size cap is 413, before it is parsed", async () => {
+  const { calls, handler } = setup(LOCAL, null);
+  const response = await handler(post("x".repeat(256 * 1024 + 1)));
+  assert.equal(response.status, 413);
+  assert.equal(calls.length, 0);
 });

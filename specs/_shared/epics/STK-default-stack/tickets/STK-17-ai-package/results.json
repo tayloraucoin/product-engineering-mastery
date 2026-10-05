@@ -1,26 +1,56 @@
 {
   "id": "STK-17",
-  "criteria_sha256": "22919a61a85d1114b23efd20f4cdc9454daaf38a00e12578a008273d5bdbd577",
+  "criteria_sha256": "37d13965c1ae86ce22d5eb250b9fe7203d887dc316d01d3ec2afee6b721bda2f",
   "criteria": {
     "C1": {
       "status": "FAIL",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test",
+        "exit": 1,
+        "at": "2026-10-05T03:22:00Z",
+        "head": "d8ac51baeb0b36a2c757e3e47e57dfbc0cf7f518",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-17-ai-package/evidence/C1.log",
+        "evidence_sha256": "674a71ff9304d1273a9adb479339a1c9f0875d3ebd8accca1ecf7a20636c518c",
+        "tests": 187
+      }
     },
     "C2": {
       "status": "FAIL",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test",
+        "exit": 1,
+        "at": "2026-10-05T03:22:17Z",
+        "head": "d8ac51baeb0b36a2c757e3e47e57dfbc0cf7f518",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-17-ai-package/evidence/C2.log",
+        "evidence_sha256": "f0f7e1b87abed5c6698882af95eef23a5f26cec18556aaeb24d483f91334da59",
+        "tests": 187
+      }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn lint:boundaries",
+        "exit": 0,
+        "at": "2026-10-05T03:22:45Z",
+        "head": "d8ac51baeb0b36a2c757e3e47e57dfbc0cf7f518",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-17-ai-package/evidence/C3.log",
+        "evidence_sha256": "b7584465b5e82bcf94e2a5a765e3638aa36c1917b1c30cf1896d1e2a3b13252c"
+      }
     },
     "C4": {
       "status": "FAIL",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn verify",
+        "exit": 1,
+        "at": "2026-10-05T03:22:52Z",
+        "head": "d8ac51baeb0b36a2c757e3e47e57dfbc0cf7f518",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-17-ai-package/evidence/C4.log",
+        "evidence_sha256": "858436fa366d3253f691d8ad939a9475db6586c401bc9518d5244ed45c03cc2b"
+      }
     },
     "review:mason": {
       "status": "FAIL",
@@ -36,7 +66,12 @@
       "status": "FAIL",
       "evidence": "manual",
       "run": null
+    },
+    "C5": {
+      "status": "FAIL",
+      "evidence": "manual",
+      "run": null
     }
   },
-  "updated_at": "2026-10-05T03:05:18Z"
+  "updated_at": "2026-10-05T03:59:59Z"
 }

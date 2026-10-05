@@ -18,21 +18,23 @@
 - The planned path `apps/web/app/api/ai/**` was narrowed to the two files, and `contract:tier` dropped assay and threshold, which matched only through the glob. Planned paths added: `next.config.ts`, `apps/web/package.json`, `yarn.lock`, `tooling/boundaries.test.ts` and `codebase-conventions.md`.
 - `apps/web/next.config.ts` was reformatted after another ticket's commit, because format:check failed at HEAD.
 
-- Added after the reviews (mason, vigil and warden all passed; these are their should-fix and cheap consider items):
-  - The route's gates moved into `createChatHandler` in `@pem/ai`, where `chat-handler.test.ts` proves them: 401 with no user before a vendor call, 400 on a refused body, 503 with no key, and fixtures without asking who is signed in.
+- Added after a first round of mason, vigil and warden reviews (each PASS, superseded by the round recorded in `review-*.md`):
+  - The route's gates moved into `createChatHandler` in `@pem/ai`, where `chat-handler.test.ts` proves them: 401 with no user before a vendor call, 429 past a per-user window (20 a minute, per process), 413 for a body over 256 KB, 400 on a refused body, 503 with no key, and fixtures without asking who is signed in.
   - Every vendor call logs `[ai] vendor` with the case, the model and the user's id.
   - `reasoning` parts are refused, since their text escaped the character cap.
-  - The fixture-mode and no-key tests also install the stand-in as the global `fetch`.
+  - The fixture-mode and no-key tests also install the stand-in as the global `fetch`. A canned Anthropic reply proves what a vendor request carries: the case's model, its effort, the output cap and the versioned prompt.
   - The extraction eval requires an email only when the input contains an `@`.
-  - The spend-limit step was added to `.env.example` and the README, and the README notes that the transcript is the client's and the extracted email is unvalidated.
-  - `boundaries.js`'s layer-order comment now names `ai`, and its header notes that `web-ai-route` holds the route and its client only.
+  - `packages/config/eslint/workspace-resolver.cjs` now resolves each app's `@/` alias and fails closed. Before this, every `@/` import passed the boundary rules unresolved, so `@/app/api/ai/ai` reached the route's client from any app file. Two probes pin it. The planned path was added.
+  - The README covers the data that leaves for Anthropic, the spend limit, the client-owned transcript and the unvalidated email. `remove-ai.md` gains the conventions edits and a vendor-side step for data already sent. `boundaries.js`'s layer comment names `ai`, and `codebase-conventions.md` names `ai`'s SDK owners.
+  - C5 was added for the operator steps that need Taylor's Anthropic account (spend limit, data settings, recording the fixtures), and was handed over as deferred.
 
 ## Not verified
 
 - The fixtures are `source: "synthetic"`: written by hand in the shape a recording takes, never recorded. No call has reached Anthropic, and the vendor path is proven only against a stand-in `fetch`.
 - The `effort` provider option and structured output on `claude-opus-5-5` are not exercised against the live API.
 - No client renders the chat stream yet (`useChat` is out of scope); the stream's format is proven by parsing it in the test.
-- No cap on calls per user: the Console spend limit is the control, and it is an operator step.
+- C5 is deferred to Taylor: the spend limit, the account's data settings and the first real recording (`evidence/C5-operator.md`).
+- The per-user window is per process, so a deployment with several instances allows a multiple of it.
 
 ## Next
 

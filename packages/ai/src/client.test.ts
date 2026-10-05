@@ -10,6 +10,7 @@ import type { UIMessage } from "ai";
 
 import type { LogFields, Logger } from "@pem/observability/logger";
 
+import { MAX_OUTPUT_TOKENS } from "./cases/options.ts";
 import {
   aiMode,
   AiNotConfiguredError,
@@ -190,4 +191,37 @@ test("C2: no key in a deployment or on a hosted tier throws, and never replays a
     });
     assert.equal(vendor.calls.length, 0);
   }
+});
+
+test("with a key, the request names the case's model, its effort, the output cap and the versioned prompt", async () => {
+  const bodies: Record<string, unknown>[] = [];
+  const fetch: typeof globalThis.fetch = async (_input, init) => {
+    bodies.push(JSON.parse(String(init?.body)) as Record<string, unknown>);
+    return Response.json({
+      id: "msg_synthetic",
+      type: "message",
+      role: "assistant",
+      model: CASE_MODELS.generate.model,
+      content: [{ type: "text", text: "A synthetic summary." }],
+      stop_reason: "end_turn",
+      stop_sequence: null,
+      usage: { input_tokens: 1, output_tokens: 1 },
+    });
+  };
+  const ai = createAi(
+    { ...LOCAL, apiKey: "sk-ant-synthetic" },
+    { fetch, logger: memoryLogger().logger },
+  );
+  assert.equal(await ai.summarize("text"), "A synthetic summary.");
+  const [body] = bodies;
+  assert.equal(body?.model, CASE_MODELS.generate.model);
+  assert.equal(body?.max_tokens, MAX_OUTPUT_TOKENS);
+  assert.match(
+    JSON.stringify(body?.system),
+    new RegExp(summarizePrompt.instructions.slice(0, 40)),
+  );
+  assert.match(
+    JSON.stringify(body),
+    new RegExp(`"effort":"${CASE_MODELS.generate.effort}"`),
+  );
 });

@@ -100,7 +100,7 @@ A package imports only packages below it, and only along the edges in `packages/
 
 **Services are transport-free** (D-STK-8): `@pem/services` imports no `next`, `react` or `@trpc/*`, enforced in `boundaries.js` (`TRANSPORT_FREE`). A service never reads `process.env` and never reaches the unscoped database singleton; the transport builds its `ctx` with `createServiceContext` and maps the domain errors to its own shape.
 
-**Each vendor SDK has one owner** (D-STK-16): only that package imports it, and everything else goes through the owner's exports. `SDK_OWNERS` in `boundaries.js` enforces it; `postgres` and `drizzle-kit` belong to `db`, `@supabase/*` to `auth`, `resend` to `email`.
+**Each vendor SDK has one owner** (D-STK-16): only that package imports it, and everything else goes through the owner's exports. `SDK_OWNERS` in `boundaries.js` enforces it; `postgres` and `drizzle-kit` belong to `db`, `@supabase/*` to `auth`, `resend` to `email`, `ai` and `@ai-sdk/*` to `ai`.
 
 **README seams.** `utils`, `types` and `hooks` ship as folders holding only a README that states their convention and what turns each into a package (`packages/<name>/README.md`). Each becomes a package with its first module and takes its place in the order then. There is no `lib` or `helpers` package (§8).
 

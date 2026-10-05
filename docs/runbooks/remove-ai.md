@@ -30,6 +30,8 @@ load_when:
 - Any service that takes an `Ai`: that import, and `@pem/ai` in `packages/services/package.json` if a service added it.
 - `packages/config/eslint/boundaries.js` and `tooling/boundaries.test.ts`: see Boundaries entries.
 - `docs/engineering/tech-stack.md`: the `ai`, `@ai-sdk/anthropic`, `@ai-sdk/provider` row.
+- `docs/engineering/codebase-conventions.md` §4: the `@pem/ai` row, `ai` in the services row's imports and in the layer order, the "AI is reached two ways" paragraph, and `ai` in the SDK owners sentence.
+- `packages/config/eslint/workspace-resolver.cjs` keeps resolving the `@/` alias: it guards every app's imports, not only this module's.
 
 ## Variables
 
@@ -49,6 +51,7 @@ In `packages/config/eslint/boundaries.js`: the `workspacePackage("ai", "ai")` li
 
 1. In the Anthropic Console, revoke each tier's API key.
 2. Delete the `ANTHROPIC_API_KEY*` values from the hosting provider's environment settings.
+3. Text already sent stays under Anthropic's retention for the account. If the privacy notice promises deletion, request it from Anthropic, and update the notice so it no longer names Anthropic as a processor.
 
 ## Verify
 

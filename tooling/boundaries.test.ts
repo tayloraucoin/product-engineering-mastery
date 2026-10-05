@@ -142,6 +142,16 @@ const DISALLOWED: [file: string, code: string, message: RegExp][] = [
     /^app-web must not import ai/,
   ],
   [
+    "apps/web/app/zz-probe.ts",
+    'import "@/no/such/module";',
+    /@\/no\/such\/module does not resolve to a file under apps\/web/,
+  ],
+  [
+    "apps/web/app/zz-probe.ts",
+    'import { ai } from "@/app/api/ai/ai";',
+    /^app-web must not import web-ai-route/,
+  ],
+  [
     "packages/ui/src/zz-probe.ts",
     'import "@pem/ai/client";',
     /^ui must not import ai/,

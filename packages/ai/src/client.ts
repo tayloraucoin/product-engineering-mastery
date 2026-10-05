@@ -120,27 +120,81 @@ export function createAi(config: AiConfig, deps: AiDeps = {}): Ai {
   };
 }
 
+/** Per signed-in user, per process: a burst bound. The Anthropic Console's spend limit bounds the month. */
+export const CHAT_RATE = { requests: 20, windowMs: 60_000 } as const;
+
+/** A body larger than this is refused before it is parsed (the text cap is 20,000 characters). */
+export const MAX_CHAT_BODY_BYTES = 256 * 1024;
+
 /**
  * The streamed chat route's whole body: the app's route file is one line, and
  * these gates are tested here.
  * - 401 when the call would reach the vendor and `currentUserId` finds nobody:
  *   a live model spends money, so it answers only a user. The local fixtures
  *   cost nothing and answer anyone.
- * - 400 when the body fails `parseChatRequest`.
+ * - 429 when that user has made `rate.requests` vendor calls in the window.
+ *   The count lives in this process, so a deployment running several
+ *   instances allows a multiple of it; it stops a loop, not a determined
+ *   spender, which is the Console limit's job.
+ * - 413 for a body over MAX_CHAT_BODY_BYTES; 400 when it fails `parseChatRequest`.
  * - 503 when no key is set where fixtures may not answer.
  */
 export function createChatHandler(deps: {
   ai: Ai;
   currentUserId: () => Promise<string | null>;
+  rate?: { requests: number; windowMs: number };
+  now?: () => number;
+  logger?: Logger;
 }): (request: Request) => Promise<Response> {
+  const rate = deps.rate ?? CHAT_RATE;
+  const now = deps.now ?? Date.now;
+  const logger = deps.logger ?? createLogger("ai");
+  const recent = new Map<string, number[]>();
+
+  /** Records a call for `userId`, or returns false when the window is full. */
+  function admit(userId: string): boolean {
+    const at = now();
+    const kept = (recent.get(userId) ?? []).filter(
+      (time) => at - time < rate.windowMs,
+    );
+    if (kept.length >= rate.requests) {
+      recent.set(userId, kept);
+      return false;
+    }
+    kept.push(at);
+    recent.set(userId, kept);
+    return true;
+  }
+
   return async (request) => {
     let userId: string | null = null;
     if (deps.ai.mode === "vendor") {
       userId = await deps.currentUserId();
       if (!userId)
         return Response.json({ error: "sign in to chat" }, { status: 401 });
+      if (!admit(userId)) {
+        logger.warn("chat.limited", { userId });
+        return Response.json(
+          { error: "too many requests" },
+          {
+            status: 429,
+            headers: { "retry-after": String(Math.ceil(rate.windowMs / 1000)) },
+          },
+        );
+      }
     }
-    const body: unknown = await request.json().catch(() => null);
+    const declared = Number(request.headers.get("content-length") ?? 0);
+    if (declared > MAX_CHAT_BODY_BYTES)
+      return Response.json({ error: "body too large" }, { status: 413 });
+    const text = await request.text();
+    if (text.length > MAX_CHAT_BODY_BYTES)
+      return Response.json({ error: "body too large" }, { status: 413 });
+    let body: unknown = null;
+    try {
+      body = JSON.parse(text);
+    } catch {
+      body = null;
+    }
     const parsed = await parseChatRequest(body);
     if (!parsed.ok)
       return Response.json({ error: parsed.error }, { status: 400 });

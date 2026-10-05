@@ -30,6 +30,7 @@ planned_paths:
   - "yarn.lock"
   - "tooling/boundaries.test.ts"
   - "docs/engineering/codebase-conventions.md"
+  - "packages/config/eslint/workspace-resolver.cjs"
   - "apps/web/env.ts"
   - ".env.example"
   - "turbo.json"
@@ -71,6 +72,10 @@ criteria:
     statement: Warden reviews this ticket in fresh context against its contract and evidence.
     evidence: manual
     reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
+  - id: C5
+    statement: "Before a key reaches a hosted tier: a monthly spend limit is set on each tier's Anthropic key, the account's data retention and training settings are checked against the privacy notice, and yarn workspace @pem/ai record has replaced the synthetic fixtures with recordings that pass their evals."
+    evidence: manual
+    reason: needs Taylor's Anthropic account and a staging key
 tier: 2
 ---
 

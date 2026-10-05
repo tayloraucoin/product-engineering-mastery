@@ -22,7 +22,9 @@ Each is a plain function over a model in `src/cases/`, so a product adds a fourt
 - **No key, local tier, not a deployment**: the case's recorded fixture (`src/fixtures/`). Nothing leaves the process and nothing is spent; each call logs `[ai] fixture` with the case and prompt version.
 - **No key anywhere else**: every call throws `AiNotConfiguredError`, and the chat route answers 503. A deployment never serves a fixture as an answer.
 
-The chat route answers 401 when the call would reach the vendor and nobody is signed in, 400 when the body fails the gate (text parts only, at most 40 turns and 20,000 characters, the user's turn last) and 503 with no key. Every vendor call logs `[ai] vendor` with the case, the model and the user's id, so spend can be traced to a user. Nothing caps calls per user: before a hosted tier, set a monthly spend limit on its key in the Anthropic Console.
+The chat route answers 401 when the call would reach the vendor and nobody is signed in, 429 and 413 as below, 400 when the body fails the gate (text parts only, at most 40 turns and 20,000 characters, the user's turn last) and 503 with no key. Every vendor call logs `[ai] vendor` with the case, the model and the user's id, so spend can be traced to a user. The handler answers 429 past 20 vendor calls per user per minute (`CHAT_RATE`), counted per process, and 413 for a body over 256 KB. That stops a loop, not a determined spender: before a hosted tier, set a monthly spend limit on its key in the Anthropic Console.
+
+**Data leaves the system.** Every vendor call sends its text to Anthropic: the passage to extract from or summarize, and the whole chat transcript. Extraction exists to pull names and email addresses out of that text. Before a key reaches a hosted tier, check the Anthropic account's data retention and training settings against the product's privacy notice; the removal runbook covers data already sent.
 
 The transcript is the client's, assistant turns included. That is harmless while the route offers no tools and no private context; a route that adds either keeps the history on the server rather than trusting the one it is sent.
 
