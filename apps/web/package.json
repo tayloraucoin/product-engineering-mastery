@@ -12,8 +12,8 @@
     "test": "node --test \"lib/**/*.test.ts\""
   },
   "dependencies": {
-    "@pem/api": "workspace:*",
     "@pem/ai": "workspace:*",
+    "@pem/api": "workspace:*",
     "@pem/auth": "workspace:*",
     "@pem/brand": "workspace:*",
     "@pem/db": "workspace:*",
