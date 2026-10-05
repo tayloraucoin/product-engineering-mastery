@@ -44,7 +44,7 @@ const UNPLANTABLE = new Set([
   "VERCEL_GIT_COMMIT_SHA",
   "NEXT_RUNTIME",
 ]);
-/** Values env.ts checks by prefix: the sentinel carries one that fits the local tier the build runs on. */
+/** Values env.ts checks by prefix, by base name (every tier's form): the sentinel carries one that fits the local tier the build runs on. */
 const SENTINEL_PREFIX: Readonly<Record<string, string>> = {
   STRIPE_SECRET_KEY: "sk_test_",
 };
@@ -189,7 +189,7 @@ if (args.includes("--plan")) {
   const sentinels = new Map(
     names.map((name) => [
       name,
-      `${SENTINEL_PREFIX[name] ?? ""}pem-sentinel-${name.toLowerCase()}-${randomBytes(8).toString("hex")}`,
+      `${SENTINEL_PREFIX[name.replace(/_(LOCAL|STAGING)$/, "")] ?? ""}pem-sentinel-${name.toLowerCase()}-${randomBytes(8).toString("hex")}`,
     ]),
   );
   const env: NodeJS.ProcessEnv = {
