@@ -15,6 +15,14 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-05 — PEM: a reference for every check, hook and script
+
+Taylor found `tooling/` hard to navigate and could not judge which checks earn their cost. New: `docs/engineering/tooling.md`. It has one entry per script in `package.json`, per file in `tooling/` and per agent or git hook. Each entry is scored 0–7 on importance, token cost, wall time and how standard it is, and ends in a verdict; a weakest-first table closes the file.
+
+- **Measured once on 2026-10-05:** `yarn verify` takes 101 s with a warm Turbo cache and prints about 121 KB, 85% of it from `yarn test` and `yarn test:tooling`. The four contract-loop test files are nearly all of the 41 s `yarn test:tooling` takes.
+- **Found in passing:** the native git hooks are not installed in this checkout. An agent's `yarn verify` fails inside the sandbox at `yarn test`, because Turbo cannot hash `.env.local`. Every session start and stop pays 5.8 s for `yarn status --brief`.
+- **No code changed.** The five cuts it names first (the pre-commit hook, `test:boundaries`, the commit-msg hook, `truth:promote`, `hooks:install`) wait for Taylor. The contract family's entries are marked as changing in the workflow overhaul.
+
 ## 2026-10-05 — PEM: runbooks grouped by use case (PR-18)
 
 Taylor asked for `docs/runbooks/` grouped by use case, so the new-project duplication guide has a fixed home to be rewritten into.
