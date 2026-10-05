@@ -1,72 +1,66 @@
 ---
-title: Primer prompts — index and run order
-description: Read when starting a new thread or a toolkit phase, to pick the primer, the role to inject, what to attach, and what it depends on.
+title: "Prompts — what you paste into a thread"
+description: "Open when you are about to start a thread by hand and need the text to paste: the shared briefing, a research prompt whose trigger has fired, or the archived prompts that built this repo."
 layer: prompts
 status: adopted
 thread:
 role: Plumb
 date: 2026-10-01
-last_reviewed: 2026-10-01
+last_reviewed: 2026-10-05
 supersedes:
 load_when:
 ---
 
-# Primer prompts
+# Prompts
 
-Each file is a self-contained primer for a new thread, written in the captain's voice: the role assigned, the decision served, the ask, evidence rules, output shape, done criteria, and what is not wanted. Attach [`shared-context.md`](shared-context.md) and the named role prompt with every one.
+**What this is.** Text a person pastes into a new thread, Claude Code or a general Claude chat, so the thread starts with the right role, attachments, question and done criteria. Nothing here loads by itself.
 
-## Investigation threads (run; outputs archived)
+**Not here.** Everyday work (a fix, a feature, an epic) does not start from this folder. The prompt builder, [`docs/workflows/prompt-builder.md`](../workflows/prompt-builder.md) or `/tk-prompt`, writes those prompts for each stage.
 
-The fourteen primers that ran these threads were removed on 2026-10-01: their work lives in the outputs below. The originals are in git history (commit `19fc480`) and the owner's prompts folder.
+## What each part holds
 
-| #   | Thread                                               | Model  | Primary role     | Consulted         | Output                                                                                                                      |
-| --- | ---------------------------------------------------- | ------ | ---------------- | ----------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| 01  | Paper vs. Figma vs. alternatives, Cursor Design Mode | Opus   | Plumb            | —                 | [`tools-per-loop.md`](../research/design-tools/tools-per-loop.md) → `docs/design/workflow.md`                          |
-| 02  | Why Framer AI for marketing                          | Opus   | Vitrine          | —                 | [`framer-marketing-sites.md`](../research/design-tools/framer-marketing-sites.md)                                  |
-| 03  | Staging branches for customer testing, honest A/B    | Opus   | Tally            | Mason (optional)  | [`staging-branches-customer-testing.md`](../research/process/staging-branches-customer-testing.md) → the runbook and metrics templates            |
-| 04  | The world of design skills                           | Opus   | Plumb            | Threshold         | [`design-skills-adoption.md`](../research/design-tools/design-skills-adoption.md) → `docs/design/skills.md`            |
-| 05  | Shape Up                                             | Sonnet | Compass          | —                 | [`shape-up.md`](../research/process/shape-up.md) → the cycle charter                                          |
-| 06  | Shift Nudge and Matt D. Smith (two-phase)            | Fable  | Alembic → Vesper | Plumb             | [`shift-nudge-free-layer.md`](../research/courses/shift-nudge-free-layer.md), [`shift-nudge-curriculum.md`](../research/courses/shift-nudge-curriculum.md), [`shift-nudge-ui-checklist.md`](../research/courses/shift-nudge-ui-checklist.md)                                                                                     |
-| 07  | animations.dev and a motion skill (two-phase)        | Opus   | Alembic → Vesper | Plumb             | [`kowalski-motion-inventory.md`](../research/courses/kowalski-motion-inventory.md), [`motion-skill.md`](../research/courses/motion-skill.md), `motion-skill-files/` (the skill bundle)                                                                                      |
-| 08  | Refactoring UI review                                | Opus   | Vesper           | Plumb             | [`refactoring-ui-review.md`](../research/courses/refactoring-ui-review.md)                                      |
-| 09  | Design+Code (Meng To) review                         | Opus   | Vesper           | Plumb             | [`design-plus-code-review.md`](../research/courses/design-plus-code-review.md)                                  |
-| 10  | Product Talk Academy review                          | Opus   | Envoy            | Compass           | [`product-talk-academy-review.md`](../research/courses/product-talk-academy-review.md)                            |
-| 11  | Newsletters, podcasts, people → `.md` extraction     | Opus   | Alembic          | —                 | [`_meta/extraction-guide.md`](../references/_meta/extraction-guide.md) (live, draft)                                        |
-| 12  | Books → what's online, distillation                  | Opus   | Alembic          | —                 | [`_meta/books-plan.md`](../references/_meta/books-plan.md) (live, draft)                                                    |
-| 13  | Laws of UX reference artifacts + input checklist     | Fable  | Plumb            | Vesper, Threshold | [`laws-of-ux-reference-layer.md`](../research/toolkit/laws-of-ux-reference-layer.md) → `docs/references/README.md` |
-| 14  | The `.md` asset toolkit of the 1%                    | Fable  | Plumb            | Compass, Tally    | [`toolkit-map.md`](../research/toolkit/toolkit-map.md)                                                            |
+| Part | What it is | When you open it |
+| --- | --- | --- |
+| [`shared-context.md`](shared-context.md) | The standing briefing every prompt here assumes: who is captaining, the three loops, Recipe A, where things live, the roles on call, and the evidence rules. | Attach it to every thread you start from this folder, beside the role prompt the prompt names. Fill the captain line once per person. |
+| [`research/`](research/README.md) | Research prompts that can be run again. Each asks one question the toolkit needs answered, names the role that answers it, and says what moment makes it worth running. | When its trigger fires (table below), and again when its last answer has gone stale. |
+| [`archive/`](archive/README.md) | The one-time prompts that built this repo, phase by phase, and the record of the investigation threads before them. | Only to trace why something is the way it is. Never to start new work. |
 
-## Toolkit phases
+## When to run a research prompt, and when to run it again
 
-| #                                        | Phase                                   | Where                        | Role(s)                | Status                                                                      |
-| ---------------------------------------- | --------------------------------------- | ---------------------------- | ---------------------- | --------------------------------------------------------------------------- |
-| [P-A](phases/consolidation-and-the-map.md)   | 1 — Consolidation and the map           | general thread               | Alembic → Plumb        | done; outputs in `docs/decisions/`, `docs/design/canon.md`, `docs/index.md` |
-| [P-B](phases/practice-layer-and-docs-app.md) | 2 — The practice layer and the docs app | Claude Code                  | Plumb                  | done 2026-10-01 (`docs/decisions/changelog.md`)                             |
-| [P-C](phases/demo-app-and-skills.md)         | 3 — The demo app and the skills         | Claude Code                  | Vesper → Plumb → Assay | next                                                                        |
-| [P-D](phases/library-batches.md)             | 4 — Library batches (retargeting note)  | general threads              | Alembic                | after P-C; Laws of UX first                                                 |
-| [P-E](phases/port-dry-run.md)                | 5 — Port dry-run                        | Claude Code, fresh directory | procedure              | after P-C                                                                   |
-| [P-J](phases/engineering-layer.md)           | The engineering layer and the workflows | Claude Code, on `agent/PJ`   | Lorimer                | running; started by [`phases/engineering-layer-primer.md`](phases/engineering-layer-primer.md); runs before P-C         |
+Run a research prompt the first time its trigger fires. Run it again when the answer it produced stops fitting, which happens in three ways:
 
-## Threads to commission (stubs; CF-29)
+- **A different product.** The toolkit is copied into a project the first answer did not cover: its first AI feature, its first instrumented feature, a brand to bring in.
+- **A changed landscape.** A tool, model or vendor the answer relied on has changed: a model upgrade, a new flag or analytics tool, a new agent harness.
+- **A revisit trigger.** The decision record the answer fed names a condition for looking again, and that condition has happened.
 
-| #                                        | Thread                      | Primary role | When                                                        |
-| ---------------------------------------- | --------------------------- | ------------ | ----------------------------------------------------------- |
-| [P-F](threads/agent-context-architecture.md)  | Agent context architecture  | Plumb        | after P-C, before P-E                                       |
-| [P-G](threads/measurement-layer.md)           | Measurement layer           | Tally        | when a product first instruments a feature                  |
-| [P-H](threads/product-operating-artifacts.md) | Product operating artifacts | Compass      | when a product needs charter, positioning, opportunity tree |
-| [P-I](threads/ai-evals.md)                    | AI evals                    | Tally        | when a product ships an AI surface                          |
-| [P-K](threads/branding-insertion.md)          | Branding insertion          | Plumb, Turner builds | after P-C's first surface exists                    |
-| [P-L](threads/cold-trial.md)                  | Cold trial of the human path | Usher, a stranger times it | after J14 lands                             |
+Each run is a new thread. Its output is filed as a new file under `docs/research/<topic>/`, and the earlier output stays as it was, because a filed output is never edited in place ([record 0006](../decisions/records/0006-file-naming-and-filing.md)). Each prompt is a stub until its first run, and is filled out then; after that, edit it only to bring its trigger or attachments up to date.
 
-**The letters.** Each toolkit thread is a primer, lettered in the order it was commissioned: P-A to P-L. The thread id in frontmatter is `P-X`; the work-id on its branch and in its commit messages is `PX` (so `PJ` is the engineering layer, Primer J, nothing more).
+| Prompt | The question it answers | Role | Run it when |
+| --- | --- | --- | --- |
+| [P-F](research/agent-context-architecture.md) | How context loads across agent tools, how the token budget is measured, how the toolkit is vendored into a product | Plumb | After Phase 3, before the port dry-run |
+| [P-G](research/measurement-layer.md) | How the metrics templates become an enforced event taxonomy with versioned definitions | Tally | A product instruments its first feature |
+| [P-H](research/product-operating-artifacts.md) | Which product operating files (charter, roadmap pins, positioning, opportunity tree, discovery ledger) a product needs | Compass | A product needs those as files rather than inside role prompts |
+| [P-I](research/ai-evals.md) | How an AI feature's failure modes, judges and release gate are built for real | Tally | A product ships an AI feature that makes claims to users |
+| [P-K](research/branding-insertion.md) | Where a company's brand (primitives, fonts, assets, marketing voice) enters the toolkit | Plumb; Turner builds | Phase 3's first surface exists |
+| [P-L](research/cold-trial.md) | How long a stranger takes from clone to a first merged change, and where they stumble | Usher; a person runs the trial | The stage files and the prompt builder have landed (J14) |
 
-## Conventions used in every prompt
+All six are drafts and none has run yet; each file names its role, attachments and done criteria.
 
-- The role reads its role prompt and the shared context before the task; where a role prompt and an attached document disagree on fact, the document wins.
-- Evidence is labeled verified / secondary / judgment; pricing and availability are dated; gaps are marked not found, never filled.
-- Two-phase threads use Alembic first (distill, add nothing) and a craft role second (reason to a best answer, label every inference `[DIRECT]` / `[INFERRED]` / `[UNKNOWN]`).
-- Reviews of educational material are done by the craft role and addressed to Plumb, who owns what enters the canon.
-- The P-series reflect the rulings in `docs/decisions/conflicts.md`.
+## The archive, and a duplicated project
+
+[`archive/`](archive/README.md) is this repo's own history: the phase prompts (P-A to P-E, and P-J, the engineering layer) were written to build the toolkit once, in order, and are kept byte for byte so a ruling can be traced to the prompt that asked for it. A project made by duplicating this repo deletes `archive/` on day one; its prompts describe building this toolkit, not that product. It keeps `shared-context.md` and `research/`.
+
+## The letters
+
+Every prompt is lettered in the order it was commissioned, P-A to P-L. The id in frontmatter is `P-X`; the work-id on its branch and in commit messages is `PX`, so `PJ` is Primer J, the engineering layer.
+
+## Conventions in every prompt
+
+- The role reads its role prompt and the shared context before the task. Where a role prompt and an attached document disagree on fact, the document wins.
+- Evidence is labelled verified, secondary or judgment; prices and availability are dated; a gap is marked not found, never filled.
+- A two-phase thread runs Alembic first (distil, add nothing) and a craft role second (reason to a best answer, labelling every inference `[DIRECT]`, `[INFERRED]` or `[UNKNOWN]`).
+- Reviews of course or book material are done by the craft role and addressed to Plumb, who owns what enters the canon.
+- Every prompt follows the rulings in `docs/decisions/conflicts.md`.
 
 <!-- Generated by `yarn directory-map` from each file's frontmatter. Everything below this line is rewritten; edit above it. -->
 
@@ -75,5 +69,5 @@ The fourteen primers that ran these threads were removed on 2026-10-01: their wo
 | File | What it is for |
 | --- | --- |
 | [`shared-context.md`](shared-context.md) | Attach to every primer-prompt thread as the standing briefing; fill the captain socket once per person. |
-| [`phases/`](phases/README.md) | Open to run or re-read a phase of the toolkit build, each a self-contained primer for one thread. |
-| [`threads/`](threads/README.md) | Open when a trigger fires that commissions one of the stub threads: agent context, measurement, product operating artifacts, AI evals. |
+| [`archive/`](archive/README.md) | Open only to trace a ruling back to the prompt that asked for it: the one-time phase prompts that built this repo, and the investigation threads before them. A duplicated project deletes this folder. |
+| [`research/`](research/README.md) | Open when a trigger fires, or an earlier answer has gone stale, to run a research thread again: agent context, measurement, product operating files, AI evals, branding, the cold trial. |

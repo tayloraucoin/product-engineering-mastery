@@ -15,7 +15,7 @@ load_when: ui-build, critique, spec, discovery, metrics
 
 Load order: the design layer, then the package, then this router, then **at most three** files from the row that matches the task. The cap counts laws, heuristics and canons together. The design layer wins every conflict: a reference can justify a finding but never overrides a token, a component rule or an anti-pattern. Findings cite rule IDs (`Fails <Law> [<RULE-ID>] at <element>: <evidence>. Fix: <fix>.`); a finding with no rule ID of any kind is Consider at most (canon C-R15).
 
-**Nothing below is written yet.** Every file arrives in Phase 4 through prompt [P-D](../prompts/phases/library-batches.md): Laws of UX first (batch 1), then batches 2 and 3, then canons, practitioners and books. Until a file lands, skip it. **Do not improvise its content.**
+**Nothing below is written yet.** Every file arrives in Phase 4 through prompt [P-D](../prompts/archive/phases/library-batches.md): Laws of UX first (batch 1), then batches 2 and 3, then canons, practitioners and books. Until a file lands, skip it. **Do not improvise its content.**
 
 ## Laws of UX, by task type
 

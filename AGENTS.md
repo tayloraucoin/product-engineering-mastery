@@ -5,7 +5,7 @@ The canonical instructions for every agent (Claude Code, Cursor, Codex). `CLAUDE
 ## Start here
 
 1. **What this is:** a universal product-engineering toolkit and the repo that proves it. The practice (roles, design canon, templates, decisions, workflows, prompts) lives in `docs/`; `apps/web` is the demo app that holds every template's filled example and is the critic's target; `apps/docs` renders `docs/` in a browser. No product lives here.
-2. **Current phase:** PJ, the engineering layer (`docs/prompts/phases/engineering-layer.md`), on `agent/PJ`; Phase 3 (`demo-app-and-skills.md`) then builds the demo through the work loop. Until then `apps/web` is a single page.
+2. **Current phase:** PJ, the engineering layer (`docs/prompts/archive/phases/engineering-layer.md`), on `agent/PJ`; Phase 3 (`demo-app-and-skills.md`) then builds the demo through the work loop. Until then `apps/web` is a single page.
 3. **Read [`docs/index.md`](docs/index.md) first, every session.** It is the map: the layers, the precedence ladder, what loads always, by path, by trigger and never, and the token budget.
 4. **Before any UI work, read [`docs/design/canon.md`](docs/design/canon.md)** and the product's design layer: `DESIGN.md`, `tokens.md`, `components.md`, `anti-patterns.md`, `states.md`, `coverage-gaps.md` (in the demo: `apps/web/docs/design/`). In Claude Code, `.claude/rules/ui.md` also fires on UI files.
 5. **State the exact file paths before implementing.** Placement is decided by one question, who imports this ([`docs/engineering/codebase-conventions.md`](docs/engineering/codebase-conventions.md) §1).

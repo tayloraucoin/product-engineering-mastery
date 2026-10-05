@@ -44,7 +44,7 @@ function liveFiles(): string[] {
       // History, not instruction: the changelog and the records name paths as they were.
       f !== "docs/decisions/changelog.md" &&
       !f.startsWith("docs/decisions/records/") &&
-      !/^docs\/prompts\/phases\//.test(f),
+      !/^docs\/prompts\/archive\//.test(f),
   );
   return [
     ...roots,

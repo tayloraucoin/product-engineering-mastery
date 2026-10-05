@@ -269,7 +269,7 @@
     },
     {
       "from": "docs/_files_dump/pj-engineering-layer.md",
-      "to": "docs/prompts/phases/engineering-layer.md",
+      "to": "docs/prompts/archive/phases/engineering-layer.md",
       "body_sha256": "572d451069bf0f4026e323bae3f6b67e75a0a0d34be2818cac4dda154cfdb79e",
       "frontmatter": "kept",
       "source_commit": "3e58eae",
@@ -278,7 +278,7 @@
     },
     {
       "from": "docs/_files_dump/pj-primer.md",
-      "to": "docs/prompts/phases/engineering-layer-primer.md",
+      "to": "docs/prompts/archive/phases/engineering-layer-primer.md",
       "body_sha256": "3db84639ee4f98b8e5d78f3a0530a69f0f2cb00e0bfc3ae87bf3a133edc61115",
       "frontmatter": "added",
       "source_commit": "3e58eae",
