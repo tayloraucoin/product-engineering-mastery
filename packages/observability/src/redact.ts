@@ -10,6 +10,7 @@ export const REDACTED = "[redacted]";
 const SECRET_KEYS = [
   "password",
   "passwd",
+  "pwd",
   "secret",
   "token",
   "accesstoken",
@@ -42,6 +43,11 @@ const SECRET_SUFFIXES = [
   "token",
   "apikey",
   "password",
+  "secretkey",
+  "privatekey",
+  "accesskey",
+  "servicerolekey",
+  "signingkey",
   "cookie",
   "body",
   "email",
@@ -62,30 +68,51 @@ export function isSecretKey(key: string): boolean {
 const MAX_DEPTH = 6;
 
 /**
- * Free text cannot be redacted by key, so every string, an error's message and
- * stack included, is scrubbed of the shapes a secret or an address takes.
- * Each pattern replaces only the sensitive part, so the line stays readable.
+ * Free text cannot be redacted by key, so every string value, an error's
+ * message and stack included, is scrubbed of the shapes a secret or an address
+ * takes. Each pattern replaces only the sensitive part, so the line stays
+ * readable. Every pattern is anchored by a lookbehind or a literal and bounded,
+ * so a long string costs linear time, never quadratic.
  */
 const TEXT_PATTERNS: [pattern: RegExp, replacement: string][] = [
-  // An email address.
-  [/[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g, REDACTED],
-  // An Authorization value: `Bearer <token>`, `Basic <credentials>`.
-  [/\b(Bearer|Basic)\s+[\w.~+/=-]+/gi, `$1 ${REDACTED}`],
-  // A JSON Web Token.
-  [/\beyJ[\w-]+\.[\w-]+\.[\w-]+/g, REDACTED],
-  // A secret in a URL's query or a `key=value` pair.
+  // The password in a connection string: `postgres://user:<password>@host`.
   [
-    /\b((?:access_|refresh_|id_)?token|api_?key|apikey|secret|password|code|signature|sig)=[^&\s"']+/gi,
-    `$1=${REDACTED}`,
+    /((?<![\w+.-])[a-z][\w+.-]{0,31}:\/\/[^\s:/@]{1,256}:)[^\s@/]{1,256}@/gi,
+    `$1${REDACTED}@`,
+  ],
+  // An Authorization header's whole value, scheme included.
+  [
+    /((?<![\w-])authorization["']?\s*[:=]\s*["']?)(?:(?:Bearer|Basic|Token)\s+)?[^\s"',;]{1,4096}/gi,
+    `$1${REDACTED}`,
+  ],
+  // A bearer credential anywhere else; short words after "bearer" are prose.
+  [/(?<![\w-])(Bearer)\s+[\w.~+/=-]{8,4096}/gi, `$1 ${REDACTED}`],
+  // A JSON Web Token.
+  [/(?<![\w-])eyJ[\w-]{1,4096}\.[\w-]{1,4096}\.[\w-]{0,4096}/g, REDACTED],
+  // An OAuth code in a URL's query, and nowhere else (`code=23505` is a database error).
+  [/([?&]code=)[^&\s"'#]{1,4096}/g, `$1${REDACTED}`],
+  // An email address; `pkg@1.2.3`, a version, is not one.
+  [
+    /(?<![\w.+-])[\w.+-]{1,64}@(?!\d+(?:\.\d+)+\b)[\w-]{1,63}(?:\.[\w-]{1,63}){1,8}/g,
+    REDACTED,
   ],
 ];
 
-/** `text` with every email address, bearer credential, JWT and secret query value replaced. */
+/**
+ * `name=value`, `name: value` and `"name":"value"` in free text, whose name the
+ * key rule (`isSecretKey`) calls secret: one rule for keys and for text.
+ */
+const PAIR =
+  /(?<![\w-])([\w-]{1,64})(=|:[ \t]*|"[ \t]*:[ \t]*")([^&\s"',;]{1,4096})/g;
+
+/** `text` with every connection-string password, credential, JWT, OAuth code, email address and secret-named value replaced. */
 export function scrubText(text: string): string {
-  return TEXT_PATTERNS.reduce(
-    (scrubbed, [pattern, replacement]) =>
-      scrubbed.replace(pattern, replacement),
+  const scrubbed = TEXT_PATTERNS.reduce(
+    (current, [pattern, replacement]) => current.replace(pattern, replacement),
     text,
+  );
+  return scrubbed.replace(PAIR, (pair, name: string, separator: string) =>
+    isSecretKey(name) ? `${name}${separator}${REDACTED}` : pair,
   );
 }
 
@@ -101,13 +128,17 @@ function describeError(error: Error, depth: number): Record<string, unknown> {
   return described;
 }
 
-/** A copy of `value` with every secret key's value replaced by `[redacted]` and every string scrubbed. */
+/** A copy of `value` with every secret key's value replaced by `[redacted]` and every string value scrubbed (keys are not). */
 export function redactValue(value: unknown, depth = 0): unknown {
   if (typeof value === "string") return scrubText(value);
   if (value === null || typeof value !== "object") return value;
   if (depth >= MAX_DEPTH) return "[truncated]";
   if (value instanceof Error) return describeError(value, depth);
-  if (value instanceof Date) return value.toISOString();
+  // A logger never throws: an invalid Date has no ISO form.
+  if (value instanceof Date)
+    return Number.isNaN(value.getTime())
+      ? "[invalid date]"
+      : value.toISOString();
   if (Array.isArray(value))
     return value.map((item) => redactValue(item, depth + 1));
   const copy: Record<string, unknown> = {};

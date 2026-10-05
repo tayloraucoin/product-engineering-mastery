@@ -220,11 +220,15 @@ test("C1: a secret-like tag is redacted before it reaches the reporter", () => {
   });
 });
 
-test("C2: free text is scrubbed of addresses, bearer credentials, JWTs and secret query values", () => {
+test("C2: free text is scrubbed of addresses, credentials, JWTs and OAuth codes", () => {
   assert.equal(scrubText("sent to person@example.test"), `sent to ${REDACTED}`);
   assert.equal(
     scrubText("Authorization: Bearer abc.def-123"),
-    `Authorization: Bearer ${REDACTED}`,
+    `Authorization: ${REDACTED}`,
+  );
+  assert.equal(
+    scrubText("sent with Bearer abc.def-123456"),
+    `sent with Bearer ${REDACTED}`,
   );
   assert.equal(
     scrubText("jwt eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIn0.c2lnbmF0dXJl here"),
@@ -258,4 +262,66 @@ test("C2: an error's message and stack are scrubbed on the printed line", () => 
   );
   assert.ok(!fields.error.stack.includes("person@example.test"));
   assert.equal(fields.note, `reply to ${REDACTED}`);
+});
+
+test("C2: secret-named values in free text follow the key rule, in every common form", () => {
+  const cases: [string, string][] = [
+    ["client_secret=abc", `client_secret=${REDACTED}`],
+    ["STRIPE_SECRET_KEY=sk_live_x", `STRIPE_SECRET_KEY=${REDACTED}`],
+    ["RESEND_API_KEY=re_x", `RESEND_API_KEY=${REDACTED}`],
+    ["accessToken=y", `accessToken=${REDACTED}`],
+    ["api-key=k", `api-key=${REDACTED}`],
+    ["pwd=p", `pwd=${REDACTED}`],
+    ['{"password":"z"}', `{"password":"${REDACTED}"}`],
+    ["password: hunter2", `password: ${REDACTED}`],
+    ["?email=a%40b.co&plan=pro", `?email=${REDACTED}&plan=pro`],
+    [
+      "/api/trpc/notes.get?input=%7B%22id%22%7D",
+      `/api/trpc/notes.get?input=${REDACTED}`,
+    ],
+    ["Authorization: Basic dGVzdDp0ZXN0", `Authorization: ${REDACTED}`],
+    [
+      "postgres://app:s3cr3t@localhost:5432/db",
+      `postgres://app:${REDACTED}@localhost:5432/db`,
+    ],
+  ];
+  for (const [text, expected] of cases)
+    assert.equal(scrubText(text), expected, text);
+});
+
+test("C2: prose, versions and error codes survive the scrub", () => {
+  for (const text of [
+    "upgrade from basic to pro",
+    "the bearer of the plan",
+    "supabase-js@2.45.0 at next@15.0.1/dist/server.js",
+    "postgres error code=23505 on insert",
+    "exit code=1",
+    "at handler (file.ts:12:3)",
+  ])
+    assert.equal(scrubText(text), text);
+});
+
+test("C2: scrubbing a long run without a match stays linear", () => {
+  for (const text of [
+    "a".repeat(200_000),
+    "a.".repeat(100_000),
+    `${"a".repeat(200_000)}=`,
+  ]) {
+    const started = performance.now();
+    scrubText(text);
+    assert.ok(
+      performance.now() - started < 500,
+      `${text.slice(0, 4)}… took too long`,
+    );
+  }
+});
+
+test("C1: an invalid Date is logged, never thrown", () => {
+  const printed = capture("warn");
+  assert.doesNotThrow(() =>
+    createLogger("x").warn("date.invalid", { parsed: new Date("nope") }),
+  );
+  assert.deepEqual(printed.mock.calls[0]?.arguments[1], {
+    parsed: "[invalid date]",
+  });
 });
