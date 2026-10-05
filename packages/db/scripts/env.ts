@@ -3,10 +3,17 @@
  * drizzle.config.ts, the db:* scripts and the integration tests import it; the
  * runtime client never does, because an app hands it its URL.
  *
+ * The tier is read on demand, never at import, so importing a script in a
+ * unit test throws nothing. An unset DATABASE_ENVIRONMENT is refused, naming
+ * the variable and the example file's default: this repo runs no local
+ * database by default, so nothing here falls back to the local address. The
+ * local tier is chosen on purpose, in .env.local, by the add recipe.
+ *
  * DATABASE_URL is the runtime URL: the transaction pooler on a hosted tier.
  * DATABASE_MIGRATION_URL is the session pooler, for migrations and setup SQL.
- * Each takes the _LOCAL and _STAGING suffixes. On the local tier an unset
- * value means the database `yarn db:local` starts.
+ * Each takes the _LOCAL and _STAGING suffixes, and a hosted tier reads only
+ * its own suffix or the unsuffixed name, never _LOCAL. On the local tier an
+ * unset value means the database `yarn db:local` starts.
  *
  * NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are the auth
  * variables (D-STK-6). Their _LOCAL values select the local mode: a hosted
@@ -15,9 +22,14 @@
  */
 
 import { pickTiered, tierName } from "@pem/env/pick";
-import { parseTier, type Tier } from "@pem/env/tier";
+import { isTier, TIER_SWITCH, TIERS, type Tier } from "@pem/env/tier";
 
 import { LOCAL_IMAGE_URL } from "./local-image.ts";
+
+/** The file each developer copies to packages/db/.env.local. */
+export const EXAMPLE_FILE = "packages/db/.env.example";
+/** The recipe that switches the local Docker database on. */
+export const ADD_RECIPE = "docs/runbooks/add/docker-local-database.md";
 
 const raw = {
   DATABASE_ENVIRONMENT: process.env.DATABASE_ENVIRONMENT,
@@ -37,14 +49,34 @@ const raw = {
     process.env.SUPABASE_SERVICE_ROLE_KEY_STAGING,
 };
 
-export const tier: Tier = parseTier(raw.DATABASE_ENVIRONMENT);
+/**
+ * The tier the scripts act on. Unset or empty is refused, naming the variable
+ * and the example file's default; so is any value that is not a tier name.
+ * Unlike the apps, which treat unset as local (EN-08), no database script
+ * falls back to the local database.
+ */
+export function requireTier(): Tier {
+  const value = raw.DATABASE_ENVIRONMENT?.trim() ?? "";
+  if (value === "") {
+    throw new Error(
+      `${TIER_SWITCH} is unset. Copy ${EXAMPLE_FILE} to packages/db/.env.local (its default is staging), or set it to one of ${TIERS.join(", ")}; this repo runs no local database by default.`,
+    );
+  }
+  if (!isTier(value)) {
+    throw new Error(
+      `${TIER_SWITCH} is "${value}"; set it to one of ${TIERS.join(", ")}.`,
+    );
+  }
+  return value;
+}
 
 function resolve(name: "DATABASE_URL" | "DATABASE_MIGRATION_URL"): string {
+  const tier = requireTier();
   const value = pickTiered(raw, name, tier);
   if (value) return value;
   if (tier === "local") return LOCAL_IMAGE_URL;
   throw new Error(
-    `Set ${tierName(name, tier)} (or ${name}) for DATABASE_ENVIRONMENT=${tier}; see .env.example.`,
+    `Set ${tierName(name, tier)} (or ${name}) for ${TIER_SWITCH}=${tier}; see ${EXAMPLE_FILE}.`,
   );
 }
 
@@ -63,6 +95,7 @@ export function authSettings(): {
   url: string | undefined;
   serviceRoleKey: string | undefined;
 } {
+  const tier = requireTier();
   return {
     url: pickTiered(raw, "NEXT_PUBLIC_SUPABASE_URL", tier),
     serviceRoleKey: pickTiered(raw, "SUPABASE_SERVICE_ROLE_KEY", tier),
@@ -71,7 +104,7 @@ export function authSettings(): {
 
 /** The variable name that holds the auth URL on this tier, for messages. */
 export function authUrlName(): string {
-  return tierName("NEXT_PUBLIC_SUPABASE_URL", tier);
+  return tierName("NEXT_PUBLIC_SUPABASE_URL", requireTier());
 }
 
 /**

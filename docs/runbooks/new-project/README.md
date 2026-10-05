@@ -84,7 +84,7 @@ After the round, ask one more: **anything to add that is off by default?** Each 
 
 | # | Question | Options | What each does |
 | --- | --- | --- | --- |
-| D1 | Where does the database run on a developer's machine? | Hosted only, no Docker (Recommended, the default). Local, in Docker. | "Hosted only": step 5 points developer machines at a hosted project and nothing starts a container. "Local": step 5 follows [`add/docker-local-database.md`](../add/docker-local-database.md). |
+| D1 | Where does the database run on a developer's machine? | Hosted only, no Docker (Recommended, the default). Local, in Docker. | "Hosted only": the example files already point developer machines at a hosted project and nothing starts a container; step 5 has nothing to do for the database. "Local": step 5 follows [`add/docker-local-database.md`](../add/docker-local-database.md). |
 | D2 | (Hosted only) Which hosted project do developer machines use? | The staging project (Recommended, the default). A separate development project. | "Staging": one Supabase project fewer, and an unmerged migration is applied to the database a preview deployment also uses. "Separate": a second project to pay for and keep migrated, and staging only changes on merge; on a developer's machine its values go in the `_STAGING` slots of `.env.local`, and the example file says so. |
 
 Say this plainly with D1: without Docker the database's own integration proofs (`yarn test:db`: row-level security, the billing ledger) cannot run on a developer's machine, because they refuse any database that is not on the machine itself. `yarn verify` does not run them and stays green either way.
@@ -177,7 +177,7 @@ Remove in this order, from the top of the package graph down, so nothing still p
 
 1. A removed part's variables are already gone: its recipe took them out.
 2. Where an example value names the toolkit, replace it with the product's. Keep every comment. A secret never goes in an example file.
-3. **Hosted only (D1, the default).** In both example files set `DATABASE_ENVIRONMENT=staging`, empty the values of `DATABASE_URL_LOCAL` and `DATABASE_MIGRATION_URL_LOCAL`, and add one comment line above the switch: this project runs no local database, so a developer's machine uses the staging tier, on the hosted project chosen in D2 (name which); unset still means local, which has no database here. The example file is what each developer copies to `.env.local`, so the choice travels with it. Leave `packages/db` as it is. Then read "What hosted only means" below to the operator.
+3. **Hosted only (D1, the default).** Nothing to do: both example files already set `DATABASE_ENVIRONMENT=staging`, with a comment line saying this project runs no local database and the add recipe adds one, and the `_LOCAL` database URLs keep the CLI's loopback address, which is read on the local tier only. The database scripts refuse an unset tier rather than falling back to a local database. When D2 chose a separate development project, add its name to that comment line. The example file is what each developer copies to `.env.local`, so the choice travels with it. Leave `packages/db` as it is. Then read "What hosted only means" below to the operator.
 4. **Local, in Docker (D1).** Follow [`add/docker-local-database.md`](../add/docker-local-database.md).
 5. **Hand to the operator, by name (E2):** creating the hosted projects, and copying the example file to `.env.local` in `apps/web` and in `packages/db` with real values. The agent never asks for a value in the thread.
 
@@ -191,7 +191,7 @@ Remove in this order, from the top of the package graph down, so nothing still p
 | AI | A call reaches the live model and spends when the staging key is set. No recorded answers. |
 | Billing | The staging keys, which are test keys. |
 | Error monitoring | Reports to the staging project when its DSN is set. |
-| Not available | `yarn db:local`, `yarn db:local:full`, `yarn db:stop`, `yarn db:local:reset`, `yarn db:seed-users` and `yarn test:db`. They stay in `package.json` and need Docker. |
+| Not available | `yarn db:local`, `yarn db:local:full`, `yarn db:stop`, `yarn db:local:reset`, `yarn db:seed-users` and `yarn test:db`. They stay in `package.json`; each refuses in its first line, naming the add recipe, until the tier is local. |
 
 **Proof:** `yarn check-stack` and `yarn check-client-bundle` exit 0, then `yarn verify`. The database itself is proven later, by the operator's first `yarn db:migrate` against the hosted project; say so in the report rather than claiming it.
 
@@ -254,7 +254,7 @@ Read through on 2026-10-05 against the toolkit at commit `1c0fb5f`. Nothing was 
 
 **Step 4.** Two recipes, in order: `remove/billing.md`, then `remove/ai.md`. The billing recipe ends with a generated migration that drops its table. `yarn check-stack` and `yarn verify` after each.
 
-**Step 5.** The Stripe and Anthropic variables are already gone. Both example files get `DATABASE_ENVIRONMENT=staging`, empty `_LOCAL` database URLs and the comment. The "hosted only" table is read to the operator. Handed over: the Supabase staging and production projects, the two `.env.local` files. `yarn check-stack`, `yarn check-client-bundle`, `yarn verify`.
+**Step 5.** The Stripe and Anthropic variables are already gone. The database needs nothing: both example files already carry `DATABASE_ENVIRONMENT=staging` and the comment. The "hosted only" table is read to the operator. Handed over: the Supabase staging and production projects, the two `.env.local` files. `yarn check-stack`, `yarn check-client-bundle`, `yarn verify`.
 
 **Step 6.** The owner is unchanged, so part 5 of `rename.md` is skipped. The README opening, the two "Start here" items and the web app's paragraph are rewritten. The set-up record is written, naming billing and AI as removed, the hosted database on the staging project, and the docs app as "remove, no recipe yet". `yarn directory-map`. The three docs checks, then `yarn verify`.
 

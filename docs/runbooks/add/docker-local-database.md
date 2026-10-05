@@ -16,7 +16,7 @@ load_when:
 > **Module:** the local half of the database package: the Supabase CLI and its Postgres image, the scripts that start, reset and seed it, and the local auth mirror.
 > **Run from:** step 5 of [`new-project/README.md`](../new-project/README.md) when the interview's D1 answer is "local, in Docker", or later, when a hosted-only project changes its mind.
 > **Needs:** the database kept (not removed), and Docker running on the developer's machine.
-> **Status:** draft, not yet run cold. Today the starter still ships every file this recipe uses, so the recipe switches on what is already there. When the database package makes the local database opt-in, this recipe gains a "files to restore" section, copied from the toolkit at a named commit.
+> **Status:** draft, not yet run cold. The starter ships every file this recipe uses and runs none of it by default (WEB-8): the tier alone switches the local database on, so there is nothing to restore. Until it is on, `yarn db:local`, `yarn db:local:full`, `yarn db:local:reset` and `yarn test:db` refuse in their first line and name this recipe.
 
 ## What you get, and what it costs
 
@@ -29,7 +29,7 @@ load_when:
 ## Steps
 
 1. **Name it.** `project_id` in `packages/db/supabase/config.toml` is the repo's folder name ([`rename.md`](../new-project/rename.md), part 4). Two repos with one id share one local database.
-2. **Set the tier back to local.** In the root `.env.example` and in `packages/db/.env.example`: `DATABASE_ENVIRONMENT=local`, and both `DATABASE_URL_LOCAL` and `DATABASE_MIGRATION_URL_LOCAL` set to the local address, `postgresql://postgres:postgres@127.0.0.1:54322/postgres` (a synthetic password, the CLI's default). Delete the comment line the hosted-only step added. Each developer makes the same change in their two `.env.local` files.
+2. **Set the tier to local.** In the root `.env.example` and in `packages/db/.env.example`: `DATABASE_ENVIRONMENT=local`, and replace the comment line above it (this repo runs no local database by default) with one saying the database runs in Docker, started by `yarn db:local`. The `_LOCAL` database URLs are already filled with the local address, `postgresql://postgres:postgres@127.0.0.1:54322/postgres` (a synthetic password, the CLI's default), and are read on the local tier only. Each developer makes the same one-line change in their two `.env.local` files.
 3. **Pick how sign-in works locally.** There is no mode variable: the `_LOCAL` auth values decide.
    - **Mode A (Recommended): sign in on staging.** The `_LOCAL` auth values are the staging project's. Add `http://localhost:3000/auth/callback` to that project's redirect addresses. Each person who signs in is copied into the local database by the local auth mirror. Starts with `yarn db:local`.
    - **Mode B: everything local.** The whole Supabase stack runs in Docker. Starts with `yarn db:local:full`; the `_LOCAL` auth values are the ones the CLI's status command prints (the root `.env.example` names it), and `yarn db:seed-users` creates made-up users.
@@ -47,6 +47,7 @@ No entry in `toolkit.json` changes: the `db` entry already lists these files, an
 2. `yarn test:db` exits 0.
 3. `yarn web:dev`, then sign in (Mode A or B): the app shows the signed-in user, and the local `public.users` table holds their row.
 4. `yarn check-stack` and `yarn verify` exit 0.
+5. STK-11's operator check C4 (`specs/_status.md`, Operator checks) needs this database and can now be run; the first step of its C5, stopping the local database, applies only once this recipe has run.
 
 ## Day to day
 
@@ -55,4 +56,4 @@ No entry in `toolkit.json` changes: the `db` entry already lists these files, an
 
 ## Going back to hosted only
 
-`yarn db:stop --no-backup`, then step 5 of [`new-project/README.md`](../new-project/README.md), the "hosted only" item, and a line in the changelog.
+`yarn db:stop --no-backup`, then undo step 2: `DATABASE_ENVIRONMENT=staging` in both example files and in each developer's two `.env.local` files, with the comment line restored from the toolkit's example files; then a line in the changelog.

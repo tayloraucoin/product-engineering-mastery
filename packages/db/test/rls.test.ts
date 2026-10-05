@@ -17,7 +17,7 @@ import {
   openMigrationClient,
   runMigrations,
 } from "../scripts/database.ts";
-import { migrationUrl, runtimeUrl, tier } from "../scripts/env.ts";
+import { migrationUrl, requireTier, runtimeUrl } from "../scripts/env.ts";
 import { createDb, type Db } from "../src/client.ts";
 import { describeUrl } from "../src/connection.ts";
 import { assertLoopbackClient } from "../src/loopback.ts";
@@ -31,6 +31,7 @@ let admin: postgres.Sql | undefined;
 let db: Db;
 
 before(async () => {
+  const tier = requireTier();
   if (tier !== "local") {
     throw new Error(
       `yarn test:db runs only against the local image; DATABASE_ENVIRONMENT is ${tier}.`,

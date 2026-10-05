@@ -21,7 +21,7 @@ load_when:
 
 ## Before deleting anything
 
-Stop the local database and drop its volume while the CLI is still installed: `yarn db:stop --no-backup`. With the CLI already gone, `docker rm -f supabase_db_<project_id>` and `docker volume rm supabase_db_<project_id>` do the same, with `project_id` from `packages/db/supabase/config.toml`.
+A hosted-only project, the default, has no local database and skips this. Where [`add/docker-local-database.md`](../add/docker-local-database.md) switched one on, stop it and drop its volume while the CLI is still installed: `yarn db:stop --no-backup`. With the CLI already gone, `docker rm -f supabase_db_<project_id>` and `docker volume rm supabase_db_<project_id>` do the same, with `project_id` from `packages/db/supabase/config.toml`.
 
 ## Files to delete
 
@@ -72,7 +72,7 @@ In `packages/config/eslint/boundaries.js`: the `workspacePackage("db", "db")` li
 
 ## Vendor-side steps
 
-1. The local database went in "Before deleting anything". A machine that still has STK-9's pre-CLI container removes it too: `docker rm -f pem-db-local`.
+1. The local database, where one was added, went in "Before deleting anything". A machine that still has STK-9's pre-CLI container removes it too: `docker rm -f pem-db-local`.
 2. In the Supabase dashboard, for each tier's project, delete the tables `@pem/db` migrated (`public.users`, `public.notes` and any added since) and the `drizzle` schema holding the migration journal; or delete the project when auth goes too.
 3. Drop the setup SQL's objects, on hosted tiers only (the local database went with its volume, and with it the mirror's `local_auth_mirror` marker schema): the triggers `on_auth_user_created` and `on_auth_user_email_changed` on `auth.users`, and the functions `public.handle_new_auth_user`, `public.handle_auth_user_email_change` and `public.set_updated_at`.
 4. Delete the `DATABASE_URL*` and `DATABASE_MIGRATION_URL*` values from the hosting provider's environment settings.

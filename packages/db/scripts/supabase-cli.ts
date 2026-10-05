@@ -10,8 +10,10 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import postgres from "postgres";
 
+import type { Tier } from "@pem/env/tier";
+
 import { isLoopbackHost } from "../src/loopback.ts";
-import { cliEnvironment } from "./env.ts";
+import { ADD_RECIPE, cliEnvironment, requireTier } from "./env.ts";
 import {
   LEGACY_CONTAINER,
   LOCAL_CONTAINER,
@@ -29,8 +31,32 @@ function stop(command: string, message: string): never {
   process.exit(1);
 }
 
-/** Exits with a clear line when Docker is down or the old container holds the port. */
+/**
+ * Exits with one line, before any `docker` call, unless the tier is local:
+ * the commands that call this need the Docker database, which this repo runs
+ * only when the add recipe has switched it on.
+ */
+export function requireLocalTier(command: string): void {
+  let tier: Tier;
+  try {
+    tier = requireTier();
+  } catch (error) {
+    stop(
+      command,
+      `needs the local database (Docker), and ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+  if (tier !== "local") {
+    stop(
+      command,
+      `needs the local database (Docker), and DATABASE_ENVIRONMENT is ${tier}. This repo runs no local database by default; to add one, follow ${ADD_RECIPE}.`,
+    );
+  }
+}
+
+/** Exits with a clear line when the tier is not local, Docker is down, or the old container holds the port. */
 export function preflight(command: string): void {
+  requireLocalTier(command);
   // The probe's stderr is dropped: with the daemon down, some Docker CLIs panic
   // on the format template and bury the one line that says what to do.
   try {

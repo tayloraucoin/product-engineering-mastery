@@ -18,7 +18,7 @@ import {
   openMigrationClient,
   runMigrations,
 } from "../scripts/database.ts";
-import { migrationUrl, tier } from "../scripts/env.ts";
+import { migrationUrl, requireTier } from "../scripts/env.ts";
 import { markLocalAuthMirror } from "../scripts/local-auth-marker.ts";
 import { describeUrl } from "../src/connection.ts";
 import {
@@ -57,6 +57,7 @@ async function publicEmail(id: string) {
 }
 
 before(async () => {
+  const tier = requireTier();
   if (tier !== "local") {
     throw new Error(
       `yarn test:db runs only against the local database; DATABASE_ENVIRONMENT is ${tier}.`,

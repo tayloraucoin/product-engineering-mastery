@@ -17,7 +17,7 @@ import {
   openMigrationClient,
   runMigrations,
 } from "../scripts/database.ts";
-import { migrationUrl, runtimeUrl, tier } from "../scripts/env.ts";
+import { migrationUrl, requireTier, runtimeUrl } from "../scripts/env.ts";
 import {
   claimStripeEvent,
   markStripeEventProcessed,
@@ -37,6 +37,7 @@ let admin: postgres.Sql | undefined;
 let db: Db;
 
 before(async () => {
+  const tier = requireTier();
   if (tier !== "local") {
     throw new Error(
       `yarn test:db runs only against the local image; DATABASE_ENVIRONMENT is ${tier}.`,

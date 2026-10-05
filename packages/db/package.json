@@ -41,7 +41,7 @@
     "lint": "eslint . --max-warnings 0",
     "check-types": "tsc --noEmit",
     "test": "node --test \"src/**/*.test.ts\" \"scripts/**/*.test.ts\"",
-    "test:db": "node --env-file-if-exists=.env.local --test --test-concurrency=1 \"test/**/*.test.ts\"",
+    "test:db": "node --env-file-if-exists=.env.local scripts/test-db.ts",
     "check-migrations": "node scripts/check-migrations.ts",
     "db:local": "node --env-file-if-exists=.env.local scripts/local.ts",
     "db:local:full": "node --env-file-if-exists=.env.local scripts/local-full.ts",

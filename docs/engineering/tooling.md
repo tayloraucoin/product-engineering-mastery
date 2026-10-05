@@ -1014,9 +1014,9 @@ All of these forward to `packages/db`. bash-guard and the permissions ask before
 
 #### test:db
 
-- **What:** `yarn test:db` runs `packages/db/test/` against a real local Postgres, one file at a time. The files cover the row-level security policies, the local auth mirror, the reset script and the Stripe event ledger.
+- **What:** `yarn test:db` runs `packages/db/test/` against a real local Postgres, one file at a time. The files cover the row-level security policies, the local auth mirror, the reset script and the Stripe event ledger. On any tier but local it exits in its first line, naming the add recipe, before a test file loads.
 - **Area:** `packages/db`.
-- **Trigger:** by hand, with `yarn db:local` running. It is not in verify or CI.
+- **Trigger:** by hand, with `yarn db:local` running; the Docker database is opt-in (`docs/runbooks/add/docker-local-database.md`). It is not in verify or CI.
 - **Scores:** importance **4.0** (the only proof the SQL and its policies work on a real database) · token **1.5** (a TAP run) · wall **0.0** (run on purpose; _estimate_ 5–20 s) · standard **6.0** (`node:test` against a real database).
 - **Pros:**
   - No mocks.
@@ -1026,7 +1026,7 @@ All of these forward to `packages/db`. bash-guard and the permissions ask before
 
 #### db:local
 
-- **What:** `yarn db:local` starts the local Supabase database through the Supabase CLI. It warns when the port is bound beyond loopback (EN-13).
+- **What:** `yarn db:local` starts the local Supabase database through the Supabase CLI. The database is off by default: on any tier but local it refuses in its first line, naming the add recipe. It warns when the port is bound beyond loopback (EN-13).
 - **Area:** `packages/db`.
 - **Trigger:** by a person or an agent before database work.
 - **Scores:** importance **3.5** (the local database the other scripts need) · token **1.0** (a startup log) · wall **0.0** (run on purpose) · standard **5.0** (the Supabase CLI, wrapped).
@@ -1038,7 +1038,7 @@ All of these forward to `packages/db`. bash-guard and the permissions ask before
 
 #### db:local:full
 
-- **What:** `yarn db:local:full` starts the full local Supabase stack, auth included, not just Postgres. Auth work needs it.
+- **What:** `yarn db:local:full` starts the full local Supabase stack, auth included, not just Postgres. Auth work needs it. Like `db:local`, it refuses any tier but local in its first line.
 - **Area:** `packages/db`, `packages/auth`.
 - **Trigger:** by a person, for auth work.
 - **Scores:** importance **2.5** (auth work needs it) · token **1.0** (a startup log) · wall **0.0** (run on purpose) · standard **5.0** (the Supabase CLI, wrapped).
@@ -1062,7 +1062,7 @@ All of these forward to `packages/db`. bash-guard and the permissions ask before
 
 #### db:local:reset
 
-- **What:** `yarn db:local:reset` rebuilds the local database from the migrations. It refuses anything but a local database, and bash-guard asks first.
+- **What:** `yarn db:local:reset` rebuilds the local database from the migrations. It refuses an unset tier and anything but a local database, and bash-guard asks first.
 - **Area:** `packages/db`.
 - **Trigger:** by a person, or an agent with approval.
 - **Scores:** importance **2.0** (the one sanctioned reset) · token **0.5** (a short log) · wall **0.0** (run on purpose) · standard **3.0** (a house script).
@@ -1086,7 +1086,7 @@ All of these forward to `packages/db`. bash-guard and the permissions ask before
 
 #### db:migrate
 
-- **What:** `yarn db:migrate` applies pending migrations to the database the tier names. bash-guard and the permissions both ask first.
+- **What:** `yarn db:migrate` applies pending migrations to the database the tier names; an unset tier, or a hosted tier with no URL of its own, is refused in one line. bash-guard and the permissions both ask first.
 - **Area:** `packages/db`.
 - **Trigger:** by a person, or an agent with approval.
 - **Scores:** importance **4.0** (applying a migration is a one-way door) · token **0.5** (a short log) · wall **0.0** (run on purpose) · standard **5.0** (drizzle migrations, wrapped).

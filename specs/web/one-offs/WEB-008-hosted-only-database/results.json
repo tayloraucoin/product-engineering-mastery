@@ -1,0 +1,37 @@
+{
+  "id": "WEB-8",
+  "criteria_sha256": "fdfafd561548cd964808dd3ae6216857179133052f5d3d734adb5031aff87f09",
+  "criteria": {
+    "C1": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C2": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C3": {
+      "status": "FAIL",
+      "evidence": "manual",
+      "run": null
+    },
+    "C4": {
+      "status": "FAIL",
+      "evidence": "manual",
+      "run": null
+    },
+    "C5": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    },
+    "review:warden": {
+      "status": "FAIL",
+      "evidence": "manual",
+      "run": null
+    }
+  },
+  "updated_at": "2026-10-05T22:28:10Z"
+}

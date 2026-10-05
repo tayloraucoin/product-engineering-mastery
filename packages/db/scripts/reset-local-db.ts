@@ -1,8 +1,8 @@
 /**
  * `yarn db:local:reset`: empties the local database's public schema and
  * drizzle's journal, then reapplies the migrations and the setup SQL
- * (D-STK-18). It refuses any tier but local before it resolves a URL, and a
- * URL that is not loopback before it connects. The auth schema, the mirror's
+ * (D-STK-18). It refuses an unset tier and any tier but local before it
+ * resolves a URL, and a URL that is not loopback before it connects. The auth schema, the mirror's
  * marker and the public schema's own grants are left as they are.
  *
  * Its name never matches the deny rules on reset (`*db:reset*`); it is an ask
@@ -14,10 +14,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type postgres from "postgres";
 
+import type { Tier } from "@pem/env/tier";
+
 import { describeUrl } from "../src/connection.ts";
 import { assertLoopbackClient, isLoopbackUrl } from "../src/loopback.ts";
 import { applySetup, openMigrationClient, runMigrations } from "./database.ts";
-import { migrationUrl, tier } from "./env.ts";
+import { ADD_RECIPE, migrationUrl, requireTier } from "./env.ts";
 
 const COMMAND = "db:local:reset";
 
@@ -112,10 +114,16 @@ function refuse(message: string): never {
 }
 
 async function main(): Promise<void> {
-  // A hosted tier is refused before any URL is resolved.
+  // An unset or hosted tier is refused before any URL is resolved.
+  let tier: Tier;
+  try {
+    tier = requireTier();
+  } catch (error) {
+    refuse(error instanceof Error ? error.message : String(error));
+  }
   if (tier !== "local")
     refuse(
-      `DATABASE_ENVIRONMENT is ${tier}. Only the local database is ever reset; a hosted tier changes by migration, which Taylor applies.`,
+      `DATABASE_ENVIRONMENT is ${tier}. Only the local database (Docker) is ever reset; a hosted tier changes by migration, which Taylor applies. This repo runs no local database by default; to add one, follow ${ADD_RECIPE}.`,
     );
   const url = migrationUrl();
   if (!isLoopbackUrl(url))
