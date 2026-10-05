@@ -19,7 +19,7 @@ Lead: Compass (`docs/roles/product-design/compass-product-strategist.md`). Suppo
 
 ## 2. Venue
 
-Claude Code, in the repo, on the operator's branch. First move: `yarn spec:init <app> <EPIC> <slug>` creates the epic folder; second move: save the prompt you were given as `prompts/00-frame.md`.
+Claude Code, in the repo, on the operator's branch. First move: `yarn spec:init <app> <EPIC> <slug>` creates the epic folder. The prompt you were given is not saved: prompts are printed, never filed. A feature exploration or a product spec runs this stage too; its track file says which rounds to skip.
 
 ## 3. Loads
 
@@ -51,4 +51,4 @@ You. Say go, or send it back with the round number to revisit.
 
 ## 7. Handoff
 
-For each knowledge gap, write a Research prompt to `prompts/01-research-<topic>.md` (from `stages/research.md`). Then write the UX prompt to `prompts/02-ux.md` (from `stages/ux.md`), print it, and say: open a new thread with the research prompts first if there are any, then the UX prompt.
+For each knowledge gap, apply the builder's rule (`prompt-builder.md` §5): look it up here, or print a research block for its own thread (from `stages/research.md`). Then print the UX prompt (from `stages/ux.md`) and say: run the research threads first if there are any, then open a new thread with the UX prompt. Print only; save no prompt file.

@@ -1,67 +1,72 @@
 ---
 title: "Stage: Build"
-description: "Open for a build thread, one ticket or a batch: the contract is the brief and the oracle, results are written only by tooling, the tier sets the review, and the thread ends on a short report."
+description: "Open for a build thread, one ticket or a batch, with or without a formal ticket: the QA level sets the proof, the review and the paperwork, and the thread ends on a short report."
 layer: workflows
 status: draft
-thread: P-J
+thread: PR-18
 role: Usher
-date: 2026-10-02
-last_reviewed: 2026-10-02
+date: 2026-10-05
+last_reviewed: 2026-10-05
 supersedes:
 load_when: on request
 ---
 
-# Stage: Build (a ticket or a batch; the one-off's only stage)
+# Stage: Build (a ticket, a batch, or work with no ticket)
+
+Shared by the epic, one-off, bug and product-spec tracks.
 
 ## 1. Lead and support
 
-No lead role: the thread is the builder, and the work loop in `AGENTS.md` governs it. The ticket's tier sets the review (PR-15):
+No lead role: the thread is the builder, and the work loop in `AGENTS.md` governs it. The QA level the operator confirmed sets everything else ([`../qa-levels.md`](../qa-levels.md)):
 
-| Tier | Planned paths                                                                                                                            | Review                                                                                                  |
-| ---- | ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| 0    | Docs and data only                                                                                                                       | None: its scripted criteria                                                                             |
-| 1    | Code                                                                                                                                     | One `vigil` pass over the whole batch, at batch close                                                   |
-| 2    | A one-way door: the database, schema, migrations, policies, SQL, auth, billing, webhooks, `proxy.ts`, `env.ts`, agent settings and hooks | The Tickets pre-flight, then `vigil` and the `toolkit.json` specialists on the ticket, in fresh context |
+| Level | Proof                                                       | Review                                                              | Written down                                 |
+| ----- | ----------------------------------------------------------- | ------------------------------------------------------------------- | -------------------------------------------- |
+| Q0    | The stop check                                              | None                                                                | Nothing                                      |
+| Q1    | The builder runs the criteria; one `yarn verify` at the end | None                                                                | An as-built only when something deviated     |
+| Q2    | Same as Q1                                                  | One reviewer in fresh context; findings return in the thread        | A short as-built                             |
+| Q3    | Recorded proofs, frozen at close                            | The confirmed specialists, each in fresh context; review files kept | The contract, the as-built, the review files |
 
-`contract:init` computes the tier; `tier:` in the contract, or `yarn contract:tier <id> <n>`, overrides it.
+A `focus` line in the contract or the prompt raises one named part to a higher level without raising the rest. The operator can raise or lower a level at any time by saying so.
 
 ## 2. Venue
 
-Claude Code, on the branch Taylor has checked out. Say which tickets to build ("build STK-5 and STK-7"); `tk-batch` takes them from there. One thread builds a batch in order; tickets with no dependency between them can run in parallel threads on the same branch. Add "on its own branch" when the work should be its own pull request (PR-17): the thread makes a separate folder and branch `agent/<id>` for it, leaves the shared checkout alone, and reports the branch as ready; "merge it back" folds it into the working branch.
+Claude Code, on the branch the operator has checked out, unless the prompt says "on its own branch" ([`../branches.md`](../branches.md)). Say which tickets to build ("build STK-5 and STK-7"), or paste a prompt for work with no ticket. One thread builds a batch in order; batches with no dependency between them can run in parallel threads.
 
 ## 3. Loads
 
-| File                               | Reason                                                                    |
-| ---------------------------------- | ------------------------------------------------------------------------- |
-| `contract.md`                      | The brief and the oracle: Build notes, criteria, planned paths            |
-| The one surface file it cites      | What the surface must do in every state                                   |
-| `technical.md`, for an epic ticket | Placement and the data contract                                           |
-| Path rules, as files are touched   | `ui.md`, `ts.md`, `testing.md`, `next.md`, `specs.md` fire on their globs |
-| Never a `docs/research/` file      | A11; `check-specs` fails a kickoff that names one                         |
+| File                                 | Reason                                                               |
+| ------------------------------------ | -------------------------------------------------------------------- |
+| `contract.md`, or the printed prompt | The brief: what to build, the criteria, the level, the focus         |
+| The one surface file it cites        | What the surface must do in every state                              |
+| `technical.md`, for an epic ticket   | Only what every ticket in the epic shares                            |
+| Path rules, as files are touched     | `ui.md`, `ts.md`, `testing.md`, `next.md`, `specs.md` on their globs |
+| Never a `docs/research/` file        | Research is distilled before a build starts                          |
 
-No interview. A question the contract cannot answer is an `[ASSUMPTION]` in the as-built. Only an open `[NEEDS DECISION]` a ticket waits on, or a change to a criterion, goes to Taylor: once, before the build, every question in one message with a recommendation.
+How often the thread stops follows the involvement the operator chose. **Autonomous:** a question the brief cannot answer becomes an `[ASSUMPTION]` in the report or the as-built. **Check in at gates:** the thread stops with its plan and file list before building, and with what it built before closing. **Decide together:** each meaningful choice is put to the operator with a recommendation. In every mode, what only a person can do goes to the operator in one message.
 
 ## 4. The loop
 
 Per ticket, in build order:
 
-1. `yarn contract:init <APP|EPIC> <slug>`: it starts a contract drafted at the Tickets stage, or writes one from the template to fill and start with a second run. A dependency counts once its own criteria are PASS; its reviews never hold the next ticket.
-2. Build inside the rails. A one-off that changes behaviour edits the truth file named in `truth_files` in the same branch.
-3. `yarn contract:run <id>` for `test` and `check` criteria; `yarn contract:record <id> <criterion> --evidence <path>` for `capture` and `manual`.
-4. The as-built, then a tier 2 ticket's reviews through `yarn review:run <role> <id>`.
+1. **Start.** With a ticket: `yarn contract:init <APP | EPIC> <slug>`. Without one: restate the criteria from the prompt in the thread.
+2. **Build** in small commits labelled with the work id. Work that changes behaviour updates the living UX file in the same change, or writes it when none exists.
+3. **Prove at the level.** Q1 and Q2: run each criterion's command once (criteria that share a command share the run) and say what passed. Q3: `yarn contract:run <id>` records each result; a check that needs a person is handed over as an operator check.
+4. **Fix and prove again** until the criteria pass. Give up on one failure only after three different fixes, and say what was tried.
+5. **Write down what the level asks for,** and nothing more.
+6. **Review at the level.** Q2: one subagent given the brief, the changed files and the reviewer's role, never the builder's summary. Q3: `yarn review:run <role> <id>` per confirmed specialist. Black and red findings are fixed and re-proven; cheap orange ones too; the rest become drafted follow-ups.
 
-Once per batch: the tier 1 review, `yarn verify`, `yarn status`, and the report.
+Once per batch: `yarn verify`, then the report.
 
-The thread runs all of it and keeps going until `yarn status <id>` says nothing is left (PR-16): a failure is fixed and re-proven, a stale proof on any ticket is re-run, a blocked command is run again unsandboxed. What only a person can check is handed over as an operator check (`--verdict deferred`), which closes the ticket and lists the check in `specs/_status.md`. Set `operator_review: true`, or say so in the thread, when you want to look a ticket over yourself.
+## 5. What does not happen
 
-## 5. Writes
-
-`results.json` (tooling only), `as-built.md` (Shipped against the contract, Deviations, Not verified, Next), review files, and the truth-file edit for a one-off.
+- A commit to a shared file never reopens another ticket. Only a Q3 ticket's proofs are recorded, and they are checked for staleness once, before a merge.
+- Evidence logs are not committed.
+- No prompt file, no per-ticket kickoff file, no review file below Q3.
 
 ## 6. Gate
 
-During a build, `yarn check-specs` fails only on a defect (a broken contract, a hand-edited result) and warns on work in flight, so one ticket's open close never fails another's `yarn verify`. Before a merge, `yarn check-specs --strict`: every criterion PASS with a run record whose commit is not older than the ticket's own paths; every `review:*` recorded; the as-built complete. Then you: read the batch report, read a tier 2 ticket's `review-<role>.md`, and merge.
+`yarn verify` green for the batch. For Q3 tickets, `yarn check-specs --strict` before a merge: every criterion recorded as passing, every confirmed review recorded, the as-built complete. Then the operator merges.
 
 ## 7. Handoff
 
-The thread ends on the closing report in `tk-batch`'s shape, six lines at most: `Done`, `Not done`, `Needs you` (a decision with a recommendation, or an action only a person can take; never a `yarn` command), `To look at when you like` (operator checks and drafted follow-ups), `What went wrong`. When everything closed it is one line. The Stop hook checks only the files that thread edited.
+The closing report, six lines at most: `Done`, `Not done`, `Needs you` (a decision with a recommendation, or an action only a person can take; never a command to run), `To look at when you like` (operator checks and drafted follow-ups), `What went wrong`. When everything closed it is one line.

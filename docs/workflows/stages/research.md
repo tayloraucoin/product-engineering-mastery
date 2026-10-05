@@ -38,7 +38,7 @@ Primary sources over comparisons; every price, availability or capability claim 
 
 ## 5. Writes
 
-`specs/<app>/epics/<EPIC>-<slug>/research/<topic>.md` from the template: the question, the answer in one paragraph, the evidence table, what was not found, and "Promote to library: yes/no, why". A note that outlives the epic goes through `docs/references/_meta/`'s procedure, never by copy.
+`research/<topic>.md` in the work's own folder (an epic's `specs/<app>/epics/<EPIC>-<slug>/`, an exploration's `specs/<app>/explorations/<slug>/`; the research block names the exact directory and filename) from the template: the question, the answer in one paragraph, the evidence table, what was not found, and "Promote to library: yes/no, why". A note that outlives the epic goes through `docs/references/_meta/`'s procedure, never by copy.
 
 ## 6. Gate
 
@@ -46,4 +46,4 @@ The note answers its question, or says plainly what was not found. The Frame lea
 
 ## 7. Handoff
 
-Print nothing new. The UX prompt already written by Frame lists this note under its loads; tell the person which prompt to open next.
+Print nothing new. The prompt that asked for this research lists the note under its loads; tell the person to save the result at the path the research block named, and which prompt to open next.

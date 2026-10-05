@@ -12,8 +12,6 @@ docs/product/package.template.md
 docs/product/cycle-charter.template.md
 docs/runbooks/variant-testing.md
 docs/prompts/archive/phases/
-docs/workflows/one-off.md
-docs/workflows/epic.md
 docs/workflows/glossary.md
 
 # Landing pages: a hand-written top and a generated table (yarn directory-map).

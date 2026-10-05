@@ -39,7 +39,7 @@ Ninety minutes, or the cycle charter's limit. Answer "is this possible in this a
 
 ## 5. Writes
 
-`specs/<app>/epics/<EPIC>-<slug>/technical.md` (or `technical/` when over 2,000 tokens): placement by consumer; the data contract; the one-way doors touched, each with its record or its ratification due; calls routed to you, each with a recommendation; the test shape per risk (Touchstone's rule: the risk's shape picks the test type).
+`specs/<app>/epics/<EPIC>-<slug>/technical.md` (or `technical/` when over 2,000 tokens). It holds only what every ticket shares; detail that belongs to one ticket is written into that ticket's Build notes at the Tickets stage, so a build thread never pays to read another ticket's detail. Contents: placement by consumer; the data contract; the one-way doors touched, each with its record or its ratification due; calls routed to you, each with a recommendation; the test shape per risk (Touchstone's rule: the risk's shape picks the test type).
 
 ## 6. Gate
 
@@ -47,4 +47,4 @@ You ratify the routed calls, on the record. An unratified one-way door blocks th
 
 ## 7. Handoff
 
-Write the Tickets prompt to `prompts/04-tickets.md` (from `stages/tickets.md`), print it, and say: open a new thread with it.
+Print the Tickets prompt (from `stages/tickets.md`) and say: open a new thread with it. Print only; save no prompt file.

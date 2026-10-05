@@ -13,7 +13,7 @@ load_when:
 
 # Stages
 
-**What this is.** One file per level of an epic (frame, research, ux, technical, tickets) and one for a ticket's build thread, which is also the one-off's only stage. Each file is the protocol the thread follows: who leads, where it runs, what it loads and why, the interview rounds where it interviews, what it writes and from which template, what passes it, and the prompt it hands to the next level.
+**What this is.** The stages that tracks share: frame, research, ux, technical, tickets and build. A track ([`../tracks/`](../tracks/README.md)) names which of these it runs and states only its differences; a stage that belongs to one track alone is written in that track's file. Each file here is the protocol the thread follows: who leads, where it runs, what it loads and why, the interview rounds where it interviews, what it writes and from which template, what passes it, and the prompt it hands to the next level.
 
 **Come here when.** The prompt builder has routed work to a stage, or you are writing the next level's prompt by hand and need its loads and gate.
 
@@ -25,9 +25,9 @@ load_when:
 
 | File | What it is for |
 | --- | --- |
-| [`build.md`](build.md) | Open for a build thread, one ticket or a batch: the contract is the brief and the oracle, results are written only by tooling, the tier sets the review, and the thread ends on a short report. |
+| [`build.md`](build.md) | Open for a build thread, one ticket or a batch, with or without a formal ticket: the QA level sets the proof, the review and the paperwork, and the thread ends on a short report. |
 | [`frame.md`](frame.md) | Open at an epic's first level, to turn a brain dump into a brief: the problem, who has it, the appetite, what is out, and the knowledge gaps. |
 | [`research.md`](research.md) | Open when a brief names a knowledge gap that the UX spec cannot proceed without: one question, one note, promoted to the library only when it outlives the epic. |
 | [`technical.md`](technical.md) | Open at an epic's technical level, after the UX files are approved, to decide placement, the data contract and the one-way doors, and to route the calls that need ratifying. |
-| [`tickets.md`](tickets.md) | Open at an epic's tickets level, to cut the approved spec into contracts a build thread can build and prove from the ticket alone, with tiers computed and dependencies ordered. |
+| [`tickets.md`](tickets.md) | Open at an epic's tickets level, to cut the approved spec into contracts a build thread can build from the ticket alone, grouped into batches and waves, each with its own QA level, reviewers and focus for the operator to confirm. |
 | [`ux.md`](ux.md) | Open at an epic's UX level, to turn the brief into surface files a fresh thread could build without asking a question: every state, access, criteria with IDs, mirroring the living truth. |

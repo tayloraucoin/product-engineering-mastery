@@ -50,4 +50,4 @@ You approve, and each file is set to `status: approved`. The detail test: a fres
 
 ## 7. Handoff
 
-Write the Technical prompt to `prompts/03-technical.md` (from `stages/technical.md`), print it, and say: open a new thread with it.
+Print the Technical prompt (from `stages/technical.md`) and say: open a new thread with it. Print only; save no prompt file. On the product-spec track this stage hands off to that track's Handoff stage instead.
