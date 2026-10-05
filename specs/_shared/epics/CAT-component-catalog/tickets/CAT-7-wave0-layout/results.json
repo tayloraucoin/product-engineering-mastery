@@ -3,40 +3,90 @@
   "criteria_sha256": "c80cb3c81a47f6d8bf3eb5365a0c26742d9e06f9924ecf00f896d497419957ea",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn check-catalog --ticket CAT-7",
+        "exit": 0,
+        "at": "2026-10-05T03:05:25Z",
+        "head": "2707c4773dfd687e90ef49027b91d6935fe74ef6",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-7-wave0-layout/evidence/C1.log",
+        "evidence_sha256": "c8dd403806afbaf9dc2ac9cfdcf371925548d7ba808daea0be68de79c9f1fe95"
+      }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-05T03:05:27Z",
+        "head": "2707c4773dfd687e90ef49027b91d6935fe74ef6",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-7-wave0-layout/evidence/C2.log",
+        "evidence_sha256": "6adfbace1778addf177450d838d91fad5e775add287b154db4649cedd45ee2bb",
+        "tests": 187
+      }
     },
     "C3": {
       "status": "FAIL",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn lint",
+        "exit": 1,
+        "at": "2026-10-05T03:05:29Z",
+        "head": "2707c4773dfd687e90ef49027b91d6935fe74ef6",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-7-wave0-layout/evidence/C3.log",
+        "evidence_sha256": "b1b2047a0cbbc43a1eea9b65742ea9811a5306911a2da45d15f058f52563e8a9"
+      }
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn check-ui-layout",
+        "exit": 0,
+        "at": "2026-10-05T03:05:38Z",
+        "head": "2707c4773dfd687e90ef49027b91d6935fe74ef6",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-7-wave0-layout/evidence/C4.log",
+        "evidence_sha256": "a7246ef1507cdad60758f4ca11dfbcd56f323f96def2e9a33846f9c0c1108f9f"
+      }
     },
     "C5": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn contrast-audit",
+        "exit": 0,
+        "at": "2026-10-05T03:05:40Z",
+        "head": "2707c4773dfd687e90ef49027b91d6935fe74ef6",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-7-wave0-layout/evidence/C5.log",
+        "evidence_sha256": "2a149387ec31bc6102cd7b6dca4cdd7b1792d6337e14dbd3b16854669d67dc01"
+      }
     },
     "C6": {
       "status": "FAIL",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn check-types",
+        "exit": 1,
+        "at": "2026-10-05T03:05:42Z",
+        "head": "2707c4773dfd687e90ef49027b91d6935fe74ef6",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-7-wave0-layout/evidence/C6.log",
+        "evidence_sha256": "acb1db1d1b6f6ab6d88c2bfd4a4b44c4a28354d44b1b4cb032e95a0da47aa974"
+      }
     },
     "C7": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn check-stack",
+        "exit": 0,
+        "at": "2026-10-05T03:05:53Z",
+        "head": "2707c4773dfd687e90ef49027b91d6935fe74ef6",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-7-wave0-layout/evidence/C7.log",
+        "evidence_sha256": "c8547ae63af9430c410af30dbdf38ab6b6f059cbbf9c595d1d51538e07322caf"
+      }
     }
   },
-  "updated_at": "2026-10-05T02:56:53Z"
+  "updated_at": "2026-10-05T03:05:53Z"
 }

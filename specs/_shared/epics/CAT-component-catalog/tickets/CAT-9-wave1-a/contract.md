@@ -21,7 +21,7 @@ planned_paths:
   - "packages/ui/package.json"
   - "packages/catalog/STATUS.md"
 depends_on:
-  - CAT-8
+  - CAT-4
 out_of_scope:
   - "The form library choice (raised with a recommendation, not built)."
 criteria:

@@ -27,7 +27,7 @@ planned_paths:
   - "toolkit.json"
   - "docs/engineering/tech-stack.md"
 depends_on:
-  - CAT-10
+  - CAT-4
 out_of_scope:
   - "The blocks (CAT-12)."
 criteria:

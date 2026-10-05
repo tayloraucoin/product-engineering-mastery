@@ -23,7 +23,7 @@ planned_paths:
   - "packages/ui/package.json"
   - "packages/catalog/STATUS.md"
 depends_on:
-  - CAT-7
+  - CAT-4
 out_of_scope:
   - "Dialogs, sheets and toast (CAT-9)."
 criteria:

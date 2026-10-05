@@ -1,0 +1,52 @@
+command: yarn lint
+exit: 1
+at: 2026-10-05T03:05:29Z
+head: 2707c4773dfd687e90ef49027b91d6935fe74ef6
+---
+
+   • turbo 2.11.6
+   • Packages in scope: @pem/ai, @pem/api, @pem/auth, @pem/brand, @pem/catalog, @pem/config, @pem/constants, @pem/db, @pem/email, @pem/env, @pem/observability, @pem/services, @pem/ui, @pem/validators, docs, web
+   • Running lint in 16 packages
+   • Remote caching disabled
+
+@pem/constants:lint: cache miss, executing b3d36db65209d503
+@pem/validators:lint: cache miss, executing 8c9039f53d3d210a
+@pem/env:lint: cache miss, executing ddec7ec800d6e595
+@pem/brand:lint: cache miss, executing ae97427d798cd41d
+@pem/observability:lint: cache miss, executing e8d04da1b099f3f9
+@pem/db:lint: cache miss, executing 91d2fce1e00273d2
+@pem/ai:lint: cache miss, executing 58dd9c65b225df18
+@pem/ui:lint: cache miss, executing 8fe12bd17b4a7372
+@pem/email:lint: cache miss, executing b441b3540d2f85c0
+@pem/services:lint: cache miss, executing 19bc70a5e7f50036
+@pem/auth:lint: cache miss, executing d65ee6b6a7fa45e7
+@pem/catalog:lint: cache miss, executing f5b96d57907538f9
+docs:lint: cache miss, executing 83638a65cb371246
+@pem/api:lint: cache miss, executing e3e8c290267f144b
+web:lint: cache miss, executing 26c8479c0379bf08
+web:lint: 
+web:lint: ./apps/web/env.ts
+web:lint:   65:22  warning  STRIPE_SECRET_KEY is not listed as a dependency in root turbo.json              turbo/no-undeclared-env-vars
+web:lint:   66:28  warning  STRIPE_SECRET_KEY_LOCAL is not listed as a dependency in root turbo.json        turbo/no-undeclared-env-vars
+web:lint:   67:30  warning  STRIPE_SECRET_KEY_STAGING is not listed as a dependency in root turbo.json      turbo/no-undeclared-env-vars
+web:lint:   68:26  warning  STRIPE_WEBHOOK_SECRET is not listed as a dependency in root turbo.json          turbo/no-undeclared-env-vars
+web:lint:   69:32  warning  STRIPE_WEBHOOK_SECRET_LOCAL is not listed as a dependency in root turbo.json    turbo/no-undeclared-env-vars
+web:lint:   70:34  warning  STRIPE_WEBHOOK_SECRET_STAGING is not listed as a dependency in root turbo.json  turbo/no-undeclared-env-vars
+web:lint:   71:20  warning  STRIPE_PRICE_ID is not listed as a dependency in root turbo.json                turbo/no-undeclared-env-vars
+web:lint:   72:26  warning  STRIPE_PRICE_ID_LOCAL is not listed as a dependency in root turbo.json          turbo/no-undeclared-env-vars
+web:lint:   73:28  warning  STRIPE_PRICE_ID_STAGING is not listed as a dependency in root turbo.json        turbo/no-undeclared-env-vars
+web:lint: 
+web:lint: ./apps/web/lib/error-reporting/scrub.ts
+web:lint:   72:59  warning  '_data' is defined but never used  @typescript-eslint/no-unused-vars
+web:lint: 
+web:lint: ✖ 10 problems (0 errors, 10 warnings)
+web:lint: 
+web:lint: ESLint found too many warnings (maximum: 0).
+
+ Tasks:    14 successful, 15 total
+Cached:    0 cached, 15 total
+  Time:    7.295s 
+Failed:    web#lint
+
+web#lint:  ERROR  command (./apps/web) /private/var/folders/q7/r3bzpkmj5zn1nhwcb4j4fhkh0000gn/T/xfs-d1f77147/yarn run lint exited (1)
+ ERROR  run failed: command  exited (1)

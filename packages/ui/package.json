@@ -24,6 +24,10 @@
       "types": "./src/primitives/display/badge/index.ts",
       "default": "./src/primitives/display/badge/index.ts"
     },
+    "./breadcrumb": {
+      "types": "./src/primitives/navigation/breadcrumb/index.ts",
+      "default": "./src/primitives/navigation/breadcrumb/index.ts"
+    },
     "./bubble": {
       "types": "./src/primitives/display/bubble/index.ts",
       "default": "./src/primitives/display/bubble/index.ts"
@@ -48,13 +52,29 @@
       "types": "./src/primitives/layout/collapsible/index.ts",
       "default": "./src/primitives/layout/collapsible/index.ts"
     },
+    "./context-menu": {
+      "types": "./src/primitives/feedback/context-menu/index.ts",
+      "default": "./src/primitives/feedback/context-menu/index.ts"
+    },
+    "./direction": {
+      "types": "./src/providers/direction/index.ts",
+      "default": "./src/providers/direction/index.ts"
+    },
     "./drawer": {
       "types": "./src/primitives/layout/drawer/index.ts",
       "default": "./src/primitives/layout/drawer/index.ts"
     },
+    "./dropdown-menu": {
+      "types": "./src/primitives/feedback/dropdown-menu/index.ts",
+      "default": "./src/primitives/feedback/dropdown-menu/index.ts"
+    },
     "./empty": {
       "types": "./src/primitives/display/empty/index.ts",
       "default": "./src/primitives/display/empty/index.ts"
+    },
+    "./hover-card": {
+      "types": "./src/primitives/feedback/hover-card/index.ts",
+      "default": "./src/primitives/feedback/hover-card/index.ts"
     },
     "./input": {
       "types": "./src/primitives/control/input/index.ts",
@@ -83,6 +103,14 @@
     "./native-select": {
       "types": "./src/primitives/control/native-select/index.ts",
       "default": "./src/primitives/control/native-select/index.ts"
+    },
+    "./navigation-menu": {
+      "types": "./src/primitives/navigation/navigation-menu/index.ts",
+      "default": "./src/primitives/navigation/navigation-menu/index.ts"
+    },
+    "./popover": {
+      "types": "./src/primitives/feedback/popover/index.ts",
+      "default": "./src/primitives/feedback/popover/index.ts"
     },
     "./progress": {
       "types": "./src/primitives/display/progress/index.ts",
@@ -148,6 +176,10 @@
     "./toggle": {
       "types": "./src/primitives/control/toggle/index.ts",
       "default": "./src/primitives/control/toggle/index.ts"
+    },
+    "./tooltip": {
+      "types": "./src/primitives/feedback/tooltip/index.ts",
+      "default": "./src/primitives/feedback/tooltip/index.ts"
     }
   },
   "scripts": {

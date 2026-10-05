@@ -25,7 +25,7 @@ planned_paths:
   - "toolkit.json"
   - "docs/engineering/tech-stack.md"
 depends_on:
-  - CAT-9
+  - CAT-4
 out_of_scope:
   - "Date picker and data table (CAT-11)."
 criteria:
