@@ -3,23 +3,35 @@ import { expect, userEvent } from "storybook/test";
 
 import { ToggleGroup, ToggleGroupItem } from "./toggle-group";
 
-type Args = { multiple?: boolean; variant?: "default" | "outline"; disabled?: boolean; defaultValue?: string[] };
+type Args = {
+  multiple?: boolean;
+  variant?: "default" | "outline";
+  disabled?: boolean;
+  defaultValue?: string[];
+};
 
 const meta = {
   title: "Primitives/Control/Toggle group",
   tags: ["source:shadcn", "verdict:kit", "layer:primitive"],
   parameters: {
     provenance: {
-      upstream: "ui.shadcn.com/r/styles/base-vega/toggle-group.json, shadcn 4.21.0 (read 2026-10-04)",
+      upstream:
+        "ui.shadcn.com/r/styles/base-vega/toggle-group.json, shadcn 4.21.0 (read 2026-10-04)",
       licence: "MIT",
       adapted: "as upstream, but for cn",
     },
   },
   render: (args: Args) => (
     <ToggleGroup aria-label="Text style" {...args}>
-      <ToggleGroupItem value="bold" aria-label="Bold">B</ToggleGroupItem>
-      <ToggleGroupItem value="italic" aria-label="Italic">I</ToggleGroupItem>
-      <ToggleGroupItem value="underline" aria-label="Underline">U</ToggleGroupItem>
+      <ToggleGroupItem value="bold" aria-label="Bold">
+        B
+      </ToggleGroupItem>
+      <ToggleGroupItem value="italic" aria-label="Italic">
+        I
+      </ToggleGroupItem>
+      <ToggleGroupItem value="underline" aria-label="Underline">
+        U
+      </ToggleGroupItem>
     </ToggleGroup>
   ),
 } satisfies Meta<Args>;
@@ -34,8 +46,13 @@ export const Outline: Story = { args: { variant: "outline" } };
 export const Pressed: Story = {
   args: { defaultValue: ["bold"] },
   play: async ({ canvas }) => {
-    await expect(canvas.getByRole("button", { name: "Bold" })).toHaveAttribute("aria-pressed", "true");
-    await expect(canvas.getByRole("button", { name: "Italic" })).toHaveAttribute("aria-pressed", "false");
+    await expect(canvas.getByRole("button", { name: "Bold" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    await expect(
+      canvas.getByRole("button", { name: "Italic" }),
+    ).toHaveAttribute("aria-pressed", "false");
   },
 };
 

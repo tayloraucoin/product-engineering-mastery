@@ -13,16 +13,21 @@ import {
   SheetTrigger,
 } from "./sheet";
 
-type Args = { defaultOpen?: boolean; side?: "top" | "right" | "bottom" | "left" };
+type Args = {
+  defaultOpen?: boolean;
+  side?: "top" | "right" | "bottom" | "left";
+};
 
 const meta = {
   title: "Primitives/Layout/Sheet",
   tags: ["source:shadcn", "verdict:kit", "layer:primitive"],
   parameters: {
     provenance: {
-      upstream: "ui.shadcn.com/r/styles/base-vega/sheet.json, shadcn 4.21.0 (read 2026-10-04)",
+      upstream:
+        "ui.shadcn.com/r/styles/base-vega/sheet.json, shadcn 4.21.0 (read 2026-10-04)",
       licence: "MIT",
-      adapted: "the 2.5rem slide on translate-10; ease on the in-out motion token; no slide under reduced motion",
+      adapted:
+        "the 2.5rem slide on translate-10; ease on the in-out motion token; no slide under reduced motion",
     },
   },
   render: ({ side, ...args }: Args) => (
@@ -31,7 +36,9 @@ const meta = {
       <SheetContent side={side}>
         <SheetHeader>
           <SheetTitle>Filters</SheetTitle>
-          <SheetDescription>Narrow the list to what you need today.</SheetDescription>
+          <SheetDescription>
+            Narrow the list to what you need today.
+          </SheetDescription>
         </SheetHeader>
         <SheetFooter>
           <SheetClose render={<Button />}>Show 32 results</SheetClose>
@@ -49,7 +56,9 @@ export const Closed: Story = {};
 export const Right: Story = {
   args: { defaultOpen: true },
   play: async ({ canvasElement }) => {
-    const dialog = await within(canvasElement.ownerDocument.body).findByRole("dialog");
+    const dialog = await within(canvasElement.ownerDocument.body).findByRole(
+      "dialog",
+    );
     await expect(dialog).toHaveAccessibleName("Filters");
     await expect(dialog).toHaveAttribute("data-side", "right");
   },
@@ -69,7 +78,9 @@ export const Toggle: Story = {
     const body = within(canvasElement.ownerDocument.body);
     await expect(await body.findByRole("dialog")).toBeInTheDocument();
     await userEvent.keyboard("{Escape}");
-    await waitFor(() => expect(body.queryByRole("dialog")).not.toBeInTheDocument());
+    await waitFor(() =>
+      expect(body.queryByRole("dialog")).not.toBeInTheDocument(),
+    );
     await waitFor(() => expect(trigger).toHaveFocus());
   },
 };

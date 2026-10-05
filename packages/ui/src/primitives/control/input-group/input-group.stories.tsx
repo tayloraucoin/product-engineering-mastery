@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { SearchIcon } from "lucide-react";
 import { expect, userEvent } from "storybook/test";
 
-import { SearchIcon } from "lucide-react";
 import {
   InputGroup,
   InputGroupAddon,
@@ -18,7 +18,8 @@ const meta = {
   tags: ["source:shadcn", "verdict:kit", "layer:primitive"],
   parameters: {
     provenance: {
-      upstream: "ui.shadcn.com/r/styles/base-vega/input-group.json, shadcn 4.21.0 (read 2026-10-04)",
+      upstream:
+        "ui.shadcn.com/r/styles/base-vega/input-group.json, shadcn 4.21.0 (read 2026-10-04)",
       licence: "MIT",
       adapted: "the radius-5px corners on rounded-xs; kbd nudges on -m*-0.5",
     },
@@ -28,7 +29,12 @@ const meta = {
       <InputGroupAddon>
         <SearchIcon aria-hidden="true" />
       </InputGroupAddon>
-      <InputGroupInput aria-label="Search orders" placeholder="Order number or email" aria-invalid={invalid || undefined} disabled={disabled} />
+      <InputGroupInput
+        aria-label="Search orders"
+        placeholder="Order number or email"
+        aria-invalid={invalid || undefined}
+        disabled={disabled}
+      />
       <InputGroupAddon align="inline-end">
         <InputGroupText>12 found</InputGroupText>
       </InputGroupAddon>
@@ -50,14 +56,18 @@ export const Default: Story = {
 export const Invalid: Story = {
   args: { invalid: true },
   play: async ({ canvas }) => {
-    await expect(canvas.getByRole("textbox", { name: "Search orders" })).toBeInvalid();
+    await expect(
+      canvas.getByRole("textbox", { name: "Search orders" }),
+    ).toBeInvalid();
   },
 };
 
 export const Disabled: Story = {
   args: { disabled: true },
   play: async ({ canvas }) => {
-    await expect(canvas.getByRole("textbox", { name: "Search orders" })).toBeDisabled();
+    await expect(
+      canvas.getByRole("textbox", { name: "Search orders" }),
+    ).toBeDisabled();
   },
 };
 
@@ -65,7 +75,10 @@ export const Disabled: Story = {
 export const WithButton: Story = {
   render: () => (
     <InputGroup className="max-w-sm">
-      <InputGroupInput aria-label="Invite by email" placeholder="ada@example.com" />
+      <InputGroupInput
+        aria-label="Invite by email"
+        placeholder="ada@example.com"
+      />
       <InputGroupAddon align="inline-end">
         <InputGroupButton variant="secondary">Invite</InputGroupButton>
       </InputGroupAddon>
@@ -73,7 +86,9 @@ export const WithButton: Story = {
   ),
   play: async ({ canvas }) => {
     await userEvent.tab();
-    await expect(canvas.getByRole("textbox", { name: "Invite by email" })).toHaveFocus();
+    await expect(
+      canvas.getByRole("textbox", { name: "Invite by email" }),
+    ).toHaveFocus();
     await userEvent.tab();
     await expect(canvas.getByRole("button", { name: "Invite" })).toHaveFocus();
   },
@@ -90,6 +105,8 @@ export const Textarea: Story = {
     </InputGroup>
   ),
   play: async ({ canvas }) => {
-    await expect(canvas.getByRole("textbox", { name: "Reply" })).toBeInTheDocument();
+    await expect(
+      canvas.getByRole("textbox", { name: "Reply" }),
+    ).toBeInTheDocument();
   },
 };

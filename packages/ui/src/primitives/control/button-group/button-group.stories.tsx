@@ -2,7 +2,11 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { expect, userEvent, within } from "storybook/test";
 
 import { Button } from "../button/button";
-import { ButtonGroup, ButtonGroupSeparator, ButtonGroupText } from "./button-group";
+import {
+  ButtonGroup,
+  ButtonGroupSeparator,
+  ButtonGroupText,
+} from "./button-group";
 
 type Args = { orientation?: "horizontal" | "vertical" };
 
@@ -11,7 +15,8 @@ const meta = {
   tags: ["source:shadcn", "verdict:kit", "layer:primitive"],
   parameters: {
     provenance: {
-      upstream: "ui.shadcn.com/r/styles/base-vega/button-group.json, shadcn 4.21.0 (read 2026-10-04)",
+      upstream:
+        "ui.shadcn.com/r/styles/base-vega/button-group.json, shadcn 4.21.0 (read 2026-10-04)",
       licence: "MIT",
       adapted: "as upstream, but for cn",
     },

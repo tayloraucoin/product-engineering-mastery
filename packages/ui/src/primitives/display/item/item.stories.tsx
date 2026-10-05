@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { FileTextIcon } from "lucide-react";
 import { expect, userEvent } from "storybook/test";
 
 import { Button } from "../../control/button/button";
-import { FileTextIcon } from "lucide-react";
 import {
   Item,
   ItemActions,
@@ -14,14 +14,18 @@ import {
   ItemTitle,
 } from "./item";
 
-type Args = { variant?: "default" | "outline" | "muted"; size?: "default" | "sm" | "xs" };
+type Args = {
+  variant?: "default" | "outline" | "muted";
+  size?: "default" | "sm" | "xs";
+};
 
 const meta = {
   title: "Primitives/Display/Item",
   tags: ["source:shadcn", "verdict:kit", "layer:primitive"],
   parameters: {
     provenance: {
-      upstream: "ui.shadcn.com/r/styles/base-vega/item.json, shadcn 4.21.0 (read 2026-10-04)",
+      upstream:
+        "ui.shadcn.com/r/styles/base-vega/item.json, shadcn 4.21.0 (read 2026-10-04)",
       licence: "MIT",
       adapted: "as upstream, but for cn",
     },
@@ -36,7 +40,9 @@ const meta = {
         <ItemDescription>Edited by Ada Lovelace, 2 hours ago</ItemDescription>
       </ItemContent>
       <ItemActions>
-        <Button variant="outline" size="sm">Open</Button>
+        <Button variant="outline" size="sm">
+          Open
+        </Button>
       </ItemActions>
     </Item>
   ),
@@ -48,7 +54,9 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   play: async ({ canvas }) => {
     await expect(canvas.getByText("Q3 board report")).toBeInTheDocument();
-    await expect(canvas.getByRole("button", { name: "Open" })).toBeInTheDocument();
+    await expect(
+      canvas.getByRole("button", { name: "Open" }),
+    ).toBeInTheDocument();
   },
 };
 
@@ -70,7 +78,9 @@ export const Link: Story = {
   ),
   play: async ({ canvas }) => {
     await userEvent.tab();
-    await expect(canvas.getByRole("link", { name: /Q3 board report/ })).toHaveFocus();
+    await expect(
+      canvas.getByRole("link", { name: /Q3 board report/ }),
+    ).toHaveFocus();
   },
 };
 

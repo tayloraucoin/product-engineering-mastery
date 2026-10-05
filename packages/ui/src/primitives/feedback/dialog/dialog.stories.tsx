@@ -20,21 +20,28 @@ const meta = {
   tags: ["source:shadcn", "verdict:kit", "layer:primitive"],
   parameters: {
     provenance: {
-      upstream: "ui.shadcn.com/r/styles/base-vega/dialog.json, shadcn 4.21.0 (read 2026-10-04)",
+      upstream:
+        "ui.shadcn.com/r/styles/base-vega/dialog.json, shadcn 4.21.0 (read 2026-10-04)",
       licence: "MIT",
       adapted: "the width cap's rem on the spacing scale",
     },
   },
   render: (args: Args) => (
     <Dialog {...args}>
-      <DialogTrigger render={<Button variant="outline" />}>Rename project</DialogTrigger>
+      <DialogTrigger render={<Button variant="outline" />}>
+        Rename project
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Rename project</DialogTitle>
-          <DialogDescription>The new name shows everywhere the project is linked.</DialogDescription>
+          <DialogDescription>
+            The new name shows everywhere the project is linked.
+          </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <DialogClose render={<Button variant="outline" />}>Cancel</DialogClose>
+          <DialogClose render={<Button variant="outline" />}>
+            Cancel
+          </DialogClose>
           <Button>Save</Button>
         </DialogFooter>
       </DialogContent>
@@ -50,9 +57,13 @@ export const Closed: Story = {};
 export const Open: Story = {
   args: { defaultOpen: true },
   play: async ({ canvasElement }) => {
-    const dialog = await within(canvasElement.ownerDocument.body).findByRole("dialog");
+    const dialog = await within(canvasElement.ownerDocument.body).findByRole(
+      "dialog",
+    );
     await expect(dialog).toHaveAccessibleName("Rename project");
-    await expect(dialog).toHaveAccessibleDescription("The new name shows everywhere the project is linked.");
+    await expect(dialog).toHaveAccessibleDescription(
+      "The new name shows everywhere the project is linked.",
+    );
   },
 };
 
@@ -64,7 +75,9 @@ export const Toggle: Story = {
     const body = within(canvasElement.ownerDocument.body);
     await expect(await body.findByRole("dialog")).toBeInTheDocument();
     await userEvent.keyboard("{Escape}");
-    await waitFor(() => expect(body.queryByRole("dialog")).not.toBeInTheDocument());
+    await waitFor(() =>
+      expect(body.queryByRole("dialog")).not.toBeInTheDocument(),
+    );
     await waitFor(() => expect(trigger).toHaveFocus());
   },
 };
@@ -74,6 +87,8 @@ export const CloseButton: Story = {
   args: { defaultOpen: true },
   play: async ({ canvasElement }) => {
     const body = within(canvasElement.ownerDocument.body);
-    await expect(await body.findByRole("button", { name: "Close" })).toBeInTheDocument();
+    await expect(
+      await body.findByRole("button", { name: "Close" }),
+    ).toBeInTheDocument();
   },
 };

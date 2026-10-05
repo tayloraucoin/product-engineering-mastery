@@ -2,14 +2,13 @@
  * shadcn's Vega button group (base-vega, shadcn 4.21.0, read 2026-10-04), mapped
  * onto house tokens by docs/design/component-sources.md.
  */
-import { mergeProps } from "@base-ui/react/merge-props"
-import { useRender } from "@base-ui/react/use-render"
-import type { VariantProps } from "class-variance-authority"
-import { cn } from "../../../lib/cn"
-import { buttonGroupVariants } from "./button-group.variants"
+import { mergeProps } from "@base-ui/react/merge-props";
+import { useRender } from "@base-ui/react/use-render";
+import type { VariantProps } from "class-variance-authority";
 
-import { Separator } from "../../layout/separator/separator"
-
+import { cn } from "../../../lib/cn";
+import { Separator } from "../../layout/separator/separator";
+import { buttonGroupVariants } from "./button-group.variants";
 
 function ButtonGroup({
   className,
@@ -24,7 +23,7 @@ function ButtonGroup({
       className={cn(buttonGroupVariants({ orientation }), className)}
       {...props}
     />
-  )
+  );
 }
 
 function ButtonGroupText({
@@ -38,16 +37,16 @@ function ButtonGroupText({
       {
         className: cn(
           "flex items-center gap-2 rounded-md border bg-muted px-2.5 text-sm font-medium shadow-resting [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4",
-          className
+          className,
         ),
       },
-      props
+      props,
     ),
     render,
     state: {
       slot: "button-group-text",
     },
-  })
+  });
 }
 
 function ButtonGroupSeparator({
@@ -61,11 +60,11 @@ function ButtonGroupSeparator({
       orientation={orientation}
       className={cn(
         "relative self-stretch bg-input data-horizontal:mx-px data-horizontal:w-auto data-vertical:my-px data-vertical:h-auto",
-        className
+        className,
       )}
       {...props}
     />
-  )
+  );
 }
 
 export {
@@ -73,5 +72,4 @@ export {
   ButtonGroupSeparator,
   ButtonGroupText,
   buttonGroupVariants,
-}
-
+};

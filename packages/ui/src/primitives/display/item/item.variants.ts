@@ -1,4 +1,4 @@
-import { cva } from "class-variance-authority"
+import { cva } from "class-variance-authority";
 
 export const itemVariants = cva(
   "group/item flex w-full flex-wrap items-center rounded-md border text-sm transition-colors duration-(--motion-duration-fast) outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:transition-none focus-visible:ring-ring/50 [a]:transition-colors [a]:hover:bg-muted",
@@ -19,8 +19,8 @@ export const itemVariants = cva(
       variant: "default",
       size: "default",
     },
-  }
-)
+  },
+);
 
 export const itemMediaVariants = cva(
   "flex shrink-0 items-center justify-center gap-2 group-has-data-[slot=item-description]/item:translate-y-0.5 group-has-data-[slot=item-description]/item:self-start [&_svg]:pointer-events-none",
@@ -36,5 +36,5 @@ export const itemMediaVariants = cva(
     defaultVariants: {
       variant: "default",
     },
-  }
-)
+  },
+);
