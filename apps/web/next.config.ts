@@ -28,13 +28,17 @@ const nextConfig: NextConfig = {
 
   // Workspace packages ship TypeScript source; the app compiles them.
   transpilePackages: [
+    "@pem/api",
+    "@pem/ai",
     "@pem/auth",
     "@pem/brand",
     "@pem/db",
     "@pem/email",
     "@pem/env",
     "@pem/observability",
+    "@pem/services",
     "@pem/ui",
+    "@pem/validators",
   ],
 
   /**

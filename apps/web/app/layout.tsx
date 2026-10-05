@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
 
+import { ApiProvider } from "@pem/api/react";
 import { brand } from "@pem/brand/brand";
 import { brandSans } from "@pem/brand/font";
 import { appIcon } from "@pem/brand/icon";
@@ -27,10 +28,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en" className={brandSans.variable} suppressHydrationWarning>
       <body>
         <ThemeProvider>
-          <header className="fixed top-4 right-4">
-            <ThemeToggle />
-          </header>
-          {children}
+          <ApiProvider>
+            <header className="fixed top-4 right-4">
+              <ThemeToggle />
+            </header>
+            {children}
+          </ApiProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -316,6 +316,21 @@
       "locked": true,
       "runbook": null
     },
+    "api": {
+      "files": ["packages/api", "apps/web/app/api/trpc", "apps/web/lib/trpc"],
+      "env": [],
+      "dependencies": [
+        "@pem/api",
+        "@trpc/server",
+        "@trpc/client",
+        "@trpc/tanstack-react-query",
+        "@tanstack/react-query",
+        "superjson"
+      ],
+      "boundaries": ["api"],
+      "locked": false,
+      "runbook": "docs/runbooks/remove-api.md"
+    },
     "error-monitoring": {
       "files": [
         "apps/web/instrumentation.ts",

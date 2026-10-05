@@ -28,6 +28,11 @@ planned_paths:
   - "toolkit.json"
   - "docs/runbooks/remove-api.md"
   - "docs/engineering/tech-stack.md"
+  - "docs/engineering/codebase-conventions.md"
+  - "apps/web/lib/supabase/context.ts"
+  - "apps/web/next.config.ts"
+  - "tooling/boundaries.test.ts"
+  - "yarn.lock"
 depends_on:
   - STK-13
 out_of_scope:

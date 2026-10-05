@@ -3,7 +3,7 @@
  *
  * Enforced via eslint-plugin-boundaries at the repo root (eslint.config.mjs).
  * Layer order (low → high), the built part of codebase-conventions §4:
- *   config → constants, env, brand, observability → validators → db → auth → email → services → ui → apps
+ *   config → constants, env, brand, observability → validators → db → auth → email → services → api → ui → apps
  *
  * `ui-workshop` is `packages/ui/.storybook/`, the component workshop
  * (D-STK-10): it reads @pem/brand for fonts and assets, which @pem/ui's own
@@ -67,6 +67,7 @@ const ELEMENTS = [
   workspacePackage("auth", "auth"),
   workspacePackage("email", "email"),
   workspacePackage("services", "services"),
+  workspacePackage("api", "api"),
   {
     type: "ui-workshop",
     pattern: ["packages/ui/.storybook/**"],
@@ -88,10 +89,22 @@ const PACKAGE_IMPORTS = {
   auth: ["config", "db", "observability"],
   email: ["config", "env", "brand", "observability"],
   services: ["config", "validators", "db"],
+  api: ["config", "observability", "validators", "auth", "services"],
   ui: ["config"],
   "ui-workshop": ["config", "brand", "ui"],
   catalog: ["config", "ui"],
 };
+
+/**
+ * Edges no row above may declare (D-STK-8): a data hook takes the client it
+ * calls, so `hooks`, once it is a package, never imports `api`. Query hooks
+ * live in `@pem/api/react`.
+ */
+const FORBIDDEN_EDGES = [["hooks", "api"]];
+for (const [from, to] of FORBIDDEN_EDGES) {
+  if (PACKAGE_IMPORTS[from]?.includes(to))
+    throw new Error(`boundaries.js: ${from} must never import ${to} (D-STK-8)`);
+}
 
 /** Vendor SDK → the one element type allowed to import it (D-STK-16). */
 const SDK_OWNERS = {
@@ -99,6 +112,7 @@ const SDK_OWNERS = {
   "drizzle-kit": "db",
   "@supabase/*": "auth",
   resend: "email",
+  "@trpc/*": "api",
   "@sentry/*": "app-web",
 };
 

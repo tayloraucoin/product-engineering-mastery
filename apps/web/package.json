@@ -12,12 +12,14 @@
     "test": "node --test \"lib/**/*.test.ts\""
   },
   "dependencies": {
+    "@pem/api": "workspace:*",
     "@pem/auth": "workspace:*",
     "@pem/brand": "workspace:*",
     "@pem/db": "workspace:*",
     "@pem/email": "workspace:*",
     "@pem/env": "workspace:*",
     "@pem/observability": "workspace:*",
+    "@pem/services": "workspace:*",
     "@pem/ui": "workspace:*",
     "@t3-oss/env-nextjs": "^0.13.11",
     "next": "16.3.8",

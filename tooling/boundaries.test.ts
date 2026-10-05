@@ -109,6 +109,27 @@ const DISALLOWED: [file: string, code: string, message: RegExp][] = [
     'import "@sentry/react";',
     /@sentry\/\* is owned by apps\/web/,
   ],
+  // STK-14: @trpc/* is owned by api (D-STK-16); api sits above services and below ui.
+  [
+    "apps/web/app/zz-probe.ts",
+    'import "@trpc/server/adapters/fetch";',
+    /@trpc\/\* is owned by @pem\/api/,
+  ],
+  [
+    "packages/services/src/zz-probe.ts",
+    'import "@pem/api/server";',
+    /^services must not import api/,
+  ],
+  [
+    "packages/auth/src/zz-probe.ts",
+    'import "@pem/api/server";',
+    /^auth must not import api/,
+  ],
+  [
+    "packages/ui/src/zz-probe.ts",
+    'import "@pem/api/react";',
+    /^ui must not import api/,
+  ],
   // CAT-3: the shelf is never imported (CS-07, record 0011).
   [
     "apps/web/app/zz-probe.ts",
@@ -168,6 +189,14 @@ const ALLOWED: [file: string, code: string][] = [
   [
     "apps/web/lib/error-reporting/zz-probe.ts",
     'import * as Sentry from "@sentry/nextjs"; import "@pem/observability/error-reporter";',
+  ],
+  [
+    "packages/api/src/zz-probe.ts",
+    'import "@trpc/server"; import "@trpc/client"; import "@pem/services/notes"; import "@pem/auth/context"; import "@pem/validators/notes"; import "@pem/observability/logger";',
+  ],
+  [
+    "apps/web/lib/zz-probe.ts",
+    'import "@pem/api/server"; import "@pem/services/context";',
   ],
   ["packages/catalog/src/zz-probe.ts", 'import "@pem/ui/button";'],
   [
