@@ -10,14 +10,16 @@
 import { contactSchema } from "./cases/extract.ts";
 import type { CaseId } from "./models.ts";
 
-/** Extraction: schema-valid, and the email exactly as the input wrote it. */
+/** Extraction: schema-valid, and the email exactly as the input wrote it, when it gives one. */
 function checkExtract(output: unknown, input: string): string[] {
   const parsed = contactSchema.safeParse(output);
   if (!parsed.success) return [`not a contact: ${parsed.error.message}`];
   const problems: string[] = [];
   const email = parsed.data.email;
-  if (!email) problems.push("no email, though the input gives one");
-  else if (!input.includes(email))
+  if (!email) {
+    if (input.includes("@"))
+      problems.push("no email, though the input gives one");
+  } else if (!input.includes(email))
     problems.push(`email ${email} is not in the input`);
   if (!input.includes(parsed.data.name))
     problems.push(`name ${parsed.data.name} is not in the input`);

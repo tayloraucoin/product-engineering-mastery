@@ -38,6 +38,20 @@ function fakeFetch() {
   return { calls, fetch };
 }
 
+/** Runs `body` with the stand-in also installed as the global fetch, so a request that bypasses the provider is seen too. */
+async function withGlobalFetch(
+  fetch: typeof globalThis.fetch,
+  body: () => Promise<void>,
+): Promise<void> {
+  const original = globalThis.fetch;
+  globalThis.fetch = fetch;
+  try {
+    await body();
+  } finally {
+    globalThis.fetch = original;
+  }
+}
+
 function memoryLogger() {
   const lines: { event: string; fields?: LogFields }[] = [];
   const keep = (event: string, fields?: LogFields) => {
@@ -126,9 +140,11 @@ test("C2: no key on the local tier replays every fixture and never calls the ven
   const { lines, logger } = memoryLogger();
   const ai = createAi(LOCAL, { fetch: vendor.fetch, logger });
   assert.equal(ai.mode, "fixture");
-  await ai.extractContact(FIXTURES.extract.input);
-  await ai.summarize(FIXTURES.generate.input);
-  await streamedText(await ai.streamChat([userMessage(FIXTURES.chat.input)]));
+  await withGlobalFetch(vendor.fetch, async () => {
+    await ai.extractContact(FIXTURES.extract.input);
+    await ai.summarize(FIXTURES.generate.input);
+    await streamedText(await ai.streamChat([userMessage(FIXTURES.chat.input)]));
+  });
   assert.equal(vendor.calls.length, 0);
   assert.deepEqual(
     lines
@@ -164,12 +180,14 @@ test("C2: no key in a deployment or on a hosted tier throws, and never replays a
       fetch: vendor.fetch,
       logger: memoryLogger().logger,
     });
-    await assert.rejects(ai.summarize("text"), AiNotConfiguredError);
-    await assert.rejects(ai.extractContact("text"), AiNotConfiguredError);
-    await assert.rejects(
-      ai.streamChat([userMessage("hi")]),
-      AiNotConfiguredError,
-    );
+    await withGlobalFetch(vendor.fetch, async () => {
+      await assert.rejects(ai.summarize("text"), AiNotConfiguredError);
+      await assert.rejects(ai.extractContact("text"), AiNotConfiguredError);
+      await assert.rejects(
+        ai.streamChat([userMessage("hi")]),
+        AiNotConfiguredError,
+      );
+    });
     assert.equal(vendor.calls.length, 0);
   }
 });

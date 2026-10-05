@@ -2,7 +2,7 @@
 
 AI through the AI SDK and Anthropic, wired for three standard cases (D-STK-12). Only this package imports `ai` and `@ai-sdk/*` (D-STK-16), and only `@pem/services` and the app's streaming route (`apps/web/app/api/ai/`) import this package; the boundaries lint holds both. A removable module: [`docs/runbooks/remove-ai.md`](../../docs/runbooks/remove-ai.md).
 
-- **`@pem/ai/client`**: `createAi({ tier, apiKey, deployed })` returns `extractContact(text)`, `summarize(text)` and `streamChat(messages)`, and `parseChatRequest(body)`, the chat route's input gate. The app builds it once from its `env.ts` (`apps/web/app/api/ai/ai.ts`); this package never reads `process.env`, and the key is handed to the SDK, which never looks for its own.
+- **`@pem/ai/client`**: `createAi({ tier, apiKey, deployed })` returns `extractContact(text)`, `summarize(text)` and `streamChat(messages)`, each taking an optional `{ userId }`. `createChatHandler({ ai, currentUserId })` is the chat route's whole body, and `parseChatRequest(body)` its input gate. The app builds it once from its `env.ts` (`apps/web/app/api/ai/ai.ts`); this package never reads `process.env`, and the key is handed to the SDK, which never looks for its own.
 - **`@pem/ai/models`**: the default model per case, and `MODELS_CHOSEN_ON`, the day they were chosen. No other file names a model.
 - **`@pem/ai/prompts`**: every prompt, each with a `version`. Prompts live in `src/prompts/` and nowhere else.
 
@@ -22,7 +22,11 @@ Each is a plain function over a model in `src/cases/`, so a product adds a fourt
 - **No key, local tier, not a deployment**: the case's recorded fixture (`src/fixtures/`). Nothing leaves the process and nothing is spent; each call logs `[ai] fixture` with the case and prompt version.
 - **No key anywhere else**: every call throws `AiNotConfiguredError`, and the chat route answers 503. A deployment never serves a fixture as an answer.
 
-The chat route answers 401 when the call would reach the vendor and nobody is signed in, and its gate takes text only, at most 40 turns and 20,000 characters.
+The chat route answers 401 when the call would reach the vendor and nobody is signed in, 400 when the body fails the gate (text parts only, at most 40 turns and 20,000 characters, the user's turn last) and 503 with no key. Every vendor call logs `[ai] vendor` with the case, the model and the user's id, so spend can be traced to a user. Nothing caps calls per user: before a hosted tier, set a monthly spend limit on its key in the Anthropic Console.
+
+The transcript is the client's, assistant turns included. That is harmless while the route offers no tools and no private context; a route that adds either keeps the history on the server rather than trusting the one it is sent.
+
+The extraction's `email` is whatever string the model read, unvalidated by intent: real text holds partial and obfuscated addresses. A caller that sends mail to it validates it first.
 
 ## Fixtures and evals
 

@@ -10,6 +10,9 @@
  *   fixture, and no request leaves the process;
  * - no key anywhere else: every call throws AiNotConfiguredError, so a
  *   deployment never serves a fixture as if it were an answer.
+ *
+ * Every vendor call logs `[ai] vendor` with the case, the model and, when the
+ * caller passes one, the user's id.
  */
 
 import { createAnthropic } from "@ai-sdk/anthropic";
@@ -18,7 +21,7 @@ import type { LanguageModel, UIMessage } from "ai";
 import type { Tier } from "@pem/env/tier";
 import { createLogger, type Logger } from "@pem/observability/logger";
 
-import { streamChat } from "./cases/chat.ts";
+import { parseChatRequest, streamChat } from "./cases/chat.ts";
 import { extractContact, type Contact } from "./cases/extract.ts";
 import { summarize } from "./cases/generate.ts";
 import { createFixtureModel } from "./fixture-model.ts";
@@ -58,12 +61,15 @@ export class AiNotConfiguredError extends Error {
   }
 }
 
+/** Who a call is for: the signed-in user's id, logged with every vendor call so spend is attributable. */
+export type CallOptions = { userId?: string | null };
+
 export type Ai = {
   mode: AiMode;
-  extractContact(text: string): Promise<Contact>;
-  summarize(text: string): Promise<string>;
+  extractContact(text: string, options?: CallOptions): Promise<Contact>;
+  summarize(text: string, options?: CallOptions): Promise<string>;
   /** A streamed UI message response; pass messages that `parseChatRequest` returned. */
-  streamChat(messages: UIMessage[]): Promise<Response>;
+  streamChat(messages: UIMessage[], options?: CallOptions): Promise<Response>;
 };
 
 export function aiMode(config: AiConfig): AiMode {
@@ -81,8 +87,16 @@ export function createAi(config: AiConfig, deps: AiDeps = {}): Ai {
       ? createAnthropic({ apiKey: config.apiKey, fetch: deps.fetch })
       : null;
 
-  function modelFor(caseId: CaseId): LanguageModel {
-    if (anthropic) return anthropic(CASE_MODELS[caseId].model);
+  function modelFor(caseId: CaseId, options: CallOptions = {}): LanguageModel {
+    if (anthropic) {
+      const { model } = CASE_MODELS[caseId];
+      logger.info("vendor", {
+        case: caseId,
+        model,
+        ...(options.userId ? { userId: options.userId } : {}),
+      });
+      return anthropic(model);
+    }
     if (mode === "fixture") {
       const fixture = FIXTURES[caseId];
       logger.info("fixture", {
@@ -97,9 +111,48 @@ export function createAi(config: AiConfig, deps: AiDeps = {}): Ai {
 
   return {
     mode,
-    extractContact: async (text) => extractContact(modelFor("extract"), text),
-    summarize: async (text) => summarize(modelFor("generate"), text),
-    streamChat: async (messages) =>
-      streamChat(modelFor("chat"), messages, logger),
+    extractContact: async (text, options) =>
+      extractContact(modelFor("extract", options), text),
+    summarize: async (text, options) =>
+      summarize(modelFor("generate", options), text),
+    streamChat: async (messages, options) =>
+      streamChat(modelFor("chat", options), messages, logger),
+  };
+}
+
+/**
+ * The streamed chat route's whole body: the app's route file is one line, and
+ * these gates are tested here.
+ * - 401 when the call would reach the vendor and `currentUserId` finds nobody:
+ *   a live model spends money, so it answers only a user. The local fixtures
+ *   cost nothing and answer anyone.
+ * - 400 when the body fails `parseChatRequest`.
+ * - 503 when no key is set where fixtures may not answer.
+ */
+export function createChatHandler(deps: {
+  ai: Ai;
+  currentUserId: () => Promise<string | null>;
+}): (request: Request) => Promise<Response> {
+  return async (request) => {
+    let userId: string | null = null;
+    if (deps.ai.mode === "vendor") {
+      userId = await deps.currentUserId();
+      if (!userId)
+        return Response.json({ error: "sign in to chat" }, { status: 401 });
+    }
+    const body: unknown = await request.json().catch(() => null);
+    const parsed = await parseChatRequest(body);
+    if (!parsed.ok)
+      return Response.json({ error: parsed.error }, { status: 400 });
+    try {
+      return await deps.ai.streamChat(parsed.messages, { userId });
+    } catch (error) {
+      if (error instanceof AiNotConfiguredError)
+        return Response.json(
+          { error: "AI is not configured" },
+          { status: 503 },
+        );
+      throw error;
+    }
   };
 }

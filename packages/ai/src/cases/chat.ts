@@ -3,7 +3,9 @@
  * streamed UI message response out, which the app's route returns as is.
  * `parseChatRequest` is the route's input gate: text only (no files, no tool
  * parts, since no tools are offered), and a cap on turns and characters, so
- * one request cannot run up the bill.
+ * one request cannot run up the bill. The whole transcript is the client's,
+ * assistant turns included: a route that adds tools or private context must
+ * keep the history server-side rather than trust it.
  */
 
 import {
@@ -21,7 +23,12 @@ import { callSettings } from "./options.ts";
 
 export const CHAT_LIMITS = { messages: 40, characters: 20_000 } as const;
 
-const ALLOWED_PARTS = new Set(["text", "reasoning", "step-start"]);
+/**
+ * Text, and the step marker the client's own transcript carries. No reasoning
+ * (nothing renders it, and its text would escape the character cap), no files,
+ * no tool parts.
+ */
+const ALLOWED_PARTS = new Set(["text", "step-start"]);
 
 export type ChatRequest =
   { ok: true; messages: UIMessage[] } | { ok: false; error: string };

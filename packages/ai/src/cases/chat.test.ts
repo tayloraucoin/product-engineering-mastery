@@ -60,6 +60,17 @@ test("file, tool and system content is refused", async () => {
     assert.equal((await parseChatRequest({ messages })).ok, false);
 });
 
+test("reasoning parts are refused: their text would escape the character cap", async () => {
+  const reasoning = {
+    id: "r",
+    role: "user",
+    parts: [
+      { type: "reasoning", text: "x".repeat(CHAT_LIMITS.characters + 1) },
+    ],
+  };
+  assert.equal((await parseChatRequest({ messages: [reasoning] })).ok, false);
+});
+
 test("the last turn must be the user's", async () => {
   const parsed = await parseChatRequest({
     messages: [text("user", "hi", "a"), text("assistant", "hello", "b")],

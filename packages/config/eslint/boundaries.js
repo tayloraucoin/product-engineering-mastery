@@ -3,7 +3,7 @@
  *
  * Enforced via eslint-plugin-boundaries at the repo root (eslint.config.mjs).
  * Layer order (low → high), the built part of codebase-conventions §4:
- *   config → constants, env, brand, observability → validators → db → auth → email → services → api → ui → apps
+ *   config → constants, env, brand, observability → validators → db → auth → email, ai → services → api → ui → apps
  *
  * `ui-workshop` is `packages/ui/.storybook/`, the component workshop
  * (D-STK-10): it reads @pem/brand for fonts and assets, which @pem/ui's own
@@ -16,8 +16,9 @@
  * `web-ai-route` is `apps/web/app/api/ai/`, the streaming route (D-STK-12):
  * the one place in an app that may import @pem/ai. It may import whatever
  * apps/web may, and @pem/ai; the rest of apps/web may not, nor may any
- * package but services. It is listed before `app-web` because the first
- * match wins.
+ * package but services. The folder holds the route and its client only: a
+ * file added there inherits the edge. It is listed before `app-web` because
+ * the first match wins.
  *
  * Each element in TRANSPORT_FREE imports no transport or framework: a service
  * is called the same way by a tRPC procedure, a Route Handler or a webhook
