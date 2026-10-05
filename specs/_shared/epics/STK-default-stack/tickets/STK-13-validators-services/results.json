@@ -3,28 +3,28 @@
   "criteria_sha256": "02c0014ced605a46fa74f551c8209b55a8e473fecb963330f683a3a7da72f27c",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
       "run": {
         "command": "yarn test",
-        "exit": 1,
-        "at": "2026-10-05T00:12:33Z",
-        "head": "b38b3109819db84308002f87e0d4bdfb5561909f",
+        "exit": 0,
+        "at": "2026-10-05T00:16:49Z",
+        "head": "b6a1d67cb423d2bf7fd01ea0c7bd1b4cd4e0b929",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-13-validators-services/evidence/C1.log",
-        "evidence_sha256": "229d8df2e7cb8163978b10afaece08070697fdc490f06143750604cfa6b43f7b",
+        "evidence_sha256": "f02b711e541f2bb62dc4d6f1f2254778c717899e1d90857449228e07ee108815",
         "tests": 130
       }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
       "run": {
         "command": "yarn test",
-        "exit": 1,
-        "at": "2026-10-05T00:12:42Z",
-        "head": "b38b3109819db84308002f87e0d4bdfb5561909f",
+        "exit": 0,
+        "at": "2026-10-05T00:16:52Z",
+        "head": "b6a1d67cb423d2bf7fd01ea0c7bd1b4cd4e0b929",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-13-validators-services/evidence/C2.log",
-        "evidence_sha256": "5d207c29cff3e5cad7b815cabb969674cf74644e92e709b1d059cf2c54b3b717",
+        "evidence_sha256": "880d8d2f1d5af2568631efb055e72399767b1a9d0ce31d4f882d65ea3336f6dd",
         "tests": 130
       }
     },
@@ -34,24 +34,24 @@
       "run": {
         "command": "yarn lint:boundaries",
         "exit": 0,
-        "at": "2026-10-05T00:12:47Z",
-        "head": "b38b3109819db84308002f87e0d4bdfb5561909f",
+        "at": "2026-10-05T00:16:55Z",
+        "head": "b6a1d67cb423d2bf7fd01ea0c7bd1b4cd4e0b929",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-13-validators-services/evidence/C3.log",
-        "evidence_sha256": "ada2bdfa372fb3e4b77d4de5f03cf0d0a9ca00c47218f956fd36e5a4d31c0592"
+        "evidence_sha256": "a2da5fb48eba95a79b2cf433458ff7771be5f535b4f4164f19e6291c5294dec8"
       }
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
       "run": {
         "command": "yarn verify",
-        "exit": 1,
-        "at": "2026-10-05T00:12:52Z",
-        "head": "b38b3109819db84308002f87e0d4bdfb5561909f",
+        "exit": 0,
+        "at": "2026-10-05T00:17:00Z",
+        "head": "b6a1d67cb423d2bf7fd01ea0c7bd1b4cd4e0b929",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-13-validators-services/evidence/C4.log",
-        "evidence_sha256": "e9ceea22ea6ea56a09e1eadd3d288486f12753766fe665b3fcf76236afc0cf5a"
+        "evidence_sha256": "743eee4350fae45c209154e63ae83538c9ddbd9c76eaa4be3dc0e31b24fbadc5"
       }
     }
   },
-  "updated_at": "2026-10-05T00:13:17Z"
+  "updated_at": "2026-10-05T00:18:12Z"
 }
