@@ -64,9 +64,8 @@
   --popover: var(--neutral-0);
   --popover-foreground: var(--neutral-950);
   --muted: var(--neutral-100);
-  --muted-foreground: var(
-    --neutral-550
-  ); /* passes AA on --hover and --selected (CAT-7 review B1) */
+  /* passes AA on --hover and --selected (CAT-7 review B1) */
+  --muted-foreground: var(--neutral-550);
   --border: var(--neutral-200);
   --input: var(--neutral-400);
   --primary: var(--neutral-900);
@@ -114,9 +113,8 @@
   --popover: var(--neutral-900);
   --popover-foreground: var(--neutral-50);
   --muted: var(--neutral-800);
-  --muted-foreground: var(
-    --neutral-350
-  ); /* passes AA on --hover and --selected (CAT-7 review B1) */
+  /* passes AA on --hover and --selected (CAT-7 review B1) */
+  --muted-foreground: var(--neutral-350);
   --border: var(--neutral-800);
   --input: var(--neutral-500);
   --primary: var(--neutral-200);
