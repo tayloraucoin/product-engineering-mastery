@@ -66,10 +66,20 @@
       }
     },
     "review:warden": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run warden WEB-8",
+        "exit": 0,
+        "at": "2026-10-05T22:39:40Z",
+        "head": "73b59679b6c25d72b4a5f85706b9e833af46dc37",
+        "evidence_path": "specs/web/one-offs/WEB-008-hosted-only-database/review-warden.md",
+        "evidence_sha256": "852ed10bda376314f7d35d4d2fb5eeb0490181a0e419da9eb4f4695693987efe",
+        "contract_sha256": "ae471718320efd61fbd8a5fa22a0fcb35ef2557c24f67e201aaf1f5ea23f8fac",
+        "as_built_sha256": "b1925d143361964107e01ab4fc006fb503389de5be7d6b72019f58d22395c0da",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
+      }
     }
   },
-  "updated_at": "2026-10-05T22:39:35Z"
+  "updated_at": "2026-10-05T22:45:33Z"
 }
