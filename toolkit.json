@@ -236,7 +236,9 @@
         "embla-carousel-react",
         "recharts",
         "react-is",
-        "@shadcn/react"
+        "@shadcn/react",
+        "cmdk",
+        "@tanstack/react-table"
       ],
       "boundaries": ["ui"],
       "locked": true,
