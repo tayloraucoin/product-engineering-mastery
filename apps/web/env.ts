@@ -19,6 +19,8 @@ import { pickTiered } from "@pem/env/pick";
 import { isDeployed, resolveSiteUrl } from "@pem/env/site-url";
 import { parseTier, TIERS } from "@pem/env/tier";
 
+import { resolveSentryDsn } from "./lib/error-reporting/dsn";
+
 /** This app's origin outside a deployment: the port `yarn web:dev` serves. */
 const LOCAL_ORIGIN = "http://localhost:3000";
 
@@ -56,6 +58,16 @@ const raw = {
   SUPABASE_SERVICE_ROLE_KEY_LOCAL: process.env.SUPABASE_SERVICE_ROLE_KEY_LOCAL,
   SUPABASE_SERVICE_ROLE_KEY_STAGING:
     process.env.SUPABASE_SERVICE_ROLE_KEY_STAGING,
+  NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  NEXT_PUBLIC_SENTRY_DSN_LOCAL: process.env.NEXT_PUBLIC_SENTRY_DSN_LOCAL,
+  NEXT_PUBLIC_SENTRY_DSN_STAGING: process.env.NEXT_PUBLIC_SENTRY_DSN_STAGING,
+  NEXT_PUBLIC_SENTRY_ENVIRONMENT: process.env.NEXT_PUBLIC_SENTRY_ENVIRONMENT,
+  SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
+  SENTRY_ORG: process.env.SENTRY_ORG,
+  SENTRY_PROJECT: process.env.SENTRY_PROJECT,
+  SENTRY_PROJECT_STAGING: process.env.SENTRY_PROJECT_STAGING,
+  VERCEL_GIT_COMMIT_SHA: process.env.VERCEL_GIT_COMMIT_SHA,
+  NEXT_RUNTIME: process.env.NEXT_RUNTIME,
 };
 
 const tier = parseTier(raw.DATABASE_ENVIRONMENT);
@@ -83,6 +95,26 @@ const supabasePublishableKey = pickTiered(
   "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
   tier,
 );
+
+/** The tier's own Sentry DSN, never another tier's (lib/error-reporting/dsn.ts). */
+const sentryDsn = resolveSentryDsn(raw, tier);
+
+/** The runtime Next compiled this bundle for: nodejs or edge on the server, undefined in the browser. */
+export const nextRuntime = raw.NEXT_RUNTIME;
+
+/**
+ * What next.config.ts hands withSentryConfig at build. Source maps upload only
+ * from a deployment holding the token, the org and the tier's project; any
+ * other build, local and CI included, skips the upload and succeeds (STK-18
+ * NN5). The release is the commit Vercel builds.
+ */
+export const errorReportingBuild = {
+  deployed,
+  authToken: raw.SENTRY_AUTH_TOKEN?.trim() || undefined,
+  org: raw.SENTRY_ORG?.trim() || undefined,
+  project: pickTiered(raw, "SENTRY_PROJECT", tier),
+  release: raw.VERCEL_GIT_COMMIT_SHA?.trim() || undefined,
+};
 
 /** On the server the tier's picked value; in the browser the literal next.config.ts inlined. */
 const isServer = typeof window === "undefined";
@@ -128,6 +160,10 @@ export const env = createEnv({
           publicKeyProblem("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", value);
         if (problem) context.addIssue({ code: "custom", message: problem });
       }),
+    /** The tier's Sentry DSN (STK-18): public by design, it only lets a client send events. Unset, nothing is reported. */
+    NEXT_PUBLIC_SENTRY_DSN: z.url().optional(),
+    /** The tier, as Sentry's environment; env.ts derives it, so it is never set by hand. */
+    NEXT_PUBLIC_SENTRY_ENVIRONMENT: z.enum(TIERS).optional(),
   },
   runtimeEnv: {
     DATABASE_ENVIRONMENT: tier,
@@ -148,6 +184,10 @@ export const env = createEnv({
     NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: isServer
       ? supabasePublishableKey
       : raw.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+    NEXT_PUBLIC_SENTRY_DSN: isServer ? sentryDsn : raw.NEXT_PUBLIC_SENTRY_DSN,
+    NEXT_PUBLIC_SENTRY_ENVIRONMENT: isServer
+      ? tier
+      : raw.NEXT_PUBLIC_SENTRY_ENVIRONMENT,
   },
   emptyStringAsUndefined: true,
 });
@@ -157,4 +197,8 @@ export const nextConfigEnv = nextPublicEnv({
   NEXT_PUBLIC_SITE_URL: siteUrl,
   NEXT_PUBLIC_SUPABASE_URL: supabaseUrl,
   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: supabasePublishableKey,
+  // An empty string, not undefined: Next would otherwise inline a raw
+  // NEXT_PUBLIC_SENTRY_DSN from .env.local, production's, into a local bundle.
+  NEXT_PUBLIC_SENTRY_DSN: sentryDsn ?? "",
+  NEXT_PUBLIC_SENTRY_ENVIRONMENT: tier,
 });
