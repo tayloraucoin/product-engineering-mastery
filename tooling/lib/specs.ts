@@ -231,8 +231,18 @@ const abs = (rel: string) => path.join(REPO_ROOT, rel);
 export const fileExists = (rel: string) => existsSync(abs(rel));
 const isDir = (rel: string) =>
   fileExists(rel) && statSync(abs(rel)).isDirectory();
+/**
+ * Files the OS drops into any folder it shows (Finder, Explorer). They are
+ * never part of the layout and never a stray, so every listing skips them;
+ * anything else unexpected is still reported (A4).
+ */
+export const OS_METADATA = new Set([".DS_Store", "Thumbs.db", "desktop.ini"]);
 const listDir = (rel: string) =>
-  isDir(rel) ? readdirSync(abs(rel)).sort() : [];
+  isDir(rel)
+    ? readdirSync(abs(rel))
+        .filter((name) => !OS_METADATA.has(name))
+        .sort()
+    : [];
 export const readRepoText = (rel: string) => readFileSync(abs(rel), "utf8");
 
 export const hashText = (text: string | Buffer) =>

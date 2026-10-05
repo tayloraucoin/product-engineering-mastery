@@ -67,4 +67,6 @@ yarn-error.log*
 
 # Misc
 .DS_Store
+# The check-specs fixture that pins "OS metadata is not a stray" keeps a placeholder.
+!tooling/fixtures/specs/pass-os-metadata-ignored/**/.DS_Store
 *.pem

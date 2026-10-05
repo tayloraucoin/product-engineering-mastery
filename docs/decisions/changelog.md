@@ -15,6 +15,10 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-05 — PEM: check-specs ignores OS metadata files
+
+`yarn check-specs` failed `yarn verify` whenever Finder had written `specs/.DS_Store`, reporting it as not part of the layout (A4). The specs reader now skips `.DS_Store`, `Thumbs.db` and `desktop.ini` at every level it lists; any other unexpected file or folder is still a stray. Pinned by the fixture `tooling/fixtures/specs/pass-os-metadata-ignored/`, whose placeholder `.DS_Store` files are un-ignored in `.gitignore` for that path only.
+
 ## 2026-10-05 — PEM: ticket folders sort in number order, and finished work moves to an archive
 
 `specs/` will hold hundreds of ticket and epic folders. Two changes keep it readable.
