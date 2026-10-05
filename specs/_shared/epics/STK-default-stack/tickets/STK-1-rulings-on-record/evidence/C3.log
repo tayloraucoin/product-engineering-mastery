@@ -1,6 +1,0 @@
-command: yarn directory-map --check
-exit: 0
-at: 2026-10-04T18:36:43Z
-head: b5de80bb103fa116ccfd1438324df9a77bf72a2d
----
-directory-map — up to date (189 files, 35 landing pages).

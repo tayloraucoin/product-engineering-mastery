@@ -1,5 +1,0 @@
-command: yarn lint:boundaries
-exit: 0
-at: 2026-10-04T08:01:03Z
-head: 1dec187aa7321aa81bc86369df66aa3bd13d37c4
----

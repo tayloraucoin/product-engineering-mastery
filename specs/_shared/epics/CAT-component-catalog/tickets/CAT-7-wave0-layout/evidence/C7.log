@@ -1,6 +1,0 @@
-command: yarn check-stack
-exit: 0
-at: 2026-10-05T04:18:59Z
-head: 5dc10f2c2b601501d546f4b426590386d9b0f6a6
----
-check-stack — 16 module(s); nothing missing, nothing left behind.

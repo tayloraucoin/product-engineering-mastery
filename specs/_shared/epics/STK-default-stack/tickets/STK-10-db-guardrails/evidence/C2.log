@@ -1,6 +1,0 @@
-command: yarn check-settings
-exit: 0
-at: 2026-10-04T19:10:37Z
-head: 9dd86e12db3428e3ee4b1d3176397285670355b4
----
-check-settings — 12 fixtures behaved; .claude/settings.json is clean.

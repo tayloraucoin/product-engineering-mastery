@@ -1,6 +1,0 @@
-command: yarn check-ui-layout
-exit: 0
-at: 2026-10-05T01:32:13Z
-head: cc7b27dcacf3ef4b83c740e31a4ae3d79e19de96
----
-check-ui-layout: ok

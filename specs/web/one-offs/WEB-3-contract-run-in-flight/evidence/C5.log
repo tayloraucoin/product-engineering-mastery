@@ -1,5 +1,0 @@
-command: yarn check-types:tooling
-exit: 0
-at: 2026-10-05T00:16:18Z
-head: ec8febbaccde98c9dea46ff66fd3784e3d9be6c7
----
