@@ -57,7 +57,11 @@ export function createLogger(namespace: string): Logger {
       write("error", prefix, event, redactFields(fields));
       reportError({
         error: error ?? new Error(`${namespace}: ${event}`),
-        tags: { ...tags, namespace, event },
+        tags: {
+          ...(redactFields(tags ?? {}) as Record<string, string>),
+          namespace,
+          event,
+        },
         userId,
         context: redactFields(rest),
       });

@@ -14,7 +14,7 @@ The canonical instructions for every agent (Claude Code, Cursor, Codex). `CLAUDE
 ## Work loop
 
 - **Every change is a ticket with a contract**, started by `yarn contract:init`: testable criteria, each with an evidence type; the planned paths; the one UX surface it cites; Build notes that say what to build. The default ticket is under half a day.
-- **Asked to build tickets, build them start to finish** (`tk-batch`; no slash command needed): start, build, prove, as-built, review by tier, one `yarn verify`, one short report. Decide what is reversible; ask Taylor only what only Taylor can answer, once, with a recommendation.
+- **Asked to build tickets, take them to closed yourself** (`tk-batch`; no slash command needed): start, build, prove, fix and re-prove, as-built, review by tier, one `yarn verify`, a report of six lines at most. You run every command, re-prove any stale proof and decide what is reversible. Taylor gets only what a person alone can do (PR-16): a choice that cannot be undone, money, growing scope, a credential, a protected file, the merge. Never hand Taylor a `yarn` command.
 - **The tier sets the QA** (PR-15): 0 docs, checks only; 1 code, one review per batch; 2 a one-way door, pre-flight and reviewers on the ticket.
 - **One-off or epic is decided by the routing rule in [`docs/workflows/README.md`](docs/workflows/README.md), never by size:** more than one ticket, a new surface, no living UX file, or an unsettled problem makes an epic.
 - **Done is `results.json` plus `as-built.md`, never a claim in chat.** Only `yarn contract:run`, `contract:record`, `contract:tier` and `review:run` write results. Taylor reads a tier 2 ticket's `review-<role>.md` before merge.

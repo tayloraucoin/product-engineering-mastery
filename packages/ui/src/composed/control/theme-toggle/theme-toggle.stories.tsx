@@ -25,7 +25,16 @@ const meta = {
         </ThemeProvider>
       ),
   ],
-  parameters: { themes: { disable: true } },
+  tags: ["source:custom", "verdict:kit", "layer:composed"],
+  parameters: {
+    themes: { disable: true },
+    provenance: {
+      upstream: "this repo, STK-6 20c2a31 (2026-10-03), on next-themes 0.4.6",
+      licence: "house",
+      adapted:
+        "built here; the same job was built in Synapse, taylor-aucoin and cho-verse",
+    },
+  },
 } satisfies Meta<typeof ThemeToggle>;
 
 export default meta;

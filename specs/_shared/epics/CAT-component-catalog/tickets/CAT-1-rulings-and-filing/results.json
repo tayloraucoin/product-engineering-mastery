@@ -1,0 +1,43 @@
+{
+  "id": "CAT-1",
+  "criteria_sha256": "84717f5bec1e6a7f9feea12fa43d0ab11676fe5cbe4eb0853388d931775968d2",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn lint:docs",
+        "exit": 0,
+        "at": "2026-10-04T21:31:57Z",
+        "head": "09db35e3c8f9e389e8e2c2ed905f6d751770833e",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-1-rulings-and-filing/evidence/C1.log",
+        "evidence_sha256": "6760bc79eb80edebca7e6bdf876e888694a0c8045c8d7dfcc07da5834ad0e8c5"
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn check-refs",
+        "exit": 0,
+        "at": "2026-10-04T21:32:01Z",
+        "head": "09db35e3c8f9e389e8e2c2ed905f6d751770833e",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-1-rulings-and-filing/evidence/C2.log",
+        "evidence_sha256": "ac8c63474cccbb1aeb9fb7e613439784dda893d0761e7ed9b876d4ea605cb8e5"
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn directory-map --check",
+        "exit": 0,
+        "at": "2026-10-04T21:32:06Z",
+        "head": "09db35e3c8f9e389e8e2c2ed905f6d751770833e",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-1-rulings-and-filing/evidence/C3.log",
+        "evidence_sha256": "f4f3c49826da7eca920469c804fd497fca9dbd6baec30708b49cc92efee5e2c4"
+      }
+    }
+  },
+  "updated_at": "2026-10-04T21:32:06Z"
+}

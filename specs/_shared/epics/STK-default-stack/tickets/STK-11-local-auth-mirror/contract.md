@@ -24,6 +24,8 @@ reviewers:
 planned_paths:
   - "packages/db/src/local-auth-mirror.ts"
   - "packages/db/src/local-auth-mirror.test.ts"
+  - "packages/db/src/loopback.ts"
+  - "packages/db/src/loopback.test.ts"
   - "packages/db/test/**"
   - "packages/db/scripts/**"
   - "packages/db/supabase/config.toml"
@@ -33,6 +35,7 @@ planned_paths:
   - "toolkit.json"
   - "package.json"
   - ".env.example"
+  - "packages/db/.env.example"
   - "turbo.json"
   - "docs/runbooks/remove-supabase-auth.md"
   - "docs/runbooks/remove-supabase-database.md"

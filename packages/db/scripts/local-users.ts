@@ -7,7 +7,7 @@
  * URL that is not loopback, before sending anything.
  */
 
-import { isLoopbackUrl } from "../src/local-auth-mirror.ts";
+import { isLoopbackUrl } from "../src/loopback.ts";
 
 /** Synthetic accounts; the password is a local test value, never a real one. */
 export const LOCAL_USERS = [

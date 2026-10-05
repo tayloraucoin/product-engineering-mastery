@@ -34,6 +34,19 @@ function preset(overrides: { light?: string; dark?: string } = {}): string {
   --accent-foreground: var(--step-black);
   --primary: var(--step-black);
   --primary-foreground: var(--step-white);
+  --card: var(--step-white);
+  --card-foreground: var(--step-black);
+  --popover: var(--step-white);
+  --popover-foreground: var(--step-black);
+  --secondary: var(--step-white);
+  --secondary-foreground: var(--step-black);
+  --destructive: var(--step-black);
+  --sidebar: var(--step-white);
+  --sidebar-foreground: var(--step-black);
+  --sidebar-accent: var(--step-white);
+  --sidebar-accent-foreground: var(--step-black);
+  --sidebar-primary: var(--step-black);
+  --sidebar-primary-foreground: var(--step-white);
   --ring: var(--step-black);
   ${overrides.light ?? ""}
 }
@@ -46,6 +59,19 @@ function preset(overrides: { light?: string; dark?: string } = {}): string {
   --accent-foreground: var(--step-white);
   --primary: var(--step-white);
   --primary-foreground: var(--step-black);
+  --card: var(--step-black);
+  --card-foreground: var(--step-white);
+  --popover: var(--step-black);
+  --popover-foreground: var(--step-white);
+  --secondary: var(--step-black);
+  --secondary-foreground: var(--step-white);
+  --destructive: var(--step-white);
+  --sidebar: var(--step-black);
+  --sidebar-foreground: var(--step-white);
+  --sidebar-accent: var(--step-black);
+  --sidebar-accent-foreground: var(--step-white);
+  --sidebar-primary: var(--step-white);
+  --sidebar-primary-foreground: var(--step-black);
   --ring: var(--step-white);
   ${overrides.dark ?? ""}
 }`;
@@ -68,7 +94,7 @@ function audit(css?: string) {
 test("C1: the repo's preset passes every pair in both themes", () => {
   const { status, out } = audit();
   assert.equal(status, 0, out);
-  assert.match(out, /all 18 pairs pass/);
+  assert.match(out, /all 42 pairs pass/);
 });
 
 test("C1: black on white measures 21:1, the WCAG maximum", () => {
@@ -90,7 +116,7 @@ test("C1: a text pair below 4.5:1 fails and is named", () => {
     out,
     /FAIL\s+light --muted-foreground on --background \(muted text\): 4\.48:1, needs 4\.5:1/,
   );
-  assert.match(out, /3 of 18 pairs/);
+  assert.match(out, /5 of 42 pairs/);
 });
 
 test("C1: a focus ring below 3:1 fails in the theme it is set in", () => {

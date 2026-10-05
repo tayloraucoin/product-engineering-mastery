@@ -7,7 +7,7 @@
  * SUPABASE_SERVICE_ROLE_KEY_LOCAL at the values `supabase status` prints.
  */
 
-import { isLoopbackUrl } from "../src/local-auth-mirror.ts";
+import { isLoopbackUrl } from "../src/loopback.ts";
 import { authSettings, authUrlName } from "./env.ts";
 import {
   LOCAL_CONTAINER,
@@ -19,6 +19,7 @@ import {
   preflight,
   supabase,
   waitForDatabase,
+  warnIfExposed,
 } from "./supabase-cli.ts";
 
 const COMMAND = "db:local:full";
@@ -38,6 +39,7 @@ if (
 }
 supabase(COMMAND, ["start"]);
 await waitForDatabase(COMMAND);
+warnIfExposed(COMMAND);
 
 const { url } = authSettings();
 if (!url || !isLoopbackUrl(url)) {

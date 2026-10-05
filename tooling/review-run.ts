@@ -126,6 +126,9 @@ function runReviewer(prompt: string): Verdict {
     encoding: "utf8",
     timeout: TIMEOUT_MS,
     maxBuffer: 64 * 1024 * 1024,
+    // The reviewer is read-only: the stop gate has nothing of its to check,
+    // and blocking its stop replaces the review with a reply to the hook.
+    env: { ...process.env, PEM_HEADLESS_REVIEW: "1" },
   });
   let text = "";
   let model = "unknown";

@@ -82,6 +82,11 @@ function one(id: string) {
   lines.push(
     left.length ? `Left to go:\n  ${left.join("\n  ")}` : "Left to go: none.",
   );
+  const deferred = state.criteria.filter((c) => c.deferred).map((c) => c.id);
+  if (deferred.length)
+    lines.push(
+      `Operator checks (not holding the ticket): ${deferred.join(", ")}. See specs/_status.md.`,
+    );
   if (state.stage === "migration pending")
     lines.push(
       `Migration pending: set applied: in ${asBuiltPath(item)} once a person applies it.`,

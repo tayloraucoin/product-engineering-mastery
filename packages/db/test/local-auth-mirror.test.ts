@@ -23,11 +23,11 @@ import { markLocalAuthMirror } from "../scripts/local-auth-marker.ts";
 import { describeUrl } from "../src/connection.ts";
 import {
   applyLocalAuthMirror,
-  assertLoopbackClient,
   clearLocalAuthMirrorCache,
   MARKER_TABLE,
   MIRROR_CACHE_TTL_MS,
 } from "../src/local-auth-mirror.ts";
+import { assertLoopbackClient } from "../src/loopback.ts";
 
 const created: string[] = [];
 let admin: postgres.Sql | undefined;

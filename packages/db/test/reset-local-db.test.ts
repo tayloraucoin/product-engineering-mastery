@@ -19,7 +19,7 @@ import {
 import { migrationUrl, tier } from "../scripts/env.ts";
 import { resetLocalDatabase } from "../scripts/reset-local-db.ts";
 import { describeUrl } from "../src/connection.ts";
-import { assertLoopbackClient } from "../src/local-auth-mirror.ts";
+import { assertLoopbackClient } from "../src/loopback.ts";
 
 const user = randomUUID();
 let admin: postgres.Sql | undefined;

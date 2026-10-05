@@ -168,3 +168,54 @@ test("C2: the reporter's context is redacted; the error itself is passed as caug
     "stack",
   ]);
 });
+
+test("C2: personal data and request bodies are redacted under their common compound names", () => {
+  const printed = capture("info");
+
+  createLogger("signup").info("signup.completed", {
+    userEmail: "person@example.test",
+    emailAddress: "person@example.test",
+    phoneNumber: "+1 555 0100",
+    ipAddress: "192.0.2.1",
+    ip: "192.0.2.1",
+    firstName: "Synthetic",
+    input: { name: "Synthetic Person" },
+    payload: { note: "synthetic" },
+    responseBody: "synthetic",
+    plan: "pro",
+  });
+
+  const fields = printed.mock.calls[0]?.arguments[1] as Record<string, unknown>;
+  for (const key of [
+    "userEmail",
+    "emailAddress",
+    "phoneNumber",
+    "ipAddress",
+    "ip",
+    "firstName",
+    "input",
+    "payload",
+    "responseBody",
+  ])
+    assert.equal(fields[key], REDACTED, key);
+  assert.equal(fields.plan, "pro");
+});
+
+test("C1: a secret-like tag is redacted before it reaches the reporter", () => {
+  capture("error");
+  const reports: ErrorReport[] = [];
+  restore = registerErrorReporter((report) => {
+    reports.push(report);
+  });
+
+  createLogger("billing").error("checkout.failed", {
+    tags: { stage: "session", email: "person@example.test" },
+  });
+
+  assert.deepEqual(reports[0]?.tags, {
+    stage: "session",
+    email: REDACTED,
+    namespace: "billing",
+    event: "checkout.failed",
+  });
+});

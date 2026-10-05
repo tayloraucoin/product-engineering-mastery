@@ -3,6 +3,8 @@ import { create } from "storybook/theming";
 
 import { brand } from "@pem/brand/brand";
 
+import { registerProvenancePanel } from "./provenance-panel";
+
 /** The workshop's own chrome carries the brand: its name, logo and home link. */
 addons.setConfig({
   theme: create({
@@ -13,3 +15,5 @@ addons.setConfig({
     brandTarget: "_self",
   }),
 });
+
+registerProvenancePanel();

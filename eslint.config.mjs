@@ -7,6 +7,7 @@
  */
 
 import { boundariesConfig } from "@pem/config/eslint/boundaries";
+import { tokensPlugin } from "@pem/config/eslint/tokens";
 
 /** @type {import("eslint").Linter.Config[]} */
 export default [
@@ -23,6 +24,9 @@ export default [
     // turbo, …) that this boundaries-only config never loads; reporting them
     // as unused here would make the two lint passes fight each other.
     linterOptions: { reportUnusedDisableDirectives: "off" },
+    // Loaded, never run: a waiver naming pem-tokens/no-raw-values (the OG
+    // image's) must resolve here too, or this pass reports the rule missing.
+    plugins: { "pem-tokens": tokensPlugin },
   },
   ...boundariesConfig,
 ];

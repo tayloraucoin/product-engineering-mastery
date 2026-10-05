@@ -1,0 +1,64 @@
+command: yarn test:boundaries
+exit: 0
+at: 2026-10-04T08:01:00Z
+head: 1dec187aa7321aa81bc86369df66aa3bd13d37c4
+tests: 8
+---
+TAP version 13
+# Subtest: C1: import "@pem/db/client"; in packages/ui/src/zz-probe.ts fails the boundaries lint
+ok 1 - C1: import "@pem/db/client"; in packages/ui/src/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 631.154416
+  type: 'test'
+  ...
+# Subtest: C1: import "@pem/brand/brand"; in packages/env/src/zz-probe.ts fails the boundaries lint
+ok 2 - C1: import "@pem/brand/brand"; in packages/env/src/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 5.859291
+  type: 'test'
+  ...
+# Subtest: C1: import "../../db/src/client"; in packages/env/src/zz-probe.ts fails the boundaries lint
+ok 3 - C1: import "../../db/src/client"; in packages/env/src/zz-probe.ts fails the boundaries lint
+  ---
+  duration_ms: 12.149417
+  type: 'test'
+  ...
+# Subtest: C2: @pem/env/not-exported, which its package does not export, is a resolve error with no stack
+ok 4 - C2: @pem/env/not-exported, which its package does not export, is a resolve error with no stack
+  ---
+  duration_ms: 2.374459
+  type: 'test'
+  ...
+# Subtest: C2: @pem/db, which its package does not export, is a resolve error with no stack
+ok 5 - C2: @pem/db, which its package does not export, is a resolve error with no stack
+  ---
+  duration_ms: 3.554333
+  type: 'test'
+  ...
+# Subtest: C2: import type { Tier } from "@pem/env/tier"; in packages/db/src/zz-probe.ts still passes
+ok 6 - C2: import type { Tier } from "@pem/env/tier"; in packages/db/src/zz-probe.ts still passes
+  ---
+  duration_ms: 5.060458
+  type: 'test'
+  ...
+# Subtest: C2: import "next-themes"; import "react"; in packages/ui/src/zz-probe.ts still passes
+ok 7 - C2: import "next-themes"; import "react"; in packages/ui/src/zz-probe.ts still passes
+  ---
+  duration_ms: 5.092458
+  type: 'test'
+  ...
+# Subtest: C2: import "@pem/ui/button"; import "@pem/ui/styles/globals.css"; import "@pem/brand/assets/logo.svg"; import "@/app/layout"; in apps/web/app/zz-probe.ts still passes
+ok 8 - C2: import "@pem/ui/button"; import "@pem/ui/styles/globals.css"; import "@pem/brand/assets/logo.svg"; import "@/app/layout"; in apps/web/app/zz-probe.ts still passes
+  ---
+  duration_ms: 6.882208
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 867.914667

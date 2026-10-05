@@ -224,11 +224,27 @@
         "@pem/ui",
         "class-variance-authority",
         "clsx",
-        "tailwind-merge"
+        "tailwind-merge",
+        "@base-ui/react",
+        "lucide-react",
+        "tw-animate-css",
+        "shadcn"
       ],
       "boundaries": ["ui"],
       "locked": true,
       "runbook": null
+    },
+    "catalog": {
+      "files": [
+        "packages/catalog",
+        "tooling/check-catalog.ts",
+        "tooling/check-catalog.test.ts"
+      ],
+      "env": [],
+      "dependencies": ["@pem/catalog"],
+      "boundaries": ["catalog"],
+      "locked": false,
+      "runbook": "docs/runbooks/remove-catalog.md"
     },
     "db": {
       "files": ["packages/db"],
@@ -244,8 +260,25 @@
       "locked": false,
       "runbook": "docs/runbooks/remove-supabase-database.md"
     },
+    "auth": {
+      "files": [
+        "packages/auth",
+        "apps/web/proxy.ts",
+        "apps/web/lib/supabase",
+        "apps/web/app/auth"
+      ],
+      "env": [
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY"
+      ],
+      "dependencies": ["@pem/auth", "@supabase/ssr", "@supabase/supabase-js"],
+      "boundaries": ["auth"],
+      "locked": false,
+      "runbook": "docs/runbooks/remove-supabase-auth.md"
+    },
     "email": {
-      "files": ["packages/email"],
+      "files": ["packages/email", "apps/web/lib/email.ts"],
       "env": ["RESEND_API_KEY", "EMAIL_FROM"],
       "dependencies": ["@pem/email", "resend"],
       "boundaries": ["email"],

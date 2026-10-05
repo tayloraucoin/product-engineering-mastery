@@ -27,6 +27,10 @@
     "./local-auth-mirror": {
       "types": "./src/local-auth-mirror.ts",
       "default": "./src/local-auth-mirror.ts"
+    },
+    "./loopback": {
+      "types": "./src/loopback.ts",
+      "default": "./src/loopback.ts"
     }
   },
   "scripts": {

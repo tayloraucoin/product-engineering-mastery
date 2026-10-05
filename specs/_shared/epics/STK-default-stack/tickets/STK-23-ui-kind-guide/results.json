@@ -1,0 +1,45 @@
+{
+  "id": "STK-23",
+  "criteria_sha256": "a68baa280b8a19403988a478583994fe45de1c00fafc7e7e122508f4a12dcf66",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-04T21:07:39Z",
+        "head": "d59dc799a07f8e418fea51c264ef0aebe54d37dd",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-23-ui-kind-guide/evidence/C1.log",
+        "evidence_sha256": "d923b6cadbed12c627463a685e52a1cfc43840756dedfceed0f8a5531407f26e",
+        "tests": 65
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn check-ui-layout",
+        "exit": 0,
+        "at": "2026-10-04T21:08:14Z",
+        "head": "d59dc799a07f8e418fea51c264ef0aebe54d37dd",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-23-ui-kind-guide/evidence/C2.log",
+        "evidence_sha256": "4518e74047094bb91efe594f9537f71fa8ea75a201df1fcdd2a578cc4fc1db05"
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-04T21:08:18Z",
+        "head": "d59dc799a07f8e418fea51c264ef0aebe54d37dd",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-23-ui-kind-guide/evidence/C3.log",
+        "evidence_sha256": "33267b8f3dd944b19e60f34ccced416a6b6ee0a5ed4e0332d8b9b38ff20858f5",
+        "tests": 79
+      }
+    }
+  },
+  "updated_at": "2026-10-04T21:08:24Z"
+}

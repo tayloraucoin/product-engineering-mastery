@@ -12,6 +12,13 @@
  *   3. shadcn bridge (@theme inline): exposes the semantic names to Tailwind
  *      as utilities (`bg-background`, `text-muted-foreground`, …).
  *
+ * Beside them: elevation, four levels named by role (CS-11), exposed as
+ * `shadow-resting|raised|overlay|modal`; and motion, the tk-motion values
+ * verbatim (CS-12), used as `duration-(--motion-duration-base)` and
+ * `ease-(--motion-ease-out)`. Every role, step, level and token shadcn's
+ * Vega style uses is here (CAT-2); the copy-in mapping is in
+ * docs/design/component-sources.md.
+ *
  * Dark mode is the `.dark` class on <html>, set before first paint by the
  * theme provider in `@pem/ui/theme`; "system" resolves to light or dark
  * there, not here. The `dark:` variant follows the class.
@@ -33,11 +40,16 @@
   --neutral-50: oklch(0.985 0 0);
   --neutral-100: oklch(0.97 0 0);
   --neutral-200: oklch(0.922 0 0);
+  --neutral-300: oklch(0.87 0 0);
   --neutral-400: oklch(0.645 0 0);
   --neutral-500: oklch(0.545 0 0);
+  --neutral-600: oklch(0.439 0 0);
+  --neutral-700: oklch(0.371 0 0);
   --neutral-800: oklch(0.269 0 0);
   --neutral-900: oklch(0.205 0 0);
   --neutral-950: oklch(0.145 0 0);
+  --red-300: oklch(0.808 0.114 19.571);
+  --red-800: oklch(0.444 0.177 26.899);
 }
 
 /* 2. Semantic names: light */
@@ -45,15 +57,44 @@
   color-scheme: light;
   --background: var(--neutral-0);
   --foreground: var(--neutral-950);
+  --card: var(--neutral-0);
+  --card-foreground: var(--neutral-950);
+  --popover: var(--neutral-0);
+  --popover-foreground: var(--neutral-950);
   --muted: var(--neutral-100);
   --muted-foreground: var(--neutral-500);
   --border: var(--neutral-200);
+  --input: var(--neutral-200);
   --primary: var(--neutral-900);
   --primary-foreground: var(--neutral-50);
+  --secondary: var(--neutral-100);
+  --secondary-foreground: var(--neutral-900);
   --accent: var(--neutral-100);
   --accent-foreground: var(--neutral-900);
+  --destructive: var(--red-800);
   --ring: var(--neutral-400);
+  --chart-1: var(--neutral-300);
+  --chart-2: var(--neutral-500);
+  --chart-3: var(--neutral-600);
+  --chart-4: var(--neutral-700);
+  --chart-5: var(--neutral-800);
+  --sidebar: var(--neutral-50);
+  --sidebar-foreground: var(--neutral-950);
+  --sidebar-primary: var(--neutral-900);
+  --sidebar-primary-foreground: var(--neutral-50);
+  --sidebar-accent: var(--neutral-100);
+  --sidebar-accent-foreground: var(--neutral-900);
+  --sidebar-border: var(--neutral-200);
+  --sidebar-ring: var(--neutral-400);
   --radius: 0.5rem;
+  /* Elevation, the canon's closed scale (C-P06, CS-11); neutral placeholders a brand retunes. */
+  --elevation-resting: 0 1px 2px 0 oklch(0 0 0 / 0.05);
+  --elevation-raised:
+    0 1px 3px 0 oklch(0 0 0 / 0.1), 0 1px 2px -1px oklch(0 0 0 / 0.1);
+  --elevation-overlay:
+    0 4px 6px -1px oklch(0 0 0 / 0.1), 0 2px 4px -2px oklch(0 0 0 / 0.1);
+  --elevation-modal:
+    0 10px 15px -3px oklch(0 0 0 / 0.1), 0 4px 6px -4px oklch(0 0 0 / 0.1);
 }
 
 /* 2. Semantic names: dark */
@@ -61,31 +102,101 @@
   color-scheme: dark;
   --background: var(--neutral-950);
   --foreground: var(--neutral-50);
+  --card: var(--neutral-900);
+  --card-foreground: var(--neutral-50);
+  --popover: var(--neutral-900);
+  --popover-foreground: var(--neutral-50);
   --muted: var(--neutral-800);
   --muted-foreground: var(--neutral-400);
   --border: var(--neutral-800);
+  --input: var(--neutral-800);
   --primary: var(--neutral-200);
   --primary-foreground: var(--neutral-900);
+  --secondary: var(--neutral-800);
+  --secondary-foreground: var(--neutral-50);
   --accent: var(--neutral-800);
   --accent-foreground: var(--neutral-50);
+  --destructive: var(--red-300);
   --ring: var(--neutral-500);
+  --sidebar: var(--neutral-900);
+  --sidebar-foreground: var(--neutral-50);
+  --sidebar-primary: var(--neutral-200);
+  --sidebar-primary-foreground: var(--neutral-900);
+  --sidebar-accent: var(--neutral-800);
+  --sidebar-accent-foreground: var(--neutral-50);
+  --sidebar-border: var(--neutral-800);
+  --sidebar-ring: var(--neutral-500);
+  --chart-1: var(--neutral-800);
+  --chart-2: var(--neutral-600);
+  --chart-3: var(--neutral-500);
+  --chart-4: var(--neutral-400);
+  --chart-5: var(--neutral-300);
 }
 
 /* 3. shadcn bridge */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
+  --color-input: var(--input);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
   --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
   /* The brand font, set on <html> by each layout from @pem/brand/font. */
   --font-sans: var(--font-brand-sans, ui-sans-serif, system-ui, sans-serif);
   --radius-sm: calc(var(--radius) - 2px);
   --radius-md: var(--radius);
   --radius-lg: calc(var(--radius) + 4px);
+  --radius-xl: calc(var(--radius) + 6px);
+  --radius-2xl: calc(var(--radius) + 10px);
+  --radius-3xl: calc(var(--radius) + 16px);
+  --radius-4xl: calc(var(--radius) + 24px);
+  --shadow-resting: var(--elevation-resting);
+  --shadow-raised: var(--elevation-raised);
+  --shadow-overlay: var(--elevation-overlay);
+  --shadow-modal: var(--elevation-modal);
+}
+
+/* 4. Motion: tk-motion's values, verbatim (CS-12). */
+:root {
+  --motion-ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --motion-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --motion-ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --motion-ease-hover: ease;
+  --motion-duration-instant: 0ms;
+  --motion-duration-fast: 125ms;
+  --motion-duration-press: 160ms;
+  --motion-duration-base: 180ms;
+  --motion-duration-moderate: 250ms;
+  --motion-duration-sheet: 500ms;
+  --motion-duration-hold: 1500ms;
+  --motion-scale-press: 0.97;
+  --motion-scale-enter: 0.95;
+  --motion-translate-enter: 8px;
+  --motion-blur-crossfade: 2px;
+  --motion-stagger: 40ms;
 }

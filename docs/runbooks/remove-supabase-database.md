@@ -17,7 +17,7 @@ load_when:
 > **Built by:** STK-9; STK-10 adds its agent guardrails (D-STK-18); STK-11 adds the local auth mirror and the Supabase CLI that runs the local database (D-STK-6).
 > **Run from:** step 4 of [`new-project.md`](new-project.md).
 
-**When both Supabase modules go.** Run [`remove-supabase-auth.md`](remove-supabase-auth.md) first, then this one: auth sits above the database in the package graph (D-STK-1). With both gone, nothing uses the Supabase project, so the vendor-side steps of both runbooks apply, and the database guardrails in `.claude/settings.json` (D-STK-18, STK-10) guard nothing. Removing the database while keeping auth: what auth loses is filled by STK-9 and STK-12.
+**When both Supabase modules go.** Run [`remove-supabase-auth.md`](remove-supabase-auth.md) first, then this one: auth sits above the database in the package graph (D-STK-1). With both gone, nothing uses the Supabase project, so the vendor-side steps of both runbooks apply, and the database guardrails in `.claude/settings.json` (D-STK-18, STK-10) guard nothing. Removing the database while keeping auth: follow "When auth stays" below as well.
 
 ## Before deleting anything
 
@@ -34,6 +34,16 @@ Stop the local database and drop its volume while the CLI is still installed: `y
 - `packages/config/eslint/boundaries.js`: see Boundaries entries.
 - `docs/engineering/codebase-conventions.md` §4: the `@pem/db` row, and `postgres` and `drizzle-kit` in the SDK-owner paragraph.
 - `docs/engineering/tech-stack.md`: the `drizzle-orm`, `drizzle-kit`, `postgres` row, the `supabase` CLI row and the `supabase/postgres` image row.
+- `apps/web/env.ts`: the three `DATABASE_URL` reads in `raw`, the `DATABASE_URL` entries in `server` and `runtimeEnv`.
+- `apps/web/next.config.ts`: `@pem/db` in `transpilePackages`. `apps/web/package.json`: the `@pem/db` dependency.
+
+## When auth stays
+
+The auth module (STK-12) reaches the database twice: Mode A's local mirror, and the application roles its `AuthContext` carries.
+
+- Delete `apps/web/lib/supabase/local-mirror.ts`. In `apps/web/lib/supabase/context.ts`, delete its import and call `createAuthContextResolver()` with no `mirror`.
+- `packages/auth/src/context.ts`: replace the `@pem/db/rls` import with the roles themselves, `export const APP_ROLES = ["user", "admin"] as const;` and `export type AppRole = (typeof APP_ROLES)[number];`. Delete `@pem/db` from `packages/auth/package.json` and `db` from the `auth` row of `PACKAGE_IMPORTS`.
+- `packages/auth/src/client-safe.test.ts`: the last test's `@pem/db/rls` assertion goes with the import.
 
 ## Variables
 
@@ -42,7 +52,7 @@ From `.env.example` and `turbo.json`'s `globalEnv`, each with its `_LOCAL` and `
 - `DATABASE_URL`
 - `DATABASE_MIGRATION_URL`
 
-Keep `DATABASE_ENVIRONMENT`: it is the tier switch every module reads (D-STK-3), not this module's. Keep `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` while Supabase Auth stays: STK-11 declared them for `db:seed-users`, but they are the auth module's, and its runbook removes them.
+Keep `DATABASE_ENVIRONMENT`: it is the tier switch every module reads (D-STK-3), not this module's. Keep `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` while Supabase Auth stays: STK-11 declared them for `db:seed-users`, but they are the auth module's, and its runbook removes them. When `toolkit.json`'s `stack` block has no `auth` entry, nothing else reads them: delete both, with their `_LOCAL` and `_STAGING` forms and their comment block, from `.env.example` and `turbo.json`'s `globalEnv`. A service-role key name with no reader invites a live key where nothing uses it.
 
 ## Dependencies
 
@@ -50,7 +60,7 @@ Keep `DATABASE_ENVIRONMENT`: it is the tier switch every module reads (D-STK-3),
 
 ## Boundaries entries
 
-In `packages/config/eslint/boundaries.js`: the `workspacePackage("db", "db")` line in `ELEMENTS`, the `db` entry in `PACKAGE_IMPORTS`, and the `postgres` and `drizzle-kit` entries in `SDK_OWNERS`. Remove `db` from the layer-order comment.
+In `packages/config/eslint/boundaries.js`: the `workspacePackage("db", "db")` line in `ELEMENTS`, the `db` entry in `PACKAGE_IMPORTS`, and the `postgres` and `drizzle-kit` entries in `SDK_OWNERS`. Remove `db` from the layer-order comment. In `tooling/boundaries.test.ts`, delete every probe that names `db`, `@pem/db` or a path under `packages/db/` (`git grep -n db tooling/boundaries.test.ts` lists them): they describe rules that no longer exist.
 
 ## Vendor-side steps
 

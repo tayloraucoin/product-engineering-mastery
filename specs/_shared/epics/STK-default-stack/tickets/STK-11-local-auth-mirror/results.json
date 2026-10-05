@@ -8,10 +8,10 @@
       "run": {
         "command": "yarn contract:record STK-11 C1 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/test-db.txt",
         "exit": 0,
-        "at": "2026-10-04T07:45:55Z",
-        "head": "dab71e69e490755cea485187683c5ec17a227435",
+        "at": "2026-10-05T00:09:44Z",
+        "head": "4adbaab647267aaffacea596e2aa88589639ffd5",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/test-db.txt",
-        "evidence_sha256": "863dd6e7c764d9604f65b762b1e410781f69822c3ac0b1d9749cca0fe34e037f"
+        "evidence_sha256": "3b90680f8538da6ecfc2dfa1d8543ec311156cb768059a1f21320f96a30fc292"
       }
     },
     "C2": {
@@ -20,11 +20,11 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-04T07:46:04Z",
-        "head": "dab71e69e490755cea485187683c5ec17a227435",
+        "at": "2026-10-05T00:03:58Z",
+        "head": "6a6463b711ad71731020dd04116266ff54373d05",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/C2.log",
-        "evidence_sha256": "2580889f535c81d55ca482c264c61e75b8f9771fb31ea40809896634155758bd",
-        "tests": 54
+        "evidence_sha256": "831c615bdc809ed84f22227b9c1893b0f274152c955def5e4f064160a05acc86",
+        "tests": 114
       }
     },
     "C3": {
@@ -33,21 +33,37 @@
       "run": {
         "command": "yarn verify",
         "exit": 1,
-        "at": "2026-10-04T07:46:08Z",
-        "head": "dab71e69e490755cea485187683c5ec17a227435",
+        "at": "2026-10-05T00:04:01Z",
+        "head": "6a6463b711ad71731020dd04116266ff54373d05",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/C3.log",
-        "evidence_sha256": "34a578149b1cc60b4691661eb650a65dc8f5d9c74a10e25d979716fa332aa1a6"
+        "evidence_sha256": "dd393ce4720a0f017083911f43b69bb38d4b966f1b4a8771ab2e6dea3c0991ef"
       }
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn contract:record STK-11 C4 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/C4-operator.md --verdict deferred",
+        "exit": 0,
+        "at": "2026-10-05T00:03:52Z",
+        "head": "6a6463b711ad71731020dd04116266ff54373d05",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/C4-operator.md",
+        "evidence_sha256": "babd1f230390c3836bec45a441b8c3a185bc9e92536b23b05e560b7cefe3e8ff",
+        "deferred": true
+      }
     },
     "C5": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn contract:record STK-11 C5 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/C5-operator.md --verdict deferred",
+        "exit": 0,
+        "at": "2026-10-05T00:03:55Z",
+        "head": "6a6463b711ad71731020dd04116266ff54373d05",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/evidence/C5-operator.md",
+        "evidence_sha256": "5b45549428134421600c752b2a828bdbe926dbbdf66f1e588d5c02bf07100c3c",
+        "deferred": true
+      }
     },
     "review:mason": {
       "status": "FAIL",
@@ -55,15 +71,35 @@
       "run": null
     },
     "review:vigil": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run vigil STK-11",
+        "exit": 0,
+        "at": "2026-10-04T23:43:45Z",
+        "head": "3465bd77c5d7367af8d39de6d65d82dc74d95851",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/review-vigil.md",
+        "evidence_sha256": "1fb6215a174a8627c6df3fc300d7c84aa5330b51076b1cb8764132d008cc00ed",
+        "contract_sha256": "e7cc2fb8716af0f91ca85d99149fd2a7b79384c8741b334879d78bbd2fa04893",
+        "as_built_sha256": "23d561c78f14fd8768da9c6493450b8230105897869de8c103967aba35247f24",
+        "runner": "claude 2.1.232 (Claude Code) (agent vigil; tools Read,Grep,Glob)"
+      }
     },
     "review:warden": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run warden STK-11",
+        "exit": 0,
+        "at": "2026-10-04T23:30:07Z",
+        "head": "c19369cb0d0de39268cbc0fb5f65e212e6f9acd2",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-11-local-auth-mirror/review-warden.md",
+        "evidence_sha256": "633cb65649c0a15a51e558c53cf25e074e971cb34e17d8d468524a8ad4748942",
+        "contract_sha256": "efd2f37963742150cd7b8f01b4b37485de98411896332a3152159dab5e08ec04",
+        "as_built_sha256": "d7f32fbd5ae3d707719fa92474504b10eb789521753211db0c0deab2224a32c2",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
+      }
     }
   },
-  "updated_at": "2026-10-04T07:46:13Z"
+  "updated_at": "2026-10-05T00:09:44Z"
 }

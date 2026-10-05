@@ -16,7 +16,12 @@ cites:
   - "D-STK-7"
   - "D-STK-16"
 truth_files: "none: no living UX file covers the starter's own stack"
-reviewers: []
+reviewers:
+  - assay
+  - mason
+  - threshold
+  - vigil
+  - warden
 planned_paths:
   - "packages/auth/**"
   - "apps/web/proxy.ts"
@@ -29,6 +34,12 @@ planned_paths:
   - "packages/config/eslint/boundaries.js"
   - "toolkit.json"
   - "docs/runbooks/remove-supabase-auth.md"
+  - "docs/runbooks/remove-supabase-database.md"
+  - "docs/engineering/tech-stack.md"
+  - "apps/web/package.json"
+  - "yarn.lock"
+  - "tooling/boundaries.test.ts"
+  - "docs/engineering/codebase-conventions.md"
 depends_on:
   - STK-11
 out_of_scope:
@@ -55,6 +66,27 @@ criteria:
     statement: "A staging sign-in on localhost redirects back to localhost."
     evidence: manual
     reason: "needs the hosted staging project"
+  - id: review:assay
+    statement: Assay reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run assay <id>
+  - id: review:mason
+    statement: Mason reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run mason <id>
+  - id: review:threshold
+    statement: Threshold reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run threshold <id>
+  - id: review:vigil
+    statement: Vigil reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run vigil <id>
+  - id: review:warden
+    statement: Warden reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
+tier: 2
 ---
 
 # Contract — STK-12 auth-package

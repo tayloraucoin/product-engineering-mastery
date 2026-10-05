@@ -224,7 +224,11 @@ const pathRules = Math.max(
       .reduce((s, rel) => s + tokensOf(rel), 0),
   ),
 );
-const nestedAgents = largest(apps.map((app) => `${app.path}/AGENTS.md`));
+/** Nested AGENTS.md load by path in apps/ and packages/ (docs/index.md). */
+const nestedAgents = largest([
+  ...apps.map((app) => `${app.path}/AGENTS.md`),
+  ...listIn("packages", () => true).map((dir) => `${dir}/AGENTS.md`),
+]);
 const nonUiRules = pathRules + nestedAgents;
 
 /** The largest contract under the specs root, with the one surface file it cites. */

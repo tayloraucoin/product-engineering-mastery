@@ -23,7 +23,19 @@ import { REPO_ROOT } from "./lib/docs.ts";
 const TEXT = 4.5;
 const NON_TEXT = 3;
 
-type Pair = { fg: string; bg: string; min: number; use: string };
+/**
+ * `tint` paints `bg` at that opacity over `--background`, as a `bg-x/10`
+ * class does (CAT batch review B4); `themes` limits a pair to the themes
+ * whose classes use that tint.
+ */
+type Pair = {
+  fg: string;
+  bg: string;
+  min: number;
+  use: string;
+  tint?: number;
+  themes?: Array<"light" | "dark">;
+};
 
 const PAIRS: Pair[] = [
   { fg: "--foreground", bg: "--background", min: TEXT, use: "body text" },
@@ -62,6 +74,95 @@ const PAIRS: Pair[] = [
     bg: "--accent",
     min: TEXT,
     use: "selected or hovered label",
+  },
+  // CAT-2: the surfaces and roles shadcn's Vega style puts text on.
+  { fg: "--card-foreground", bg: "--card", min: TEXT, use: "text on a card" },
+  {
+    fg: "--muted-foreground",
+    bg: "--card",
+    min: TEXT,
+    use: "a card's description",
+  },
+  {
+    fg: "--popover-foreground",
+    bg: "--popover",
+    min: TEXT,
+    use: "a menu or popover item",
+  },
+  {
+    fg: "--muted-foreground",
+    bg: "--popover",
+    min: TEXT,
+    use: "a menu shortcut or hint",
+  },
+  {
+    fg: "--secondary-foreground",
+    bg: "--secondary",
+    min: TEXT,
+    use: "secondary button label",
+  },
+  {
+    fg: "--destructive",
+    bg: "--background",
+    min: TEXT,
+    use: "destructive text and error messages",
+  },
+  {
+    fg: "--destructive",
+    bg: "--popover",
+    min: TEXT,
+    use: "a destructive menu item",
+  },
+  {
+    fg: "--sidebar-foreground",
+    bg: "--sidebar",
+    min: TEXT,
+    use: "sidebar text",
+  },
+  {
+    fg: "--sidebar-accent-foreground",
+    bg: "--sidebar-accent",
+    min: TEXT,
+    use: "the active sidebar item",
+  },
+  {
+    fg: "--sidebar-primary-foreground",
+    bg: "--sidebar-primary",
+    min: TEXT,
+    use: "a sidebar's primary mark",
+  },
+  // The destructive Button: its label on its own tint, at rest and on hover.
+  {
+    fg: "--destructive",
+    bg: "--destructive",
+    tint: 0.1,
+    themes: ["light"],
+    min: TEXT,
+    use: "destructive button label",
+  },
+  {
+    fg: "--destructive",
+    bg: "--destructive",
+    tint: 0.2,
+    themes: ["light"],
+    min: TEXT,
+    use: "destructive button label, hovered",
+  },
+  {
+    fg: "--destructive",
+    bg: "--destructive",
+    tint: 0.2,
+    themes: ["dark"],
+    min: TEXT,
+    use: "destructive button label",
+  },
+  {
+    fg: "--destructive",
+    bg: "--destructive",
+    tint: 0.3,
+    themes: ["dark"],
+    min: TEXT,
+    use: "destructive button label, hovered",
   },
   { fg: "--ring", bg: "--background", min: NON_TEXT, use: "focus ring" },
   {
@@ -171,6 +272,16 @@ function parseColor(raw: string): Rgba | null {
 const luminance = ({ r, g, b }: Rgba) =>
   0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
 
+/** `top` at opacity `alpha` over `under`, in encoded sRGB as browsers blend. */
+function over(top: Rgba, under: Rgba, alpha: number): Rgba {
+  return {
+    r: top.r * alpha + under.r * (1 - alpha),
+    g: top.g * alpha + under.g * (1 - alpha),
+    b: top.b * alpha + under.b * (1 - alpha),
+    a: 1,
+  };
+}
+
 /** A see-through foreground is composited over the surface first, in encoded sRGB as browsers do. */
 function contrastRatio(fg: Rgba, bg: Rgba): number {
   const top = { ...bg };
@@ -194,13 +305,25 @@ function main(): void {
   ];
 
   const failures: string[] = [];
+  let total = 0;
   for (const [theme, vars] of themes) {
     for (const pair of PAIRS) {
-      const label = `${theme} ${pair.fg} on ${pair.bg} (${pair.use})`;
+      if (pair.themes && !pair.themes.includes(theme as "light" | "dark"))
+        continue;
+      total++;
+      const bgName = pair.tint
+        ? `${pair.bg}/${Math.round(pair.tint * 100)}`
+        : pair.bg;
+      const label = `${theme} ${pair.fg} on ${bgName} (${pair.use})`;
       const fgValue = vars[pair.fg] && resolveVar(vars[pair.fg]!, vars);
       const bgValue = vars[pair.bg] && resolveVar(vars[pair.bg]!, vars);
+      const surfaceValue =
+        vars["--background"] && resolveVar(vars["--background"]!, vars);
       const fg = fgValue ? parseColor(fgValue) : null;
-      const bg = bgValue ? parseColor(bgValue) : null;
+      const solid = bgValue ? parseColor(bgValue) : null;
+      const surface = surfaceValue ? parseColor(surfaceValue) : null;
+      const bg =
+        pair.tint && solid && surface ? over(solid, surface, pair.tint) : solid;
       if (!fg || !bg || bg.a !== 1) {
         failures.push(
           `${label}: unresolved (${fgValue ?? "missing"} on ${bgValue ?? "missing"})`,
@@ -220,7 +343,6 @@ function main(): void {
     }
   }
 
-  const total = PAIRS.length * themes.length;
   if (failures.length > 0) {
     console.error(
       `\ncontrast-audit: ${failures.length} of ${total} pairs in ${path.relative(REPO_ROOT, presetPath)} fail WCAG 2.2 AA. Change the raw step's lightness in the preset:`,

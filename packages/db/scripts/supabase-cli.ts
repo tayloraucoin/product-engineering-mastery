@@ -10,9 +10,11 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import postgres from "postgres";
 
+import { isLoopbackHost } from "../src/loopback.ts";
 import { cliEnvironment } from "./env.ts";
 import {
   LEGACY_CONTAINER,
+  LOCAL_CONTAINER,
   LOCAL_IMAGE_URL,
   LOCAL_PORT,
 } from "./local-image.ts";
@@ -60,19 +62,42 @@ export function isContainerRunning(name: string): boolean {
   );
 }
 
-/** Whether a container publishes `port` on every interface rather than loopback only. */
+/**
+ * The addresses in `docker port` output that are not loopback: `0.0.0.0` and
+ * `::` (every interface) or a specific LAN address the daemon binds to.
+ */
+export function nonLoopbackBindings(dockerPortOutput: string): string[] {
+  return dockerPortOutput
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line !== "")
+    .map((line) => line.slice(0, line.lastIndexOf(":")))
+    .filter((host) => !isLoopbackHost(host));
+}
+
+/** Whether a container publishes `port` anywhere but loopback; false when Docker cannot say. */
 export function isPublishedBeyondLoopback(
   container: string,
   port: number,
 ): boolean {
-  const lines = execFileSync("docker", ["port", container, String(port)], {
-    encoding: "utf8",
-  })
-    .trim()
-    .split("\n");
-  return lines.some(
-    (line) => line.startsWith("0.0.0.0:") || line.startsWith("[::]:"),
-  );
+  try {
+    const output = execFileSync("docker", ["port", container, String(port)], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    });
+    return nonLoopbackBindings(output).length > 0;
+  } catch {
+    return false;
+  }
+}
+
+/** Prints the network-exposure warning when the database port is not loopback-only. */
+export function warnIfExposed(command: string): void {
+  if (isPublishedBeyondLoopback(LOCAL_CONTAINER, 5432)) {
+    console.warn(
+      `${command} — the database port ${LOCAL_PORT} is reachable from your network, password postgres, and it may hold mirrored staging emails. On a shared network, set "ip": "127.0.0.1" in Docker's daemon settings, then yarn db:stop and rerun.`,
+    );
+  }
 }
 
 /** Runs `supabase <args> --workdir packages/db`, streaming its output; exits on failure. */

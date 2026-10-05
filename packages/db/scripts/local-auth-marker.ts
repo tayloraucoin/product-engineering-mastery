@@ -11,11 +11,8 @@
 
 import type postgres from "postgres";
 
-import {
-  assertLoopbackClient,
-  MARKER_SCHEMA,
-  MARKER_TABLE,
-} from "../src/local-auth-mirror.ts";
+import { MARKER_SCHEMA, MARKER_TABLE } from "../src/local-auth-mirror.ts";
+import { assertLoopbackClient } from "../src/loopback.ts";
 
 export type MarkerResult = "marked" | "auth-owned";
 

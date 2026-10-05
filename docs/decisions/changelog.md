@@ -19,9 +19,56 @@ Amendments to files in the practice, newest first (CF-06). A ruling's one-line f
 
 On 2026-10-04 STK-2's `yarn verify` failed twice with "C1 is PASS, but evidence … changed after it was recorded" while `contract:run STK-8` and then `contract:run STK-10` ran on the shared branch (PR-14). Seconds later it was clean both times. `contract:run` wrote each log as it went, but wrote `results.json` once, after the last criterion. So a ticket with a `yarn verify` criterion also failed on every full run of its own.
 
-- **`contract:run` records each criterion as it finishes.** The log is written to a temp file, renamed into place, and its result is written straight after. The gap between a log and its hash is now one write, not a whole run.
+- **`contract:run` records each criterion as it finishes** (also made by "PJ: the thread closes its own tickets", below). The log is written to a temp file, renamed into place, and its result is written straight after. The gap between a log and its hash is now one write, not a whole run. PR-16's run lock serialises runs within one checkout; this covers a `yarn verify` outside any run, and another checkout.
 - **`check-specs` reads the log's run header on a hash mismatch.** If the header shows a newer run than the recorded one, the PASS is stale: a warning while the ticket is open, and a failure under `--strict` once it has an as-built (PR-15). A matching header, an older one, or none at all is still a hard failure.
 - No lock file, so a crashed run cannot leave one behind; such a run leaves a stale PASS, and re-running the criterion clears it.
+
+## 2026-10-04 — CAT: the batch review of CAT-2 to CAT-4
+
+A `vigil` review (`specs/_shared/epics/CAT-component-catalog/_batch-review-2026-10-04.md`) found four Blocking items, all fixed: the token lint missed `_`-joined literals (B1); the chart roles were missing under `.dark` (B2); check-catalog passed a conflicting tag or a wrong licence (B3); the destructive Button's label sat at 3.99:1 on its tint (B4), which contrast-audit could not see until it learned to composite a tinted background. The destructive step moved to red-800 in light and red-300 in dark, and all 42 pairs pass. The lint now also rejects other absolute units, any unit case, bare colour names and font families (CS-13 amended). Elevation takes the canon's own closed scale, resting, raised, overlay, modal (CS-11 amended; C-P06 already named it). Canon C-P06's "Enforced by" line now says which arbitrary values the lint bans. Record 0011 gains an amendment block.
+
+## 2026-10-04 — CAT-2: the tokens shadcn's Vega style needs, and a lint that judges values
+
+Measured on the 62 resolved base-vega components: copied raw, 49 would fail the token lint, 641 times on variant selectors such as `data-[size=sm]:` that are not values, and the preset named no elevation and no motion tokens though the canon requires both. Taylor approved the addendum. New in the preset: card, popover, secondary, destructive, input, sidebar and chart roles (neutral placeholders); radius xl to 4xl on the house radius; elevation `shadow-control|raised|overlay|floating` (CS-11); the tk-motion tokens verbatim (CS-12). The token lint (CS-13) judges only the utility after the last variant, and rejects an arbitrary value only when it holds a raw length, time or curve; `shadow-xs` is now banned. The copy-in mapping is in `docs/design/component-sources.md`. P-K may rename or retune these with a brand, never remove them.
+
+## 2026-10-04 — CAT: component sources, the kit and the catalog
+
+Taylor, on the returned P-M research: every shadcn component, then the ecosystem and the custom components of five earlier products, browsable in the workshop, filterable by source, with the code ready to pick; he approved the four recommendations (Base UI, per-command registry access, Vega, catalogue by job). New: `docs/design/component-sources.md` (CS-01 to CS-10, the review deltas, the job index, the starter kits) and record 0011 (two shelves). Amended: `skills.md` edit A2 admits the ruled sources by commit-pinned GitHub address; SK-05's status. The research is filed unchanged at `docs/research/design-tools/react-ui-libraries.md`. Open: the form library, chosen by the first ticket that needs one.
+
+## 2026-10-04 — PJ: a separate branch only when asked
+
+Taylor: the default stays one working branch, with a phrase to ask for a separate one when two pieces of work should be separate pull requests, "and not just have it start doing it and creating a big mess of branches" (PR-17). `tk-batch`: on "on its own branch", the thread runs `git worktree add .claude/worktrees/<name> -b agent/<name>` from the current branch (from `main` on "off main"), installs, and does all of that work there, so the shared checkout and its other threads are untouched. The report names the branch; pushing stays Taylor's. On "merge it back" the thread merges into the working branch and removes the folder and branch. One branch per request, never per ticket. Not yet run in a real thread.
+
+## 2026-10-04 — PJ: the thread closes its own tickets
+
+Taylor, after the first batches under PR-15: threads still ended by handing over `yarn contract:run`, `yarn review:run` and re-proofs of other tickets. "Running yarn commands is stupid. It only needs me for what it actually needs me." (PR-16).
+
+- **`tk-batch` loops until closed.** The thread runs every command, fixes a failure and re-proves, runs a sandbox-blocked command again unsandboxed, re-proves a stale proof on any ticket, and pulls an unbuilt dependency into its batch. Taylor is asked only for a choice that cannot be undone, money, growing scope, a credential, a protected file, or the merge. The report is six lines at most and never holds a `yarn` command.
+- **Operator checks.** `yarn contract:record <id> <criterion> --evidence <path> --verdict deferred` hands a `manual` criterion only a person can check to Taylor: it counts as done for the ticket, reviews and dependents, and `specs/_status.md` lists it under Operator checks with the file that says what to look at. `operator_review: true` in a contract makes `contract:init` add such a criterion for Taylor's own look. Trade-off: a ticket reads "closed" with a person's check still open; the list is where that is visible.
+- **A closed ticket's proofs are frozen.** Once every criterion is recorded PASS and the as-built exists, a later change to its planned paths no longer marks it stale. Many tickets plan the same shared files (the ledger, `package.json`), and each later ticket was reopening the earlier ones. Trade-off: a regression after close is caught by the batch's `yarn verify`, not by the ticket.
+- **`contract:run` fixes.** It writes `results.json` after each criterion, not once at the end: a `yarn verify` criterion in the same run read fresh logs against old hashes and failed, then passed when run alone. One run at a time per checkout: a second thread's run waits for the first, because two full builds in one folder overwrite each other's output. `contract:record` resolves symlinked folders.
+- **The stop gate skips a headless reviewer** (`PEM_HEADLESS_REVIEW`): blocking its stop replaced one review with a reply to the hook.
+- **`.env.example` is readable.** `check-settings` accepts the blanket `Read(**/.env.*)` deny or the named value files (`.env.local`, `.env.*.local`, `.env.development`, `.env.staging`, `.env.production`); the settings template uses the named form. `.claude/settings.json` is Taylor's to update from the template.
+- **Not done:** existing STK contracts still carry `yarn verify` as a criterion; it can pass now, so they are left as cut.
+
+## 2026-10-04 — WEB-2: the boundaries lint sees `@pem/*` subpath imports
+
+The STK-7 batch review (finding 4), confirmed by probe: `import "@pem/db/client"` in `packages/ui` and `import "@pem/brand/brand"` in `packages/env` linted clean, because eslint-import-resolver-node ignores `exports` and every `@pem/<subpath>` passed as unknown. Only relative paths into another package were caught.
+
+- **`packages/config/eslint/workspace-resolver.cjs`** resolves `@pem/*` through each package's `exports` with Node's own resolution, ahead of the node resolver. No dependency added.
+- **It fails closed:** an `@pem/*` specifier that does not resolve is a lint error ("Resolve error"), never unknown.
+- **`yarn test:boundaries`** (`tooling/boundaries.test.ts`, also in `yarn test:tooling`) lints the probes as text and fails if either edge passes again. The real tree had no hidden violation.
+- Ledger: EN-12.
+
+## 2026-10-04 — STK-23: every `@pem/ui` kind folder exists and says what belongs in it
+
+Taylor, after STK-22: the kind subfolders were missing, and nothing told a future agent how to file a new component. STK-22 had named the kinds only in the check.
+
+- **Kind folders from day one.** `src/primitives/<kind>/` and `src/composed/<kind>/` exist for every kind, each with a `README.md` (rule 9's README seam): the kind's test, its scope at that layer, examples from Synapse and Conscious Connections, and where the line falls with its neighbours.
+- **`packages/ui/AGENTS.md`** gains a kinds table (what a person does with it, examples per layer, tie-breaks where the audited repos disagree) and "Adding a component" in five steps.
+- **`yarn check-ui-layout`** fails on a missing kind folder or README, and when the `AGENTS.md` table and `KINDS` differ. Supersedes STK-22's "kinds named once, in the check": the table is a second copy, held equal by the check.
+- **A primitive may import another primitive** (a dialog uses the button), never a composed component; stories are exempt. STK-22 had banned every sibling import, which most reference primitives would fail on port.
+- **`yarn budget` counts nested `AGENTS.md` in `packages/`,** as `docs/index.md` says they load; `packages/ui/AGENTS.md` keeps the kinds table and the steps, and leaves examples to the kind READMEs.
 
 ## 2026-10-04 — STK-22: `@pem/ui` takes the house layout
 

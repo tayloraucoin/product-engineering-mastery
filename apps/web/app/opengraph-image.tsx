@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-syntax -- next/og renders inline styles only, with no stylesheet, so no preset token can reach the image; its colours and font come from @pem/brand. */
+/* eslint-disable pem-tokens/no-raw-values -- next/og renders inline styles only, with no stylesheet, so no preset token can reach the image; its colours and font come from @pem/brand. */
 import { ImageResponse } from "next/og";
 
 import { brand } from "@pem/brand/brand";

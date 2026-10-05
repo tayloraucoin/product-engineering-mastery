@@ -3,11 +3,15 @@
  *
  * Enforced via eslint-plugin-boundaries at the repo root (eslint.config.mjs).
  * Layer order (low → high), the built part of codebase-conventions §4:
- *   config → constants, env, brand, observability → db → email → ui → apps
+ *   config → constants, env, brand, observability → db → auth → email → ui → apps
  *
  * `ui-workshop` is `packages/ui/.storybook/`, the component workshop
  * (D-STK-10): it reads @pem/brand for fonts and assets, which @pem/ui's own
  * components never do. It is listed before `ui` because the first match wins.
+ *
+ * `catalog` is `packages/catalog`, the shelf (CS-07, record 0011): it may
+ * import `config` and `ui`, and nothing may import it. No package lists it
+ * and apps are kept off it below; the workshop reaches its stories by a glob.
  *
  * - apps/* → apps/*: hard ban
  * - packages/* → apps/*: hard ban
@@ -55,6 +59,7 @@ const ELEMENTS = [
   workspacePackage("brand", "brand"),
   workspacePackage("observability", "observability"),
   workspacePackage("db", "db"),
+  workspacePackage("auth", "auth"),
   workspacePackage("email", "email"),
   {
     type: "ui-workshop",
@@ -62,6 +67,7 @@ const ELEMENTS = [
     mode: "full",
   },
   workspacePackage("ui", "ui"),
+  workspacePackage("catalog", "catalog"),
 ];
 
 /** Each package may import only these lower-layer types. */
@@ -72,15 +78,18 @@ const PACKAGE_IMPORTS = {
   brand: ["config"],
   observability: ["config"],
   db: ["config", "env"],
+  auth: ["config", "db", "observability"],
   email: ["config", "env", "brand", "observability"],
   ui: ["config"],
   "ui-workshop": ["config", "brand", "ui"],
+  catalog: ["config", "ui"],
 };
 
 /** Vendor SDK → the one element type allowed to import it (D-STK-16). */
 const SDK_OWNERS = {
   postgres: "db",
   "drizzle-kit": "db",
+  "@supabase/*": "auth",
   resend: "email",
 };
 
@@ -88,9 +97,10 @@ const APP_TYPES = ELEMENTS.map((element) => element.type).filter((type) =>
   type.startsWith("app-"),
 );
 
-/** Apps import packages, never a package's workshop. */
+/** Apps import packages, never a package's workshop, and never the shelf. */
+const NOT_FOR_APPS = new Set(["ui-workshop", "catalog"]);
 const APP_IMPORTS = Object.keys(PACKAGE_IMPORTS).filter(
-  (type) => type !== "ui-workshop",
+  (type) => !NOT_FOR_APPS.has(type),
 );
 
 const SOURCE_FILES = "**/*.{ts,tsx,js,jsx,mjs,cjs}";
@@ -184,10 +194,15 @@ export const boundariesConfig = [
     },
     settings: {
       "boundaries/root-path": repoRoot,
-      // Without this, eslint-import-resolver-node only tries .js/.json/.node,
-      // every `@pem/*` specifier resolves to null, and the whole rule set
-      // silently passes on `isUnknown`. Workspace entry points are .ts.
+      // Tried in order, first found wins. An unresolved import passes on
+      // `isUnknown`, so resolution is what the whole rule set stands on.
+      // - workspace-resolver: `@pem/*` through each package's `exports`,
+      //   which the node resolver ignores; an unresolvable one is a lint
+      //   error, never unknown.
+      // - node: relative imports and third-party packages. Without the
+      //   extensions it tries only .js/.json/.node; workspace sources are .ts.
       "import/resolver": {
+        [resolve(configDir, "workspace-resolver.cjs")]: {},
         node: {
           extensions: [".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".json"],
         },

@@ -24,6 +24,7 @@ docs/**/README.md
 docs/_generated/
 .claude/agents/
 specs/_status.md
+packages/catalog/STATUS.md
 # Written by yarn review:run and hashed into results.json: a reformat would break the hash.
 specs/**/review-*.md
 specs/**/tickets/_preflight.md

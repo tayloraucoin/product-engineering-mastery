@@ -20,6 +20,7 @@ import {
 import { migrationUrl, runtimeUrl, tier } from "../scripts/env.ts";
 import { createDb, type Db } from "../src/client.ts";
 import { describeUrl } from "../src/connection.ts";
+import { assertLoopbackClient } from "../src/loopback.ts";
 import { createRlsClient } from "../src/rls.ts";
 import { notes, users } from "../src/schema/index.ts";
 
@@ -37,6 +38,9 @@ before(async () => {
   }
   const url = migrationUrl();
   const client = openMigrationClient(url, tier);
+  // The local tier skips the pooler check, so a hosted URL in a _LOCAL
+  // variable would otherwise be migrated and written to.
+  assertLoopbackClient(client);
   try {
     await client`select 1`;
   } catch (error) {
@@ -50,6 +54,8 @@ before(async () => {
   await applySetup(client);
   await client`insert into auth.users (id, email) values (${alice}, 'alice@example.test'), (${bob}, 'bob@example.test')`;
   db = createDb({ url: runtimeUrl(), tier });
+  // The runtime client writes too, through the bridge; same check.
+  assertLoopbackClient(db.$client);
 });
 
 after(async () => {

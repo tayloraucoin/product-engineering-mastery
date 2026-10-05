@@ -26,6 +26,8 @@ export default defineConfig({
           /[\\/]storybook[\\/]/,
           /vite-plugin-storybook-nextjs/,
           /next-themes/,
+          // Base UI imports react; inlined, it resolves through the same alias as the stories.
+          /@base-ui\//,
         ],
       },
     },
