@@ -8,10 +8,10 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-05T04:00:44Z",
-        "head": "12a9b07d40b1abfe6e3864387116bd889c077f81",
+        "at": "2026-10-05T04:03:09Z",
+        "head": "5066108ec9be6bef3ab56a85e3c1051f4c66bf59",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-17-ai-package/evidence/C1.log",
-        "evidence_sha256": "3455e7b9db373f7a785818e7e3476d91a2aa1142557f91090751404870b4d40d",
+        "evidence_sha256": "d8f3f586e6e7e37ff73bae91cb8d833f1d63e2e978221ba04c8202ba5d669d84",
         "tests": 199
       }
     },
@@ -21,10 +21,10 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-05T04:01:13Z",
-        "head": "12a9b07d40b1abfe6e3864387116bd889c077f81",
+        "at": "2026-10-05T04:03:14Z",
+        "head": "5066108ec9be6bef3ab56a85e3c1051f4c66bf59",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-17-ai-package/evidence/C2.log",
-        "evidence_sha256": "4bdb81779a142de949b3a9d9b2f9b43f9f6f7b2b8041c86a239578d7b0bf6fe7",
+        "evidence_sha256": "f94a8d186865195db6adc32528441b5b47aa03c1097c22da3795e2662bee6229",
         "tests": 199
       }
     },
@@ -34,22 +34,22 @@
       "run": {
         "command": "yarn lint:boundaries",
         "exit": 0,
-        "at": "2026-10-05T04:01:19Z",
-        "head": "12a9b07d40b1abfe6e3864387116bd889c077f81",
+        "at": "2026-10-05T04:03:19Z",
+        "head": "5066108ec9be6bef3ab56a85e3c1051f4c66bf59",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-17-ai-package/evidence/C3.log",
-        "evidence_sha256": "d9302a75d69fe70a377bb33dc8976fa21ee0856879ae4d0993817b51e5e0e691"
+        "evidence_sha256": "7a5d70267e759017c2f667174ddd8393a94aaa4a02b623a4a1d62ccc9257183b"
       }
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
       "run": {
         "command": "yarn verify",
-        "exit": 1,
-        "at": "2026-10-05T04:01:28Z",
-        "head": "12a9b07d40b1abfe6e3864387116bd889c077f81",
+        "exit": 0,
+        "at": "2026-10-05T04:03:27Z",
+        "head": "5066108ec9be6bef3ab56a85e3c1051f4c66bf59",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-17-ai-package/evidence/C4.log",
-        "evidence_sha256": "7ac8fd870850d6a07f22bc09be7068149d27e692fae989b6ec0f3535942683fe"
+        "evidence_sha256": "8c0027dd935c1e32507a20bde131b29a6cff0f6bada97dace8c4fbea5af24542"
       }
     },
     "review:mason": {
@@ -81,5 +81,5 @@
       }
     }
   },
-  "updated_at": "2026-10-05T04:02:23Z"
+  "updated_at": "2026-10-05T04:05:26Z"
 }
