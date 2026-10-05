@@ -30,6 +30,7 @@ planned_paths:
   - "apps/web/sentry.edge.config.ts"
   - "apps/web/lib/error-reporting/**"
   - "apps/web/app/global-error.tsx"
+  - "apps/web/app/page.tsx"
   - "apps/web/next.config.ts"
   - "apps/web/proxy.ts"
   - "apps/web/env.ts"
