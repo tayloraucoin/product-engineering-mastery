@@ -6,43 +6,62 @@ status: draft
 thread: "STK-3"
 role: Usher
 date: 2026-10-03
-last_reviewed: 2026-10-03
+last_reviewed: 2026-10-04
 supersedes:
 load_when:
 ---
 
 # Remove error monitoring
 
-> **Module:** Sentry, wired in the web app only (D-STK-12), and `@sentry/nextjs`, owned by the web app (D-STK-16). The observability package's vendor-free error reporter (STK-5) is not part of it and stays.
-> **Built by:** STK-18 builds it. The module is not built, so every list below is empty until STK-18 fills it; nothing here is guessed ahead of the code.
+> **Module:** Sentry, wired in the web app only (D-STK-12), and `@sentry/nextjs`, owned by the web app (D-STK-16). The observability package's vendor-free error reporter (STK-5) is not part of it and stays: with Sentry gone, `logger.error` still logs and hands each error to the no-op reporter.
+> **Built by:** STK-18. The lists below are the module's `error-monitoring` entry in `toolkit.json`'s `stack` block, and what reads it.
 > **Run from:** step 4 of [`new-project.md`](new-project.md).
 
 ## Files to delete
 
-Not built yet: STK-18 fills this from the module's `files` list in `toolkit.json`.
+- `apps/web/instrumentation.ts`: starts the SDK per server runtime and reports request errors.
+- `apps/web/instrumentation-client.ts`: starts the SDK in the browser.
+- `apps/web/sentry.server.config.ts` and `apps/web/sentry.edge.config.ts`.
+- `apps/web/lib/error-reporting/`: the scrub rule, the per-tier DSN, the SDK and build options, the seam connection and their tests.
+
+`apps/web/app/global-error.tsx` and `?state=error` in `apps/web/app/page.tsx` stay: the error page logs through `@pem/observability`, which names no vendor.
 
 ## Files to edit
 
-Not built yet: STK-18 fills this.
+- `apps/web/next.config.ts`: the `withSentryConfig` import and wrapper (export `nextConfig` itself), the `sentryBuildOptions` import, and `errorReportingBuild` from the `./env` import.
+- `apps/web/env.ts`: the `resolveSentryDsn` import; in `raw`, the `NEXT_PUBLIC_SENTRY_DSN` reads (with `_LOCAL` and `_STAGING`), `NEXT_PUBLIC_SENTRY_ENVIRONMENT`, `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT` (with `_STAGING`), `VERCEL_GIT_COMMIT_SHA` and `NEXT_RUNTIME`; `sentryDsn`, `nextRuntime` and `errorReportingBuild`; the two `NEXT_PUBLIC_SENTRY_*` entries in `client`, `runtimeEnv` and `nextConfigEnv`.
+- `apps/web/proxy.ts`: `monitoring$|` in the matcher, and its comment.
+- `apps/web/package.json`: `@sentry/nextjs`.
+- `tooling/check-client-bundle.ts`: `VERCEL_GIT_COMMIT_SHA` and `NEXT_RUNTIME` in `UNPLANTABLE`, and the comment's Sentry clause.
+- `packages/config/eslint/boundaries.js` and `tooling/boundaries.test.ts`: see Boundaries entries.
+- `docs/engineering/tech-stack.md`: the `@sentry/nextjs` row.
 
 ## Variables
 
-Not built yet: STK-18 fills this from the module's `env` list in `toolkit.json`.
+From `.env.example` (the whole "Error monitoring" block) and `turbo.json`'s `globalEnv`:
+
+- `NEXT_PUBLIC_SENTRY_DSN`, `NEXT_PUBLIC_SENTRY_DSN_LOCAL`, `NEXT_PUBLIC_SENTRY_DSN_STAGING`
+- `NEXT_PUBLIC_SENTRY_ENVIRONMENT`
+- `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT`, `SENTRY_PROJECT_STAGING`
+- `VERCEL_GIT_COMMIT_SHA` and `NEXT_RUNTIME`: only this module reads them.
 
 ## Dependencies
 
-Not built yet: STK-18 fills this from the module's `dependencies` list in `toolkit.json`.
+`@sentry/nextjs`. After deleting the files, run `yarn install` so `yarn.lock` drops it and its `@sentry/*` dependencies.
 
 ## Boundaries entries
 
-Not built yet: STK-18 fills this from the module's `boundaries` list in `toolkit.json`. The rows live in the layer matrix in `packages/config/eslint/boundaries.js` (D-STK-16).
+The module holds no element. In `packages/config/eslint/boundaries.js`, delete the `"@sentry/*": "app-web"` entry in `SDK_OWNERS`. In `tooling/boundaries.test.ts`, delete the three probes that name `@sentry/`.
 
 ## Vendor-side steps
 
-Not built yet: STK-18 fills this.
+1. In Sentry (US region, organization settings), delete the staging and production projects, or archive them to keep their history.
+2. Revoke the organization auth token the deployments used.
+3. Delete the `NEXT_PUBLIC_SENTRY_DSN*`, `SENTRY_AUTH_TOKEN`, `SENTRY_ORG` and `SENTRY_PROJECT*` values from the hosting provider's environment settings.
 
 ## Verify
 
-1. In `toolkit.json`, set `"removed": true` on the module's `stack` entry. Until STK-18 adds the entry, there is nothing to mark.
+1. In `toolkit.json`, set `"removed": true` on the `error-monitoring` entry of the `stack` block.
 2. `yarn check-stack` exits 0: no listed file, variable or dependency of the module is left.
-3. `yarn verify` exits 0.
+3. A case-insensitive search for `sentry` outside `node_modules`, `docs/`, `specs/` and `toolkit.json` (whose removed entry still names the variables) finds nothing.
+4. `yarn verify` exits 0.
