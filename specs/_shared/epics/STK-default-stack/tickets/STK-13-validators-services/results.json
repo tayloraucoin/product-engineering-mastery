@@ -5,23 +5,53 @@
     "C1": {
       "status": "FAIL",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test",
+        "exit": 1,
+        "at": "2026-10-05T00:12:33Z",
+        "head": "b38b3109819db84308002f87e0d4bdfb5561909f",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-13-validators-services/evidence/C1.log",
+        "evidence_sha256": "229d8df2e7cb8163978b10afaece08070697fdc490f06143750604cfa6b43f7b",
+        "tests": 130
+      }
     },
     "C2": {
       "status": "FAIL",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test",
+        "exit": 1,
+        "at": "2026-10-05T00:12:42Z",
+        "head": "b38b3109819db84308002f87e0d4bdfb5561909f",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-13-validators-services/evidence/C2.log",
+        "evidence_sha256": "5d207c29cff3e5cad7b815cabb969674cf74644e92e709b1d059cf2c54b3b717",
+        "tests": 130
+      }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn lint:boundaries",
+        "exit": 0,
+        "at": "2026-10-05T00:12:47Z",
+        "head": "b38b3109819db84308002f87e0d4bdfb5561909f",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-13-validators-services/evidence/C3.log",
+        "evidence_sha256": "ada2bdfa372fb3e4b77d4de5f03cf0d0a9ca00c47218f956fd36e5a4d31c0592"
+      }
     },
     "C4": {
       "status": "FAIL",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn verify",
+        "exit": 1,
+        "at": "2026-10-05T00:12:52Z",
+        "head": "b38b3109819db84308002f87e0d4bdfb5561909f",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-13-validators-services/evidence/C4.log",
+        "evidence_sha256": "e9ceea22ea6ea56a09e1eadd3d288486f12753766fe665b3fcf76236afc0cf5a"
+      }
     }
   },
-  "updated_at": "2026-10-05T00:09:30Z"
+  "updated_at": "2026-10-05T00:13:17Z"
 }
