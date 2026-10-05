@@ -8,11 +8,11 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-04T20:47:34Z",
-        "head": "697f87874f4c8afaf6c309f7a1e78d12f61e1df5",
+        "at": "2026-10-05T00:16:31Z",
+        "head": "68506caa80142ef5ab7816930d42554e983320c4",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-5-constants-observability/evidence/C1.log",
-        "evidence_sha256": "d16d6356d990847c59b757ea70552060325f263fd93872f26ade6b088802cad5",
-        "tests": 78
+        "evidence_sha256": "0e88c42b72d947d829cf47df8d9db9da23106b1fcdd7a24db1fca6868692de65",
+        "tests": 130
       }
     },
     "C2": {
@@ -21,11 +21,11 @@
       "run": {
         "command": "yarn test",
         "exit": 0,
-        "at": "2026-10-04T20:47:34Z",
-        "head": "697f87874f4c8afaf6c309f7a1e78d12f61e1df5",
+        "at": "2026-10-05T00:16:36Z",
+        "head": "68506caa80142ef5ab7816930d42554e983320c4",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-5-constants-observability/evidence/C2.log",
-        "evidence_sha256": "5949eff5eeb0ce2af111aacd8a7d78783b9ae69c5f07725a994f6a26c9f093b6",
-        "tests": 78
+        "evidence_sha256": "ba431717312d10ab158a9d8b36cf9fdb4973ea99ada691eae84a24e07042d6af",
+        "tests": 130
       }
     },
     "C3": {
@@ -34,10 +34,10 @@
       "run": {
         "command": "yarn lint:boundaries",
         "exit": 0,
-        "at": "2026-10-04T20:47:35Z",
-        "head": "697f87874f4c8afaf6c309f7a1e78d12f61e1df5",
+        "at": "2026-10-05T00:13:47Z",
+        "head": "67f1d7629d4c43a3df580cda32cff63b753ccd0f",
         "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-5-constants-observability/evidence/C3.log",
-        "evidence_sha256": "bb262473b19a079e7592ca91ec021bf26327c4d7a01e80514f0ae246e6df90a1"
+        "evidence_sha256": "be96594df384121ee556a1a80c421ef1ba9734a203ea484125a3a2746eb0e001"
       }
     },
     "C4": {
@@ -65,5 +65,5 @@
       }
     }
   },
-  "updated_at": "2026-10-04T20:50:13Z"
+  "updated_at": "2026-10-05T00:16:37Z"
 }
