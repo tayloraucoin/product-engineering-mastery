@@ -21,7 +21,18 @@ const synthetic = (): ScrubbableEvent => ({
     ip_address: "203.0.113.7",
     username: "ada",
   },
-  exception: { values: [{ value: "token=synthetic-secret-value rejected" }] },
+  exception: {
+    values: [
+      {
+        value: "token=synthetic-secret-value rejected",
+        stacktrace: {
+          frames: [
+            { function: "charge", vars: { cardNumber: "4111111111111111" } },
+          ],
+        },
+      },
+    ],
+  },
   breadcrumbs: [
     { message: "fetch to ada@example.test", data: { url: "/x?token=1" } },
   ],
@@ -55,6 +66,7 @@ test("free text is scrubbed and extra and breadcrumb data are dropped", () => {
     "abc123",
     "203.0.113.7",
     "4242424242424242",
+    "4111111111111111",
   ])
     assert.ok(!serialised.includes(leak), `leaked ${leak}`);
   assert.equal(event.extra, undefined);
@@ -65,4 +77,10 @@ test("the input event is not mutated", () => {
   const event = synthetic();
   scrubEvent(event);
   assert.equal(event.user?.email, "ada@example.test");
+});
+
+test("stack frames keep their place but lose their local variables", () => {
+  const frames =
+    scrubEvent(synthetic()).exception?.values?.[0]?.stacktrace?.frames;
+  assert.deepEqual(frames, [{ function: "charge" }]);
 });

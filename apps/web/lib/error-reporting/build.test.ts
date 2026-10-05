@@ -37,3 +37,7 @@ test("a deployment with the token, org and project uploads under the commit rele
   assert.equal(options.project, "example-web-staging");
   assert.equal(options.authToken, "sntrys_synthetic");
 });
+
+test("there is no tunnel route, so the app relays no one's events", () => {
+  assert.equal(sentryBuildOptions(deployedWithToken).tunnelRoute, false);
+});

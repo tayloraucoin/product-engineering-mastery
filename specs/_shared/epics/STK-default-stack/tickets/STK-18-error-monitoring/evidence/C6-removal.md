@@ -15,6 +15,10 @@ Done by the agent on 2026-10-04, on a throwaway git worktree of HEAD 492e300 (`.
 - `git grep -il sentry -- apps packages tooling turbo.json .env.example ':!tooling/refs-pending.json'` printed nothing.
 - Every `yarn verify` step passed, `build` and `check-client-bundle` included, except `format:check`. All 30 files it named are `packages/ui/src/primitives/**` components that CAT-9 committed at 02f5fb7 and that HEAD fails on without the removal too. None of them is a file the removal touched.
 
+## Since the rehearsal
+
+After review, the tunnel route was turned off (the commit after ea96947), so the runbook no longer edits `apps/web/proxy.ts`: the module never touches it. The rest of the runbook is unchanged.
+
 ## Found by the rehearsal, fixed in the runbook
 
 The first pass (on 741737c) found that `check-refs` fails on the runbook's own list of deleted paths, and that the grep needed scoping. Commit 0a9f5f2 added the `refs-pending.json` step and the scoped `git grep`.

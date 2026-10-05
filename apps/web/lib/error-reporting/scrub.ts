@@ -3,8 +3,9 @@
  * headers or query string, and a user who is an opaque id and nothing else.
  * Sentry's `beforeSend` runs this on every event, after the SDK's own
  * dataCollection settings, so a category left on by mistake still never
- * leaves. Free text (messages, exception values, breadcrumbs) is scrubbed
- * with @pem/observability's `scrubText`, the logger's one rule.
+ * leaves: a stack frame's local variables are dropped too. Free text
+ * (messages, exception values, breadcrumbs) is scrubbed with
+ * @pem/observability's `scrubText`, the logger's one rule.
  *
  * The event type is the structural subset this function touches, so the rule
  * is tested without the SDK; Sentry's `ErrorEvent` is assignable to it.
@@ -24,7 +25,12 @@ export type ScrubbableEvent = {
     env?: unknown;
   };
   user?: { id?: string | number; [field: string]: unknown };
-  exception?: { values?: { value?: string }[] };
+  exception?: {
+    values?: {
+      value?: string;
+      stacktrace?: { frames?: { function?: string; vars?: unknown }[] };
+    }[];
+  };
   breadcrumbs?: { message?: string; data?: unknown }[];
   extra?: unknown;
 };
@@ -58,11 +64,21 @@ export function scrubEvent<E extends ScrubbableEvent>(event: E): E {
   if (event.exception?.values) {
     scrubbed.exception = {
       ...event.exception,
-      values: event.exception.values.map((value) =>
-        value.value === undefined
-          ? value
-          : { ...value, value: scrubText(value.value) },
-      ),
+      values: event.exception.values.map((value) => {
+        const kept = { ...value };
+        if (kept.value !== undefined) kept.value = scrubText(kept.value);
+        // Locals at a throw site hold payloads, tokens and form input.
+        if (kept.stacktrace?.frames)
+          kept.stacktrace = {
+            ...kept.stacktrace,
+            frames: kept.stacktrace.frames.map((frame) => {
+              const bare = { ...frame };
+              delete bare.vars;
+              return bare;
+            }),
+          };
+        return kept;
+      }),
     };
   }
 

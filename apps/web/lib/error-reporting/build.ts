@@ -7,13 +7,6 @@
 
 import type { SentryBuildOptions } from "@sentry/nextjs/config";
 
-/**
- * Browser events go through this route on the app's own origin, so an ad
- * blocker does not drop them. A fixed path, so proxy.ts's matcher can leave
- * it out (the devs_call: tunnel on).
- */
-export const TUNNEL_ROUTE = "/monitoring";
-
 export type ErrorReportingBuild = {
   deployed: boolean;
   authToken: string | undefined;
@@ -39,7 +32,11 @@ export function sentryBuildOptions(
       : {}),
     telemetry: false,
     silent: !upload,
-    tunnelRoute: TUNNEL_ROUTE,
+    // The devs_call: tunnel off. Sentry's tunnel rewrite forwards to whichever
+    // org and project the caller's query names, so it would relay anyone's
+    // events through this origin; browser events go to Sentry's ingest
+    // directly, and an ad blocker may drop some.
+    tunnelRoute: false,
     sourcemaps: { disable: !upload, deleteSourcemapsAfterUpload: true },
     release: {
       ...(build.release ? { name: build.release } : {}),
