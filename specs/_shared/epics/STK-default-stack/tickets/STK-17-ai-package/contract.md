@@ -17,7 +17,12 @@ cites:
   - "D-STK-16"
   - "D-STK-13"
 truth_files: "none: no living UX file covers the starter's own stack"
-reviewers: []
+reviewers:
+  - assay
+  - mason
+  - threshold
+  - vigil
+  - warden
 planned_paths:
   - "packages/ai/**"
   - "apps/web/app/api/ai/**"
@@ -50,6 +55,27 @@ criteria:
     statement: "Types and build pass with the streaming route mounted."
     evidence: check
     command: "yarn verify"
+  - id: review:assay
+    statement: Assay reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run assay <id>
+  - id: review:mason
+    statement: Mason reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run mason <id>
+  - id: review:threshold
+    statement: Threshold reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run threshold <id>
+  - id: review:vigil
+    statement: Vigil reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run vigil <id>
+  - id: review:warden
+    statement: Warden reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
+tier: 2
 ---
 
 # Contract — STK-17 ai-package
