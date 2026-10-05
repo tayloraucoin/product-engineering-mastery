@@ -22,4 +22,4 @@
 
 ## Next
 
-Merge this branch into `agent/STK-3`. The other thread's uncommitted PR-16 run lock there also moves `writeResults` into the loop, so expect a conflict in `run()` and `contract-run.test.ts`; keep both: the lock, and this rename and header reading.
+`agent/STK-3` is merged into this branch (`0b14d59`, conflicts resolved keeping PR-16's run lock and frozen proofs beside this rename and header reading), and WEB-3 is re-proven at the merged head. `agent/STK-3` fast-forwards to this branch.
