@@ -15,7 +15,7 @@ const meta = {
         "ui.shadcn.com/r/styles/base-vega/button.json, shadcn 4.21.0 (read 2026-10-04)",
       licence: "MIT",
       adapted:
-        "cva in button.variants.ts; cn from the package; shadow-control; colour transitions on the motion tokens; the house radius for xs and sm",
+        "cva in button.variants.ts; cn from the package; shadow-resting; colour transitions on the motion tokens; the house radius for xs and sm",
     },
   },
 } satisfies Meta<typeof Button>;
@@ -36,7 +36,7 @@ export const Secondary: Story = { args: { variant: "secondary" } };
 
 export const Ghost: Story = { args: { variant: "ghost" } };
 
-/** Destructive is a tinted label, not a filled red block (CS-11 roles). */
+/** Destructive is a tinted label, not a filled red block; the audit holds the label on its tint (CAT-2). */
 export const Destructive: Story = {
   args: { variant: "destructive", children: "Delete record" },
 };
@@ -89,8 +89,16 @@ export const Icon: Story = {
   },
 };
 
+export const IconExtraSmall: Story = {
+  args: { ...Icon.args, size: "icon-xs" },
+};
+
 export const IconSmall: Story = {
   args: { ...Icon.args, size: "icon-sm" },
+};
+
+export const IconLarge: Story = {
+  args: { ...Icon.args, size: "icon-lg" },
 };
 
 export const Hover: Story = { parameters: { pseudo: { hover: true } } };

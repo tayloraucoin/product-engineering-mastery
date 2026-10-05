@@ -2,7 +2,7 @@ import { cva } from "class-variance-authority";
 
 /**
  * shadcn's Vega button (base-vega, shadcn 4.21.0, read 2026-10-04), mapped
- * onto house tokens: `shadow-control` for the outline's lift (CS-11), colour
+ * onto house tokens: `shadow-resting` for the outline's lift (CS-11), colour
  * transitions on the hover motion tokens (CS-12, tk-motion), and the house
  * radius in place of Vega's `min(--radius-md, 8px)` caps.
  *
@@ -16,7 +16,7 @@ export const buttonVariants = cva(
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/80",
         outline:
-          "border-border bg-background shadow-control hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
+          "border-border bg-background shadow-resting hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
         ghost:
