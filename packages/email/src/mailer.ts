@@ -30,7 +30,10 @@ export type MailerConfig = {
   apiKey?: string;
   /** `EMAIL_FROM`: an address on a domain verified in Resend; `brand.contact.email` when unset. */
   fromAddress?: string;
-  /** Whether this process runs in a deployment (`isDeployed` from @pem/env/site-url), never set by hand. */
+  /**
+   * Whether this process may be serving real users: a deployment or a
+   * production build (`productionRuntime` in apps/web/env.ts), never set by hand.
+   */
   deployed: boolean;
 };
 
@@ -60,7 +63,12 @@ export type Mailer = { send(message: EmailMessage): Promise<SendResult> };
 
 /** `"Name <address>"`, the form Resend reads for a sender with a display name. */
 export function formatSender(name: string, address: string): string {
-  return `${name.replace(/["<>]/g, "")} <${address}>`;
+  return `${singleLine(name).replace(/["<>]/g, "")} <${singleLine(address)}>`;
+}
+
+/** A header value on one line: CR and LF become spaces, so no value can add a header. */
+export function singleLine(value: string): string {
+  return value.replace(/[\r\n]+/g, " ").trim();
 }
 
 /** The first letter, `***` and the domain: enough to tell recipients apart in a local log, never the address. */
@@ -97,7 +105,7 @@ export function createMailer(
         log.warn("email.withheld", {
           tier: config.tier,
           reason:
-            "DATABASE_ENVIRONMENT is local on a deployment, so the message is neither sent nor logged",
+            "DATABASE_ENVIRONMENT is local in a deployment or production build, so the message is neither sent nor logged",
           recipientCount: to.length,
         });
         return { status: "withheld" };
@@ -130,6 +138,12 @@ export function createMailer(
         throw new Error(
           `Resend refused the message: ${error?.message ?? "no id returned"}`,
         );
+      log.info("email.sent", {
+        tier: config.tier,
+        id: data.id,
+        recipientCount: to.length,
+        ...("template" in part ? { templateId: part.template.id } : {}),
+      });
       return { status: "sent", id: data.id };
     },
   };

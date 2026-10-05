@@ -6,7 +6,12 @@ import { test } from "node:test";
 import { brand } from "@pem/brand/brand";
 import type { LogFields, Logger } from "@pem/observability/logger";
 
-import { createMailer, maskAddress, type SendEmail } from "./mailer.ts";
+import {
+  createMailer,
+  formatSender,
+  maskAddress,
+  type SendEmail,
+} from "./mailer.ts";
 
 const content = {
   subject: "Synthetic subject",
@@ -190,4 +195,29 @@ test("C1: a deployment left on the local tier neither sends nor logs the body", 
     "person@",
   ])
     assert.ok(!logged.includes(leak), leak);
+});
+
+test("C1: a send logs its Resend id and recipient count, never the address or body", async () => {
+  const vendor = fakeVendor();
+  const { lines, logger } = memoryLogger();
+  const mailer = createMailer(
+    { tier: "production", deployed: true, apiKey: "re_synthetic" },
+    { sendEmail: vendor.sendEmail, logger },
+  );
+
+  await mailer.send({ to: "person@example.test", content });
+
+  assert.equal(lines[0]?.event, "email.sent");
+  assert.equal(lines[0]?.fields?.id, "email_synthetic");
+  assert.equal(lines[0]?.fields?.recipientCount, 1);
+  const logged = JSON.stringify(lines);
+  for (const leak of ["person@", "Synthetic heading", "Synthetic subject"])
+    assert.ok(!logged.includes(leak), leak);
+});
+
+test("formatSender keeps a display name and address on one line", () => {
+  assert.equal(
+    formatSender('Brand "X"\r\nBcc: a', "mail@example.test\n"),
+    "Brand X Bcc: a <mail@example.test>",
+  );
 });

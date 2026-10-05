@@ -120,7 +120,8 @@ function renderText(content: DefaultEmail, actionUrl?: string): string {
 export function renderDefaultEmail(content: DefaultEmail): RenderedEmail {
   const actionUrl = content.action ? safeUrl(content.action.url) : undefined;
   return {
-    subject: content.subject,
+    // A subject is a header: one line, so no caller value can add a header.
+    subject: content.subject.replace(/[\r\n]+/g, " ").trim(),
     html: renderHtml(content, actionUrl),
     text: renderText(content, actionUrl),
   };

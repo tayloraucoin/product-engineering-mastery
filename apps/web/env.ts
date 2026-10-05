@@ -26,6 +26,7 @@ const LOCAL_ORIGIN = "http://localhost:3000";
 const raw = {
   DATABASE_ENVIRONMENT: process.env.DATABASE_ENVIRONMENT,
   VERCEL_ENV: process.env.VERCEL_ENV,
+  NODE_ENV: process.env.NODE_ENV,
   EXAMPLE_API_KEY: process.env.EXAMPLE_API_KEY,
   EXAMPLE_API_KEY_LOCAL: process.env.EXAMPLE_API_KEY_LOCAL,
   EXAMPLE_API_KEY_STAGING: process.env.EXAMPLE_API_KEY_STAGING,
@@ -61,6 +62,13 @@ const tier = parseTier(raw.DATABASE_ENVIRONMENT);
 
 /** Whether this process runs in a Vercel deployment: derived from the platform, never set (D-STK-3). */
 export const deployed = isDeployed(raw.VERCEL_ENV);
+
+/**
+ * Whether this process may be serving real users: a Vercel deployment, or any
+ * production build (`next start`, another host), where VERCEL_ENV is absent.
+ * A guard that must hold off Vercel reads this, not `deployed`.
+ */
+export const productionRuntime = deployed || raw.NODE_ENV === "production";
 
 /** The site URL for this tier: localhost whenever the code runs outside a deployment. */
 const siteUrl = resolveSiteUrl({
