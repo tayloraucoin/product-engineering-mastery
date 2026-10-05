@@ -3,7 +3,7 @@ title: "Branches, in plain language"
 description: "Read when the prompt builder asks whether work should stay on the current branch or get its own, or when someone who does not write code needs to know what a branch, a pull request and a merge mean here."
 layer: workflows
 status: draft
-thread: PR-18
+thread: PR-19
 role: Usher
 date: 2026-10-05
 last_reviewed: 2026-10-05

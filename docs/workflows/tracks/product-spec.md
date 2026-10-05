@@ -3,7 +3,7 @@ title: "Track: product spec only"
 description: "Read when a product lead is preparing work to hand to developers: the UX spec alone, or the spec plus UI and basic function, ending in a ticket the developer can start from."
 layer: workflows
 status: draft
-thread: PR-18
+thread: PR-19
 role: Usher
 date: 2026-10-05
 last_reviewed: 2026-10-05

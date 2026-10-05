@@ -3,7 +3,7 @@ title: "Stage: Tickets"
 description: "Open at an epic's tickets level, to cut the approved spec into contracts a build thread can build from the ticket alone, grouped into batches and waves, each with its own QA level, reviewers and focus for the operator to confirm."
 layer: workflows
 status: draft
-thread: PR-18
+thread: PR-19
 role: Usher
 date: 2026-10-05
 last_reviewed: 2026-10-05

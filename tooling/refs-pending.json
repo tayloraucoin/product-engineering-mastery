@@ -14,6 +14,8 @@
   ".claude/skills/shadcn/": "lands in P-C",
   ".claude/skills/tk-motion/references/law.md": "lands in P-C",
   ".claude/skills/tk-ui-code-lint/SKILL.md": "lands in P-C",
+  "/tk-kickoff": "retired by PR-19; stale ledger text (PR-13)",
+  "/tk-close": "retired by PR-19; stale ledger text (PR-13)",
   "/tk-ui-critic": "lands in P-C",
   "/tk-ui-diverge": "lands in P-C",
   "docs/references/practitioners/": "lands in P-D",

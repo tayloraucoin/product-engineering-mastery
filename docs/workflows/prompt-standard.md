@@ -3,7 +3,7 @@ title: "The prompt standard: what every printed prompt carries"
 description: "Read before writing or checking any prompt that opens a thread, by the prompt builder, a stage file or a person: the checklist a prompt must pass, the forecast printed with it, and the kickoff block for build threads."
 layer: workflows
 status: draft
-thread: PR-18
+thread: PR-19
 role: Usher
 date: 2026-10-05
 last_reviewed: 2026-10-05

@@ -15,6 +15,19 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-05 — PEM: one front door, eight tracks, QA levels (PR-19)
+
+Taylor: two days of the contract loop cost most of two days and a quarter of a week's tokens for work he expected to take hours; the system must be faster than not using it or nobody will adopt it. An audit of `agent/STK-3` found 343 of 425 commits touching `specs/` against 108 touching product code, about 70 commits that only re-proved, and up to six fresh-context reviewers on one small ticket. The cause was proofs bound to file hashes in a checkout many threads share, and reviewers assigned by file glob.
+
+- **The front door.** `docs/workflows/prompt-builder.md` is where every piece of work starts. It interviews the operator once, through the question tool, with no cap on questions: the track, the cast, the QA level and reviewers, any part needing a deeper look, the pace, the involvement, the branch, whether to make a ticket, outside attachments, and the track's own questions. It prints the prompt, a forecast (estimates) and a block per research thread. It saves nothing. Tiny work takes a fast lane.
+- **Tracks.** `docs/workflows/tracks/`: epic, one-off, feature exploration, product spec only, bug, question or report, audit, new project. `epic.md` and `one-off.md` moved there. Tracks share the stage files where a stage is the same. A one-off no longer needs an existing UX file.
+- **QA levels.** `docs/workflows/qa-levels.md`: Q0 to Q3 set proof, review and paperwork together. The operator confirms the level and the reviewers; an epic sets them per ticket in one table at the Tickets gate; a `focus` line raises one named part. Reviews and audits share five flags (black, red, orange, yellow, grey). This replaces the computed tiers of PR-15.
+- **The always-loaded rules.** `AGENTS.md`'s work loop is rewritten around the builder, the tracks and the levels; "every change is a ticket with a contract" is gone, as are the phase line and the built-as-of line; the design-layer files are named as absent in this repo. `CLAUDE.md` narrows plan mode to the canon, the index, package boundaries and `docs/decisions/records/`. `.claude/rules/specs.md` follows.
+- **Skills.** `tk-prompt` is model-invocable; `tk-batch` is shortened and no longer re-proves other tickets (this reverses that line of PR-16); `tk-kickoff`, `tk-close` and `tk-contract` are retired.
+- **Changing the practice** now asks for a changelog entry, a ledger line only for a ruling others will cite, and a record only for a choice that is hard to undo.
+- **Also new:** `docs/workflows/branches.md`, a plain-language guide to the branch question.
+- **Not yet done:** the tooling still computes tiers and keeps a `results.json` for every ticket; `.claude/rules/specs.md` carries one bridging line until that changes. The exploration track's access gate and results view are not built.
+
 ## 2026-10-05 — PEM: a reference for every check, hook and script
 
 Taylor found `tooling/` hard to navigate and could not judge which checks earn their cost. New: `docs/engineering/tooling.md`. It has one entry per script in `package.json`, per file in `tooling/` and per agent or git hook. Each entry is scored 0–7 on importance, token cost, wall time and how standard it is, and ends in a verdict; a weakest-first table closes the file.

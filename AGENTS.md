@@ -5,21 +5,21 @@ The canonical instructions for every agent (Claude Code, Cursor, Codex). `CLAUDE
 ## Start here
 
 1. **What this is:** a universal product-engineering toolkit and the repo that proves it. The practice (roles, design canon, templates, decisions, workflows, prompts) lives in `docs/`; `apps/web` is the demo app that holds every template's filled example and is the critic's target; `apps/docs` renders `docs/` in a browser. No product lives here.
-2. **Current phase:** PJ, the engineering layer (`docs/prompts/archive/phases/engineering-layer.md`), on `agent/PJ`; Phase 3 (`demo-app-and-skills.md`) then builds the demo through the work loop. Until then `apps/web` is a single page.
+2. **Current work:** the starter's default stack (STK) and component catalog (CAT) epics. Live state is `specs/_status.md`.
 3. **Read [`docs/index.md`](docs/index.md) first, every session.** It is the map: the layers, the precedence ladder, what loads always, by path, by trigger and never, and the token budget.
-4. **Before any UI work, read [`docs/design/canon.md`](docs/design/canon.md)** and the product's design layer: `DESIGN.md`, `tokens.md`, `components.md`, `anti-patterns.md`, `states.md`, `coverage-gaps.md` (in the demo: `apps/web/docs/design/`). In Claude Code, `.claude/rules/ui.md` also fires on UI files.
+4. **Before any UI work, read [`docs/design/canon.md`](docs/design/canon.md)** and, when the product has one, its design layer (`DESIGN.md`, `tokens.md`, `components.md`, `anti-patterns.md`, `states.md`, `coverage-gaps.md` under `apps/<app>/docs/design/`; this repo has none yet). In Claude Code, `.claude/rules/ui.md` also fires on UI files.
 5. **State the exact file paths before implementing.** Placement is decided by one question, who imports this ([`docs/engineering/codebase-conventions.md`](docs/engineering/codebase-conventions.md) §1).
 6. **Verify the way CI does:** `yarn verify`.
 
 ## Work loop
 
-- **Every change is a ticket with a contract**, started by `yarn contract:init`: testable criteria, each with an evidence type; the planned paths; the one UX surface it cites; Build notes that say what to build. The default ticket is under half a day.
-- **Asked to build tickets, take them to closed yourself** (`tk-batch`; no slash command needed): start, build, prove, fix and re-prove, as-built, review by tier, one `yarn verify`, a report of six lines at most. You run every command, re-prove any stale proof and decide what is reversible. Taylor gets only what a person alone can do (PR-16): a choice that cannot be undone, money, growing scope, a credential, a protected file, the merge. Never hand Taylor a `yarn` command.
-- **The tier sets the QA** (PR-15): 0 docs, checks only; 1 code, one review per batch; 2 a one-way door, pre-flight and reviewers on the ticket.
-- **One-off or epic is decided by the routing rule in [`docs/workflows/README.md`](docs/workflows/README.md), never by size:** more than one ticket, a new surface, no living UX file, or an unsettled problem makes an epic.
-- **Done is `results.json` plus `as-built.md`, never a claim in chat.** Only `yarn contract:run`, `contract:record`, `contract:tier` and `review:run` write results. Taylor reads a tier 2 ticket's `review-<role>.md` before merge.
-- **`specs/<app>/ux/` is the living truth** of how the app works now. An epic proposes changes in its own `ux/`; shipping promotes them.
-- **Built as of 2026-10-02:** the contract loop and `status` (J5); the Stop check and the SessionStart line (J6); `/tk-contract`, `tk-kickoff`, `tk-close`, `tk-batch` and `vigil` (J7, PR-15). **Lands later:** `yarn pr:body` (J8), the map's other skills (P-C). Delete this line at J8.
+- **Work starts at the prompt builder** ([`docs/workflows/prompt-builder.md`](docs/workflows/prompt-builder.md), `tk-prompt`): it settles the track, cast, QA level, pace, involvement and branch with the operator, then prints the prompt. Handed work with no prompt and no ticket, run the builder first; tiny work takes its fast lane.
+- **The track sets the path** ([`docs/workflows/tracks/`](docs/workflows/tracks/README.md)). A ticket and contract exist when the track or the operator calls for one (`yarn contract:init`); otherwise the prompt is the brief.
+- **The QA level sets proof, review and paperwork** ([`docs/workflows/qa-levels.md`](docs/workflows/qa-levels.md)). Q0: nothing extra. Q1: run the criteria, one `yarn verify`. Q2: plus one fresh-context reviewer, findings in the thread. Q3 (money, auth, schema, personal data, agent permissions): recorded proofs in `results.json`, written only by tooling, the specialists the operator confirmed, review files kept. Flag a critical path below Q3 once. Raise any named part when the operator asks.
+- **Take the work to done yourself** (`tk-batch` for tickets): build, prove, fix and prove again, review at the level, one `yarn verify`, a report of six lines at most. You run every command and decide what is reversible; stop only as the chosen involvement says. The operator gets what a person alone can do: a choice that cannot be undone, money, growing scope, a credential, a protected file, the merge. Never hand the operator a command to run.
+- **Stay in your own work.** Never re-prove, re-review or commit another ticket's files; a commit to a shared file reopens nothing.
+- **Never filed:** prompt files, evidence logs, review files below Q3.
+- **`specs/<app>/ux/` is the living truth** of how the app works now. Work that changes behaviour updates it in the same change; an epic proposes in its own `ux/` and shipping promotes it.
 
 ## Commands
 

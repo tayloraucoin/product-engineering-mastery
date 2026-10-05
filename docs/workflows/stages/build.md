@@ -3,7 +3,7 @@ title: "Stage: Build"
 description: "Open for a build thread, one ticket or a batch, with or without a formal ticket: the QA level sets the proof, the review and the paperwork, and the thread ends on a short report."
 layer: workflows
 status: draft
-thread: PR-18
+thread: PR-19
 role: Usher
 date: 2026-10-05
 last_reviewed: 2026-10-05

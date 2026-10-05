@@ -3,7 +3,7 @@ title: "Track: question or report"
 description: "Read when the output is an answer or a document and not a change to the product: a quick question about the code or the practice, or a formal report for a named audience."
 layer: workflows
 status: draft
-thread: PR-18
+thread: PR-19
 role: Usher
 date: 2026-10-05
 last_reviewed: 2026-10-05

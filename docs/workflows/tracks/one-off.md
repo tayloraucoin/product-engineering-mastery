@@ -3,7 +3,7 @@ title: "Track: the one-off"
 description: "Read when a piece of work is one buildable change with a known outcome, or when teaching someone the day-to-day loop: brain dump, one build thread, a short report."
 layer: workflows
 status: draft
-thread: PR-18
+thread: PR-19
 role: Usher
 date: 2026-10-05
 last_reviewed: 2026-10-05

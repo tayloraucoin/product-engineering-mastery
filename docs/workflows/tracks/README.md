@@ -3,7 +3,7 @@ title: "Tracks"
 description: "Open to see the kinds of work the prompt builder routes to and how to tell them apart: each track file names when it applies, its stages, cast, default QA level, what it writes, its interview questions and how it ends."
 layer: workflows
 status: draft
-thread: PR-18
+thread: PR-19
 role: Usher
 date: 2026-10-05
 last_reviewed: 2026-10-05

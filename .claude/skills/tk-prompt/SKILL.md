@@ -1,10 +1,9 @@
 ---
 name: tk-prompt
-description: "Turn a brain dump into the first prompt for a new thread, routed as a one-off or an epic, with the cast, the files and the venue, checked against the prompt standard. Manual: run it as /tk-prompt."
-disable-model-invocation: true
-argument-hint: <what you want built or changed, in your own words>
+description: "The front door for new work. Use when someone describes work to start that has no ticket and no prompt yet (a feature, a fix, a bug report, an exploration, a spec to hand off, an audit, a report, a new project), or asks to build or write a prompt. Do not use for a question you can answer directly, for named tickets (tk-batch), or inside a thread already running from a builder prompt."
+argument-hint: <what you want done, in your own words>
 ---
 
-Read `docs/workflows/prompt-builder.md` and follow it exactly, for this one reply, with the brain dump below as the input. Print the prompt and the filled checklist from `docs/workflows/prompt-standard.md`, then the one closing line. Write no file except an existing epic's `prompts/NN-<stage>.md`.
+Read `docs/workflows/prompt-builder.md` and follow it exactly, with the brain dump below as the input. Ask its interview through the question tool, in as many rounds as the work needs. Then print the prompt, the forecast and any research blocks. Write no file.
 
 Brain dump: $ARGUMENTS

@@ -20,7 +20,7 @@ The rules people and agents build by, a library loaded on demand, and a demo app
 | Layer         | Where                                      | What it is                                                                                                              | Loads                                                     |
 | ------------- | ------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
 | Agent context | `AGENTS.md`, `CLAUDE.md`, `.claude/rules/` | What every agent is told: commands, boundaries, the work loop, path rules | always / by path |
-| Workflows     | `docs/workflows/`                          | How work moves, for people: one-offs, epics, stages, gates, the prompt builder | on request; people start here |
+| Workflows     | `docs/workflows/`                          | How work moves: the prompt builder (the front door), `tracks/`, shared `stages/`, QA levels, branches | the builder when work starts; the rest on request |
 | Decisions     | `docs/decisions/`                          | Why the rules are what they are: `ledger.md` (index), `records/`, `conflicts.md`, `changelog.md` | grep on demand |
 | Roles         | `docs/roles/<department>/`                 | Who does the work: one prompt per seat; `.claude/agents/` is generated from them | injected, or as a subagent |
 | Design        | `docs/design/`                             | What UI is built and judged by: Recipe A (`README.md`), `workflow.md`, `skills.md`, `canon.md`, `canon-rubric.md`, `templates/` | by path on UI files |
@@ -30,7 +30,7 @@ The rules people and agents build by, a library loaded on demand, and a demo app
 | Runbooks      | `docs/runbooks/`                           | Procedures a person follows: onboard-agent, variant testing, release, postmortem | on request |
 | References    | `docs/references/`                         | The distilled library: `README.md` router; laws-of-ux, canons, practitioners, books; `_meta/` | by router, at most 3 files |
 | Skills        | `.claude/skills/`                          | Procedures an agent runs: `tk-ui-critic`, `tk-ui-diverge`, `tk-motion`, `tk-ui-code-lint`, `shadcn`; `REGISTRY.md` | listing always; body on trigger |
-| Prompts       | `docs/prompts/`                            | What you paste into a thread: shared context, phase primers, threads to commission | injected by you |
+| Prompts       | `docs/prompts/`                            | Prompts kept for reuse: shared context, `research/` threads to commission; `archive/` is history | injected by you |
 | Research      | `docs/research/`                           | The bookshelf: thread outputs, byte for byte, by topic | never (A11: one labelled file in a Frame, Research or UX prompt) |
 | Demo          | `apps/web/`                                | The filled example of every template; the critic's target | when working in the demo |
 
@@ -72,6 +72,6 @@ A product's own design layer gets about 1,700 of the 5,000; `canon.md` takes the
 ## Changing the practice
 
 - Amend the file.
-- Add a ledger line and a `changelog.md` entry. Add a record in `records/` only if the reason needs more than one line.
+- Add a `changelog.md` entry; a ledger line only for a ruling others will cite; a record in `records/` only for a choice that is hard to undo.
 - Nothing lives in two places.
 - Prune monthly, using the deletion test on every always-on line. Re-run the critic calibration and the trigger tests at every model upgrade.

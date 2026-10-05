@@ -3,7 +3,7 @@ title: "Track: feature exploration"
 description: "Read when the work is early product thinking: trying directions, showing them to clients or teammates and collecting what they say, before anything is committed to the product."
 layer: workflows
 status: draft
-thread: PR-18
+thread: PR-19
 role: Usher
 date: 2026-10-05
 last_reviewed: 2026-10-05

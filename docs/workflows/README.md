@@ -3,7 +3,7 @@ title: "How work moves: the system map"
 description: "Read first when you are new to the toolkit or need to explain it to someone: the five systems, the front door, the tracks, the QA levels, and where every file of a piece of work lives."
 layer: workflows
 status: draft
-thread: PR-18
+thread: PR-19
 role: Usher
 date: 2026-10-05
 last_reviewed: 2026-10-05
@@ -15,7 +15,7 @@ load_when: on request
 
 > **The whole thing in one breath.** Every piece of work starts at one front door: you describe it, the prompt builder asks what it needs to know once, and prints a prompt for a new thread. The track decides what happens next, the QA level decides how carefully it is checked, and the thread finishes on its own and tells you in a few lines what needs you.
 
-> **State as of 2026-10-05 (PR-18).** The workflow layer on this page is in force. The tooling still computes the older tiers (0, 1, 2) until the tooling change lands; read tier 0 as Q1 for docs, tier 1 as Q1 or Q2, tier 2 as Q3.
+> **State as of 2026-10-05 (PR-19).** The workflow layer on this page is in force. The tooling still computes the older tiers (0, 1, 2) until the tooling change lands; read tier 0 as Q1 for docs, tier 1 as Q1 or Q2, tier 2 as Q3.
 
 ## The game you're playing
 

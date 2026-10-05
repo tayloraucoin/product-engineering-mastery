@@ -3,7 +3,7 @@ title: "The prompt builder: the front door of every piece of work"
 description: "Attach, or run as /tk-prompt, whenever work is about to start: it interviews the operator, settles the track, the cast, the QA level, the pace, the involvement and the branch, then prints the prompt, what to expect, and any research prompts. It saves nothing."
 layer: workflows
 status: draft
-thread: PR-18
+thread: PR-19
 role: Usher
 date: 2026-10-05
 last_reviewed: 2026-10-05

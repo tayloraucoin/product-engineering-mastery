@@ -3,7 +3,7 @@ title: "Track: new project"
 description: "Read when the boilerplate is being duplicated for a new product: the builder runs the expanded set-up interview and hands the work to the new-project runbook."
 layer: workflows
 status: draft
-thread: PR-18
+thread: PR-19
 role: Usher
 date: 2026-10-05
 last_reviewed: 2026-10-05
