@@ -30,6 +30,5 @@ export function handlerFor(
 ): ((event: Stripe.Event) => Promise<void>) | undefined {
   if (!Object.hasOwn(handlers, event.type)) return undefined;
   return handlers[event.type] as
-    | ((event: Stripe.Event) => Promise<void>)
-    | undefined;
+    ((event: Stripe.Event) => Promise<void>) | undefined;
 }

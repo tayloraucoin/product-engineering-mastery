@@ -42,12 +42,8 @@
           "tableFrom": "users",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -59,18 +55,14 @@
           "name": "users_select_owner_or_admin",
           "as": "PERMISSIVE",
           "for": "SELECT",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(\"users\".\"id\" = nullif(current_setting('app.user_id', true), '')::uuid or coalesce(current_setting('app.user_role', true), '') = 'admin')"
         },
         "users_update_owner": {
           "name": "users_update_owner",
           "as": "PERMISSIVE",
           "for": "UPDATE",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "\"users\".\"id\" = nullif(current_setting('app.user_id', true), '')::uuid",
           "withCheck": "\"users\".\"id\" = nullif(current_setting('app.user_id', true), '')::uuid"
         },
@@ -78,18 +70,14 @@
           "name": "users_insert_denied",
           "as": "PERMISSIVE",
           "for": "INSERT",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "withCheck": "false"
         },
         "users_delete_denied": {
           "name": "users_delete_denied",
           "as": "PERMISSIVE",
           "for": "DELETE",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "false"
         }
       },
@@ -156,12 +144,8 @@
           "name": "notes_owner_id_users_id_fk",
           "tableFrom": "notes",
           "tableTo": "users",
-          "columnsFrom": [
-            "owner_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["owner_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -173,27 +157,21 @@
           "name": "notes_select_owner",
           "as": "PERMISSIVE",
           "for": "SELECT",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "\"notes\".\"owner_id\" = nullif(current_setting('app.user_id', true), '')::uuid"
         },
         "notes_insert_owner": {
           "name": "notes_insert_owner",
           "as": "PERMISSIVE",
           "for": "INSERT",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "withCheck": "\"notes\".\"owner_id\" = nullif(current_setting('app.user_id', true), '')::uuid"
         },
         "notes_update_owner": {
           "name": "notes_update_owner",
           "as": "PERMISSIVE",
           "for": "UPDATE",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "\"notes\".\"owner_id\" = nullif(current_setting('app.user_id', true), '')::uuid",
           "withCheck": "\"notes\".\"owner_id\" = nullif(current_setting('app.user_id', true), '')::uuid"
         },
@@ -201,9 +179,7 @@
           "name": "notes_delete_owner",
           "as": "PERMISSIVE",
           "for": "DELETE",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "\"notes\".\"owner_id\" = nullif(current_setting('app.user_id', true), '')::uuid"
         }
       },
@@ -256,9 +232,7 @@
           "name": "stripe_events_all_denied",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "false",
           "withCheck": "false"
         }
