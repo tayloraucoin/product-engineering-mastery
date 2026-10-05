@@ -59,7 +59,9 @@ export const Outgoing: Story = {
     <Message align="end" className="w-96">
       <MessageContent>
         <Bubble>
-          <BubbleContent>Thursday works. I'll send a new invite.</BubbleContent>
+          <BubbleContent>
+            Thursday works. I will send a new invite.
+          </BubbleContent>
         </Bubble>
         <MessageFooter>Read 9:43</MessageFooter>
       </MessageContent>
