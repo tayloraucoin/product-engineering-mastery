@@ -15,6 +15,10 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-04 — STK-11: the local database's network exposure, accepted
+
+STK-11 moved `yarn db:local` from STK-9's `docker run`, which bound `127.0.0.1:54322`, to the Supabase CLI that D-STK-6 names. The CLI (2.119.0) publishes the database port on every interface and has no setting to change that. The local database therefore answers on the network with the password `postgres`, and in Mode A it holds the emails of staging users the mirror copies. Taylor accepted this on 2026-10-04 (ledger EN-13). The controls: `db:local` and `db:local:full` warn whenever the port is bound to anything but loopback; `new-project.md` step 6 and the `tech-stack.md` image row name Docker's `"ip": "127.0.0.1"` daemon setting; and `yarn db:stop --no-backup` wipes the mirrored emails.
+
 ## 2026-10-04 — CAT: the batch review of CAT-2 to CAT-4
 
 A `vigil` review (`specs/_shared/epics/CAT-component-catalog/_batch-review-2026-10-04.md`) found four Blocking items, all fixed: the token lint missed `_`-joined literals (B1); the chart roles were missing under `.dark` (B2); check-catalog passed a conflicting tag or a wrong licence (B3); the destructive Button's label sat at 3.99:1 on its tint (B4), which contrast-audit could not see until it learned to composite a tinted background. The destructive step moved to red-800 in light and red-300 in dark, and all 42 pairs pass. The lint now also rejects other absolute units, any unit case, bare colour names and font families (CS-13 amended). Elevation takes the canon's own closed scale, resting, raised, overlay, modal (CS-11 amended; C-P06 already named it). Canon C-P06's "Enforced by" line now says which arbitrary values the lint bans. Record 0011 gains an amendment block.
