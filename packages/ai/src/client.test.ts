@@ -12,6 +12,7 @@ import type { UIMessage } from "ai";
 import type { LogFields, Logger } from "@pem/observability/logger";
 
 import {
+  AiChatRejectedError,
   AiInputTooLongError,
   aiMode,
   AiNotConfiguredError,
@@ -243,6 +244,31 @@ test("a text over its case's input cap is refused before any model is called, an
   }
   assert.equal(calls.length, 0);
   // The spend record counts only calls that could spend (STK-26).
+  assert.deepEqual(
+    lines.filter((line) => line.event === "vendor"),
+    [],
+  );
+});
+
+test("a transcript passed to streamChat without the gate is refused before any model is called, and logs no [ai] vendor line", async () => {
+  const { calls, fetch } = fakeFetch();
+  const { lines, logger } = memoryLogger();
+  const ai = createAi(
+    { ...LOCAL, apiKey: "sk-ant-synthetic" },
+    { fetch, logger },
+  );
+  const tooMany = Array.from({ length: 41 }, (_, i) => ({
+    ...userMessage("hello"),
+    id: `m${i}`,
+  }));
+  await assert.rejects(ai.streamChat(tooMany), AiChatRejectedError);
+  await assert.rejects(
+    ai.streamChat([
+      { id: "s", role: "system", parts: [{ type: "text", text: "x" }] },
+    ]),
+    AiChatRejectedError,
+  );
+  assert.equal(calls.length, 0);
   assert.deepEqual(
     lines.filter((line) => line.event === "vendor"),
     [],

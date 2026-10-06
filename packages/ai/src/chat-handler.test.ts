@@ -199,6 +199,8 @@ test("past the per-user window a vendor call is 429, before any model is called;
   assert.equal(limited.headers.get("retry-after"), "60");
   assert.equal(calls.length, before);
   assert.ok(lines.some((line) => line.event === "chat.limited"));
+  // Only the two admitted calls are in the spend record.
+  assert.equal(lines.filter((line) => line.event === "vendor").length, 2);
   advance(60_000);
   const reopened = await handler(post(chat));
   assert.equal(reopened.status, 200);
@@ -206,12 +208,13 @@ test("past the per-user window a vendor call is 429, before any model is called;
 });
 
 test("a refused request does not use the window", async () => {
-  const { handler } = setup(KEYED, "user-synthetic", {
+  const { lines, handler } = setup(KEYED, "user-synthetic", {
     requests: 1,
     windowMs: 60_000,
   });
   for (let i = 0; i < 3; i += 1)
     assert.equal((await handler(post({}))).status, 400);
+  assert.equal(lines.filter((line) => line.event === "vendor").length, 0);
   const response = await handler(post(chat));
   assert.equal(response.status, 200);
   await response.text();

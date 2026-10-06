@@ -64,6 +64,14 @@ export type AiDeps = {
 const NOT_CONFIGURED =
   "AI is not configured: set ANTHROPIC_API_KEY for this tier (packages/ai/README.md).";
 
+/** A chat transcript `parseChatRequest` refuses, passed to `streamChat` directly. */
+export class AiChatRejectedError extends Error {
+  constructor(reason: string) {
+    super(`chat: ${reason}`);
+    this.name = "AiChatRejectedError";
+  }
+}
+
 export class AiNotConfiguredError extends Error {
   constructor() {
     super(NOT_CONFIGURED);
@@ -78,7 +86,7 @@ export type Ai = {
   mode: AiMode;
   extractContact(text: string, options?: CallOptions): Promise<Contact>;
   summarize(text: string, options?: CallOptions): Promise<string>;
-  /** A streamed UI message response; pass messages that `parseChatRequest` returned. */
+  /** A streamed UI message response. The transcript is checked again here, so a caller that skips `parseChatRequest` is refused with AiChatRejectedError before any model is called. */
   streamChat(messages: UIMessage[], options?: CallOptions): Promise<Response>;
 };
 
@@ -119,9 +127,8 @@ export function createAi(config: AiConfig, deps: AiDeps = {}): Ai {
     throw new AiNotConfiguredError();
   }
 
-  // The input cap is checked before modelFor writes `[ai] vendor`; a text the
-  // case refuses is never logged as spend. The chat's gate is parseChatRequest,
-  // which the handler runs before streamChat.
+  // Every case's input check runs before modelFor writes `[ai] vendor`; an
+  // input the case refuses is never logged as spend.
   return {
     mode,
     extractContact: async (text, options) => {
@@ -132,8 +139,16 @@ export function createAi(config: AiConfig, deps: AiDeps = {}): Ai {
       checkInput("generate", text);
       return summarize(modelFor("generate", options), text);
     },
-    streamChat: async (messages, options) =>
-      streamChat(modelFor("chat", options), messages, logger, options),
+    streamChat: async (messages, options) => {
+      const parsed = await parseChatRequest({ messages });
+      if (!parsed.ok) throw new AiChatRejectedError(parsed.error);
+      return streamChat(
+        modelFor("chat", options),
+        parsed.messages,
+        logger,
+        options,
+      );
+    },
   };
 }
 
@@ -161,6 +176,8 @@ export function createRateWindow(
 
   function sweep(at: number): void {
     for (const [userId, times] of recent) {
+      // Times are appended in order: an entry whose oldest call is still inside is untouched.
+      if (at - (times[0] ?? -Infinity) < rate.windowMs) continue;
       const kept = times.filter((time) => at - time < rate.windowMs);
       if (kept.length === 0) recent.delete(userId);
       else if (kept.length !== times.length) recent.set(userId, kept);
