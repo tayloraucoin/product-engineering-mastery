@@ -140,15 +140,16 @@ test("no key on a hosted tier answers 503 before asking who is signed in or read
     null,
   );
   let pulled = 0;
-  const body = new ReadableStream<Uint8Array>({
-    pull(controller) {
-      pulled += 1;
-      controller.enqueue(new TextEncoder().encode("{}"));
-      controller.close();
+  const body = new ReadableStream<Uint8Array>(
+    {
+      pull(controller) {
+        pulled += 1;
+        controller.enqueue(new TextEncoder().encode("{}"));
+        controller.close();
+      },
     },
-  },
-  // Nothing buffered ahead: only a read pulls.
-  { highWaterMark: 0 },
+    // Nothing buffered ahead: only a read pulls.
+    { highWaterMark: 0 },
   );
   const response = await handler(
     new Request("http://localhost/api/ai/chat", {
