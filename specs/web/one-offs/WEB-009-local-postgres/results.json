@@ -16,9 +16,16 @@
       }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn contract:record WEB-9 C2 --evidence specs/web/one-offs/WEB-009-local-postgres/evidence/C2-setup-local.md",
+        "exit": 0,
+        "at": "2026-10-06T01:42:46Z",
+        "head": "ff3a8d29a07102492fef15310d411c889b80a380",
+        "evidence_path": "specs/web/one-offs/WEB-009-local-postgres/evidence/C2-setup-local.md",
+        "evidence_sha256": "53120423d548e57e607fb4d8702d199453eae5da3f2f97ea381b0c9a820252eb"
+      }
     },
     "C3": {
       "status": "FAIL",
@@ -50,5 +57,5 @@
       }
     }
   },
-  "updated_at": "2026-10-06T01:42:32Z"
+  "updated_at": "2026-10-06T01:42:46Z"
 }
