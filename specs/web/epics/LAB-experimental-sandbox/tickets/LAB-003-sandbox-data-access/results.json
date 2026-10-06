@@ -8,10 +8,10 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-06T19:25:08Z",
-        "head": "829bc707818342814c400eda37e94ecfb91a3328",
+        "at": "2026-10-06T19:38:00Z",
+        "head": "1b7f5b4bd560f5d7c3e3b6c1a277a9068b807850",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-003-sandbox-data-access/evidence/C1.log",
-        "evidence_sha256": "7499ea8228cd300f7e1577dfac3587f74987e55692a0c8b65ee0252d81ea50d7",
+        "evidence_sha256": "fd58c1b6f92b8d055c99057d9f43294ee457983acf760526d65d29b41f8b6ed4",
         "tests": 70
       }
     },
@@ -21,10 +21,10 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-06T19:25:08Z",
-        "head": "829bc707818342814c400eda37e94ecfb91a3328",
+        "at": "2026-10-06T19:38:00Z",
+        "head": "1b7f5b4bd560f5d7c3e3b6c1a277a9068b807850",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-003-sandbox-data-access/evidence/C2.log",
-        "evidence_sha256": "7499ea8228cd300f7e1577dfac3587f74987e55692a0c8b65ee0252d81ea50d7",
+        "evidence_sha256": "fd58c1b6f92b8d055c99057d9f43294ee457983acf760526d65d29b41f8b6ed4",
         "tests": 70
       }
     },
@@ -34,10 +34,10 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-06T19:25:08Z",
-        "head": "829bc707818342814c400eda37e94ecfb91a3328",
+        "at": "2026-10-06T19:38:00Z",
+        "head": "1b7f5b4bd560f5d7c3e3b6c1a277a9068b807850",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-003-sandbox-data-access/evidence/C3.log",
-        "evidence_sha256": "7499ea8228cd300f7e1577dfac3587f74987e55692a0c8b65ee0252d81ea50d7",
+        "evidence_sha256": "fd58c1b6f92b8d055c99057d9f43294ee457983acf760526d65d29b41f8b6ed4",
         "tests": 70
       }
     },
@@ -47,10 +47,10 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-06T19:25:08Z",
-        "head": "829bc707818342814c400eda37e94ecfb91a3328",
+        "at": "2026-10-06T19:38:00Z",
+        "head": "1b7f5b4bd560f5d7c3e3b6c1a277a9068b807850",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-003-sandbox-data-access/evidence/C4.log",
-        "evidence_sha256": "7499ea8228cd300f7e1577dfac3587f74987e55692a0c8b65ee0252d81ea50d7",
+        "evidence_sha256": "fd58c1b6f92b8d055c99057d9f43294ee457983acf760526d65d29b41f8b6ed4",
         "tests": 70
       }
     },
@@ -60,10 +60,10 @@
       "run": {
         "command": "yarn test:boundaries",
         "exit": 0,
-        "at": "2026-10-06T19:25:29Z",
-        "head": "829bc707818342814c400eda37e94ecfb91a3328",
+        "at": "2026-10-06T19:38:21Z",
+        "head": "1b7f5b4bd560f5d7c3e3b6c1a277a9068b807850",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-003-sandbox-data-access/evidence/C5.log",
-        "evidence_sha256": "29047347c67800b199ea8fc3919a56e37b66036b45e0b4e642a2871e093c5735",
+        "evidence_sha256": "c88c22fe20e5bcbfad3deac8f8e97dc19525b7ede6dcfee280031e89d919662a",
         "tests": 65
       }
     },
@@ -98,5 +98,5 @@
       }
     }
   },
-  "updated_at": "2026-10-06T19:36:02Z"
+  "updated_at": "2026-10-06T19:38:23Z"
 }
