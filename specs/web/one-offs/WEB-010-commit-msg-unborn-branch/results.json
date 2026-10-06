@@ -3,15 +3,30 @@
   "criteria_sha256": "c413499ede765f0c00a1af4a11c1ae14f4d2818384c8afebbd1ffd53aece3dd8",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-06T14:47:37Z",
+        "head": "09b4bd75a0fcf529aa959c446d74dbae743a4400",
+        "evidence_path": "specs/web/one-offs/WEB-010-commit-msg-unborn-branch/evidence/C1.log",
+        "evidence_sha256": "4867fab2fc68234e427ba4997010e91471cda480595c336e5f78a6b9677d9b2b",
+        "tests": 175
+      }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn verify",
+        "exit": 0,
+        "at": "2026-10-06T14:48:22Z",
+        "head": "09b4bd75a0fcf529aa959c446d74dbae743a4400",
+        "evidence_path": "specs/web/one-offs/WEB-010-commit-msg-unborn-branch/evidence/C2.log",
+        "evidence_sha256": "9fe545d3207ff66d8982f458384b79c71007d274ade66bf385130000e366c6db"
+      }
     }
   },
-  "updated_at": "2026-10-06T14:46:32Z"
+  "updated_at": "2026-10-06T14:49:55Z"
 }
