@@ -10,6 +10,7 @@ import type { Logger } from "@pem/observability/logger";
 
 import {
   createAuthContextResolver,
+  roleOf,
   type AuthUser,
   type Mirror,
   type MirrorUser,
@@ -72,6 +73,28 @@ test("C1: a user without a known app_metadata role is a user; user_metadata is n
   };
   assert.equal((await resolve(reader({ user: plain })))?.role, "user");
   assert.equal((await resolve(reader({ user: selfPromoted })))?.role, "user");
+});
+
+test("C1: roleOf returns developer for app_metadata.role developer, admin for admin, and user for a missing or unknown value (LAB-2)", () => {
+  const as = (app_metadata: AuthUser["app_metadata"]): AuthUser => ({
+    id: USER_ID,
+    email: "dev@example.test",
+    app_metadata,
+  });
+  assert.equal(roleOf(as({ role: "developer" })), "developer");
+  assert.equal(roleOf(as({ role: "admin" })), "admin");
+  assert.equal(roleOf(as({ role: "user" })), "user");
+  assert.equal(roleOf(as({})), "user");
+  assert.equal(roleOf(as(undefined)), "user");
+  for (const unknown of [
+    "owner",
+    "Developer",
+    "DEVELOPER",
+    " developer",
+    1,
+    null,
+  ])
+    assert.equal(roleOf(as({ role: unknown })), "user");
 });
 
 test("C1: refuses when getUser returns an error, even with a user beside it", async () => {

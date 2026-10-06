@@ -12,6 +12,19 @@ test("the bridge accepts a UUID user and a known role", () => {
   });
 });
 
+test("C3: the bridge accepts developer and still refuses an unknown role (LAB-2)", () => {
+  assert.deepEqual(assertRlsContext({ userId, role: "developer" }), {
+    userId,
+    role: "developer",
+  });
+  for (const role of ["owner", "Developer", "service_role", ""]) {
+    assert.throws(
+      () => assertRlsContext({ userId, role: role as unknown as "user" }),
+      /role must be one of/,
+    );
+  }
+});
+
 test("the bridge refuses a partial or forged identity before any SQL", () => {
   assert.throws(() => assertRlsContext({ userId: "", role: "user" }), /UUID/);
   assert.throws(

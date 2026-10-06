@@ -196,4 +196,35 @@ describe("an owner-private policy", () => {
     );
     assert.deepEqual(seen, [{ id: bob }]);
   });
+
+  test("C4: a developer reads only their own row under ownerRowPolicies, as a user does, while an admin reads every row (LAB-2)", async () => {
+    const both = sql`${users.id} in (${alice}, ${bob})`;
+    const asDeveloper = await createRlsClient(db, {
+      userId: bob,
+      role: "developer",
+    }).execute((tx) => tx.select({ id: users.id }).from(users).where(both));
+    assert.deepEqual(asDeveloper, [{ id: bob }]);
+
+    const asAdmin = await createRlsClient(db, {
+      userId: bob,
+      role: "admin",
+    }).execute((tx) =>
+      tx.select({ id: users.id }).from(users).where(both).orderBy(users.id),
+    );
+    assert.deepEqual(
+      asAdmin.map((row) => row.id),
+      [alice, bob].sort(),
+    );
+
+    // Nor does developer open an owner-private table: notes stay the owner's.
+    await db.insert(notes).values({ ownerId: alice, body: "developer probe" });
+    const notesSeen = await createRlsClient(db, {
+      userId: bob,
+      role: "developer",
+    }).execute((tx) =>
+      tx.select({ id: notes.id }).from(notes).where(eq(notes.ownerId, alice)),
+    );
+    assert.deepEqual(notesSeen, []);
+    await db.delete(notes).where(eq(notes.ownerId, alice));
+  });
 });

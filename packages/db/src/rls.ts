@@ -12,7 +12,7 @@ import { sql } from "drizzle-orm";
 import type { Db } from "./client.ts";
 
 /** The application roles a policy may read from `app.user_role`. */
-export const APP_ROLES = ["user", "admin"] as const;
+export const APP_ROLES = ["user", "developer", "admin"] as const;
 
 export type AppRole = (typeof APP_ROLES)[number];
 
