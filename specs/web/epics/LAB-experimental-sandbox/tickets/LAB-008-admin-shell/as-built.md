@@ -20,7 +20,7 @@
 - [ASSUMPTION] The layout calls `requireTeamPage(null)`: with no session it renders the page bare, and the page's redirect carries `next`. C6's scan lets awaiting the handed `params` or `searchParams` come before the guard, since that reads nothing (LAB-10's `[slug]` layout needs it).
 - [ASSUMPTION] Shell `?state=` keys are read in the client leaf with `useSearchParams`: a layout gets no search params, and only a team member ever renders the shell. `shell-not-found` calls `notFound()` from the client. `shell-phone` opens the sheet on mount.
 - `lucide-react@1.48.0` was added to `apps/web` for the nav icons. It was already in the lockfile, and the tech-stack row now names `apps/web`.
-- Outside the planned paths: `apps/web/app/layout.tsx` and a new `app/_components/floating-theme-toggle.tsx`. The root layout's corner theme toggle sat invisible behind the shell and was the first Tab stop, ahead of "Skip to content". It now renders nothing under `/admin`, whose footer carries the toggle.
+- Outside the planned paths: `apps/web/app/layout.tsx` and a new `app/_components/floating-theme-toggle.tsx`. The root layout's corner theme toggle sat invisible behind the shell and was the first Tab stop, ahead of "Skip to content". It now hides while the shell is on the page, whose footer carries the toggle.
 - No `signOutAdmin` action, against the contract's interface list: the footer's "Sign out" posts to the hardened `/auth/sign-out` route (STK-24). That route clears every session cookie whatever Supabase answers, checks Origin and logs a failed revoke (warden O5). So `app/admin/` has no action file and no unguarded action.
 - After review, the root's corner toggle hides on `[data-admin-shell]` through CSS, not on the path. A 404 under `/admin` then looks like any other 404.
 - `Sidebar` gained `sheetTitle` and `sheetDescription` (defaults unchanged). The shell names its sheet "Admin" with no description and drops `SidebarRail`, whose "Toggle Sidebar" name is not in shell.md.
@@ -29,6 +29,7 @@
 ## Reviews (Q2, in the thread)
 
 - Round 1: assay FAIL (black: the not-ready entry was told apart by colour alone; red: the "Sidebar" and "Toggle Sidebar" names), warden FAIL (red: the scan passed a dropped refusal and a page passing `null`; orange: scan gaps, flag-only admin-only, a weaker sign-out). All black, red and orange findings above are fixed, except the two below.
+- Round 2: assay PASS, warden PASS. Warden's remaining orange is taken: C6 also fails a `"use server"` file in `lib/sandbox`. Its yellows are not: a multi-declarator `export const`, and a layout's bare return checked for a return but not for `children`.
 - Not taken, routed: hover and the active entry share `sidebar-accent`, because no selection token exists (a token for Plumb, outside this ticket). The collapsed strip hides the footer; shell.md is silent on that.
 - Not taken, yellow: a tooltip on the labels toggle; the sheet's width (`w-3/4`, `sm:max-w-sm`) beats `--sidebar-width`; the primitive animates width.
 - The red "1 issue" badge on the 404 capture is Next's dev overlay reporting next-themes' "script tag" warning. It shows on every 404 in the app, not only under /admin.

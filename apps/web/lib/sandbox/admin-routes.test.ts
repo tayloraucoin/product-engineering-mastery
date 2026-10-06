@@ -458,3 +458,15 @@ test("C6: a synthetic action that skips the guard, works first, or drops the ref
     ],
   );
 });
+
+test("C6: no server action lives in lib/sandbox, where the route scan cannot see it", () => {
+  const dir = fileURLToPath(new URL("./", import.meta.url));
+  const actions = readdirSync(dir)
+    .filter((name) => /\.(ts|tsx)$/.test(name))
+    .filter((name) =>
+      /^\s*(\/\/[^\n]*\n|\/\*[\s\S]*?\*\/\s*)*["']use server["']/.test(
+        readFileSync(path.join(dir, name), "utf8"),
+      ),
+    );
+  assert.deepEqual(actions, []);
+});
