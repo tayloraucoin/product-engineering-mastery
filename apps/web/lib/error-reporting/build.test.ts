@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { test } from "node:test";
 
 import { sentryBuildOptions, type ErrorReportingBuild } from "./build.ts";
+import { resolveSentryProject } from "./dsn.ts";
 
 const deployedWithToken: ErrorReportingBuild = {
   deployed: true,
@@ -53,5 +54,30 @@ test("the build script turns off the Sentry CLI's own telemetry", () => {
   assert.match(
     manifest.scripts.build,
     /^SENTRY_CLI_NO_TELEMETRY=1 next build$/,
+  );
+});
+
+test("a staging build missing SENTRY_PROJECT_STAGING uploads nothing, never into production's project", () => {
+  const source = {
+    SENTRY_PROJECT: "example-web-production",
+    SENTRY_ORG: "example-org",
+    SENTRY_AUTH_TOKEN: "sntrys_synthetic",
+  };
+  const project = resolveSentryProject(source, "staging");
+  assert.equal(project, undefined);
+  const options = sentryBuildOptions({ ...deployedWithToken, project });
+  assert.equal(options.sourcemaps?.disable, true);
+  assert.equal(options.release?.create, false);
+  assert.equal(options.project, undefined);
+  assert.equal(
+    resolveSentryProject(
+      { ...source, SENTRY_PROJECT_STAGING: "example-web-staging" },
+      "staging",
+    ),
+    "example-web-staging",
+  );
+  assert.equal(
+    resolveSentryProject(source, "production"),
+    "example-web-production",
   );
 });

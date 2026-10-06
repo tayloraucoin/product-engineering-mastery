@@ -20,7 +20,10 @@ import { pickTiered } from "@pem/env/pick";
 import { isDeployed, resolveSiteUrl } from "@pem/env/site-url";
 import { parseTier, TIERS } from "@pem/env/tier";
 
-import { resolveSentryDsn } from "./lib/error-reporting/dsn";
+import {
+  resolveSentryDsn,
+  resolveSentryProject,
+} from "./lib/error-reporting/dsn";
 
 /** This app's origin outside a deployment: the port `yarn web:dev` serves. */
 const LOCAL_ORIGIN = "http://localhost:3000";
@@ -136,7 +139,7 @@ export const errorReportingBuild = {
   deployed,
   authToken: raw.SENTRY_AUTH_TOKEN?.trim() || undefined,
   org: raw.SENTRY_ORG?.trim() || undefined,
-  project: pickTiered(raw, "SENTRY_PROJECT", tier),
+  project: resolveSentryProject(raw, tier),
   release: raw.VERCEL_GIT_COMMIT_SHA?.trim() || undefined,
 };
 

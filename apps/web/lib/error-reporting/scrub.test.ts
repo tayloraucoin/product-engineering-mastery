@@ -108,3 +108,15 @@ test("stack frames keep their place but lose their local variables", () => {
     scrubEvent(synthetic()).exception?.values?.[0]?.stacktrace?.frames;
   assert.deepEqual(frames, [{ function: "charge" }]);
 });
+
+test("tags and the transaction name are scrubbed like every other free-text field", () => {
+  const event: ScrubbableEvent = {
+    tags: { namespace: "billing", invitee: "ada@example.test", attempt: 2 },
+    transaction: "/invite/ada@example.test",
+  };
+  const scrubbed = scrubEvent(event);
+  assert.equal(scrubbed.tags?.namespace, "billing");
+  assert.equal(scrubbed.tags?.attempt, 2);
+  assert.doesNotMatch(String(scrubbed.tags?.invitee), /ada@example\.test/);
+  assert.doesNotMatch(scrubbed.transaction ?? "", /ada@example\.test/);
+});

@@ -34,6 +34,8 @@ export type ScrubbableEvent = {
   breadcrumbs?: { message?: string; data?: unknown }[];
   extra?: unknown;
   contexts?: unknown;
+  tags?: Record<string, unknown>;
+  transaction?: string;
 };
 
 /** `url` without its query string or fragment, its text scrubbed. */
@@ -98,6 +100,18 @@ export function scrubEvent<E extends ScrubbableEvent>(event: E): E {
   // the logger's rule: secret-named keys redacted, every string scrubbed.
   if (event.contexts !== undefined)
     scrubbed.contexts = redactValue(event.contexts);
+
+  // Tags and the transaction name pass the same rule, so a tag built from
+  // input or a route name holding a value cannot carry it past the scrub.
+  if (event.tags)
+    scrubbed.tags = Object.fromEntries(
+      Object.entries(event.tags).map(([key, value]) => [
+        key,
+        typeof value === "string" ? scrubText(value) : value,
+      ]),
+    );
+  if (event.transaction !== undefined)
+    scrubbed.transaction = scrubText(event.transaction);
 
   delete scrubbed.extra;
   return scrubbed as E;

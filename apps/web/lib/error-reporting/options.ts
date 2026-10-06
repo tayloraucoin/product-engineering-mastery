@@ -21,8 +21,18 @@ export type ReportingTarget = {
 
 type Integration = { name: string };
 
-/** Integrations the SDK adds on its own that this app does not want. */
-const UNWANTED_INTEGRATIONS = new Set(["BrowserTracing"]);
+/**
+ * Integrations this app never runs (NN6). Only BrowserTracing is a default
+ * today; the rest are opt-in, named here so an SDK upgrade that turns one on
+ * by default is still dropped.
+ */
+export const UNWANTED_INTEGRATIONS: ReadonlySet<string> = new Set([
+  "BrowserTracing",
+  "Replay",
+  "ReplayCanvas",
+  "Feedback",
+  "BrowserProfiling",
+]);
 
 export const DATA_COLLECTION = {
   userInfo: false,
