@@ -3,35 +3,86 @@
   "criteria_sha256": "5415c6c3337fe9b08502c0a1dbd87f68dc02f897a589ddeeb741ce0a230b7950",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-06T03:46:01Z",
+        "head": "6960357f87944bc738a0db53355b0a6c7a845f9f",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-21-billing-entitlements/evidence/C1.log",
+        "evidence_sha256": "5494c38cf5c6f0617ac8f6030dc87c56f438ce7b167c4d81ee0b0524de3efed5",
+        "tests": 275
+      }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-06T03:46:01Z",
+        "head": "6960357f87944bc738a0db53355b0a6c7a845f9f",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-21-billing-entitlements/evidence/C2.log",
+        "evidence_sha256": "5494c38cf5c6f0617ac8f6030dc87c56f438ce7b167c4d81ee0b0524de3efed5",
+        "tests": 275
+      }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn verify",
+        "exit": 0,
+        "at": "2026-10-06T03:46:11Z",
+        "head": "6960357f87944bc738a0db53355b0a6c7a845f9f",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-21-billing-entitlements/evidence/C3.log",
+        "evidence_sha256": "e3029232ff42510d969905fbb5bec34380d2adf44f6b333282bdfac37bc8e681"
+      }
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn contract:record STK-21 C4 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-21-billing-entitlements/evidence/C4-operator.md --verdict deferred",
+        "exit": 0,
+        "at": "2026-10-06T03:48:10Z",
+        "head": "6960357f87944bc738a0db53355b0a6c7a845f9f",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-21-billing-entitlements/evidence/C4-operator.md",
+        "evidence_sha256": "71ad87a067e883524bc9e997f5f2665f8bc7d582ab9afba77dbdc3761652103a",
+        "deferred": true
+      }
     },
     "review:vigil": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run vigil STK-21",
+        "exit": 0,
+        "at": "2026-10-06T03:48:20Z",
+        "head": "6960357f87944bc738a0db53355b0a6c7a845f9f",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-21-billing-entitlements/review-vigil.md",
+        "evidence_sha256": "f1d0a39beac8fc154f41a399dd95a526d247aa96f288066f609206e8f98c2034",
+        "contract_sha256": "955619bf166fa52b369b7aea05b6390e1daea475e3dc3fbabb693949c065baf9",
+        "as_built_sha256": "5c5d4bba572b91bf7b364445e31797a4aa407f2a84bd241878b1dd8cdec5d2e2",
+        "runner": "claude 2.1.232 (Claude Code) (agent vigil; tools Read,Grep,Glob)"
+      }
     },
     "review:warden": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run warden STK-21",
+        "exit": 0,
+        "at": "2026-10-06T03:55:29Z",
+        "head": "6960357f87944bc738a0db53355b0a6c7a845f9f",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-21-billing-entitlements/review-warden.md",
+        "evidence_sha256": "7b5a346db0dfb8483cb39678515065b8b458c96b91aacbbed2ed5a974fe55bb9",
+        "contract_sha256": "955619bf166fa52b369b7aea05b6390e1daea475e3dc3fbabb693949c065baf9",
+        "as_built_sha256": "5c5d4bba572b91bf7b364445e31797a4aa407f2a84bd241878b1dd8cdec5d2e2",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
+      }
     }
   },
-  "updated_at": "2026-10-06T02:07:16Z"
+  "updated_at": "2026-10-06T04:03:16Z"
 }
