@@ -28,7 +28,9 @@
 
 ## Migrations
 
-- applied: n/a (the local database only; no hosted project exists. The operator applies it to a hosted project.)
+applied: n/a
+
+The local database only; no hosted project exists. The operator applies it to a hosted project.
 
 ## Not verified
 

@@ -5,7 +5,7 @@ status: approved
 
 # LAB — technical notes
 
-> Mason, with Warden consulted on doors 1, 3, 4 and 7, gap 3 and erasure, 2026-10-05, from the brief (S-items) and the approved `ux/` (D-LAB-1 to 29). Quartermaster was not needed: nothing new is installed. Detail every ticket shares is in `technical/placement.md`, `technical/data-contract.md` and `technical/gate.md`. Labels: verified (read, dated), secondary, judgment.
+> Mason, with Warden consulted on doors 1, 3, 4 and 7, gap 3 and erasure, 2026-10-05, from the brief (S-items) and the approved `ux/` (D-LAB-1 to 29). Quartermaster was not needed: nothing new is installed. Detail every ticket shares is in `technical/placement.md`, `technical/data-contract.md`, `technical/gate.md` and `technical/tests.md`. Labels: verified (read, dated), secondary, judgment.
 
 ## Appetite verdict
 
@@ -56,16 +56,7 @@ Approved at the UX gate; applied to `brief.md` on 2026-10-05:
 
 ## Test shape per risk
 
-| Risk                           | Test                                                                                                                                                                                                         |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Isolation (door 4)             | Integration on local Postgres in `packages/db/test/sandbox/`, over every `@pem/db/sandbox` function crossed with every kind of viewer (two reviewers, two slugs, developer, admin): no read or write crosses |
-| One face (C-LAB-gate-1, 2)     | Integration: real, unknown, revoked and closed-without-code responses compared, per-request tokens stripped                                                                                                  |
-| Codes, cookies, link, throttle | Unit, plus generated inputs: any spacing, case or confusable variant normalises to the same code, and any one-symbol change fails                                                                            |
-| Erasure (S28)                  | Integration: one code with two emails on two slugs; erase one, then a sweep of every sandbox table and label finds it nowhere, and the record holds counts only                                              |
-| Retries                        | Integration: the same comment or version id sent twice gives one row                                                                                                                                         |
-| Roles                          | Unit (`roleOf` with `developer`); action test for the last-admin guard                                                                                                                                       |
-| Journeys                       | No end-to-end runner exists (not found, 2026-10-05). Server-action integration tests stand in                                                                                                                |
-| UI                             | Captures of every `?state=` key at 390, 834 and 1440, light and dark                                                                                                                                         |
+One row per risk, in `technical/tests.md`.
 
 ## Rabbit holes
 
