@@ -24,6 +24,7 @@ import {
   resolveSentryDsn,
   resolveSentryProject,
 } from "./lib/error-reporting/dsn";
+import { sandboxSecretProblem } from "./lib/sandbox/secret-check";
 
 /** This app's origin outside a deployment: the port `yarn web:dev` serves. */
 const LOCAL_ORIGIN = "http://localhost:3000";
@@ -74,6 +75,9 @@ const raw = {
   STRIPE_PRICE_ID: process.env.STRIPE_PRICE_ID,
   STRIPE_PRICE_ID_LOCAL: process.env.STRIPE_PRICE_ID_LOCAL,
   STRIPE_PRICE_ID_STAGING: process.env.STRIPE_PRICE_ID_STAGING,
+  SANDBOX_SECRET: process.env.SANDBOX_SECRET,
+  SANDBOX_SECRET_LOCAL: process.env.SANDBOX_SECRET_LOCAL,
+  SANDBOX_SECRET_STAGING: process.env.SANDBOX_SECRET_STAGING,
   NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
   NEXT_PUBLIC_SENTRY_DSN_LOCAL: process.env.NEXT_PUBLIC_SENTRY_DSN_LOCAL,
   NEXT_PUBLIC_SENTRY_DSN_STAGING: process.env.NEXT_PUBLIC_SENTRY_DSN_STAGING,
@@ -195,6 +199,20 @@ export const env = createEnv({
     STRIPE_WEBHOOK_SECRET: z.string().min(1).optional(),
     /** The price the app sells, from the tier's own Stripe account (test prices on local and staging). */
     STRIPE_PRICE_ID: z.string().min(1).optional(),
+    /**
+     * The experimental sandbox's key (LAB-5, D-LAB-32): it signs the access
+     * cookie, the email-link token and the throttle's keys, each under its own
+     * label. At least 32 bytes. Optional: unset, every reviewer is shown the
+     * gate and no code can be entered; the team is unaffected.
+     */
+    SANDBOX_SECRET: z
+      .string()
+      .min(1)
+      .optional()
+      .superRefine((value, context) => {
+        const problem = value && sandboxSecretProblem(value);
+        if (problem) context.addIssue({ code: "custom", message: problem });
+      }),
   },
   client: {
     NEXT_PUBLIC_SITE_URL: z.url(),
@@ -231,6 +249,7 @@ export const env = createEnv({
     STRIPE_SECRET_KEY: pickTiered(raw, "STRIPE_SECRET_KEY", tier),
     STRIPE_WEBHOOK_SECRET: stripeWebhookSecret,
     STRIPE_PRICE_ID: pickTiered(raw, "STRIPE_PRICE_ID", tier),
+    SANDBOX_SECRET: pickTiered(raw, "SANDBOX_SECRET", tier),
     // In the browser the tier is unknown, so the value next.config.ts inlined is the truth there.
     NEXT_PUBLIC_SITE_URL: isServer ? siteUrl : raw.NEXT_PUBLIC_SITE_URL,
     NEXT_PUBLIC_SUPABASE_URL: isServer

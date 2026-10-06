@@ -21,8 +21,8 @@ cites:
 truth_files: "none: server modules and config; the gate's UX file promotes with LAB-7"
 qa: Q3
 reviewers:
-  - warden
   - mason
+  - warden
 focus:
   - "no database read before the cookie verifies (warden)"
   - "code normalisation under generated inputs (warden)"
@@ -81,6 +81,14 @@ criteria:
     statement: "SANDBOX_SECRET and its tiered forms never reach a browser bundle, and turbo.json and .env.example list the same names."
     evidence: check
     command: "yarn check-client-bundle"
+  - id: review:mason
+    statement: Mason reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run mason <id>
+  - id: review:warden
+    statement: Warden reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
 ---
 
 # Contract — LAB-5 gate-codes-cookie

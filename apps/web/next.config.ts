@@ -6,6 +6,7 @@ import { withSentryConfig } from "@sentry/nextjs/config";
 import { getLocalDevOrigins } from "../../tooling/local-dev-origins";
 import { errorReportingBuild, nextConfigEnv } from "./env";
 import { sentryBuildOptions } from "./lib/error-reporting/build";
+import { SANDBOX_NOINDEX_HEADERS } from "./lib/sandbox/robots";
 
 const appRoot = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(appRoot, "../..");
@@ -46,6 +47,11 @@ const nextConfig: NextConfig = {
    * Importing env.ts here also validates the environment once, at build.
    */
   env: nextConfigEnv,
+
+  /** Noindex on /experimental and /admin, the gate included (LAB-5, D-LAB-42). */
+  async headers() {
+    return SANDBOX_NOINDEX_HEADERS;
+  },
 
   turbopack: {
     root: repoRoot,
