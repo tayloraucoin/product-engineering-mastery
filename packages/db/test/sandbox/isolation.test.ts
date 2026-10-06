@@ -125,7 +125,7 @@ const recordAsReviewer = (kind: ViewerKind) => async (w: World) => {
 
 /** A role change names the changed team member, and nothing else. */
 async function roleChangeAs(w: World, viewer: TeamViewer) {
-  const target = `promoted-${w.run}@example.test`;
+  const target = `promoted-${viewer.role}-${w.run}@example.test`;
   await sandbox.recordAction(db(), viewer, {
     action: ROLE_CHANGE_ACTION,
     targetEmail: target,
@@ -564,11 +564,16 @@ describe("C2: the coverage guard", () => {
       Object.defineProperty(async () => null, "length", { value: length });
     const gate = withArity(2);
     const scoped = withArity(3);
+    // A scoped read with a default parameter reports arity 2: it must still
+    // not pass as a gate or as support.
+    const defaulted = withArity(2);
     const synthetic = {
       covered: gate,
       uncovered: gate,
       halfCovered: scoped,
       misfiled: scoped,
+      fakeGate: defaulted,
+      fakeSupport: defaulted,
     };
     const registry: Registry<null> = {
       covered: { group: "gate", cases: { "a case": () => {} } },
@@ -577,14 +582,18 @@ describe("C2: the coverage guard", () => {
         byViewer: { developer: () => {} } as never,
       },
       misfiled: { group: "support", cases: { "one happy path": () => {} } },
+      fakeGate: { group: "gate", cases: { "one happy path": () => {} } },
+      fakeSupport: { group: "support", cases: { "one happy path": () => {} } },
       gone: { group: "support", cases: { "a case": () => {} } },
     };
-    assert.deepEqual(coverageProblems(synthetic, registry), [
+    assert.deepEqual(coverageProblems(synthetic, registry, ["covered"]), [
       "uncovered has no isolation case",
       ...VIEWER_KINDS.filter((kind) => kind !== "developer").map(
         (kind) => `halfCovered has no case for the ${kind}`,
       ),
-      "misfiled takes a viewer but is filed as support",
+      "misfiled is a function filed as support",
+      "fakeGate is filed as gate but is not in the gate group",
+      "fakeSupport is a function filed as support",
       "gone is registered but not exported",
     ]);
   });

@@ -3,11 +3,11 @@
 > Written by `yarn review:run mason LAB-3`. Never edit it: check-specs binds it to the hashes below, and Taylor reads it before merge.
 
 - contract_sha256: d2e24e81b694f829d2a4cbfac9a66c874b0ef5633412b7c73e0ddc881d682eec
-- as_built_sha256: 1a3937228520a54700616ee1f41a7e87bf72f4740d60e423444f0677952b9175
-- head: 9dad4a39cf24e1df0e4ec49b4a791b73655e473c
+- as_built_sha256: edd18c91d00a0947bf8cf03e5b7dd81368aab865425a5c71e5644368fa993502
+- head: cbe33b58a2e5290342efccbf8dff03f4045e72a8
 - runner: claude 2.1.232 (Claude Code) (role docs/roles/engineering/mason-cto-principal-dev.md; tools Read,Grep,Glob)
 - model: claude-opus-5[1m]
-- at: 2026-10-06T19:02:06Z
+- at: 2026-10-06T19:25:59Z
 - verdict: PASS
 
 ## Prompt
@@ -21,11 +21,11 @@ Read, in this order:
 2. The results: specs/web/epics/LAB-experimental-sandbox/tickets/LAB-003-sandbox-data-access/results.json. Each criterion's run record and evidence file.
 3. The as-built: specs/web/epics/LAB-experimental-sandbox/tickets/LAB-003-sandbox-data-access/as-built.md. What the builder says shipped, and every deviation. Check its claims against the code; do not trust them.
 4. The evidence:
-   - C1 test: specs/web/epics/LAB-experimental-sandbox/tickets/LAB-003-sandbox-data-access/evidence/C1.log (sha256 cdc0a9e7c5e5)
-   - C2 test: specs/web/epics/LAB-experimental-sandbox/tickets/LAB-003-sandbox-data-access/evidence/C2.log (sha256 cdc0a9e7c5e5)
-   - C3 test: specs/web/epics/LAB-experimental-sandbox/tickets/LAB-003-sandbox-data-access/evidence/C3.log (sha256 cdc0a9e7c5e5)
-   - C4 test: specs/web/epics/LAB-experimental-sandbox/tickets/LAB-003-sandbox-data-access/evidence/C4.log (sha256 cdc0a9e7c5e5)
-   - C5 test: specs/web/epics/LAB-experimental-sandbox/tickets/LAB-003-sandbox-data-access/evidence/C5.log (sha256 6a5aa8c65099)
+   - C1 test: specs/web/epics/LAB-experimental-sandbox/tickets/LAB-003-sandbox-data-access/evidence/C1.log (sha256 7499ea8228cd)
+   - C2 test: specs/web/epics/LAB-experimental-sandbox/tickets/LAB-003-sandbox-data-access/evidence/C2.log (sha256 7499ea8228cd)
+   - C3 test: specs/web/epics/LAB-experimental-sandbox/tickets/LAB-003-sandbox-data-access/evidence/C3.log (sha256 7499ea8228cd)
+   - C4 test: specs/web/epics/LAB-experimental-sandbox/tickets/LAB-003-sandbox-data-access/evidence/C4.log (sha256 7499ea8228cd)
+   - C5 test: specs/web/epics/LAB-experimental-sandbox/tickets/LAB-003-sandbox-data-access/evidence/C5.log (sha256 29047347c678)
 5. The files this ticket changes against main (its planned paths; other tickets share the branch): packages/config/eslint/boundaries.js, packages/db/package.json, packages/db/src/sandbox/actions.ts, packages/db/src/sandbox/gate.ts, packages/db/src/sandbox/index.ts, packages/db/src/sandbox/viewer.test.ts, packages/db/src/sandbox/viewer.ts, packages/db/test/sandbox/fixtures.ts, packages/db/test/sandbox/isolation.test.ts, packages/db/test/sandbox/registry.ts, packages/db/test/sandbox/schema.test.ts, tooling/boundaries.test.ts.
 6. The surface the ticket cites: specs/web/epics/LAB-experimental-sandbox/technical/data-contract.md. Every state and criterion it names.
 
@@ -37,40 +37,35 @@ VERDICT: FAIL
 
 ## Review
 
-## Verdict up top
+## Per-criterion
 
-**PASS.** C1–C5 are met by the evidence and by the code; nothing Blocking. Three Should-fix findings, none of which touches a one-way door already walked through: one unvalidated field, one self-declared classification in the coverage guard, one stale line in the cited surface.
+**C1 — every export, as every viewer kind: MET.**
+`VIEWER_KINDS` (`packages/db/test/sandbox/registry.ts:19-25`) is exactly the contract's five, and `fixtures.ts:165-224` builds them against real rows: two reviewers on slug A, one on slug B, a signed-in reviewer on slug A, a team note, and developer/admin viewers. `recordAction` — the only viewer function that exists — runs as all five (`isolation.test.ts:499-507`; C1.log tests 19-23). `reviewerScope`, the single helper every later reviewer read will filter by, is proven against real rows for all four reviewers across `sandbox_view_events`, `sandbox_comments` and `sandbox_review_versions`, returns nothing when the slug is swapped, and refuses both team viewers (`isolation.test.ts:608-641`; C1.log suite 9). The team note on slug A is correctly excluded by the `reviewer_id` predicate. Gate functions carry named cases instead of viewer cases, which is what `technical/data-contract.md:54` sanctions.
 
-I read the working-tree files and they match the test names in `C1.log` and `C5.log` exactly; the recorded head `19bb3d8` is the code commit and the only later commit (`9dad4a3`) is the paperwork, so the proofs are not stale against what I read. `packages/db/test/sandbox/schema.test.ts` is LAB-1's and I did not review it.
+**C2 — the coverage guard: MET.**
+`coverageProblems` (`registry.ts:41-77`) flags an unregistered export, a `viewer` entry missing any of the five kinds, a misfiled group, and an entry for nothing exported. Run against the real namespace it returns `[]`; the synthetic module asserts the exact problem list, misfiling included (`isolation.test.ts:554-590`; C1.log suite 7). Importing through `@pem/db/sandbox` (`isolation.test.ts:15`) means a wrong `exports` entry fails here too, and `package.json:39-42` is the one subpath.
 
-## Criteria
+**C3 — the gate group: MET.**
+`gate.ts` takes `(db, input)` throughout and returns only `{reviewerId, codeVersion}`, `{accessId}`, `{reviewerId, accessId}` or an email; `exactKeys` pins each return shape. Every state the criterion names is covered and passing: live code on its own slug, foreign slug, revoked code, stale `code_version`, and a signed-in access read by another user id or signed out (C1.log tests 1-18). Malformed ids and hashes are rejected before any query (`gate.ts:31-35, 101, 136`), which is the right call given Postgres echoes a bad uuid.
 
-**C1 — met.** `evidence/C1.log:167-329`: 24 registered cases plus the scope sweep, all `ok`, `fail 0`. The world (`test/sandbox/fixtures.ts:165-225`) is the contract's five kinds — two reviewers on slug A, one on B, developer, admin — plus a signed-in reviewer on A, each with an access, a view, a comment and a version, and a team note. `recordAction` runs as all five kinds; the three reviewer kinds are refused *and* `actionRowCount()` is compared before and after (`isolation.test.ts:109-119`), so a refusal is proven to write nothing. `reviewerScope` is proven against real rows on all three reviewer tables for all four reviewers, returning exactly the one own row each (`isolation.test.ts:573-607`); the team note is excluded by the same filter, which is the collaborate-mode guard LAB-25 will widen. A viewer with its slug swapped sees nothing, so both columns are load-bearing. Only one viewer-group export exists yet; the as-built says so under "Not verified", correctly.
+**C4 — recordAction: MET.**
+One row with actor id and email, action, slug and counts, and nothing else (`actions.ts:78-85`); the test asserts the row's exact key set and that no reviewer label, email, code or id appears anywhere in it (`isolation.test.ts:154-173`). All three reviewer viewers are refused with a fixed message and write nothing — the test compares the table count across the refusal (`isolation.test.ts:115-123`). `targetEmail` is admitted only with `role-change` and only normalised (`actions.ts:58-71`), so an erasure cannot record the address it erased.
 
-**C2 — met.** `registry.ts:37-63` flags all three classes, and the synthetic-module test asserts the exact problem list, including four missing viewer kinds and a registered-but-unexported entry (`isolation.test.ts:534-555`). Run against the real module it returns `[]` (`C1.log:148-162`).
+**C5 — the boundary: MET.**
+`web-sandbox` and `db-sandbox` are listed before their parents (`boundaries.js:82-86, 95-103`), `db-sandbox` is in `NOT_FOR_APPS` (`:176`) so only `web-sandbox` reaches it, and the route override bans `@pem/db/client` and `@pem/db/schema` under `apps/web/app/experimental/**` and `apps/web/app/admin/**` while keeping the SDK bans (`:244-264`). Nine refusals and four allowances pass, including `services` refused and `next`/`react` refused inside the module (C5.log tests 53-65, exit 0).
 
-**C3 — met.** `src/gate.ts` is `(db, input)` throughout and every return is pinned by `exactKeys` in its case: `{reviewerId, codeVersion}`, `{accessId}`, `{reviewerId, accessId}`, or the email. No label, `display_name` or feedback row is selected anywhere in the file. Every clause of the statement has a case and all pass: own-slug-only hash hit, foreign slug, revoked code, stale `code_version`, signed-in access read by `otherUser`, read signed out, read with a malformed id, unknown ids. The documented deviations hold up: `createAccess` is one guarded `insert … select` (`gate.ts:80-87`), so a code revoked or replaced between lookup and insert grants nothing — stronger than the contract asked for — and `findAccessEmail` returning null on a revoked code (`gate.ts:148`) matches gate.md's "say no more than an unknown slug does".
+The as-built's claims check out against the code, including the second-review items (`targetEmail` on role change only, the arity check, the `@pem/db/sandbox` import, the `createDb`/`closeDb` ban at `viewer.test.ts:89`, nine-plus-four probes, and `data-contract.md:54` naming the exception). The two declared deviations — the `db-sandbox` element and `createAccess` returning null on a stale or revoked code — are both improvements on the contract's shape, and `grep` confirms no `getDb`/`createDb`/`closeDb` anywhere in `src/sandbox/`.
 
-**C4 — met, with one gap.** One row, `exactKeys` over its columns, actor id and email, slug and counts asserted, `targetEmail` null, and a JSON scan of the row proving no reviewer label, email, code or reviewer id appears (`isolation.test.ts:134-153`). Refusals cover free text, an email as the action, a bad slug, an unnamed count, a negative and a fractional count, each with the one fixed message. The gap is `targetEmail` — see Should-fix 1.
-
-**C5 — met.** `C5.log`: 65/65, `fail 0`. Probes 34-42 and 62-65 are precisely this criterion: `@pem/db/sandbox` refused from `apps/web/app/**` and from `apps/web/lib/**` outside `lib/sandbox`, `@pem/db/client` refused in `app/experimental/[slug]/`, `@pem/db/schema` refused in `app/admin/`, and `lib/sandbox` importing the subpath allowed. The second element is the right call — the plugin matches paths, not subpaths — and putting `db-sandbox` in `NOT_FOR_APPS` (`boundaries.js:176`) plus the explicit `web-sandbox → db-sandbox` edge (`:316-320`) is the narrow form. `db-sandbox` in `TRANSPORT_FREE` (`:168`) makes "neither next nor react" a lint rule, proven by probes 41-42. I checked the obvious way around the route override: `@pem/db` has no root export, and `@pem/db/rls` hands out no client of its own (`createRlsClient(db, context)` takes one), so `client` and `schema` are the only doors and both are shut.
+Two evidence observations, neither a finding: C1-C4 share one log because they share one command, and the identical sha256 is correct. The log footer reports 60 tests and 10 suites while `results.json` records 70 — the recorder is counting suites as tests; only tooling writes that file.
 
 ## Findings
 
-**Should-fix**
+**Should-fix — the guard's arity check is defeated by a default parameter.** `registry.ts:56-64` infers a function's group from `Function.length`, so a reviewer-scoped read declared `(db, viewer, input = {})` reports arity 2 and may be filed as `gate`, which is precisely the misfiling the check exists to catch — and a `gate` entry never runs against the five viewer kinds. Nothing today is misfiled, but the next ticket to add a scoped read is the one that would discover it. The Tickets-gate ruling makes the gate group closed (four functions now, LAB-6's throttle later), so pin `gate` to a named list of members and let the guard refuse any other export into that group.
 
-1. `packages/db/src/sandbox/actions.ts:66` — `targetEmail` reaches the insert unchecked, while `action`, `slug` and `counts` each get a validator and a fixed refusal. The only thing enforcing "a team member's email, never a reviewer's" (contract gotcha; D-LAB-28; `data-contract.md:21`) is the comment on line 35. This module *is* the enforcement layer for personal data in the sandbox — a comment is not it. Validate as `createAccess` validates email (string, non-empty, already trimmed and lower-cased), and add the refusal to the `SandboxAccessError` entry at `test/sandbox/isolation.test.ts:489`.
+**Consider — nothing writes `last_seen_at`.** The column is `notNull().defaultNow()` (`packages/db/src/schema/sandbox/accesses.ts:47-49`) and the data contract commits to it, but neither this module nor LAB-5's contract claims the write, so an access would read as last seen at creation forever. `checkAccess` is the natural home; worth naming in LAB-5 rather than discovered by admin people.md.
 
-2. `packages/db/test/sandbox/registry.ts:26-32` — the group is self-declared, so a later `(db, viewer, input)` read registered as `group: "support"` with one trivial case passes the guard without ever running against the five viewer kinds. The guard honestly catches a *missing* entry; it cannot catch a *mis-filed* one, and every surface ticket from here on files its own entry. Derive it instead: in `coverageProblems`, require any export with `fn.length >= 3` to be in the `viewer` group, and add that case to the synthetic module at `isolation.test.ts:534`. One line now, versus the one unscoped read this ticket exists to prevent.
+**Consider — a db handle is still reachable from the route trees.** The override closes `@pem/db/client` and `@pem/db/schema`, as the contract asks, but an experimental or admin file can still import an apps/web module that re-exports one (`apps/web/lib/trpc/context.ts:23`, `apps/web/lib/billing/webhook/ledger.ts:28`), and the seven tables stay in the `@pem/db/schema` barrel. The `./schema/sandbox` subpath warden suggested closes the table half; a ban on app-local db-handle modules in `SANDBOX_ROUTE_FILES` would close the rest.
 
-3. `specs/web/epics/LAB-experimental-sandbox/technical/data-contract.md:49` — "Every function in `@pem/db/sandbox` takes `(db, viewer, input)`" is now false: the gate group takes `(db, input)` under the Tickets-gate ruling. The cited surface contradicts the shipped module with no note, so the next reader either writes the wrong signature for a gate-like function or files `gate.ts` as a violation. One line in that section naming the gate group fixes it.
-
-**Consider**
-
-4. `packages/db/test/sandbox/isolation.test.ts:19` — the suite imports `../../src/sandbox/index.ts`, not the `@pem/db/sandbox` subpath it is meant to pin, so a wrong `exports` entry would not fail the guard. The stripe-ledger test does the same, so this is a house pattern rather than drift; worth changing both together, or not at all.
-
-5. `tooling/boundaries.test.ts:245,259` — the LAB-3 probes run under test names prefixed `C1:`/`C2:`, which are WEB-2's criterion ids. `C5.log` therefore reads as "C1/C2 passed" for a C5 proof. A per-probe criterion label, as the isolation registry does with `criteria`, would make the log self-evident.
-
-6. `packages/db/src/sandbox/viewer.test.ts:74` — the "never the `getDb` singleton" half of non-negotiable 3 is proven only here, and neither `test:db` nor `test:boundaries` runs this file; it rides on `yarn verify`'s `yarn test`. I confirmed by grep that no `getDb` and no `next`/`react` import exists in `src/sandbox/`, and the next/react half is independently covered by C5 probes 41-42, so this is a note about where the evidence lives, not a hole.
+**Consider — the role-change case depends on case order.** `roleChangeAs` (`isolation.test.ts:128-138`) uses the same target address for both team viewers and relies on the developer's row being deleted before the admin's runs, so `rows.length === 1` holds only in `VIEWER_KINDS` order. Putting the role in the address makes the case independent of its neighbours.
 
 VERDICT: PASS

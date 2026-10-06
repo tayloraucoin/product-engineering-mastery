@@ -9,12 +9,23 @@
  *   exists. It has named cases, including what it returns.
  * - `support`: anything else exported at runtime, with the cases that pin it.
  *
- * The group is checked, not trusted: a function of three parameters
- * `(db, viewer, input)` must be in `viewer`, a `gate` function takes two
- * `(db, input)`, and a `viewer` entry must be a function of three.
+ * The group is checked, not trusted. The gate group is closed: only the
+ * functions named in GATE_GROUP may be filed as `gate` (the Tickets-gate
+ * ruling; LAB-6 adds its throttle's here). Every other function export must
+ * be a `viewer` function of three parameters `(db, viewer, input)`, so a
+ * scoped read cannot slip into `gate` or `support`, even with a default
+ * parameter lowering its arity. `support` holds only classes and values.
  *
  * Type-only exports are erased at runtime and need no entry.
  */
+
+/** The functions that run before any viewer exists; nothing else is filed as `gate`. */
+export const GATE_GROUP: readonly string[] = [
+  "findLiveReviewerByCodeHash",
+  "createAccess",
+  "checkAccess",
+  "findAccessEmail",
+];
 
 export const VIEWER_KINDS = [
   "reviewer on slug A",
@@ -41,6 +52,7 @@ export type Registry<W> = Record<string, RegistryEntry<W>>;
 export function coverageProblems<W>(
   module: Record<string, unknown>,
   registry: Registry<W>,
+  gateGroup: readonly string[] = GATE_GROUP,
 ): string[] {
   const problems: string[] = [];
   const exported = Object.keys(module).filter(
@@ -53,15 +65,18 @@ export function coverageProblems<W>(
       continue;
     }
     const value = module[name];
-    const arity = typeof value === "function" ? value.length : null;
-    if (arity === 3 && entry.group !== "viewer")
-      problems.push(`${name} takes a viewer but is filed as ${entry.group}`);
+    const isFunction = typeof value === "function" && !isClass(value);
+    const arity = isFunction ? (value as () => unknown).length : null;
+    if (entry.group === "gate" && !gateGroup.includes(name))
+      problems.push(`${name} is filed as gate but is not in the gate group`);
+    else if (entry.group === "gate" && arity !== 2)
+      problems.push(`${name} is filed as gate but does not take (db, input)`);
+    if (isFunction && entry.group === "support")
+      problems.push(`${name} is a function filed as support`);
     if (entry.group === "viewer" && arity !== 3)
       problems.push(
         `${name} is filed as viewer but does not take (db, viewer, input)`,
       );
-    if (entry.group === "gate" && arity !== 2)
-      problems.push(`${name} is filed as gate but does not take (db, input)`);
     if (entry.group === "viewer") {
       for (const kind of VIEWER_KINDS)
         if (typeof entry.byViewer[kind] !== "function")
@@ -70,8 +85,20 @@ export function coverageProblems<W>(
       problems.push(`${name} has no isolation case`);
     }
   }
+  for (const name of gateGroup)
+    if (registry[name] && registry[name].group !== "gate")
+      problems.push(
+        `${name} is in the gate group but filed as ${registry[name].group}`,
+      );
   for (const name of Object.keys(registry))
     if (!exported.includes(name))
       problems.push(`${name} is registered but not exported`);
   return problems;
+}
+
+function isClass(value: unknown): boolean {
+  return (
+    typeof value === "function" &&
+    /^class\b/.test(Function.prototype.toString.call(value))
+  );
 }
