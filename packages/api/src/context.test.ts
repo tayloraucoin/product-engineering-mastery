@@ -138,10 +138,7 @@ test("C1: an admin procedure refuses a non-admin with FORBIDDEN and serves an ad
 test("C2: an admin procedure refuses a developer with FORBIDDEN (LAB-2)", async () => {
   const developer = await caller(
     { authorization: `Bearer ${ACCESS_TOKEN}` },
-    {
-      cookie: null,
-      user: { ...supabaseUser(), app_metadata: { role: "developer" } },
-    },
+    { cookie: null, user: supabaseUser("developer") },
   );
   assert.equal(await developer.whoami().then((u) => u?.role), "developer");
   assert.equal(await codeOf(developer.everyone()), "FORBIDDEN");

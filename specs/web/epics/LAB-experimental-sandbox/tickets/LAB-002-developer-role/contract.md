@@ -28,6 +28,8 @@ planned_paths:
   - "packages/db/test/rls.test.ts"
   - "packages/auth/src/context.test.ts"
   - "packages/api/src/context.test.ts"
+  - "packages/api/src/test-helpers.ts"
+  - "docs/runbooks/remove/supabase-database.md"
   - "apps/web/lib/sandbox/team.ts"
   - "apps/web/lib/sandbox/team-check.ts"
   - "apps/web/lib/sandbox/team.test.ts"

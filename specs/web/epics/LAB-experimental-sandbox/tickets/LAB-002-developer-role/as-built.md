@@ -15,6 +15,11 @@
   - `team.ts` opens with `import "server-only"` and binds the rule to the request: `getTeamMember = () => getTeamMemberWith(getAuthContext)`, a static import. It re-exports the rule, so callers import from `team.ts`.
   - This follows the billing webhook's `handle.ts` and `ledger.ts`. It replaced a call-time dynamic import that the first build used to keep `server-only` out of the node tests.
   - `team-check.ts` was added to the contract's planned paths.
+- **After the second reviews (both PASS):**
+  - `supabaseUser` in `packages/api/src/test-helpers.ts` takes `AuthContext["role"]`, so it follows `APP_ROLES`, and C2 mints the developer with `supabaseUser("developer")`.
+  - `docs/runbooks/remove/supabase-database.md` inlined the old two-role list for when `@pem/db` goes. Followed, it would have sent every developer back to `user`. It now lists all three roles and says why.
+  - The owner-private probe asserts its insert before using it.
+  - Both files were added to the contract's planned paths.
 - `technical/placement.md` now names `team.ts` and `getTeamMember()` as the team check, which `access.ts` calls first. It used to say the check sat inside `access.ts`; mason found the line stale.
 - `[ASSUMPTION]` (from the contract) A team member with no email is null, because the record of actions names its actor by email. An empty email counts as none.
 - `appUserIsAdmin` (`packages/db/src/policies.ts:23`) is unchanged, an exact `'admin'` match. No developer policy twin was added (R3), and no database constraint on role values. A grep for `role ===` and `role !==` across `apps/` and `packages/` finds only `trpc.ts:60` and two unrelated chat-message role checks in `packages/ai`. `packages/services/src/context.ts` only passes the role on to the bridge.

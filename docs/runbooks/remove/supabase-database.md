@@ -42,7 +42,7 @@ On a developer's own Postgres (the default), the operator drops the `pem_local` 
 The auth module (STK-12) reaches the database twice: Mode A's local mirror, and the application roles its `AuthContext` carries.
 
 - Delete `apps/web/lib/supabase/local-mirror.ts`. In `apps/web/lib/supabase/context.ts`, delete its import and call `createAuthContextResolver()` with no `mirror`.
-- `packages/auth/src/context.ts`: replace the `@pem/db/rls` import with the roles themselves, `export const APP_ROLES = ["user", "admin"] as const;` and `export type AppRole = (typeof APP_ROLES)[number];`. Delete `@pem/db` from `packages/auth/package.json` and `db` from the `auth` row of `PACKAGE_IMPORTS`.
+- `packages/auth/src/context.ts`: replace the `@pem/db/rls` import with the roles themselves, `export const APP_ROLES = ["user", "developer", "admin"] as const;` (keep every role the application still grants: dropping one sends its holders back to `user`) and `export type AppRole = (typeof APP_ROLES)[number];`. Delete `@pem/db` from `packages/auth/package.json` and `db` from the `auth` row of `PACKAGE_IMPORTS`.
 - `packages/auth/src/client-safe.test.ts`: the last test's `@pem/db/rls` assertion goes with the import.
 
 ## Variables

@@ -227,16 +227,17 @@ describe("an owner-private policy", () => {
         .values({ ownerId: alice, body: "developer probe" })
         .returning({ id: notes.id }),
     );
+    assert.ok(note);
     try {
       const seen = await createRlsClient(db, {
         userId: bob,
         role: "developer",
       }).execute((tx) =>
-        tx.select({ id: notes.id }).from(notes).where(eq(notes.id, note!.id)),
+        tx.select({ id: notes.id }).from(notes).where(eq(notes.id, note.id)),
       );
       assert.deepEqual(seen, []);
     } finally {
-      await db.delete(notes).where(eq(notes.id, note!.id));
+      await db.delete(notes).where(eq(notes.id, note.id));
     }
   });
 });

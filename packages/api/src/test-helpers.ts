@@ -8,6 +8,7 @@ import { drizzle } from "drizzle-orm/pg-proxy";
 
 import {
   createAuthContextResolver,
+  type AuthContext,
   type AuthUser,
   type UserReader,
 } from "@pem/auth/context";
@@ -24,7 +25,7 @@ export const ACCESS_TOKEN = "eyJ.access.token";
 const silent: Logger = { info() {}, warn() {}, error() {} };
 
 /** What Supabase answers for a genuine session or token. */
-export function supabaseUser(role: "user" | "admin" = "user"): AuthUser {
+export function supabaseUser(role: AuthContext["role"] = "user"): AuthUser {
   return {
     id: USER_ID,
     email: "ana@example.test",

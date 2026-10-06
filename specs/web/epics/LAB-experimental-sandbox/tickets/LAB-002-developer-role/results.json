@@ -68,9 +68,19 @@
       }
     },
     "review:mason": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run mason LAB-2",
+        "exit": 0,
+        "at": "2026-10-06T18:53:10Z",
+        "head": "d1a5a03f3b9f1e5892e6b635215e958f9549c39c",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-002-developer-role/review-mason.md",
+        "evidence_sha256": "0b45329b0e98ae46c1d614788db7eae5ee9c4e868c0c49f11c14b6b6313baac4",
+        "contract_sha256": "2cf746037a766c9ff5d8edb22f9a96cff7720f20ef56b84089440be283822574",
+        "as_built_sha256": "7e82bff2de387a35d5d60901544b4e7ecf79e82550c4f86c5adce263ea587642",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/mason-cto-principal-dev.md; tools Read,Grep,Glob)"
+      }
     },
     "review:warden": {
       "status": "PASS",
@@ -78,15 +88,15 @@
       "run": {
         "command": "yarn review:run warden LAB-2",
         "exit": 0,
-        "at": "2026-10-06T18:46:03Z",
-        "head": "366e8e62bd01662cee15699335e5e839bb3f10f8",
+        "at": "2026-10-06T18:57:08Z",
+        "head": "d1a5a03f3b9f1e5892e6b635215e958f9549c39c",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-002-developer-role/review-warden.md",
-        "evidence_sha256": "da1b74f7b677921f5e13084e3284bec2b0c6d90e1083ac7bed131c518775f2a6",
-        "contract_sha256": "9fdec9ae509103537b19b5ae088e36ffa47182cdd255ce60ea6de2f7e4e35c31",
-        "as_built_sha256": "32720d96f6521339624d1f4b4bc1beca540638b29e7c2a65ba39f649a086e3c7",
+        "evidence_sha256": "48e93ee4033d92b069c08ae7a4711747c48d3d500c01fe6e0423f402559d2d7b",
+        "contract_sha256": "2cf746037a766c9ff5d8edb22f9a96cff7720f20ef56b84089440be283822574",
+        "as_built_sha256": "7e82bff2de387a35d5d60901544b4e7ecf79e82550c4f86c5adce263ea587642",
         "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
       }
     }
   },
-  "updated_at": "2026-10-06T18:52:55Z"
+  "updated_at": "2026-10-06T19:02:56Z"
 }
