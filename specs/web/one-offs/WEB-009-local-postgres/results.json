@@ -28,9 +28,16 @@
       }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn contract:record WEB-9 C3 --evidence specs/web/one-offs/WEB-009-local-postgres/evidence/C3-test-db.md",
+        "exit": 0,
+        "at": "2026-10-06T01:42:51Z",
+        "head": "7af304d3a8b20cf8829e2461dd6851905f971403",
+        "evidence_path": "specs/web/one-offs/WEB-009-local-postgres/evidence/C3-test-db.md",
+        "evidence_sha256": "a99056a749d44e8956ddf3c60650c66d7477b56cda4e310fd636df0aedc21a39"
+      }
     },
     "C4": {
       "status": "PASS",
@@ -57,5 +64,5 @@
       }
     }
   },
-  "updated_at": "2026-10-06T01:42:46Z"
+  "updated_at": "2026-10-06T01:42:51Z"
 }
