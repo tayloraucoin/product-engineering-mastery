@@ -6,8 +6,9 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { foreignSessionCookies, sessionCookieRef } from "./cookies.ts";
-import { clearSessionCookies, updateSession } from "./session.ts";
+import { clearSessionCookies, signOut, updateSession } from "./session.ts";
 import {
+  forgedSessionCookie,
   LOCAL_STACK,
   memoryStore,
   recordingFetch,
@@ -116,4 +117,70 @@ test("C2: switching to a tier with no project clears every Supabase session cook
   assert.equal(cleared.length, STAGING_COOKIES.length + 1);
   assert.ok(!cleared.some((name) => UNRELATED.some((u) => u.name === name)));
   assert.ok(store.batches[0]!.every((write) => write.options.maxAge === 0));
+});
+
+test("STK-24 C1: signOut revokes this session on Supabase and deletes every session cookie of the project", async () => {
+  const session = forgedSessionCookie(STAGING);
+  const stale = [
+    { name: `${session.name}.1`, value: "stale-chunk" },
+    { name: `${session.name}-code-verifier`, value: "v" },
+  ];
+  const store = memoryStore([session, ...stale, ...UNRELATED]);
+  const fetch = recordingFetch(200, {});
+  const result = await signOut(STAGING, store, { fetch });
+
+  assert.equal(result.revoked, true);
+  assert.deepEqual(
+    fetch.urls
+      .map((url) => new URL(url))
+      .map((url) => url.pathname + url.search),
+    ["/auth/v1/logout?scope=local"],
+  );
+  const last = store.batches.at(-1)!;
+  for (const cookie of [session, ...stale]) {
+    const write = last.find((entry) => entry.name === cookie.name);
+    assert.ok(write, `${cookie.name} was not deleted`);
+    assert.equal(write.value, "");
+    assert.equal(write.options.maxAge, 0);
+  }
+  assert.ok(
+    !last.some((entry) => UNRELATED.some((u) => u.name === entry.name)),
+  );
+  assert.deepEqual(
+    result.cleared.sort(),
+    [session, ...stale].map((cookie) => cookie.name).sort(),
+  );
+});
+
+test("STK-24 C1: the global scope revokes every device's session", async () => {
+  const fetch = recordingFetch(200, {});
+  await signOut(STAGING, memoryStore([forgedSessionCookie(STAGING)]), {
+    fetch,
+    scope: "global",
+  });
+  assert.equal(new URL(fetch.urls[0]!).searchParams.get("scope"), "global");
+});
+
+test("STK-24 C1: when Supabase cannot be reached the cookies are still deleted", async () => {
+  const session = forgedSessionCookie(STAGING);
+  const store = memoryStore([session]);
+  const result = await signOut(STAGING, store, {
+    fetch: recordingFetch(500, { message: "down" }),
+  });
+  assert.equal(result.revoked, false);
+  const last = store.batches.at(-1)!;
+  assert.equal(last.find((entry) => entry.name === session.name)?.value, "");
+});
+
+test("STK-24 C1: with no session, signOut calls nobody and deletes nothing", async () => {
+  const store = memoryStore([...UNRELATED]);
+  const fetch = recordingFetch(200, {});
+  const result = await signOut(STAGING, store, { fetch });
+  assert.deepEqual(fetch.urls, []);
+  assert.deepEqual(result.cleared, []);
+  assert.ok(
+    store.batches.every((batch) =>
+      batch.every((entry) => !UNRELATED.some((u) => u.name === entry.name)),
+    ),
+  );
 });

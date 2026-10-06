@@ -18,6 +18,8 @@ planned_paths:
   - "apps/web/app/auth/**"
   - "apps/web/lib/supabase/**"
   - "docs/runbooks/remove/supabase-auth.md"
+  - "packages/auth/src/session.ts"
+  - "packages/auth/src/session.test.ts"
 depends_on:
   - STK-12
 out_of_scope:

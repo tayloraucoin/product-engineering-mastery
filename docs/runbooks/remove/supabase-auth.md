@@ -33,10 +33,10 @@ When the database goes too, its runbook deletes the whole `packages/db/` folder,
 
 ## Files to delete
 
-- `packages/auth/`, the whole folder: the factories, `updateSession`, the request seam, the redirect rules and their tests.
+- `packages/auth/`, the whole folder: the factories, `updateSession` and `signOut`, the request seam, the redirect rules and their tests.
 - `apps/web/proxy.ts`: it does nothing but refresh the session.
 - `apps/web/lib/supabase/`: the config, the browser, server and admin clients, the seam and the Mode A mirror wiring.
-- `apps/web/app/auth/`: the callback route and the sign-in page.
+- `apps/web/app/auth/`: the callback route, the sign-in page and the sign-out route. Delete any form that posts to `/auth/sign-out` with it.
 
 ## Files to edit
 

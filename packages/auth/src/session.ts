@@ -79,3 +79,48 @@ export async function updateSession(
     purged: [...purged],
   };
 }
+
+/** Which sessions a sign-out ends: this browser's (`local`) or every device's (`global`). */
+export type SignOutScope = "local" | "global";
+
+export type SignOutResult = {
+  /** Whether Supabase confirmed the revocation; false when it could not be reached or refused. */
+  revoked: boolean;
+  /** Names of the session cookies deleted. */
+  cleared: string[];
+};
+
+/**
+ * Ends the request's session (STK-24). It calls `signOut` on the server
+ * client, so Supabase revokes the refresh token (this session's by default,
+ * every device's with `global`), then deletes every Supabase session cookie
+ * the request carries, chunks and code verifiers included, whether or not
+ * Supabase answered: the browser is signed out either way. Call it only from
+ * a POST, never from a GET a link prefetch could fire.
+ */
+export async function signOut(
+  config: AuthConfig,
+  cookies: CookieStore,
+  options: ServerClientOptions & { scope?: SignOutScope } = {},
+): Promise<SignOutResult> {
+  const pending = new Map<string, CookieWrite>();
+  let pendingHeaders: Record<string, string> = {};
+  const write = (list: CookieWrite[], headers: Record<string, string>) => {
+    for (const cookie of list) pending.set(cookie.name, cookie);
+    pendingHeaders = { ...pendingHeaders, ...headers };
+    cookies.setAll([...pending.values()], pendingHeaders);
+  };
+
+  const { scope = "local", ...clientOptions } = options;
+  const client = createServerAuthClient(
+    config,
+    { getAll: () => cookies.getAll(), setAll: write },
+    clientOptions,
+  );
+  const { error } = await client.auth.signOut({ scope });
+
+  // Supabase deletes the cookies it can name; a stale chunk or verifier can outlive them.
+  const clear = foreignSessionCookies(cookies.getAll(), null);
+  if (clear.length) write(clear, {});
+  return { revoked: !error, cleared: clear.map((cookie) => cookie.name) };
+}
