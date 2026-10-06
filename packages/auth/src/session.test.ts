@@ -184,3 +184,26 @@ test("STK-24 C1: with no session, signOut calls nobody and deletes nothing", asy
     ),
   );
 });
+
+test("STK-24 C1: an expired session whose refresh fails is still deleted, by the fallback alone", async () => {
+  const live = forgedSessionCookie(STAGING);
+  const session = JSON.parse(
+    Buffer.from(live.value.slice("base64-".length), "base64url").toString(),
+  ) as { expires_at: number };
+  session.expires_at = Math.floor(Date.now() / 1000) - 3600;
+  const expired = {
+    name: live.name,
+    value: `base64-${Buffer.from(JSON.stringify(session)).toString("base64url")}`,
+  };
+  const store = memoryStore([expired]);
+  const fetch = (async () => {
+    throw new TypeError("fetch failed");
+  }) as typeof globalThis.fetch;
+  const result = await signOut(STAGING, store, { fetch });
+
+  assert.equal(result.revoked, false);
+  assert.ok(result.failure);
+  const last = store.batches.at(-1)!;
+  assert.equal(last.find((entry) => entry.name === expired.name)?.value, "");
+  assert.deepEqual(result.cleared, [expired.name]);
+});

@@ -86,6 +86,8 @@ export type SignOutScope = "local" | "global";
 export type SignOutResult = {
   /** Whether Supabase confirmed the revocation; false when it could not be reached or refused. */
   revoked: boolean;
+  /** Supabase's error code when it did not confirm, for the log; never a user detail. */
+  failure?: string;
   /** Names of the session cookies deleted. */
   cleared: string[];
 };
@@ -117,10 +119,23 @@ export async function signOut(
     { getAll: () => cookies.getAll(), setAll: write },
     clientOptions,
   );
-  const { error } = await client.auth.signOut({ scope });
-
-  // Supabase deletes the cookies it can name; a stale chunk or verifier can outlive them.
-  const clear = foreignSessionCookies(cookies.getAll(), null);
-  if (clear.length) write(clear, {});
-  return { revoked: !error, cleared: clear.map((cookie) => cookie.name) };
+  let failure: string | undefined;
+  try {
+    const { error } = await client.auth.signOut({ scope });
+    if (error) failure = error.code ?? error.name;
+  } catch (error) {
+    failure = error instanceof Error ? error.name : "unknown";
+  } finally {
+    // Supabase deletes the cookies it can name; a stale chunk or verifier can
+    // outlive them. Its own deletions are kept as written, so attributes it
+    // set (a Domain, say) are never replaced by these bare ones.
+    const clear = foreignSessionCookies(cookies.getAll(), null).filter(
+      (cookie) => pending.get(cookie.name)?.value !== "",
+    );
+    if (clear.length) write(clear, {});
+  }
+  const cleared = foreignSessionCookies(cookies.getAll(), null).map(
+    (cookie) => cookie.name,
+  );
+  return { revoked: failure === undefined, failure, cleared };
 }
