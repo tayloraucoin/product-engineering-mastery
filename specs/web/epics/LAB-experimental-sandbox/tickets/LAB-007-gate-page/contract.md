@@ -28,8 +28,8 @@ cites:
 truth_files: "none: the approved proposal ux/experimental/gate.md reaches specs/web/ux/experimental/gate.md through yarn truth:promote LAB once its citing tickets close"
 qa: Q3
 reviewers:
-  - warden
   - assay
+  - warden
 focus:
   - "one face for real, unknown, revoked and closed (warden)"
   - "the notice's four points (warden)"
@@ -100,6 +100,18 @@ criteria:
     statement: "The HTML yarn web:dev serves without access for a real and an unknown slug is identical once per-request tokens are stripped."
     evidence: manual
     reason: "No test runner serves the app; the builder diffs two served responses and records the diff in the as-built."
+  - id: C13
+    statement: Taylor has looked this ticket over and approved it.
+    evidence: manual
+    reason: "operator_review: true; the builder defers it with what to look at"
+  - id: review:assay
+    statement: Assay reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run assay <id>
+  - id: review:warden
+    statement: Warden reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
 ---
 
 # Contract — LAB-7 gate-page

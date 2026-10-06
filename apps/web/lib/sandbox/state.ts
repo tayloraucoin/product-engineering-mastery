@@ -22,6 +22,17 @@ export type SandboxViewerKind = "reviewer" | "guest" | "team";
 export const SANDBOX_STATE_KEYS: Readonly<
   Record<string, SandboxStateAudience>
 > = {
+  // The gate (LAB-7, gate.md): anyone, on synthetic fixtures.
+  "gate-empty": "anyone",
+  "gate-loading": "anyone",
+  "gate-error": "anyone",
+  "gate-partial": "anyone",
+  "gate-offline": "anyone",
+  "gate-success": "anyone",
+  "gate-throttled": "anyone",
+  "gate-revoked": "anyone",
+  "gate-signed-in": "anyone",
+  "gate-server-error": "anyone",
   // The /admin shell (LAB-8, shell.md).
   "shell-admin": "team",
   "shell-developer": "team",
