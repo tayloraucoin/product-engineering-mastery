@@ -8,11 +8,11 @@
       "run": {
         "command": "yarn workspace web test",
         "exit": 0,
-        "at": "2026-10-06T21:09:56Z",
-        "head": "69dca23fc69128157837a7895ca693c373db20a8",
+        "at": "2026-10-06T21:29:35Z",
+        "head": "06f073e6216df8744c99a6cbe073fc279897b0ef",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C1.log",
-        "evidence_sha256": "b1ae961d1cf45ffc3acd80468e36a3d352bfaaef4c60dfdd947a1b0a80041aa0",
-        "tests": 230
+        "evidence_sha256": "d1bb66304a3f079280afa61097a3d7e0c47858dc9f7bb9ecea85a4bbe269b17a",
+        "tests": 252
       }
     },
     "C2": {
@@ -21,11 +21,11 @@
       "run": {
         "command": "yarn workspace web test",
         "exit": 0,
-        "at": "2026-10-06T21:09:56Z",
-        "head": "69dca23fc69128157837a7895ca693c373db20a8",
+        "at": "2026-10-06T21:29:35Z",
+        "head": "06f073e6216df8744c99a6cbe073fc279897b0ef",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C2.log",
-        "evidence_sha256": "b1ae961d1cf45ffc3acd80468e36a3d352bfaaef4c60dfdd947a1b0a80041aa0",
-        "tests": 230
+        "evidence_sha256": "d1bb66304a3f079280afa61097a3d7e0c47858dc9f7bb9ecea85a4bbe269b17a",
+        "tests": 252
       }
     },
     "C3": {
@@ -34,11 +34,11 @@
       "run": {
         "command": "yarn workspace web test",
         "exit": 0,
-        "at": "2026-10-06T21:09:56Z",
-        "head": "69dca23fc69128157837a7895ca693c373db20a8",
+        "at": "2026-10-06T21:29:35Z",
+        "head": "06f073e6216df8744c99a6cbe073fc279897b0ef",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C3.log",
-        "evidence_sha256": "b1ae961d1cf45ffc3acd80468e36a3d352bfaaef4c60dfdd947a1b0a80041aa0",
-        "tests": 230
+        "evidence_sha256": "d1bb66304a3f079280afa61097a3d7e0c47858dc9f7bb9ecea85a4bbe269b17a",
+        "tests": 252
       }
     },
     "C4": {
@@ -47,11 +47,11 @@
       "run": {
         "command": "yarn workspace web test",
         "exit": 0,
-        "at": "2026-10-06T21:09:56Z",
-        "head": "69dca23fc69128157837a7895ca693c373db20a8",
+        "at": "2026-10-06T21:29:35Z",
+        "head": "06f073e6216df8744c99a6cbe073fc279897b0ef",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C4.log",
-        "evidence_sha256": "b1ae961d1cf45ffc3acd80468e36a3d352bfaaef4c60dfdd947a1b0a80041aa0",
-        "tests": 230
+        "evidence_sha256": "d1bb66304a3f079280afa61097a3d7e0c47858dc9f7bb9ecea85a4bbe269b17a",
+        "tests": 252
       }
     },
     "C5": {
@@ -60,11 +60,11 @@
       "run": {
         "command": "yarn workspace web test",
         "exit": 0,
-        "at": "2026-10-06T21:09:56Z",
-        "head": "69dca23fc69128157837a7895ca693c373db20a8",
+        "at": "2026-10-06T21:29:35Z",
+        "head": "06f073e6216df8744c99a6cbe073fc279897b0ef",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C5.log",
-        "evidence_sha256": "b1ae961d1cf45ffc3acd80468e36a3d352bfaaef4c60dfdd947a1b0a80041aa0",
-        "tests": 230
+        "evidence_sha256": "d1bb66304a3f079280afa61097a3d7e0c47858dc9f7bb9ecea85a4bbe269b17a",
+        "tests": 252
       }
     },
     "C6": {
@@ -73,11 +73,11 @@
       "run": {
         "command": "yarn workspace web test",
         "exit": 0,
-        "at": "2026-10-06T21:09:56Z",
-        "head": "69dca23fc69128157837a7895ca693c373db20a8",
+        "at": "2026-10-06T21:29:35Z",
+        "head": "06f073e6216df8744c99a6cbe073fc279897b0ef",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C6.log",
-        "evidence_sha256": "b1ae961d1cf45ffc3acd80468e36a3d352bfaaef4c60dfdd947a1b0a80041aa0",
-        "tests": 230
+        "evidence_sha256": "d1bb66304a3f079280afa61097a3d7e0c47858dc9f7bb9ecea85a4bbe269b17a",
+        "tests": 252
       }
     },
     "C7": {
@@ -86,8 +86,8 @@
       "run": {
         "command": "yarn contract:record LAB-7 C7 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/gate-notice.png",
         "exit": 0,
-        "at": "2026-10-06T21:10:42Z",
-        "head": "69dca23fc69128157837a7895ca693c373db20a8",
+        "at": "2026-10-06T21:30:10Z",
+        "head": "06f073e6216df8744c99a6cbe073fc279897b0ef",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/gate-notice.png",
         "evidence_sha256": "988dec6ee5aca4854c9305e42abe0a6c4050432456d87c0b950734872c32155b"
       }
@@ -98,10 +98,10 @@
       "run": {
         "command": "yarn contract:record LAB-7 C8 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/gate-throttled.png",
         "exit": 0,
-        "at": "2026-10-06T21:10:48Z",
-        "head": "69dca23fc69128157837a7895ca693c373db20a8",
+        "at": "2026-10-06T21:30:16Z",
+        "head": "06f073e6216df8744c99a6cbe073fc279897b0ef",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/gate-throttled.png",
-        "evidence_sha256": "55a130377342cd94506c44a447be1a7ec51f4b855b5c159cf266d5c1709746ca"
+        "evidence_sha256": "a5b93176658880f143e3dfd2bf9c2931389a1393a4829178f3abeec6fbc6a3b0"
       }
     },
     "C9": {
@@ -110,8 +110,8 @@
       "run": {
         "command": "yarn contract:record LAB-7 C9 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C9-steps.md --verdict deferred",
         "exit": 0,
-        "at": "2026-10-06T21:11:04Z",
-        "head": "69dca23fc69128157837a7895ca693c373db20a8",
+        "at": "2026-10-06T21:30:32Z",
+        "head": "06f073e6216df8744c99a6cbe073fc279897b0ef",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C9-steps.md",
         "evidence_sha256": "61c01a98ea320deebf28eef2017bb8823c15e1e3b9b0d24cbdb158f03b9da219",
         "deferred": true
@@ -123,8 +123,8 @@
       "run": {
         "command": "yarn contract:record LAB-7 C10 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/gate-states.png",
         "exit": 0,
-        "at": "2026-10-06T21:10:53Z",
-        "head": "69dca23fc69128157837a7895ca693c373db20a8",
+        "at": "2026-10-06T21:30:21Z",
+        "head": "06f073e6216df8744c99a6cbe073fc279897b0ef",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/gate-states.png",
         "evidence_sha256": "5564d7515dd419cdfc5bc3ff5207eb6ab5cc5f51a2eb9995bd0672d99a094d54"
       }
@@ -135,11 +135,11 @@
       "run": {
         "command": "yarn workspace web test",
         "exit": 0,
-        "at": "2026-10-06T21:09:56Z",
-        "head": "69dca23fc69128157837a7895ca693c373db20a8",
+        "at": "2026-10-06T21:29:35Z",
+        "head": "06f073e6216df8744c99a6cbe073fc279897b0ef",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C11.log",
-        "evidence_sha256": "b1ae961d1cf45ffc3acd80468e36a3d352bfaaef4c60dfdd947a1b0a80041aa0",
-        "tests": 230
+        "evidence_sha256": "d1bb66304a3f079280afa61097a3d7e0c47858dc9f7bb9ecea85a4bbe269b17a",
+        "tests": 252
       }
     },
     "C12": {
@@ -148,10 +148,10 @@
       "run": {
         "command": "yarn contract:record LAB-7 C12 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C12-served-diff.md",
         "exit": 0,
-        "at": "2026-10-06T21:10:59Z",
-        "head": "69dca23fc69128157837a7895ca693c373db20a8",
+        "at": "2026-10-06T21:30:27Z",
+        "head": "06f073e6216df8744c99a6cbe073fc279897b0ef",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C12-served-diff.md",
-        "evidence_sha256": "1a33aed80d391ea585cf4f39000a33811c39715b2c3aade7d0897c0e6314f273"
+        "evidence_sha256": "48bb5004094be7f1371e38ce50c5187bdce2ccb2683e7d47cd2fb357aca7e616"
       }
     },
     "C13": {
@@ -160,8 +160,8 @@
       "run": {
         "command": "yarn contract:record LAB-7 C13 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C13-look-over.md --verdict deferred",
         "exit": 0,
-        "at": "2026-10-06T21:11:10Z",
-        "head": "69dca23fc69128157837a7895ca693c373db20a8",
+        "at": "2026-10-06T21:30:38Z",
+        "head": "06f073e6216df8744c99a6cbe073fc279897b0ef",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C13-look-over.md",
         "evidence_sha256": "fbff39ba1c863afd86a2f3a570c936330a7db64d55d084ce641511828656d19c",
         "deferred": true
@@ -198,5 +198,5 @@
       }
     }
   },
-  "updated_at": "2026-10-06T21:25:18Z"
+  "updated_at": "2026-10-06T21:30:38Z"
 }
