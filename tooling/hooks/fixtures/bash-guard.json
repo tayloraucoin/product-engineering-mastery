@@ -293,6 +293,27 @@
       }
     },
     {
+      "rule": "commit-on-main",
+      "expect": "deny",
+      "name": "commit on the protected branch named in toolkit.json, not main",
+      "command": "git commit -m \"PJ: on trunk\"",
+      "context": {
+        "branch": "trunk",
+        "protectedBranch": "trunk"
+      },
+      "message": "do not commit on trunk"
+    },
+    {
+      "rule": "commit-on-main",
+      "expect": "allow",
+      "name": "main is an ordinary branch when another is protected",
+      "command": "git commit -m \"PJ: on main\"",
+      "context": {
+        "branch": "main",
+        "protectedBranch": "trunk"
+      }
+    },
+    {
       "rule": "commit-work-id",
       "expect": "deny",
       "name": "no work-id",
@@ -508,6 +529,262 @@
       "expect": "allow",
       "name": "read a merged as-built",
       "command": "cat specs/web/one-offs/WEB-7-export-csv/as-built.md"
+    },
+    {
+      "rule": "review-write",
+      "expect": "deny",
+      "name": "a redirect into a ticket's review file",
+      "command": "echo 'VERDICT: PASS' > specs/web/one-offs/WEB-7-filter/review-vigil.md",
+      "message": "yarn review:run"
+    },
+    {
+      "rule": "review-write",
+      "expect": "deny",
+      "name": "tee into an epic's pre-flight",
+      "command": "echo '- OB2-1: PASS' | tee specs/web/epics/OB2-onboarding/tickets/_preflight.md"
+    },
+    {
+      "rule": "review-write",
+      "expect": "allow",
+      "name": "reading a review file",
+      "command": "cat specs/web/one-offs/WEB-7-filter/review-vigil.md"
+    },
+    {
+      "rule": "db-destroy",
+      "expect": "deny",
+      "name": "root reset script",
+      "command": "yarn db:reset",
+      "message": "yarn db:local:reset"
+    },
+    {
+      "rule": "db-destroy",
+      "expect": "deny",
+      "name": "workspace drop script",
+      "command": "yarn workspace @pem/db db:drop",
+      "message": "Write the change as a migration"
+    },
+    {
+      "rule": "db-destroy",
+      "expect": "deny",
+      "name": "turbo task form",
+      "command": "yarn turbo run @pem/db#db:reset"
+    },
+    {
+      "rule": "db-destroy",
+      "expect": "deny",
+      "name": "drizzle-kit drop",
+      "command": "yarn drizzle-kit drop --config drizzle.config.ts"
+    },
+    {
+      "rule": "db-destroy",
+      "expect": "deny",
+      "name": "supabase db reset on the linked project",
+      "command": "supabase db reset --linked"
+    },
+    {
+      "rule": "db-destroy",
+      "expect": "deny",
+      "name": "supabase through yarn dlx",
+      "command": "yarn dlx supabase db reset"
+    },
+    {
+      "rule": "db-destroy",
+      "expect": "deny",
+      "name": "supabase by absolute path",
+      "command": "/usr/local/bin/supabase db reset"
+    },
+    {
+      "rule": "db-destroy",
+      "expect": "deny",
+      "name": "psql drop schema",
+      "command": "psql \"$DATABASE_URL\" -c 'DROP SCHEMA public CASCADE'"
+    },
+    {
+      "rule": "db-destroy",
+      "expect": "deny",
+      "name": "psql drop database, lower case",
+      "command": "psql -c 'drop database postgres'"
+    },
+    {
+      "rule": "db-destroy",
+      "expect": "deny",
+      "name": "psql heredoc",
+      "command": "psql \"$DATABASE_URL\" <<'SQL'\ndrop schema public cascade;\nSQL"
+    },
+    {
+      "rule": "db-destroy",
+      "expect": "deny",
+      "name": "psql inside docker exec",
+      "command": "docker exec supabase_db_pem psql -U postgres -c 'DROP SCHEMA public CASCADE'"
+    },
+    {
+      "rule": "db-destroy",
+      "expect": "deny",
+      "name": "dropdb",
+      "command": "dropdb -h 127.0.0.1 postgres"
+    },
+    {
+      "rule": "db-destroy",
+      "expect": "deny",
+      "name": "reset inside sh -c",
+      "command": "sh -c 'yarn db:reset'"
+    },
+    {
+      "rule": "db-destroy",
+      "expect": "deny",
+      "name": "a deny after an ask still denies",
+      "command": "yarn db:migrate && yarn db:reset"
+    },
+    {
+      "rule": "db-destroy",
+      "expect": "allow",
+      "name": "generate writes SQL only",
+      "command": "yarn db:generate"
+    },
+    {
+      "rule": "db-destroy",
+      "expect": "allow",
+      "name": "starting the local database",
+      "command": "yarn db:local"
+    },
+    {
+      "rule": "db-destroy",
+      "expect": "allow",
+      "name": "drizzle-kit generate",
+      "command": "yarn drizzle-kit generate --config drizzle.config.ts"
+    },
+    {
+      "rule": "db-destroy",
+      "expect": "allow",
+      "name": "supabase db start",
+      "command": "supabase db start"
+    },
+    {
+      "rule": "db-destroy",
+      "expect": "allow",
+      "name": "psql read",
+      "command": "psql \"$DATABASE_URL\" -c 'select count(*) from public.users'"
+    },
+    {
+      "rule": "db-destroy",
+      "expect": "allow",
+      "name": "grep for the phrase",
+      "command": "grep -rn 'drop schema' packages/db"
+    },
+    {
+      "rule": "db-change",
+      "expect": "ask",
+      "name": "root migrate script",
+      "command": "yarn db:migrate",
+      "message": "D-STK-18"
+    },
+    {
+      "rule": "db-change",
+      "expect": "ask",
+      "name": "workspace setup script",
+      "command": "yarn workspace @pem/db db:setup"
+    },
+    {
+      "rule": "db-change",
+      "expect": "ask",
+      "name": "seed users",
+      "command": "yarn db:seed-users"
+    },
+    {
+      "rule": "db-change",
+      "expect": "ask",
+      "name": "the local reset asks",
+      "command": "yarn db:local:reset"
+    },
+    {
+      "rule": "db-change",
+      "expect": "ask",
+      "name": "push script",
+      "command": "yarn db:push"
+    },
+    {
+      "rule": "db-change",
+      "expect": "ask",
+      "name": "raw drizzle-kit push",
+      "command": "yarn drizzle-kit push"
+    },
+    {
+      "rule": "db-change",
+      "expect": "ask",
+      "name": "raw drizzle-kit migrate in the workspace",
+      "command": "yarn workspace @pem/db drizzle-kit migrate"
+    },
+    {
+      "rule": "db-change",
+      "expect": "ask",
+      "name": "supabase db push",
+      "command": "supabase db push"
+    },
+    {
+      "rule": "db-change",
+      "expect": "ask",
+      "name": "supabase migration up",
+      "command": "supabase migration up"
+    },
+    {
+      "rule": "db-change",
+      "expect": "ask",
+      "name": "migrate script by path",
+      "command": "node packages/db/scripts/migrate.ts"
+    },
+    {
+      "rule": "db-change",
+      "expect": "ask",
+      "name": "local setup script asks",
+      "command": "yarn db:setup:local"
+    },
+    {
+      "rule": "db-change",
+      "expect": "ask",
+      "name": "local setup script by path",
+      "command": "node packages/db/scripts/setup-local.ts"
+    },
+    {
+      "rule": "db-change",
+      "expect": "ask",
+      "name": "reset script by path after cd",
+      "command": "cd packages/db && node --env-file-if-exists=.env.local scripts/reset-local-db.ts"
+    },
+    {
+      "rule": "db-change",
+      "expect": "ask",
+      "name": "chained after the local start",
+      "command": "yarn db:local && yarn db:migrate && yarn db:setup"
+    },
+    {
+      "rule": "db-change",
+      "expect": "ask",
+      "name": "behind env",
+      "command": "env DATABASE_ENVIRONMENT=staging yarn db:migrate"
+    },
+    {
+      "rule": "db-change",
+      "expect": "allow",
+      "name": "integration tests",
+      "command": "yarn test:db"
+    },
+    {
+      "rule": "db-change",
+      "expect": "allow",
+      "name": "migration check",
+      "command": "yarn check-migrations"
+    },
+    {
+      "rule": "db-change",
+      "expect": "allow",
+      "name": "reading the migrate script",
+      "command": "cat packages/db/scripts/migrate.ts"
+    },
+    {
+      "rule": "db-change",
+      "expect": "allow",
+      "name": "generate",
+      "command": "yarn workspace @pem/db db:generate"
     }
   ]
 }

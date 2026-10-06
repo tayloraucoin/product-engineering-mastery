@@ -1,0 +1,113 @@
+{
+  "id": "STK-9",
+  "criteria_sha256": "b9acd3605607e8812f72239acf727b8cb07e4f5da733cab0ea0f1996df35b4ff",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "capture",
+      "run": {
+        "command": "yarn contract:record STK-9 C1 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/evidence/test-db.txt",
+        "exit": 0,
+        "at": "2026-10-04T06:45:42Z",
+        "head": "34ce6a57044c5409fc7df06a372519ea9a6d15c4",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/evidence/test-db.txt",
+        "evidence_sha256": "bb309ddd4a15c546c8c332075316a2405424cbeccfe4cd7925295b2e1fc44a0f"
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-05T04:25:44Z",
+        "head": "ce6168f566b5c52ecf0a2a36c56a58c920014bea",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/evidence/C2.log",
+        "evidence_sha256": "a1f43fad3049b1dc2bd89f9bde13b91ba01efac33ee1427add9aa521fa718a60",
+        "tests": 204
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn lint:boundaries",
+        "exit": 0,
+        "at": "2026-10-05T04:25:49Z",
+        "head": "ce6168f566b5c52ecf0a2a36c56a58c920014bea",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/evidence/C3.log",
+        "evidence_sha256": "1b9cee1906a781f9bbe9f53425297eafc68892fc457d02883e0921a831f6712b"
+      }
+    },
+    "C4": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn verify",
+        "exit": 0,
+        "at": "2026-10-05T04:25:57Z",
+        "head": "ce6168f566b5c52ecf0a2a36c56a58c920014bea",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/evidence/C4.log",
+        "evidence_sha256": "07b9bda9156c69c33d02a319b2050e6f5a294a0ddfa50a65567fe734177076bf"
+      }
+    },
+    "C5": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn contract:record STK-9 C5 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/evidence/C5-2026-10-04.md",
+        "exit": 0,
+        "at": "2026-10-05T04:27:46Z",
+        "head": "ce6168f566b5c52ecf0a2a36c56a58c920014bea",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/evidence/C5-2026-10-04.md",
+        "evidence_sha256": "81e2eefa8c5791d7fe4dc3dab49f7368fe8bfb09785d1415f611ce8f316bd5b6"
+      }
+    },
+    "review:mason": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn review:run mason STK-9",
+        "exit": 0,
+        "at": "2026-10-04T06:46:03Z",
+        "head": "fa1d9389d50832e4c0ac6efa353c178cb40ec873",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/review-mason.md",
+        "evidence_sha256": "dbce995b840fb16924f4022f176344fcdf7db9fa8967b5680643b1763e37c297",
+        "contract_sha256": "2602afb9282d250acfde0d5b3cb4778088144415470b8b3f1d1160e7837dcc61",
+        "as_built_sha256": "adc6bed7c4d5f506ca3ca10222758953db8e841191b4414e61b84f6896c368cd",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/mason-cto-principal-dev.md; tools Read,Grep,Glob)"
+      }
+    },
+    "review:vigil": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn review:run vigil STK-9",
+        "exit": 0,
+        "at": "2026-10-04T05:48:43Z",
+        "head": "57a2057cc2745ed56843ec6be133a86aa328cd88",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/review-vigil.md",
+        "evidence_sha256": "5f930ac0c958db9c2757af3b7ef410f758f16a5882c7a16edc48f8e7b3b74ae0",
+        "contract_sha256": "2602afb9282d250acfde0d5b3cb4778088144415470b8b3f1d1160e7837dcc61",
+        "as_built_sha256": "e18ddc8962f9f4ff68390f8b8f21cf126c4eb28868162b0d0b37af4d91f75a0d",
+        "runner": "claude 2.1.232 (Claude Code) (agent vigil; tools Read,Grep,Glob)"
+      }
+    },
+    "review:warden": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn review:run warden STK-9",
+        "exit": 0,
+        "at": "2026-10-04T05:56:05Z",
+        "head": "57a2057cc2745ed56843ec6be133a86aa328cd88",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-9-db-package/review-warden.md",
+        "evidence_sha256": "f02b64edf376f56e4dfd83fff22e17b615bd911d82bc36aab4dd885101ae9336",
+        "contract_sha256": "2602afb9282d250acfde0d5b3cb4778088144415470b8b3f1d1160e7837dcc61",
+        "as_built_sha256": "e18ddc8962f9f4ff68390f8b8f21cf126c4eb28868162b0d0b37af4d91f75a0d",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
+      }
+    }
+  },
+  "updated_at": "2026-10-05T04:27:46Z"
+}

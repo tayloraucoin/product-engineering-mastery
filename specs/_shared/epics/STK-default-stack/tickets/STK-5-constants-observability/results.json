@@ -1,0 +1,69 @@
+{
+  "id": "STK-5",
+  "criteria_sha256": "7ce113f621ccc6532ca9ce89ccd9c7979105ecb8c3b32e4ef98b8699e51e21ae",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-05T00:25:56Z",
+        "head": "aa3486660e5eb705c469396e6d082922c03e2ef7",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-5-constants-observability/evidence/C1.log",
+        "evidence_sha256": "fa38bb0f6562796e765b959553251f024cac6099e1ff459eeaa2926824b62c34",
+        "tests": 134
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-05T00:26:00Z",
+        "head": "aa3486660e5eb705c469396e6d082922c03e2ef7",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-5-constants-observability/evidence/C2.log",
+        "evidence_sha256": "07806f2042f674d764cc4f55c4c5bdbc0e4aacc7b31bdc2fe06493be1069ebae",
+        "tests": 134
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn lint:boundaries",
+        "exit": 0,
+        "at": "2026-10-05T00:26:04Z",
+        "head": "aa3486660e5eb705c469396e6d082922c03e2ef7",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-5-constants-observability/evidence/C3.log",
+        "evidence_sha256": "b9696e3cd9610fb073ff257fd38d95a97d296a26c7ced341a5b0c5e15924c454"
+      }
+    },
+    "C4": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn contract:record STK-5 C4 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-5-constants-observability/evidence/C4.md",
+        "exit": 0,
+        "at": "2026-10-05T00:26:09Z",
+        "head": "e24207de902ff60bd5c5d98c715975591f8e1493",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-5-constants-observability/evidence/C4.md",
+        "evidence_sha256": "195854de87e54be2af81cdc6ded30c9dd9f813f8f53195604a43f37c04854f55"
+      }
+    },
+    "C5": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn verify",
+        "exit": 0,
+        "at": "2026-10-05T00:33:28Z",
+        "head": "4ac5cf93e5eaa1e3b1368e9344c28e7f89ff6fbd",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-5-constants-observability/evidence/C5.log",
+        "evidence_sha256": "9b2eba3c63d384c23fa9b65c0a66e4715dbf4f2bcc73787766dd7a00a6561246"
+      }
+    }
+  },
+  "updated_at": "2026-10-05T00:34:32Z"
+}

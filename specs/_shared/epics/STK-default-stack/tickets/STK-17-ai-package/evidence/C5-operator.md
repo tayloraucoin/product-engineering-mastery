@@ -1,0 +1,7 @@
+# STK-17 C5: operator steps before an Anthropic key reaches a hosted tier
+
+Each step needs Taylor's Anthropic account. Do them once per tier (staging, then production) before setting `ANTHROPIC_API_KEY_STAGING` or `ANTHROPIC_API_KEY` in the hosting provider.
+
+1. **Spend limit.** In the Anthropic Console, create the tier's API key in its own workspace, and set a monthly spend limit on that workspace that the product can afford to lose. **You should see** the limit shown on the workspace's limits page. The chat route answers any signed-in user; its per-user window (20 calls a minute, per process) stops a loop, not a determined spender.
+2. **Data settings.** In the Console's privacy and data settings, check how long the account retains prompts and outputs, and whether they may be used for training. **You should see** settings that match what the product's privacy notice says about AI processing. Extraction sends names and email addresses; chat sends whole transcripts.
+3. **Real fixtures.** Put the staging key in `packages/ai/.env.local` as `ANTHROPIC_API_KEY=…`, then ask the agent to run the record script for STK-17. **You should see** `record — wrote src/fixtures/extract.ts` (and `chat.ts`, `generate.ts`), each fixture's `source` now `"recorded"`, and `yarn test` still green. A case whose live answer fails its eval keeps its old fixture and prints why; that answer is the finding.

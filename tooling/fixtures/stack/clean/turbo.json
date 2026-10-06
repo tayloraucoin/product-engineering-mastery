@@ -1,0 +1,13 @@
+{
+  "globalEnv": [
+    "NODE_ENV",
+    "KEPT_API_URL"
+  ],
+  "tasks": {
+    "build": {
+      "env": [
+        "KEPT_API_URL_STAGING"
+      ]
+    }
+  }
+}

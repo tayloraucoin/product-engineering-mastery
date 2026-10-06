@@ -1,6 +1,6 @@
 /**
  * Lints every markdown file under docs/: file and folder names (record 0006)
- * and the frontmatter schema (plan §2.7 as amended by conflicts.md CF-16).
+ * and the frontmatter schema (record 0006 §Frontmatter, CF-16).
  * This file is the enforceable copy of both; the docs describe, this decides.
  *
  *   yarn lint:docs
@@ -157,7 +157,7 @@ function lintFrontmatter(file: string, fm: Frontmatter) {
   }
   const isLanding = path.posix.basename(file) === "README.md";
   if (layer === "research" && status !== "archived" && !isLanding) {
-    fail(file, `research files are status: archived (plan §2.6)`);
+    fail(file, `research files are status: archived (record 0006)`);
   }
   if (typeof description === "string") {
     if (description.includes("\n")) fail(file, "description must be one line");
@@ -255,13 +255,17 @@ function lintRule(file: string): string | null {
   return null;
 }
 
-// The fixture must fail, or the rule lint is not checking anything.
-const RULE_FIXTURE = "tooling/fixtures/rules/with-description.md";
-if (lintRule(RULE_FIXTURE) === null)
-  fail(
-    RULE_FIXTURE,
-    "the fixture with a description key passed; the rule lint is broken",
-  );
+// Each fixture must fail with its own message, or the rule lint is not checking anything.
+const RULE_FIXTURES: [string, string][] = [
+  ["tooling/fixtures/rules/with-description.md", "rules carry only `paths`"],
+  ["tooling/fixtures/rules/paths-missing.md", "paths must be a non-empty list"],
+];
+for (const [fixture, expected] of RULE_FIXTURES)
+  if (!lintRule(fixture)?.includes(expected))
+    fail(
+      fixture,
+      `the fixture did not fail with "${expected}"; the rule lint is broken`,
+    );
 for (const file of listMarkdown(".claude/rules")) {
   const problem = lintRule(file);
   if (problem) errors.push(problem);
@@ -275,7 +279,7 @@ for (const file of files) {
   lintName(file);
   const md = readMarkdown(file);
   if (md.rawFrontmatter === null) {
-    fail(file, "no frontmatter (plan §2.7)");
+    fail(file, "no frontmatter; copy the block record 0006 §Frontmatter lists");
     continue;
   }
   if (md.frontmatterError) {

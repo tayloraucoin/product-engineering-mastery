@@ -1,0 +1,7 @@
+{
+  "expect": "fail",
+  "messages": [
+    "stack.gone is removed, but its variable GONE_SECRET is still in .env.example",
+    "stack.gone is removed, but its variable GONE_SECRET_STAGING is still in .env.example"
+  ]
+}

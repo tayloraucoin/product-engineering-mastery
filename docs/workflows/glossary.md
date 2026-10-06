@@ -19,7 +19,10 @@ One line per term, grouped by system. If a term needs more than a line, it links
 
 | Term | Meaning |
 |---|---|
-| **One-off** | A single ticket that changes something that already exists. A side quest. |
+| **Track** | A kind of work with its own path: epic, one-off, feature exploration, product spec only, bug, question or report, audit, new project. See [`tracks/`](tracks/README.md). |
+| **One-off** | One buildable change with a known outcome, with or without a formal ticket. A side quest. |
+| **Batch** | The tickets one thread builds in order because they share context. |
+| **Wave** | The batches that can run at the same time because nothing depends between them. |
 | **Epic** | A folder of tickets that share one problem, one UX proposal and one set of technical notes. A campaign. |
 | **Ticket** | One unit of buildable work, sized to fit one build thread. Its folder holds a contract, results and an as-built record. |
 | **Work-id** | A ticket's name. `WEB-41` for a one-off (app prefix), `OB2-3` for an epic ticket (epic prefix). Scripts allocate the numbers. |
@@ -43,14 +46,18 @@ One line per term, grouped by system. If a term needs more than a line, it links
 | **Contract** | A ticket's definition of done: criteria, how each is proven, planned paths, what it cites, what's out of scope, what it depends on, and who reviews it. |
 | **Criterion** | One checkable statement in a contract. |
 | **Evidence type** | How a criterion is proven: `test` (an automated test), `check` (lint, types, boundaries), `capture` (a screenshot of a UI state) or `manual` (a human check, reported as not verified). |
-| **`results.json`** | Each criterion's PASS or FAIL. It starts at FAIL, and only scripts write it, each with a run record. |
-| **Run record** | Proof stamped into each result: the command, its exit code, the time and an evidence hash. |
-| **As-built** | The closing record: what shipped, deviations and why, migrations, test changes, what wasn't verified, and the next step. Frozen after merge. |
-| **Reviewer** | A role that checks a ticket in fresh context, chosen by what the ticket touches. |
+| **QA level** | Q0 to Q3: how the work is proven, who reviews it and what is written down. Recommended by the builder, confirmed by the operator, set per ticket. See [`qa-levels.md`](qa-levels.md). |
+| **Focus** | A named part of the work raised to a higher level on request ("the webhook handling"), without raising the rest. |
+| **Ledger** | A Q3 ticket's `results.json` and kept review files: proofs that are checked for staleness before a merge. |
+| **`results.json`** | A ticket's PASS or FAIL per criterion, written only by scripts. Below Q3 it is a status note that never goes stale; at Q3 it is the ledger. |
+| **Run record** | Proof stamped into each Q3 result: the command, its exit code and the time. |
+| **As-built** | The closing record: what shipped, deviations and why, what wasn't verified, and the next step. Written at Q2 and Q3, or when something deviated. |
+| **Reviewer** | A role that checks work in fresh context. Recommended from what the work touches, confirmed by the operator. |
+| **Flag** | The colour on a review or audit finding: black (fix now), red (critical), orange (high to medium), yellow (minor), grey (low). |
 | **Vigil** | The QA evaluator. It runs as a read-only subagent and never sees the builder's summary. |
 | **Assay** | The UI critic. It scores rendered UI against the canon rubric. |
 | **One-way door** | A change that's hard to undo: schema, migrations, auth, billing, package boundaries, public API shape. |
-| **Risk tier** | The classifier's label for a diff, based on which one-way doors it touches. |
+| **Critical path** | Files where a one-way door lives. Work that touches one below Q3 is flagged once, never blocked. |
 
 ## The physics
 
@@ -59,11 +66,13 @@ One line per term, grouped by system. If a term needs more than a line, it links
 | **Hook** | A script Claude Code runs automatically before or after an agent action. It can block the action and say why. |
 | **Check** | A script in `yarn verify`, the git hooks or CI that fails when a rule is broken. |
 | **Path rule** | A file in `.claude/rules/` that loads only when the agent touches matching files. |
-| **Skill** | A packaged instruction set. The `tk-` skills are manual: they run only when you type their slash command. |
+| **Skill** | A packaged instruction set an agent loads when the work calls for it. The house ones are `tk-prompt` (the front door) and `tk-batch` (building tickets); plain language triggers both. |
+| **`tk-`** | Short for "toolkit": the prefix on this repo's own skills, to tell them from third-party ones. |
+| **HUD** | Heads-up display, from games: what the system shows you without being asked (the status line when a session opens, a denial that names the right move, "Left to go" when a session stops). |
 | **Subagent** | A role run in its own fresh context with limited tools (Vigil, Assay). |
 | **Settings and sandbox** | `.claude/settings.json`: what the agent may never do, must ask about, or may do freely. |
 | **`toolkit.json`** | The one file that says where things live in this repo: apps, prefixes, specs root, reviewer map. |
-| **Always-on** | What loads in every session (`AGENTS.md`, `CLAUDE.md`, `docs/index.md`, listings, the status line), kept under about 3,400 tokens. |
+| **Always-on** | What loads in every session (`AGENTS.md`, `CLAUDE.md`, `docs/README.md`, listings, the status line), kept under about 3,400 tokens. |
 | **Budget** | The token caps for each kind of thread, held by `yarn budget`. |
 | **Status** | Generated views of every item's state: `yarn status`, `specs/_status.md`. |
 | **Left to go** | The generated list of what remains on the active ticket, printed when a session stops. |
@@ -73,12 +82,16 @@ One line per term, grouped by system. If a term needs more than a line, it links
 
 | Term | Meaning |
 |---|---|
-| **Prompt builder** | The front door. You brain dump into it and it prints a ready prompt: route, venue, lead and support roles, files to attach. |
+| **Prompt builder** | The front door of every piece of work. It interviews you, then prints the prompt, what to expect and any research prompts. It saves nothing. |
+| **Fast lane** | The builder doing a tiny piece of work in its own thread, with no prompt and no new thread. |
+| **Involvement** | How often a thread stops for you: autonomous (once, at the end), check in at gates (a few named stops), decide together (every meaningful choice). |
+| **Pace** | Fast, balanced or careful: how much checking and how deep a model the work gets. |
 | **Prompt standard** | The checklist every printed prompt is checked against. |
-| **Stage file** | One file per level telling the agent who leads, what to load, how to interview, what to write, the gate and the handoff. |
-| **Handoff prompt** | The next level's prompt, written by the level that just finished into the epic's `prompts/` folder. |
+| **Stage file** | One file per stage telling the agent who leads, what to load, how to interview, what to write, the gate and the handoff. Tracks share stages. |
+| **Handoff prompt** | The next stage's prompt, printed in the thread by the stage that just finished. Never saved as a file. |
+| **Research block** | The printed instruction to run a research thread: the role, the model, the prompt, and where to save the result. |
 | **Venue** | Where a prompt runs: Claude Code, or a general Claude thread. Every prompt states it on its first line. |
-| **Tier** | How the toolkit is adopted in a repo. Starter: the full toolkit. Overlay: a minimum harness in a repo you don't own. Overlay-local: the same, kept in ignored files. |
+| **Adoption tier** | How the toolkit is adopted in a repo. Starter: the full toolkit. Overlay: a minimum harness in a repo you don't own. Overlay-local: the same, kept in ignored files. |
 
 ## Old words, new words
 

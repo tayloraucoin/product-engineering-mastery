@@ -1,8 +1,40 @@
 /**
- * Imported by each app's `app/globals.css`, after Tailwind and the token
- * preset. `@source` resolves relative to this file, so every class used
- * anywhere in `@pem/ui` is generated without the app knowing this package's
- * path on disk.
+ * Imported by each app's `app/globals.css` and by the workshop's
+ * `.storybook/preview.css`, after Tailwind and the token preset, so every
+ * surface paints the same base. `@source` resolves relative to this file, so
+ * every class used anywhere in `@pem/ui` is generated without the importer
+ * knowing this package's path on disk.
  */
 
+/* shadcn's enter and exit animations, and its variants and utilities, ejected (CS-06). */
+@import "tw-animate-css";
+@import "./shadcn.css";
+
 @source "../";
+
+/*
+ * Reduced motion keeps opacity only (canon C-P11): tw-animate's enter and exit
+ * scale, slide, spin and blur are neutralised everywhere, so a popup or dialog
+ * fades in place. A transition that moves is turned off where it is set.
+ */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    --tw-enter-scale: 1 !important;
+    --tw-exit-scale: 1 !important;
+    --tw-enter-translate-x: 0 !important;
+    --tw-enter-translate-y: 0 !important;
+    --tw-exit-translate-x: 0 !important;
+    --tw-exit-translate-y: 0 !important;
+    --tw-enter-rotate: 0 !important;
+    --tw-exit-rotate: 0 !important;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}

@@ -1,45 +1,81 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "agentGuidance": false,
-  "globalDependencies": [
-    "**/.env.*local",
-    "**/.env"
-  ],
   "globalEnv": [
-    "NODE_ENV"
+    "NODE_ENV",
+    "DATABASE_ENVIRONMENT",
+    "VERCEL_ENV",
+    "EXAMPLE_API_KEY",
+    "EXAMPLE_API_KEY_LOCAL",
+    "EXAMPLE_API_KEY_STAGING",
+    "NEXT_PUBLIC_SITE_URL",
+    "NEXT_PUBLIC_SITE_URL_LOCAL",
+    "NEXT_PUBLIC_SITE_URL_STAGING",
+    "DATABASE_URL",
+    "DATABASE_URL_LOCAL",
+    "DATABASE_URL_STAGING",
+    "DATABASE_MIGRATION_URL",
+    "DATABASE_MIGRATION_URL_LOCAL",
+    "DATABASE_MIGRATION_URL_STAGING",
+    "NEXT_PUBLIC_SUPABASE_URL",
+    "NEXT_PUBLIC_SUPABASE_URL_LOCAL",
+    "NEXT_PUBLIC_SUPABASE_URL_STAGING",
+    "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+    "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY_LOCAL",
+    "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY_STAGING",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY_LOCAL",
+    "SUPABASE_SERVICE_ROLE_KEY_STAGING",
+    "NEXT_PUBLIC_SENTRY_DSN",
+    "NEXT_PUBLIC_SENTRY_DSN_LOCAL",
+    "NEXT_PUBLIC_SENTRY_DSN_STAGING",
+    "NEXT_PUBLIC_SENTRY_ENVIRONMENT",
+    "SENTRY_AUTH_TOKEN",
+    "SENTRY_ORG",
+    "SENTRY_PROJECT",
+    "SENTRY_PROJECT_STAGING",
+    "VERCEL_GIT_COMMIT_SHA",
+    "NEXT_RUNTIME",
+    "RESEND_API_KEY",
+    "RESEND_API_KEY_LOCAL",
+    "RESEND_API_KEY_STAGING",
+    "EMAIL_FROM",
+    "EMAIL_FROM_LOCAL",
+    "EMAIL_FROM_STAGING",
+    "ANTHROPIC_API_KEY",
+    "ANTHROPIC_API_KEY_LOCAL",
+    "ANTHROPIC_API_KEY_STAGING",
+    "STRIPE_SECRET_KEY",
+    "STRIPE_SECRET_KEY_LOCAL",
+    "STRIPE_SECRET_KEY_STAGING",
+    "STRIPE_WEBHOOK_SECRET",
+    "STRIPE_WEBHOOK_SECRET_LOCAL",
+    "STRIPE_WEBHOOK_SECRET_STAGING",
+    "STRIPE_PRICE_ID",
+    "STRIPE_PRICE_ID_LOCAL",
+    "STRIPE_PRICE_ID_STAGING"
   ],
-  "globalPassThroughEnv": [
-    "TMPDIR"
-  ],
+  "globalPassThroughEnv": ["TMPDIR"],
   "ui": "tui",
   "tasks": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        ".env*"
-      ],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**",
-        "dist/**"
-      ]
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "dev": {
       "cache": false,
       "persistent": true
     },
     "lint": {
-      "dependsOn": [
-        "^lint"
-      ]
+      "dependsOn": ["^lint"]
     },
     "check-types": {
-      "dependsOn": [
-        "^check-types"
-      ]
+      "dependsOn": ["^check-types"]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$"]
     }
   }
 }

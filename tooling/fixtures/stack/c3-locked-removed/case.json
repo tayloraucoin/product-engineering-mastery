@@ -1,0 +1,6 @@
+{
+  "expect": "fail",
+  "messages": [
+    "\"stack.core\" is locked, so it cannot be marked removed"
+  ]
+}

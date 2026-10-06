@@ -20,6 +20,7 @@
   },
   "migrationsDir": null,
   "branchPattern": "agent/{id}",
+  "protectedBranch": "main",
   "reviewers": [
     {
       "glob": "**/migrations/**",
@@ -70,6 +71,18 @@
       "status": "draft"
     },
     {
+      "glob": "**/rls.ts",
+      "role": "mason",
+      "why": "One-way door: the bridge from a request's identity to row-level security.",
+      "status": "draft"
+    },
+    {
+      "glob": "**/policies.ts",
+      "role": "mason",
+      "why": "One-way door: the policy factories every table's row-level security is built from.",
+      "status": "draft"
+    },
+    {
       "glob": "**/auth/**",
       "role": "warden",
       "why": "Authentication and authorization flows, sessions and recovery.",
@@ -91,6 +104,18 @@
       "glob": "**/policies/**",
       "role": "warden",
       "why": "Deny-by-default access policies in the data layer.",
+      "status": "draft"
+    },
+    {
+      "glob": "**/rls.ts",
+      "role": "warden",
+      "why": "Whose identity and role each user-scoped query runs as.",
+      "status": "draft"
+    },
+    {
+      "glob": "**/policies.ts",
+      "role": "warden",
+      "why": "Deny-by-default access policies in the data layer, as one file.",
       "status": "draft"
     },
     {
@@ -165,5 +190,28 @@
       "why": "Billing copy and what it promises.",
       "status": "draft"
     }
-  ]
+  ],
+  "stack": {
+    "config": {
+      "files": ["packages/config"],
+      "env": [],
+      "dependencies": ["@pem/config"],
+      "boundaries": ["config"],
+      "locked": true,
+      "runbook": null
+    },
+    "ui": {
+      "files": ["packages/ui"],
+      "env": [],
+      "dependencies": [
+        "@pem/ui",
+        "class-variance-authority",
+        "clsx",
+        "tailwind-merge"
+      ],
+      "boundaries": ["ui"],
+      "locked": true,
+      "runbook": null
+    }
+  }
 }

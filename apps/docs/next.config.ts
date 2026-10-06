@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
   agentRules: false,
 
   // Workspace packages ship TypeScript source; the app compiles them.
-  transpilePackages: ["@pem/ui"],
+  transpilePackages: ["@pem/brand", "@pem/ui"],
 
   turbopack: {
     root: repoRoot,

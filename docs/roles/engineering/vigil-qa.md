@@ -9,6 +9,8 @@ date: 2026-10-01
 last_reviewed: 2026-10-01
 supersedes:
 load_when:
+subagent: true
+subagent_tools: [Read, Grep, Glob]
 ---
 # Role Prompt — Vigil · QA & Product Experience Lead
 

@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1791085366997,
+      "tag": "0000_example_schema",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791169115303,
+      "tag": "0001_stripe_events",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791253971852,
+      "tag": "0002_billing_entitlements",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791314171646,
+      "tag": "0003_sandbox_schema",
+      "breakpoints": true
+    }
+  ]
+}

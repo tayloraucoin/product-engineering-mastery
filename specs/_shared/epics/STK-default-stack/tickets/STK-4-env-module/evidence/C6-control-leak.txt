@@ -1,0 +1,7 @@
+Negative control, 2026-10-03, Next.js 16.3.8: apps/web/app/page.tsx temporarily rendered {env.EXAMPLE_API_KEY} from a Server Component (reverted, never committed). Output of node tooling/check-client-bundle.ts:
+check-client-bundle — server-only values reached the browser bundle:
+  EXAMPLE_API_KEY_LOCAL in apps/web/.next/server/app/index.html
+  EXAMPLE_API_KEY_LOCAL in apps/web/.next/server/app/index.rsc
+  EXAMPLE_API_KEY_LOCAL in apps/web/.next/server/app/index.segments/__PAGE__.segment.rsc
+  EXAMPLE_API_KEY_LOCAL in apps/web/.next/server/app/index.segments/_full.segment.rsc
+exit: 1

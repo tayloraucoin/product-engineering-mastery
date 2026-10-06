@@ -27,4 +27,6 @@ load_when:
 | --- | --- |
 | [`codebase-conventions.md`](codebase-conventions.md) | Read before placing, naming or importing any code, adding a package, or reading an environment variable; the placement, naming and package-graph contract. |
 | [`tech-stack.md`](tech-stack.md) | Read before adding a dependency or bumping a pinned version; the stack, the exact pins, and what is deliberately absent. |
+| [`tooling.md`](tooling.md) | Read when deciding which checks, hooks and scripts to keep, or when a tooling message needs explaining; what runs when, its measured cost, and a verdict for each entry. |
+| [`schemas/`](schemas/README.md) | Open when check-specs names a schema, or when you need the exact shape of a contract's frontmatter or a results.json. |
 | [`templates/`](templates/README.md) | Open when setting up a repo's layout file or its agent settings, or when `yarn verify` says a key is missing from one of them. |

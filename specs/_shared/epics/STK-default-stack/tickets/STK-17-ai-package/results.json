@@ -1,0 +1,85 @@
+{
+  "id": "STK-17",
+  "criteria_sha256": "d71179faa0884f14abff16fe35c15d2157f191762d39373612fddbe53f08d57e",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-05T21:48:47Z",
+        "head": "79eba019a478c941bb735e00af3e1be8506cc941",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-17-ai-package/evidence/C1.log",
+        "evidence_sha256": "0a20e82c8b5bdc0b2af57e7e002edb4f0b0b7c941c670f8d516894e31ea8a95c",
+        "tests": 205
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-05T21:48:47Z",
+        "head": "79eba019a478c941bb735e00af3e1be8506cc941",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-17-ai-package/evidence/C2.log",
+        "evidence_sha256": "0a20e82c8b5bdc0b2af57e7e002edb4f0b0b7c941c670f8d516894e31ea8a95c",
+        "tests": 205
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn lint:boundaries",
+        "exit": 0,
+        "at": "2026-10-05T21:48:56Z",
+        "head": "79eba019a478c941bb735e00af3e1be8506cc941",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-17-ai-package/evidence/C3.log",
+        "evidence_sha256": "1f8c049d51cb72b9cfa009061e374c829a185c4054673f32a2bbc095ba89a2e0"
+      }
+    },
+    "C4": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn verify",
+        "exit": 0,
+        "at": "2026-10-05T21:49:03Z",
+        "head": "79eba019a478c941bb735e00af3e1be8506cc941",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-17-ai-package/evidence/C4.log",
+        "evidence_sha256": "54ccb4a1ff0e464fe1114236840428df73808ebda7da0872416e8fc34c6ad9d5"
+      }
+    },
+    "review:warden": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn review:run warden STK-17",
+        "exit": 0,
+        "at": "2026-10-05T21:50:55Z",
+        "head": "79eba019a478c941bb735e00af3e1be8506cc941",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-17-ai-package/review-warden.md",
+        "evidence_sha256": "c706ea437834d60a3b74b88c9fce4854a6bb09d38e3cc3ef00702624a4e9515f",
+        "contract_sha256": "bc0cd80bf178a2c348aabe1310948d30931a46055b979a7a025b6879b53c688d",
+        "as_built_sha256": "79c43f1b403b21e64a28fbf7138b6910ec8169bfd4ba76b026f9319e7f2330bd",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
+      }
+    },
+    "C5": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn contract:record STK-17 C5 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-17-ai-package/evidence/C5-operator.md --verdict deferred",
+        "exit": 0,
+        "at": "2026-10-05T04:02:23Z",
+        "head": "12a9b07d40b1abfe6e3864387116bd889c077f81",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-17-ai-package/evidence/C5-operator.md",
+        "evidence_sha256": "5f765ae35a73673a0284cbe4927059d26abfd913627400c833f6845bcd08c5d0",
+        "deferred": true
+      }
+    }
+  },
+  "updated_at": "2026-10-05T21:57:52Z"
+}

@@ -28,7 +28,11 @@
       "Bash(*DROP SCHEMA*)",
       "Bash(*DROP DATABASE*)",
       "Read(**/.env)",
-      "Read(**/.env.*)",
+      "Read(**/.env.local)",
+      "Read(**/.env.*.local)",
+      "Read(**/.env.development)",
+      "Read(**/.env.staging)",
+      "Read(**/.env.production)",
       "Read(**/secrets/**)",
       "Read(**/*.pem)",
       "Read(~/.ssh/**)",
@@ -43,6 +47,7 @@
       "Bash(*db:push*)",
       "Bash(*db:seed*)",
       "Bash(*db:setup*)",
+      "Bash(*db:local:reset*)",
       "Bash(*supabase db push*)",
       "Bash(*drizzle-kit migrate*)",
       "Bash(*drizzle-kit push*)",
@@ -89,16 +94,16 @@
       ]
     },
     "filesystem": {
-      "allowWrite": [
-        "~/.yarn",
-        "~/.cache/yarn",
-        "~/Library/Caches/Yarn"
-      ],
+      "allowWrite": ["~/.yarn", "~/.cache/yarn", "~/Library/Caches/Yarn"],
       "denyRead": [
         "~/.ssh",
         "~/.aws",
         "./**/.env",
-        "./**/.env.*",
+        "./**/.env.local",
+        "./**/.env.*.local",
+        "./**/.env.development",
+        "./**/.env.staging",
+        "./**/.env.production",
         "./**/secrets",
         "./**/*.pem"
       ]
@@ -113,6 +118,38 @@
             "type": "command",
             "command": "node \"${CLAUDE_PROJECT_DIR}/tooling/hooks/bash-guard.ts\"",
             "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/tooling/hooks/results-gate.ts\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/tooling/hooks/session-start.ts\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PROJECT_DIR}/tooling/hooks/stop-gate.ts\"",
+            "timeout": 120
           }
         ]
       }

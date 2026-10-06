@@ -1,0 +1,44 @@
+{
+  "id": "STK-19",
+  "criteria_sha256": "544d2b5b42860abed7262e53996c63a6b6a31578966a4513254486a5894cda21",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-04T06:38:08Z",
+        "head": "de1df9ba919f7f2762f75e3848b94c4fe8b6d653",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-19-helpers-deploy/evidence/C1.log",
+        "evidence_sha256": "3e97c7e273740f0b9fbe4f64752873ee2bb482584d5e1f8544a39183aa095abb",
+        "tests": 39
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn verify",
+        "exit": 0,
+        "at": "2026-10-04T06:39:03Z",
+        "head": "52541804cfcf059cd2b03f1e94e36ca7e7177ecf",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-19-helpers-deploy/evidence/C2.log",
+        "evidence_sha256": "ab1ad71fd0d36aceb3acd0c60366df2dcfa268aaf24fdc2d863bf2d65eb6c2fe"
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn contract:record STK-19 C3 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-19-helpers-deploy/evidence/C3.md",
+        "exit": 0,
+        "at": "2026-10-04T06:43:00Z",
+        "head": "ed3012c471b7a6bf6f67ec5162a68e980280c1c0",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-19-helpers-deploy/evidence/C3.md",
+        "evidence_sha256": "9118105931bb9b4cd712a14c6b6b8352836eba61734cd2d69e2443ab5121a498"
+      }
+    }
+  },
+  "updated_at": "2026-10-04T06:43:00Z"
+}

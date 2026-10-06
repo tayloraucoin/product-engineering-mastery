@@ -1,0 +1,85 @@
+{
+  "id": "WEB-8",
+  "criteria_sha256": "fdfafd561548cd964808dd3ae6216857179133052f5d3d734adb5031aff87f09",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace @pem/db test",
+        "exit": 0,
+        "at": "2026-10-05T22:46:51Z",
+        "head": "66f308ada43d9714ea97286a63a3d3958cf54ea2",
+        "evidence_path": "specs/web/one-offs/WEB-008-hosted-only-database/evidence/C1.log",
+        "evidence_sha256": "a804a38f3cc8c2802c551ec11eff07e2ba77bdc5b409e6f5c655e9e58f902360",
+        "tests": 56
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace @pem/db test",
+        "exit": 0,
+        "at": "2026-10-05T22:46:51Z",
+        "head": "66f308ada43d9714ea97286a63a3d3958cf54ea2",
+        "evidence_path": "specs/web/one-offs/WEB-008-hosted-only-database/evidence/C2.log",
+        "evidence_sha256": "a804a38f3cc8c2802c551ec11eff07e2ba77bdc5b409e6f5c655e9e58f902360",
+        "tests": 56
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn contract:record WEB-8 C3 --evidence specs/web/one-offs/WEB-008-hosted-only-database/evidence/C3-verify-no-docker.md",
+        "exit": 0,
+        "at": "2026-10-05T22:48:27Z",
+        "head": "4f9bbb06ad1cd6782b7293aa187b0bb0ff6b14bc",
+        "evidence_path": "specs/web/one-offs/WEB-008-hosted-only-database/evidence/C3-verify-no-docker.md",
+        "evidence_sha256": "227845c601b4da7f6b6dca6eafb89719d4b935522bcd664fa78c035ec104f462"
+      }
+    },
+    "C4": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn contract:record WEB-8 C4 --evidence specs/web/one-offs/WEB-008-hosted-only-database/evidence/C4-operator.md --verdict deferred",
+        "exit": 0,
+        "at": "2026-10-05T22:35:36Z",
+        "head": "d97600fca6461541ba50b843dcca4872d6fd5b20",
+        "evidence_path": "specs/web/one-offs/WEB-008-hosted-only-database/evidence/C4-operator.md",
+        "evidence_sha256": "deb3720931b48549b0273a8ae69d1585884b8024b8addb3b912b1b2166cd9862",
+        "deferred": true
+      }
+    },
+    "C5": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn check-types",
+        "exit": 0,
+        "at": "2026-10-05T22:47:02Z",
+        "head": "66f308ada43d9714ea97286a63a3d3958cf54ea2",
+        "evidence_path": "specs/web/one-offs/WEB-008-hosted-only-database/evidence/C5.log",
+        "evidence_sha256": "c8166f8da3410a5320244141f0f2db6af6204e27a8a3be8b58e2b7f12aa2cff2"
+      }
+    },
+    "review:warden": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn review:run warden WEB-8",
+        "exit": 0,
+        "at": "2026-10-05T22:39:40Z",
+        "head": "73b59679b6c25d72b4a5f85706b9e833af46dc37",
+        "evidence_path": "specs/web/one-offs/WEB-008-hosted-only-database/review-warden.md",
+        "evidence_sha256": "852ed10bda376314f7d35d4d2fb5eeb0490181a0e419da9eb4f4695693987efe",
+        "contract_sha256": "ae471718320efd61fbd8a5fa22a0fcb35ef2557c24f67e201aaf1f5ea23f8fac",
+        "as_built_sha256": "b1925d143361964107e01ab4fc006fb503389de5be7d6b72019f58d22395c0da",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
+      }
+    }
+  },
+  "updated_at": "2026-10-05T22:48:27Z"
+}

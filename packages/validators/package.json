@@ -1,0 +1,34 @@
+{
+  "name": "@pem/validators",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./field-errors": {
+      "types": "./src/field-errors.ts",
+      "default": "./src/field-errors.ts"
+    },
+    "./notes": {
+      "types": "./src/notes/notes.ts",
+      "default": "./src/notes/notes.ts"
+    },
+    "./billing": {
+      "types": "./src/billing/billing.ts",
+      "default": "./src/billing/billing.ts"
+    }
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "check-types": "tsc --noEmit",
+    "test": "node --test \"src/**/*.test.ts\""
+  },
+  "dependencies": {
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@pem/config": "workspace:*",
+    "@types/node": "^22",
+    "eslint": "^9.39.1",
+    "typescript": "5.9.2"
+  }
+}

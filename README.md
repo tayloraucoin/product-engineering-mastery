@@ -1,8 +1,8 @@
 # Product Engineering Mastery
 
-A universal product-engineering toolkit: the practice that people and coding agents build by (roles, a design canon, templates, decisions, primer prompts), a library loaded on demand, and a demo app that proves both. No product lives here. Clone it, run it, and copy what a product needs.
+A universal product-engineering toolkit: the practice that people and coding agents build by (roles, a design canon, templates, decisions, primer prompts), a library loaded on demand, and a demo app that proves both. No product lives here. Clone it and run it; a product starts as a duplicate of it, then removes what it does not use.
 
-**What it is and how the layers relate:** [`docs/index.md`](docs/index.md). This README only gets you running.
+**Start here, as a person:** [`docs/README.md`](docs/README.md), organised by the question you arrive with. **How the layers relate:** [`docs/index.md`](docs/index.md), the map agents read. This README only gets you running.
 
 **For AI agents:** [`AGENTS.md`](AGENTS.md) is the contract; `CLAUDE.md` imports it and `docs/index.md`.
 
@@ -15,10 +15,17 @@ A universal product-engineering toolkit: the practice that people and coding age
 
 ```sh
 yarn install
+yarn doctor       # is this machine ready? names the fix for anything broken
 yarn docs:dev     # the practice as a site, at http://localhost:3001
 yarn web:dev      # the demo app, at http://localhost:3000
 yarn verify       # everything CI runs
 ```
+
+**On a phone.** `yarn web:dev:local` binds the demo app to every interface and prints its LAN URLs; open one on a phone on the same Wi-Fi. `apps/web/next.config.ts` lists the same addresses in `allowedDevOrigins`, which Next.js 16 needs before it serves the client scripts to another origin.
+
+**Contrast.** `yarn contrast-audit` checks the preset's token pairs, light and dark, against WCAG 2.2 AA (4.5:1 for text, 3:1 for the focus ring) and runs in `yarn verify`. A failing pair is fixed in `packages/config/tailwind/preset.css` by changing the raw step's lightness.
+
+**Deploy.** `apps/web/vercel.json` builds the demo app on Vercel from the workspace: set the project's Root Directory to `apps/web`; it installs with Corepack and Yarn from the repo root and builds through `turbo run build --filter=web`. CI runs `yarn verify`, the same chain as a local run.
 
 The docs app reads the markdown in `docs/` directly: the sidebar groups files by their `layer`, the search box (press `/`) covers every file including archived research, and each page shows its frontmatter.
 
@@ -30,10 +37,12 @@ The docs app reads the markdown in `docs/` directly: the sidebar groups files by
 | `apps/web`        | The demo app; holds the filled example of every template (Phase 3).                           |
 | `apps/docs`       | Renders `docs/` in the browser.                                                               |
 | `packages/config` | `@pem/config` — ESLint (code, boundaries, tokens), Prettier, Tailwind tokens, tsconfig bases. |
+| `packages/env`    | `@pem/env` — the pure per-tier environment picker (STK-4).                                    |
+| `packages/db`     | `@pem/db` — Drizzle on Supabase: schema, policies, migrations, setup SQL (STK-9).             |
 | `packages/ui`     | `@pem/ui` — shared components.                                                                |
-| `tooling/`        | `yarn lint:docs`, `yarn budget`, `yarn gen:agents`, `yarn directory-map`.                     |
+| `tooling/`        | The checks `yarn verify` runs, the hooks in `.claude/settings.json`, and `yarn doctor`.       |
 | `.claude/`        | Path rules, generated subagents (`agents/`, never edited by hand), skills.                    |
 
-## Porting into a product
+## Starting a product from this repo
 
-Written in Phase 5 (prompt [`port-dry-run.md`](docs/prompts/phases/port-dry-run.md)) from a timed cold run. Until then, the rule: a product repo copies the templates, skills, roles, `AGENTS.md` and `CLAUDE.md`; fills its own design layer and product files from the templates; and never copies the demo app or `docs/research/`.
+Duplicate, then remove ([record 0010](docs/decisions/records/0010-starter-ships-default-stack.md)): a product repo starts as a full duplicate of this one, default stack included, then removes the modules it does not use and clears the toolkit's own content (the demo, `docs/research/`, `specs/`). Follow [`docs/runbooks/new-project/README.md`](docs/runbooks/new-project/README.md); it ends on `yarn check-stack` and `yarn verify`. The guide is a draft until the dry-run ticket (STK-20) times it on a duplicate.

@@ -1,0 +1,7 @@
+{
+  "globalEnv": [
+    "NODE_ENV",
+    "KEPT_API_URL",
+    "GONE_SECRET"
+  ]
+}

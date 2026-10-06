@@ -15,7 +15,7 @@ load_when: metrics, spec
 
 > **Who fills:** Tally (metrics analyst) owns the taxonomy; engineering proposes events in the package; Gloss checks nouns against the glossary.
 > **When:** before any package cites an event ID; every change in the same PR as the code that fires it.
-> **Lives at:** `docs/metrics/events.md` in the product repo. Delete this instruction block when you fill it.
+> **Lives at:** `docs/measurement/metrics/events.md` in the product repo. Delete this instruction block when you fill it.
 > **What the critic checks:** nothing; this is measurement, not pixels. The intended enforcement is a typed event registry that fails the build on a name missing here (Toolkit Map §5; thread P-G).
 > **Grammar (CF-45, v0.1):** `object_action`, snake_case, past tense; a category prefix is optional. A change to the grammar goes through P-G as a versioned amendment that keeps both series.
 

@@ -1,0 +1,1367 @@
+{
+  "id": "c6e98dca-22ad-4d39-9763-c50df01ddafe",
+  "prevId": "0ac19aae-3dfc-4a26-aaec-a84cc6a67fc4",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "users_id_users_id_fk": {
+          "name": "users_id_users_id_fk",
+          "tableFrom": "users",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "users_select_owner_or_admin": {
+          "name": "users_select_owner_or_admin",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(\"users\".\"id\" = nullif(current_setting('app.user_id', true), '')::uuid or coalesce(current_setting('app.user_role', true), '') = 'admin')"
+        },
+        "users_update_owner": {
+          "name": "users_update_owner",
+          "as": "PERMISSIVE",
+          "for": "UPDATE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "\"users\".\"id\" = nullif(current_setting('app.user_id', true), '')::uuid",
+          "withCheck": "\"users\".\"id\" = nullif(current_setting('app.user_id', true), '')::uuid"
+        },
+        "users_insert_denied": {
+          "name": "users_insert_denied",
+          "as": "PERMISSIVE",
+          "for": "INSERT",
+          "to": [
+            "authenticated"
+          ],
+          "withCheck": "false"
+        },
+        "users_delete_denied": {
+          "name": "users_delete_denied",
+          "as": "PERMISSIVE",
+          "for": "DELETE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "false"
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.notes": {
+      "name": "notes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "body": {
+          "name": "body",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "notes_owner_id_idx": {
+          "name": "notes_owner_id_idx",
+          "columns": [
+            {
+              "expression": "owner_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "notes_owner_id_users_id_fk": {
+          "name": "notes_owner_id_users_id_fk",
+          "tableFrom": "notes",
+          "tableTo": "users",
+          "columnsFrom": [
+            "owner_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "notes_select_owner": {
+          "name": "notes_select_owner",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": [
+            "authenticated"
+          ],
+          "using": "\"notes\".\"owner_id\" = nullif(current_setting('app.user_id', true), '')::uuid"
+        },
+        "notes_insert_owner": {
+          "name": "notes_insert_owner",
+          "as": "PERMISSIVE",
+          "for": "INSERT",
+          "to": [
+            "authenticated"
+          ],
+          "withCheck": "\"notes\".\"owner_id\" = nullif(current_setting('app.user_id', true), '')::uuid"
+        },
+        "notes_update_owner": {
+          "name": "notes_update_owner",
+          "as": "PERMISSIVE",
+          "for": "UPDATE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "\"notes\".\"owner_id\" = nullif(current_setting('app.user_id', true), '')::uuid",
+          "withCheck": "\"notes\".\"owner_id\" = nullif(current_setting('app.user_id', true), '')::uuid"
+        },
+        "notes_delete_owner": {
+          "name": "notes_delete_owner",
+          "as": "PERMISSIVE",
+          "for": "DELETE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "\"notes\".\"owner_id\" = nullif(current_setting('app.user_id', true), '')::uuid"
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.stripe_events": {
+      "name": "stripe_events",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'processing'"
+        },
+        "claimed_at": {
+          "name": "claimed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "processed_at": {
+          "name": "processed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "stripe_events_processed_at_idx": {
+          "name": "stripe_events_processed_at_idx",
+          "columns": [
+            {
+              "expression": "processed_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "where": "\"stripe_events\".\"status\" = 'processed'",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "stripe_events_all_denied": {
+          "name": "stripe_events_all_denied",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "authenticated"
+          ],
+          "using": "false",
+          "withCheck": "false"
+        }
+      },
+      "checkConstraints": {
+        "stripe_events_status_check": {
+          "name": "stripe_events_status_check",
+          "value": "\"stripe_events\".\"status\" in ('processing', 'processed')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.billing_entitlements": {
+      "name": "billing_entitlements",
+      "schema": "",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "stripe_customer_id": {
+          "name": "stripe_customer_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "stripe_subscription_id": {
+          "name": "stripe_subscription_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "price_id": {
+          "name": "price_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "current_period_end": {
+          "name": "current_period_end",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "stripe_event_at": {
+          "name": "stripe_event_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "billing_entitlements_user_id_users_id_fk": {
+          "name": "billing_entitlements_user_id_users_id_fk",
+          "tableFrom": "billing_entitlements",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "billing_entitlements_stripe_customer_id_unique": {
+          "name": "billing_entitlements_stripe_customer_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "stripe_customer_id"
+          ]
+        }
+      },
+      "policies": {
+        "billing_entitlements_all_denied": {
+          "name": "billing_entitlements_all_denied",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "authenticated"
+          ],
+          "using": "false",
+          "withCheck": "false"
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.sandbox_reviewers": {
+      "name": "sandbox_reviewers",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "label": {
+          "name": "label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "display_name": {
+          "name": "display_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "code_hash": {
+          "name": "code_hash",
+          "type": "bytea",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "code_version": {
+          "name": "code_version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "revoked_at": {
+          "name": "revoked_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "first_design": {
+          "name": "first_design",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "last_design": {
+          "name": "last_design",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "sandbox_reviewers_slug_idx": {
+          "name": "sandbox_reviewers_slug_idx",
+          "columns": [
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "sandbox_reviewers_code_hash_unique": {
+          "name": "sandbox_reviewers_code_hash_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "code_hash"
+          ]
+        },
+        "sandbox_reviewers_id_slug_key": {
+          "name": "sandbox_reviewers_id_slug_key",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id",
+            "slug"
+          ]
+        }
+      },
+      "policies": {
+        "sandbox_reviewers_all_denied": {
+          "name": "sandbox_reviewers_all_denied",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "authenticated"
+          ],
+          "using": "false",
+          "withCheck": "false"
+        }
+      },
+      "checkConstraints": {
+        "sandbox_reviewers_slug_check": {
+          "name": "sandbox_reviewers_slug_check",
+          "value": "(\"sandbox_reviewers\".\"slug\" ~ '^[a-z0-9]+(-[a-z0-9]+)*$' and char_length(\"sandbox_reviewers\".\"slug\") <= 48)"
+        },
+        "sandbox_reviewers_code_version_check": {
+          "name": "sandbox_reviewers_code_version_check",
+          "value": "\"sandbox_reviewers\".\"code_version\" >= 1"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.sandbox_accesses": {
+      "name": "sandbox_accesses",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "reviewer_id": {
+          "name": "reviewer_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "code_version": {
+          "name": "code_version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "last_seen_at": {
+          "name": "last_seen_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "sandbox_accesses_reviewer_idx": {
+          "name": "sandbox_accesses_reviewer_idx",
+          "columns": [
+            {
+              "expression": "reviewer_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "sandbox_accesses_email_idx": {
+          "name": "sandbox_accesses_email_idx",
+          "columns": [
+            {
+              "expression": "email",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "sandbox_accesses_user_idx": {
+          "name": "sandbox_accesses_user_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "sandbox_accesses_reviewer_id_sandbox_reviewers_id_fk": {
+          "name": "sandbox_accesses_reviewer_id_sandbox_reviewers_id_fk",
+          "tableFrom": "sandbox_accesses",
+          "tableTo": "sandbox_reviewers",
+          "columnsFrom": [
+            "reviewer_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "sandbox_accesses_user_id_users_id_fk": {
+          "name": "sandbox_accesses_user_id_users_id_fk",
+          "tableFrom": "sandbox_accesses",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "sandbox_accesses_id_reviewer_key": {
+          "name": "sandbox_accesses_id_reviewer_key",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id",
+            "reviewer_id"
+          ]
+        }
+      },
+      "policies": {
+        "sandbox_accesses_all_denied": {
+          "name": "sandbox_accesses_all_denied",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "authenticated"
+          ],
+          "using": "false",
+          "withCheck": "false"
+        }
+      },
+      "checkConstraints": {
+        "sandbox_accesses_one_identity_check": {
+          "name": "sandbox_accesses_one_identity_check",
+          "value": "(\"sandbox_accesses\".\"email\" is null) <> (\"sandbox_accesses\".\"user_id\" is null)"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.sandbox_view_events": {
+      "name": "sandbox_view_events",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "reviewer_id": {
+          "name": "reviewer_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "access_id": {
+          "name": "access_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "kind": {
+          "name": "kind",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "design": {
+          "name": "design",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "at": {
+          "name": "at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "sandbox_view_events_access_idx": {
+          "name": "sandbox_view_events_access_idx",
+          "columns": [
+            {
+              "expression": "access_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "sandbox_view_events_reviewer_at_idx": {
+          "name": "sandbox_view_events_reviewer_at_idx",
+          "columns": [
+            {
+              "expression": "reviewer_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "sandbox_view_events_access_fk": {
+          "name": "sandbox_view_events_access_fk",
+          "tableFrom": "sandbox_view_events",
+          "tableTo": "sandbox_accesses",
+          "columnsFrom": [
+            "access_id",
+            "reviewer_id"
+          ],
+          "columnsTo": [
+            "id",
+            "reviewer_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "sandbox_view_events_reviewer_fk": {
+          "name": "sandbox_view_events_reviewer_fk",
+          "tableFrom": "sandbox_view_events",
+          "tableTo": "sandbox_reviewers",
+          "columnsFrom": [
+            "reviewer_id",
+            "slug"
+          ],
+          "columnsTo": [
+            "id",
+            "slug"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "sandbox_view_events_all_denied": {
+          "name": "sandbox_view_events_all_denied",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "authenticated"
+          ],
+          "using": "false",
+          "withCheck": "false"
+        }
+      },
+      "checkConstraints": {
+        "sandbox_view_events_slug_check": {
+          "name": "sandbox_view_events_slug_check",
+          "value": "(\"sandbox_view_events\".\"slug\" ~ '^[a-z0-9]+(-[a-z0-9]+)*$' and char_length(\"sandbox_view_events\".\"slug\") <= 48)"
+        },
+        "sandbox_view_events_kind_check": {
+          "name": "sandbox_view_events_kind_check",
+          "value": "\"sandbox_view_events\".\"kind\" in ('load', 'switch')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.sandbox_comments": {
+      "name": "sandbox_comments",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "design": {
+          "name": "design",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "number": {
+          "name": "number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "kind": {
+          "name": "kind",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "body": {
+          "name": "body",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "anchor": {
+          "name": "anchor",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "viewport_w": {
+          "name": "viewport_w",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "viewport_h": {
+          "name": "viewport_h",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "client_created_at": {
+          "name": "client_created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "reviewer_id": {
+          "name": "reviewer_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "access_id": {
+          "name": "access_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "team_user_id": {
+          "name": "team_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "sandbox_comments_slug_reviewer_idx": {
+          "name": "sandbox_comments_slug_reviewer_idx",
+          "columns": [
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "reviewer_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "sandbox_comments_access_idx": {
+          "name": "sandbox_comments_access_idx",
+          "columns": [
+            {
+              "expression": "access_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "sandbox_comments_parent_idx": {
+          "name": "sandbox_comments_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "sandbox_comments_team_user_id_users_id_fk": {
+          "name": "sandbox_comments_team_user_id_users_id_fk",
+          "tableFrom": "sandbox_comments",
+          "tableTo": "users",
+          "columnsFrom": [
+            "team_user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "sandbox_comments_access_fk": {
+          "name": "sandbox_comments_access_fk",
+          "tableFrom": "sandbox_comments",
+          "tableTo": "sandbox_accesses",
+          "columnsFrom": [
+            "access_id",
+            "reviewer_id"
+          ],
+          "columnsTo": [
+            "id",
+            "reviewer_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "sandbox_comments_reviewer_fk": {
+          "name": "sandbox_comments_reviewer_fk",
+          "tableFrom": "sandbox_comments",
+          "tableTo": "sandbox_reviewers",
+          "columnsFrom": [
+            "reviewer_id",
+            "slug"
+          ],
+          "columnsTo": [
+            "id",
+            "slug"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "sandbox_comments_all_denied": {
+          "name": "sandbox_comments_all_denied",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "authenticated"
+          ],
+          "using": "false",
+          "withCheck": "false"
+        }
+      },
+      "checkConstraints": {
+        "sandbox_comments_slug_check": {
+          "name": "sandbox_comments_slug_check",
+          "value": "(\"sandbox_comments\".\"slug\" ~ '^[a-z0-9]+(-[a-z0-9]+)*$' and char_length(\"sandbox_comments\".\"slug\") <= 48)"
+        },
+        "sandbox_comments_kind_check": {
+          "name": "sandbox_comments_kind_check",
+          "value": "\"sandbox_comments\".\"kind\" is null or \"sandbox_comments\".\"kind\" in ('problem', 'question', 'suggestion', 'keep')"
+        },
+        "sandbox_comments_body_check": {
+          "name": "sandbox_comments_body_check",
+          "value": "char_length(\"sandbox_comments\".\"body\") <= 2000"
+        },
+        "sandbox_comments_one_author_check": {
+          "name": "sandbox_comments_one_author_check",
+          "value": "(\"sandbox_comments\".\"reviewer_id\" is not null and \"sandbox_comments\".\"access_id\" is not null and \"sandbox_comments\".\"team_user_id\" is null) or (\"sandbox_comments\".\"reviewer_id\" is null and \"sandbox_comments\".\"access_id\" is null and \"sandbox_comments\".\"team_user_id\" is not null)"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.sandbox_review_versions": {
+      "name": "sandbox_review_versions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "reviewer_id": {
+          "name": "reviewer_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "access_id": {
+          "name": "access_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "number": {
+          "name": "number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "core_version": {
+          "name": "core_version",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "answers": {
+          "name": "answers",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "triage": {
+          "name": "triage",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "sandbox_review_versions_access_idx": {
+          "name": "sandbox_review_versions_access_idx",
+          "columns": [
+            {
+              "expression": "access_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "sandbox_review_versions_slug_idx": {
+          "name": "sandbox_review_versions_slug_idx",
+          "columns": [
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "sandbox_review_versions_access_fk": {
+          "name": "sandbox_review_versions_access_fk",
+          "tableFrom": "sandbox_review_versions",
+          "tableTo": "sandbox_accesses",
+          "columnsFrom": [
+            "access_id",
+            "reviewer_id"
+          ],
+          "columnsTo": [
+            "id",
+            "reviewer_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "sandbox_review_versions_reviewer_fk": {
+          "name": "sandbox_review_versions_reviewer_fk",
+          "tableFrom": "sandbox_review_versions",
+          "tableTo": "sandbox_reviewers",
+          "columnsFrom": [
+            "reviewer_id",
+            "slug"
+          ],
+          "columnsTo": [
+            "id",
+            "slug"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "sandbox_review_versions_reviewer_number_key": {
+          "name": "sandbox_review_versions_reviewer_number_key",
+          "nullsNotDistinct": false,
+          "columns": [
+            "reviewer_id",
+            "number"
+          ]
+        }
+      },
+      "policies": {
+        "sandbox_review_versions_all_denied": {
+          "name": "sandbox_review_versions_all_denied",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "authenticated"
+          ],
+          "using": "false",
+          "withCheck": "false"
+        }
+      },
+      "checkConstraints": {
+        "sandbox_review_versions_slug_check": {
+          "name": "sandbox_review_versions_slug_check",
+          "value": "(\"sandbox_review_versions\".\"slug\" ~ '^[a-z0-9]+(-[a-z0-9]+)*$' and char_length(\"sandbox_review_versions\".\"slug\") <= 48)"
+        },
+        "sandbox_review_versions_number_check": {
+          "name": "sandbox_review_versions_number_check",
+          "value": "\"sandbox_review_versions\".\"number\" >= 1"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.sandbox_actions": {
+      "name": "sandbox_actions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "at": {
+          "name": "at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "actor_user_id": {
+          "name": "actor_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "actor_email": {
+          "name": "actor_email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "action": {
+          "name": "action",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "target_email": {
+          "name": "target_email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "counts": {
+          "name": "counts",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "sandbox_actions_at_idx": {
+          "name": "sandbox_actions_at_idx",
+          "columns": [
+            {
+              "expression": "at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "sandbox_actions_all_denied": {
+          "name": "sandbox_actions_all_denied",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "authenticated"
+          ],
+          "using": "false",
+          "withCheck": "false"
+        }
+      },
+      "checkConstraints": {
+        "sandbox_actions_slug_check": {
+          "name": "sandbox_actions_slug_check",
+          "value": "\"sandbox_actions\".\"slug\" is null or (\"sandbox_actions\".\"slug\" ~ '^[a-z0-9]+(-[a-z0-9]+)*$' and char_length(\"sandbox_actions\".\"slug\") <= 48)"
+        },
+        "sandbox_actions_counts_check": {
+          "name": "sandbox_actions_counts_check",
+          "value": "\"sandbox_actions\".\"counts\" is null or (jsonb_typeof(\"sandbox_actions\".\"counts\") = 'object' and \"sandbox_actions\".\"counts\" - '{reviewers,accesses,viewEvents,comments,reviewVersions,teamNotes,labelsScrubbed,reviewersRevoked}'::text[] = '{}'::jsonb)"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.sandbox_gate_attempts": {
+      "name": "sandbox_gate_attempts",
+      "schema": "",
+      "columns": {
+        "key_hash": {
+          "name": "key_hash",
+          "type": "bytea",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "failures": {
+          "name": "failures",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "window_ends_at": {
+          "name": "window_ends_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "locked_until": {
+          "name": "locked_until",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "sandbox_gate_attempts_all_denied": {
+          "name": "sandbox_gate_attempts_all_denied",
+          "as": "PERMISSIVE",
+          "for": "ALL",
+          "to": [
+            "authenticated"
+          ],
+          "using": "false",
+          "withCheck": "false"
+        }
+      },
+      "checkConstraints": {
+        "sandbox_gate_attempts_failures_check": {
+          "name": "sandbox_gate_attempts_failures_check",
+          "value": "\"sandbox_gate_attempts\".\"failures\" >= 0"
+        }
+      },
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

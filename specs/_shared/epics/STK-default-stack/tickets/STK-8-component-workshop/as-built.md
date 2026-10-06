@@ -1,0 +1,33 @@
+# As-built — STK-8
+
+## Shipped against the contract
+
+- C1: `packages/ui/.storybook/stories.test.ts` composes every `src/**/*.stories.tsx` (portable stories, `@storybook/nextjs-vite`) and runs each one in Vitest on jsdom: render, then its `play` interactions, then the a11y addon's own axe pass (`a11y.test: "error"`), so the workshop and `yarn test` use one rule set. A fixture story with an unnamed button must fail (`button-name`), which proves the axe pass really fails a story. Every story's parameters must keep `a11y.test` at `"error"`, so no story can opt out. There are 19 stories: button (Default, Outline, Ghost, Small, Large, Hover, OutlineHover, GhostHover, Focus, Disabled), theme toggle (Unresolved, System, Light, Dark, Keyboard, Click) and theme provider (System, Light, Dark). `yarn test` PASS, with `@pem/ui` at 25 tests.
+- C2: `yarn verify` PASS, with the story checks in it and both app builds. It first failed at `check-settings`, because `.claude/settings.json` lacked the `db:local:reset` ask rule that STK-10's template requires; Taylor approved the line (6c214cd). C2 then ran on its own, since a run with C1 trips `check-specs` on C1's freshly rewritten log (the race STK-7 recorded).
+- C3: `evidence/button-dark.png` (at 6d5405d) shows the workshop at 1440×900. The manager carries the brand: logo, name and home link from `manager.ts` and `@pem/brand`. Button / Default is in dark mode from the toolbar, with the brand font, the dark `--primary`, and the Accessibility panel at 0 violations.
+- C4: `evidence/C4-warm-start.log` (at 6d5405d): `yarn ui:storybook --ci` answered on `localhost:6006` after 2.2 s, warm (Storybook reports manager 136 ms, preview 195 ms).
+- C5: `.storybook/story-coverage.ts` requires `<name>.stories.tsx` beside each primitive and composed component, and a `*.stories.tsx` in each provider folder. Each story file needs at least one story and a title in the grammar `<Group>/<Kind>/<Name>` (`Primitives/Control/Button`, `Composed/Control/Theme toggle`) or `Providers/<Name>`. `story-coverage.test.ts` passes on the package. On `.storybook/fixtures/uncovered` it fails `orphan` and the provider `bare`, naming each folder and its missing file, and fails a misnamed title. It reports nothing else. `yarn test` PASS.
+- Non-negotiables. The workshop lives in `packages/ui/.storybook/`; `yarn ui:storybook` runs `storybook dev --port 6006`. Versions verified on the registry on 2026-10-04: `storybook`, `@storybook/nextjs-vite`, `@storybook/addon-a11y`, `@storybook/addon-themes` and `storybook-addon-pseudo-states` at 10.6.1 (published 2026-09-29); `vitest` 5.0.3, `jsdom` 30.1.1, `vite` 8.3.2, `@tailwindcss/vite` 4.3.3. `preview.css` is the app's CSS chain, line for line. The `.dark` class comes from the toolbar (addon-themes, class on `<html>`). The font is `@pem/brand/font` (`next/font/local` through the framework's Vite plugin), and `@pem/brand/assets` is served at `/brand/`, never from an app's `public/`.
+
+## Deviations
+
+- **devs_call, settled: addons and title grammar.** The addons are `a11y`, `themes` and `pseudo-states` (Hover renders `:hover` without a pointer). Titles follow the folder: `<Group>/<Kind>/<Name>`, with the name in sentence case. The coverage check enforces the grammar.
+- **[ASSUMPTION] The story checks run in jsdom, not in a browser.** `@storybook/addon-vitest` needs Vitest browser mode and a Playwright Chromium download in CI, and CI runs only `yarn verify`. jsdom runs every `play` function and axe's DOM rules, but not colour contrast. Contrast is held by `yarn contrast-audit` on the preset. On 2026-10-04 I also ran axe in Chromium over all 19 stories in light and dark: 0 violations. That was a one-off run, so contrast inside a component is not checked in `yarn verify` (batch review, Conversations). Moving to browser mode is a later call.
+- **The base layer moved into `@pem/ui/styles/globals.css`** (`border-border`, and the body's background, foreground and antialiasing). Both apps' `globals.css` are now the three imports, so the workshop loads the same CSS as the app without importing an app (packages never import apps). The docs app keeps its typography plugin and prose rules.
+- **A `ui-workshop` element in `packages/config/eslint/boundaries.js`** for `packages/ui/.storybook/**`, allowed `config`, `brand` and `ui`. The workshop may read `@pem/brand`; `@pem/ui`'s components still may not. Apps cannot import the workshop.
+- **The theme class is set before paint.** The toolbar addon applies `.dark` in an effect after the first paint, so axe in the workshop scanned the button mid `transition-colors` and reported a false contrast failure. `withToolbarTheme` sets the class during render, as next-themes does in the app. A story whose `ThemeProvider` owns the class sets `themes: { disable: true }`. `parameters.storedTheme` seeds next-themes' storage before the story mounts (`null` means no choice yet). Afterwards it clears the key and the class, so a click in one story never leaks into the next (batch review S1).
+- **The workshop's chrome wears the brand** (`.storybook/manager.ts`): name, logo and home link, all from `@pem/brand` (batch review S3). Its colours stay Storybook's, because `brand.ts` holds OKLCH and the manager's theme cannot parse it.
+- **jsdom stubs** in `vitest.setup.ts`: `matchMedia`, which next-themes reads and which answers "light", and `HTMLCanvasElement.getContext`, which axe probes.
+- **Known console noise:** next-themes 0.4.6 logs React 19's "script tag while rendering" warning when it renders client-only, which happens in the workshop. The app server-renders it, so the app is unaffected.
+- **Paths added before building:** `packages/ui/tsconfig.json` (types now cover `.storybook`), `packages/ui/src/styles/globals.css`, `packages/ui/AGENTS.md`, both apps' `globals.css`, `boundaries.js` and `yarn.lock`. `turbo.json` was planned but not needed. `.claude/launch.json` gained a `storybook` entry; it is local and not tracked.
+
+## Not verified
+
+- C3 is a capture. `.claude/rules/testing.md` counts every capture as UNVERIFIED until the P-C harness exists, so the critic has not scored it.
+- C4 was timed by the agent with a script that polled the port, not by a person. The criterion asks for a person.
+- The apps after the base layer moved: both build, but no one has looked at them in a browser.
+- The boundaries lint still ignores `@pem/*` subpath imports (STK-7's finding 4, its own task). So the new `ui-workshop` edge is declared, but the lint does not enforce it yet.
+
+## Next
+
+Closed. A later ticket can add a `tooling/` check that `preview.css` matches the app's `globals.css` (batch review S4), and decide whether the story checks move to Vitest browser mode for contrast.

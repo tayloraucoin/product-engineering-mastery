@@ -4,9 +4,11 @@
  *   yarn check-settings            fixtures first, then .claude/settings.json
  *   yarn check-settings <file>     one settings file, no fixtures
  *
- * Fails when: a required deny is missing, an allow rule admits every shell
- * command, a value holds a machine path, the sandbox is off, a registered hook
- * points at a script that does not exist, or settings.local.json is tracked.
+ * Fails when: a required deny or ask is missing, a deny would block the local
+ * reset, an allow rule admits every shell
+ * command, a value holds a machine path, the sandbox is off, a required hook is
+ * not registered, a registered hook points at a script that does not exist, or
+ * settings.local.json is tracked.
  */
 
 import { execFileSync } from "node:child_process";
@@ -31,11 +33,66 @@ const REQUIRED_DENIES = [
   "Bash(npm publish *)",
   "Bash(npm login *)",
   "Read(**/.env)",
-  "Read(**/.env.*)",
   "Read(**/secrets/**)",
   "Read(**/*.pem)",
   "Read(~/.ssh/**)",
   "Read(~/.aws/**)",
+  // D-STK-18: no agent resets or drops a database.
+  "Bash(*db:reset*)",
+  "Bash(*db:drop*)",
+  "Bash(*drizzle-kit drop*)",
+  "Bash(*supabase db reset*)",
+  "Bash(*DROP SCHEMA*)",
+  "Bash(*DROP DATABASE*)",
+];
+/**
+ * The env files that hold values (PR-16). Either the blanket rule, or every
+ * one of the named files: the named form leaves .env.example readable, which
+ * holds names and local defaults, never a key.
+ */
+const ENV_BLANKET_DENY = "Read(**/.env.*)";
+const ENV_FILE_DENIES = [
+  "Read(**/.env.local)",
+  "Read(**/.env.*.local)",
+  "Read(**/.env.development)",
+  "Read(**/.env.staging)",
+  "Read(**/.env.production)",
+];
+/** D-STK-18's asks: every command that changes a database waits for Taylor. */
+const REQUIRED_ASKS = [
+  "Bash(*db:migrate*)",
+  "Bash(*db:push*)",
+  "Bash(*db:seed*)",
+  "Bash(*db:setup*)",
+  "Bash(*db:local:reset*)",
+  "Bash(*drizzle-kit migrate*)",
+  "Bash(*drizzle-kit push*)",
+  "Bash(*supabase db push*)",
+];
+/** Asked, never denied: a deny broad enough to catch it takes the local rebuild away. */
+const LOCAL_RESET = "yarn db:local:reset";
+/**
+ * Hooks that must stay registered (A13.1). Deleting a hook block would
+ * otherwise pass every check. A hook joins this list in the step that lands
+ * its script (A2).
+ */
+const REQUIRED_HOOKS = [
+  {
+    event: "PreToolUse",
+    matcher: "Bash",
+    script: "tooling/hooks/bash-guard.ts",
+  },
+  {
+    event: "PreToolUse",
+    matcher: "Edit|Write|NotebookEdit",
+    script: "tooling/hooks/results-gate.ts",
+  },
+  {
+    event: "SessionStart",
+    matcher: undefined,
+    script: "tooling/hooks/session-start.ts",
+  },
+  { event: "Stop", matcher: undefined, script: "tooling/hooks/stop-gate.ts" },
 ];
 /** Shell reads the Read tool's deny cannot be trusted to cover on its own. */
 const REQUIRED_DENY_READ = ["~/.ssh", "~/.aws"];
@@ -58,6 +115,19 @@ function walk(value: unknown, at: string, out: [string, string][]) {
       walk(item, at ? `${at}.${key}` : key, out);
 }
 
+/** Whether a `Bash(...)` rule's pattern, with `*` as any text, matches the whole command. */
+function bashRuleMatches(rule: string, command: string): boolean {
+  const pattern = rule.match(/^Bash\((.*)\)$/)?.[1];
+  if (pattern === undefined) return false;
+  // The legacy `prefix:*` form means the prefix, then anything.
+  const body = pattern
+    .replace(/:\*$/, "*")
+    .split("*")
+    .map((part) => part.replace(/[.+?^${}()|[\]\\]/g, "\\$&"))
+    .join(".*");
+  return new RegExp(`^${body}$`).test(command);
+}
+
 export function checkSettings(settings: unknown): string[] {
   const problems: string[] = [];
   if (!isObject(settings)) return ["the file must hold one JSON object"];
@@ -66,6 +136,7 @@ export function checkSettings(settings: unknown): string[] {
     : {};
   const deny = strings(permissions.deny);
   const allow = strings(permissions.allow);
+  const ask = strings(permissions.ask);
 
   for (const rule of REQUIRED_DENIES) {
     if (!deny.includes(rule))
@@ -73,11 +144,48 @@ export function checkSettings(settings: unknown): string[] {
         `permissions.deny is missing ${rule}; restore it from ${TEMPLATE}`,
       );
   }
+  if (
+    !deny.includes(ENV_BLANKET_DENY) &&
+    !ENV_FILE_DENIES.every((rule) => deny.includes(rule))
+  )
+    problems.push(
+      `permissions.deny must hold ${ENV_BLANKET_DENY}, or every one of ${ENV_FILE_DENIES.join(", ")}; restore it from ${TEMPLATE}`,
+    );
+  for (const rule of REQUIRED_ASKS) {
+    if (!ask.includes(rule))
+      problems.push(
+        `permissions.ask is missing ${rule}; restore it from ${TEMPLATE}`,
+      );
+  }
+  for (const rule of deny) {
+    if (bashRuleMatches(rule, LOCAL_RESET))
+      problems.push(
+        `permissions.deny holds ${rule}, which also blocks ${LOCAL_RESET}; ` +
+          "narrow it so the local reset stays an ask (D-STK-18)",
+      );
+  }
   for (const rule of allow) {
     if (/^Bash(\(\s*\*?\s*\)|\(\*:\*\))?$/.test(rule))
       problems.push(
         `permissions.allow holds ${rule}, which admits every shell command; ` +
           "replace it with the specific commands, as in the template",
+      );
+  }
+
+  const hooks = isObject(settings.hooks) ? settings.hooks : {};
+  for (const { event, matcher, script } of REQUIRED_HOOKS) {
+    const entries = Array.isArray(hooks[event]) ? hooks[event] : [];
+    const registered = entries.some(
+      (entry) =>
+        isObject(entry) &&
+        (entry.matcher ?? "") === (matcher ?? "") &&
+        JSON.stringify(entry.hooks ?? []).includes(
+          `\${CLAUDE_PROJECT_DIR}/${script}`,
+        ),
+    );
+    if (!registered)
+      problems.push(
+        `hooks.${event} does not register ${script}${matcher ? ` for "${matcher}"` : ""}; restore the entry from ${TEMPLATE}`,
       );
   }
 

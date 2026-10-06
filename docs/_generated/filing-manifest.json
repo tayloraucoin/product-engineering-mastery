@@ -269,7 +269,7 @@
     },
     {
       "from": "docs/_files_dump/pj-engineering-layer.md",
-      "to": "docs/prompts/phases/engineering-layer.md",
+      "to": "docs/prompts/archive/phases/engineering-layer.md",
       "body_sha256": "572d451069bf0f4026e323bae3f6b67e75a0a0d34be2818cac4dda154cfdb79e",
       "frontmatter": "kept",
       "source_commit": "3e58eae",
@@ -278,7 +278,7 @@
     },
     {
       "from": "docs/_files_dump/pj-primer.md",
-      "to": "docs/prompts/phases/engineering-layer-primer.md",
+      "to": "docs/prompts/archive/phases/engineering-layer-primer.md",
       "body_sha256": "3db84639ee4f98b8e5d78f3a0530a69f0f2cb00e0bfc3ae87bf3a133edc61115",
       "frontmatter": "added",
       "source_commit": "3e58eae",
@@ -309,14 +309,16 @@
     },
     {
       "from": "docs/_files_dump/workflows-one-off.md",
-      "to": "docs/workflows/one-off.md",
+      "to": "docs/workflows/tracks/one-off.md",
+      "note": "moved and rewritten by PR-19; the hash is the body as received",
       "body_sha256": "0561e5540192dc8aca344e1a261d3ff07aa8ed2db909a90eedb9c6c4c751d1af",
       "frontmatter": "kept",
       "source_commit": "3e58eae"
     },
     {
       "from": "docs/_files_dump/workflows-epic.md",
-      "to": "docs/workflows/epic.md",
+      "to": "docs/workflows/tracks/epic.md",
+      "note": "moved and rewritten by PR-19; the hash is the body as received",
       "body_sha256": "a4261655d200bb1190eb83bc7587c235e05a7efb0250741d2e0c70d63953fb37",
       "frontmatter": "kept",
       "source_commit": "3e58eae"

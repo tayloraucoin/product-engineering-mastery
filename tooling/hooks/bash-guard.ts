@@ -2,11 +2,14 @@
  * PreToolUse guard for the Bash tool (E-16, E-32, E-33; A1, A4; the J0 results).
  *
  * Reads the hook input on stdin. Exit 0 lets the command run. Exit 2 blocks it,
- * and stderr tells the agent what to run instead.
+ * and stderr tells the agent what to run instead. Exit 0 with a JSON
+ * `permissionDecision: "ask"` on stdout asks the user first.
  *
  * Blocks: npm, npx and pnpm; any git push; a commit on main; a commit whose
  * message does not open with an admitted work-id; and a shell write to a
  * results.json under the specs root, or to an as-built.md that exists on main.
+ * Database commands (D-STK-18): a reset or drop is blocked; a migrate, push,
+ * seed, setup or local reset is answered with "ask", so it waits for Taylor.
  *
  * The command is tokenized, not prefix-matched: a deny rule on `git push *`
  * misses `git -C . push`, `sh -c 'git push'` and `/usr/bin/git push`. This
@@ -14,14 +17,16 @@
  * boundary: a path held in a variable is invisible to it. The boundary for
  * results is the run record that check-specs verifies (A9).
  *
- * Kept free of workspace imports so it starts fast. Fixtures:
+ * Imports only node built-ins and tooling/lib/work-ids.ts, so it starts fast. Fixtures:
  * tooling/hooks/fixtures/bash-guard.json, run by `yarn test:hooks`.
  */
 
 import { execFileSync } from "node:child_process";
-import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+
+import { hasWorkId, readLayout, type Layout } from "../lib/work-ids.ts";
 
 const ROOT =
   process.env.CLAUDE_PROJECT_DIR ??
@@ -33,51 +38,34 @@ type FixtureContext = {
   epicPrefixes?: string[];
   asBuiltOnMain?: string[];
   aliases?: Record<string, string>;
+  protectedBranch?: string;
 };
 const fixture: FixtureContext | null = process.env.PEM_HOOK_FIXTURE_CONTEXT
   ? (JSON.parse(process.env.PEM_HOOK_FIXTURE_CONTEXT) as FixtureContext)
   : null;
 
-type Denial = { rule: string; message: string };
+/** A denial blocks the command; with `ask`, the command waits for Taylor's yes instead. */
+type Denial = { rule: string; message: string; ask?: true };
 
 // ---------------------------------------------------------------- layout
 
-type Layout = { specsRoot: string; prefixes: string[]; readable: boolean };
-
-function readLayout(): Layout {
-  try {
-    const toolkit = JSON.parse(
-      readFileSync(path.join(ROOT, "toolkit.json"), "utf8"),
-    ) as {
-      specsRoot: string;
-      toolkitPrefixes: string[];
-      apps: Record<string, { prefix: string }>;
-    };
-    const prefixes = [
-      ...toolkit.toolkitPrefixes,
-      ...Object.values(toolkit.apps).map((app) => app.prefix),
-      ...(fixture?.epicPrefixes ?? epicPrefixes(toolkit.specsRoot)),
-    ];
-    return { specsRoot: toolkit.specsRoot, prefixes, readable: true };
-  } catch {
-    return { specsRoot: "specs", prefixes: [], readable: false };
-  }
+function readGuardLayout(): Layout {
+  const layout = readLayout(ROOT, fixture?.epicPrefixes);
+  return fixture?.protectedBranch
+    ? { ...layout, protectedBranch: fixture.protectedBranch }
+    : layout;
 }
 
-/** An epic's prefix exists once its folder does: <specsRoot>/<app>/epics/<EPIC>-<slug>/ (A4). */
-function epicPrefixes(specsRoot: string): string[] {
-  const found: string[] = [];
-  const root = path.join(ROOT, specsRoot);
-  if (!existsSync(root)) return found;
-  for (const app of readdirSync(root)) {
-    const epics = path.join(root, app, "epics");
-    if (!existsSync(epics) || !statSync(epics).isDirectory()) continue;
-    for (const name of readdirSync(epics)) {
-      const prefix = name.match(/^([A-Z][A-Z0-9]{1,4})-/)?.[1];
-      if (prefix) found.push(prefix);
-    }
-  }
-  return found;
+/**
+ * A commit is judged by the layout of the repo it lands in: a worktree or
+ * another checkout holds its own epics, which this checkout cannot see.
+ */
+function commitLayout(dir: string, fallback: Layout): Layout {
+  if (fixture) return fallback;
+  const top = git(dir, ["rev-parse", "--show-toplevel"]);
+  return top && path.resolve(top) !== path.resolve(ROOT)
+    ? readLayout(top)
+    : fallback;
 }
 
 function git(cwd: string, args: string[]): string | null {
@@ -100,19 +88,21 @@ const aliasOf = (cwd: string, name: string) =>
     ? (fixture.aliases?.[name] ?? null)
     : git(cwd, ["config", "--get", `alias.${name}`]);
 
-function existsOnMain(rel: string): boolean {
+function existsOnProtected(rel: string, layout: Layout): boolean {
   if (fixture) return (fixture.asBuiltOnMain ?? []).includes(rel);
-  return git(ROOT, ["cat-file", "-e", `main:${rel}`]) !== null;
+  return (
+    git(ROOT, ["cat-file", "-e", `${layout.protectedBranch}:${rel}`]) !== null
+  );
 }
 
-function anyAsBuiltOnMain(specsRoot: string): boolean {
+function anyAsBuiltOnProtected(layout: Layout): boolean {
   if (fixture) return (fixture.asBuiltOnMain ?? []).length > 0;
   const listing = git(ROOT, [
     "ls-tree",
     "-r",
     "--name-only",
-    "main",
-    specsRoot,
+    layout.protectedBranch,
+    layout.specsRoot,
   ]);
   return (listing ?? "")
     .split("\n")
@@ -565,11 +555,11 @@ function gitRules(
     };
   if (sub !== "commit") return null;
 
-  if (currentBranch(dir) === "main")
+  layout = commitLayout(dir, layout);
+  if (currentBranch(dir) === layout.protectedBranch)
     return {
       rule: "commit-on-main",
-      message:
-        "Agents do not commit on main. Run: git switch -c agent/<work-id>   then commit there. Your staged changes come with you.",
+      message: `Agents do not commit on ${layout.protectedBranch}. Run: git switch -c ${layout.branchPattern.replace("{id}", "<work-id>")}   then commit there. Your staged changes come with you.`,
     };
 
   const message = commitMessage(
@@ -595,8 +585,7 @@ function gitRules(
       message:
         "toolkit.json is missing or unreadable, so no work-id can be checked. Run: yarn doctor",
     };
-  const workId = new RegExp(`^(${layout.prefixes.join("|")})(-\\d+)?: \\S`);
-  if (workId.test(message.subject)) return null;
+  if (hasWorkId(message.subject, layout.prefixes)) return null;
   return {
     rule: "commit-work-id",
     message:
@@ -614,12 +603,12 @@ const globToRegExp = (glob: string) =>
       .replace(/\?/g, ".")}$`,
   );
 
-/** "results", "as-built", or null: what a shell write to this path would overwrite. */
+/** "results", "review", "as-built", or null: what a shell write to this path would overwrite. */
 function protectedFile(
   target: string,
   cwd: string,
   layout: Layout,
-): "results" | "as-built" | null {
+): "results" | "review" | "as-built" | null {
   if (target.includes("$")) return null;
   const rel = path
     .relative(ROOT, path.resolve(cwd, target))
@@ -635,11 +624,17 @@ function protectedFile(
   const matches = (name: string) =>
     HAS_GLOB.test(base) ? globToRegExp(base).test(name) : base === name;
   if (matches("results.json")) return "results";
+  // Written by review:run: a review in a ticket folder, and an epic's pre-flight.
+  if (
+    /^review-[a-z*?]+\.md$/.test(base) ||
+    (matches("_preflight.md") && rel.includes("/tickets/"))
+  )
+    return "review";
   if (matches("as-built.md"))
     return (
       HAS_GLOB.test(rel)
-        ? anyAsBuiltOnMain(layout.specsRoot)
-        : existsOnMain(rel)
+        ? anyAsBuiltOnProtected(layout)
+        : existsOnProtected(rel, layout)
     )
       ? "as-built"
       : null;
@@ -701,14 +696,86 @@ function writeRules(
           "results.json is written only by tooling, so the builder cannot grade itself. " +
           "Run: yarn contract:run <id>   or   yarn contract:record <id> <criterion> --evidence <path>",
       };
+    if (kind === "review")
+      return {
+        rule: "review-write",
+        message:
+          "Reviews and the pre-flight are written only by their run. " +
+          "Run: yarn review:run <role> <id>   or, for the Tickets gate, yarn review:run vigil <EPIC>",
+      };
     if (kind === "as-built")
       return {
         rule: "as-built-write",
         message:
-          "This as-built.md is on main and immutable. To set applied:, edit that one field with the Edit tool. " +
+          `This as-built.md is on ${layout.protectedBranch} and immutable. To set applied:, edit that one field with the Edit tool. ` +
           "A new result goes through yarn contract:run or yarn contract:record on a new item.",
       };
   }
+  return null;
+}
+
+// ---------------------------------------------------------------- database (D-STK-18)
+
+/** Programs that run a package script named in their arguments. */
+const SCRIPT_RUNNERS = new Set(["yarn", "turbo", "bun"]);
+/** A script name, bare or as a turbo task (`@pem/db#db:migrate`). */
+const DESTROY_SCRIPT = /^(?:\S*#)?db:(?:reset|drop)/;
+const CHANGE_SCRIPT = /^(?:\S*#)?db:(?:migrate|push|seed|setup|local:reset)/;
+/** The db package's scripts that change a database, run by path rather than by name. */
+const CHANGE_FILE =
+  /(?:^|\/)scripts\/(?:migrate|setup|setup-local|seed-users|reset-local-db)\.ts$/;
+const SQL_CLIENTS = new Set(["psql", "pgcli", "usql"]);
+const DROP_SQL = /\bdrop\s+(?:schema|database)\b/i;
+
+const DESTROY: Denial = {
+  rule: "db-destroy",
+  message:
+    "Agents never reset or drop a database (D-STK-18). Write the change as a migration and stop for Taylor; " +
+    "for the local database only, yarn db:local:reset rebuilds it (it asks first).",
+};
+const CHANGE: Denial = {
+  rule: "db-change",
+  ask: true,
+  message:
+    "This changes a database (D-STK-18). Agents write the migration or SQL and stop; approve only a run you asked for.",
+};
+
+/** The words after `name` (a program, anywhere in the segment), flags dropped. */
+function subcommandAfter(words: string[], name: string): string[] | null {
+  const at = words.findIndex((word) => path.posix.basename(word) === name);
+  return at === -1 ? null : words.slice(at + 1).filter((arg) => !isFlag(arg));
+}
+
+function databaseRules(
+  program: string,
+  args: string[],
+  segment: Segment,
+  heredocs: string[],
+): Denial | null {
+  const words = [program, ...args];
+  if (program === "dropdb") return DESTROY;
+  if (words.some((word) => SQL_CLIENTS.has(path.posix.basename(word)))) {
+    const sql = [...args, ...segment.heredocs.map((i) => heredocs[i] ?? "")];
+    if (sql.some((text) => DROP_SQL.test(text))) return DESTROY;
+  }
+
+  const drizzle = subcommandAfter(words, "drizzle-kit");
+  if (drizzle?.[0] === "drop") return DESTROY;
+  const supabase = subcommandAfter(words, "supabase");
+  if (supabase?.[0] === "db" && supabase[1] === "reset") return DESTROY;
+
+  const scripts = SCRIPT_RUNNERS.has(program) ? args : [];
+  if (scripts.some((arg) => DESTROY_SCRIPT.test(arg))) return DESTROY;
+
+  if (
+    scripts.some((arg) => CHANGE_SCRIPT.test(arg)) ||
+    ["migrate", "push"].includes(drizzle?.[0] ?? "") ||
+    (supabase?.[0] === "db" && supabase[1] === "push") ||
+    (supabase?.[0] === "migration" && supabase[1] === "up") ||
+    (["node", "tsx", "bun", "deno"].includes(program) &&
+      args.some((arg) => CHANGE_FILE.test(arg)))
+  )
+    return CHANGE;
   return null;
 }
 
@@ -727,8 +794,15 @@ function evaluate(
   for (const entry of bodies)
     if (entry.expands) nested.push(...substitutions(entry.body));
 
+  // A deny anywhere wins; an ask is held until nothing in the command denies.
+  let ask: Denial | null = null;
+  const weigh = (denial: Denial | null) => {
+    if (denial?.ask) ask ??= denial;
+    return denial && !denial.ask ? denial : null;
+  };
+
   for (const inner of nested) {
-    const denial = evaluate(inner, cwd, layout, depth + 1);
+    const denial = weigh(evaluate(inner, cwd, layout, depth + 1));
     if (denial) return denial;
   }
   for (const segment of toSegments(tokens)) {
@@ -740,23 +814,25 @@ function evaluate(
       const flag = args.findIndex((arg) => /^-[a-zA-Z]*c$/.test(arg));
       const script = flag === -1 ? null : args[flag + 1];
       if (script) {
-        const denial = evaluate(script, cwd, layout, depth + 1);
+        const denial = weigh(evaluate(script, cwd, layout, depth + 1));
         if (denial) return denial;
       }
     } else if (program === "eval") {
-      const denial = evaluate(args.join(" "), cwd, layout, depth + 1);
+      const denial = weigh(evaluate(args.join(" "), cwd, layout, depth + 1));
       if (denial) return denial;
     }
 
-    const denial =
+    const denial = weigh(
       packageManager(program, args) ??
-      (program === "git"
-        ? gitRules(args, segment, cwd, layout, heredocs)
-        : null) ??
-      writeRules(program, args, segment, cwd, layout);
+        (program === "git"
+          ? gitRules(args, segment, cwd, layout, heredocs)
+          : null) ??
+        writeRules(program, args, segment, cwd, layout) ??
+        databaseRules(program, args, segment, heredocs),
+    );
     if (denial) return denial;
   }
-  return null;
+  return ask;
 }
 
 /** When the command cannot be tokenized, refuse what plainly looks like a blocked action. */
@@ -780,6 +856,12 @@ function fallback(command: string): Denial | null {
         "write a results or as-built file; use yarn contract:run",
       ),
     };
+  if (
+    /db:(reset|drop)|drizzle-kit\s+drop|supabase\s+db\s+reset|\bdropdb\b|drop\s+(schema|database)/i.test(
+      command,
+    )
+  )
+    return { ...DESTROY, message: message("reset or drop a database") };
   return null;
 }
 
@@ -801,11 +883,23 @@ if (input.tool_name !== "Bash" || typeof command !== "string") process.exit(0);
 const cwd = input.cwd ?? ROOT;
 let denial: Denial | null;
 try {
-  denial = evaluate(command, cwd, readLayout());
+  denial = evaluate(command, cwd, readGuardLayout());
 } catch {
   denial = fallback(command);
 }
-if (denial) {
+if (denial?.ask) {
+  // Exit 0 with this JSON makes Claude Code ask the user, showing the reason
+  // (PreToolUse hookSpecificOutput; code.claude.com/docs/en/hooks, 2026-10-04).
+  console.log(
+    JSON.stringify({
+      hookSpecificOutput: {
+        hookEventName: "PreToolUse",
+        permissionDecision: "ask",
+        permissionDecisionReason: `bash-guard [${denial.rule}]: ${denial.message}`,
+      },
+    }),
+  );
+} else if (denial) {
   console.error(`bash-guard [${denial.rule}]: ${denial.message}`);
   process.exit(2);
 }

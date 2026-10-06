@@ -1,0 +1,79 @@
+{
+  "id": "STK-6",
+  "criteria_sha256": "ed2bab0fe9692b03ed1938117e0b9f3794374b7cf6af48cfcf864041dd2b3880",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn lint",
+        "exit": 0,
+        "at": "2026-10-04T06:34:49Z",
+        "head": "dc88948f4c238580b791ea194aba05bf095910c8",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/C1.log",
+        "evidence_sha256": "640a513ae44daeb58bce86d077f2dffe6ea0d07c555bbb3c054b4fb66b0f2159"
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn verify",
+        "exit": 0,
+        "at": "2026-10-04T06:40:50Z",
+        "head": "ed3012c471b7a6bf6f67ec5162a68e980280c1c0",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/C2.log",
+        "evidence_sha256": "194c2b8a689436a51234e2ad34e2f64ed3ac958903edc060d4a46637485774b7"
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "capture",
+      "run": {
+        "command": "yarn contract:record STK-6 C3 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/dark.png",
+        "exit": 0,
+        "at": "2026-10-04T06:37:32Z",
+        "head": "c4a3825635b0eb443aeb240e2693a8d5f6777497",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/dark.png",
+        "evidence_sha256": "1136fc5d511d389d7abed9baaf904f2204ca7f1adff089427759eb7122b2c144"
+      }
+    },
+    "C4": {
+      "status": "PASS",
+      "evidence": "capture",
+      "run": {
+        "command": "yarn contract:record STK-6 C4 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/light.png",
+        "exit": 0,
+        "at": "2026-10-04T06:37:38Z",
+        "head": "c4a3825635b0eb443aeb240e2693a8d5f6777497",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/light.png",
+        "evidence_sha256": "7aaae57cfbbae3ae8f32df80866765a0d8d309cc1f527f9f60bf59536788b28d"
+      }
+    },
+    "C5": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn contract:record STK-6 C5 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/C5.md",
+        "exit": 0,
+        "at": "2026-10-04T06:37:50Z",
+        "head": "c4a3825635b0eb443aeb240e2693a8d5f6777497",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/C5.md",
+        "evidence_sha256": "fa5863b087b3fcf763ccd65e5c79c9aaa314d733cd9ae25224f5ce002de1bca3"
+      }
+    },
+    "C6": {
+      "status": "PASS",
+      "evidence": "capture",
+      "run": {
+        "command": "yarn contract:record STK-6 C6 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/toggle-states.png",
+        "exit": 0,
+        "at": "2026-10-04T06:37:44Z",
+        "head": "c4a3825635b0eb443aeb240e2693a8d5f6777497",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-6-theme-switch/evidence/toggle-states.png",
+        "evidence_sha256": "057d49a6ef8c4ce14366239c8f29b635451abf16f8a179b4119f59bb6696e015"
+      }
+    }
+  },
+  "updated_at": "2026-10-04T06:41:55Z"
+}

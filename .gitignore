@@ -15,8 +15,17 @@ package-lock.json
 # Testing
 coverage
 
+# A contract:run log before its rename (tooling/contract.ts)
+specs/**/evidence/.*.tmp
+# contract:run logs are local: results.json keeps the command, exit and test count (PR-19)
+specs/**/evidence/*.log
+
 # Turbo
 .turbo
+
+# Storybook (packages/ui)
+storybook-static
+*storybook.log
 
 # Vercel
 .vercel
@@ -58,4 +67,6 @@ yarn-error.log*
 
 # Misc
 .DS_Store
+# The check-specs fixture that pins "OS metadata is not a stray" keeps a placeholder.
+!tooling/fixtures/specs/pass-os-metadata-ignored/**/.DS_Store
 *.pem

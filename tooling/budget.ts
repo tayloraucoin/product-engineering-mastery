@@ -13,6 +13,7 @@ import { existsSync, readdirSync } from "node:fs";
 import path, { matchesGlob } from "node:path";
 
 import {
+  estimateTokens,
   listFiles,
   readMarkdown,
   readText,
@@ -33,8 +34,7 @@ const toolkit = loadToolkit();
 const apps = Object.values(toolkit.apps);
 
 const exists = (rel: string) => existsSync(path.join(REPO_ROOT, rel));
-const estimate = (text: string) =>
-  Math.ceil(text.replace(/\s+/g, " ").length / 4);
+const estimate = estimateTokens;
 const tokensOf = (rel: string) => (exists(rel) ? estimate(readText(rel)) : 0);
 
 function listIn(relDir: string, filter: (name: string) => boolean): string[] {
@@ -45,10 +45,9 @@ function listIn(relDir: string, filter: (name: string) => boolean): string[] {
 }
 
 /** "always 4,000 + design layer 5,000 + …" → { always: 4000, "design layer": 5000, … } */
-function parseCaps(): {
-  rows: Map<string, { cap: number; parts: Map<string, number> }>;
-} {
-  const text = readText(INDEX);
+type Row = { cap: number; parts: Map<string, number> };
+
+function parseCaps(text: string): Map<string, Row> {
   const rows = new Map<string, { cap: number; parts: Map<string, number> }>();
   for (const line of text.split("\n")) {
     const cells = line.split("|").map((c) => c.trim());
@@ -67,19 +66,35 @@ function parseCaps(): {
       parts,
     });
   }
-  return { rows };
+  return rows;
 }
 
 /** Descriptions the model sees in every session: model-invocable skills and subagents. */
-function listingTokens(): { tokens: number; skills: number; agents: number } {
+function listingTokens(): {
+  tokens: number;
+  skills: number;
+  agents: number;
+  problems: string[];
+} {
   let tokens = 0;
-  const skills = listIn(".claude/skills", (n) => !n.endsWith(".md"))
+  const all = listIn(".claude/skills", (n) => !n.endsWith(".md"))
     .map((dir) => `${dir}/SKILL.md`)
-    .filter(exists)
-    .filter(
+    .filter(exists);
+  // Frontmatter Claude Code cannot parse loses its disable-model-invocation
+  // key, so the skill would be counted as listed with an empty description.
+  const problems = [
+    ...all,
+    ...listIn(".claude/agents", (n) => n.endsWith(".md")),
+  ]
+    .filter((rel) => readMarkdown(rel).frontmatterError)
+    .map(
       (rel) =>
-        readMarkdown(rel).frontmatter?.["disable-model-invocation"] !== true,
+        `${rel}: the frontmatter is not valid YAML (${readMarkdown(rel).frontmatterError}); quote any value holding ": "`,
     );
+  const skills = all.filter(
+    (rel) =>
+      readMarkdown(rel).frontmatter?.["disable-model-invocation"] !== true,
+  );
   for (const rel of skills)
     tokens += estimate(
       String(readMarkdown(rel).frontmatter?.description ?? ""),
@@ -89,7 +104,7 @@ function listingTokens(): { tokens: number; skills: number; agents: number } {
     tokens += estimate(
       String(readMarkdown(rel).frontmatter?.description ?? ""),
     );
-  return { tokens, skills: skills.length, agents: agents.length };
+  return { tokens, skills: skills.length, agents: agents.length, problems };
 }
 
 /** What a forked critic loads from the canon: canon-rubric.md plus canon §2, the tells C-R14 checks (record 0009). */
@@ -126,16 +141,8 @@ function briefAndPackagePairs(): string[][] {
   return [...folders.values()];
 }
 
-const { rows } = parseCaps();
 const errors: string[] = [];
 const report: string[] = [];
-const line = (label: string, tokens: number, cap?: number, note = "") => {
-  const over = cap !== undefined && tokens > cap;
-  if (over) errors.push(`${label}: ${tokens} tokens over the ${cap} cap`);
-  report.push(
-    `${over ? "FAIL" : "ok  "} ${label.padEnd(44)} ${String(tokens).padStart(6)}${cap ? ` / ${cap}` : ""}${note ? `  ${note}` : ""}`,
-  );
-};
 
 // Line caps.
 for (const [rel, cap] of Object.entries(LINE_CAPS)) {
@@ -159,11 +166,26 @@ const skillBodies = listIn(".claude/skills", (n) => !n.endsWith(".md"))
   .filter(exists);
 const listing = listingTokens();
 
+/**
+ * SessionStart output is counted at its declared allowance (E-19), read from
+ * the map's Always line, since what it prints varies by session; the hook
+ * truncates its line in code.
+ */
+const sessionStart = Number(
+  readText(INDEX)
+    .match(/SessionStart hook output \(≤([\d,]+)\)/)?.[1]
+    ?.replace(/,/g, "") ?? Number.NaN,
+);
+if (Number.isNaN(sessionStart))
+  errors.push(
+    `${INDEX}: the Always line no longer declares "SessionStart hook output (≤<tokens>)"; budget.ts counts that allowance`,
+  );
 const always =
   tokensOf("AGENTS.md") +
   tokensOf("CLAUDE.md") +
   tokensOf(INDEX) +
-  listing.tokens;
+  listing.tokens +
+  (sessionStart || 0);
 const canon = tokensOf("docs/design/canon.md");
 const uiRule = tokensOf(".claude/rules/ui.md");
 const design = canon + sum(productLayer);
@@ -182,7 +204,7 @@ const PROBES = [
   ".yarnrc.yml",
   "docs/design/canon.md",
   `${toolkit.specsRoot}/web/one-offs/WEB-1-filter/contract.md`,
-  "packages/ui/src/button.tsx",
+  "packages/ui/src/primitives/control/button/button.tsx",
 ];
 const rules = listIn(
   ".claude/rules",
@@ -202,7 +224,11 @@ const pathRules = Math.max(
       .reduce((s, rel) => s + tokensOf(rel), 0),
   ),
 );
-const nestedAgents = largest(apps.map((app) => `${app.path}/AGENTS.md`));
+/** Nested AGENTS.md load by path in apps/ and packages/ (docs/index.md). */
+const nestedAgents = largest([
+  ...apps.map((app) => `${app.path}/AGENTS.md`),
+  ...listIn("packages", () => true).map((dir) => `${dir}/AGENTS.md`),
+]);
 const nonUiRules = pathRules + nestedAgents;
 
 /** The largest contract under the specs root, with the one surface file it cites. */
@@ -229,71 +255,144 @@ const surfaces = exists(toolkit.specsRoot)
 const citedSurface = largest(surfaces);
 const evaluatorBody = tokensOf(".claude/agents/vigil.md");
 
-const ui = rows.get("ui build");
-const nonUi = rows.get("non-ui build");
-const critic = rows.get("critic pass (forked)");
-const evaluator = rows.get("evaluator pass (forked)");
-if (!ui || !nonUi || !critic || !evaluator)
-  throw new Error(
-    "docs/index.md budget table is missing a row this script reads",
-  );
+/**
+ * Measures every build against the caps in a budget table's text. A row or
+ * part label the script reads but the table lacks is an error, never a
+ * silently dropped cap (Mason, audit day).
+ */
+function checkAgainst(
+  text: string,
+  source: string,
+): { errors: string[]; report: string[] } {
+  const errors: string[] = [];
+  const report: string[] = [];
+  const rows = parseCaps(text);
+  const line = (label: string, tokens: number, cap?: number, note = "") => {
+    const over = cap !== undefined && tokens > cap;
+    if (over) errors.push(`${label}: ${tokens} tokens over the ${cap} cap`);
+    report.push(
+      `${over ? "FAIL" : "ok  "} ${label.padEnd(44)} ${String(tokens).padStart(6)}${cap ? ` / ${cap}` : ""}${note ? `  ${note}` : ""}`,
+    );
+  };
+  const part = (row: Row, label: string) => {
+    const cap = row.parts.get(label);
+    if (cap === undefined)
+      errors.push(
+        `${source}: the budget table has no "${label}" part; budget.ts reads that label, so restore it or rename it in both`,
+      );
+    return cap;
+  };
+  const ui = rows.get("ui build");
+  const nonUi = rows.get("non-ui build");
+  const critic = rows.get("critic pass (forked)");
+  const evaluator = rows.get("evaluator pass (forked)");
+  if (!ui || !nonUi || !critic || !evaluator) {
+    errors.push(
+      `${source}: the budget table is missing a row this script reads (UI build, Non-UI build, Critic pass (forked), Evaluator pass (forked))`,
+    );
+    return { errors, report };
+  }
 
-line(
-  "always-on",
-  always,
-  ui.parts.get("always"),
-  `skills ${listing.skills}, agents ${listing.agents}`,
-);
-line(
-  "design layer (canon + product layer)",
-  design,
-  ui.parts.get("design layer"),
-  productLayer.length ? "" : "(product layer not written yet)",
-);
-line(
-  "brief and package (largest example)",
-  briefAndPackage,
-  ui.parts.get("brief and package"),
-  example.length ? "" : "(not written yet)",
-);
-line(
-  "one skill body (largest)",
-  skillBody,
-  ui.parts.get("one skill body"),
-  skillBodies.length ? "" : "(no skills yet)",
-);
-line(
-  "UI build (+ ui.md rule)",
-  always + design + uiRule + briefAndPackage + skillBody,
-  ui.cap,
-);
-line(
-  "path rules and nested AGENTS.md (heaviest file)",
-  nonUiRules,
-  nonUi.parts.get("path rules and nested agents.md"),
-);
-line(
-  "contract and cited spec (largest)",
-  contractAndSpec,
-  nonUi.parts.get("contract and cited spec"),
-  contractSpec.length ? "" : "(no contract yet)",
-);
-line("non-UI build", always + nonUiRules + contractAndSpec, nonUi.cap);
-line(
-  "critic pass (rubric + canon §2 + cited surface)",
-  criticCanon() + citedSurface,
-  critic.cap,
-);
-line(
-  "evaluator pass (vigil + contract and spec + evidence index)",
-  evaluatorBody + contractAndSpec,
-  evaluator.cap,
-  evaluatorBody ? "" : "(vigil not generated yet)",
-);
+  line(
+    "always-on",
+    always,
+    part(ui, "always"),
+    `skills ${listing.skills}, agents ${listing.agents}, SessionStart ${sessionStart || 0}`,
+  );
+  line(
+    "design layer (canon + product layer)",
+    design,
+    part(ui, "design layer"),
+    productLayer.length ? "" : "(product layer not written yet)",
+  );
+  line(
+    "brief and package (largest example)",
+    briefAndPackage,
+    part(ui, "brief and package"),
+    example.length ? "" : "(not written yet)",
+  );
+  line(
+    "one skill body (largest)",
+    skillBody,
+    part(ui, "one skill body"),
+    skillBodies.length ? "" : "(no skills yet)",
+  );
+  line(
+    "UI build (+ ui.md rule)",
+    always + design + uiRule + briefAndPackage + skillBody,
+    ui.cap,
+  );
+  line(
+    "path rules and nested AGENTS.md (heaviest file)",
+    nonUiRules,
+    part(nonUi, "path rules and nested agents.md"),
+  );
+  line(
+    "contract and cited spec (largest)",
+    contractAndSpec,
+    part(nonUi, "contract and cited spec"),
+    contractSpec.length ? "" : "(no contract yet)",
+  );
+  line("non-UI build", always + nonUiRules + contractAndSpec, nonUi.cap);
+  line(
+    "critic pass (rubric + canon §2 + cited surface)",
+    criticCanon() + citedSurface,
+    critic.cap,
+  );
+  line(
+    "evaluator pass (vigil + contract and spec + evidence index)",
+    evaluatorBody + contractAndSpec,
+    evaluator.cap,
+    evaluatorBody ? "" : "(vigil not generated yet)",
+  );
+  // The body part warns rather than fails: vigil's body is its role verbatim
+  // until refinement 22c (held for Taylor), and a role body is never cut here.
+  const bodyPart = part(evaluator, "evaluator body");
+  if (bodyPart !== undefined && evaluatorBody > bodyPart)
+    report.push(
+      `WARN vigil's body is ${evaluatorBody} tokens, over the ${bodyPart} the evaluator row allots it; the row total holds. Refinement 22c (held) cuts it.`,
+    );
+  return { errors, report };
+}
+
+/**
+ * The checker proves itself first (Touchstone, audit day): a synthetic map
+ * whose caps every real measurement exceeds must fail on each named row, and
+ * a map with a renamed part label must fail on that label.
+ */
+const BUDGET_FIXTURES: [string, string[]][] = [
+  [
+    "tooling/fixtures/budget/over-cap-index.md",
+    [
+      "always-on:",
+      "design layer (canon + product layer):",
+      "UI build (+ ui.md rule):",
+      "non-UI build:",
+      "critic pass",
+    ],
+  ],
+  ["tooling/fixtures/budget/renamed-part-index.md", ['no "always" part']],
+];
+for (const [fixture, expected] of BUDGET_FIXTURES) {
+  const result = checkAgainst(readText(fixture), fixture);
+  for (const text of expected)
+    if (!result.errors.some((error) => error.includes(text))) {
+      console.error(
+        `budget — the fixture ${fixture} did not fail with "${text}"; the budget check is broken. Got: ${result.errors.join(" | ") || "no errors"}`,
+      );
+      process.exit(1);
+    }
+}
+
+errors.push(...listing.problems);
+const measured = checkAgainst(readText(INDEX), INDEX);
+errors.push(...measured.errors);
+report.push(...measured.report);
+const ui = parseCaps(readText(INDEX)).get("ui build");
 
 // The index allots a product's own design layer about 1,700 of the design-layer cap.
 const PRODUCT_SHARE = 1700;
-const designCap = ui.parts.get("design layer") ?? 0;
+const designCap = ui?.parts.get("design layer") ?? 0;
 const headroom = designCap - canon;
 if (headroom < PRODUCT_SHARE) {
   report.push(

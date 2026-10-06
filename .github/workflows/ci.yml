@@ -11,7 +11,7 @@ concurrency:
 
 jobs:
   verify:
-    name: format · docs · budget · agents · lint · boundaries · types · build
+    name: yarn verify
     runs-on: ubuntu-latest
     env:
       # Vercel Remote Cache — set TURBO_TOKEN (secret) and TURBO_TEAM (variable) in GitHub repo settings.
@@ -21,7 +21,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          # Full history: check-specs and check-test-weakening compare against the
+          # protected branch, and a run record's commit must be reachable.
+          fetch-depth: 0
 
       - name: Enable Corepack
         run: corepack enable
@@ -35,32 +37,6 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
-      - name: Format
-        run: yarn format:check
-
-      - name: Docs (frontmatter and names)
-        run: yarn lint:docs
-
-      - name: Context budget
-        run: yarn budget
-
-      - name: Generated agents up to date
-        run: yarn gen:agents --check
-
-      - name: Directory map up to date
-        run: yarn directory-map --check
-
-      - name: Lint (code quality)
-        run: yarn lint
-
-      - name: Lint (import boundaries)
-        run: yarn lint:boundaries
-
-      - name: Typecheck
-        run: yarn check-types
-
-      - name: Typecheck (tooling)
-        run: yarn check-types:tooling
-
-      - name: Build
-        run: yarn build
+      # One step: CI runs exactly what `yarn verify` runs (A13.1), so the two cannot drift.
+      - name: Verify
+        run: yarn verify

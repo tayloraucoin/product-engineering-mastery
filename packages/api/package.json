@@ -1,0 +1,46 @@
+{
+  "name": "@pem/api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./server": {
+      "types": "./src/server.ts",
+      "default": "./src/server.ts"
+    },
+    "./react": {
+      "types": "./src/react.tsx",
+      "default": "./src/react.tsx"
+    }
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "check-types": "tsc --noEmit",
+    "test": "node --conditions=react-server --test \"src/**/*.test.ts\""
+  },
+  "dependencies": {
+    "@pem/auth": "workspace:*",
+    "@pem/observability": "workspace:*",
+    "@pem/services": "workspace:*",
+    "@pem/validators": "workspace:*",
+    "@tanstack/react-query": "5.104.0",
+    "@trpc/client": "11.19.0",
+    "@trpc/server": "11.19.0",
+    "@trpc/tanstack-react-query": "11.19.0",
+    "server-only": "0.0.1",
+    "superjson": "2.2.6",
+    "zod": "4.6.5"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@pem/config": "workspace:*",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "drizzle-orm": "0.45.2",
+    "eslint": "^9.39.1",
+    "react": "19.2.8",
+    "typescript": "5.9.2"
+  }
+}

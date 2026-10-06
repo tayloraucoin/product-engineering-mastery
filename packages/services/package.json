@@ -1,0 +1,41 @@
+{
+  "name": "@pem/services",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./context": {
+      "types": "./src/context.ts",
+      "default": "./src/context.ts"
+    },
+    "./errors": {
+      "types": "./src/errors.ts",
+      "default": "./src/errors.ts"
+    },
+    "./notes": {
+      "types": "./src/notes/notes.ts",
+      "default": "./src/notes/notes.ts"
+    },
+    "./billing": {
+      "types": "./src/billing/entitlements.ts",
+      "default": "./src/billing/entitlements.ts"
+    }
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "check-types": "tsc --noEmit",
+    "test": "node --test \"src/**/*.test.ts\""
+  },
+  "dependencies": {
+    "@pem/db": "workspace:*",
+    "@pem/validators": "workspace:*",
+    "drizzle-orm": "0.45.2",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@pem/config": "workspace:*",
+    "@types/node": "^22",
+    "eslint": "^9.39.1",
+    "typescript": "5.9.2"
+  }
+}

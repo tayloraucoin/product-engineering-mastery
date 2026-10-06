@@ -1,0 +1,44 @@
+{
+  "name": "@pem/brand",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./brand": {
+      "types": "./src/brand.ts",
+      "default": "./src/brand.ts"
+    },
+    "./color": {
+      "types": "./src/color.ts",
+      "default": "./src/color.ts"
+    },
+    "./image-font": {
+      "types": "./src/image-font.ts",
+      "default": "./src/image-font.ts"
+    },
+    "./icon": {
+      "types": "./src/icon.ts",
+      "default": "./src/icon.ts"
+    },
+    "./font": {
+      "types": "./src/font.ts",
+      "default": "./src/font.ts"
+    },
+    "./assets/*": "./assets/*"
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "check-types": "tsc --noEmit",
+    "test": "node --test \"src/**/*.test.ts\""
+  },
+  "peerDependencies": {
+    "next": "16.3.8"
+  },
+  "devDependencies": {
+    "@pem/config": "workspace:*",
+    "@types/node": "^22",
+    "eslint": "^9.39.1",
+    "next": "16.3.8",
+    "typescript": "5.9.2"
+  }
+}

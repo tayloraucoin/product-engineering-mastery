@@ -15,7 +15,7 @@ load_when: metrics, spec
 
 > **Who fills:** Tally. Compass names which signal matters; Tally defines how it is measured and how far it can be trusted.
 > **When:** before a brief cites the metric (the brief's Metric field takes an ID and version from here), and at every change.
-> **Lives at:** `docs/metrics/definitions.md` in the product repo. Definitions never live in a brief: a brief retires when its feature ships (CF-09). Delete this instruction block when you fill it.
+> **Lives at:** `docs/measurement/metrics/definitions.md` in the product repo. Definitions never live in a brief: a brief retires when its feature ships (CF-09). Delete this instruction block when you fill it.
 > **What the critic checks:** nothing. A definition change without a changelog entry is meant to fail CI (thread P-G).
 > **Versioning:** a definition change bumps the version and keeps both series reported side by side until the old one is retired in the changelog. The trend line never silently changes meaning.
 

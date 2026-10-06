@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "results.schema.json",
+  "title": "results.json: a ticket's results, written only by tooling",
+  "description": "Written by yarn contract:init (every criterion FAIL), contract:run, contract:record, contract:add and review:run. check-specs validates every results.json against this file (A9, A13.2).",
+  "type": "object",
+  "required": ["id", "criteria_sha256", "criteria", "updated_at"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "description": "The ticket's work-id, as in WEB-41 or OB2-3; equals the contract's id and the folder's prefix.",
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9]{1,4}-[1-9][0-9]*$"
+    },
+    "criteria_sha256": {
+      "description": "Hash of the contract's criteria set, frozen at init; only contract:add changes it.",
+      "$ref": "#/$defs/sha256"
+    },
+    "criteria": {
+      "description": "One entry per contract criterion, keyed by its id.",
+      "type": "object",
+      "additionalProperties": { "$ref": "#/$defs/result" }
+    },
+    "updated_at": { "$ref": "#/$defs/timestamp" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "timestamp": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"
+    },
+    "result": {
+      "type": "object",
+      "required": ["status", "evidence", "run"],
+      "additionalProperties": false,
+      "properties": {
+        "status": { "enum": ["PASS", "FAIL"] },
+        "evidence": { "enum": ["test", "check", "capture", "manual"] },
+        "run": {
+          "description": "The last run that set this status; null until one has.",
+          "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/run" }]
+        }
+      }
+    },
+    "run": {
+      "description": "A9's run record, plus HEAD (A13.2 B2) and, for a review, what it reviewed (B1).",
+      "type": "object",
+      "required": [
+        "command",
+        "exit",
+        "at",
+        "head",
+        "evidence_path",
+        "evidence_sha256"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "command": { "type": "string", "minLength": 1 },
+        "exit": { "type": "integer" },
+        "at": { "$ref": "#/$defs/timestamp" },
+        "head": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "evidence_path": { "type": "string", "minLength": 1 },
+        "evidence_sha256": { "$ref": "#/$defs/sha256" },
+        "tests": {
+          "description": "Tests the runner reported for a test criterion; zero fails the criterion.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "contract_sha256": { "$ref": "#/$defs/sha256" },
+        "as_built_sha256": { "$ref": "#/$defs/sha256" },
+        "runner": { "type": "string", "minLength": 1 },
+        "deferred": {
+          "description": "true when a manual criterion only a person can check was handed to the operator (contract:record --verdict deferred). It never holds the ticket; _status.md lists it under Operator checks.",
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

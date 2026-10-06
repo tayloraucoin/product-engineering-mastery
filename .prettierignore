@@ -11,9 +11,7 @@ docs/product/brief.template.md
 docs/product/package.template.md
 docs/product/cycle-charter.template.md
 docs/runbooks/variant-testing.md
-docs/prompts/phases/
-docs/workflows/one-off.md
-docs/workflows/epic.md
+docs/prompts/archive/phases/
 docs/workflows/glossary.md
 
 # Landing pages: a hand-written top and a generated table (yarn directory-map).
@@ -23,3 +21,11 @@ docs/**/README.md
 # Generated.
 docs/_generated/
 .claude/agents/
+specs/_status.md
+packages/catalog/STATUS.md
+# Written by yarn review:run and hashed into results.json: a reformat would break the hash.
+specs/**/review-*.md
+specs/**/tickets/_preflight.md
+
+# Synthetic fixtures: check-specs hashes their bytes, so a formatter must not touch them.
+tooling/fixtures/

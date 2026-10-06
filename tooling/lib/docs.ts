@@ -21,6 +21,14 @@ export type MarkdownFile = {
   body: string;
 };
 
+/**
+ * The token estimate every budget in the toolkit uses: characters / 4 after
+ * collapsing runs of whitespace (table padding costs almost nothing once
+ * tokenized). A sharper counter is part of thread P-F.
+ */
+export const estimateTokens = (text: string) =>
+  Math.ceil(text.replace(/\s+/g, " ").length / 4);
+
 export function readText(relativePath: string): string {
   return readFileSync(path.join(REPO_ROOT, relativePath), "utf8");
 }

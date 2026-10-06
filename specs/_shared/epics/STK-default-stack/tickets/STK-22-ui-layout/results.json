@@ -1,0 +1,68 @@
+{
+  "id": "STK-22",
+  "criteria_sha256": "ab856b54fd1953c43925308f997b06b873771ee7e64431116b2c872509074cb9",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-04T07:19:04Z",
+        "head": "dade61ec5d1d9714518f0d5f659ff2fac06e2d72",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-22-ui-layout/evidence/C1.log",
+        "evidence_sha256": "0b7e7ad78609cad0fd73c38ba9ddad809a4a4febd7f470e86b65aaefc61fb4b2",
+        "tests": 51
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn check-ui-layout",
+        "exit": 0,
+        "at": "2026-10-04T07:19:32Z",
+        "head": "dade61ec5d1d9714518f0d5f659ff2fac06e2d72",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-22-ui-layout/evidence/C2.log",
+        "evidence_sha256": "75b87b0dde5c2ef504458121afc6814bcad96fb7d8bbb8bae2520563c8fddd49"
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn check-types",
+        "exit": 0,
+        "at": "2026-10-04T07:19:33Z",
+        "head": "dade61ec5d1d9714518f0d5f659ff2fac06e2d72",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-22-ui-layout/evidence/C3.log",
+        "evidence_sha256": "4c86d2d759c1169b2ab80e17bf4483d2cd79db9466a3f1a6e28fa8f912ed7884"
+      }
+    },
+    "C4": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn lint",
+        "exit": 0,
+        "at": "2026-10-04T07:19:33Z",
+        "head": "dade61ec5d1d9714518f0d5f659ff2fac06e2d72",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-22-ui-layout/evidence/C4.log",
+        "evidence_sha256": "ee28372880a834ccda34c330f6cb9ffc8408899e36a8585c988d5460bf5c41d8"
+      }
+    },
+    "C5": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn build",
+        "exit": 0,
+        "at": "2026-10-04T07:19:34Z",
+        "head": "dade61ec5d1d9714518f0d5f659ff2fac06e2d72",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-22-ui-layout/evidence/C5.log",
+        "evidence_sha256": "314d14c85eab4268b59b481d3eb77fc5cc2d3a7c59b1a2dcfaab335a928d20c3"
+      }
+    }
+  },
+  "updated_at": "2026-10-04T07:19:44Z"
+}

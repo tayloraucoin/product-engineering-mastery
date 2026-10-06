@@ -1,0 +1,257 @@
+/** The chat route's gates (createChatHandler): who may reach the vendor, what body is accepted, and the answer with no key. */
+
+import assert from "node:assert/strict";
+import { test } from "node:test";
+
+import type { LogFields, Logger } from "@pem/observability/logger";
+
+import {
+  createAi,
+  createChatHandler,
+  createRateWindow,
+  type AiConfig,
+} from "./client.ts";
+import { FIXTURES } from "./fixtures/index.ts";
+
+const LOCAL: AiConfig = { tier: "local", deployed: false };
+const KEYED: AiConfig = { ...LOCAL, apiKey: "sk-ant-synthetic" };
+
+function setup(
+  config: AiConfig,
+  userId: string | null,
+  rate?: { requests: number; windowMs: number },
+) {
+  const calls: string[] = [];
+  const fetch: typeof globalThis.fetch = async (input) => {
+    calls.push(String(input instanceof Request ? input.url : input));
+    throw new Error("offline: the test vendor answers nothing");
+  };
+  const lines: { event: string; fields?: LogFields }[] = [];
+  const keep = (event: string, fields?: LogFields) => {
+    lines.push({ event, fields });
+  };
+  const logger: Logger = { info: keep, warn: keep, error: keep };
+  const ai = createAi(config, { fetch, logger });
+  let asked = 0;
+  let clock = 0;
+  const handler = createChatHandler({
+    ai,
+    logger,
+    rate,
+    now: () => clock,
+    currentUserId: async () => {
+      asked += 1;
+      return userId;
+    },
+  });
+  return {
+    calls,
+    lines,
+    handler,
+    asked: () => asked,
+    advance: (ms: number) => {
+      clock += ms;
+    },
+  };
+}
+
+function post(body: unknown): Request {
+  return new Request("http://localhost/api/ai/chat", {
+    method: "POST",
+    body: typeof body === "string" ? body : JSON.stringify(body),
+  });
+}
+
+const chat = {
+  messages: [
+    {
+      id: "m1",
+      role: "user",
+      parts: [{ type: "text", text: FIXTURES.chat.input }],
+    },
+  ],
+};
+
+test("with a key and nobody signed in: 401, and the vendor is never called", async () => {
+  const { calls, handler } = setup(KEYED, null);
+  const response = await handler(post(chat));
+  assert.equal(response.status, 401);
+  assert.equal(calls.length, 0);
+});
+
+test("with a key and a user: the call reaches the vendor and is logged with the user's id", async () => {
+  const { calls, lines, handler } = setup(KEYED, "user-synthetic");
+  const response = await handler(post(chat));
+  assert.equal(response.status, 200);
+  await response.text();
+  assert.ok(calls.length > 0);
+  const vendor = lines.find((line) => line.event === "vendor");
+  assert.equal(vendor?.fields?.userId, "user-synthetic");
+  assert.equal(vendor?.fields?.case, "chat");
+  // The stand-in vendor fails the stream, and the failure names who it was for.
+  const failed = lines.find((line) => line.event === "chat.failed");
+  assert.equal(failed?.fields?.userId, "user-synthetic");
+});
+
+test("fixtures answer anyone, without asking who is signed in", async () => {
+  const { calls, handler, asked } = setup(LOCAL, null);
+  const response = await handler(post(chat));
+  assert.equal(response.status, 200);
+  assert.match(await response.text(), /text-delta/);
+  assert.equal(asked(), 0);
+  assert.equal(calls.length, 0);
+});
+
+test("a body the gate refuses is 400, before any model is called", async () => {
+  for (const body of [
+    "not json",
+    {},
+    {
+      messages: [
+        { id: "r", role: "user", parts: [{ type: "reasoning", text: "x" }] },
+      ],
+    },
+  ]) {
+    const { calls, handler } = setup(LOCAL, null);
+    const response = await handler(post(body));
+    assert.equal(response.status, 400);
+    assert.equal(calls.length, 0);
+  }
+});
+
+test("no key on a hosted tier is 503 with a body that names no key, variable or configuration", async () => {
+  const { calls, lines, handler } = setup(
+    { tier: "staging", deployed: true },
+    "user-synthetic",
+  );
+  const response = await handler(post(chat));
+  assert.equal(response.status, 503);
+  const text = await response.text();
+  assert.deepEqual(JSON.parse(text), { error: "chat is unavailable" });
+  assert.doesNotMatch(text, /config|key|anthropic|env/i);
+  assert.equal(calls.length, 0);
+  // The reason stays in the server's log.
+  assert.ok(lines.some((line) => line.event === "chat.unconfigured"));
+});
+
+test("no key on a hosted tier answers 503 before asking who is signed in or reading the body", async () => {
+  const { handler, asked } = setup(
+    { tier: "production", deployed: true },
+    null,
+  );
+  let pulled = 0;
+  const body = new ReadableStream<Uint8Array>(
+    {
+      pull(controller) {
+        pulled += 1;
+        controller.enqueue(new TextEncoder().encode("{}"));
+        controller.close();
+      },
+    },
+    // Nothing buffered ahead: only a read pulls.
+    { highWaterMark: 0 },
+  );
+  const response = await handler(
+    new Request("http://localhost/api/ai/chat", {
+      method: "POST",
+      body,
+      duplex: "half",
+    } as RequestInit),
+  );
+  assert.equal(response.status, 503);
+  assert.equal(asked(), 0);
+  assert.equal(pulled, 0);
+});
+
+test("the rate window drops a user once their last call leaves it", () => {
+  let clock = 0;
+  const window = createRateWindow(
+    { requests: 2, windowMs: 60_000 },
+    () => clock,
+  );
+  assert.equal(window.admit("user-a"), true);
+  assert.equal(window.admit("user-b"), true);
+  assert.equal(window.size(), 2);
+  clock = 30_000;
+  assert.equal(window.admit("user-b"), true);
+  clock = 60_000;
+  // user-a's one call has left the window; user-b's second is still in it.
+  assert.equal(window.admit("user-c"), true);
+  assert.equal(window.size(), 2);
+  clock = 200_000;
+  assert.equal(window.admit("user-c"), true);
+  assert.equal(window.size(), 1);
+});
+
+test("past the per-user window a vendor call is 429, before any model is called; the window then reopens", async () => {
+  const { calls, lines, handler, advance } = setup(KEYED, "user-synthetic", {
+    requests: 2,
+    windowMs: 60_000,
+  });
+  for (let i = 0; i < 2; i += 1) {
+    const response = await handler(post(chat));
+    assert.equal(response.status, 200);
+    await response.text();
+  }
+  const before = calls.length;
+  const limited = await handler(post(chat));
+  assert.equal(limited.status, 429);
+  assert.equal(limited.headers.get("retry-after"), "60");
+  assert.equal(calls.length, before);
+  assert.ok(lines.some((line) => line.event === "chat.limited"));
+  // Only the two admitted calls are in the spend record.
+  assert.equal(lines.filter((line) => line.event === "vendor").length, 2);
+  advance(60_000);
+  const reopened = await handler(post(chat));
+  assert.equal(reopened.status, 200);
+  await reopened.text();
+});
+
+test("a refused request does not use the window", async () => {
+  const { lines, handler } = setup(KEYED, "user-synthetic", {
+    requests: 1,
+    windowMs: 60_000,
+  });
+  for (let i = 0; i < 3; i += 1)
+    assert.equal((await handler(post({}))).status, 400);
+  assert.equal(lines.filter((line) => line.event === "vendor").length, 0);
+  const response = await handler(post(chat));
+  assert.equal(response.status, 200);
+  await response.text();
+});
+
+test("a body over the size cap is 413, before it is parsed", async () => {
+  const { calls, handler } = setup(LOCAL, null);
+  const response = await handler(post("x".repeat(256 * 1024 + 1)));
+  assert.equal(response.status, 413);
+  assert.equal(calls.length, 0);
+});
+
+test("a chunked body with no content-length is cut off at the cap, and the rest is never read", async () => {
+  const { calls, handler } = setup(LOCAL, null);
+  const chunk = new Uint8Array(64 * 1024).fill(0x78);
+  let pulled = 0;
+  const body = new ReadableStream<Uint8Array>({
+    pull(controller) {
+      pulled += 1;
+      controller.enqueue(chunk);
+    },
+  });
+  const request = new Request("http://localhost/api/ai/chat", {
+    method: "POST",
+    body,
+    duplex: "half",
+  } as RequestInit);
+  assert.equal(request.headers.get("content-length"), null);
+  const response = await handler(request);
+  assert.equal(response.status, 413);
+  assert.ok(pulled <= 6, `read ${pulled} chunks of an endless body`);
+  assert.equal(calls.length, 0);
+});
+
+test("the cap counts bytes, so multibyte text under it in characters is still 413", async () => {
+  const { handler } = setup(LOCAL, null);
+  // 100,000 characters, 300,000 bytes in UTF-8.
+  const response = await handler(post("€".repeat(100_000)));
+  assert.equal(response.status, 413);
+});

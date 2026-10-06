@@ -1,0 +1,8 @@
+{
+  "name": "site",
+  "private": true,
+  "dependencies": {
+    "@demo/core": "workspace:*",
+    "@demo/kept": "workspace:*"
+  }
+}

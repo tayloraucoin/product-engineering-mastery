@@ -1,0 +1,55 @@
+{
+  "id": "STK-1",
+  "criteria_sha256": "5dc60ebc126c5dea43c1d022a806accffa8a5bebbf1a8d5fd8d920baaebf4178",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn lint:docs",
+        "exit": 0,
+        "at": "2026-10-04T18:36:40Z",
+        "head": "b5de80bb103fa116ccfd1438324df9a77bf72a2d",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C1.log",
+        "evidence_sha256": "9de3d060f306319dd68061f0ad3dcc92f5d91c1f1816683d9be20ec00029dbb7"
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn check-refs",
+        "exit": 0,
+        "at": "2026-10-04T18:36:41Z",
+        "head": "b5de80bb103fa116ccfd1438324df9a77bf72a2d",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C2.log",
+        "evidence_sha256": "159e4a17f8f5fcba20f70dfc75ea1bb8eb34005a9144475e766f39217295f2cc"
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn directory-map --check",
+        "exit": 0,
+        "at": "2026-10-04T18:36:43Z",
+        "head": "b5de80bb103fa116ccfd1438324df9a77bf72a2d",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C3.log",
+        "evidence_sha256": "d248a6c4b61eb7d326380ea08f8c3830994c7295e9f4309e2d37a99d0107e2a6"
+      }
+    },
+    "C4": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn contract:record STK-1 C4 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C4-reread.md",
+        "exit": 0,
+        "at": "2026-10-04T18:37:42Z",
+        "head": "f0dd8e561990cb18e6a39a676bc0010f31ab3485",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-1-rulings-on-record/evidence/C4-reread.md",
+        "evidence_sha256": "fbfd0c3c4e24b2139cab0a9d9aabd4e4281b8bc827d6bfc12750c7ee4423af64"
+      }
+    }
+  },
+  "updated_at": "2026-10-04T18:37:42Z"
+}

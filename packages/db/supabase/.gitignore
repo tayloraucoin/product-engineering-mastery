@@ -1,0 +1,5 @@
+# Written by the Supabase CLI on every run.
+.branches
+.temp
+.env
+.env.*

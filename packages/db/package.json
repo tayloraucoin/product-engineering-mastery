@@ -1,0 +1,73 @@
+{
+  "name": "@pem/db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./client": {
+      "types": "./src/client.ts",
+      "default": "./src/client.ts"
+    },
+    "./rls": {
+      "types": "./src/rls.ts",
+      "default": "./src/rls.ts"
+    },
+    "./schema": {
+      "types": "./src/schema/index.ts",
+      "default": "./src/schema/index.ts"
+    },
+    "./policies": {
+      "types": "./src/policies.ts",
+      "default": "./src/policies.ts"
+    },
+    "./connection": {
+      "types": "./src/connection.ts",
+      "default": "./src/connection.ts"
+    },
+    "./local-auth-mirror": {
+      "types": "./src/local-auth-mirror.ts",
+      "default": "./src/local-auth-mirror.ts"
+    },
+    "./loopback": {
+      "types": "./src/loopback.ts",
+      "default": "./src/loopback.ts"
+    },
+    "./stripe-event-ledger": {
+      "types": "./src/billing/stripe-event-ledger.ts",
+      "default": "./src/billing/stripe-event-ledger.ts"
+    },
+    "./sandbox": {
+      "types": "./src/sandbox/index.ts",
+      "default": "./src/sandbox/index.ts"
+    }
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "check-types": "tsc --noEmit",
+    "test": "node --test \"src/**/*.test.ts\" \"scripts/**/*.test.ts\"",
+    "test:db": "node --env-file-if-exists=.env.local scripts/test-db.ts",
+    "check-migrations": "node scripts/check-migrations.ts",
+    "db:local": "node --env-file-if-exists=.env.local scripts/local.ts",
+    "db:local:full": "node --env-file-if-exists=.env.local scripts/local-full.ts",
+    "db:stop": "supabase stop",
+    "db:local:reset": "node --env-file-if-exists=.env.local scripts/reset-local-db.ts",
+    "db:generate": "drizzle-kit generate --config drizzle.config.ts",
+    "db:migrate": "node --env-file-if-exists=.env.local scripts/migrate.ts",
+    "db:setup": "node --env-file-if-exists=.env.local scripts/setup.ts",
+    "db:setup:local": "node --env-file-if-exists=.env.local scripts/setup-local.ts",
+    "db:seed-users": "node --env-file-if-exists=.env.local scripts/seed-users.ts"
+  },
+  "dependencies": {
+    "@pem/env": "workspace:*",
+    "drizzle-orm": "0.45.2",
+    "postgres": "3.4.9"
+  },
+  "devDependencies": {
+    "@pem/config": "workspace:*",
+    "@types/node": "^22",
+    "drizzle-kit": "0.31.10",
+    "eslint": "^9.39.1",
+    "supabase": "2.119.0",
+    "typescript": "5.9.2"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "id": "STK-20",
+  "criteria_sha256": "8cf00502dbd7f629e6334db3f690041bc450b3a1ef4b76391cfdf6158433c758",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn lint:docs",
+        "exit": 0,
+        "at": "2026-10-06T14:53:46Z",
+        "head": "a9de4c71a1390a41aa1d34405d27638e7a687375",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-20-removal-dry-run/evidence/C1.log",
+        "evidence_sha256": "26a1e0f5587b83e7a4e407c53738810fa850b4fd9b6769b356a6a1eccf9a1325"
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn check-refs",
+        "exit": 0,
+        "at": "2026-10-06T14:53:51Z",
+        "head": "a9de4c71a1390a41aa1d34405d27638e7a687375",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-20-removal-dry-run/evidence/C2.log",
+        "evidence_sha256": "1e8c865073e167bb5cb0e1c4848324362b1fd24b8f1365bbe670a5435302abaa"
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "capture",
+      "run": {
+        "command": "yarn contract:record STK-20 C3 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-20-removal-dry-run/evidence/dry-run-1.txt",
+        "exit": 0,
+        "at": "2026-10-06T14:53:58Z",
+        "head": "a9de4c71a1390a41aa1d34405d27638e7a687375",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-20-removal-dry-run/evidence/dry-run-1.txt",
+        "evidence_sha256": "d449c67c20c85de6b11617df9bbd19c7ba2bc3f677baef71bccd9ec05eab2e19"
+      }
+    },
+    "C4": {
+      "status": "FAIL",
+      "evidence": "capture",
+      "run": null
+    }
+  },
+  "updated_at": "2026-10-06T14:53:58Z"
+}

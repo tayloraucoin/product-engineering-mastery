@@ -1,0 +1,45 @@
+{
+  "id": "WEB-2",
+  "criteria_sha256": "599b76f76431119a589171b69c2c13f15d9e0366eedf64dc9569fb88f23c9cbf",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:boundaries",
+        "exit": 0,
+        "at": "2026-10-04T08:01:00Z",
+        "head": "1dec187aa7321aa81bc86369df66aa3bd13d37c4",
+        "evidence_path": "specs/web/one-offs/WEB-2-boundaries-subpath-resolve/evidence/C1.log",
+        "evidence_sha256": "4d4ac7505ab40fc456c4554e4c599e01ea0390538c812718134c2d7a1f2161ec",
+        "tests": 8
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:boundaries",
+        "exit": 0,
+        "at": "2026-10-04T08:01:01Z",
+        "head": "1dec187aa7321aa81bc86369df66aa3bd13d37c4",
+        "evidence_path": "specs/web/one-offs/WEB-2-boundaries-subpath-resolve/evidence/C2.log",
+        "evidence_sha256": "d9607a1642ba8de6001d630192fc0ebb1ff229d928a9191bdd0e694bf58f07ff",
+        "tests": 8
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn lint:boundaries",
+        "exit": 0,
+        "at": "2026-10-04T08:01:03Z",
+        "head": "1dec187aa7321aa81bc86369df66aa3bd13d37c4",
+        "evidence_path": "specs/web/one-offs/WEB-2-boundaries-subpath-resolve/evidence/C3.log",
+        "evidence_sha256": "9907a0be68969ffd4280a992f1849992bbebabdfb5afc861c4a0d6d93da03233"
+      }
+    }
+  },
+  "updated_at": "2026-10-04T08:15:32Z"
+}

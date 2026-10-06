@@ -1,0 +1,69 @@
+{
+  "id": "STK-8",
+  "criteria_sha256": "fca71372f7f14ee8cad06a80df5933998d8f1be415ba9d30825541f6edf3da1d",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-04T19:06:30Z",
+        "head": "6c214cd874296aa2f9da872fba71b88cd5872361",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-8-component-workshop/evidence/C1.log",
+        "evidence_sha256": "76695a121fb6cde556a48ea360874b70280fe2961bbd9f0ff54707727ec11452",
+        "tests": 54
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn verify",
+        "exit": 0,
+        "at": "2026-10-04T19:07:21Z",
+        "head": "6c214cd874296aa2f9da872fba71b88cd5872361",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-8-component-workshop/evidence/C2.log",
+        "evidence_sha256": "6ce7fd43412d97f2ab8be0ca3b075b8a304b295c2412b26c8a91fb23878a3471"
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "capture",
+      "run": {
+        "command": "yarn contract:record STK-8 C3 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-8-component-workshop/evidence/button-dark.png",
+        "exit": 0,
+        "at": "2026-10-04T07:58:45Z",
+        "head": "5c8c2ad4f9d544f506f3237328c921cdd5c1448c",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-8-component-workshop/evidence/button-dark.png",
+        "evidence_sha256": "add44ff23ea3e302f61f33bce155bb286e7373ad8c16234402d12762eaef6281"
+      }
+    },
+    "C4": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn contract:record STK-8 C4 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-8-component-workshop/evidence/C4-warm-start.log",
+        "exit": 0,
+        "at": "2026-10-04T07:58:53Z",
+        "head": "5c8c2ad4f9d544f506f3237328c921cdd5c1448c",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-8-component-workshop/evidence/C4-warm-start.log",
+        "evidence_sha256": "cce99844549eb9a6ace63bcdb812a0f0571011ec7d68a0f5caec84c100c4a8f8"
+      }
+    },
+    "C5": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-04T19:07:04Z",
+        "head": "6c214cd874296aa2f9da872fba71b88cd5872361",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-8-component-workshop/evidence/C5.log",
+        "evidence_sha256": "640fbdc1be6113e2a0be6b1e8c049a0253d8e6fe9ab32ba324f015cd1031e9d3",
+        "tests": 54
+      }
+    }
+  },
+  "updated_at": "2026-10-04T19:08:34Z"
+}

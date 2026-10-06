@@ -1,0 +1,7 @@
+{
+  "name": "@demo/kept",
+  "private": true,
+  "dependencies": {
+    "kept-sdk": "^2.0.0"
+  }
+}

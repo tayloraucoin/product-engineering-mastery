@@ -5,18 +5,21 @@ The canonical instructions for every agent (Claude Code, Cursor, Codex). `CLAUDE
 ## Start here
 
 1. **What this is:** a universal product-engineering toolkit and the repo that proves it. The practice (roles, design canon, templates, decisions, workflows, prompts) lives in `docs/`; `apps/web` is the demo app that holds every template's filled example and is the critic's target; `apps/docs` renders `docs/` in a browser. No product lives here.
-2. **Current phase:** PJ, the engineering layer (`docs/prompts/phases/engineering-layer.md`), on `agent/PJ`. Phase 3 (`demo-app-and-skills.md`) follows and builds the demo through the work loop. Until then `apps/web` is a single page and `.claude/skills/` holds no skills; the map's skill row describes the target.
+2. **Current work:** the starter's default stack (STK) and component catalog (CAT) epics. Live state is `specs/_status.md`.
 3. **Read [`docs/index.md`](docs/index.md) first, every session.** It is the map: the layers, the precedence ladder, what loads always, by path, by trigger and never, and the token budget.
-4. **Before any UI work, read [`docs/design/canon.md`](docs/design/canon.md)** and the product's design layer: `DESIGN.md`, `tokens.md`, `components.md`, `anti-patterns.md`, `states.md`, `coverage-gaps.md` (in the demo: `apps/web/docs/design/`). In Claude Code, `.claude/rules/ui.md` also fires on UI files.
+4. **Before any UI work, read [`docs/design/canon.md`](docs/design/canon.md)** and, when the product has one, its design layer (`DESIGN.md`, `tokens.md`, `components.md`, `anti-patterns.md`, `states.md`, `coverage-gaps.md` under `apps/<app>/docs/design/`; this repo has none yet). In Claude Code, `.claude/rules/ui.md` also fires on UI files.
 5. **State the exact file paths before implementing.** Placement is decided by one question, who imports this ([`docs/engineering/codebase-conventions.md`](docs/engineering/codebase-conventions.md) §1).
-6. **Verify the way CI does:** `yarn verify`. There is no test suite yet; Phase 3 adds Playwright captures.
+6. **Verify the way CI does:** `yarn verify`.
 
 ## Work loop
 
-- **Every change is a ticket with a contract** (`specs/<app>/one-offs/<APP-n>-<slug>/contract.md`, or an epic's `tickets/`): testable criteria, each with an evidence type; the planned paths; the one UX surface it cites. The default ticket is under half a day.
-- **One-off or epic is decided by the routing rule in [`docs/workflows/README.md`](docs/workflows/README.md), never by size:** more than one ticket, a new surface, no living UX file, or an unsettled problem makes an epic.
-- **Done is `results.json` plus `as-built.md`, never a claim in chat.** Results are written only by `yarn contract:run` and `yarn contract:record`; a merged as-built is immutable.
-- **`specs/<app>/ux/` is the living truth** of how the app works now. An epic proposes changes in its own `ux/`; shipping promotes them. Every epic ticket is judged by `vigil`, an evaluator in fresh context.
+- **Work starts at the prompt builder** ([`docs/workflows/prompt-builder.md`](docs/workflows/prompt-builder.md), `tk-prompt`): it settles the track, cast, QA level, pace, involvement and branch with the operator, then prints the prompt. Handed work with no prompt and no ticket, run the builder first; tiny work takes its fast lane.
+- **The track sets the path** ([`docs/workflows/tracks/`](docs/workflows/tracks/README.md)). A ticket and contract exist when the track or the operator calls for one (`yarn contract:init`); otherwise the prompt is the brief.
+- **The QA level sets proof, review and paperwork** ([`docs/workflows/qa-levels.md`](docs/workflows/qa-levels.md)). Q0: nothing extra. Q1: run the criteria, one `yarn verify`. Q2: plus one fresh-context reviewer, findings in the thread. Q3 (money, auth, schema, personal data, agent permissions): proofs checked for staleness before a merge, the specialists the operator confirmed, review files kept. Only tooling writes `results.json`. Flag a critical path below Q3 once; raise a named part on request.
+- **Take the work to done yourself** (`tk-batch` for tickets): build, prove, fix and prove again, review at the level, one `yarn verify`, a report of six lines at most. You run every command and decide what is reversible; stop only as the chosen involvement says. The operator gets what a person alone can do: a choice that cannot be undone, money, growing scope, a credential, a protected file, the merge. Never hand the operator a command to run.
+- **Stay in your own work.** Never re-prove, re-review or commit another ticket's files; a commit to a shared file reopens nothing.
+- **Never filed:** prompt files, evidence logs, review files below Q3.
+- **`specs/<app>/ux/` is the living truth** of how the app works now. Work that changes behaviour updates it in the same change; an epic proposes in its own `ux/` and shipping promotes it.
 
 ## Commands
 
@@ -40,7 +43,7 @@ Node 22, Yarn 4.13.0 (`corepack enable && yarn install`).
 ## Roles, subagents, skills
 
 - **Roles:** `docs/roles/<department>/<name>-<title>.md`. Inject one per thread. Department seat maps are each folder's `README.md`.
-- **Subagents:** `.claude/agents/` is **generated** by `yarn gen:agents` from roles whose frontmatter says `subagent: true` ([record 0008](docs/decisions/records/0008-subagents-are-generated-opt-in.md)). Never edit it by hand; CI fails on drift.
+- **Subagents:** `.claude/agents/` is **generated** by `yarn gen:agents` from roles whose frontmatter says `subagent: true` ([record 0008](docs/decisions/records/0008-subagents-are-generated-opt-in.md)).
 - **Skills:** `.claude/skills/<name>/`; house skills are prefixed `tk-`. Rulings and load order: [`docs/design/skills.md`](docs/design/skills.md). Provenance: `.claude/skills/REGISTRY.md`.
 
 ## Engineering boundaries
@@ -48,7 +51,7 @@ Node 22, Yarn 4.13.0 (`corepack enable && yarn install`).
 - **Apps import packages; packages never import apps; apps never import each other.** Enforced by `yarn lint:boundaries` (`packages/config/eslint/boundaries.js`). Never suppress a boundaries error; an upward import means the boundary is wrong.
 - Workspace packages are imported as `@pem/<name>`, never by relative path.
 - Server Components by default; a client leaf has `"use client"` on line 1, in the route's `_components/`.
-- No app reads environment variables yet; the first one creates that app's `env.ts`, the only `process.env` reader.
+- Each app's `env.ts` is its only `process.env` reader; `@pem/env` holds the pure tier picker (codebase-conventions §5).
 
 ## Keeping instructions in sync
 

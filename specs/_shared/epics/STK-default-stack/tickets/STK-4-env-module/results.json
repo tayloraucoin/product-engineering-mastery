@@ -1,0 +1,82 @@
+{
+  "id": "STK-4",
+  "criteria_sha256": "eeb3ce06ede5b17361705659b6042d78ae584f077f1ad1cd8d11cfed7b257860",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-04T06:44:32Z",
+        "head": "33fbc0813327394fd171e8d362065672e4e3b5e9",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C1.log",
+        "evidence_sha256": "94b9083ca793856b479a86588c0d21bbd8a9aab706f0419850f7b2f5c87ff55f",
+        "tests": 27
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-04T06:44:33Z",
+        "head": "33fbc0813327394fd171e8d362065672e4e3b5e9",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C2.log",
+        "evidence_sha256": "a70656acdd726f516aa89e349344002e946469c29b02c2a62f6e5230ae1a90b8",
+        "tests": 27
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn lint:boundaries",
+        "exit": 0,
+        "at": "2026-10-04T06:44:33Z",
+        "head": "33fbc0813327394fd171e8d362065672e4e3b5e9",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C3.log",
+        "evidence_sha256": "6399822690c1de03209fa754946f86b436878139430b2b769083b36fa27f7d53"
+      }
+    },
+    "C4": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn check-types",
+        "exit": 0,
+        "at": "2026-10-04T06:44:35Z",
+        "head": "33fbc0813327394fd171e8d362065672e4e3b5e9",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C4.log",
+        "evidence_sha256": "303ab27a7d3465798cc635d44f8eb247bc2e701050ee2630f4e666a5fa91c508"
+      }
+    },
+    "C5": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-04T06:44:35Z",
+        "head": "33fbc0813327394fd171e8d362065672e4e3b5e9",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C5.log",
+        "evidence_sha256": "b045b2d8d95d35fb7c5ea96502c430829bd1622ba6f2e8f29a574d03a8656f75",
+        "tests": 39
+      }
+    },
+    "C6": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn verify",
+        "exit": 0,
+        "at": "2026-10-04T06:39:41Z",
+        "head": "52541804cfcf059cd2b03f1e94e36ca7e7177ecf",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-4-env-module/evidence/C6.log",
+        "evidence_sha256": "6879d3d43dec36d28ccca20347301a98ebee3fb3b1892c228d9e6009713ed6db"
+      }
+    }
+  },
+  "updated_at": "2026-10-04T06:45:02Z"
+}

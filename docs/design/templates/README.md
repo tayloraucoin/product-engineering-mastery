@@ -31,4 +31,6 @@ load_when:
 | [`DESIGN.template.md`](DESIGN.template.md) | Fill when a product starts its design layer, or amend when a product rule changes; the product's own principles, type, color, density, voice and motion deltas on top of the canon. |
 | [`states.template.md`](states.template.md) | Fill when a surface or component is added, so every reachable state is designed, backed by a story, and capturable by the critic through ?state=. |
 | [`tokens.template.md`](tokens.template.md) | Fill when a product defines or changes a design token; holds each token's role and reason, while the values themselves live in code. |
+| [`ux-overview.template.md`](ux-overview.template.md) | Fill at the UX stage of an epic, one per area the epic touches, mirroring specs/<app>/ux/<area>/overview.md; it frames the area, lists its routes and surfaces, and logs every decision with an ID. |
+| [`ux-surface.template.md`](ux-surface.template.md) | Fill at the UX stage of an epic, one per surface, so a fresh build thread can build the surface without asking a question: layout, every state, the words, the keyboard path, and criteria with IDs a contract cites. |
 | [`refs/`](refs/README.md) | Fill at Recipe A step 3, before diverging, to pick three to six annotated references for one package; never a moodboard. |

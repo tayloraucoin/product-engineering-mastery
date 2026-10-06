@@ -1,0 +1,11 @@
+{
+  "name": "stack-fixture",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "devDependencies": {
+    "gone-sdk-extra": "^1.0.0"
+  }
+}

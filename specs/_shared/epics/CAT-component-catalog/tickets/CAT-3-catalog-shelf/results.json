@@ -1,0 +1,82 @@
+{
+  "id": "CAT-3",
+  "criteria_sha256": "3f937eea7564638c7f5d576b2c9f4b112e91b9a80b7c480c8d5d2453f9648f28",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:boundaries",
+        "exit": 0,
+        "at": "2026-10-05T00:02:03Z",
+        "head": "458e25d4e332622daa4eac7e327e9e39758037fa",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-3-catalog-shelf/evidence/C1.log",
+        "evidence_sha256": "e9d00c1bb0ef67e3a6653dc627155ff71a612bf4d7233c80e34dfc47d5f28c7a",
+        "tests": 17
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-05T00:02:06Z",
+        "head": "458e25d4e332622daa4eac7e327e9e39758037fa",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-3-catalog-shelf/evidence/C2.log",
+        "evidence_sha256": "2c16e52cdb68bc5551414cd1b386c04f3ce5e33670b97eba7096f09df36256a0",
+        "tests": 115
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn check-catalog --ticket CAT-3",
+        "exit": 0,
+        "at": "2026-10-05T00:02:36Z",
+        "head": "458e25d4e332622daa4eac7e327e9e39758037fa",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-3-catalog-shelf/evidence/C3.log",
+        "evidence_sha256": "be9d15c7410190baebd351157b2f13bd7b4ed440096c238afdce2530f19e32fa"
+      }
+    },
+    "C4": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-05T00:02:38Z",
+        "head": "458e25d4e332622daa4eac7e327e9e39758037fa",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-3-catalog-shelf/evidence/C4.log",
+        "evidence_sha256": "290bbd0a098e0eccf4f132aefb565ca2f402cb5393135e0d87d7686d2f6f43a9",
+        "tests": 114
+      }
+    },
+    "C5": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn check-stack",
+        "exit": 0,
+        "at": "2026-10-05T00:02:40Z",
+        "head": "458e25d4e332622daa4eac7e327e9e39758037fa",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-3-catalog-shelf/evidence/C5.log",
+        "evidence_sha256": "a253881d6f1c9093d6b54a7438e867f93ae636370f72de2018fd90cb83eb7bac"
+      }
+    },
+    "C6": {
+      "status": "PASS",
+      "evidence": "capture",
+      "run": {
+        "command": "yarn contract:record CAT-3 C6 --evidence specs/_shared/epics/CAT-component-catalog/tickets/CAT-3-catalog-shelf/evidence/C6-workshop.md",
+        "exit": 0,
+        "at": "2026-10-04T23:28:39Z",
+        "head": "ac17cdd678e0d3498f798cff26a20d0b0028d661",
+        "evidence_path": "specs/_shared/epics/CAT-component-catalog/tickets/CAT-3-catalog-shelf/evidence/C6-workshop.md",
+        "evidence_sha256": "dcf06f2d68c3b88fc0ac882dfd5148c177e4d841e2324595fbdad2d661a137fa"
+      }
+    }
+  },
+  "updated_at": "2026-10-05T00:02:40Z"
+}

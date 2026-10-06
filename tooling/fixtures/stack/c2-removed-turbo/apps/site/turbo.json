@@ -1,0 +1,12 @@
+{
+  "extends": [
+    "//"
+  ],
+  "tasks": {
+    "dev": {
+      "passThroughEnv": [
+        "GONE_SECRET_LOCAL"
+      ]
+    }
+  }
+}

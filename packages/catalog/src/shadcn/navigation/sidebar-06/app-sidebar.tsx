@@ -1,0 +1,183 @@
+"use client";
+
+/**
+ * shadcn's sidebar-06 block, app sidebar (base-vega, shadcn 4.21.0, read 2026-10-04),
+ * mapped onto house tokens by docs/design/component-sources.md. Copyright (c) 2023 shadcn, MIT: keep this notice when copying; the licence text is ../../LICENSE.
+ */
+import * as React from "react";
+import { GalleryVerticalEndIcon } from "lucide-react";
+
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarRail,
+} from "@pem/ui/sidebar";
+
+import { NavMain } from "./nav-main";
+import { SidebarOptInForm } from "./sidebar-opt-in-form";
+
+// This is sample data.
+const data = {
+  navMain: [
+    {
+      title: "Getting Started",
+      url: "#",
+      items: [
+        {
+          title: "Installation",
+          url: "#",
+        },
+        {
+          title: "Project Structure",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Build Your Application",
+      url: "#",
+      items: [
+        {
+          title: "Routing",
+          url: "#",
+        },
+        {
+          title: "Data Fetching",
+          url: "#",
+          isActive: true,
+        },
+        {
+          title: "Rendering",
+          url: "#",
+        },
+        {
+          title: "Caching",
+          url: "#",
+        },
+        {
+          title: "Styling",
+          url: "#",
+        },
+        {
+          title: "Optimizing",
+          url: "#",
+        },
+        {
+          title: "Configuring",
+          url: "#",
+        },
+        {
+          title: "Testing",
+          url: "#",
+        },
+        {
+          title: "Authentication",
+          url: "#",
+        },
+        {
+          title: "Deploying",
+          url: "#",
+        },
+        {
+          title: "Upgrading",
+          url: "#",
+        },
+        {
+          title: "Examples",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "API Reference",
+      url: "#",
+      items: [
+        {
+          title: "Components",
+          url: "#",
+        },
+        {
+          title: "File Conventions",
+          url: "#",
+        },
+        {
+          title: "Functions",
+          url: "#",
+        },
+        {
+          title: "next.config.js Options",
+          url: "#",
+        },
+        {
+          title: "CLI",
+          url: "#",
+        },
+        {
+          title: "Edge Runtime",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Architecture",
+      url: "#",
+      items: [
+        {
+          title: "Accessibility",
+          url: "#",
+        },
+        {
+          title: "Fast Refresh",
+          url: "#",
+        },
+        {
+          title: "Next.js Compiler",
+          url: "#",
+        },
+        {
+          title: "Supported Browsers",
+          url: "#",
+        },
+        {
+          title: "Turbopack",
+          url: "#",
+        },
+      ],
+    },
+  ],
+};
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  return (
+    <Sidebar {...props}>
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg" render={<a href="#" />}>
+              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                <GalleryVerticalEndIcon className="size-4" />
+              </div>
+              <div className="flex flex-col gap-0.5 leading-none">
+                <span className="font-medium">Documentation</span>
+                <span className="">v1.0.0</span>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
+      <SidebarContent>
+        <NavMain items={data.navMain} />
+      </SidebarContent>
+      <SidebarFooter>
+        <div className="p-1">
+          <SidebarOptInForm />
+        </div>
+      </SidebarFooter>
+      <SidebarRail />
+    </Sidebar>
+  );
+}

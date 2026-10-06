@@ -1,0 +1,101 @@
+{
+  "id": "LAB-1",
+  "criteria_sha256": "df6d357a160040bfdf86af9ce1ff27e7a61f8d13aa299f3b42d61a472c9e98d4",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace @pem/db test",
+        "exit": 0,
+        "at": "2026-10-06T19:23:37Z",
+        "head": "829bc707818342814c400eda37e94ecfb91a3328",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/evidence/C1.log",
+        "evidence_sha256": "2a1ffd701644851fcaeabd7d212668c70b72000ce1618acd9db5126e3947996e",
+        "tests": 73
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-06T19:23:46Z",
+        "head": "829bc707818342814c400eda37e94ecfb91a3328",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/evidence/C2.log",
+        "evidence_sha256": "a5418764e2ecc72c35d8da8b7d8d4341a1552185f7cc90860ad1abcede920f36",
+        "tests": 70
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-06T19:23:46Z",
+        "head": "829bc707818342814c400eda37e94ecfb91a3328",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/evidence/C3.log",
+        "evidence_sha256": "a5418764e2ecc72c35d8da8b7d8d4341a1552185f7cc90860ad1abcede920f36",
+        "tests": 70
+      }
+    },
+    "C4": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-06T19:23:46Z",
+        "head": "829bc707818342814c400eda37e94ecfb91a3328",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/evidence/C4.log",
+        "evidence_sha256": "a5418764e2ecc72c35d8da8b7d8d4341a1552185f7cc90860ad1abcede920f36",
+        "tests": 70
+      }
+    },
+    "C5": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn check-migrations",
+        "exit": 0,
+        "at": "2026-10-06T19:24:02Z",
+        "head": "829bc707818342814c400eda37e94ecfb91a3328",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/evidence/C5.log",
+        "evidence_sha256": "68157f0e24834cca7099f7a0ffd28612baaea9c2c3bfdac7742b6977ddb1505d"
+      }
+    },
+    "review:mason": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn review:run mason LAB-1",
+        "exit": 0,
+        "at": "2026-10-06T19:25:59Z",
+        "head": "cbe33b58a2e5290342efccbf8dff03f4045e72a8",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/review-mason.md",
+        "evidence_sha256": "4ebf365d88c07c0f478d4e967617b26dae16f8668dc654ae04f7b0acb061e3ea",
+        "contract_sha256": "863a59148797fa54c42b204eac568f6e99028198a4c51d3de5dd0198d4387e45",
+        "as_built_sha256": "fbdff24e9ac39ba304550488be6e0ee4f9f236579d49ce9e8cc0217727148e3b",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/mason-cto-principal-dev.md; tools Read,Grep,Glob)"
+      }
+    },
+    "review:warden": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn review:run warden LAB-1",
+        "exit": 0,
+        "at": "2026-10-06T19:31:14Z",
+        "head": "1da0d7dc0a32fd7ee48d0b14b1293d506934b238",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/review-warden.md",
+        "evidence_sha256": "711f29d85f7ece0794772d840aecb3b7cc742cad134c160d006ce82df02a8637",
+        "contract_sha256": "863a59148797fa54c42b204eac568f6e99028198a4c51d3de5dd0198d4387e45",
+        "as_built_sha256": "fbdff24e9ac39ba304550488be6e0ee4f9f236579d49ce9e8cc0217727148e3b",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
+      }
+    }
+  },
+  "updated_at": "2026-10-06T19:38:23Z"
+}

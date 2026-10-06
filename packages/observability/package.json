@@ -1,0 +1,35 @@
+{
+  "name": "@pem/observability",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./logger": {
+      "types": "./src/logger.ts",
+      "default": "./src/logger.ts"
+    },
+    "./error-reporter": {
+      "types": "./src/error-reporter.ts",
+      "default": "./src/error-reporter.ts"
+    },
+    "./redact": {
+      "types": "./src/redact.ts",
+      "default": "./src/redact.ts"
+    },
+    "./analytics": {
+      "types": "./src/analytics.ts",
+      "default": "./src/analytics.ts"
+    }
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "check-types": "tsc --noEmit",
+    "test": "node --test \"src/**/*.test.ts\""
+  },
+  "devDependencies": {
+    "@pem/config": "workspace:*",
+    "@types/node": "^22",
+    "eslint": "^9.39.1",
+    "typescript": "5.9.2"
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "id": "STK-18",
+  "criteria_sha256": "4a499929cab4bb51e7a2421d744332dc938c422050d943cee4976606dd490b8c",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-06T02:40:10Z",
+        "head": "3285758dda0c96e80492ba2d5546abdae0786fb3",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-18-error-monitoring/evidence/C1.log",
+        "evidence_sha256": "2e1fd0d02a94a6ea0c7a89b3da7c527785c897d097b08e76f2e2e838dfa5b9a0",
+        "tests": 267
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-06T02:40:10Z",
+        "head": "3285758dda0c96e80492ba2d5546abdae0786fb3",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-18-error-monitoring/evidence/C2.log",
+        "evidence_sha256": "2e1fd0d02a94a6ea0c7a89b3da7c527785c897d097b08e76f2e2e838dfa5b9a0",
+        "tests": 267
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn lint:boundaries",
+        "exit": 0,
+        "at": "2026-10-06T02:40:19Z",
+        "head": "3285758dda0c96e80492ba2d5546abdae0786fb3",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-18-error-monitoring/evidence/C3.log",
+        "evidence_sha256": "9610d71a4bd379fc16d2fa557c71e36eef17680e44ee4c9e743d3af40e80f554"
+      }
+    },
+    "C4": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn verify",
+        "exit": 0,
+        "at": "2026-10-06T02:40:27Z",
+        "head": "3285758dda0c96e80492ba2d5546abdae0786fb3",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-18-error-monitoring/evidence/C4.log",
+        "evidence_sha256": "c3b0baf8a7b03f7b3798b233102a52ac54bbbf5563b2dd69a149f73633d4c612"
+      }
+    },
+    "C5": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn contract:record STK-18 C5 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-18-error-monitoring/evidence/C5-operator.md --verdict deferred",
+        "exit": 0,
+        "at": "2026-10-06T02:42:16Z",
+        "head": "3285758dda0c96e80492ba2d5546abdae0786fb3",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-18-error-monitoring/evidence/C5-operator.md",
+        "evidence_sha256": "3366a8db17f46c98261af663bdbcd501ee9b4e5a2d85b2f42f82a2a7e23d9962",
+        "deferred": true
+      }
+    },
+    "C6": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn contract:record STK-18 C6 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-18-error-monitoring/evidence/C6-removal.md",
+        "exit": 0,
+        "at": "2026-10-06T02:42:21Z",
+        "head": "3285758dda0c96e80492ba2d5546abdae0786fb3",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-18-error-monitoring/evidence/C6-removal.md",
+        "evidence_sha256": "d512cc351c0a4e9aedfab5a179d0b92b4e563026c0902b2205d014e2b099e086"
+      }
+    },
+    "review:warden": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn review:run warden STK-18",
+        "exit": 0,
+        "at": "2026-10-06T02:42:30Z",
+        "head": "3285758dda0c96e80492ba2d5546abdae0786fb3",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-18-error-monitoring/review-warden.md",
+        "evidence_sha256": "4c76ed01aa09605232aaa26094a61a1c5eb39280a1ae667e85b72f2b117869fb",
+        "contract_sha256": "77aee5f65dd609eb5bc1926767f5c3923dc49c6d27adb61cebbdfcec1903249c",
+        "as_built_sha256": "6ed0d17b66e4deb858412aaadd83abd13aee1a68b66c9e61e12aaa4ce4a3503a",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
+      }
+    }
+  },
+  "updated_at": "2026-10-06T02:50:55Z"
+}

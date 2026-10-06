@@ -85,7 +85,7 @@ Each entry gives the ruling, the rule it rests on, and what the losing side had 
 
 **CF-11 — Runbooks.**
 
-- **Ruling:** `docs/runbooks/` holds four files: `onboard-agent.md`, `variant-testing.md`, `release.template.md`, `postmortem.template.md`. Weekly rituals are cut, because the charter's cool-down already covers them. Human onboarding goes into README's port runbook.
+- **Ruling:** `docs/runbooks/` holds four files: `onboard-agent.md`, `variant-testing.md`, `release.template.md`, `postmortem.template.md`. Weekly rituals are cut, because the charter's cool-down already covers them. Human onboarding goes into README's port runbook. **Amended 2026-10-05 (PR-18, owner's instruction):** the folder is grouped by use case: `new-project/` (the duplication guide, which replaced the port runbook), `remove/` (one recipe per stack module), `add/`, and `postmortem/` (the template, its paths per case, and `convention-log.md`); `onboard-agent.md`, `variant-testing.md` and `release.template.md` stay at its top.
 - **Rule:** displacement.
 - **Losing:** R14's five runbooks.
 

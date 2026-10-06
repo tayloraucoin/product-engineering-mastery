@@ -42,10 +42,10 @@ Every folder has a page like this one. The table at the foot of each is generate
 | [`design/`](design/README.md) | Read when starting any UI work, to know which loop you are in, which step of Recipe A comes next, which file governs it, and where verification happens. |
 | [`engineering/`](engineering/README.md) | Open before placing, naming or importing code, adding a dependency, or touching the agent harness: the conventions, the stack, and the templates the tooling reads. |
 | [`measurement/`](measurement/README.md) | Open when a feature needs numbers or an AI surface needs a grader: the metrics templates and the evals templates. |
-| [`product/`](product/README.md) | Read when shaping work or setting up a product's operating rhythm, to see which template to fill, who fills it, which gate it passes, and what the critic checks it against. |
-| [`prompts/`](prompts/README.md) | Read when starting a new thread or a toolkit phase, to pick the primer, the role to inject, what to attach, and what it depends on. |
+| [`product/`](product/README.md) | Read when deciding what to build or how a product team runs: what each product template is, the moment it is filled, who fills it, and which the workflows use today (the brief) versus keep for later. |
+| [`prompts/`](prompts/README.md) | Open when you are about to start a thread by hand and need the text to paste: the shared briefing, a research prompt whose trigger has fired, or the archived prompts that built this repo. |
 | [`references/`](references/README.md) | Read when a UI build, critique or spec needs the library; maps the task type to at most three reference files, so nothing else in docs/references/ loads. |
 | [`research/`](research/README.md) | Open to pull a thread output from the shelf when the context calls for it: the raw reports behind the practice, by topic, kept byte for byte. |
 | [`roles/`](roles/README.md) | Open to pick who plays a thread: the departments, their seats, and the guide for writing a new role. |
-| [`runbooks/`](runbooks/README.md) | Open when a procedure is followed by hand: onboarding an agent tool, releasing behind a flag, testing a variant with real customers, or a postmortem. |
-| [`workflows/`](workflows/README.md) | Read first when you are new to the toolkit or need to explain it to someone: the five systems, the two workflows, the system map, and where every file of a piece of work lives. |
+| [`runbooks/`](runbooks/README.md) | Open when a procedure is followed by hand: starting a product repo, removing or adding a stack module, onboarding an agent tool, releasing behind a flag, testing a variant with real customers, or a postmortem. |
+| [`workflows/`](workflows/README.md) | Read first when you are new to the toolkit or need to explain it to someone: the five systems, the front door, the tracks, the QA levels, and where every file of a piece of work lives. |

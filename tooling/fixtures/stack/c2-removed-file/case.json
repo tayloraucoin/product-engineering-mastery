@@ -1,0 +1,6 @@
+{
+  "expect": "fail",
+  "messages": [
+    "stack.gone is removed, but its file packages/gone is still present"
+  ]
+}

@@ -13,16 +13,14 @@
       "designLayer": null
     }
   },
-  "toolkitPrefixes": [
-    "PEM",
-    "PJ"
-  ],
+  "toolkitPrefixes": ["PEM", "PJ"],
   "verify": {
     "full": "yarn verify",
     "fast": "yarn verify:fast"
   },
-  "migrationsDir": null,
+  "migrationsDir": "packages/db/migrations",
   "branchPattern": "agent/{id}",
+  "protectedBranch": "main",
   "reviewers": [
     {
       "glob": "**/migrations/**",
@@ -73,6 +71,18 @@
       "status": "draft"
     },
     {
+      "glob": "**/rls.ts",
+      "role": "mason",
+      "why": "One-way door: the bridge from a request's identity to row-level security.",
+      "status": "draft"
+    },
+    {
+      "glob": "**/policies.ts",
+      "role": "mason",
+      "why": "One-way door: the policy factories every table's row-level security is built from.",
+      "status": "draft"
+    },
+    {
       "glob": "**/auth/**",
       "role": "warden",
       "why": "Authentication and authorization flows, sessions and recovery.",
@@ -94,6 +104,18 @@
       "glob": "**/policies/**",
       "role": "warden",
       "why": "Deny-by-default access policies in the data layer.",
+      "status": "draft"
+    },
+    {
+      "glob": "**/rls.ts",
+      "role": "warden",
+      "why": "Whose identity and role each user-scoped query runs as.",
+      "status": "draft"
+    },
+    {
+      "glob": "**/policies.ts",
+      "role": "warden",
+      "why": "Deny-by-default access policies in the data layer, as one file.",
       "status": "draft"
     },
     {
@@ -168,5 +190,216 @@
       "why": "Billing copy and what it promises.",
       "status": "draft"
     }
-  ]
+  ],
+  "stack": {
+    "config": {
+      "files": ["packages/config"],
+      "env": [],
+      "dependencies": ["@pem/config"],
+      "boundaries": ["config"],
+      "locked": true,
+      "runbook": null
+    },
+    "constants": {
+      "files": ["packages/constants"],
+      "env": [],
+      "dependencies": ["@pem/constants"],
+      "boundaries": ["constants"],
+      "locked": true,
+      "runbook": null
+    },
+    "env": {
+      "files": ["packages/env", "apps/web/env.ts", ".env.example"],
+      "env": [
+        "DATABASE_ENVIRONMENT",
+        "VERCEL_ENV",
+        "NEXT_PUBLIC_SITE_URL",
+        "EXAMPLE_API_KEY"
+      ],
+      "dependencies": ["@pem/env", "@t3-oss/env-nextjs", "zod"],
+      "boundaries": ["env"],
+      "locked": true,
+      "runbook": null
+    },
+    "brand": {
+      "files": [
+        "packages/brand",
+        "apps/web/app/manifest.ts",
+        "apps/web/app/opengraph-image.tsx"
+      ],
+      "env": [],
+      "dependencies": ["@pem/brand"],
+      "boundaries": ["brand"],
+      "locked": true,
+      "runbook": null
+    },
+    "observability": {
+      "files": ["packages/observability"],
+      "env": [],
+      "dependencies": ["@pem/observability"],
+      "boundaries": ["observability"],
+      "locked": true,
+      "runbook": null
+    },
+    "ui": {
+      "files": ["packages/ui"],
+      "env": [],
+      "dependencies": [
+        "@pem/ui",
+        "class-variance-authority",
+        "clsx",
+        "tailwind-merge",
+        "@base-ui/react",
+        "lucide-react",
+        "tw-animate-css",
+        "shadcn",
+        "input-otp",
+        "react-resizable-panels",
+        "react-day-picker",
+        "date-fns",
+        "embla-carousel-react",
+        "recharts",
+        "react-is",
+        "@shadcn/react",
+        "cmdk",
+        "@tanstack/react-table"
+      ],
+      "boundaries": ["ui"],
+      "locked": true,
+      "runbook": null
+    },
+    "catalog": {
+      "files": [
+        "packages/catalog",
+        "tooling/check-catalog.ts",
+        "tooling/check-catalog.test.ts"
+      ],
+      "env": [],
+      "dependencies": ["@pem/catalog"],
+      "boundaries": ["catalog"],
+      "locked": false,
+      "runbook": "docs/runbooks/remove/catalog.md"
+    },
+    "validators": {
+      "files": ["packages/validators"],
+      "env": [],
+      "dependencies": ["@pem/validators"],
+      "boundaries": ["validators"],
+      "locked": true,
+      "runbook": null
+    },
+    "db": {
+      "files": ["packages/db"],
+      "env": ["DATABASE_URL", "DATABASE_MIGRATION_URL"],
+      "dependencies": [
+        "@pem/db",
+        "drizzle-orm",
+        "drizzle-kit",
+        "postgres",
+        "supabase"
+      ],
+      "boundaries": ["db"],
+      "locked": false,
+      "runbook": "docs/runbooks/remove/supabase-database.md"
+    },
+    "auth": {
+      "files": [
+        "packages/auth",
+        "apps/web/proxy.ts",
+        "apps/web/lib/supabase",
+        "apps/web/app/auth"
+      ],
+      "env": [
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY",
+        "SUPABASE_SERVICE_ROLE_KEY"
+      ],
+      "dependencies": ["@pem/auth", "@supabase/ssr", "@supabase/supabase-js"],
+      "boundaries": ["auth"],
+      "locked": false,
+      "runbook": "docs/runbooks/remove/supabase-auth.md"
+    },
+    "email": {
+      "files": ["packages/email", "apps/web/lib/email.ts"],
+      "env": ["RESEND_API_KEY", "EMAIL_FROM"],
+      "dependencies": ["@pem/email", "resend"],
+      "boundaries": ["email"],
+      "locked": true,
+      "runbook": null
+    },
+    "ai": {
+      "files": ["packages/ai", "apps/web/app/api/ai"],
+      "env": ["ANTHROPIC_API_KEY"],
+      "dependencies": [
+        "@pem/ai",
+        "ai",
+        "@ai-sdk/anthropic",
+        "@ai-sdk/provider"
+      ],
+      "boundaries": ["ai", "web-ai-route"],
+      "locked": false,
+      "runbook": "docs/runbooks/remove/ai.md"
+    },
+    "services": {
+      "files": ["packages/services"],
+      "env": [],
+      "dependencies": ["@pem/services"],
+      "boundaries": ["services"],
+      "locked": true,
+      "runbook": null
+    },
+    "api": {
+      "files": ["packages/api", "apps/web/app/api/trpc", "apps/web/lib/trpc"],
+      "env": [],
+      "dependencies": [
+        "@pem/api",
+        "@trpc/server",
+        "@trpc/client",
+        "@trpc/tanstack-react-query",
+        "@tanstack/react-query",
+        "superjson"
+      ],
+      "boundaries": ["api"],
+      "locked": false,
+      "runbook": "docs/runbooks/remove/api.md"
+    },
+    "error-monitoring": {
+      "files": [
+        "apps/web/instrumentation.ts",
+        "apps/web/instrumentation-client.ts",
+        "apps/web/sentry.server.config.ts",
+        "apps/web/sentry.edge.config.ts",
+        "apps/web/lib/error-reporting"
+      ],
+      "env": [
+        "NEXT_PUBLIC_SENTRY_DSN",
+        "NEXT_PUBLIC_SENTRY_ENVIRONMENT",
+        "SENTRY_AUTH_TOKEN",
+        "SENTRY_ORG",
+        "SENTRY_PROJECT",
+        "VERCEL_GIT_COMMIT_SHA",
+        "NEXT_RUNTIME"
+      ],
+      "dependencies": ["@sentry/nextjs"],
+      "boundaries": ["@sentry/*"],
+      "locked": false,
+      "runbook": "docs/runbooks/remove/error-monitoring.md"
+    },
+    "billing": {
+      "files": [
+        "apps/web/app/api/webhooks/stripe",
+        "apps/web/lib/billing",
+        "packages/db/src/schema/billing",
+        "packages/db/src/billing",
+        "packages/db/test/stripe-event-ledger.test.ts",
+        "packages/services/src/billing",
+        "packages/validators/src/billing"
+      ],
+      "env": ["STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET", "STRIPE_PRICE_ID"],
+      "dependencies": ["stripe"],
+      "boundaries": ["stripe"],
+      "locked": false,
+      "runbook": "docs/runbooks/remove/billing.md"
+    }
+  }
 }

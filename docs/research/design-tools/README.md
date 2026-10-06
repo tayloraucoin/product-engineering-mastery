@@ -27,4 +27,5 @@ load_when:
 | --- | --- |
 | [`design-skills-adoption.md`](design-skills-adoption.md) | Read only to trace docs/design/skills.md or to re-review a third-party skill. |
 | [`framer-marketing-sites.md`](framer-marketing-sites.md) | Read when deciding where a marketing page lives (builder or app) or choosing a site builder for a non-engineer owner. |
+| [`react-ui-libraries.md`](react-ui-libraries.md) | Read only to trace docs/design/component-sources.md or to re-score a component source. |
 | [`tools-per-loop.md`](tools-per-loop.md) | Read only to trace the source of docs/design/workflow.md or to re-open a tool-per-loop ruling. |
