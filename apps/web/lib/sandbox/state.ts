@@ -50,6 +50,15 @@ export const SANDBOX_STATE_KEYS: Readonly<
   "people-filter-empty": "team",
   "people-last-admin": "team",
   "people-change-error": "team",
+  // Experiments (LAB-10, experiments.md).
+  "expts-empty": "team",
+  "expts-loading": "team",
+  "expts-error": "team",
+  "expts-partial": "team",
+  "expts-offline": "team",
+  "expts-success": "team",
+  "expts-stale": "team",
+  "expts-developer": "team",
 };
 
 /**
