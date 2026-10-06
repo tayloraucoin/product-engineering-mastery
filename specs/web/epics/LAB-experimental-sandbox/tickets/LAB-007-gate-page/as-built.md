@@ -27,7 +27,7 @@
 - **The cookies' `Secure`** follows `productionRuntime`, after LAB-5's review. The network counter's `trusted` stays `deployed`. The test pins both.
 - `sandbox_gate` is set on any failed or refused try when the browser had none, and never refreshed.
 - [ASSUMPTION] A signed-in user whose account has no email gets the guest face and enters with the email they type. The account line needs an address to name.
-- [ASSUMPTION] The lock time is `Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" })`, so it reads "2:18 PM" or "14:18" in the reader's own convention. It is formatted after mount, and one `setTimeout` re-enables the button. A fixture holds still, so the throttled capture keeps its disabled button.
+- [ASSUMPTION] The lock time is `Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" })`, so it reads like "2:42 PM" or "14:42" in the reader's own convention. It is formatted after mount, and one `setTimeout` re-enables the button. A fixture holds still, so the throttled capture keeps its disabled button.
 - The sign-out target is 44px tall through padding and a negative margin, so the account line keeps its line height.
 - Offline is read from `navigator.onLine` and its events. While offline, submitting does nothing and the line shows above the button.
 - After the first reviews (assay and warden, both PASS):
