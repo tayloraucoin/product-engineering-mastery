@@ -35,7 +35,7 @@ From the module's `files` list in `toolkit.json`:
 - `packages/services/package.json` and `packages/validators/package.json`: delete each `./billing` export.
 - `packages/services/src/context.ts`: delete `SystemContext` and `createSystemContext`, unless another service takes one.
 - `packages/db/package.json`: delete the `./stripe-event-ledger` export.
-- `apps/web/env.ts`: delete the `STRIPE_*` raw reads, `stripeWebhookSecret`, the three schema entries and their `runtimeEnv` lines, and the `keyModeProblem` import if nothing else uses it.
+- `apps/web/env.ts`: delete the `STRIPE_*` raw reads, `stripeWebhookSecret`, the three schema entries and their `runtimeEnv` lines, and the `keyModeProblem` import if nothing else uses it. `packages/env/src/key-mode.ts` stays: it is `@pem/env`'s general check for a key's mode against the tier, ready for the next vendor key.
 - `apps/web/proxy.ts`: delete `api/webhooks/stripe|` from the matcher.
 - `tooling/check-client-bundle.ts`: delete the `STRIPE_SECRET_KEY` entry in `SENTINEL_PREFIX`.
 - `tooling/boundaries.test.ts`: delete the STK-16 probes (`stripe` from services, db and `apps/web/lib/billing`).

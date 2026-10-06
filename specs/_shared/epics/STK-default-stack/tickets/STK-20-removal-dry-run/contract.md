@@ -23,6 +23,11 @@ planned_paths:
   - "docs/runbooks/remove/ai.md"
   - "README.md"
   - "docs/prompts/phases/port-dry-run.md"
+  - "docs/prompts/archive/phases/port-dry-run.md"
+  - "docs/runbooks/new-project/strip.md"
+  - "docs/runbooks/new-project/rename.md"
+  - "docs/runbooks/remove/README.md"
+  - "docs/runbooks/add/docker-local-database.md"
 depends_on:
   - STK-3
   - STK-8

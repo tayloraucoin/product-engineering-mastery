@@ -13,7 +13,7 @@ load_when:
 
 # Remove recipes
 
-**What this is.** One recipe per module of the default stack that is not locked. Each lists exactly what the module added (its entry in `toolkit.json`'s `stack` block names this file as its `runbook`), deletes or edits it, marks the entry `"removed": true`, and proves it gone with `yarn check-stack`.
+**What this is.** One recipe per module of the default stack that is not locked. Each lists exactly what the module added (its entry in `toolkit.json`'s `stack` block names this file as its `runbook`), deletes or edits it, marks the entry `"removed": true`, and proves it gone with `yarn check-stack`. After the files go, run `yarn check-refs`. The recipes and other kept docs name what a recipe deletes, so add each path or script the check names to `tooling/refs-pending.json`, keyed exactly as printed, with the value `"removed by docs/runbooks/remove/<recipe>.md"`.
 
 **Come here when.** Step 4 of [`new-project/`](../new-project/README.md) says a module the briefing drops goes, or a product repo later decides to drop one.
 

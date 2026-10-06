@@ -18,6 +18,8 @@ load_when:
 > **Needs:** the database kept (not removed), and Docker running on the developer's machine.
 > **Status:** draft, not yet run cold. The starter ships every file this recipe uses and runs none of it by default (WEB-8, WEB-9): the local tier is a Postgres on the developer's own machine (`yarn db:setup:local`), and this recipe swaps in Docker's database by changing the `_LOCAL` URLs; nothing is restored. `yarn db:local` and `yarn db:local:full` refuse on any other tier and name this recipe.
 
+**With Supabase Auth removed.** [`remove/supabase-auth.md`](../remove/supabase-auth.md) deletes the local auth mirror, `yarn db:local:full` and `yarn db:seed-users`, so only the database half of this recipe applies. Skip step 3 and Mode B. Start with `yarn db:local` alone in step 4; its "ready" line then names the address and no mode. Close the port in step 6 all the same. Skip proof 3: there is no sign-in to try.
+
 ## What you get, and what it costs
 
 | You get                                                                                                                                                  | It costs                                                                        |

@@ -15,7 +15,7 @@ load_when:
 
 > **Run from:** step 2 of [`README.md`](README.md), after [`strip.md`](strip.md), with the interview's answers A2 to A5; part 5 runs from step 6, with E1.
 > **Built from:** a search of this repo on 2026-10-05, at commit `1c0fb5f`. A count below that no longer matches is a sign the toolkit moved; trust the search command, not the count.
-> **Not yet run cold.** The dry run (STK-20) times it and corrects it.
+> **Run cold once,** in dry run 1 (STK-20, 2026-10-05). Its stops are fixed here; a second run follows.
 
 ## The one trap
 
@@ -57,12 +57,12 @@ Each part ends on a check. Do not start the next part on a failed check.
 4. Run `yarn format`. A scope of a different length moves line breaks and table columns, and `yarn verify` starts with a format check.
 5. Run `yarn directory-map`, and `yarn check-catalog --write` while the catalog is present.
 
-`docs/decisions/` is left alone: records are history and keep their wording. This folder is left alone so the guide still says what it replaced.
+`docs/decisions/` is left alone: records are history and keep their wording. This folder is left alone so the guide still says what it replaced. The generated map in `docs/_generated/` repeats the decision files' descriptions, so the check skips it too.
 
 **Check:** this prints nothing:
 
 ```sh
-git grep -n -e '@pem' -- . ':!docs/decisions' ':!docs/runbooks/new-project'
+git grep -n -e '@pem' -- . ':!docs/decisions' ':!docs/runbooks/new-project' ':!docs/_generated'
 ```
 
 Then `yarn check-types`, `yarn lint`, `yarn lint:boundaries` and `yarn test` exit 0. If `yarn budget` fails, the longer scope pushed an always-loaded file over its cap: shorten the scope or report it; never raise the cap.
@@ -76,6 +76,8 @@ Set `name` in the root `package.json` to the folder name (A2), then run `yarn in
 ### 3. The prefixes
 
 In `toolkit.json`: `toolkitPrefixes` becomes a list of one, the repo-wide work-id (A4); each app's `prefix` becomes its answer from A5. From here the commit hook admits the product's prefixes, which is why the guide's first commit comes after this part.
+
+Then replace `PJ` with the work-id in `tooling/hooks/fixtures/bash-guard.json`: the `agent/PJ` branch, every commit message (heredoc bodies included) and the `PJ-J3` case. Its cases commit under the old prefix, which the new list refuses.
 
 **Check:** `yarn check-specs` and `yarn test:hooks` exit 0.
 

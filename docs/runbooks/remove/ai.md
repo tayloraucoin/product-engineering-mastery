@@ -6,7 +6,7 @@ status: draft
 thread: "STK-3"
 role: Usher
 date: 2026-10-03
-last_reviewed: 2026-10-04
+last_reviewed: 2026-10-05
 supersedes:
 load_when:
 ---
@@ -45,7 +45,7 @@ From `.env.example` and `turbo.json`'s `globalEnv`, each with its `_LOCAL` and `
 
 ## Boundaries entries
 
-In `packages/config/eslint/boundaries.js`: the `workspacePackage("ai", "ai")` line and the `web-ai-route` element in `ELEMENTS`, its paragraph in the header comment, the `ai` entry in `PACKAGE_IMPORTS` and `"ai"` in the `services` entry, the `ai` and `"@ai-sdk/*"` entries in `SDK_OWNERS`, `"ai"` in `NOT_FOR_APPS`, and the `web-ai-route` rule in `buildDependencyRules`. Remove `ai` from the layer-order comment. In `tooling/boundaries.test.ts`, delete the probes that name `ai`, `@ai-sdk/*`, `@pem/ai` or `apps/web/app/api/ai`.
+In `packages/config/eslint/boundaries.js`: the `workspacePackage("ai", "ai")` line and the `web-ai-route` element in `ELEMENTS`, its paragraph in the header comment, the `ai` entry in `PACKAGE_IMPORTS` and `"ai"` in the `services` entry, the `ai` and `"@ai-sdk/*"` entries in `SDK_OWNERS`, `"ai"` in `NOT_FOR_APPS`, and the `web-ai-route` rule in `buildDependencyRules`. Remove `ai` from the layer-order comment. In `tooling/boundaries.test.ts`, delete the probes that name `ai`, `@ai-sdk/*`, `@pem/ai` or `apps/web/app/api/ai`, or that sit in `packages/ai/`.
 
 ## Vendor-side steps
 

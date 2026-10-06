@@ -16,7 +16,7 @@ load_when:
 > **Who runs it:** an agent in Claude Code, with the operator answering questions. On the deepest model available: the interview is design work, and a smaller model turns it into a checklist.
 > **When:** a product repo starts from this one. The rule is duplicate, then remove ([record 0010](../../decisions/records/0010-starter-ships-default-stack.md)).
 > **Done means:** `yarn check-stack` and `yarn verify` exit 0 in the new repo, the set-up record is written, the work is committed on its branch, and the operator holds the prompts for the threads that follow (step 7).
-> **Status:** draft. No step here has been run cold on a duplicate; the dry-run ticket (STK-20) times each one. The desk walk at the end is a reading, not a trial.
+> **Status:** draft. Dry run 1 ran on a duplicate on 2026-10-05 (STK-20): 21 stops in 61 minutes, each fixed here. A second run follows. The desk walk at the end is a reading, not a trial.
 
 This folder holds the guide and what it hands out:
 
@@ -50,6 +50,7 @@ Ask before anything is copied. Nothing below is guessed: a name, a prefix, a ven
 | A3 | The package scope that replaces `@pem`? | A short scope of two to five letters from the name, as `@syn` and `@cc` are (Recommended, [record 0002](../../decisions/records/0002-package-scope-pem.md)); the full name; the operator's own | Every workspace package name and import |
 | A4 | The work-id for changes that belong to no app? | Two or three capitals from the name (Recommended); the operator's own | The branch name, commit messages, the repo-wide prefix that replaces `PEM` and `PJ` |
 | A5 | Ticket prefixes for the apps? | Keep `WEB` and `DOC` (Recommended: tickets never leave the repo, so they cannot clash); one prefix per app from the product name | Each app's `prefix` in `toolkit.json` |
+| A6 | The product's home URL, support URL and contact addresses? | Ask. "Not yet" keeps the `example.com` placeholders. | `urls` and `contact` in `packages/brand/src/brand.ts` (step 3) |
 
 The app folders keep their names (`web`, `docs`). Only the prefixes change.
 
@@ -70,7 +71,7 @@ For each part: **keep** or **remove**. Recommend "remove" only when the briefing
 | # | Part | What "keep" costs when unused | "Remove" runs | Depends on |
 | --- | --- | --- | --- | --- |
 | C1 | Database (Supabase Postgres, Drizzle) | A package with nothing to connect to until its URLs are set | [`remove/supabase-database.md`](../remove/supabase-database.md) | Removing it removes billing too (the event ledger lives in the database package) and the services' example domain |
-| C2 | Auth (Supabase Auth) | Every request is served signed out until its keys are set | [`remove/supabase-auth.md`](../remove/supabase-auth.md) | With the database kept, its recipe also clears the local auth mirror |
+| C2 | Auth (Supabase Auth) | Every request is served signed out until its keys are set | [`remove/supabase-auth.md`](../remove/supabase-auth.md) | With the database kept, its recipe also clears the local auth mirror. With the API kept, every API request is anonymous until an identity provider replaces auth. |
 | C3 | API layer (tRPC) | One provider around the app | [`remove/api.md`](../remove/api.md) | Services stay; pages call them directly |
 | C4 | Billing (Stripe) | Off until its keys are set; one table in the database | [`remove/billing.md`](../remove/billing.md) | Needs the database |
 | C5 | Email (Resend) | Nothing: without a key the local tier logs the message and sends nothing | No recipe: the part is locked in `toolkit.json` | Tell the operator it stays, and why |
@@ -84,7 +85,7 @@ After the round, ask one more: **anything to add that is off by default?** Each 
 
 | # | Question | Options | What each does |
 | --- | --- | --- | --- |
-| D1 | Where does the database run on a developer's machine? | A Postgres on each developer's machine, no Docker (Recommended, the default). Hosted only. Local, in Docker. | "Own Postgres": the example files already name it (`127.0.0.1:5432/pem_local`) and `yarn db:setup:local` prepares it; step 5 has nothing to do for the database. "Hosted only": step 5 sets the staging tier in the example files and nothing runs on the machine. "Docker": step 5 follows [`add/docker-local-database.md`](../add/docker-local-database.md). |
+| D1 | Where does the database run on a developer's machine? | A Postgres on each developer's machine, no Docker (Recommended, the default). Hosted only. Local, in Docker. | "Own Postgres": the example files already name it (`127.0.0.1:5432/pem_local`) and `yarn db:setup:local` prepares it; step 5 only renames the database. "Hosted only": step 5 sets the staging tier in the example files and nothing runs on the machine. "Docker": step 5 follows [`add/docker-local-database.md`](../add/docker-local-database.md). |
 | D2 | (Hosted only) Which hosted project do developer machines use? | The staging project (Recommended, the default). A separate development project. | "Staging": one Supabase project fewer, and an unmerged migration is applied to the database a preview deployment also uses. "Separate": a second project to pay for and keep migrated, and staging only changes on merge; on a developer's machine its values go in the `_STAGING` slots of `.env.local`, and the example file says so. |
 
 Say this plainly with D1: the database's own integration proofs (`yarn test:db`: row-level security, the billing ledger) refuse any database that is not on the machine itself, so they run on a developer's own Postgres or on Docker's, and never on "hosted only". `yarn verify` does not run them and stays green either way.
@@ -119,11 +120,13 @@ Where each lands is one table, [`branding.md`](branding.md) "The files a brand l
 
 | # | Question | Options | What happens |
 | --- | --- | --- | --- |
-| G1 | Does a full UX spec exist: every area, surface and state of the first release? | Yes: attach it, or name where it is. Partly. No. | "Yes": step 7 prints the components prompt with the spec's location in it. "Partly" or "No": step 7 prints the UX-spec prompt, and the components prompt waits for the spec. |
+| G1 | Does a full UX spec exist: every area, surface and state of the first release? | Yes: attach it, or name where it is. Partly. No. | "Yes": step 7 prints the components prompt with the spec's location in it. "Partly" or "No": step 7 prints the UX-spec prompt, and the components prompt waits for the spec. Also ask what the UX thread should be handed (sketches, competitors, notes, client emails); it goes in that prompt's Attach line. |
 
 ## The steps
 
 Each step ends on a check, and a failed check is fixed before the next step starts. From step 2 on, every step also ends with `yarn verify`, so a break is caught in the step that made it. Note when each step starts and ends: step 7 reports the minutes.
+
+One story timing out in `packages/ui`'s stories test while the machine is loaded is not a break: rerun `yarn test` once before fixing anything.
 
 ### 1. Duplicate
 
@@ -135,17 +138,20 @@ cd <folder-name>
 rm -rf .git
 git init -b main
 git switch -c agent/<work-id>
+git add -A
 corepack enable
 yarn install
 yarn hooks:install
 yarn doctor
 ```
 
-`yarn hooks:install` writes the git config. From an agent's sandboxed shell it exits 1 and says so; the operator runs that one line in their own terminal, and the agent goes on from `yarn doctor`. This is the only command in the guide a person must run.
+`yarn hooks:install` writes the git config. From an agent's sandboxed shell it may exit 1, when the duplicate sits outside the sandbox's writable folders, and says so; the operator runs that one line in their own terminal, and the agent goes on from `yarn doctor`. This is the only command in the guide a person must run.
 
-All work goes on `agent/<work-id>`: the hooks refuse commits on `main`. Do not commit yet. The commit hook admits only the prefixes in `toolkit.json`, and step 2 changes them.
+All work goes on `agent/<work-id>`: the hooks refuse commits on `main`. Do not commit yet. The commit hook admits only the prefixes in `toolkit.json`, and step 2 changes them. Stage instead (`git add -A`), and again before each search: the strip and the rename search with `git grep`, which sees only tracked files. A staged file is deleted with `git rm -rf`; plain `git rm` refuses it.
 
 **Proof:** `yarn doctor` names nothing broken, and `yarn verify` exits 0 before anything is changed. A duplicate that is not green at the start is a toolkit defect: stop and report it.
+
+**Before step 2.** Open a new Claude Code session in `<folder-name>`, hand it the confirmed interview table, and run steps 2 to 7 there. A session opened in the toolkit runs the toolkit's hooks, which read the toolkit's `toolkit.json` and refuse a commit under the product's work-id.
 
 ### 2. Strip, then rename
 
@@ -176,8 +182,8 @@ Remove in this order, from the top of the package graph down, so nothing still p
 `.env.example` at the root lists every variable with a comment saying what breaks without it; `packages/db/.env.example` lists the database scripts' variables; `turbo.json` lists the same names.
 
 1. A removed part's variables are already gone: its recipe took them out.
-2. Where an example value names the toolkit, replace it with the product's. Keep every comment. A secret never goes in an example file.
-3. **Own Postgres (D1, the default).** Nothing to do: both example files already set `DATABASE_ENVIRONMENT=local` with the `_LOCAL` URLs naming a Postgres on the developer's machine, and `yarn db:setup:local` creates the database, the roles and the auth schema Supabase would otherwise provide, then migrates it. The database scripts refuse an unset tier rather than guessing. Tell the operator: each developer needs Postgres.app or a Homebrew Postgres running, and runs `yarn db:setup:local` once.
+2. Where an example value names the toolkit, replace it with the product's. Keep every comment, renaming what it names. The local database `pem_local` becomes `<folder-name>_local`, with underscores for hyphens, so the product and the toolkit never share one database on a machine. A secret never goes in an example file.
+3. **Own Postgres (D1, the default).** Nothing more to do: both example files already set `DATABASE_ENVIRONMENT=local` with the `_LOCAL` URLs naming a Postgres on the developer's machine, and `yarn db:setup:local` creates the database, the roles and the auth schema Supabase would otherwise provide, then migrates it. The database scripts refuse an unset tier rather than guessing. Tell the operator: each developer needs Postgres.app or a Homebrew Postgres running, and runs `yarn db:setup:local` once.
 4. **Hosted only (D1).** In both example files set `DATABASE_ENVIRONMENT=staging` and replace the comment line above it with one saying this project runs no database on a developer's machine and uses the hosted project chosen in D2 (name which). The example file is what each developer copies to `.env.local`, so the choice travels with it. Leave `packages/db` as it is. Then read "What hosted only means" below to the operator.
 5. **Local, in Docker (D1).** Follow [`add/docker-local-database.md`](../add/docker-local-database.md).
 6. **Hand to the operator, by name (E2):** creating the hosted projects, and copying the example file to `.env.local` in `apps/web` and in `packages/db` with real values. The agent never asks for a value in the thread.
@@ -199,7 +205,7 @@ Remove in this order, from the top of the package graph down, so nothing still p
 ### 6. The owner, the record, and the files that describe the toolkit
 
 1. **The owner (E1).** When the answer is a new name, follow part 5 of [`rename.md`](rename.md).
-2. **What describes the toolkit.** Rewrite for the product, from the interview: the opening paragraph of the root `README.md`; items 1 and 2 of "Start here" in `AGENTS.md`; and "What this app is" in `apps/web/AGENTS.md`, deleting its "The filled examples live here" section. The rest of those files is the practice the product keeps.
+2. **What describes the toolkit.** Rewrite for the product, from the interview: the title and opening paragraph of the root `README.md`; the title and items 1 and 2 of "Start here" in `AGENTS.md`; and "What this app is" in `apps/web/AGENTS.md`, deleting its "The filled examples live here" section. The rest of those files is the practice the product keeps.
 3. **The set-up record.** Fill [`decision.template.md`](../../decisions/decision.template.md) as the next numbered record under `docs/decisions/records/`: the interview table, every part removed and why, the database choice, the owner, the toolkit's remote and commit from step 1, and each choice that has no recipe yet (B1 to B3). Add its line to the ledger and the first entry of the product's own changelog.
 4. Run `yarn directory-map`.
 
