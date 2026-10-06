@@ -124,7 +124,7 @@ A package imports only packages below it, and only along the edges in `packages/
 - **The picker is pure.** `@pem/env` holds the per-tier picker (`@pem/env/pick`), the switch (`/tier`), the key-mode guard (`/key-mode`) and the site URL rule (`/site-url`). It never reads `process.env`; its lint rejects a read.
 - **The readers.** Each app's `env.ts` (t3-env, zod) and each package's `scripts/env.ts` are the only modules that read `process.env`, validated with a schema. Everything else imports the resolved `env`.
 - Client code reads only `NEXT_PUBLIC_*` names. Secrets never reach a browser bundle: `next.config.ts`'s `env` block holds only the collapsed `NEXT_PUBLIC_*` values, through `nextPublicEnv` (`@pem/env/next-public`), and `yarn check-client-bundle` (in `yarn verify`) builds the app with every server-only variable set to a sentinel and fails if one reaches what the browser receives.
-- Every variable is listed in `turbo.json` (`globalEnv` or the task's `env`) so it is part of the cache key, and in a root `.env.example`.
+- Every variable is listed in `turbo.json` (`globalEnv` or the task's `env`) so its value in the process environment is part of every task's cache key, and in a root `.env.example`. A value Next reads from the `.env.local` in `apps/web` never reaches that key (the file is loaded inside the task), so `web#build` hashes `apps/web/.env*` through its own `inputs` (`apps/web/turbo.json`); no other task reads an env file, and `turbo.json` hashes none globally (EN-15).
 
 ## 6. Components and styling
 

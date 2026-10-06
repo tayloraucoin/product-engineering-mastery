@@ -1,7 +1,6 @@
 {
   "$schema": "https://turborepo.com/schema.json",
   "agentGuidance": false,
-  "globalDependencies": ["**/.env.*local", "**/.env"],
   "globalEnv": [
     "NODE_ENV",
     "DATABASE_ENVIRONMENT",
@@ -61,7 +60,7 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "inputs": ["$TURBO_DEFAULT$"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
     "dev": {

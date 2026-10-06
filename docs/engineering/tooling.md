@@ -36,7 +36,7 @@ The scores come from the Scribe seat, and the cost to an agent from Lorimer's (c
 
 ### Verify, step by step
 
-Each step was timed once on 2026-10-05, on `agent/STK-3` at `b274a6b` with other threads' edits in the tree. Steps 1–13, 15–17, 19 and 21–22 ran in the agent sandbox. The Turbo steps (`test`, `lint`, `check-types`, `build`) fail inside the sandbox, because Turbo cannot hash the `.env.local` files the sandbox hides, so they were timed outside it. All four were Turbo cache hits (`build`: one of two tasks), so their cold times are estimates. A cold `--force` run was not allowed in this session.
+Each step was timed once on 2026-10-05, on `agent/STK-3` at `b274a6b` with other threads' edits in the tree. Steps 1–13, 15–17, 19 and 21–22 ran in the agent sandbox. The Turbo steps (`test`, `lint`, `check-types`, `build`) failed inside the sandbox at the time, because `turbo.json` then hashed every `.env.local` as a global dependency and the sandbox hides those files, so they were timed outside it; the same day's change (changelog 2026-10-05, EN-15) moved that hashing to `web#build` alone. All four were Turbo cache hits (`build`: one of two tasks), so their cold times are estimates. A cold `--force` run was not allowed in this session.
 
 | #   | Step                         |   Seconds | Output (lines / bytes) | Note                                                                                                                            |
 | --- | ---------------------------- | --------: | ---------------------: | ------------------------------------------------------------------------------------------------------------------------------- |
@@ -70,7 +70,7 @@ What the measurements say:
 - **Two steps produce 85% of verify's output.** `yarn test` (66 KB) replays every package's full log even on a cache hit. `yarn test:tooling` (37 KB) prints TAP for 164 tests. On a pass, neither needs more than a summary line.
 - **`yarn test:tooling` is 41 s of verify's 101 s, and the contract-loop tests are nearly all of it.** Run one at a time, the four `tooling/contract-*.test.ts` files take 88 s between them: `contract-run` 39.4 s, `contract-init` 25.2 s, `contract-review` 14.0 s, `contract-git` 9.6 s. The other ten test files take 6 s together. All four are tests of code the overhaul is rewriting.
 - **Every session start and every stop pays for `yarn status --brief`** (5.8 s), including a stop where nothing changed.
-- **An agent's `yarn verify` fails in the sandbox at step 14**, every time, and must be run again outside it.
+- **An agent's `yarn verify` failed in the sandbox at step 14**, every time, until `turbo.json` stopped hashing every `.env.local` as a global dependency (changelog 2026-10-05, EN-15). What stays outside the sandbox is step 23 on a machine with a `.env.local` in `apps/web`; the `verify` entry says why.
 - **The native git hooks are not installed here**, so the commit-time protection is bash-guard's alone.
 
 ## 2. How to read an entry
@@ -243,7 +243,7 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
 - **Trigger:** by hand or by an agent before a ticket closes; CI on every pull request and every push to `main`.
 - **Scores:**
   - Importance **7.0**: it is the merge gate.
-  - Token cost **6.0**: about 121 KB (about 30,000 tokens) of output on a pass, measured. Inside the agent sandbox it fails at `yarn test` every time, which forces a second, unsandboxed run.
+  - Token cost **6.0**: about 121 KB (about 30,000 tokens) of output on a pass, measured. Inside the agent sandbox it failed at `yarn test` every time until 2026-10-05 (EN-15); now only step 23 can fail there, and only on a machine with a `.env.local` in `apps/web`.
   - Wall time **7.0**: 101 s with a warm Turbo cache, measured; 3–4 minutes cold (_estimate_).
   - Standard **5.0**: one verify script mirrored by CI is standard. Ten of its 23 steps are house checks.
 - **Pros:**
@@ -251,9 +251,9 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - The cheap checks mostly come first.
 - **Cons:**
   - Loud.
-  - Sandbox-hostile.
+  - Sandbox-hostile at step 23 on a machine with a `.env.local` in `apps/web`: `web#build` hashes that file on purpose (`apps/web/turbo.json`), because Next loads it inside the task, where `globalEnv` cannot see it, and the bundle embeds the collapsed `NEXT_PUBLIC_*` values. The sandbox hides the file, so that one step then runs outside it; no other step reads an env file.
   - About 40% of its time is the contract-loop tests.
-- **Verdict:** **keep but simplify.** Quiet `yarn test` and `yarn test:tooling` on a pass. Move the contract-loop tests out of the default run, or into CI only, when the overhaul replaces them. Name the sandbox failure in the error, or make the Turbo steps run inside the sandbox.
+- **Verdict:** **keep but simplify.** Quiet `yarn test` and `yarn test:tooling` on a pass. Move the contract-loop tests out of the default run, or into CI only, when the overhaul replaces them. Name the one remaining sandbox failure (`build` with a `.env.local` in `apps/web`) in the error.
 
 #### verify:fast
 
@@ -500,7 +500,7 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
 - **Trigger:** verify step 14.
 - **Scores:**
   - Importance **6.5**: the product's own unit tests.
-  - Token cost **6.0**: 66 KB (about 16,000 tokens) on a full cache hit, because Turbo replays every log. In the agent sandbox it fails at once on `.env.local`.
+  - Token cost **6.0**: 66 KB (about 16,000 tokens) on a full cache hit, because Turbo replays every log. It runs inside the agent sandbox: its inputs hold no env file.
   - Wall time **4.0**: 0.7 s when fully cached (measured); about 30 s cold (_estimate_).
   - Standard **7.0**: Turbo, `node:test`, Vitest.
 - **Pros:**
@@ -670,6 +670,7 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Standard.
 - **Cons:**
   - Last in verify, so a build break is found after everything else has run.
+  - `web#build` hashes `apps/web/.env*` (`apps/web/turbo.json`), the one place an env file feeds a cached output; the sandbox hides that file, so on a machine with a `.env.local` in `apps/web` this step alone runs outside the sandbox (EN-15).
 - **Verdict:** **keep.**
 
 ### 3.5 Generators and setup run by hand
