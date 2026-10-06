@@ -10,3 +10,11 @@
 
 - [ASSUMPTION] The devs_call: the token is `--input`, shadcn's name for a control's boundary, at `--neutral-400` light and `--neutral-500` dark. CAT-5 (b6a1d67) had already added it to `preset.css` and to the audit after this ticket was drafted, so NN1 and NN2 were met before the build; `preset.css` is unchanged here. `--border` stays the decorative hairline.
 - `tooling/contrast-audit.ts` gains the hovered pair; the hover fill would otherwise be an unaudited surface under the boundary.
+
+## Not verified
+
+- C2 (manual): checked by the agent in the in-app browser, from the computed border and page colours and a screenshot per theme (`evidence/C2-rendered.md`), not by a person's eyes on a real display.
+
+## Next
+
+Nothing waits on this ticket; P-C's captures will take over C2's check when they land.
