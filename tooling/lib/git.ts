@@ -33,7 +33,13 @@ export function runGit(
 const lines = (text: string | null) =>
   (text ?? "").split("\n").filter((line) => line !== "");
 
+/**
+ * The checked-out branch, `HEAD` when detached, or null outside a repo.
+ * `symbolic-ref` reads it even on an unborn branch (a fresh `git init` with no
+ * commit yet), where `rev-parse` fails (WEB-10).
+ */
 export const getCurrentBranch = (root?: string) =>
+  runGit(["symbolic-ref", "--short", "-q", "HEAD"], root) ??
   runGit(["rev-parse", "--abbrev-ref", "HEAD"], root);
 
 export const getHead = (root?: string) => runGit(["rev-parse", "HEAD"], root);

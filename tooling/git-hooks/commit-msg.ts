@@ -4,11 +4,11 @@
  * The same law as bash-guard, for Cursor sessions and people.
  */
 
-import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { getCurrentBranch } from "../lib/git.ts";
 import { hasWorkId, isAgentBranch, readLayout } from "../lib/work-ids.ts";
 
 const ROOT = path.resolve(
@@ -18,10 +18,8 @@ const ROOT = path.resolve(
 const file = process.argv[2];
 if (!file) process.exit(0);
 
-const branch = execFileSync("git", ["rev-parse", "--abbrev-ref", "HEAD"], {
-  cwd: ROOT,
-  encoding: "utf8",
-}).trim();
+// Reads an unborn branch too: a product's first commit follows a fresh git init.
+const branch = getCurrentBranch(ROOT) ?? "";
 const layout = readLayout(ROOT);
 if (!isAgentBranch(branch, layout.branchPattern)) process.exit(0);
 
