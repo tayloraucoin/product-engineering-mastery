@@ -25,8 +25,8 @@ cites:
 truth_files: "none: the approved proposal ux/admin/people.md reaches specs/web/ux/admin/people.md through yarn truth:promote LAB once its citing tickets close; promotion reconciles R11's line"
 qa: Q3
 reviewers:
-  - warden
   - mason
+  - warden
 focus:
   - "last-admin guard inside the action, under an advisory lock (warden)"
 operator_review: false
@@ -82,6 +82,14 @@ criteria:
     statement: "Every people.md ?state= key renders at 390, 834 and 1440, light and dark."
     evidence: capture
     path: "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-009-admin-people/evidence/people-states.png"
+  - id: review:mason
+    statement: Mason reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run mason <id>
+  - id: review:warden
+    statement: Warden reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
 ---
 
 # Contract — LAB-9 admin-people
