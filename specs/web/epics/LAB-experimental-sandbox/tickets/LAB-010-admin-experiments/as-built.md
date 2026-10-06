@@ -31,7 +31,17 @@
 - [ASSUMPTION] `reviewersHoldingData` counts reviewer rows on the slug, as the contract's assumption says. Today it equals `codes`; LAB-16's delete removes them all.
 - A comment's activity time is its server `created_at`, not the browser's `client_created_at`, which a client could set.
 - The `expts-*` fixtures are synthetic slugs dated relative to now, so "closed 34 days ago" holds on any day.
-- The list's loading state is a `?state=` key only: no `loading.tsx`, which would also cover the `[slug]` pages.
+- The list loads behind a Suspense boundary whose fallback is the same static skeleton `expts-loading` shows. A `loading.tsx` would also have covered the `[slug]` pages.
+- Three keys beyond experiments.md's table: `expts-header-stale`, `expts-header-developer` and `expts-header-partial`. They make the header's forms reachable. A layout gets no search params, so the header's client leaf reads them.
+
+## Review (Q2, assay, in the thread)
+
+PASS, with one red and four oranges.
+
+- Red, fixed: a closed experiment whose counts failed showed no marker under its heading, so it looked as if it held nothing. `ExperimentHeader.partial` now shows "Some counts didn't load. Reload to try again." in the marker's place. experiments.md has no row for this state; promotion should add one.
+- Orange, fixed: the header's stale and developer forms could not be reached or captured (the three keys above, now in C9). The designed skeleton showed only by key (the Suspense fallback). The skeleton pulsed (`animate-none`).
+- Orange, not taken: the exact date shows on hover only, not on focus. experiments.md asks for "hover and focus" but also makes the title the row's only Tab stop; the exact time is in screen-reader text. That conflict is the spec owner's.
+- Cut list taken: one scroll box, and the offline and partial notices at one weight. Left: "—" means both "nothing held" and "count failed" (the partial line explains it); Data held sits far right at 390; rows take the primitive's hover.
 
 ## Not verified
 
