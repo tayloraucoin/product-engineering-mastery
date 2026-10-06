@@ -8,11 +8,11 @@
       "run": {
         "command": "yarn workspace web test",
         "exit": 0,
-        "at": "2026-10-06T20:48:01Z",
-        "head": "d99923572232a6cdb6c0ec237f645c0712071102",
+        "at": "2026-10-06T21:09:22Z",
+        "head": "69dca23fc69128157837a7895ca693c373db20a8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-006-gate-throttle/evidence/C1.log",
-        "evidence_sha256": "ec2d394a293abed6053641dfe68699873359814e97fcb008b473d1533b5b0707",
-        "tests": 174
+        "evidence_sha256": "c74d521824639514bab5e193b16b8c1a7e9ed0a46be0e14cb75667d39ed1f824",
+        "tests": 230
       }
     },
     "C2": {
@@ -21,11 +21,11 @@
       "run": {
         "command": "yarn workspace web test",
         "exit": 0,
-        "at": "2026-10-06T20:48:01Z",
-        "head": "d99923572232a6cdb6c0ec237f645c0712071102",
+        "at": "2026-10-06T21:09:22Z",
+        "head": "69dca23fc69128157837a7895ca693c373db20a8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-006-gate-throttle/evidence/C2.log",
-        "evidence_sha256": "ec2d394a293abed6053641dfe68699873359814e97fcb008b473d1533b5b0707",
-        "tests": 174
+        "evidence_sha256": "c74d521824639514bab5e193b16b8c1a7e9ed0a46be0e14cb75667d39ed1f824",
+        "tests": 230
       }
     },
     "C3": {
@@ -34,11 +34,11 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-06T20:48:11Z",
-        "head": "d99923572232a6cdb6c0ec237f645c0712071102",
+        "at": "2026-10-06T21:09:33Z",
+        "head": "69dca23fc69128157837a7895ca693c373db20a8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-006-gate-throttle/evidence/C3.log",
-        "evidence_sha256": "74da13d48bc3ef3ddf402180ffe6be5e4318bb1ef6e0021c888481cf0a18b9ae",
-        "tests": 90
+        "evidence_sha256": "75bd96a6df28e480046188c440f6b2cf2f4ac7e38291a07e84be78d1c9a81382",
+        "tests": 98
       }
     },
     "C4": {
@@ -47,11 +47,11 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-06T20:48:11Z",
-        "head": "d99923572232a6cdb6c0ec237f645c0712071102",
+        "at": "2026-10-06T21:09:33Z",
+        "head": "69dca23fc69128157837a7895ca693c373db20a8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-006-gate-throttle/evidence/C4.log",
-        "evidence_sha256": "74da13d48bc3ef3ddf402180ffe6be5e4318bb1ef6e0021c888481cf0a18b9ae",
-        "tests": 90
+        "evidence_sha256": "75bd96a6df28e480046188c440f6b2cf2f4ac7e38291a07e84be78d1c9a81382",
+        "tests": 98
       }
     },
     "C5": {
@@ -60,11 +60,11 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-06T20:48:11Z",
-        "head": "d99923572232a6cdb6c0ec237f645c0712071102",
+        "at": "2026-10-06T21:09:33Z",
+        "head": "69dca23fc69128157837a7895ca693c373db20a8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-006-gate-throttle/evidence/C5.log",
-        "evidence_sha256": "74da13d48bc3ef3ddf402180ffe6be5e4318bb1ef6e0021c888481cf0a18b9ae",
-        "tests": 90
+        "evidence_sha256": "75bd96a6df28e480046188c440f6b2cf2f4ac7e38291a07e84be78d1c9a81382",
+        "tests": 98
       }
     },
     "C6": {
@@ -73,11 +73,11 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-06T20:48:11Z",
-        "head": "d99923572232a6cdb6c0ec237f645c0712071102",
+        "at": "2026-10-06T21:09:33Z",
+        "head": "69dca23fc69128157837a7895ca693c373db20a8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-006-gate-throttle/evidence/C6.log",
-        "evidence_sha256": "74da13d48bc3ef3ddf402180ffe6be5e4318bb1ef6e0021c888481cf0a18b9ae",
-        "tests": 90
+        "evidence_sha256": "75bd96a6df28e480046188c440f6b2cf2f4ac7e38291a07e84be78d1c9a81382",
+        "tests": 98
       }
     },
     "C7": {
@@ -109,5 +109,5 @@
       }
     }
   },
-  "updated_at": "2026-10-06T20:57:02Z"
+  "updated_at": "2026-10-06T21:09:51Z"
 }
