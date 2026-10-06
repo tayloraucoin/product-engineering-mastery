@@ -43,9 +43,11 @@ import { parseInput } from "../parse-input.ts";
  * - `stale`: a newer event was applied already; nothing changed.
  * - `no-user`: the event names no user of this app; nothing changed.
  * - `customer-mismatch`: the customer is linked to another user; nothing changed.
+ * - `superseded`: the event would end a subscription the row has moved past
+ *   while another still entitles the user; nothing changed.
  */
 export type EntitlementOutcome =
-  | { outcome: "applied" | "stale"; userId: string }
+  | { outcome: "applied" | "stale" | "superseded"; userId: string }
   | { outcome: "no-user" }
   | { outcome: "customer-mismatch"; userId: string };
 
@@ -190,6 +192,17 @@ export async function syncSubscription(
       )
         return { outcome: "customer-mismatch", userId };
     }
+    // One row per user: an older subscription ending (a plan change or a
+    // resubscribe on the same customer) never cancels the live one it gave way to.
+    const link = await currentLink(tx, userId);
+    if (
+      link !== undefined &&
+      isEntitled(link) &&
+      link.subscriptionId !== null &&
+      link.subscriptionId !== subscription.subscriptionId &&
+      !isEntitled(subscription)
+    )
+      return { outcome: "superseded", userId };
     const result = await upsert(tx, {
       userId,
       stripeCustomerId: subscription.customerId,

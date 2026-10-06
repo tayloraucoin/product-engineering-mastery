@@ -68,7 +68,7 @@ From the module's `files` list in `toolkit.json`:
 
 ## While billing is in use
 
-Alert on three log events: `[billing] billing.event_invalid`, `[billing] billing.customer_mismatch` and `[billing] billing.no_user`. Each means a verified Stripe event was acknowledged without changing an entitlement, so someone may have paid and hold nothing. `no_user` is also expected, now and then, for an account deleted while its subscription ran on. The event is in Stripe's dashboard by its id (in the log's tags); nothing here keeps the payload.
+Alert on three log events: `[billing] billing.event_invalid`, `[billing] billing.customer_mismatch` and `[billing] billing.no_user`. Each means a verified Stripe event was acknowledged without changing an entitlement, so someone may have paid and hold nothing. `no_user` is also expected, now and then, for an account deleted while its subscription ran on. `[billing] billing.superseded_subscription` (a warning) is an older subscription ending while a newer one entitles the user; nothing is lost, and it is worth reading only in numbers. The event is in Stripe's dashboard by its id (in the log's tags); nothing here keeps the payload.
 
 ## Verify
 

@@ -285,3 +285,31 @@ test("the late fill matches the subscription, so an old one's plan never lands o
   assert.match(update!.sql, /"stripe_subscription_id" = \$\d+/);
   assert.ok(update!.params.includes("sub_synthetic"));
 });
+
+test("an older subscription ending on the same customer never cancels the live one", async () => {
+  const ctx = systemContext(
+    script({
+      linkedTo: USER_ID,
+      link: ["cus_synthetic", "sub_live", "active"],
+    }),
+  );
+  assert.deepEqual(
+    await syncSubscription(ctx, {
+      ...subscription,
+      subscriptionId: "sub_old",
+      status: "canceled",
+    }),
+    { outcome: "superseded", userId: USER_ID },
+  );
+  assert.equal(inserts(ctx.calls).length, 0);
+});
+
+test("a new subscription that entitles replaces the old one on the row", async () => {
+  const ctx = systemContext(
+    script({ linkedTo: USER_ID, link: ["cus_synthetic", "sub_old", "active"] }),
+  );
+  assert.deepEqual(
+    await syncSubscription(ctx, { ...subscription, status: "active" }),
+    { outcome: "applied", userId: USER_ID },
+  );
+});

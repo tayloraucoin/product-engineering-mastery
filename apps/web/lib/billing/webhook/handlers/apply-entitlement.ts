@@ -54,6 +54,11 @@ export async function applyEntitlement(
       userId: result.userId,
       tags,
     });
+  else if (result.outcome === "superseded")
+    deps.log.warn("billing.superseded_subscription", {
+      userId: result.userId,
+      tags,
+    });
   else if (result.outcome === "stale")
     deps.log.info("billing.stale_event", { userId: result.userId, tags });
 }
