@@ -28,8 +28,8 @@ const AT = new Date("2026-10-05T12:00:00Z");
 function script(answers: {
   user?: boolean;
   linkedTo?: string;
-  /** The customer the event's metadata user is already linked to. */
-  theirs?: string;
+  /** The user's current row: customer, subscription, status. */
+  link?: [string, string | null, string];
   written?: boolean;
 }) {
   return (call: Call): unknown[][] => {
@@ -37,10 +37,10 @@ function script(answers: {
       return answers.user ? [[USER_ID]] : [];
     if (
       call.sql.startsWith(
-        'select "stripe_customer_id" from "billing_entitlements"',
+        'select "stripe_customer_id", "stripe_subscription_id", "status" from "billing_entitlements"',
       )
     )
-      return answers.theirs ? [[answers.theirs]] : [];
+      return answers.link ? [answers.link] : [];
     if (call.sql.startsWith('select "user_id" from "billing_entitlements"'))
       return answers.linkedTo ? [[answers.linkedTo]] : [];
     if (call.sql.startsWith('insert into "billing_entitlements"'))
@@ -84,7 +84,7 @@ test("a paid checkout links the user to the customer and makes them active, guar
   assert.match(insert.sql, /on conflict \("user_id"\) do update set/);
   assert.match(
     insert.sql,
-    /where "billing_entitlements"\."stripe_event_at" <= \$\d+/,
+    /where \("billing_entitlements"\."stripe_event_at" < \$\d+ or/,
   );
   assert.ok(insert.params.includes(USER_ID));
   assert.ok(insert.params.includes("cus_synthetic"));
@@ -203,7 +203,9 @@ test("a metadata user id that is not a uuid is read as no user, and the event st
 });
 
 test("a subscription naming a user who pays through another customer never moves or cancels their row", async () => {
-  const ctx = systemContext(script({ user: true, theirs: "cus_their_own" }));
+  const ctx = systemContext(
+    script({ user: true, link: ["cus_their_own", "sub_theirs", "active"] }),
+  );
   assert.deepEqual(
     await syncSubscription(ctx, {
       ...subscription,
@@ -213,4 +215,52 @@ test("a subscription naming a user who pays through another customer never moves
     { outcome: "customer-mismatch", userId: USER_ID },
   );
   assert.equal(inserts(ctx.calls).length, 0);
+});
+
+test("a checkout never relinks a user still entitled through another customer", async () => {
+  const ctx = systemContext(
+    script({ user: true, link: ["cus_their_own", "sub_theirs", "active"] }),
+  );
+  assert.deepEqual(await completeCheckout(ctx, checkout), {
+    outcome: "customer-mismatch",
+    userId: USER_ID,
+  });
+  assert.equal(inserts(ctx.calls).length, 0);
+});
+
+test("a returning subscriber whose old entitlement ended is relinked to the new customer, and the old plan and period are cleared", async () => {
+  const ctx = systemContext(
+    script({ user: true, link: ["cus_old", "sub_old", "canceled"] }),
+  );
+  assert.deepEqual(await completeCheckout(ctx, checkout), {
+    outcome: "applied",
+    userId: USER_ID,
+  });
+  const [insert] = inserts(ctx.calls);
+  assert.match(insert!.sql, /"price_id" = \$\d+/);
+  assert.match(insert!.sql, /"current_period_end" = \$\d+/);
+});
+
+test("a checkout for the subscription already on the row keeps its plan and period", async () => {
+  const ctx = systemContext(
+    script({ user: true, link: ["cus_synthetic", "sub_synthetic", "active"] }),
+  );
+  await completeCheckout(ctx, checkout);
+  const [insert] = inserts(ctx.calls);
+  assert.doesNotMatch(insert!.sql, /"price_id" = \$/);
+});
+
+test("on a same-second tie an ending event never overwrites a granting one", async () => {
+  const ending = systemContext(script({ linkedTo: USER_ID }));
+  await syncSubscription(ending, { ...subscription, status: "incomplete" });
+  assert.match(
+    inserts(ending.calls)[0]!.sql,
+    /"stripe_event_at" = \$\d+ and "billing_entitlements"\."status" not in \(\$\d+, \$\d+\)/,
+  );
+  const granting = systemContext(script({ linkedTo: USER_ID }));
+  await syncSubscription(granting, { ...subscription, status: "active" });
+  assert.match(
+    inserts(granting.calls)[0]!.sql,
+    /"stripe_event_at" = \$\d+ and true/,
+  );
 });

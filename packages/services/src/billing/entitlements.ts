@@ -13,15 +13,19 @@
  *   created the event: a retried event writes the same row again, and an
  *   older event delivered late changes nothing.
  * - A customer already linked to another user is never moved to a new one,
- *   and a user already linked to one customer is never overwritten by
- *   another's subscription: both are `customer-mismatch`, logged.
+ *   and a user still entitled through one customer is never relinked or
+ *   overwritten from another: both are `customer-mismatch`, logged. Once that
+ *   entitlement has ended, a new customer may take its place (a returning
+ *   subscriber whose checkout made a fresh customer).
+ * - On a tie (two events in the same second, Stripe's granularity), an event
+ *   that would end an entitlement never overwrites one that grants it.
  *
  * There is no read here yet. The first gate that needs one reads the row for
  * the signed-in user's own id (a ServiceContext's `userId`), never for an id
  * a caller passes in: the table sits outside row-level security.
  */
 
-import { and, eq, isNull, lte, or, sql } from "drizzle-orm";
+import { and, eq, isNull, lt, notInArray, or, sql } from "drizzle-orm";
 
 import type { RlsTransaction } from "@pem/db/rls";
 import { billingEntitlements, users } from "@pem/db/schema";
@@ -54,14 +58,31 @@ async function userExists(tx: RlsTransaction, userId: string) {
   return row !== undefined;
 }
 
-async function linkedCustomer(tx: RlsTransaction, userId: string) {
+/** The user's current link: customer, subscription and status, or undefined. */
+async function currentLink(tx: RlsTransaction, userId: string) {
   const [row] = await tx
-    .select({ customerId: billingEntitlements.stripeCustomerId })
+    .select({
+      customerId: billingEntitlements.stripeCustomerId,
+      subscriptionId: billingEntitlements.stripeSubscriptionId,
+      status: billingEntitlements.status,
+    })
     .from(billingEntitlements)
     .where(eq(billingEntitlements.userId, userId))
     .limit(1);
-  return row?.customerId;
+  return row;
 }
+
+/** The user is still entitled through a customer other than `customerId`. */
+function entitledElsewhere(
+  link: { customerId: string; status: string } | undefined,
+  customerId: string,
+) {
+  return (
+    link !== undefined && link.customerId !== customerId && isEntitled(link)
+  );
+}
+
+const ENTITLED = ENTITLED_STATUSES as unknown as string[];
 
 async function linkedUser(tx: RlsTransaction, customerId: string) {
   const [row] = await tx
@@ -89,7 +110,16 @@ async function upsert(
     .onConflictDoUpdate({
       target: billingEntitlements.userId,
       set: { ...changes, updatedAt: sql`now()` },
-      setWhere: lte(billingEntitlements.stripeEventAt, write.stripeEventAt),
+      setWhere: or(
+        lt(billingEntitlements.stripeEventAt, write.stripeEventAt),
+        and(
+          eq(billingEntitlements.stripeEventAt, write.stripeEventAt),
+          // A tie never downgrades: an ending event loses to a granting one.
+          ENTITLED.includes(write.status)
+            ? sql`true`
+            : notInArray(billingEntitlements.status, ENTITLED),
+        ),
+      ),
     })
     .returning({ userId: billingEntitlements.userId });
   return { outcome: row ? "applied" : "stale", userId };
@@ -106,11 +136,18 @@ export async function completeCheckout(
     const owner = await linkedUser(tx, checkout.customerId);
     if (owner !== undefined && owner !== checkout.userId)
       return { outcome: "customer-mismatch", userId: owner };
+    const link = await currentLink(tx, checkout.userId);
+    if (entitledElsewhere(link, checkout.customerId))
+      return { outcome: "customer-mismatch", userId: checkout.userId };
+    // A new subscription's plan and period arrive with its own events; the
+    // last one's must not be read as this one's meanwhile.
+    const fresh = link?.subscriptionId !== checkout.subscriptionId;
     return upsert(tx, {
       userId: checkout.userId,
       stripeCustomerId: checkout.customerId,
       stripeSubscriptionId: checkout.subscriptionId,
       status: checkout.paid ? "active" : "incomplete",
+      ...(fresh ? { priceId: null, currentPeriodEnd: null } : {}),
       stripeEventAt: checkout.occurredAt,
     });
   });
@@ -133,10 +170,14 @@ export async function syncSubscription(
       )
         return { outcome: "no-user" };
       userId = subscription.userId;
-      // The metadata names a user who already pays through another customer:
+      // The metadata names a user who still pays through another customer:
       // never move or cancel their row from a subscription that is not theirs.
-      const theirs = await linkedCustomer(tx, userId);
-      if (theirs !== undefined && theirs !== subscription.customerId)
+      if (
+        entitledElsewhere(
+          await currentLink(tx, userId),
+          subscription.customerId,
+        )
+      )
         return { outcome: "customer-mismatch", userId };
     }
     const result = await upsert(tx, {
