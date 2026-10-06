@@ -1,0 +1,31 @@
+{
+  "id": "STK-25",
+  "criteria_sha256": "593a1782e0ba5a16d37092cd79583c87fec330d1d84d38967cba5332ad2e6e13",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn contrast-audit",
+        "exit": 0,
+        "at": "2026-10-06T01:43:33Z",
+        "head": "e79d262a5df7559c02d62168e8c6b84bcd6d0acb",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-25-control-boundary-token/evidence/C1.log",
+        "evidence_sha256": "e69ce2f5d773acec34797a4495adb4a71682bf9a8fc7f46da62b029caed43f7a"
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn contract:record STK-25 C2 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-25-control-boundary-token/evidence/C2-rendered.md",
+        "exit": 0,
+        "at": "2026-10-06T01:43:39Z",
+        "head": "8c94ba97a79aa13fa5c9a2efdd03b47297422623",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-25-control-boundary-token/evidence/C2-rendered.md",
+        "evidence_sha256": "7492510221742905a497fb079b6b3e77adb88d1f97923df79a3c9f4d17fb89ea"
+      }
+    }
+  },
+  "updated_at": "2026-10-06T01:43:39Z"
+}
