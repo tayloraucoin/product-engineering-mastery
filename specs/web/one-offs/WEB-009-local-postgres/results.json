@@ -3,9 +3,17 @@
   "criteria_sha256": "ecf627f98cb7a04ff21a8d7e6b21ae7e61ddb67581e4e8f9e8998c5f471938e9",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace @pem/db test",
+        "exit": 0,
+        "at": "2026-10-06T01:41:59Z",
+        "head": "16f21774e2e71dcba5d5f53c3bf36da40d445843",
+        "evidence_path": "specs/web/one-offs/WEB-009-local-postgres/evidence/C1.log",
+        "evidence_sha256": "7984d429310592c0490a1ce8dd75a0378a531102c34c0e863e1fb39e852d873a",
+        "tests": 62
+      }
     },
     "C2": {
       "status": "FAIL",
@@ -18,15 +26,29 @@
       "run": null
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn test:hooks",
+        "exit": 0,
+        "at": "2026-10-06T01:42:10Z",
+        "head": "16f21774e2e71dcba5d5f53c3bf36da40d445843",
+        "evidence_path": "specs/web/one-offs/WEB-009-local-postgres/evidence/C4.log",
+        "evidence_sha256": "ce164adbdd1ca6b766a6a6a0dbfd0b7aae71d93ac7a4e434d7a2f54c46310c83"
+      }
     },
     "C5": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn check-types",
+        "exit": 0,
+        "at": "2026-10-06T01:42:23Z",
+        "head": "16f21774e2e71dcba5d5f53c3bf36da40d445843",
+        "evidence_path": "specs/web/one-offs/WEB-009-local-postgres/evidence/C5.log",
+        "evidence_sha256": "4dc9b9fb34b38be97ad7ceb674aa1810f195753a5c583a414547d38c61a1d8f4"
+      }
     }
   },
-  "updated_at": "2026-10-06T01:32:13Z"
+  "updated_at": "2026-10-06T01:42:32Z"
 }
