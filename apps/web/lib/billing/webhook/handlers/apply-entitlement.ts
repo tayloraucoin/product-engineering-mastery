@@ -50,9 +50,13 @@ export async function applyEntitlement(
   if (result.outcome === "no-user") deps.log.warn("billing.no_user", { tags });
   else if (result.outcome === "customer-mismatch")
     deps.log.error("billing.customer_mismatch", {
-      error: new Error("the event's customer is linked to another user"),
+      error: new Error(
+        result.reason === "customer-taken"
+          ? "the event's customer is linked to another user, named here"
+          : "the user named here is still entitled through another customer; they may have paid twice",
+      ),
       userId: result.userId,
-      tags,
+      tags: { ...tags, reason: result.reason },
     });
   else if (result.outcome === "superseded")
     deps.log.warn("billing.superseded_subscription", {

@@ -42,14 +42,22 @@ import { parseInput } from "../parse-input.ts";
  * - `applied`: the user's entitlement now reflects the event.
  * - `stale`: a newer event was applied already; nothing changed.
  * - `no-user`: the event names no user of this app; nothing changed.
- * - `customer-mismatch`: the customer is linked to another user; nothing changed.
+ * - `customer-mismatch`: nothing changed, for one of two reasons:
+ *   `customer-taken`, the event's customer is linked to another user (the
+ *   `userId` is that other user, who holds the link); or `entitled-elsewhere`,
+ *   the event's own user is still entitled through another customer (the
+ *   `userId` is the event's user, who may have paid twice).
  * - `superseded`: the event would end a subscription the row has moved past
  *   while another still entitles the user; nothing changed.
  */
 export type EntitlementOutcome =
   | { outcome: "applied" | "stale" | "superseded"; userId: string }
   | { outcome: "no-user" }
-  | { outcome: "customer-mismatch"; userId: string };
+  | {
+      outcome: "customer-mismatch";
+      reason: "customer-taken" | "entitled-elsewhere";
+      userId: string;
+    };
 
 async function userExists(tx: RlsTransaction, userId: string) {
   const [row] = await tx
@@ -137,10 +145,18 @@ export async function completeCheckout(
     if (!(await userExists(tx, checkout.userId))) return { outcome: "no-user" };
     const owner = await linkedUser(tx, checkout.customerId);
     if (owner !== undefined && owner !== checkout.userId)
-      return { outcome: "customer-mismatch", userId: owner };
+      return {
+        outcome: "customer-mismatch",
+        reason: "customer-taken",
+        userId: owner,
+      };
     const link = await currentLink(tx, checkout.userId);
     if (entitledElsewhere(link, checkout.customerId))
-      return { outcome: "customer-mismatch", userId: checkout.userId };
+      return {
+        outcome: "customer-mismatch",
+        reason: "entitled-elsewhere",
+        userId: checkout.userId,
+      };
     // An unpaid checkout for a second subscription (a delayed payment method)
     // never downgrades a live one; the new subscription's own events apply
     // once it is paid.
@@ -190,7 +206,11 @@ export async function syncSubscription(
           subscription.customerId,
         )
       )
-        return { outcome: "customer-mismatch", userId };
+        return {
+          outcome: "customer-mismatch",
+          reason: "entitled-elsewhere",
+          userId,
+        };
     }
     // One row per user: an older subscription ending (a plan change or a
     // resubscribe on the same customer) never cancels the live one it gave way to.

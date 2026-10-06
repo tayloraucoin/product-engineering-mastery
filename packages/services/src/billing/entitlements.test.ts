@@ -113,6 +113,7 @@ test("a customer linked to another user is never moved", async () => {
   const ctx = systemContext(script({ user: true, linkedTo: OTHER_USER }));
   assert.deepEqual(await completeCheckout(ctx, checkout), {
     outcome: "customer-mismatch",
+    reason: "customer-taken",
     userId: OTHER_USER,
   });
   assert.equal(inserts(ctx.calls).length, 0);
@@ -212,7 +213,11 @@ test("a subscription naming a user who pays through another customer never moves
       status: "canceled",
       userId: USER_ID,
     }),
-    { outcome: "customer-mismatch", userId: USER_ID },
+    {
+      outcome: "customer-mismatch",
+      reason: "entitled-elsewhere",
+      userId: USER_ID,
+    },
   );
   assert.equal(inserts(ctx.calls).length, 0);
 });
@@ -223,6 +228,7 @@ test("a checkout never relinks a user still entitled through another customer", 
   );
   assert.deepEqual(await completeCheckout(ctx, checkout), {
     outcome: "customer-mismatch",
+    reason: "entitled-elsewhere",
     userId: USER_ID,
   });
   assert.equal(inserts(ctx.calls).length, 0);
