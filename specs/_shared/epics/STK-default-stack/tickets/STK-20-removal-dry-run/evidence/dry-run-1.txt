@@ -208,3 +208,203 @@ FIXES MADE TO THE GUIDE AND RUNBOOKS (2026-10-05, after this run)
   the Docker note: docs/runbooks/add/docker-local-database.md ("With Supabase Auth removed")
   found while fixing: supabase-auth.md now covers the AI chat route ("When AI stays") and env.ts's publicKeyProblem import; billing.md says key-mode.ts stays
   stop 9 is machine load, not the guide: the note says to rerun once
+
+================================================================
+DRY RUN 2 (after run 1's fixes, at 0079371)
+================================================================
+STK-20 dry run 2 — 2026-10-05 — duplicate of 0079371025a6368d266210d5caa19d91ff8d8e7f (branch feature/conventions-setup; remote git@github.com:tayloraucoin/product-engineering-mastery.git) — product Larkspur
+INTERVIEW 21:08:21–21:08:52 (guide read + answers from briefing)
+  answers:
+  A1 product name: Larkspur — briefing
+  A2 folder: larkspur — briefing (= recommended kebab-case)
+  A3 scope: @lark — briefing (4 letters, within the 2-5 recommendation)
+  A4 repo-wide work-id: LRK — briefing
+  A5 app prefixes: keep WEB and DOC — briefing (= recommended)
+  A6 home/support URL, contacts: Not yet (example.com placeholders kept) — briefing silent; "not yet" is an allowed answer, not a stop
+  B1 docs app: Keep — briefing
+  B2 marketing site: Not now — briefing
+  B3 mobile app: Not now — briefing
+  C1 database: Keep (Supabase Postgres) — briefing
+  C2 auth: Remove — briefing (closed pilot behind host password protection; provider later)
+  C3 API (tRPC): Keep — briefing
+  C4 billing: Remove — briefing (pilot is free)
+  C5 email: Stays, locked — briefing (told: no recipe, locked in toolkit.json)
+  C6 AI: Remove — briefing
+  C7 Sentry: Keep — briefing
+  C8 catalog: Keep until the components thread — briefing (= recommended)
+  add/: Nothing — briefing
+  D1 local database: Own Postgres, no Docker — briefing (= recommended default)
+  D2: n/a (D1 not hosted only)
+  E1 owner: Rowan Vale (another person) — briefing
+  E2 code/accounts: GitHub organisation larkspur-pilot, deploy to Vercel; Rowan Vale sets up both accounts and every credential — briefing
+  E3 history: Remove all — briefing (= recommended)
+  F1 brand: Partly (name + one colour, deep green #2F6B4F; no logo, no typeface) — briefing
+  G1 UX spec: No — briefing
+  G1 follow-up (what to hand the UX thread): nothing named — see STOP 1
+  STOP 1: G1's follow-up "Also ask what the UX thread should be handed" offers no option for "nothing" and the briefing names nothing; the Attach line of the UX-spec prompt has no rule for an empty answer | cause: the question is free text with no allowed empty answer | proposed fix: docs/runbooks/new-project/README.md, row G1: after "it goes in that prompt's Attach line." add "\"Nothing yet\" is an answer: the Attach line then reads \"nothing; work from the briefing\"."
+  Table confirmation: no operator; the briefing stands in as the yes.
+STEP 1 Duplicate 21:08:52–21:11:59
+  toolkit remote noted: git@github.com:tayloraucoin/product-engineering-mastery.git; commit 0079371025a6368d266210d5caa19d91ff8d8e7f
+  git clone --branch feature/conventions-setup <toolkit path> larkspur (rehearsal substitution for --branch main); rm -rf .git; git init -b main; git switch -c agent/LRK; git add -A (1497 files staged)
+  corepack enable: 0. yarn install: 0 (9s). yarn hooks:install: 0 (duplicate is in a writable folder; nothing for the operator). yarn doctor: ready, nothing broken.
+  yarn verify on the untouched duplicate: exit 0 (2m28s).
+  Before step 2: a new session in the duplicate is not possible in this rehearsal; continued in this session (per the rehearsal rules, not a stop).
+STEP 2 Strip, then rename 21:11:59–21:19:48 (8 min)
+  strip row 1-3: git rm -rf specs docs/prompts/archive; git rm -f docs/research/** except README.md (206 + 9 + 37 files). (My own first try used plain git rm on research and was refused, exactly as step 1 warns; not a stop.)
+  STOP 2: after `git rm -rf specs`, specs/ still exists on disk holding specs/_shared/epics/STK-default-stack/tickets/STK-8-component-workshop/evidence/C4-warm-start.log | cause: the toolkit tracks that evidence log although .gitignore ignores evidence logs; after `rm -rf .git; git init; git add -A` the duplicate's index skips it, so git rm never sees it (git ls-files proof still passes, the folder survives) | proposed fix: docs/runbooks/new-project/strip.md, row 1 Action: "Delete it all: the epics, tickets, one-offs and `specs/_status.md`" -> "Delete it all: the epics, tickets, one-offs and `specs/_status.md` (`git rm -rf specs`, then `rm -rf specs` for ignored files git does not see)". Better still, untrack that log in the toolkit (it is an evidence log, never filed). Fixed in the duplicate with rm -rf specs.
+  strip row 2: docs/prompts/README.md: archive clause of description, archive table row and section "The archive, and a duplicated project" deleted.
+  strip row 4: changelog cut to frontmatter, title and opening paragraph. Row 5: only-you.md, all 29 O-rows deleted, table headers kept.
+  strip row 6: apps/web/app/page.tsx: heading "Larkspur" and one line; the ?state=error branch kept (error monitoring stays); the outline button to the Next.js docs dropped.
+  cut-down: first grep listed 68 IDs (69 with the CS-01 to CS-16 range expanded to include CS-15; EN-99 is a test-fixture string with no row); 7 records cited (0002 0003 0006 0008 0009 0010 0011). Ledger: 260 rows -> 34 kept under "Inherited from the toolkit at commit `0079371`" (closure added EN-11, SK-05, SK-28 in one more pass). Conflicts: 49 -> 37. Records 0001 0004 0005 0007 deleted; 0010's supersedes (0005) emptied. .yarnrc.yml npmPreapprovedPackages is [] so no extra ledger row.
+  STOP 3: strip.md's Check, "the first command in step 1, run again without the ':!docs/decisions' exclusion, prints no ID that the first run did not", cannot hold after step 2's own closure: the rerun prints CS-15, EN-11, SK-05, SK-28, which the first run did not, though each is a kept row | cause: the check compares with the first run instead of with the kept set | proposed fix: docs/runbooks/new-project/strip.md, "**Check:**" line: "prints no ID that the first run did not" -> "prints no ID that has neither a kept row in ledger.md nor an entry in conflicts.md (fixture strings such as EN-99 in tooling/age-gate.test.ts excepted)".
+  STOP 4: after the cut, conflicts.md still opens "Source codes are as in `ledger.md`" and every kept ledger row's Src column (R14 §3, RPM §8, CAT D-CAT-1, STK ...) names a code, but strip step 2 deletes the "Source codes" section, so those codes resolve nowhere; "How to read this file" (kept) also explains [product-bound] DealReady/Fybr tags | cause: the cut keeps citing rows but deletes the key they cite | proposed fix: docs/runbooks/new-project/strip.md, step 2: "Delete every other row, the \"Source codes\" section and the emptied section headings." -> "Delete every other row and the emptied section headings. Keep the \"Source codes\" table: the kept rows and conflicts.md cite its codes." Left as the guide says in the duplicate.
+  after deleting: yarn directory-map; yarn check-refs named 10 dead links (archive and research paths in apps/web/AGENTS.md, docs/design/component-sources.md, skills.md, workflow.md, four research prompts, shared-context.md, references/README.md, and strip.md itself); all 10 added to tooling/refs-pending.json as "stripped by docs/runbooks/new-project/strip.md" (each is a provenance sentence that does not read without its path). check-refs then 0.
+  strip proof: git ls-files specs docs/research docs/prompts/archive -> docs/research/README.md only; check-refs, check-specs, lint:docs, test:tooling, gen:agents --check, directory-map --check all 0.
+  rename 1: perl replace over 303 files (@pem/ and @pem\/ -> @lark); workspace-resolver.cjs comment edited; yarn install (lockfile: 0 @pem, 72 @lark); yarn format; yarn directory-map; yarn check-catalog --write. Check grep empty; check-types, lint, lint:boundaries, test, budget all 0. The .pem guards untouched (no diff in .claude/settings.json, .gitignore, check-settings.ts).
+  rename 2: root package.json name -> larkspur; yarn install; check grep empty.
+  rename 3: toolkitPrefixes -> ["LRK"]; bash-guard.json PJ -> LRK (12 uses, the heredoc `\nPJ:` case included; my first \b regex missed it, the guide names heredoc bodies, not a stop). check-specs 0, test:hooks 0.
+  rename 4: project_id "pem" -> "larkspur"; yarn test 0.
+  yarn verify: exit 0.
+STEP 3 Brand 21:20:15–21:23:12 (3 min)
+  F1 "partly": words only. brand.ts name "Larkspur", shortName "Larkspur", description "A shared reading list for book clubs."; urls and contact kept at example.com (A6 "not yet"); logo.svg text "PEM" -> "Larkspur". Grey placeholder colours and Geist stay; #2F6B4F goes to the branding prompt (step 7).
+  STOP 5: step 3 says to set `shortName` and `description` "from the interview", but no interview question asks for either (A1 asks only the name); I guessed shortName = the name (8 chars) and wrote the description from the briefing's first sentence | cause: the interview has no row for them | proposed fix: docs/runbooks/new-project/README.md, row A1 "Sets" cell: "The brand's `name`, the README, the agent contract's title" -> "The brand's `name`; its `shortName` (the name itself when 12 characters or fewer, otherwise ask) and its one-line `description` (from the briefing, shown in the answer table for the yes); the README; the agent contract's title".
+  yarn test 0 (brand test), yarn contrast-audit 0 (59 pairs), yarn verify 0. No Storybook look: no material applied.
+STEP 4 Remove the parts 21:23:12–21:32:06, then 07:19:30–07:26:36 next morning (16 min of work; the session sat idle ~9h47m between the AI and auth recipes, which is not counted)
+  order: billing, AI, auth (error monitoring, API, database kept; catalog kept until the components thread).
+  billing: 7 paths git rm'd; schema index re-exports, three exports (services, validators, db), SystemContext/createSystemContext (no other user), env.ts Stripe reads/schema/runtimeEnv and the now-unused keyModeProblem import, proxy matcher, SENTINEL_PREFIX entry (now {}), three STK-16 probes, stripe:listen script, tech-stack row, stripe dep, SDK_OWNERS entry, the three variables from .env.example (whole block) and turbo.json. No isEntitled gate code existed. yarn db:generate wrote migrations/0003_nosy_stardust.sql dropping stripe_events and billing_entitlements (with their policies). "removed": true. check-stack 0.
+  STOP 6: billing.md, ai.md and supabase-auth.md end their Verify at `yarn verify`, but verify then fails at check-refs on paths the runbook itself (and tooling.md, rename.md, other docs) still names: billing 10 paths, AI 5, auth 13 | cause: api.md and error-monitoring.md carry the step 4 "yarn check-refs names the deleted paths this runbook still lists. Add each to tooling/refs-pending.json ..." line (dry run 1's fix), the other three recipes do not | proposed fix: docs/runbooks/remove/billing.md, ai.md, supabase-auth.md (and supabase-database.md, catalog.md if they lack it), "## Verify": insert before "`yarn verify` exits 0": "`yarn check-refs` names the deleted paths this runbook and other kept docs still list. Add each to `tooling/refs-pending.json`, keyed exactly as printed: `\"<deleted path>\": \"removed by docs/runbooks/remove/<this file>\"`." Done in the duplicate for all three.
+  STOP 7: after billing.md, `git grep -il stripe` still matched two stale comments the recipe does not list: packages/config/eslint/boundaries.js header "An app may own an SDK only it uses (`stripe`, D-STK-11)" and apps/web/proxy.ts's matcher comment "or Stripe's webhook ... the money path" | cause: Files to edit lists only SDK_OWNERS and the matcher string | proposed fix: docs/runbooks/remove/billing.md, "## Boundaries entries": after "delete `stripe: \"app-web\"` from `SDK_OWNERS`" add "and change the header comment's example \"(`stripe`, D-STK-11)\" to \"(`@sentry/*`)\""; and in "Files to edit", the proxy line: "delete `api/webhooks/stripe|` from the matcher and the Stripe clause of the comment above it". Fixed in the duplicate. Remaining stripe matches are justified: migrations 0001/0002/0003 and meta (never delete an applied migration), packages/env/src/key-mode.ts and its test (the recipe keeps it), observability redact.ts and logger.test.ts (generic secret-name examples), tooling/check-client-bundle.ts comment (wildcard example).
+  billing check-stack 0; verify 0 (after STOP 6's pending entries).
+  AI: packages/ai and apps/web/app/api/ai git rm'd (apps/web/app/api left with trpc only); env.ts reads/schema/runtimeEnv; next.config transpilePackages; apps/web/package.json; no service took an Ai; boundaries.js (layer comment, web-ai-route paragraph and element, ai element, PACKAGE_IMPORTS ai and services' "ai", SDK_OWNERS ai and @ai-sdk/*, NOT_FOR_APPS, the web-ai-route rule); 10 boundaries probes; tech-stack row; conventions §4 (layer order, @lark/ai row, services imports, "AI is reached two ways", SDK owners sentence); .env.example block and turbo.json. yarn install dropped ai/@ai-sdk from yarn.lock. "removed": true. check-stack 0, AI grep: tooling/review-run.ts only (it names the Anthropic API the reviewer CLI calls; not the module, justified). check-refs: 5 pending added. verify 0.
+  auth (database and API kept, AI already gone): mirror: 8 files git rm'd; db package.json ./local-auth-mirror export and db:local:full/db:seed-users scripts, same two in root package.json; scripts/local.ts rewritten to start the container and warn on exposure only; scripts/env.ts auth reads, authSettings, authUrlName and the header's auth paragraph; setup-local.ts import, step and header clause; tier-guard.test.ts lists and the seed-users test; config.toml [auth] enabled = false, other [auth] and [auth.email] lines deleted; packages/db/.env.example auth block. Then packages/auth, apps/web/proxy.ts, apps/web/lib/supabase, apps/web/app/auth git rm'd; env.ts (Supabase reads, supabaseUrl/key, server/client/runtimeEnv/nextConfigEnv entries, publicKeyProblem import); DATABASE_URL kept (lib/trpc/context.ts reads env.DATABASE_URL); next.config, apps/web/package.json (@lark/db and server-only stay: still imported); "API stays" block: AuthContext defined in packages/api/src/context.ts and exported from server.ts, test-helpers fakes vouch directly with a local AuthUser, @lark/auth out of api's package.json and PACKAGE_IMPORTS, trpc context fromCookies/fromBearer answer null, services comment points at @lark/api/server. boundaries.js (element, PACKAGE_IMPORTS, SDK_OWNERS, layer comment); 7 probes deleted and one allowed probe's @lark/auth import dropped; tech-stack and conventions rows; .env.example block, turbo.json 9 names. yarn install dropped @supabase/*. "removed": true. check-stack 0; 13 pending refs; verify 0.
+  STOP 8: supabase-auth.md's mirror section leaves stale text it does not list: packages/db/.env.example's header names db:local:full and db:seed-users; docs/engineering/tech-stack.md's `supabase` CLI row names `db:local:full`; apps/web/env.ts's DATABASE_URL comment says the app "opens it only for the local auth mirror" although lib/trpc/context.ts reads it whenever the API stays (the recipe's own "serve only the mirror" is wrong in that case; its "unless" clause saves the code, not the comment); packages/api/src/context.ts's header still names `@lark/auth/context` | cause: the lists name code edits, not the comments and docs rows around them | proposed fix: docs/runbooks/remove/supabase-auth.md: in "The local auth mirror", after the packages/db/.env.example sentence add "and drop `db:local:full` and `db:seed-users` from its header line; in docs/engineering/tech-stack.md, `db:local:full` from the `supabase` CLI row"; in "Files to edit", the env.ts bullet: "The `DATABASE_URL` reads and entries serve only the mirror: delete them too unless another app file reads `env.DATABASE_URL`" -> "... unless another app file reads `env.DATABASE_URL` (with the API kept, `lib/trpc/context.ts` does: keep them and rewrite the comment above the schema entry to name it)"; in "When the API layer stays", first bullet: add "and its header's `@lark/auth/context` becomes \"the app's identity source\"". Fixed in the duplicate.
+  STOP 9: "When the API layer stays": "the fakes vouch for the user directly, with a local `AuthUser` type, instead of through `createAuthContextResolver`" does not say how the fake turns `app_metadata.role` into the context's role; packages/auth was already deleted, so I read the toolkit's packages/auth/src/context.ts (roleOf) to match it | cause: the recipe names the function it replaces but not its rule | proposed fix: docs/runbooks/remove/supabase-auth.md, that bullet: append "(the role is `app_metadata.role` when it is one of APP_ROLES, else `\"user\"`, as `roleOf` did; the email is `email ?? null`)".
+  auth grep (task's): packages/db/scripts/auth-ddl.test.ts and check-migrations.ts (the migration guard against auth-schema DDL, a database check that stays; matches "/auth" in "./auth-ddl.ts"), packages/observability/src/logger.test.ts (a scrub example URL "/auth/callback"): all justified.
+  end of step: check-stack 0, verify 0 (07:26:36).
+STEP 5 The environment and the database 07:27:24–07:29:32 (2 min)
+  1: Stripe, Anthropic and Supabase Auth variables already gone (their recipes).
+  2: pem_local -> larkspur_local in .env.example and packages/db/.env.example (2 values + 1 comment each); no other example value names the toolkit; no secret in either file.
+  3: D1 own Postgres: nothing more; DATABASE_ENVIRONMENT=local stays. Told (for the report): each developer needs Postgres.app or a Homebrew Postgres running and runs `yarn db:setup:local` once.
+  HANDED (Rowan Vale, E2): creating the hosted Supabase projects (staging, production); copying .env.example to apps/web/.env.local and packages/db/.env.example to packages/db/.env.local with real values; the first `yarn db:migrate` against a hosted project (which also applies 0003, the billing drop).
+  check-stack 0, check-client-bundle 0 (19 server-only values, none in the browser bundle), verify 0.
+STEP 6 The owner, the record, the files that describe the toolkit 07:29:32–07:34:41 (5 min)
+  1 owner (rename.md part 5): Taylor -> Rowan in docs/decisions/README.md, only-you.md (title, description, owner-column wording), ux-overview.template.md, contract.template.md and contract.schema.json ("look it over himself" reworded "in person"), technical.template.md ("Calls routed to Rowan"), postmortem README and convention-log, tooling.md (three lines that name who is asked or waited for; the literal "held for Taylor (PR-05)" quote left), product/README.md, cold-trial.md; agent-facing messages in bash-guard.ts (push, database), review-run.ts (two), reset-local-db.ts, contract.ts's manual criterion with contract-run.test.ts in one edit. Comments in tooling/, REGISTRY.md, inherited decision files, catalog provenance strings left, as the file says. yarn directory-map, then test:tooling, test:hooks, lint:docs, directory-map --check all 0.
+  2: README.md title and opening paragraph; AGENTS.md title and Start here items 1 and 2; apps/web/AGENTS.md "What this app is" rewritten and "The filled examples live here" deleted (its heading "the demo app" -> "the product" too).
+  3: record docs/decisions/records/0012-larkspur-from-the-toolkit.md from decision.template.md (interview table, parts removed and why, database, owner, toolkit remote and commit, B1-B3 with no recipe needed); ledger line LR-01 above the inherited rows under "## Larkspur"; first changelog entry "2026-10-06 — LRK: new project from the toolkit".
+  STOP 10: strip.md says "The product's own rows go above the inherited ones, in its own ID families" and step 6 says "Add its line to the ledger", but neither names the family or the section heading for a product's rows; I guessed "LR-01" under "## Larkspur" | cause: no rule for a product's ID family | proposed fix: docs/runbooks/new-project/README.md, step 6 item 3: "Add its line to the ledger" -> "Add its line to the ledger, in a section named for the product above the inherited rows, with an ID family of two letters from the work-id (for LRK, `LR-01`)".
+  4: yarn directory-map. Proof: lint:docs 0, check-refs 0, directory-map --check 0, verify 0.
+STEP 7 Verify, commit, hand over 07:34:41–07:40:30 (6 min)
+  yarn check-stack: 0 ("16 module(s); nothing missing, nothing left behind"). yarn verify: 0.
+  HANDED: the commit `LRK: new project from the toolkit` on agent/LRK runs in the duplicate's own session, as step 1 says. Tree otherwise ready: `git status` shows only the staged set-up (1156 files, all "A", nothing unstaged or untracked), branch agent/LRK, never pushed.
+  STOP 11: the commit will also fail in the duplicate's own session: step 1's `yarn hooks:install` (which succeeded here) points core.hooksPath at tooling/git-hooks, and tooling/git-hooks/commit-msg.ts line 21 runs `git rev-parse --abbrev-ref HEAD`, which exits 128 ("ambiguous argument 'HEAD'") on an unborn branch, so the very first commit of a fresh `git init` repo is refused with a Node stack trace. Reproduced without committing: `node tooling/git-hooks/commit-msg.ts <msg file holding "LRK: new project from the toolkit">` on unborn agent/LRK exits 1 with that error; `git symbolic-ref --short HEAD` prints agent/LRK in the same state | cause: the hook assumes HEAD resolves; dry run 1's hooks:install never ran (sandbox), so the first commit was never made with the hooks on | proposed fix: tooling/git-hooks/commit-msg.ts line 21: `["rev-parse", "--abbrev-ref", "HEAD"]` -> `["symbolic-ref", "--short", "HEAD"]` (and the same in tooling/hooks/bash-guard.ts currentBranch); until then docs/runbooks/new-project/README.md step 7: after "Commit on `agent/<work-id>` as `<work-id>: new project from the toolkit`" add "(the first commit of the fresh history: if the commit-msg hook fails on `git rev-parse ... HEAD`, the hook needs the symbolic-ref fix; do not pass --no-verify)".
+  HANDED (Rowan Vale): the push to the larkspur-pilot GitHub organisation and making `main`; the Vercel project with its host password protection; the hosted Supabase projects and every credential; the two .env.local files; the first `yarn db:migrate`.
+  No B-line prompts: B1 keep, B2 not now, B3 not now.
+
+  --- Printed 1: the branding prompt (F1 "partly") ---
+Venue: Claude Code, in larkspur, on the branch that is checked out.
+Model: the deepest available (Fable 5.1 today). A smaller model picks safe defaults and the result looks like every other product.
+
+Role: Hearth (brand strategist) leads. Support: Plumb rules on every token, Gloss owns the voice, Turner writes the files.
+
+Context. Larkspur was started from the product-engineering toolkit. Its brand is still the starter's placeholder: a grey scale and the Geist typeface. Your job is to settle the brand with me, then land it in the files the system reads, so that every component picks it up without being touched.
+
+Read first: docs/runbooks/new-project/branding.md (the files and the checks; it is your contract), docs/design/canon.md, docs/design/templates/DESIGN.template.md and tokens.template.md, packages/config/tailwind/preset.css, packages/brand/src/brand.ts and font.ts.
+
+What exists: the name, Larkspur, and one colour, a deep green #2F6B4F, to take as the candidate primary. No logo, no typeface.
+
+Interview me first, with the question tool, options with your recommendation first, in as many rounds as it takes. Do not write a file until I have confirmed the pillar card.
+
+Part 1, the pillars. Run docs/runbooks/new-project/branding-process.md with me, Steps 0 to 5, in its "running it solo" form: I give my own words before you add any; you add words from each audience's and each competitor's side; you challenge every word that fails the opposite test or the competitor test. Fill the pillar card, save it as apps/web/docs/design/brand-pillars.md, and get my yes.
+
+Part 2, the choices. Fill the Step 6 table with me, one system at a time, and trace every choice to a pillar:
+1. Colour. Offer two or three primary colours, each with the pillar it expresses. For the one I pick, build a ramp from 50 to 900 in OKLCH with 500 the exact brand value and lightness stepping evenly outward, so no step is darker than the one before it; check the ramp before showing it. Build the greys between the real text colour and the real background colour, and say whether they lean warm or cool. Name what each colour is for. Compute the contrast of every text and background pair at the size it will be used, in light and in dark; never assert it. Where the brand colour fails 4.5:1 as text, pick a lighter or darker step of the same ramp for text and links, and say so.
+2. Type. One typeface for the interface, with the pillar it expresses and the reason it is not the default. It must be a file we may ship (name the licence; an open licence such as the OFL unless I hold another), as a variable font covering weights 400 to 600, with a regular weight available as TTF or OTF. Show it at the sizes it will be used, on real sentences from this product, not placeholder text.
+3. The logo: do I have one, should you draft a wordmark and a square mark as SVG for now, or is a designer making it? A drafted mark is a placeholder and you say so.
+4. Voice. Three things the product says and three it never says, each traced to a pillar and its "but not". Write the same three real strings (a page title, a button, an error) in the voice, so I can hear it.
+5. Imagery and motion, in one line each, and the never-list: what this brand does not do visually.
+6. Dark mode: both themes from day one (the system's default), or one first.
+
+Then produce every row of "The files a brand lands in", in its order, running each row's check before the next. Colours are OKLCH and live only in the token file; the two primary colours are mirrored in brand.ts. Change no component. Do not add a token role the file does not have: write the need into the product's coverage-gaps.md.
+
+Boundaries: only the files in that table, plus coverage-gaps.md. Every choice traces to a pillar; flag anything that breaks a "but not". No new dependency. Never push. Commit as "LRK: brand".
+
+Done when: yarn test, yarn contrast-audit, yarn lint and yarn build pass, then one yarn verify; you have opened the component workshop and looked at controls and text in light and dark; and your report, six lines at most, lists the contrast ratio of each text pair, any drafted asset that is a placeholder, and each decision that waits for me.
+  --- end ---
+
+  --- Printed 2: the UX-spec prompt (G1 "no") ---
+Venue: Claude Code, in the new repo, on the branch that is checked out.
+Model: the deepest available (Fable 5.1 today). A smaller model writes screens and misses states.
+
+/tk-prompt
+
+Build the prompt for: a full UX spec for Larkspur, before any feature is built.
+Track: product spec. Lead: Vesper. Support: Compass for what the first release is for, Gloss for the words.
+What exists: Larkspur is a shared reading list for book clubs: a club keeps one list of books, and members add and reorder titles. The club's organiser gets a weekly email digest. The first release is the web app only, a closed pilot behind the host's password protection, with no sign-in until a provider is chosen. Brand: in its own thread. Stack kept: database (Supabase Postgres), API (tRPC), email (Resend), error monitoring (Sentry), the component catalog until the components thread, the docs app; removed: Supabase Auth, billing, AI.
+The spec covers every area, surface and state of the first release and is written under specs/web/ux/, one overview per area and one file per surface, from docs/design/templates/ux-overview.template.md and ux-surface.template.md.
+Attach: nothing; work from the briefing (see STOP 1).
+Done when: a build thread could build any surface from its file without asking a question, and the components thread can list every component the product needs from it.
+  --- end ---
+
+  --- Printed 3: the components prompt (runs once the UX spec exists under specs/web/ux/) ---
+Venue: Claude Code, in larkspur, on the branch that is checked out.
+Model: the deepest available (Fable 5.1 today). A smaller model deletes by name and misses what imports what.
+
+Role: Turner (design engineer) leads. Support: Vesper reads the UX spec with you; Plumb rules when the spec needs a component the kit lacks.
+
+Context. Larkspur was started from the product-engineering toolkit and now has its UX spec at specs/web/ux/. The repo still holds the whole starter kit (packages/ui) and the shelf of extra components (packages/catalog). Your job is to cut both down to what this product's UX needs, safely, and to write the product's component inventory.
+
+Read first: docs/runbooks/new-project/components.md (the order and the reasons), the UX spec (every overview and surface file), packages/ui/AGENTS.md, packages/catalog/README.md and manifest.json, docs/design/component-sources.md ("Starter kits by profile" and "Job index"), docs/design/templates/components.template.md, docs/runbooks/remove/catalog.md.
+
+Do this, in order:
+
+1. Inventory. From the UX spec, list every job a person does on every surface and the component that serves it. Write it as apps/web/docs/design/components.md from the template: one row per job, the component, its variant, and the surfaces that use it.
+
+2. Decide. Put every entry of manifest.json in one table with one verdict each:
+   - keep: the inventory names it, or a kept component imports it.
+   - take from the shelf: a catalog item the inventory names. Say where it goes: into the web app's own components when one surface uses it, into the kit when two do (Plumb rules on a promotion).
+   - delete: nothing in the inventory or in a kept component uses it.
+   - missing: the inventory needs it and neither the kit nor the shelf has it. Do not build it here: write it into the product's coverage-gaps.md.
+   When in doubt, keep. A deleted component is restored by copying its folder from the toolkit; a missing one costs a build thread.
+
+3. Show me the table and wait for my yes. Use the question tool: confirm all, or change some. This is the one stop.
+
+4. The shelf. Copy each "take from the shelf" item to where the table says, keeping its licence header, and give it a story. Then follow docs/runbooks/remove/catalog.md from top to bottom. yarn check-stack and yarn verify must pass before step 5.
+
+5. The kit. For each "delete", leaves first:
+   - confirm nothing kept imports it: search packages/ui/src and apps for its export name and its folder name;
+   - delete its folder under packages/ui/src/<layer>/<kind>/;
+   - delete its "./<name>" entry from exports in packages/ui/package.json;
+   - delete its name from the examples in that kind's README.
+   After every five or so, run yarn check-ui-layout, yarn check-types and yarn test, so a wrong cut is found near where it was made.
+
+6. Dependencies. For each dependency of packages/ui that no kept file imports any more: remove it from packages/ui/package.json, from the ui entry's dependencies in toolkit.json, and its row from docs/engineering/tech-stack.md. Then yarn install.
+
+7. Brand. If apps/web/docs/design/DESIGN.md exists, the brand is in: run yarn contrast-audit, open the workshop (yarn ui:storybook), look at every kept component in light and dark, and list anything that reads wrong under the brand as a finding, with the token it points at. Change no token here. If that file does not exist, the brand is still the placeholder: print the prompt from docs/runbooks/new-project/branding.md for me to run in its own thread, and say so in your report.
+
+Boundaries: packages/ui, packages/catalog, the files the catalog recipe names, the web app's own components for shelf items, toolkit.json's ui entry, tech-stack.md, and the two design-layer files named above. No new dependency. No new component. Never push. Commit as "LRK: components cut to the UX spec".
+
+Done when: yarn check-ui-layout, yarn check-stack, yarn test, yarn lint:boundaries and yarn build pass, then one yarn verify; every row of the inventory names a component that exists; and your report, six lines at most, gives the counts (kept, taken from the shelf, deleted, missing), the dependencies removed, and each decision that waits for me.
+  --- end ---
+
+  Report to the operator (8 lines):
+  Removed: billing (migration 0003 drops its two tables), AI, Supabase Auth (local mirror included; API requests are anonymous until a provider replaces it).
+  Kept: database (own Postgres, larkspur_local), tRPC, email (locked), Sentry, catalog until the components thread, docs app.
+  Minutes: interview 1, duplicate 3, strip+rename 8, brand 3, remove 16, environment 2, record 5, hand-over 6 (44 in all).
+  [ASSUMPTION]s: shortName "Larkspur" and the brand description from the briefing; ledger family LR for the product's rows; UX thread handed nothing.
+  Waits for Rowan Vale: the first commit (and the commit-msg hook fix, STOP 11), the push to larkspur-pilot and making main, Vercel with its password protection, the Supabase projects and keys, both .env.local files, the first yarn db:migrate.
+  Each developer: Postgres.app or Homebrew Postgres, then yarn db:setup:local once.
+  Printed: the branding prompt, the UX-spec prompt, the components prompt (after the UX spec).
+RESULT
+  check-stack: 0 "check-stack — 16 module(s); nothing missing, nothing left behind."
+  verify: 0 (no failing step; final run 07:35, all 23 steps; steps 2-6 each also ended on verify 0)
+  grep auth: 4 matches, all justified: packages/db/scripts/auth-ddl.test.ts and check-migrations.ts (the kept database's guard against auth-schema DDL; "/auth" matches "./auth-ddl.ts"), packages/observability/src/logger.test.ts (scrubber example URL), tooling/refs-pending.json (the deleted paths, keyed as check-refs requires)
+  grep billing: 12 matches, all justified: migrations 0001, 0002, 0003 and meta (billing.md: never delete an applied migration; 0003 is the drop), packages/env/src/key-mode.ts and its test (billing.md keeps it as the general key-mode check), packages/observability/src/redact.ts and logger.test.ts (generic secret-name examples), tooling/check-client-bundle.ts (a comment's wildcard example), tooling/refs-pending.json. Two stale comments the recipe missed were fixed (STOP 7).
+  grep ai: 1 match, justified: tooling/review-run.ts (the reviewer CLI needs the Anthropic API; not the removed module)
+  total: 44 min of work (wall clock 21:08 to 07:45 including a ~9h47m idle gap in step 4), 11 stops
+
+FIXES MADE AFTER RUN 2 (2026-10-06)
+  stops 1, 5, 10, 11 (one clause): docs/runbooks/new-project/README.md
+  stops 2, 3, 4: docs/runbooks/new-project/strip.md
+  stop 6: the Verify lists of remove/billing.md, remove/ai.md, remove/supabase-auth.md
+  stop 7: remove/billing.md; stops 8, 9: remove/supabase-auth.md
+  stop 11 (code): tooling/git-hooks/commit-msg.ts and tooling/lib/git.ts, one-off WEB-10 (09b4bd7)

@@ -6,7 +6,7 @@ status: draft
 thread: "STK-3"
 role: Usher
 date: 2026-10-03
-last_reviewed: 2026-10-05
+last_reviewed: 2026-10-06
 supersedes:
 load_when:
 ---
@@ -28,7 +28,7 @@ The mirror lives in the database package (D-STK-6), so removing auth leaves it b
 - `packages/db/scripts/local.ts`: the marker step (`markLocalAuthMirror` and its client) and the auth-URL warning; `supabase db start` and the network warning stay. `scripts/auth-writers.test.ts` stays: with the mirror gone, it requires that no shipped file writes to `auth.users`. `scripts/env.ts`: the `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` reads, `authSettings` and `authUrlName`.
 - `packages/db/scripts/setup-local.ts`: the `markLocalAuthMirror` import and step, and the header's clause about marking a mirror target. `scripts/tier-guard.test.ts`: `local-full.ts` and `seed-users.ts` from its script lists, and the `seed-users.ts` test.
 - `packages/db/supabase/config.toml`: set `[auth] enabled = false` and delete the other `[auth]` lines.
-- From `.env.example` and `turbo.json`'s `globalEnv`, with their `_LOCAL` and `_STAGING` forms: `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`. From `packages/db/.env.example`: `NEXT_PUBLIC_SUPABASE_URL_LOCAL`, `SUPABASE_SERVICE_ROLE_KEY_LOCAL` and their comment block.
+- From `.env.example` and `turbo.json`'s `globalEnv`, with their `_LOCAL` and `_STAGING` forms: `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`. From `packages/db/.env.example`: `NEXT_PUBLIC_SUPABASE_URL_LOCAL`, `SUPABASE_SERVICE_ROLE_KEY_LOCAL` and their comment block, and `db:local:full` and `db:seed-users` from its header. In `docs/engineering/tech-stack.md`, `db:local:full` from the `supabase` CLI row.
 
 When the database goes too, its runbook deletes the whole `packages/db/` folder, mirror included; only the variables above are this runbook's.
 
@@ -41,7 +41,7 @@ When the database goes too, its runbook deletes the whole `packages/db/` folder,
 
 ## Files to edit
 
-- `apps/web/env.ts`: the `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` and `SUPABASE_SERVICE_ROLE_KEY` reads in `raw` (each with its `_LOCAL` and `_STAGING` forms), `supabaseUrl` and `supabasePublishableKey`, their `server`, `client` and `runtimeEnv` entries, the two `nextConfigEnv` entries, and the `publicKeyProblem` import from `@pem/auth/config` with the check that calls it. The `DATABASE_URL` reads and entries serve only the mirror: delete them too unless another app file reads `env.DATABASE_URL`.
+- `apps/web/env.ts`: the `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` and `SUPABASE_SERVICE_ROLE_KEY` reads in `raw` (each with its `_LOCAL` and `_STAGING` forms), `supabaseUrl` and `supabasePublishableKey`, their `server`, `client` and `runtimeEnv` entries, the two `nextConfigEnv` entries, and the `publicKeyProblem` import from `@pem/auth/config` with the check that calls it. The `DATABASE_URL` reads and entries serve the mirror: delete them too unless another app file reads `env.DATABASE_URL`. With the API kept, `lib/trpc/context.ts` does: keep them, and rewrite the comment above the schema entry to name it.
 - `apps/web/next.config.ts`: `@pem/auth` in `transpilePackages`, and `@pem/db` unless the app still imports it.
 - `apps/web/package.json`: `@pem/auth`; `server-only` unless another file in the app imports it; `@pem/db` unless the app still imports it.
 - `packages/config/eslint/boundaries.js` and `tooling/boundaries.test.ts`: see Boundaries entries.
@@ -50,8 +50,8 @@ When the database goes too, its runbook deletes the whole `packages/db/` folder,
 
 **When the API layer stays.** `@pem/api` takes its identity type from `@pem/auth/context`, so it breaks with the folder. The dry run (STK-20) kept the API this way:
 
-- `packages/api/src/context.ts`: define `AuthContext` here (`userId`, `email`, and `role` typed as `ServiceContext["role"]`), and export it from `packages/api/src/server.ts` beside `ApiContextSources`.
-- `packages/api/src/test-helpers.ts`: the fakes vouch for the user directly, with a local `AuthUser` type, instead of through `createAuthContextResolver`.
+- `packages/api/src/context.ts`: define `AuthContext` here (`userId`, `email`, and `role` typed as `ServiceContext["role"]`), and export it from `packages/api/src/server.ts` beside `ApiContextSources`. In the header comment, `@pem/auth/context` becomes "the app's identity source".
+- `packages/api/src/test-helpers.ts`: the fakes vouch for the user directly, with a local `AuthUser` type, instead of through `createAuthContextResolver`. Keep its rule, from `roleOf`: the role is `app_metadata.role` when it is one of `APP_ROLES` (`@pem/db/rls`), otherwise `"user"`; the email is `email ?? null`.
 - `packages/api/package.json`: `@pem/auth`. In `packages/config/eslint/boundaries.js`, `auth` from `api`'s entry in `PACKAGE_IMPORTS`.
 - `apps/web/lib/trpc/context.ts`: drop the `../supabase/context` import; `fromCookies` and `fromBearer` answer `null`. Every API request is then anonymous, and a protected procedure refuses, until a new identity source replaces the two.
 - `packages/services/src/context.ts`: its comment names `@pem/auth/context`; point it at `@pem/api/server`.
@@ -85,4 +85,5 @@ In `packages/config/eslint/boundaries.js`: the `workspacePackage("auth", "auth")
 
 1. In `toolkit.json`, set `"removed": true` on the `auth` entry of the `stack` block.
 2. `yarn check-stack` exits 0: no listed file, variable or dependency of the module is left.
-3. `yarn verify` exits 0.
+3. `yarn check-refs` names the deleted paths this runbook still lists. Add each to `tooling/refs-pending.json`, keyed exactly as printed: `"<deleted path>": "removed by docs/runbooks/remove/supabase-auth.md"`.
+4. `yarn verify` exits 0.

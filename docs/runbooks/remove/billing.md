@@ -6,7 +6,7 @@ status: draft
 thread: "STK-3"
 role: Usher
 date: 2026-10-03
-last_reviewed: 2026-10-03
+last_reviewed: 2026-10-06
 supersedes:
 load_when:
 ---
@@ -36,7 +36,7 @@ From the module's `files` list in `toolkit.json`:
 - `packages/services/src/context.ts`: delete `SystemContext` and `createSystemContext`, unless another service takes one.
 - `packages/db/package.json`: delete the `./stripe-event-ledger` export.
 - `apps/web/env.ts`: delete the `STRIPE_*` raw reads, `stripeWebhookSecret`, the three schema entries and their `runtimeEnv` lines, and the `keyModeProblem` import if nothing else uses it. `packages/env/src/key-mode.ts` stays: it is `@pem/env`'s general check for a key's mode against the tier, ready for the next vendor key.
-- `apps/web/proxy.ts`: delete `api/webhooks/stripe|` from the matcher.
+- `apps/web/proxy.ts`: delete `api/webhooks/stripe|` from the matcher, and Stripe's webhook and the money-path clause from the comment above it.
 - `tooling/check-client-bundle.ts`: delete the `STRIPE_SECRET_KEY` entry in `SENTINEL_PREFIX`.
 - `tooling/boundaries.test.ts`: delete the STK-16 probes (`stripe` from services, db and `apps/web/lib/billing`).
 - `package.json`: delete the `stripe:listen` script.
@@ -53,7 +53,7 @@ From the module's `files` list in `toolkit.json`:
 
 ## Boundaries entries
 
-`stripe`: delete `stripe: "app-web"` from `SDK_OWNERS` in `packages/config/eslint/boundaries.js` (D-STK-16). Billing has no element of its own.
+`stripe`: delete `stripe: "app-web"` from `SDK_OWNERS` in `packages/config/eslint/boundaries.js` (D-STK-16), and the bracketed `stripe` example from the file's header comment. Billing has no element of its own.
 
 ## Vendor-side steps
 
@@ -74,4 +74,5 @@ Alert on three log events by name, whatever their level (`no_user` is a warning,
 
 1. In `toolkit.json`, set `"removed": true` on the `billing` entry in `stack`.
 2. `yarn check-stack` exits 0: no listed file, variable or dependency of the module is left.
-3. `yarn verify` exits 0.
+3. `yarn check-refs` names the deleted paths this runbook still lists. Add each to `tooling/refs-pending.json`, keyed exactly as printed: `"<deleted path>": "removed by docs/runbooks/remove/billing.md"`.
+4. `yarn verify` exits 0.

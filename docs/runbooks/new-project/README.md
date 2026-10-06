@@ -6,7 +6,7 @@ status: draft
 thread: "PEM"
 role: Usher
 date: 2026-10-05
-last_reviewed: 2026-10-05
+last_reviewed: 2026-10-06
 supersedes:
 load_when:
 ---
@@ -16,7 +16,7 @@ load_when:
 > **Who runs it:** an agent in Claude Code, with the operator answering questions. On the deepest model available: the interview is design work, and a smaller model turns it into a checklist.
 > **When:** a product repo starts from this one. The rule is duplicate, then remove ([record 0010](../../decisions/records/0010-starter-ships-default-stack.md)).
 > **Done means:** `yarn check-stack` and `yarn verify` exit 0 in the new repo, the set-up record is written, the work is committed on its branch, and the operator holds the prompts for the threads that follow (step 7).
-> **Status:** draft. Dry run 1 ran on a duplicate on 2026-10-05 (STK-20): 21 stops in 61 minutes, each fixed here. A second run follows. The desk walk at the end is a reading, not a trial.
+> **Status:** draft. Dry run 1 (21 stops, 61 min) and dry run 2 (11 stops, 44 min) ran 2026-10-05, each stop fixed here; a third run follows. The desk walk at the end is a reading, not a trial.
 
 This folder holds the guide and what it hands out:
 
@@ -45,7 +45,7 @@ Ask before anything is copied. Nothing below is guessed: a name, a prefix, a ven
 
 | # | Question | Options | Sets |
 | --- | --- | --- | --- |
-| A1 | What is the product called? | Ask. Free text. | The brand's `name`, the README, the agent contract's title |
+| A1 | What is the product called? | Ask. Free text. | The brand's `name`; its `shortName` (the app's home-screen label: the name itself when 12 characters or fewer, otherwise ask) and its one-line `description` (from the briefing, shown in the answer table); the README; the agent contract's title |
 | A2 | The repo's folder name? | The product name in kebab-case (Recommended); the operator's own | The clone folder, the root package name |
 | A3 | The package scope that replaces `@pem`? | A short scope of two to five letters from the name, as `@syn` and `@cc` are (Recommended, [record 0002](../../decisions/records/0002-package-scope-pem.md)); the full name; the operator's own | Every workspace package name and import |
 | A4 | The work-id for changes that belong to no app? | Two or three capitals from the name (Recommended); the operator's own | The branch name, commit messages, the repo-wide prefix that replaces `PEM` and `PJ` |
@@ -120,7 +120,7 @@ Where each lands is one table, [`branding.md`](branding.md) "The files a brand l
 
 | # | Question | Options | What happens |
 | --- | --- | --- | --- |
-| G1 | Does a full UX spec exist: every area, surface and state of the first release? | Yes: attach it, or name where it is. Partly. No. | "Yes": step 7 prints the components prompt with the spec's location in it. "Partly" or "No": step 7 prints the UX-spec prompt, and the components prompt waits for the spec. Also ask what the UX thread should be handed (sketches, competitors, notes, client emails); it goes in that prompt's Attach line. |
+| G1 | Does a full UX spec exist: every area, surface and state of the first release? | Yes: attach it, or name where it is. Partly. No. | "Yes": step 7 prints the components prompt with the spec's location in it. "Partly" or "No": step 7 prints the UX-spec prompt, and the components prompt waits for the spec. Also ask what the UX thread should be handed (sketches, competitors, notes, client emails); it goes in that prompt's Attach line. "Nothing yet" is an answer: the Attach line then reads "nothing; work from the briefing". |
 
 ## The steps
 
@@ -206,7 +206,7 @@ Remove in this order, from the top of the package graph down, so nothing still p
 
 1. **The owner (E1).** When the answer is a new name, follow part 5 of [`rename.md`](rename.md).
 2. **What describes the toolkit.** Rewrite for the product, from the interview: the title and opening paragraph of the root `README.md`; the title and items 1 and 2 of "Start here" in `AGENTS.md`; and "What this app is" in `apps/web/AGENTS.md`, deleting its "The filled examples live here" section. The rest of those files is the practice the product keeps.
-3. **The set-up record.** Fill [`decision.template.md`](../../decisions/decision.template.md) as the next numbered record under `docs/decisions/records/`: the interview table, every part removed and why, the database choice, the owner, the toolkit's remote and commit from step 1, and each choice that has no recipe yet (B1 to B3). Add its line to the ledger and the first entry of the product's own changelog.
+3. **The set-up record.** Fill [`decision.template.md`](../../decisions/decision.template.md) as the next numbered record under `docs/decisions/records/`: the interview table, every part removed and why, the database choice, the owner, the toolkit's remote and commit from step 1, and each choice that has no recipe yet (B1 to B3). Add its line to the ledger, under a heading named for the product above the inherited rows, in an ID family of two letters from the work-id (for `LRK`, `LR-01`); then the first entry of the product's own changelog.
 4. Run `yarn directory-map`.
 
 **Proof:** `yarn lint:docs`, `yarn check-refs` and `yarn directory-map --check` exit 0, then `yarn verify`.
@@ -218,7 +218,7 @@ yarn check-stack
 yarn verify
 ```
 
-Both exit 0. Commit on `agent/<work-id>` as `<work-id>: new project from the toolkit`, and never push: the operator pushes and makes `main`.
+Both exit 0. Commit on `agent/<work-id>` as `<work-id>: new project from the toolkit`. It is the repo's first commit, made in the duplicate's own session. Never push: the operator pushes and makes `main`.
 
 Then print, each in its own block so it can be copied whole:
 

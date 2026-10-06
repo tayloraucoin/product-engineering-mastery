@@ -6,7 +6,7 @@ status: draft
 thread: "STK-3"
 role: Usher
 date: 2026-10-03
-last_reviewed: 2026-10-05
+last_reviewed: 2026-10-06
 supersedes:
 load_when:
 ---
@@ -57,4 +57,5 @@ In `packages/config/eslint/boundaries.js`: the `workspacePackage("ai", "ai")` li
 
 1. In `toolkit.json`, set `"removed": true` on the `ai` entry of the `stack` block.
 2. `yarn check-stack` exits 0: no listed file, variable or dependency of the module is left.
-3. `yarn verify` exits 0.
+3. `yarn check-refs` names the deleted paths this runbook still lists. Add each to `tooling/refs-pending.json`, keyed exactly as printed: `"<deleted path>": "removed by docs/runbooks/remove/ai.md"`.
+4. `yarn verify` exits 0.

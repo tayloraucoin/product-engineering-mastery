@@ -15,6 +15,15 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-06 — STK-20: the new-project guide, run cold on a duplicate
+
+Two cold runs of `docs/runbooks/new-project/README.md` on a duplicate (a synthetic product keeping the database, API, email and Sentry, removing Supabase Auth, billing and AI) stopped 21 times, then 11. Every stop is fixed in the guide or a recipe; the logs are STK-20's evidence.
+
+- **The guide:** the duplicate is staged before the strip searches it, and steps 2 to 7 run in a new session opened in the duplicate (the toolkit session's hooks refuse the product's work-id). The interview gains A6 (URLs and contacts), `shortName` and `description` under A1, and an Attach answer under G1. Step 5 renames `pem_local`; step 6 names the product's ledger section and ID family.
+- **The strip:** its searches skip `docs/_generated`, its citation check closes over the kept decisions and ranges, the ledger's Source codes stay, and `specs/` is deleted from disk too.
+- **The recipes:** each one's Verify pends the paths `check-refs` names. `remove/supabase-auth.md` now covers keeping the API or AI (both lose their identity source), the mirror's last two files, `codebase-conventions.md` §4, and the stale text it left. `add/docker-local-database.md` says what changes once auth is gone.
+- **Tooling:** the commit-msg hook read the branch with `rev-parse`, which fails before a repo's first commit; WEB-10 reads it with `symbolic-ref`.
+
 ## 2026-10-05 — PEM: reviewer rows reach the RLS bridge and the policy factories
 
 No `reviewers` row in `toolkit.json` matched `packages/db/src/rls.ts` (the bridge from a request's identity to row-level security, D-STK-5) or `packages/db/src/policies.ts` (the three policy factories): Warden's `**/policies/**` is a folder glob, so a single `policies.ts` slips past it, and nothing named the bridge. Four rows close the gap, in `toolkit.json` and `docs/engineering/templates/toolkit.template.json` alike: `**/rls.ts` and `**/policies.ts`, each for Mason (one-way doors: every table's RLS is built from the factories and every user-scoped query runs through the bridge) and Warden (who each query runs as; deny-by-default policies). They are file globs rather than a brace form such as `**/policies{,.ts,/**}`: `node:path` `matchesGlob` accepts braces, but the J8 sampler in `tooling/lib/specs.ts` splits a row's glob on `/` to borrow its basename, which a brace holding `/` cuts in two, while a plain basename is added to the samples. LAB's `apps/web/lib/sandbox/**` stays with the LAB tickets; it is not generic enough for the template.
