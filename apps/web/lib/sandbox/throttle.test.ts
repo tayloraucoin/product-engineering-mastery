@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { describe, test } from "node:test";
 
 import { grantAccessWith } from "./access-check.ts";
+import { SANDBOX_MAC_LABELS, sandboxMac } from "./secret.ts";
 import {
   GATE_THROTTLE,
   gateCookieOptions,
@@ -107,6 +108,16 @@ describe("C1: the network key", () => {
     );
     assert.throws(() =>
       throttleKeys({ secret: undefined, browserId, networkKey: null }),
+    );
+    // The named derivation: HMAC under SANDBOX_SECRET, label throttle, over b:<id> or n:<address>.
+    assert.equal(SANDBOX_MAC_LABELS.throttle, "throttle");
+    assert.deepEqual(
+      Buffer.from(keys.browser!),
+      sandboxMac(SECRET, SANDBOX_MAC_LABELS.throttle, `b:${browserId}`),
+    );
+    assert.deepEqual(
+      Buffer.from(keys.network!),
+      sandboxMac(SECRET, SANDBOX_MAC_LABELS.throttle, "n:203.0.113.7"),
     );
   });
 
@@ -275,6 +286,33 @@ describe("C2: locks, and every slug alike", () => {
     assert.deepEqual([...unknown.rows.entries()], [...real.rows.entries()]);
     assert.deepEqual(unknown.calls, real.calls);
     assert.equal(real.rows.size, 2);
+  });
+
+  test("C2: a well-formed code never issued gives the same result and rows on a real and an unknown slug; only the real slug is looked up", async () => {
+    const NEVER_ISSUED = "ZZZZ-ZZZZ-ZZZZ-ZZZZ";
+    const real = memoryStore();
+    const unknown = memoryStore();
+    const keys = keysFor(newBrowserId(), "203.0.113.7");
+    const onReal = gate();
+    const onUnknown = gate();
+    const realResult = await withGateThrottle(
+      real.store,
+      keys,
+      NOW,
+      onReal.attempt("pricing-2026", NEVER_ISSUED),
+    );
+    const unknownResult = await withGateThrottle(
+      unknown.store,
+      keys,
+      NOW,
+      onUnknown.attempt("no-such-review", NEVER_ISSUED),
+    );
+    assert.deepEqual(unknownResult, realResult);
+    assert.deepEqual(realResult, { ok: false, lockedUntil: null });
+    assert.deepEqual([...unknown.rows.entries()], [...real.rows.entries()]);
+    assert.deepEqual(unknown.calls, real.calls);
+    assert.deepEqual(onReal.lookups, ["pricing-2026"]);
+    assert.deepEqual(onUnknown.lookups, []);
   });
 
   test("C2: a lock reached on one slug blocks every slug", async () => {

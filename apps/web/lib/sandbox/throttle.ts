@@ -52,13 +52,16 @@ export function readBrowserId(value: string | undefined): string | null {
   return typeof value === "string" && BROWSER_ID.test(value) ? value : null;
 }
 
-/** How `sandbox_gate` is set: every slug's gate, HttpOnly, Lax, Secure when deployed, one day. */
-export function gateCookieOptions(deployed: boolean) {
+/**
+ * How `sandbox_gate` is set: every slug's gate, HttpOnly, Lax, one day, and
+ * Secure on any production runtime (the action passes `productionRuntime`).
+ */
+export function gateCookieOptions(secure: boolean) {
   return {
     path: "/experimental",
     httpOnly: true,
     sameSite: "lax" as const,
-    secure: deployed,
+    secure,
     maxAge: GATE_COOKIE_MAX_AGE_SECONDS,
   };
 }
@@ -98,6 +101,10 @@ function expandIPv6(address: string): number[] | null {
  * The network key for an `x-forwarded-for` value: the first hop's IPv4
  * address whole, or its IPv6 /64. An IPv4-mapped IPv6 address is its IPv4.
  * Null when not trusted, or the header is missing or malformed.
+ *
+ * `trusted` is env's `deployed` and nothing else: on Vercel the platform sets
+ * the first hop. `productionRuntime` is true off Vercel too, where a client
+ * could choose the header and lock out a whole office's network.
  */
 export function networkKeyOf(
   headerValue: string | null | undefined,
