@@ -103,7 +103,7 @@ function audit(css?: string) {
 test("C1: the repo's preset passes every pair in both themes", () => {
   const { status, out } = audit();
   assert.equal(status, 0, out);
-  assert.match(out, /all 57 pairs pass/);
+  assert.match(out, /all 59 pairs pass/);
 });
 
 test("C1: black on white measures 21:1, the WCAG maximum", () => {
@@ -125,7 +125,7 @@ test("C1: a text pair below 4.5:1 fails and is named", () => {
     out,
     /FAIL\s+light --muted-foreground on --background \(muted text\): 4\.48:1, needs 4\.5:1/,
   );
-  assert.match(out, /7 of 57 pairs/);
+  assert.match(out, /7 of 59 pairs/);
 });
 
 test("C1: a focus ring below 3:1 fails in the theme it is set in", () => {
