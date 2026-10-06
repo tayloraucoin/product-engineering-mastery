@@ -29,7 +29,7 @@ status: approved
 
 - `APP_ROLES` gains `developer` (`packages/db/src/rls.ts:15`), so `roleOf` and the bridge accept it (`:37-48`).
 - Outside the sandbox a developer is a `user`: `appUserIsAdmin` is an exact `'admin'` match (`packages/db/src/policies.ts:23`), and the tRPC admin tier refuses anything but `admin` (`packages/api/src/trpc.ts:60`). Both verified 2026-10-05.
-- **No developer-or-admin policy twin in v1.** Every sandbox table is service-only, so no policy would read it. A seam ships with its first consumer (conventions rule 9, EN-05). The team check is a TypeScript test of the role inside `access.ts`; the twin arrives with the first table that needs it.
+- **No developer-or-admin policy twin in v1.** Every sandbox table is service-only, so no policy would read it. A seam ships with its first consumer (conventions rule 9, EN-05). The team check is a TypeScript test of the role in `apps/web/lib/sandbox/team.ts` (`getTeamMember()`, LAB-2), which `access.ts` calls first; the twin arrives with the first table that needs it.
 - People writes `app_metadata.role` through the service-role client.
   - The last-admin guard runs in the action, inside a Postgres advisory lock.
   - Two admins demoting each other in the same instant is an accepted, recoverable race: the runbook's first-admin script restores an admin.

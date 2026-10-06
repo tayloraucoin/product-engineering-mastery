@@ -29,6 +29,7 @@ planned_paths:
   - "packages/auth/src/context.test.ts"
   - "packages/api/src/context.test.ts"
   - "apps/web/lib/sandbox/team.ts"
+  - "apps/web/lib/sandbox/team-check.ts"
   - "apps/web/lib/sandbox/team.test.ts"
 depends_on: []
 out_of_scope:

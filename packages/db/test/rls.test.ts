@@ -215,16 +215,28 @@ describe("an owner-private policy", () => {
       asAdmin.map((row) => row.id),
       [alice, bob].sort(),
     );
+  });
 
-    // Nor does developer open an owner-private table: notes stay the owner's.
-    await db.insert(notes).values({ ownerId: alice, body: "developer probe" });
-    const notesSeen = await createRlsClient(db, {
-      userId: bob,
-      role: "developer",
+  test("C4: a developer does not open another user's owner-private row (LAB-2)", async () => {
+    const [note] = await createRlsClient(db, {
+      userId: alice,
+      role: "user",
     }).execute((tx) =>
-      tx.select({ id: notes.id }).from(notes).where(eq(notes.ownerId, alice)),
+      tx
+        .insert(notes)
+        .values({ ownerId: alice, body: "developer probe" })
+        .returning({ id: notes.id }),
     );
-    assert.deepEqual(notesSeen, []);
-    await db.delete(notes).where(eq(notes.ownerId, alice));
+    try {
+      const seen = await createRlsClient(db, {
+        userId: bob,
+        role: "developer",
+      }).execute((tx) =>
+        tx.select({ id: notes.id }).from(notes).where(eq(notes.id, note!.id)),
+      );
+      assert.deepEqual(seen, []);
+    } finally {
+      await db.delete(notes).where(eq(notes.id, note!.id));
+    }
   });
 });

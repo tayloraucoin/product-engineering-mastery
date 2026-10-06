@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { teamMemberOf } from "./team.ts";
+import { getTeamMemberWith, teamMemberOf } from "./team-check.ts";
 
 const userId = "00000000-0000-4000-8000-000000000001";
 
@@ -36,4 +36,21 @@ test("C5: an unexpected role string never passes (LAB-2)", () => {
     }),
     null,
   );
+});
+
+test("C5: getTeamMemberWith reads the context it is given on every call, and caches nothing (LAB-2)", async () => {
+  const contexts = [
+    { userId, email: "team@example.test", role: "admin" as const },
+    { userId, email: "team@example.test", role: "user" as const },
+  ];
+  let calls = 0;
+  const next = async () => contexts[calls++] ?? null;
+  assert.deepEqual(await getTeamMemberWith(next), {
+    userId,
+    email: "team@example.test",
+    role: "admin",
+  });
+  // The same person demoted: the next request is no longer a team member.
+  assert.equal(await getTeamMemberWith(next), null);
+  assert.equal(calls, 2);
 });
