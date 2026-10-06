@@ -12,4 +12,5 @@ CREATE TABLE "billing_entitlements" (
 --> statement-breakpoint
 ALTER TABLE "billing_entitlements" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
 ALTER TABLE "billing_entitlements" ADD CONSTRAINT "billing_entitlements_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+CREATE INDEX "stripe_events_processed_at_idx" ON "stripe_events" USING btree ("processed_at") WHERE "stripe_events"."status" = 'processed';--> statement-breakpoint
 CREATE POLICY "billing_entitlements_all_denied" ON "billing_entitlements" AS PERMISSIVE FOR ALL TO "authenticated" USING (false) WITH CHECK (false);

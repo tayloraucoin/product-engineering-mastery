@@ -31,6 +31,7 @@ function script(answers: {
       return answers.linkedTo ? [[answers.linkedTo]] : [];
     if (call.sql.startsWith('insert into "billing_entitlements"'))
       return answers.written === false ? [] : [[USER_ID]];
+    if (call.sql.startsWith('update "billing_entitlements"')) return [];
     throw new Error(`unexpected query: ${call.sql}`);
   };
 }
@@ -151,4 +152,38 @@ test("a subscription for a customer with no matching user changes nothing", asyn
     });
     assert.equal(inserts(ctx.calls).length, 0);
   }
+});
+
+test("a late subscription event is stale but fills a plan and period still empty, never overwriting them", async () => {
+  const ctx = fakeContext(script({ linkedTo: USER_ID, written: false }));
+  assert.deepEqual(await syncSubscription(ctx, subscription), {
+    outcome: "stale",
+    userId: USER_ID,
+  });
+  const update = ctx.calls.find((call) =>
+    call.sql.startsWith('update "billing_entitlements"'),
+  );
+  assert.ok(update);
+  assert.match(
+    update.sql,
+    /coalesce\("billing_entitlements"\."price_id", \$\d+\)/,
+  );
+  assert.match(
+    update.sql,
+    /"price_id" is null or "billing_entitlements"\."current_period_end" is null/,
+  );
+  assert.doesNotMatch(update.sql, /"status"/);
+});
+
+test("a metadata user id that is not a uuid is read as no user, and the event still applies to the linked user", async () => {
+  const ctx = fakeContext(script({ linkedTo: USER_ID }));
+  assert.deepEqual(
+    await syncSubscription(ctx, {
+      ...subscription,
+      status: "canceled",
+      userId: "legacy-42",
+    }),
+    { outcome: "applied", userId: USER_ID },
+  );
+  assert.ok(inserts(ctx.calls)[0]!.params.includes("canceled"));
 });

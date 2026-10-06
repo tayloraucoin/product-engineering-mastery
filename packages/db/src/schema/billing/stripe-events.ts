@@ -12,7 +12,7 @@
  */
 
 import { sql } from "drizzle-orm";
-import { check, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { check, index, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 import { serviceOnlyPolicies } from "../../policies.ts";
 
@@ -41,6 +41,10 @@ export const stripeEvents = pgTable(
       "stripe_events_status_check",
       sql`${table.status} in ('processing', 'processed')`,
     ),
+    // The prune runs after every processed delivery (STK-21): it reads only this.
+    index("stripe_events_processed_at_idx")
+      .on(table.processedAt)
+      .where(sql`${table.status} = 'processed'`),
     ...serviceOnlyPolicies("stripe_events"),
   ],
 );

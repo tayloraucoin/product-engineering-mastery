@@ -1,8 +1,8 @@
 /**
- * What every handler is given (STK-21): the entitlement service, bound to a
- * system context by index.ts, and the logger. Handlers take these as an
- * argument rather than importing the database, so each is tested with a
- * stand-in service and no database.
+ * What every handler is given, and how each applies its event (STK-21): the
+ * entitlement service, bound to a system context by index.ts, and the
+ * logger. Handlers take these as an argument rather than importing the
+ * database, so each is tested with a stand-in service and no database.
  */
 
 import type { Logger } from "@pem/observability/logger";

@@ -13,7 +13,7 @@ import {
   occurredAt,
   stripeId,
   type BillingHandlerDeps,
-} from "./deps.ts";
+} from "./apply-entitlement.ts";
 
 export function checkoutSessionCompleted(
   deps: BillingHandlerDeps,

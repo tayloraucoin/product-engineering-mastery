@@ -13,16 +13,19 @@
  *   created the event: a retried event writes the same row again, and an
  *   older event delivered late changes nothing.
  * - A customer already linked to another user is never moved to a new one.
+ *
+ * There is no read here yet. The first gate that needs one reads the row for
+ * the signed-in user's own id (a ServiceContext's `userId`), never for an id
+ * a caller passes in: the table sits outside row-level security.
  */
 
-import { eq, lte, sql } from "drizzle-orm";
+import { and, eq, isNull, lte, or, sql } from "drizzle-orm";
 
 import type { RlsTransaction } from "@pem/db/rls";
 import { billingEntitlements, users } from "@pem/db/schema";
 import {
   completeCheckoutInput,
   ENTITLED_STATUSES,
-  getEntitlementInput,
   syncSubscriptionInput,
 } from "@pem/validators/billing";
 
@@ -120,7 +123,7 @@ export async function syncSubscription(
         return { outcome: "no-user" };
       userId = subscription.userId;
     }
-    return upsert(tx, {
+    const result = await upsert(tx, {
       userId,
       stripeCustomerId: subscription.customerId,
       stripeSubscriptionId: subscription.subscriptionId,
@@ -129,6 +132,25 @@ export async function syncSubscription(
       currentPeriodEnd: subscription.currentPeriodEnd,
       stripeEventAt: subscription.occurredAt,
     });
+    // A late subscription event loses to a newer checkout, but the checkout
+    // carries no plan or period: fill those where still empty, never overwrite.
+    if (result.outcome === "stale")
+      await tx
+        .update(billingEntitlements)
+        .set({
+          priceId: sql`coalesce(${billingEntitlements.priceId}, ${subscription.priceId})`,
+          currentPeriodEnd: sql`coalesce(${billingEntitlements.currentPeriodEnd}, ${subscription.currentPeriodEnd})`,
+        })
+        .where(
+          and(
+            eq(billingEntitlements.userId, userId),
+            or(
+              isNull(billingEntitlements.priceId),
+              isNull(billingEntitlements.currentPeriodEnd),
+            ),
+          ),
+        );
+    return result;
   });
 }
 
@@ -138,17 +160,4 @@ export function isEntitled(entitlement: { status: string } | undefined) {
     entitlement !== undefined &&
     (ENTITLED_STATUSES as readonly string[]).includes(entitlement.status)
   );
-}
-
-/** The user's entitlement row, or undefined when they have never checked out. */
-export async function getEntitlement(ctx: SystemContext, input: unknown) {
-  const { userId } = parseInput(getEntitlementInput, input);
-  return ctx.db.execute(async (tx) => {
-    const [row] = await tx
-      .select()
-      .from(billingEntitlements)
-      .where(eq(billingEntitlements.userId, userId))
-      .limit(1);
-    return row;
-  });
 }

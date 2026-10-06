@@ -1,6 +1,6 @@
 # C4: stripe listen delivers a test event that changes a local user's entitlement end to end
 
-Handed to the operator: it needs the Stripe CLI signed in to a Stripe test account, and the local database, whose Docker daemon was not running on 2026-10-05 (so `0002_billing_entitlements` has not been applied anywhere yet).
+Handed to the operator: it needs the Stripe CLI signed in to a Stripe test account, and a local database (`0002_billing_entitlements` has not been applied anywhere yet; the agent's machine had no database running on 2026-10-05).
 
 ## What the agent checked (2026-10-05, stripe 22.6.2)
 
@@ -10,7 +10,7 @@ Handed to the operator: it needs the Stripe CLI signed in to a Stripe test accou
 
 ## Steps for the operator
 
-1. Start Docker, then `yarn db:local` and `yarn workspace @pem/db db:migrate` (applies `0001` and `0002`). Run `yarn test:db`: the ledger tests, the prune included, pass.
+1. Prepare the local database: `yarn db:setup:local` on your own Postgres (no Docker needed), or `yarn db:local` with Docker. Then `yarn workspace @pem/db db:migrate` (applies `0001` and `0002`) and `yarn test:db`: the ledger tests, the prune and the entitlements deny included, pass.
 2. Sign up a local user through `/auth/sign-in` on the local tier, and note their id from `public.users`.
 3. In `apps/web/.env.local`: `STRIPE_SECRET_KEY_LOCAL` (an `sk_test_` key), and leave `yarn stripe:listen` to print `STRIPE_WEBHOOK_SECRET_LOCAL`; set it. Start `yarn web:dev` and `yarn stripe:listen`.
 4. Create a test subscription Checkout for that user, with the same id in both places the handler reads:

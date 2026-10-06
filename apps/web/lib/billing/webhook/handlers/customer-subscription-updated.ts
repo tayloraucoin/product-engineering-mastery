@@ -1,7 +1,10 @@
 /** customer.subscription.updated: a renewal, a plan change, a failed payment (`past_due`), a pause. */
 
 import type { WebhookHandler } from "../dispatch.ts";
-import { applyEntitlement, type BillingHandlerDeps } from "./deps.ts";
+import {
+  applyEntitlement,
+  type BillingHandlerDeps,
+} from "./apply-entitlement.ts";
 import { subscriptionInput } from "./subscription.ts";
 
 export function customerSubscriptionUpdated(

@@ -2,7 +2,7 @@
 
 import type Stripe from "stripe";
 
-import { occurredAt, stripeId } from "./deps.ts";
+import { occurredAt, stripeId } from "./apply-entitlement.ts";
 
 export function subscriptionInput(
   event: { created: number },

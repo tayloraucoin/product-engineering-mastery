@@ -46,13 +46,10 @@ export const syncSubscriptionInput = z.object({
   status: z.string().min(1, { error: "Give the subscription's status." }),
   priceId: z.string().startsWith("price_").nullable(),
   currentPeriodEnd: z.date().nullable(),
-  userId: z.uuid().nullable(),
+  // Only a fallback for an update that beats its checkout: anything but a
+  // uuid is read as no user, never as a reason to drop the event.
+  userId: z.uuid().nullable().catch(null),
   occurredAt,
-});
-
-/** Whose entitlement to read. */
-export const getEntitlementInput = z.object({
-  userId: z.uuid({ error: "Name the user by their id." }),
 });
 
 export type CompleteCheckoutInput = z.input<typeof completeCheckoutInput>;

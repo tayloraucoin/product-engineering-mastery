@@ -28,7 +28,7 @@ import { createDb, type Db } from "../src/client.ts";
 import { describeUrl } from "../src/connection.ts";
 import { assertLoopbackClient } from "../src/loopback.ts";
 import { createRlsClient } from "../src/rls.ts";
-import { stripeEvents } from "../src/schema/index.ts";
+import { billingEntitlements, stripeEvents } from "../src/schema/index.ts";
 
 const run = randomUUID().slice(0, 8);
 const eventId = (name: string) => `evt_test_${run}_${name}`;
@@ -67,6 +67,7 @@ after(async () => {
   await db?.$client.end();
   if (!admin) return;
   await admin`delete from public.stripe_events where id like ${`evt_test_${run}_%`}`;
+  await admin`delete from public.billing_entitlements where user_id = ${user}`;
   await admin`delete from auth.users where id = ${user}`;
   await admin.end();
 });
@@ -156,6 +157,46 @@ describe("the Stripe event ledger", () => {
     assert.equal(await statusOf(old), undefined);
     assert.equal(await statusOf(recent), "processed");
     assert.equal(await statusOf(held), "processing");
+  });
+
+  test("a signed-in user can neither read nor grant an entitlement, their own included (STK-21)", async () => {
+    // The service writes on the singleton; a user's own row is still invisible to them.
+    await db.insert(billingEntitlements).values({
+      userId: user,
+      stripeCustomerId: `cus_test_${run}`,
+      status: "active",
+      stripeEventAt: new Date(),
+    });
+    const rls = createRlsClient(db, { userId: user, role: "user" });
+    assert.deepEqual(
+      await rls.execute((tx) => tx.select().from(billingEntitlements)),
+      [],
+    );
+    await assert.rejects(
+      rls.execute((tx) =>
+        tx
+          .update(billingEntitlements)
+          .set({ status: "active" })
+          .where(eq(billingEntitlements.userId, user))
+          .returning({ userId: billingEntitlements.userId })
+          .then((rows) => {
+            if (rows.length === 0) throw new Error("no row updated");
+          }),
+      ),
+    );
+    await db
+      .delete(billingEntitlements)
+      .where(eq(billingEntitlements.userId, user));
+    await assert.rejects(
+      rls.execute((tx) =>
+        tx.insert(billingEntitlements).values({
+          userId: user,
+          stripeCustomerId: `cus_forged_${run}`,
+          status: "active",
+          stripeEventAt: new Date(),
+        }),
+      ),
+    );
   });
 
   test("a signed-in user reads and writes nothing in the ledger", async () => {

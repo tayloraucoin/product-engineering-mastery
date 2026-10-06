@@ -1,5 +1,5 @@
 {
-  "id": "6c681f6c-7b21-4101-b598-ed2058d19c1c",
+  "id": "0ac19aae-3dfc-4a26-aaec-a84cc6a67fc4",
   "prevId": "68f71357-07a0-4a9a-8aca-98e752131a1f",
   "version": "7",
   "dialect": "postgresql",
@@ -42,12 +42,8 @@
           "tableFrom": "users",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -59,18 +55,14 @@
           "name": "users_select_owner_or_admin",
           "as": "PERMISSIVE",
           "for": "SELECT",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "(\"users\".\"id\" = nullif(current_setting('app.user_id', true), '')::uuid or coalesce(current_setting('app.user_role', true), '') = 'admin')"
         },
         "users_update_owner": {
           "name": "users_update_owner",
           "as": "PERMISSIVE",
           "for": "UPDATE",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "\"users\".\"id\" = nullif(current_setting('app.user_id', true), '')::uuid",
           "withCheck": "\"users\".\"id\" = nullif(current_setting('app.user_id', true), '')::uuid"
         },
@@ -78,18 +70,14 @@
           "name": "users_insert_denied",
           "as": "PERMISSIVE",
           "for": "INSERT",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "withCheck": "false"
         },
         "users_delete_denied": {
           "name": "users_delete_denied",
           "as": "PERMISSIVE",
           "for": "DELETE",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "false"
         }
       },
@@ -156,12 +144,8 @@
           "name": "notes_owner_id_users_id_fk",
           "tableFrom": "notes",
           "tableTo": "users",
-          "columnsFrom": [
-            "owner_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["owner_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -173,27 +157,21 @@
           "name": "notes_select_owner",
           "as": "PERMISSIVE",
           "for": "SELECT",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "\"notes\".\"owner_id\" = nullif(current_setting('app.user_id', true), '')::uuid"
         },
         "notes_insert_owner": {
           "name": "notes_insert_owner",
           "as": "PERMISSIVE",
           "for": "INSERT",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "withCheck": "\"notes\".\"owner_id\" = nullif(current_setting('app.user_id', true), '')::uuid"
         },
         "notes_update_owner": {
           "name": "notes_update_owner",
           "as": "PERMISSIVE",
           "for": "UPDATE",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "\"notes\".\"owner_id\" = nullif(current_setting('app.user_id', true), '')::uuid",
           "withCheck": "\"notes\".\"owner_id\" = nullif(current_setting('app.user_id', true), '')::uuid"
         },
@@ -201,9 +179,7 @@
           "name": "notes_delete_owner",
           "as": "PERMISSIVE",
           "for": "DELETE",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "\"notes\".\"owner_id\" = nullif(current_setting('app.user_id', true), '')::uuid"
         }
       },
@@ -247,7 +223,24 @@
           "notNull": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "stripe_events_processed_at_idx": {
+          "name": "stripe_events_processed_at_idx",
+          "columns": [
+            {
+              "expression": "processed_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "where": "\"stripe_events\".\"status\" = 'processed'",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
@@ -256,9 +249,7 @@
           "name": "stripe_events_all_denied",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "false",
           "withCheck": "false"
         }
@@ -331,12 +322,8 @@
           "name": "billing_entitlements_user_id_users_id_fk",
           "tableFrom": "billing_entitlements",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -346,9 +333,7 @@
         "billing_entitlements_stripe_customer_id_unique": {
           "name": "billing_entitlements_stripe_customer_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "stripe_customer_id"
-          ]
+          "columns": ["stripe_customer_id"]
         }
       },
       "policies": {
@@ -356,9 +341,7 @@
           "name": "billing_entitlements_all_denied",
           "as": "PERMISSIVE",
           "for": "ALL",
-          "to": [
-            "authenticated"
-          ],
+          "to": ["authenticated"],
           "using": "false",
           "withCheck": "false"
         }
