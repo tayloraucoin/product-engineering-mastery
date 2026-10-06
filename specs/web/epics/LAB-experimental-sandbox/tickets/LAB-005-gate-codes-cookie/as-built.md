@@ -16,13 +16,19 @@
 - **The result type** is `{ kind: "team" | "reviewer" | "ended", viewer, experiment }`, `{ kind: "gate" }` or `{ kind: "not-found" }`. The viewer is LAB-3's `TeamViewer` or `ReviewerViewer`. Closed means `closedOn !== null`, since the registry refuses a future date.
 - **`grantAccess(db, input)`** sits in `access-check.ts` beside `grantAccessWith(deps, input)`, which LAB-7's tests stub. Both are re-exported from `access.ts`.
 - [ASSUMPTION] MACs are base64url without padding. The label and data are joined by a newline, which no label contains. A cookie over 256 characters, or a token over 128, is refused before it is split.
-- [ASSUMPTION] `access.ts` reads the first `sandbox_access` cookie. Per-slug paths mean a request carries at most one.
 - [ASSUMPTION] With SANDBOX_SECRET unset, `setAccessCookie` and `linkUrl` throw, so LAB-7's action and LAB-20's sender fail before reporting success.
 - The generated-input seed is printed in each test name and replayed by fixing `SEED`. An environment variable would need declaring to Turbo.
+- After the first reviews (mason and warden, both PASS):
+  - **`Secure` reads `productionRuntime`, not `deployed`** (Mason). A production build served off Vercel no longer sends the access cookie over plain HTTP. `cookie.ts`'s `accessCookieOptions(slug, secure)` takes the flag, and `access.ts` passes `productionRuntime`. `technical/gate.md`'s Cookies row now says so. LAB-6's `sandbox_gate` follows the same rule.
+  - **Every `sandbox_access` value is read, and the first that verifies wins** (Warden). `resolveViewerWith` takes `readAccessCookies()`, so a cookie planted at a broader path cannot shadow the real one. Tested both ways: several bad values together still reach no database, and a planted value ahead of the real cookie does not hide it.
+  - C7's count of `headers()` now counts definitions, not mentions, so a comment cannot fail it (Mason).
 
 ## Not verified
 
 - `review:mason` and `review:warden` are recorded by `yarn review:run`.
+- **The noindex header on the config Next actually receives.** C7 reads `next.config.ts`'s source because `node --test` cannot load the file: it imports `env.ts`. `withSentryConfig` composes the export. The installed `@sentry/nextjs` sets no `headers`, so nothing overrides it today (Warden). LAB-7's served check (C12) reads the `X-Robots-Tag` header off real responses.
+- **`access.ts` itself**, the request binding, has no unit test, for the same reason. LAB-7's served check exercises it on a real and an unknown slug.
+- Accepted residual (Warden): the link token carries no issue time, as D-LAB-38 defines it. An old link prefills only the address its own message was sent to, and `findAccessEmail` re-checks slug and revocation on every use.
 
 ## Next
 

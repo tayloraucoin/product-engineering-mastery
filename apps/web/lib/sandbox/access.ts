@@ -3,7 +3,7 @@
  * review page and sandbox action calls `resolveViewer(slug)` first. This file
  * binds the pure cores (access-check.ts, cookie.ts, link.ts) to the request:
  * `cookies()`, `getAuthContext()`, the registry, env's SANDBOX_SECRET, site URL
- * and `deployed`, and the database.
+ * and `productionRuntime`, and the database.
  *
  * SANDBOX_SECRET unset: no cookie verifies, no link fills an email, and no
  * cookie can be issued, so every reviewer path fails closed. The team is
@@ -18,7 +18,7 @@ import { getDb } from "@pem/db/client";
 import { checkAccess, findAccessEmail, type SandboxDb } from "@pem/db/sandbox";
 
 import { findExperiment } from "../../app/experimental/_experiments/registry.ts";
-import { deployed, env } from "../../env";
+import { env, productionRuntime } from "../../env";
 import { getAuthContext } from "../supabase/context";
 import { resolveViewerWith, type ViewerResult } from "./access-check.ts";
 import {
@@ -59,7 +59,8 @@ export async function resolveViewer(slug: string): Promise<ViewerResult> {
     {
       getTeamMember,
       findExperiment,
-      readAccessCookie: () => jar.get(ACCESS_COOKIE)?.value,
+      readAccessCookies: () =>
+        jar.getAll(ACCESS_COOKIE).map((cookie) => cookie.value),
       secret: sandboxSecret(),
       now: new Date(),
       getUserId: async () => (await getAuthContext())?.userId ?? null,
@@ -71,7 +72,7 @@ export async function resolveViewer(slug: string): Promise<ViewerResult> {
 
 /** How `sandbox_access` is set for a slug. */
 export function accessCookieOptions(slug: string) {
-  return accessCookieOptionsFor(slug, deployed);
+  return accessCookieOptionsFor(slug, productionRuntime);
 }
 
 /**

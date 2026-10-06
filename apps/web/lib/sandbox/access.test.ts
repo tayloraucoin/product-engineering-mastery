@@ -43,7 +43,7 @@ function guest(
   return {
     getTeamMember: async () => null,
     findExperiment,
-    readAccessCookie: () => cookie,
+    readAccessCookies: () => (cookie === undefined ? [] : [cookie]),
     secret: SECRET,
     now: NOW,
     getUserId: async () => null,
@@ -101,6 +101,25 @@ describe("C4: no database call before the cookie verifies", () => {
         await resolveViewerWith(guest(value), "pricing-2026"),
         { kind: "gate" },
         `${JSON.stringify(value)} ${seedNote}`,
+      );
+    }
+  });
+
+  test(`C4: several bad cookies at once give the gate and never reach the database ${seedNote}`, async () => {
+    const valid = cookieFor("pricing-2026");
+    for (let run = 0; run < 100; run++) {
+      const values = [
+        randomValue(),
+        tamper(valid),
+        cookieFor("onboarding-2026"),
+      ];
+      assert.deepEqual(
+        await resolveViewerWith(
+          guest(undefined, { readAccessCookies: () => values }),
+          "pricing-2026",
+        ),
+        { kind: "gate" },
+        seedNote,
       );
     }
   });
@@ -171,7 +190,7 @@ describe("C5: who resolveViewer says is asking", () => {
         const result = await resolveViewerWith(
           guest(undefined, {
             getTeamMember: async () => team(role),
-            readAccessCookie: NO_COOKIE_READ,
+            readAccessCookies: NO_COOKIE_READ,
           }),
           slug,
         );
@@ -190,7 +209,7 @@ describe("C5: who resolveViewer says is asking", () => {
       await resolveViewerWith(
         guest(undefined, {
           getTeamMember: async () => team("admin"),
-          readAccessCookie: NO_COOKIE_READ,
+          readAccessCookies: NO_COOKIE_READ,
         }),
         "no-such-review",
       ),
@@ -213,6 +232,24 @@ describe("C5: who resolveViewer says is asking", () => {
     assert.deepEqual(calls, [
       { accessId: ACCESS_ID, slug: "pricing-2026", userId: null },
     ]);
+  });
+
+  test("C5: a cookie that does not verify, shadowing the real one, does not hide it", async () => {
+    const result = await resolveViewerWith(
+      guest(undefined, {
+        readAccessCookies: () => [
+          "planted",
+          cookieFor("onboarding-2026"),
+          cookieFor("pricing-2026"),
+        ],
+        checkAccess: async () => ({
+          reviewerId: REVIEWER_ID,
+          accessId: ACCESS_ID,
+        }),
+      }),
+      "pricing-2026",
+    );
+    assert.equal(result.kind, "reviewer");
   });
 
   test("C5: a live access on a closed experiment is ended", async () => {

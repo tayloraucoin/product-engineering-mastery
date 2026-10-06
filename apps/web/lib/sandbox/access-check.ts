@@ -44,8 +44,12 @@ export type ViewerResult =
 export type ResolveViewerDeps = {
   getTeamMember(): Promise<TeamMember | null>;
   findExperiment(slug: string): ExperimentConfig | null;
-  /** The `sandbox_access` cookie's value on this request, if any. */
-  readAccessCookie(): string | undefined;
+  /**
+   * Every `sandbox_access` value on this request. Per-slug paths mean one,
+   * but a cookie planted at a broader path could shadow the real one, so the
+   * first that verifies wins.
+   */
+  readAccessCookies(): readonly string[];
   /** SANDBOX_SECRET; unset, no cookie verifies and every reviewer path is the gate. */
   secret: string | null | undefined;
   now: Date;
@@ -77,10 +81,12 @@ export async function resolveViewerWith(
   }
   if (!experiment) return GATE;
 
-  const cookie = verifyAccessCookie(deps.secret, deps.readAccessCookie(), {
-    slug,
-    now: deps.now,
-  });
+  const cookie = deps
+    .readAccessCookies()
+    .map((value) =>
+      verifyAccessCookie(deps.secret, value, { slug, now: deps.now }),
+    )
+    .find((verified) => verified !== null);
   if (!cookie) return GATE;
 
   const access = await deps.checkAccess({

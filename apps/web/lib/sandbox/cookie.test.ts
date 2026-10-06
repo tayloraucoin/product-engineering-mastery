@@ -136,7 +136,7 @@ describe("C3: the access cookie", () => {
     assert.equal(verify(`${cookie}${".x".repeat(200)}`), null);
   });
 
-  test("C3: the cookie is set on its slug's path, HttpOnly, Lax, 30 days, Secure only when deployed", () => {
+  test("C3: the cookie is set on its slug's path, HttpOnly, Lax, 30 days, Secure as the caller says", () => {
     assert.deepEqual(accessCookieOptions(SLUG, true), {
       path: "/experimental/pricing-2026",
       httpOnly: true,

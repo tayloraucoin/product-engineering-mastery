@@ -34,7 +34,8 @@ describe("C7: noindex headers and the secret's length", () => {
       source,
       /async headers\(\) \{\s*return SANDBOX_NOINDEX_HEADERS;\s*\}/,
     );
-    assert.equal(source.match(/headers\(\)/g)?.length, 1);
+    // One definition of headers in the config; a comment that mentions it does not count.
+    assert.equal(source.match(/^\s*(async\s+)?headers\s*[(:]/gm)?.length, 1);
   });
 
   test("C7: no robots file disallows the sandbox, and proxy.ts does not mention it", () => {

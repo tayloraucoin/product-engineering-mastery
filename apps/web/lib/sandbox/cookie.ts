@@ -82,16 +82,17 @@ export function verifyAccessCookie(
 }
 
 /**
- * How the cookie is set: this slug's path only, HttpOnly, Lax, Secure when
- * deployed, and a Max-Age fixed at issue (never refreshed on use). access.ts
- * passes env's `deployed`.
+ * How the cookie is set: this slug's path only, HttpOnly, Lax, Secure on any
+ * production runtime, and a Max-Age fixed at issue (never refreshed on use).
+ * access.ts passes env's `productionRuntime`, not `deployed`, so a production
+ * build served off Vercel never sends the cookie over plain HTTP.
  */
-export function accessCookieOptions(slug: string, deployed: boolean) {
+export function accessCookieOptions(slug: string, secure: boolean) {
   return {
     path: `/experimental/${slug}`,
     httpOnly: true,
     sameSite: "lax" as const,
-    secure: deployed,
+    secure,
     maxAge: ACCESS_COOKIE_MAX_AGE_SECONDS,
   };
 }

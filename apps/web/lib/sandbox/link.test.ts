@@ -123,7 +123,7 @@ describe("C6: the email link's token fills the email and nothing else", () => {
             getTeamMember: async () => null,
             findExperiment: (slug) =>
               KNOWN.has(slug) ? ({ slug, closedOn: null } as never) : null,
-            readAccessCookie: () => cookie,
+            readAccessCookies: () => (cookie === undefined ? [] : [cookie]),
             secret: SECRET,
             now: new Date(),
             getUserId: async () => null,
