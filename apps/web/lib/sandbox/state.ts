@@ -21,7 +21,15 @@ export type SandboxViewerKind = "reviewer" | "guest" | "team";
 
 export const SANDBOX_STATE_KEYS: Readonly<
   Record<string, SandboxStateAudience>
-> = {};
+> = {
+  // The /admin shell (LAB-8, shell.md).
+  "shell-admin": "team",
+  "shell-developer": "team",
+  "shell-not-ready": "team",
+  "shell-collapsed": "team",
+  "shell-phone": "team",
+  "shell-not-found": "team",
+};
 
 /**
  * The `?state=` key this viewer may render, or null. `raw` is the search
