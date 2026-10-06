@@ -26,6 +26,7 @@ import {
 } from "../../src/sandbox/gate.ts";
 import {
   NOT_A_TEAM_VIEWER,
+  NOT_AN_ADMIN_VIEWER,
   reviewerScope,
   type TeamViewer,
   type Viewer,
@@ -180,6 +181,28 @@ const recordAsTeam = (kind: "developer" | "admin") => async (w: World) => {
       assert.ok(secret && !text.includes(secret));
   await roleChangeAs(w, viewer);
 };
+
+/** withRoleChangeLock (LAB-9): only an admin runs `fn`, and runs it holding the lock. */
+const lockRefused = (kind: ViewerKind, message: string) => async (w: World) => {
+  let ran = false;
+  await assert.rejects(
+    sandbox.withRoleChangeLock(db(), viewerFor(w, kind), async () => {
+      ran = true;
+    }),
+    refusedWith(message),
+  );
+  assert.equal(ran, false, "a refused viewer's fn ran");
+};
+
+async function lockAsAdmin(w: World) {
+  const held = await sandbox.withRoleChangeLock(db(), w.admin, async (tx) => {
+    const rows = await tx.execute<{ n: number }>(
+      sql`select count(*)::int as n from pg_locks where locktype = 'advisory' and pid = pg_backend_pid() and granted`,
+    );
+    return rows[0]!.n;
+  });
+  assert.equal(held, 1, "fn ran without the advisory lock");
+}
 
 /** Registered cases for every runtime export of @pem/db/sandbox. */
 const REGISTRY: Registry<World> = {
@@ -635,6 +658,27 @@ const REGISTRY: Registry<World> = {
             refusedWith(THROTTLE_INPUT_INVALID),
           );
       },
+    },
+  },
+
+  withRoleChangeLock: {
+    group: "viewer",
+    criteria: ["LAB-9 C4"],
+    byViewer: {
+      "reviewer on slug A": lockRefused(
+        "reviewer on slug A",
+        NOT_A_TEAM_VIEWER,
+      ),
+      "second reviewer on slug A": lockRefused(
+        "second reviewer on slug A",
+        NOT_A_TEAM_VIEWER,
+      ),
+      "reviewer on slug B": lockRefused(
+        "reviewer on slug B",
+        NOT_A_TEAM_VIEWER,
+      ),
+      developer: lockRefused("developer", NOT_AN_ADMIN_VIEWER),
+      admin: lockAsAdmin,
     },
   },
 

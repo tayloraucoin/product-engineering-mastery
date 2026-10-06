@@ -17,6 +17,7 @@ export {
   type CreateAccessInput,
 } from "./gate.ts";
 export { recordAction, type RecordActionInput } from "./actions.ts";
+export { withRoleChangeLock, type RoleChangeTx } from "./roles.ts";
 export {
   SandboxAccessError,
   type ReviewerViewer,
