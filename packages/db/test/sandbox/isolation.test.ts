@@ -8,8 +8,9 @@
  */
 
 import assert from "node:assert/strict";
+import { randomBytes } from "node:crypto";
 import { after, before, describe, test } from "node:test";
-import { and, count, eq, sql } from "drizzle-orm";
+import { and, count, eq, inArray, sql } from "drizzle-orm";
 
 // Through the package's own subpath, so a wrong `exports` entry fails here too.
 import * as sandbox from "@pem/db/sandbox";
@@ -21,6 +22,7 @@ import {
 import {
   ACCESS_INPUT_INVALID,
   EMAIL_NOT_NORMALISED,
+  THROTTLE_INPUT_INVALID,
 } from "../../src/sandbox/gate.ts";
 import {
   NOT_A_TEAM_VIEWER,
@@ -32,6 +34,7 @@ import {
   sandboxAccesses,
   sandboxActions,
   sandboxComments,
+  sandboxGateAttempts,
   sandboxReviewers,
   sandboxReviewVersions,
   sandboxViewEvents,
@@ -61,6 +64,10 @@ before(async () => {
 
 after(async () => {
   if (database) {
+    if (throttleKeys.length)
+      await database.db
+        .delete(sandboxGateAttempts)
+        .where(inArray(sandboxGateAttempts.keyHash, throttleKeys));
     if (world) await dropWorld(database, world);
     await database.db.$client.end();
     await database.admin.end();
@@ -493,6 +500,144 @@ const REGISTRY: Registry<World> = {
     },
   },
 
+  readGateLock: {
+    group: "gate",
+    criteria: ["C6 (LAB-6)"],
+    cases: {
+      "returns only the latest running lock, as an instant": async () => {
+        const key = throttleKey();
+        await sandbox.recordGateFailure(db(), {
+          keyHash: key,
+          limit: 1,
+          windowMs: 60_000,
+          lockMs: 60_000,
+          now: THROTTLE_T0,
+        });
+        const result = await sandbox.readGateLock(db(), {
+          keyHashes: [key],
+          now: THROTTLE_T0,
+        });
+        exactKeys(result, ["lockedUntil"]);
+        assert.ok(result.lockedUntil instanceof Date);
+        assert.deepEqual(
+          await sandbox.readGateLock(db(), {
+            keyHashes: [throttleKey()],
+            now: THROTTLE_T0,
+          }),
+          { lockedUntil: null },
+        );
+      },
+      "malformed input is refused with a fixed message and no query":
+        async () => {
+          for (const input of [
+            { keyHashes: [Buffer.alloc(31)], now: THROTTLE_T0 },
+            { keyHashes: "x", now: THROTTLE_T0 },
+            { keyHashes: [throttleKey()], now: new Date("nope") },
+          ])
+            await assert.rejects(
+              sandbox.readGateLock(db(), input as never),
+              refusedWith(THROTTLE_INPUT_INVALID),
+            );
+        },
+    },
+  },
+
+  recordGateFailure: {
+    group: "gate",
+    criteria: ["C6 (LAB-6)"],
+    cases: {
+      "returns only the count and the lock, and writes no slug or reviewer":
+        async (w) => {
+          const key = throttleKey();
+          const result = await sandbox.recordGateFailure(db(), {
+            keyHash: key,
+            limit: 5,
+            windowMs: 60_000,
+            lockMs: 60_000,
+            now: THROTTLE_T0,
+          });
+          exactKeys(result, ["failures", "lockedUntil"]);
+          assert.deepEqual(result, { failures: 1, lockedUntil: null });
+          const [row] = await db()
+            .select()
+            .from(sandboxGateAttempts)
+            .where(eq(sandboxGateAttempts.keyHash, key));
+          const text = JSON.stringify(row);
+          for (const value of [w.slugA, w.slugB, w.a1.viewer.reviewerId])
+            assert.ok(!text.includes(value));
+        },
+      "malformed input is refused with a fixed message and no write":
+        async () => {
+          const key = throttleKey();
+          for (const input of [
+            { keyHash: Buffer.alloc(31), limit: 5, windowMs: 1, lockMs: 1 },
+            { keyHash: key, limit: 0, windowMs: 1, lockMs: 1 },
+            { keyHash: key, limit: 5, windowMs: 1.5, lockMs: 1 },
+            { keyHash: key, limit: 5, windowMs: 1, lockMs: -1 },
+            { keyHash: "x", limit: 5, windowMs: 1, lockMs: 1 },
+          ])
+            await assert.rejects(
+              sandbox.recordGateFailure(db(), {
+                ...input,
+                now: THROTTLE_T0,
+              } as never),
+              refusedWith(THROTTLE_INPUT_INVALID),
+            );
+          assert.deepEqual(
+            await db()
+              .select()
+              .from(sandboxGateAttempts)
+              .where(eq(sandboxGateAttempts.keyHash, key)),
+            [],
+          );
+        },
+    },
+  },
+
+  clearGateKey: {
+    group: "gate",
+    criteria: ["C6 (LAB-6)"],
+    cases: {
+      "returns only the count cleared, and clears that key alone": async () => {
+        const key = throttleKey();
+        const kept = throttleKey();
+        for (const keyHash of [key, kept])
+          await sandbox.recordGateFailure(db(), {
+            keyHash,
+            limit: 5,
+            windowMs: 60_000,
+            lockMs: 60_000,
+            now: THROTTLE_T0,
+          });
+        const result = await sandbox.clearGateKey(db(), {
+          keyHash: key,
+          now: THROTTLE_T0,
+        });
+        exactKeys(result, ["cleared"]);
+        assert.deepEqual(result, { cleared: 1 });
+        assert.equal(
+          (
+            await db()
+              .select()
+              .from(sandboxGateAttempts)
+              .where(eq(sandboxGateAttempts.keyHash, kept))
+          ).length,
+          1,
+        );
+      },
+      "malformed input is refused with a fixed message": async () => {
+        for (const input of [
+          { keyHash: Buffer.alloc(33), now: THROTTLE_T0 },
+          { keyHash: throttleKey(), now: "now" },
+        ])
+          await assert.rejects(
+            sandbox.clearGateKey(db(), input as never),
+            refusedWith(THROTTLE_INPUT_INVALID),
+          );
+      },
+    },
+  },
+
   recordAction: {
     group: "viewer",
     criteria: ["C4"],
@@ -535,6 +680,15 @@ const REGISTRY: Registry<World> = {
     },
   },
 };
+
+/** The throttle's cases use their own random keys and a fixed clock, and remove their rows after. */
+const THROTTLE_T0 = new Date("2026-10-06T09:00:00Z");
+const throttleKeys: Buffer[] = [];
+function throttleKey(): Buffer {
+  const key = randomBytes(32);
+  throttleKeys.push(key);
+  return key;
+}
 
 async function setRevoked(reviewerId: string, revoked: boolean) {
   await db()

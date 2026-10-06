@@ -25,6 +25,9 @@ export const GATE_GROUP: readonly string[] = [
   "createAccess",
   "checkAccess",
   "findAccessEmail",
+  "readGateLock",
+  "recordGateFailure",
+  "clearGateKey",
 ];
 
 export const VIEWER_KINDS = [

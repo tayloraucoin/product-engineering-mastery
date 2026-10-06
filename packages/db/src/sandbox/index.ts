@@ -11,6 +11,9 @@ export {
   createAccess,
   checkAccess,
   findAccessEmail,
+  readGateLock,
+  recordGateFailure,
+  clearGateKey,
   type CreateAccessInput,
 } from "./gate.ts";
 export { recordAction, type RecordActionInput } from "./actions.ts";
