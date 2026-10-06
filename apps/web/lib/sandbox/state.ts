@@ -40,6 +40,16 @@ export const SANDBOX_STATE_KEYS: Readonly<
   "shell-collapsed": "team",
   "shell-phone": "team",
   "shell-not-found": "team",
+  // People (LAB-9, people.md).
+  "people-empty": "team",
+  "people-loading": "team",
+  "people-error": "team",
+  "people-partial": "team",
+  "people-offline": "team",
+  "people-success": "team",
+  "people-filter-empty": "team",
+  "people-last-admin": "team",
+  "people-change-error": "team",
 };
 
 /**

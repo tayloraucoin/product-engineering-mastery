@@ -35,7 +35,7 @@ export const ADMIN_NAV: readonly AdminNavEntry[] = [
     title: "People",
     href: "/admin/people",
     icon: "people",
-    ready: false,
+    ready: true,
     adminOnly: true,
   },
   {
