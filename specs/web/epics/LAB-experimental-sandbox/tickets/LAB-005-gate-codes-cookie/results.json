@@ -3,44 +3,107 @@
   "criteria_sha256": "b1cd6880350afca3e0b7893c8984dbdd05d89b23336200b5ba92a2177ef5f6bd",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-06T20:37:47Z",
+        "head": "cc074b3b7c840b20a3e51a8f8e1f9dfb29323c13",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-005-gate-codes-cookie/evidence/C1.log",
+        "evidence_sha256": "b76ccf01cab61c9a2f2198cfaf0896aa34bae0d31b246a038269ad5264e9e419",
+        "tests": 141
+      }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-06T20:37:47Z",
+        "head": "cc074b3b7c840b20a3e51a8f8e1f9dfb29323c13",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-005-gate-codes-cookie/evidence/C2.log",
+        "evidence_sha256": "b76ccf01cab61c9a2f2198cfaf0896aa34bae0d31b246a038269ad5264e9e419",
+        "tests": 141
+      }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-06T20:37:47Z",
+        "head": "cc074b3b7c840b20a3e51a8f8e1f9dfb29323c13",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-005-gate-codes-cookie/evidence/C3.log",
+        "evidence_sha256": "b76ccf01cab61c9a2f2198cfaf0896aa34bae0d31b246a038269ad5264e9e419",
+        "tests": 141
+      }
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-06T20:37:47Z",
+        "head": "cc074b3b7c840b20a3e51a8f8e1f9dfb29323c13",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-005-gate-codes-cookie/evidence/C4.log",
+        "evidence_sha256": "b76ccf01cab61c9a2f2198cfaf0896aa34bae0d31b246a038269ad5264e9e419",
+        "tests": 141
+      }
     },
     "C5": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-06T20:37:47Z",
+        "head": "cc074b3b7c840b20a3e51a8f8e1f9dfb29323c13",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-005-gate-codes-cookie/evidence/C5.log",
+        "evidence_sha256": "b76ccf01cab61c9a2f2198cfaf0896aa34bae0d31b246a038269ad5264e9e419",
+        "tests": 141
+      }
     },
     "C6": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-06T20:37:47Z",
+        "head": "cc074b3b7c840b20a3e51a8f8e1f9dfb29323c13",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-005-gate-codes-cookie/evidence/C6.log",
+        "evidence_sha256": "b76ccf01cab61c9a2f2198cfaf0896aa34bae0d31b246a038269ad5264e9e419",
+        "tests": 141
+      }
     },
     "C7": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-06T20:37:47Z",
+        "head": "cc074b3b7c840b20a3e51a8f8e1f9dfb29323c13",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-005-gate-codes-cookie/evidence/C7.log",
+        "evidence_sha256": "b76ccf01cab61c9a2f2198cfaf0896aa34bae0d31b246a038269ad5264e9e419",
+        "tests": 141
+      }
     },
     "C8": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn check-client-bundle",
+        "exit": 0,
+        "at": "2026-10-06T20:38:20Z",
+        "head": "cc074b3b7c840b20a3e51a8f8e1f9dfb29323c13",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-005-gate-codes-cookie/evidence/C8.log",
+        "evidence_sha256": "dc01cbbb7e80c049df7c8fa7d7eca5efe1b5c54cde5f650548e9c69d0bff2a88"
+      }
     },
     "review:mason": {
       "status": "FAIL",
@@ -53,5 +116,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-06T20:30:25Z"
+  "updated_at": "2026-10-06T20:38:40Z"
 }
