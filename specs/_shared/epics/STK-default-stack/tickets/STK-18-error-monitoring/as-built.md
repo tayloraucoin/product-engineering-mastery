@@ -18,12 +18,13 @@
 - `NEXT_RUNTIME` and `VERCEL_GIT_COMMIT_SHA` are read in `env.ts`, the one `process.env` reader, and added to `check-client-bundle`'s `UNPLANTABLE`: Next or the platform sets them, and the commit is public as the release.
 - Added to `planned_paths`: `apps/web/app/page.tsx` (`?state=error` throws off a deployment and on staging deployments, never on production or a deployment with no tier, so the error page is reachable and C5 has a trigger; this brought `review:threshold`), plus `yarn.lock`, `tech-stack.md`, `check-client-bundle.ts`, `tooling/boundaries.test.ts` and `technical.md`.
 - `app/global-error.tsx` reports through `logger.error` and names no vendor, so it stays when the module is removed.
+- `apps/web/package.json`'s `build` script sets `SENTRY_CLI_NO_TELEMETRY=1` (2026-10-05, 735deb0). The sandbox caught `check-client-bundle`'s build reaching `o1.ingest.us.sentry.io`: with `SENTRY_AUTH_TOKEN` in the environment the bundler plugin starts the Sentry CLI (the `sentry` package it depends on), upload or not, and the CLI reports to Sentry's own project; `telemetry: false` covers only the plugin. A developer with a token in `.env.local` would have sent it too. `build.test.ts` holds the script to the opt-out, and the removal runbook lists it. Next's and Turbo's own telemetry (`telemetry.vercel.com`) predate this ticket and are left alone.
 - Other threads' commits from the shared index swept in some of these edits (2707c47, eae70ad) and reverted six of them once (1d8a050); 795065a restores them.
 
 ## Not verified
 
 - C5 (manual, deferred): needs the hosted staging project. Steps are in `evidence/C5-operator.md`.
-- C6 (manual): the agent rehearsed the removal on a scratch worktree of 492e300 on 2026-10-04 (`evidence/C6-removal.md`). Since then the tunnel went off, which drops the runbook's `proxy.ts` step.
+- C6 (manual, done by the agent): the removal was rehearsed again on a scratch worktree of 6f1ce01 on 2026-10-05, after the tunnel went off and the build script changed (`evidence/C6-removal.md`). Grep empty and `yarn verify` green; the two comments the runbook missed are now named in it (1f1790a).
 
 ## Next
 
