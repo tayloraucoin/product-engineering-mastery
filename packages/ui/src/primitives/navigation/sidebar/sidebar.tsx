@@ -2,7 +2,9 @@
 
 /**
  * shadcn's Vega sidebar (base-vega, shadcn 4.21.0, read 2026-10-04), mapped
- * onto house tokens by docs/design/component-sources.md.
+ * onto house tokens by docs/design/component-sources.md. `mobileBreakpoint`
+ * on the provider moves the off-canvas point from `md` (the default, 768px)
+ * to `lg` (1024px) for a caller that asks (LAB-8); nothing else moves.
  */
 import * as React from "react";
 import { mergeProps } from "@base-ui/react/merge-props";
@@ -10,7 +12,7 @@ import { useRender } from "@base-ui/react/use-render";
 import type { VariantProps } from "class-variance-authority";
 import { PanelLeftIcon } from "lucide-react";
 
-import { useIsMobile } from "../../../hooks/use-mobile";
+import { useIsMobile, type MobileBreakpoint } from "../../../hooks/use-mobile";
 import { cn } from "../../../lib/cn";
 import { Button } from "../../control/button/button";
 import { Input } from "../../control/input/input";
@@ -44,6 +46,7 @@ type SidebarContextProps = {
   openMobile: boolean;
   setOpenMobile: (open: boolean) => void;
   isMobile: boolean;
+  mobileBreakpoint: MobileBreakpoint;
   toggleSidebar: () => void;
 };
 
@@ -62,6 +65,7 @@ function SidebarProvider({
   defaultOpen = true,
   open: openProp,
   onOpenChange: setOpenProp,
+  mobileBreakpoint = "md",
   className,
   style,
   children,
@@ -70,8 +74,10 @@ function SidebarProvider({
   defaultOpen?: boolean;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  /** Below this breakpoint the sidebar is off-canvas, in a sheet: `md` (768px) unless asked. */
+  mobileBreakpoint?: MobileBreakpoint;
 }) {
-  const isMobile = useIsMobile();
+  const isMobile = useIsMobile(mobileBreakpoint);
   const [openMobile, setOpenMobile] = React.useState(false);
 
   // This is the internal state of the sidebar.
@@ -124,17 +130,28 @@ function SidebarProvider({
       open,
       setOpen,
       isMobile,
+      mobileBreakpoint,
       openMobile,
       setOpenMobile,
       toggleSidebar,
     }),
-    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar],
+    [
+      state,
+      open,
+      setOpen,
+      isMobile,
+      mobileBreakpoint,
+      openMobile,
+      setOpenMobile,
+      toggleSidebar,
+    ],
   );
 
   return (
     <SidebarContext.Provider value={contextValue}>
       <div
         data-slot="sidebar-wrapper"
+        data-mobile-breakpoint={mobileBreakpoint}
         style={
           {
             "--sidebar-width": SIDEBAR_WIDTH,
@@ -167,7 +184,11 @@ function Sidebar({
   variant?: "sidebar" | "floating" | "inset";
   collapsible?: "offcanvas" | "icon" | "none";
 }) {
-  const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
+  const { isMobile, mobileBreakpoint, state, openMobile, setOpenMobile } =
+    useSidebar();
+  // Class names stay whole literals, so Tailwind finds both.
+  const desktopOnly = mobileBreakpoint === "lg" ? "lg:block" : "md:block";
+  const desktopFlex = mobileBreakpoint === "lg" ? "lg:flex" : "md:flex";
 
   if (collapsible === "none") {
     return (
@@ -212,7 +233,7 @@ function Sidebar({
 
   return (
     <div
-      className="group peer hidden text-sidebar-foreground md:block"
+      className={cn("group peer hidden text-sidebar-foreground", desktopOnly)}
       data-state={state}
       data-collapsible={state === "collapsed" ? collapsible : ""}
       data-variant={variant}
@@ -235,7 +256,8 @@ function Sidebar({
         data-slot="sidebar-container"
         data-side={side}
         className={cn(
-          "fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] motion-reduce:transition-none duration-(--motion-duration-base) ease-linear data-[side=left]:left-0 data-[side=left]:group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] data-[side=right]:right-0 data-[side=right]:group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)] md:flex",
+          "fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] motion-reduce:transition-none duration-(--motion-duration-base) ease-linear data-[side=left]:left-0 data-[side=left]:group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)] data-[side=right]:right-0 data-[side=right]:group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]",
+          desktopFlex,
           // Adjust the padding for floating and inset variants.
           variant === "floating" || variant === "inset"
             ? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)]"

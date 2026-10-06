@@ -25,6 +25,7 @@ type Args = {
   variant?: "sidebar" | "floating" | "inset";
   collapsible?: "offcanvas" | "icon" | "none";
   loading?: boolean;
+  mobileBreakpoint?: "md" | "lg";
 };
 
 const items = [
@@ -46,8 +47,18 @@ const meta = {
         "the group label at full sidebar-foreground, not 70%; the active item also carries aria-current; use-mobile reads the media query; icons resolved to lucide",
     },
   },
-  render: ({ defaultOpen = true, variant, collapsible, loading }: Args) => (
-    <SidebarProvider defaultOpen={defaultOpen} className="min-h-96">
+  render: ({
+    defaultOpen = true,
+    variant,
+    collapsible,
+    loading,
+    mobileBreakpoint,
+  }: Args) => (
+    <SidebarProvider
+      defaultOpen={defaultOpen}
+      mobileBreakpoint={mobileBreakpoint}
+      className="min-h-96"
+    >
       <Sidebar variant={variant} collapsible={collapsible}>
         <SidebarHeader>
           <span className="px-2 text-sm font-semibold">Northwind</span>
@@ -136,6 +147,72 @@ export const Toggle: Story = {
     );
     await waitFor(() =>
       expect(sidebar()).toHaveAttribute("data-state", "collapsed"),
+    );
+  },
+};
+
+/**
+ * A window this many CSS pixels wide, for the media queries useIsMobile
+ * reads: jsdom has no layout, so the story answers `(max-width: Nrem)`
+ * itself and puts the real matchMedia back afterwards.
+ */
+function viewportOf(width: number) {
+  return () => {
+    const original = window.matchMedia;
+    window.matchMedia = (query: string) => {
+      const rem = /max-width:\s*([\d.]+)rem/.exec(query)?.[1];
+      return {
+        matches: rem !== undefined && width <= Number(rem) * 16,
+        media: query,
+        onchange: null,
+        addListener: () => {},
+        removeListener: () => {},
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        dispatchEvent: () => false,
+      } satisfies MediaQueryList;
+    };
+    return () => {
+      window.matchMedia = original;
+    };
+  };
+}
+
+/** At 900px the default (`md`, 768px) keeps the sidebar fixed on the page: no consumer moves. */
+export const DefaultBreakpointAt900: Story = {
+  beforeEach: viewportOf(900),
+  play: async ({ canvasElement }) => {
+    await waitFor(() =>
+      expect(
+        canvasElement.querySelector('[data-slot="sidebar-wrapper"]'),
+      ).toHaveAttribute("data-mobile-breakpoint", "md"),
+    );
+    await expect(
+      canvasElement.querySelector('[data-slot="sidebar-container"]'),
+    ).not.toBeNull();
+    await expect(
+      canvasElement.querySelector('[data-mobile="true"]'),
+    ).toBeNull();
+  },
+};
+
+/** At 900px `mobileBreakpoint="lg"` (1024px) puts the sidebar off-canvas: the trigger opens it as a sheet. */
+export const LgBreakpointAt900: Story = {
+  args: { mobileBreakpoint: "lg" },
+  beforeEach: viewportOf(900),
+  play: async ({ canvasElement, canvas }) => {
+    await waitFor(() =>
+      expect(
+        canvasElement.querySelector('[data-slot="sidebar-container"]'),
+      ).toBeNull(),
+    );
+    await userEvent.click(
+      canvas.getByRole("button", { name: "Toggle Sidebar" }),
+    );
+    await waitFor(() =>
+      expect(
+        canvasElement.ownerDocument.querySelector('[data-mobile="true"]'),
+      ).not.toBeNull(),
     );
   },
 };
