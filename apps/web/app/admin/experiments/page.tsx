@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 
 import {
@@ -13,7 +14,10 @@ import {
 import { requireTeamPage } from "../../../lib/sandbox/admin-guard";
 import { readSandboxState } from "../../../lib/sandbox/state";
 import type { TeamMember } from "../../../lib/sandbox/team-check";
-import { ExperimentsTable } from "./_components/experiments-table";
+import {
+  ExperimentsSkeleton,
+  ExperimentsTable,
+} from "./_components/experiments-table";
 
 export const metadata: Metadata = { title: "Experiments" };
 
@@ -25,20 +29,35 @@ export default async function ExperimentsPage({
 }) {
   const member = await requireTeamPage("/admin/experiments");
   const params = await searchParams;
-  const now = new Date();
   const state = readSandboxState(params.state, "team");
+  return (
+    <>
+      <h1 className="text-2xl font-semibold tracking-tight">
+        {EXPERIMENTS_WORDS.heading}
+      </h1>
+      {/* The skeleton shows while the counts load, as expts-loading shows it. */}
+      <Suspense fallback={<ExperimentsSkeleton />}>
+        <ExperimentsList member={member} state={state} />
+      </Suspense>
+    </>
+  );
+}
+
+async function ExperimentsList({
+  member,
+  state,
+}: {
+  member: TeamMember;
+  state: string | null;
+}) {
+  const now = new Date();
   const view =
     experimentsStateView(state, member.role, now) ??
     (await loadExperiments(member, now));
   const headerLine = view.list?.headerLine ?? null;
   return (
     <>
-      <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-semibold tracking-tight">
-          {EXPERIMENTS_WORDS.heading}
-        </h1>
-        {headerLine ? <p>{headerLine}</p> : null}
-      </div>
+      {headerLine ? <p>{headerLine}</p> : null}
       <ExperimentsTable view={view} />
     </>
   );

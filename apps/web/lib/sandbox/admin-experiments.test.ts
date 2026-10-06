@@ -4,6 +4,8 @@ import { describe, test } from "node:test";
 
 import {
   daysSinceClose,
+  EXPERIMENT_HEADER_STATE_KEYS,
+  experimentHeaderStateView,
   experimentRows,
   EXPERIMENTS_STATE_KEYS,
   experimentsStateView,
@@ -369,5 +371,62 @@ describe("the list's state keys", () => {
       experimentsStateView("expts-success", "admin", NOW)!.list!.headerLine,
       null,
     );
+  });
+});
+
+describe("the header when its counts fail", () => {
+  test("a closed experiment whose counts failed says so in place of the marker", async () => {
+    const result = await resolveExperimentHeader(
+      { findExperiment: () => closed, loadStats: async () => null },
+      closed.slug,
+      "admin",
+      NOW,
+    );
+    const { header } = result as Extract<typeof result, { kind: "found" }>;
+    assert.equal(header.marker, null);
+    assert.equal(header.partial, true);
+    const ok = await resolveExperimentHeader(
+      {
+        findExperiment: () => closed,
+        loadStats: async () => counts(closed.slug),
+      },
+      closed.slug,
+      "admin",
+      NOW,
+    );
+    assert.equal(
+      (ok as Extract<typeof ok, { kind: "found" }>).header.partial,
+      false,
+    );
+  });
+
+  test("the header's state keys are team-only and show the stale, developer and partial forms", () => {
+    for (const key of EXPERIMENT_HEADER_STATE_KEYS) {
+      assert.equal(SANDBOX_STATE_KEYS[key], "team", key);
+      assert.equal(readSandboxState(key, "reviewer"), null);
+    }
+    const stale = experimentHeaderStateView(
+      "expts-header-stale",
+      "admin",
+      NOW,
+    )!;
+    assert.match(stale.marker!.text, /closed 34 days ago$/);
+    assert.equal(
+      stale.marker!.deleteHref,
+      "/admin/experiments/checkout-2026/data",
+    );
+    const dev = experimentHeaderStateView(
+      "expts-header-developer",
+      "admin",
+      NOW,
+    )!;
+    assert.equal(dev.marker!.deleteHref, null);
+    const partial = experimentHeaderStateView(
+      "expts-header-partial",
+      "admin",
+      NOW,
+    )!;
+    assert.deepEqual([partial.marker, partial.partial], [null, true]);
+    assert.equal(experimentHeaderStateView(null, "admin", NOW), null);
   });
 });

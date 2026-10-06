@@ -239,6 +239,11 @@ export type ExperimentHeader = {
   title: string;
   status: "Open" | "Closed";
   marker: StaleMarker | null;
+  /**
+   * The counts failed: the page says so in place of the marker, so a closed
+   * experiment never looks as if it holds nothing when the count is unknown.
+   */
+  partial: boolean;
   tabs: ExperimentTab[];
 };
 
@@ -252,6 +257,7 @@ export function experimentHeader(
     title: config.title,
     status: config.closedOn === null ? "Open" : "Closed",
     marker: marker(config, stats ?? undefined, role, now),
+    partial: stats === null,
     tabs: experimentTabs(config.slug),
   };
 }
@@ -292,6 +298,38 @@ export const EXPERIMENTS_STATE_KEYS = [
   "expts-developer",
 ] as const;
 export type ExperimentsStateKey = (typeof EXPERIMENTS_STATE_KEYS)[number];
+
+/**
+ * An experiment's own header has its forms reachable too (C-P08): the layout
+ * gets no search params, so its client leaf reads these and swaps in a
+ * synthetic header. Each is registered as `team` in state.ts.
+ */
+export const EXPERIMENT_HEADER_STATE_KEYS = [
+  "expts-header-stale",
+  "expts-header-developer",
+  "expts-header-partial",
+] as const;
+
+/** The synthetic header for a header state key, or null for the real one. */
+export function experimentHeaderStateView(
+  state: string | null,
+  role: TeamRole,
+  now: Date,
+): ExperimentHeader | null {
+  const { configs, stats } = fixtures(now);
+  const config = configs.find((c) => c.slug === "checkout-2026")!;
+  const counts = stats.find((s) => s.slug === config.slug)!;
+  switch (state) {
+    case "expts-header-stale":
+      return experimentHeader(config, counts, role, now);
+    case "expts-header-developer":
+      return experimentHeader(config, counts, "developer", now);
+    case "expts-header-partial":
+      return experimentHeader(config, null, role, now);
+    default:
+      return null;
+  }
+}
 
 export type ExperimentsView = {
   list: ExperimentsList | null;

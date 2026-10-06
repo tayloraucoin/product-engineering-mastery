@@ -59,6 +59,9 @@ export const SANDBOX_STATE_KEYS: Readonly<
   "expts-success": "team",
   "expts-stale": "team",
   "expts-developer": "team",
+  "expts-header-stale": "team",
+  "expts-header-developer": "team",
+  "expts-header-partial": "team",
 };
 
 /**

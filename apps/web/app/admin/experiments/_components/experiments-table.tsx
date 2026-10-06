@@ -95,11 +95,15 @@ export function ExperimentsTable({ view }: { view: ExperimentsView }) {
 
   return (
     <div className="flex flex-col gap-4">
-      {offline ? <p role="status">{W.offline}</p> : null}
+      {offline ? (
+        <p role="status" className="text-muted-foreground">
+          {W.offline}
+        </p>
+      ) : null}
       {view.list.partial ? (
         <p className="text-muted-foreground">{W.partial}</p>
       ) : null}
-      <div className="overflow-x-auto rounded-lg border">
+      <div className="rounded-lg border">
         <Table>
           <TableCaption className="sr-only">{W.caption}</TableCaption>
           <TableHeader>
@@ -233,12 +237,12 @@ export function ExperimentsSkeleton() {
     >
       {[0, 1, 2, 3, 4].map((i) => (
         <div key={i} className="flex items-center gap-6">
-          <Skeleton className="h-4 flex-1" />
-          <Skeleton className="h-4 w-16" />
-          <Skeleton className="h-4 w-8" />
-          <Skeleton className="h-4 w-24" />
-          <Skeleton className="h-4 w-20" />
-          <Skeleton className="h-4 w-40" />
+          <Skeleton className="h-4 animate-none flex-1" />
+          <Skeleton className="h-4 animate-none w-16" />
+          <Skeleton className="h-4 animate-none w-8" />
+          <Skeleton className="h-4 animate-none w-24" />
+          <Skeleton className="h-4 animate-none w-20" />
+          <Skeleton className="h-4 animate-none w-40" />
         </div>
       ))}
     </div>
