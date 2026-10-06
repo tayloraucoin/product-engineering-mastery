@@ -47,7 +47,7 @@ before(async () => {
   } catch (error) {
     await client.end({ timeout: 0 });
     throw new Error(
-      `The local Supabase image is not reachable at ${describeUrl(url)}. Start it with yarn db:local, then rerun yarn test:db. (${error instanceof Error ? error.message : String(error)})`,
+      `The local Supabase image is not reachable at ${describeUrl(url)}. Prepare your own Postgres with yarn db:setup:local, or start Docker's with yarn db:local, then rerun yarn test:db. (${error instanceof Error ? error.message : String(error)})`,
     );
   }
   admin = client;
@@ -81,6 +81,14 @@ describe("the bridge", () => {
   });
 
   test("leaves nothing behind on the pooled connection after the transaction", async () => {
+    // The connection's own role: postgres on Docker's image, the Mac user on
+    // a developer's own Postgres. Never the bridge's role.
+    const before = await db.execute<{ pg_role: string }>(
+      sql`select current_user as pg_role`,
+    );
+    const owner = [...before][0]?.pg_role;
+    assert.ok(owner);
+    assert.notEqual(owner, "authenticated");
     await createRlsClient(db, { userId: alice, role: "admin" }).execute(
       async () => {},
     );
@@ -93,7 +101,7 @@ describe("the bridge", () => {
     );
     assert.deepEqual(
       [...outside],
-      [{ user_id: null, user_role: null, pg_role: "postgres" }],
+      [{ user_id: null, user_role: null, pg_role: owner }],
     );
   });
 });

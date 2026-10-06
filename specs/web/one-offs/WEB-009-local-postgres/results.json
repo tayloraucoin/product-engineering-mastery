@@ -1,0 +1,32 @@
+{
+  "id": "WEB-9",
+  "criteria_sha256": "ecf627f98cb7a04ff21a8d7e6b21ae7e61ddb67581e4e8f9e8998c5f471938e9",
+  "criteria": {
+    "C1": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C2": {
+      "status": "FAIL",
+      "evidence": "manual",
+      "run": null
+    },
+    "C3": {
+      "status": "FAIL",
+      "evidence": "manual",
+      "run": null
+    },
+    "C4": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    },
+    "C5": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    }
+  },
+  "updated_at": "2026-10-06T01:32:13Z"
+}

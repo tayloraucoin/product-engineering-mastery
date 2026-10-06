@@ -16,7 +16,7 @@ load_when:
 > **Module:** the local half of the database package: the Supabase CLI and its Postgres image, the scripts that start, reset and seed it, and the local auth mirror.
 > **Run from:** step 5 of [`new-project/README.md`](../new-project/README.md) when the interview's D1 answer is "local, in Docker", or later, when a hosted-only project changes its mind.
 > **Needs:** the database kept (not removed), and Docker running on the developer's machine.
-> **Status:** draft, not yet run cold. The starter ships every file this recipe uses and runs none of it by default (WEB-8): the tier alone switches the local database on, so there is nothing to restore. Until it is on, `yarn db:local`, `yarn db:local:full`, `yarn db:local:reset` and `yarn test:db` refuse in their first line and name this recipe.
+> **Status:** draft, not yet run cold. The starter ships every file this recipe uses and runs none of it by default (WEB-8, WEB-9): the local tier is a Postgres on the developer's own machine (`yarn db:setup:local`), and this recipe swaps in Docker's database by changing the `_LOCAL` URLs; nothing is restored. `yarn db:local` and `yarn db:local:full` refuse on any other tier and name this recipe.
 
 ## What you get, and what it costs
 
@@ -29,7 +29,7 @@ load_when:
 ## Steps
 
 1. **Name it.** `project_id` in `packages/db/supabase/config.toml` is the repo's folder name ([`rename.md`](../new-project/rename.md), part 4). Two repos with one id share one local database.
-2. **Set the tier to local.** In the root `.env.example` and in `packages/db/.env.example`: `DATABASE_ENVIRONMENT=local`, and replace the comment line above it (this repo runs no local database by default) with one saying the database runs in Docker, started by `yarn db:local`. The `_LOCAL` database URLs are already filled with the local address, `postgresql://postgres:postgres@127.0.0.1:54322/postgres` (a synthetic password, the CLI's default), and are read on the local tier only. Each developer makes the same one-line change in their two `.env.local` files.
+2. **Point the local tier at Docker.** In the root `.env.example` and in `packages/db/.env.example`: `DATABASE_ENVIRONMENT=local` (already so unless the project chose hosted only), and both `DATABASE_URL_LOCAL` and `DATABASE_MIGRATION_URL_LOCAL` set to Docker's address, `postgresql://postgres:postgres@127.0.0.1:54322/postgres` (a synthetic password, the CLI's default), in place of the developer's own Postgres. Rewrite the comment above the tier to say the database runs in Docker, started by `yarn db:local`. Each developer makes the same change in their two `.env.local` files.
 3. **Pick how sign-in works locally.** There is no mode variable: the `_LOCAL` auth values decide.
    - **Mode A (Recommended): sign in on staging.** The `_LOCAL` auth values are the staging project's. Add `http://localhost:3000/auth/callback` to that project's redirect addresses. Each person who signs in is copied into the local database by the local auth mirror. Starts with `yarn db:local`.
    - **Mode B: everything local.** The whole Supabase stack runs in Docker. Starts with `yarn db:local:full`; the `_LOCAL` auth values are the ones the CLI's status command prints (the root `.env.example` names it), and `yarn db:seed-users` creates made-up users.
@@ -54,6 +54,6 @@ No entry in `toolkit.json` changes: the `db` entry already lists these files, an
 - Stop: `yarn db:stop`. Stop and delete all its data: `yarn db:stop --no-backup`.
 - Start clean without deleting users: `yarn db:local:reset`. It refuses every tier but local and every address but this machine.
 
-## Going back to hosted only
+## Going back
 
-`yarn db:stop --no-backup`, then undo step 2: `DATABASE_ENVIRONMENT=staging` in both example files and in each developer's two `.env.local` files, with the comment line restored from the toolkit's example files; then a line in the changelog.
+`yarn db:stop --no-backup`, then undo step 2: the `_LOCAL` URLs back to the developer's own Postgres (`postgresql://127.0.0.1:5432/pem_local`, then `yarn db:setup:local`), or `DATABASE_ENVIRONMENT=staging` for hosted only, in both example files and in each developer's two `.env.local` files, with the comment line restored from the toolkit's example files; then a line in the changelog.

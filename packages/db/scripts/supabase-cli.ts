@@ -32,24 +32,34 @@ function stop(command: string, message: string): never {
 }
 
 /**
- * Exits with one line, before any `docker` call, unless the tier is local:
- * the commands that call this need the Docker database, which this repo runs
- * only when the add recipe has switched it on.
+ * Exits with one line, before any `docker` call or connection, unless the
+ * tier is local. `needs` says which local database the command wants: the
+ * Docker one (`db:local`, `db:local:full`, which start it), or any local one
+ * (your own Postgres after `yarn db:setup:local`, or Docker's).
  */
-export function requireLocalTier(command: string): void {
+export function requireLocalTier(
+  command: string,
+  needs: "docker" | "any" = "docker",
+): void {
+  const what =
+    needs === "docker"
+      ? "needs the local database (Docker)"
+      : `needs a local database (your own Postgres after yarn db:setup:local, or Docker's after ${ADD_RECIPE})`;
   let tier: Tier;
   try {
     tier = requireTier();
   } catch (error) {
     stop(
       command,
-      `needs the local database (Docker), and ${error instanceof Error ? error.message : String(error)}`,
+      `${what}, and ${error instanceof Error ? error.message : String(error)}`,
     );
   }
   if (tier !== "local") {
     stop(
       command,
-      `needs the local database (Docker), and DATABASE_ENVIRONMENT is ${tier}. This repo runs no local database by default; to add one, follow ${ADD_RECIPE}.`,
+      needs === "docker"
+        ? `${what}, and DATABASE_ENVIRONMENT is ${tier}. Docker is not the default; to use it, follow ${ADD_RECIPE}.`
+        : `${what}, and DATABASE_ENVIRONMENT is ${tier}.`,
     );
   }
 }

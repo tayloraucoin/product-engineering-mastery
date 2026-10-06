@@ -1,8 +1,9 @@
 /**
  * `yarn test:db`: the integration tests in test/, one file at a time, against
- * the local Docker database. Its first line says what it needs: on any tier
- * but local it exits before a test file loads, so a hosted database is never
- * migrated or written to by a test. Each file also refuses a URL that is not
+ * the local database (your own Postgres after `yarn db:setup:local`, or
+ * Docker's). Its first line says what it needs: on any tier but local it
+ * exits before a test file loads, so a hosted database is never migrated or
+ * written to by a test. Each file also refuses a URL that is not
  * this machine. Never part of `yarn test`.
  */
 
@@ -19,9 +20,9 @@ const packageRoot = path.resolve(
   "..",
 );
 
-requireLocalTier(COMMAND);
+requireLocalTier(COMMAND, "any");
 console.log(
-  `${COMMAND} — local tier: running test/ against the Docker database, one file at a time`,
+  `${COMMAND} — local tier: running test/ against the local database, one file at a time`,
 );
 
 const result = spawnSync(

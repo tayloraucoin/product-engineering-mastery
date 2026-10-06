@@ -735,6 +735,18 @@
     {
       "rule": "db-change",
       "expect": "ask",
+      "name": "local setup script asks",
+      "command": "yarn db:setup:local"
+    },
+    {
+      "rule": "db-change",
+      "expect": "ask",
+      "name": "local setup script by path",
+      "command": "node packages/db/scripts/setup-local.ts"
+    },
+    {
+      "rule": "db-change",
+      "expect": "ask",
       "name": "reset script by path after cd",
       "command": "cd packages/db && node --env-file-if-exists=.env.local scripts/reset-local-db.ts"
     },

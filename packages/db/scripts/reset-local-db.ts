@@ -123,7 +123,7 @@ async function main(): Promise<void> {
   }
   if (tier !== "local")
     refuse(
-      `DATABASE_ENVIRONMENT is ${tier}. Only the local database (Docker) is ever reset; a hosted tier changes by migration, which Taylor applies. This repo runs no local database by default; to add one, follow ${ADD_RECIPE}.`,
+      `DATABASE_ENVIRONMENT is ${tier}. Only a local database is ever reset (your own Postgres after yarn db:setup:local, or Docker's after ${ADD_RECIPE}); a hosted tier changes by migration, which Taylor applies.`,
     );
   const url = migrationUrl();
   if (!isLoopbackUrl(url))

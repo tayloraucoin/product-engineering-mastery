@@ -723,7 +723,7 @@ const DESTROY_SCRIPT = /^(?:\S*#)?db:(?:reset|drop)/;
 const CHANGE_SCRIPT = /^(?:\S*#)?db:(?:migrate|push|seed|setup|local:reset)/;
 /** The db package's scripts that change a database, run by path rather than by name. */
 const CHANGE_FILE =
-  /(?:^|\/)scripts\/(?:migrate|setup|seed-users|reset-local-db)\.ts$/;
+  /(?:^|\/)scripts\/(?:migrate|setup|setup-local|seed-users|reset-local-db)\.ts$/;
 const SQL_CLIENTS = new Set(["psql", "pgcli", "usql"]);
 const DROP_SQL = /\bdrop\s+(?:schema|database)\b/i;
 

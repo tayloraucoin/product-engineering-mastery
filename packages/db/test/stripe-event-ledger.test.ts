@@ -51,7 +51,7 @@ before(async () => {
   } catch (error) {
     await client.end({ timeout: 0 });
     throw new Error(
-      `The local Supabase image is not reachable at ${describeUrl(url)}. Start it with yarn db:local, then rerun yarn test:db. (${error instanceof Error ? error.message : String(error)})`,
+      `The local Supabase image is not reachable at ${describeUrl(url)}. Prepare your own Postgres with yarn db:setup:local, or start Docker's with yarn db:local, then rerun yarn test:db. (${error instanceof Error ? error.message : String(error)})`,
     );
   }
   admin = client;

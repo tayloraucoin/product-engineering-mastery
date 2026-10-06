@@ -57,6 +57,7 @@
     "db:generate": "yarn workspace @pem/db db:generate",
     "db:migrate": "yarn workspace @pem/db db:migrate",
     "db:setup": "yarn workspace @pem/db db:setup",
+    "db:setup:local": "yarn workspace @pem/db db:setup:local",
     "db:seed-users": "yarn workspace @pem/db db:seed-users",
     "stripe:listen": "stripe listen --forward-to localhost:3000/api/webhooks/stripe"
   },

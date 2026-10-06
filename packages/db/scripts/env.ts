@@ -6,9 +6,9 @@
  *
  * The tier is read on demand, never at import, so importing a script in a
  * unit test throws nothing. An unset DATABASE_ENVIRONMENT is refused, naming
- * the variable and the example file's default: this repo runs no local
- * database by default, so nothing here falls back to the local address. The
- * local tier is chosen on purpose, in .env.local, by the add recipe.
+ * the variable and the example file; nothing here guesses a tier. The local
+ * tier is a Postgres on this machine (`yarn db:setup:local`, no Docker);
+ * Docker's database is the add recipe, and a hosted tier is its own project.
  *
  * DATABASE_URL is the runtime URL: the transaction pooler on a hosted tier.
  * DATABASE_MIGRATION_URL is the session pooler, for migrations and setup SQL.
@@ -29,7 +29,7 @@ import { LOCAL_IMAGE_URL } from "./local-image.ts";
 
 /** The file each developer copies to packages/db/.env.local. */
 export const EXAMPLE_FILE = "packages/db/.env.example";
-/** The recipe that switches the local Docker database on. */
+/** The recipe that puts the local tier's database in Docker instead of your own Postgres. */
 export const ADD_RECIPE = "docs/runbooks/add/docker-local-database.md";
 
 const raw = {
@@ -52,15 +52,14 @@ const raw = {
 
 /**
  * The tier the scripts act on. Unset or empty is refused, naming the variable
- * and the example file's default; so is any value that is not a tier name.
- * Unlike the apps, which treat unset as local (EN-08), no database script
- * falls back to the local database.
+ * and the example file; so is any value that is not a tier name. Unlike the
+ * apps, which treat unset as local (EN-08), no database script guesses.
  */
 export function requireTier(): Tier {
   const value = raw.DATABASE_ENVIRONMENT?.trim() ?? "";
   if (value === "") {
     throw new Error(
-      `${TIER_SWITCH} is unset. Copy ${EXAMPLE_FILE} to packages/db/.env.local (its default is staging), or set it to one of ${TIERS.join(", ")}; this repo runs no local database by default.`,
+      `${TIER_SWITCH} is unset. Copy ${EXAMPLE_FILE} to packages/db/.env.local, or set it to one of ${TIERS.join(", ")}; no database script guesses a tier.`,
     );
   }
   if (!isTier(value)) {

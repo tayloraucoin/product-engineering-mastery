@@ -1015,9 +1015,9 @@ All of these forward to `packages/db`. bash-guard and the permissions ask before
 
 #### test:db
 
-- **What:** `yarn test:db` runs `packages/db/test/` against a real local Postgres, one file at a time. The files cover the row-level security policies, the local auth mirror, the reset script and the Stripe event ledger. On any tier but local it exits in its first line, naming the add recipe, before a test file loads.
+- **What:** `yarn test:db` runs `packages/db/test/` against a real local Postgres, one file at a time. The files cover the row-level security policies, the local auth mirror, the reset script and the Stripe event ledger. On any tier but local it exits in its first line, naming both ways to get a local database, before a test file loads.
 - **Area:** `packages/db`.
-- **Trigger:** by hand, with `yarn db:local` running; the Docker database is opt-in (`docs/runbooks/add/docker-local-database.md`). It is not in verify or CI.
+- **Trigger:** by hand, after `yarn db:setup:local` on the developer's own Postgres, or with Docker's running (`docs/runbooks/add/docker-local-database.md`). It is not in verify or CI.
 - **Scores:** importance **4.0** (the only proof the SQL and its policies work on a real database) · token **1.5** (a TAP run) · wall **0.0** (run on purpose; _estimate_ 5–20 s) · standard **6.0** (`node:test` against a real database).
 - **Pros:**
   - No mocks.
@@ -1107,6 +1107,18 @@ All of these forward to `packages/db`. bash-guard and the permissions ask before
   - Repeatable.
 - **Cons:**
   - None.
+- **Verdict:** **keep.**
+
+#### db:setup:local
+
+- **What:** `yarn db:setup:local` prepares a Postgres on this machine as the local tier's database, with no Docker and no Supabase project: it creates the database the `_LOCAL` URL names, applies `packages/db/supabase/local-shim.sql` (the roles and the `auth.users` table Supabase's own image provides), then the migrations and the setup SQL, and marks the database as a local auth mirror target. Idempotent. It refuses an unset or hosted tier and any URL that is not this machine before connecting, and it asks first.
+- **Area:** `packages/db`.
+- **Trigger:** by a person, or an agent with approval, once per machine; again after `yarn db:generate` adds a migration (`yarn db:migrate` does that too).
+- **Scores:** importance **4.0** (the default local database; without it the local tier has nothing to connect to) · token **0.5** (a short log) · wall **0.0** (run on purpose; _estimate_ 2–5 s) · standard **3.0** (a house script).
+- **Pros:**
+  - No Docker, no account: Postgres.app or Homebrew and one command.
+- **Cons:**
+  - The shim is a stand-in for Supabase's auth schema: sign-in itself needs a Supabase project (Mode A) or Docker's full stack (Mode B).
 - **Verdict:** **keep.**
 
 #### db:seed-users

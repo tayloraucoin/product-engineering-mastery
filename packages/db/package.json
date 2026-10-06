@@ -50,6 +50,7 @@
     "db:generate": "drizzle-kit generate --config drizzle.config.ts",
     "db:migrate": "node --env-file-if-exists=.env.local scripts/migrate.ts",
     "db:setup": "node --env-file-if-exists=.env.local scripts/setup.ts",
+    "db:setup:local": "node --env-file-if-exists=.env.local scripts/setup-local.ts",
     "db:seed-users": "node --env-file-if-exists=.env.local scripts/seed-users.ts"
   },
   "dependencies": {
