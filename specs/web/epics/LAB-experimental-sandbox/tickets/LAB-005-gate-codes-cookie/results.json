@@ -106,15 +106,35 @@
       }
     },
     "review:mason": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run mason LAB-5",
+        "exit": 0,
+        "at": "2026-10-06T20:39:40Z",
+        "head": "7f7a16f5e3d3d5b0946208062bf993c375a28d17",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-005-gate-codes-cookie/review-mason.md",
+        "evidence_sha256": "26e736b98040d114af2fe9ad6aa5468fe1812d8e5d9d9aebabbd749e707adb4a",
+        "contract_sha256": "ac8c9770eee88ab3e18ed75f15f5ab6ff8054df532ee48803007d976028ea4b6",
+        "as_built_sha256": "bdc896cc2728ab708947dca61b8ef61f4fc56850dba0a2aa47dafbf5c47d788a",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/mason-cto-principal-dev.md; tools Read,Grep,Glob)"
+      }
     },
     "review:warden": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run warden LAB-5",
+        "exit": 0,
+        "at": "2026-10-06T20:47:10Z",
+        "head": "7f7a16f5e3d3d5b0946208062bf993c375a28d17",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-005-gate-codes-cookie/review-warden.md",
+        "evidence_sha256": "32c1dfab65064b51316ad2e0efd1b7d80b79a30016953810b7c98cc8807b106b",
+        "contract_sha256": "ac8c9770eee88ab3e18ed75f15f5ab6ff8054df532ee48803007d976028ea4b6",
+        "as_built_sha256": "bdc896cc2728ab708947dca61b8ef61f4fc56850dba0a2aa47dafbf5c47d788a",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
+      }
     }
   },
-  "updated_at": "2026-10-06T20:38:40Z"
+  "updated_at": "2026-10-06T20:54:45Z"
 }
