@@ -48,6 +48,7 @@ export type ScrubbableEvent = {
   contexts?: unknown;
   tags?: Record<string, unknown>;
   transaction?: string;
+  logentry?: { message?: string; params?: unknown[] };
 };
 
 type Frames = { frames?: { vars?: unknown }[] };
@@ -141,6 +142,16 @@ export function scrubEvent<E extends ScrubbableEvent>(event: E): E {
     );
   if (event.transaction !== undefined)
     scrubbed.transaction = scrubText(event.transaction);
+  // A parameterized message (`captureMessage`) keeps its text and arguments here.
+  if (event.logentry)
+    scrubbed.logentry = {
+      ...(event.logentry.message === undefined
+        ? {}
+        : { message: scrubText(event.logentry.message) }),
+      ...(event.logentry.params === undefined
+        ? {}
+        : { params: event.logentry.params.map((param) => redactValue(param)) }),
+    };
 
   delete scrubbed.extra;
   return scrubbed as E;

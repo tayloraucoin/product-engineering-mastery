@@ -40,12 +40,16 @@ type EveryCategory = Required<
 };
 
 /**
- * Integrations this app never runs (NN6). Only BrowserTracing is a default
- * today; the rest are opt-in, named here so an SDK upgrade that turns one on
- * by default is still dropped.
+ * Integrations this app never runs (NN6: errors only). BrowserTracing and the
+ * release-health sessions are defaults today: a session envelope is sent on
+ * every page load, never passes `beforeSend`, and hands Sentry every
+ * visitor's IP, not only an erroring one's. The rest are opt-in, named here so
+ * an SDK upgrade that turns one on by default is still dropped.
  */
 export const UNWANTED_INTEGRATIONS: ReadonlySet<string> = new Set([
   "BrowserTracing",
+  "BrowserSession",
+  "ProcessSession",
   "Replay",
   "ReplayCanvas",
   "Feedback",

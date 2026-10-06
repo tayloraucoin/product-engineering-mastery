@@ -24,3 +24,5 @@ Handed to the operator: it needs the Sentry organization (US region, ratified 20
 - The event has no cookies, headers, request body or query string; its user, if any, is an id only.
 - The browser's report went straight to the US ingest host (`*.ingest.us.sentry.io`): there is no tunnel route. An ad blocker may drop it; the server's event still arrives.
 - An event's frames carry source lines but no local variables.
+- No session envelope leaves the browser on a plain page load (the network panel shows nothing to `*.ingest.us.sentry.io` until an error).
+- Record with the date: the retention set, and the rate limit set on each project's client key.

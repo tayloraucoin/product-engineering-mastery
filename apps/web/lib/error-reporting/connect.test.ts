@@ -90,6 +90,8 @@ test("with a DSN, the SDK starts with every data category off and the reporter i
   assert.deepEqual(
     integrations([
       { name: "BrowserTracing" },
+      { name: "BrowserSession" },
+      { name: "ProcessSession" },
       { name: "Replay" },
       { name: "ReplayCanvas" },
       { name: "Feedback" },

@@ -121,6 +121,16 @@ test("tags and the transaction name are scrubbed like every other free-text fiel
   assert.doesNotMatch(scrubbed.transaction ?? "", /ada@example\.test/);
 });
 
+test("a parameterized message's text and arguments are scrubbed", () => {
+  const scrubbed = scrubEvent({
+    logentry: {
+      message: "invite for ada@example.test failed",
+      params: ["ada@example.test", 3],
+    },
+  });
+  assert.doesNotMatch(JSON.stringify(scrubbed.logentry), /ada@example\.test/);
+});
+
 test("a thread's stack frames lose their local variables too", () => {
   const scrubbed = scrubEvent({
     threads: {
