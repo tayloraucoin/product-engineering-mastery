@@ -37,10 +37,15 @@ export function createServiceContext(
  * the user it acts for from that proven source takes one.
  */
 export type SystemContext = {
+  /** Marks the unscoped context, so a ServiceContext can never be passed where this is taken, nor this where a ServiceContext is. */
+  system: true;
   db: RlsClient;
 };
 
 /** The context for a system caller on `db`'s pool. */
 export function createSystemContext(db: Db): SystemContext {
-  return { db: { execute: (callback) => db.transaction(callback) } };
+  return {
+    system: true,
+    db: { execute: (callback) => db.transaction(callback) },
+  };
 }

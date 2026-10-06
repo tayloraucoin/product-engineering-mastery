@@ -12,7 +12,9 @@
  * - Every write is an upsert keyed by the user, guarded by when Stripe
  *   created the event: a retried event writes the same row again, and an
  *   older event delivered late changes nothing.
- * - A customer already linked to another user is never moved to a new one.
+ * - A customer already linked to another user is never moved to a new one,
+ *   and a user already linked to one customer is never overwritten by
+ *   another's subscription: both are `customer-mismatch`, logged.
  *
  * There is no read here yet. The first gate that needs one reads the row for
  * the signed-in user's own id (a ServiceContext's `userId`), never for an id
@@ -50,6 +52,15 @@ async function userExists(tx: RlsTransaction, userId: string) {
     .where(eq(users.id, userId))
     .limit(1);
   return row !== undefined;
+}
+
+async function linkedCustomer(tx: RlsTransaction, userId: string) {
+  const [row] = await tx
+    .select({ customerId: billingEntitlements.stripeCustomerId })
+    .from(billingEntitlements)
+    .where(eq(billingEntitlements.userId, userId))
+    .limit(1);
+  return row?.customerId;
 }
 
 async function linkedUser(tx: RlsTransaction, customerId: string) {
@@ -122,6 +133,11 @@ export async function syncSubscription(
       )
         return { outcome: "no-user" };
       userId = subscription.userId;
+      // The metadata names a user who already pays through another customer:
+      // never move or cancel their row from a subscription that is not theirs.
+      const theirs = await linkedCustomer(tx, userId);
+      if (theirs !== undefined && theirs !== subscription.customerId)
+        return { outcome: "customer-mismatch", userId };
     }
     const result = await upsert(tx, {
       userId,

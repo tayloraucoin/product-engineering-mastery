@@ -23,7 +23,8 @@ const occurredAt = z.date({ error: "Say when Stripe created the event." });
 
 /**
  * checkout.session.completed for a subscription: the checkout names the user
- * (`client_reference_id`, set by the app when it created the session) and
+ * (`client_reference_id`, set server-side by the app from the signed-in
+ * session when it created the checkout, never from the client) and
  * Stripe names the customer it made for them.
  */
 export const completeCheckoutInput = z.object({
@@ -47,7 +48,9 @@ export const syncSubscriptionInput = z.object({
   priceId: z.string().startsWith("price_").nullable(),
   currentPeriodEnd: z.date().nullable(),
   // Only a fallback for an update that beats its checkout: anything but a
-  // uuid is read as no user, never as a reason to drop the event.
+  // uuid is read as no user, never as a reason to drop the event. Trusted
+  // because the app sets it server-side from the session when it creates the
+  // checkout; never take it from the client.
   userId: z.uuid().nullable().catch(null),
   occurredAt,
 });

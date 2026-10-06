@@ -16,17 +16,31 @@ import {
 } from "./entitlements.ts";
 
 const OTHER_USER = "00000000-0000-4000-8000-000000000002";
+
+/** The scripted database as a SystemContext, the only context these services take. */
+const systemContext = (answer: Parameters<typeof fakeContext>[0]) => ({
+  ...fakeContext(answer),
+  system: true as const,
+});
 const AT = new Date("2026-10-05T12:00:00Z");
 
 /** Answers by query: users lookup, customer link lookup, upsert. */
 function script(answers: {
   user?: boolean;
   linkedTo?: string;
+  /** The customer the event's metadata user is already linked to. */
+  theirs?: string;
   written?: boolean;
 }) {
   return (call: Call): unknown[][] => {
     if (call.sql.startsWith('select "id" from "users"'))
       return answers.user ? [[USER_ID]] : [];
+    if (
+      call.sql.startsWith(
+        'select "stripe_customer_id" from "billing_entitlements"',
+      )
+    )
+      return answers.theirs ? [[answers.theirs]] : [];
     if (call.sql.startsWith('select "user_id" from "billing_entitlements"'))
       return answers.linkedTo ? [[answers.linkedTo]] : [];
     if (call.sql.startsWith('insert into "billing_entitlements"'))
@@ -60,7 +74,7 @@ const inserts = (calls: Call[]) =>
   );
 
 test("a paid checkout links the user to the customer and makes them active, guarded by the event's time", async () => {
-  const ctx = fakeContext(script({ user: true }));
+  const ctx = systemContext(script({ user: true }));
   assert.deepEqual(await completeCheckout(ctx, checkout), {
     outcome: "applied",
     userId: USER_ID,
@@ -78,7 +92,7 @@ test("a paid checkout links the user to the customer and makes them active, guar
 });
 
 test("an unpaid checkout records the link as incomplete, which entitles nothing", async () => {
-  const ctx = fakeContext(script({ user: true }));
+  const ctx = systemContext(script({ user: true }));
   await completeCheckout(ctx, { ...checkout, paid: false });
   assert.ok(inserts(ctx.calls)[0]!.params.includes("incomplete"));
   assert.equal(isEntitled({ status: "incomplete" }), false);
@@ -88,7 +102,7 @@ test("an unpaid checkout records the link as incomplete, which entitles nothing"
 });
 
 test("a checkout for no user of this app changes nothing", async () => {
-  const ctx = fakeContext(script({ user: false }));
+  const ctx = systemContext(script({ user: false }));
   assert.deepEqual(await completeCheckout(ctx, checkout), {
     outcome: "no-user",
   });
@@ -96,7 +110,7 @@ test("a checkout for no user of this app changes nothing", async () => {
 });
 
 test("a customer linked to another user is never moved", async () => {
-  const ctx = fakeContext(script({ user: true, linkedTo: OTHER_USER }));
+  const ctx = systemContext(script({ user: true, linkedTo: OTHER_USER }));
   assert.deepEqual(await completeCheckout(ctx, checkout), {
     outcome: "customer-mismatch",
     userId: OTHER_USER,
@@ -105,7 +119,7 @@ test("a customer linked to another user is never moved", async () => {
 });
 
 test("an event older than the one applied is stale and changes nothing", async () => {
-  const ctx = fakeContext(script({ user: true, written: false }));
+  const ctx = systemContext(script({ user: true, written: false }));
   assert.deepEqual(await completeCheckout(ctx, checkout), {
     outcome: "stale",
     userId: USER_ID,
@@ -113,7 +127,7 @@ test("an event older than the one applied is stale and changes nothing", async (
 });
 
 test("malformed input stops at the validator before any query", async () => {
-  const ctx = fakeContext(script({ user: true }));
+  const ctx = systemContext(script({ user: true }));
   await assert.rejects(
     completeCheckout(ctx, { ...checkout, userId: "not-a-uuid" }),
     Invalid,
@@ -126,7 +140,7 @@ test("malformed input stops at the validator before any query", async () => {
 });
 
 test("a subscription update lands on the user its customer is linked to", async () => {
-  const ctx = fakeContext(script({ linkedTo: USER_ID }));
+  const ctx = systemContext(script({ linkedTo: USER_ID }));
   assert.deepEqual(await syncSubscription(ctx, subscription), {
     outcome: "applied",
     userId: USER_ID,
@@ -137,7 +151,7 @@ test("a subscription update lands on the user its customer is linked to", async 
 });
 
 test("an update ahead of its checkout uses the subscription's user_id metadata when that user exists", async () => {
-  const ctx = fakeContext(script({ user: true }));
+  const ctx = systemContext(script({ user: true }));
   assert.deepEqual(
     await syncSubscription(ctx, { ...subscription, userId: USER_ID }),
     { outcome: "applied", userId: USER_ID },
@@ -146,7 +160,7 @@ test("an update ahead of its checkout uses the subscription's user_id metadata w
 
 test("a subscription for a customer with no matching user changes nothing", async () => {
   for (const userId of [null, USER_ID]) {
-    const ctx = fakeContext(script({ user: false }));
+    const ctx = systemContext(script({ user: false }));
     assert.deepEqual(await syncSubscription(ctx, { ...subscription, userId }), {
       outcome: "no-user",
     });
@@ -155,7 +169,7 @@ test("a subscription for a customer with no matching user changes nothing", asyn
 });
 
 test("a late subscription event is stale but fills a plan and period still empty, never overwriting them", async () => {
-  const ctx = fakeContext(script({ linkedTo: USER_ID, written: false }));
+  const ctx = systemContext(script({ linkedTo: USER_ID, written: false }));
   assert.deepEqual(await syncSubscription(ctx, subscription), {
     outcome: "stale",
     userId: USER_ID,
@@ -176,7 +190,7 @@ test("a late subscription event is stale but fills a plan and period still empty
 });
 
 test("a metadata user id that is not a uuid is read as no user, and the event still applies to the linked user", async () => {
-  const ctx = fakeContext(script({ linkedTo: USER_ID }));
+  const ctx = systemContext(script({ linkedTo: USER_ID }));
   assert.deepEqual(
     await syncSubscription(ctx, {
       ...subscription,
@@ -186,4 +200,17 @@ test("a metadata user id that is not a uuid is read as no user, and the event st
     { outcome: "applied", userId: USER_ID },
   );
   assert.ok(inserts(ctx.calls)[0]!.params.includes("canceled"));
+});
+
+test("a subscription naming a user who pays through another customer never moves or cancels their row", async () => {
+  const ctx = systemContext(script({ user: true, theirs: "cus_their_own" }));
+  assert.deepEqual(
+    await syncSubscription(ctx, {
+      ...subscription,
+      status: "canceled",
+      userId: USER_ID,
+    }),
+    { outcome: "customer-mismatch", userId: USER_ID },
+  );
+  assert.equal(inserts(ctx.calls).length, 0);
 });

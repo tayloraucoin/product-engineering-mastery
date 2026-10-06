@@ -29,7 +29,7 @@ export const billingEntitlements = pgTable(
     priceId: text("price_id"),
     /** Stripe's subscription status, as last reported. */
     status: text("status").notNull(),
-    /** End of the period paid for; access may run to it after a cancellation. */
+    /** End of the current billing period. A subscription set to cancel stays `active` until then; `deleted` arrives at the end. */
     currentPeriodEnd: timestamp("current_period_end", { withTimezone: true }),
     /** When Stripe created the newest event applied: an older event arriving late changes nothing. */
     stripeEventAt: timestamp("stripe_event_at", {

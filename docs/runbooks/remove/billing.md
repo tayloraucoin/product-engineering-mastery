@@ -62,9 +62,13 @@ From the module's `files` list in `toolkit.json`:
 
 ## Retention and erasure
 
-`stripe_events` keeps an event id, its type and two timestamps, never the payload. Each row still points, through Stripe, at a person's payment, so it is personal data held indirectly. An erasure request is answered in Stripe, which holds the event; the row here holds nothing of the person's beyond that pointer, and the prune removes it: each processed delivery deletes `processed` rows older than 30 days (`pruneStripeEvents`), well past Stripe's three-day retry window. Have counsel confirm this reading once the product has users in a jurisdiction.
+`stripe_events` keeps an event id, its type and two timestamps, never the payload. Each row still points, through Stripe, at a person's payment, so it is personal data held indirectly. An erasure request is answered in Stripe, which holds the event; the row here holds nothing of the person's beyond that pointer, and the prune removes it: after each processed delivery, `processed` rows older than 30 days are deleted (`pruneStripeEvents`), well past Stripe's three-day retry window. It runs on deliveries, so with no billing traffic the last rows stay until the next one; a product that needs a hard limit runs the prune on a schedule. Have counsel confirm this reading once the product has users in a jurisdiction.
 
 `billing_entitlements` holds one row per user who checked out: their Stripe customer and subscription ids, the plan, its status and period end. It is deleted with the user (`on delete cascade`). An erasure request deletes the user here and the customer in Stripe.
+
+## While billing is in use
+
+Alert on two log events: `[billing] billing.event_invalid` and `[billing] billing.customer_mismatch`. Each means a verified Stripe event was acknowledged without changing an entitlement, so someone may have paid and hold nothing. The event is in Stripe's dashboard by its id (in the log's tags); nothing here keeps the payload.
 
 ## Verify
 
