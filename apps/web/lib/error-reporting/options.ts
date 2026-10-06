@@ -3,8 +3,8 @@
  * only: no tracing, replay, logs, feedback or profiling (NN6), so no sample
  * rate is set, no such integration is added, and the browser's default
  * tracing integration is dropped. Every dataCollection category is set here,
- * none left to the SDK's default (NN3): `Required<…>` below fails the type
- * check when an SDK upgrade adds a category. `beforeSend` then scrubs whatever
+ * none left to the SDK's default (NN3): `EveryCategory` below fails the type
+ * check when an SDK upgrade adds a category or a nested key. `beforeSend` then scrubs whatever
  * still arrives.
  */
 
@@ -20,6 +20,24 @@ export type ReportingTarget = {
 };
 
 type Integration = { name: string };
+
+type DataCollection = NonNullable<BrowserOptions["dataCollection"]>;
+type CollectBehavior = Extract<DataCollection["cookies"], unknown>;
+
+/**
+ * Every category and every nested key set: an SDK upgrade that adds either
+ * fails the type check here instead of defaulting permissive. The shape of
+ * the SDK's own ResolvedDataCollection.
+ */
+type EveryCategory = Required<
+  Omit<DataCollection, "httpHeaders" | "graphQL" | "genAI">
+> & {
+  httpHeaders: Required<
+    Exclude<NonNullable<DataCollection["httpHeaders"]>, CollectBehavior>
+  >;
+  graphQL: Required<NonNullable<DataCollection["graphQL"]>>;
+  genAI: Required<NonNullable<DataCollection["genAI"]>>;
+};
 
 /**
  * Integrations this app never runs (NN6). Only BrowserTracing is a default
@@ -46,7 +64,7 @@ export const DATA_COLLECTION = {
   queues: false,
   stackFrameVariables: false,
   frameContextLines: 5,
-} as const satisfies Required<NonNullable<BrowserOptions["dataCollection"]>>;
+} as const satisfies EveryCategory;
 
 export function sentryOptions({ dsn, environment }: ReportingTarget) {
   return {

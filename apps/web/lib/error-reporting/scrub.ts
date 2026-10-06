@@ -3,9 +3,16 @@
  * headers or query string, and a user who is an opaque id and nothing else.
  * Sentry's `beforeSend` runs this on every event, after the SDK's own
  * dataCollection settings, so a category left on by mistake still never
- * leaves: a stack frame's local variables are dropped too. Free text
- * (messages, exception values, breadcrumbs) is scrubbed with
- * @pem/observability's `scrubText`, the logger's one rule.
+ * leaves: a stack frame's local variables are dropped too, in exceptions and
+ * threads. Free text (messages, exception values, breadcrumbs, tags, the
+ * transaction) is scrubbed with @pem/observability's `scrubText`, the
+ * logger's one rule.
+ *
+ * The request's path and the transaction name are kept: they say where the
+ * error happened. `scrubText` catches addresses, JWTs, bearer credentials and
+ * `?code=`, not a bare opaque token in a path segment. A product that adds a
+ * route such as `/invite/<token>` or `/reset/<token>` scrubs that segment
+ * here before it ships.
  *
  * The event type is the structural subset this function touches, so the rule
  * is tested without the SDK; Sentry's `ErrorEvent` is assignable to it.
@@ -31,12 +38,32 @@ export type ScrubbableEvent = {
       stacktrace?: { frames?: { function?: string; vars?: unknown }[] };
     }[];
   };
+  threads?: {
+    values?: {
+      stacktrace?: { frames?: { function?: string; vars?: unknown }[] };
+    }[];
+  };
   breadcrumbs?: { message?: string; data?: unknown }[];
   extra?: unknown;
   contexts?: unknown;
   tags?: Record<string, unknown>;
   transaction?: string;
 };
+
+type Frames = { frames?: { vars?: unknown }[] };
+
+/** The stack trace with every frame's local variables dropped: locals at a throw site hold payloads, tokens and form input. */
+function withoutLocals<S extends Frames>(stacktrace: S): S {
+  if (!stacktrace.frames) return stacktrace;
+  return {
+    ...stacktrace,
+    frames: stacktrace.frames.map((frame) => {
+      const bare = { ...frame };
+      delete bare.vars;
+      return bare;
+    }),
+  };
+}
 
 /** `url` without its query string or fragment, its text scrubbed. */
 function stripQuery(url: string): string {
@@ -71,18 +98,20 @@ export function scrubEvent<E extends ScrubbableEvent>(event: E): E {
       values: event.exception.values.map((value) => {
         const kept = { ...value };
         if (kept.value !== undefined) kept.value = scrubText(kept.value);
-        // Locals at a throw site hold payloads, tokens and form input.
-        if (kept.stacktrace?.frames)
-          kept.stacktrace = {
-            ...kept.stacktrace,
-            frames: kept.stacktrace.frames.map((frame) => {
-              const bare = { ...frame };
-              delete bare.vars;
-              return bare;
-            }),
-          };
+        if (kept.stacktrace) kept.stacktrace = withoutLocals(kept.stacktrace);
         return kept;
       }),
+    };
+  }
+
+  if (event.threads?.values) {
+    scrubbed.threads = {
+      ...event.threads,
+      values: event.threads.values.map((thread) =>
+        thread.stacktrace
+          ? { ...thread, stacktrace: withoutLocals(thread.stacktrace) }
+          : thread,
+      ),
     };
   }
 

@@ -120,3 +120,20 @@ test("tags and the transaction name are scrubbed like every other free-text fiel
   assert.doesNotMatch(String(scrubbed.tags?.invitee), /ada@example\.test/);
   assert.doesNotMatch(scrubbed.transaction ?? "", /ada@example\.test/);
 });
+
+test("a thread's stack frames lose their local variables too", () => {
+  const scrubbed = scrubEvent({
+    threads: {
+      values: [
+        {
+          stacktrace: {
+            frames: [{ function: "charge", vars: { card: "4242 4242" } }],
+          },
+        },
+      ],
+    },
+  });
+  const frame = scrubbed.threads?.values?.[0]?.stacktrace?.frames?.[0];
+  assert.equal(frame?.function, "charge");
+  assert.equal(frame && "vars" in frame, false);
+});
