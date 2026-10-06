@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { test } from "node:test";
 
 import { sentryBuildOptions, type ErrorReportingBuild } from "./build.ts";
@@ -40,4 +41,14 @@ test("a deployment with the token, org and project uploads under the commit rele
 
 test("there is no tunnel route, so the app relays no one's events", () => {
   assert.equal(sentryBuildOptions(deployedWithToken).tunnelRoute, false);
+});
+
+test("the build script turns off the Sentry CLI's own telemetry", () => {
+  // The bundler plugin starts the CLI whenever SENTRY_AUTH_TOKEN is in the
+  // environment, upload or not, and the CLI reports to Sentry's own project
+  // unless this is set; `telemetry: false` covers only the plugin.
+  const manifest = JSON.parse(
+    readFileSync(new URL("../../package.json", import.meta.url), "utf8"),
+  ) as { scripts: { build: string } };
+  assert.match(manifest.scripts.build, /^SENTRY_CLI_NO_TELEMETRY=1 next build$/);
 });

@@ -2,7 +2,8 @@
  * withSentryConfig's options (STK-18). Source maps and the release upload
  * only from a deployment that holds the token, the org and the tier's
  * project; every other build skips both and succeeds (NN5). Nothing about the
- * build is sent to Sentry's own telemetry.
+ * build is sent to Sentry's own telemetry: `telemetry: false` here for the
+ * plugin, and SENTRY_CLI_NO_TELEMETRY in the build script for the CLI it starts.
  */
 
 import type { SentryBuildOptions } from "@sentry/nextjs/config";

@@ -30,7 +30,7 @@ load_when:
 
 - `apps/web/next.config.ts`: the `withSentryConfig` import and wrapper (export `nextConfig` itself), the `sentryBuildOptions` import, and `errorReportingBuild` from the `./env` import.
 - `apps/web/env.ts`: the `resolveSentryDsn` import; in `raw`, the `NEXT_PUBLIC_SENTRY_DSN` reads (with `_LOCAL` and `_STAGING`), `NEXT_PUBLIC_SENTRY_ENVIRONMENT`, `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT` (with `_STAGING`), `VERCEL_GIT_COMMIT_SHA` and `NEXT_RUNTIME`; `sentryDsn`, `nextRuntime` and `errorReportingBuild`; the two `NEXT_PUBLIC_SENTRY_*` entries in `client`, `runtimeEnv` and `nextConfigEnv`.
-- `apps/web/package.json`: `@sentry/nextjs`.
+- `apps/web/package.json`: `@sentry/nextjs`, and `SENTRY_CLI_NO_TELEMETRY=1` at the start of the `build` script.
 - `tooling/check-client-bundle.ts`: `VERCEL_GIT_COMMIT_SHA` and `NEXT_RUNTIME` in `UNPLANTABLE`, and the comment's Sentry clause.
 - `packages/config/eslint/boundaries.js` and `tooling/boundaries.test.ts`: see Boundaries entries.
 - `docs/engineering/tech-stack.md`: the `@sentry/nextjs` row.
