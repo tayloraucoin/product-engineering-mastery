@@ -54,7 +54,11 @@ test("C1: the seven sandbox_ tables are exported, in public, and service-only (L
   for (const name of SANDBOX_TABLES) {
     const { schema: pgSchema, policies } = configOf(name);
     assert.equal(pgSchema, undefined, `${name} must live in public`);
-    assert.equal(policies.length, 1, `${name} must carry serviceOnlyPolicies and nothing else`);
+    assert.equal(
+      policies.length,
+      1,
+      `${name} must carry serviceOnlyPolicies and nothing else`,
+    );
     const [policy] = policies;
     assert.equal(policy!.name, `${name}_all_denied`);
     assert.equal(policy!.for, "all");
@@ -68,16 +72,22 @@ test("C1: sandbox_actions has no reviewer column of any kind (D-LAB-28)", () => 
   const { columns, foreignKeys } = configOf("sandbox_actions");
   const names = columns.map((c) => c.name);
   for (const name of names)
-    assert.doesNotMatch(name, /reviewer|access|label|display/, `${name} names a reviewer`);
+    assert.doesNotMatch(
+      name,
+      /reviewer|access|label|display/,
+      `${name} names a reviewer`,
+    );
   assert.deepEqual(foreignKeys, []);
 });
 
 test("C1: sandbox_gate_attempts has no slug and no foreign key (gap 3)", () => {
   const { columns, foreignKeys } = configOf("sandbox_gate_attempts");
-  assert.deepEqual(
-    columns.map((c) => c.name).sort(),
-    ["failures", "key_hash", "locked_until", "window_ends_at"],
-  );
+  assert.deepEqual(columns.map((c) => c.name).sort(), [
+    "failures",
+    "key_hash",
+    "locked_until",
+    "window_ends_at",
+  ]);
   assert.deepEqual(foreignKeys, []);
 });
 

@@ -34,6 +34,7 @@
 ## Next
 
 LAB-3 builds `@pem/db/sandbox` on these tables. Points the reviews raised for later tickets:
+
 - LAB-16 decides whether `display_name` is cleared when a reviewer is revoked and relabelled. It also asserts that its erasure's `sandbox_actions` row holds no key or value matching the erased email.
 - LAB-25 resolves a reply's root only inside the rows already scoped to the viewer, never by looking up the browser-minted `parent_id` directly.
 - The 2 KB `anchor` cap (LAB-12) and any `triage` cap (LAB-17) are enforced in their write paths; the database bounds only `body`.
