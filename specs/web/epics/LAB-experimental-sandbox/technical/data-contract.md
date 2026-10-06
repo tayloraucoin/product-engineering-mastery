@@ -11,15 +11,15 @@ status: approved
 
 All in `packages/db/src/schema/sandbox/`, prefixed `sandbox_`, each with `serviceOnlyPolicies` (door 4). There is no experiments table: an experiment is its config, keyed by slug (S14). A slug matches `^[a-z0-9]+(-[a-z0-9]+)*$`, at most 48 characters, and never changes once it holds data.
 
-| Table | What it commits to |
-| --- | --- |
-| `sandbox_reviewers` | One person on one experiment (D-LAB-6): `slug`, `label`, `display_name` (beat 2, null in private mode), `code_hash` (unique), `code_version`, `revoked_at`, `first_design` (drawn once, S15), `last_design`. Replace rewrites the hash in place (D-LAB-23). |
-| `sandbox_accesses` | One gate entry per device: `reviewer_id` (cascade), exactly one of `email` or `user_id` (S8), `code_version`, `last_seen_at`. "Emails used" is the distinct emails. |
-| `sandbox_view_events` | `reviewer_id`, `access_id` (cascade), `slug`, `kind` (`load` or `switch`), `design`, `at`. The order log and time per design derive from it. Never written for the team (D-LAB-14). |
-| `sandbox_comments` | `id` minted in the browser (retries insert with `on conflict do nothing`), `slug`, `design` (S17), `number`, `kind` (null or `problem`, `question`, `suggestion`, `keep`), `body` (at most 2,000 characters), `anchor` (jsonb: marked id, id or path, plus x and y fractions), `viewport_w`, `viewport_h`, `client_created_at`. Author: either `reviewer_id` plus `access_id` (cascade), or `team_user_id` for a team note; a check holds exactly one. `parent_id` (beat 2) is in from beat 1. |
-| `sandbox_review_versions` | `id` minted in the browser, `reviewer_id`, `access_id` (cascade), `slug`, `number` (unique per reviewer), `core_version`, `answers` (jsonb), `triage` (jsonb, keyed by comment id, with "matters most"), `created_at`. Results read each reviewer's latest. |
-| `sandbox_actions` | The record of actions (S12c): `at`, `actor_user_id`, `actor_email`, `action`, `slug`, `target_email` (role changes only: a team member, never a reviewer), `counts` (jsonb). No reviewer column of any kind (D-LAB-28), so erasure never touches it. |
-| `sandbox_gate_attempts` | `key_hash` (primary key), `failures`, `window_ends_at`, `locked_until`. No slug and no foreign key (gap 3). |
+| Table                     | What it commits to                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sandbox_reviewers`       | One person on one experiment (D-LAB-6): `slug`, `label`, `display_name` (beat 2, null in private mode), `code_hash` (unique), `code_version`, `revoked_at`, `first_design` (drawn once, S15), `last_design`. Replace rewrites the hash in place (D-LAB-23).                                                                                                                                                                                                                                    |
+| `sandbox_accesses`        | One gate entry per device: `reviewer_id` (cascade), exactly one of `email` or `user_id` (S8), `code_version`, `last_seen_at`. "Emails used" is the distinct emails.                                                                                                                                                                                                                                                                                                                            |
+| `sandbox_view_events`     | `reviewer_id`, `access_id` (cascade), `slug`, `kind` (`load` or `switch`), `design`, `at`. The order log and time per design derive from it. Never written for the team (D-LAB-14).                                                                                                                                                                                                                                                                                                            |
+| `sandbox_comments`        | `id` minted in the browser (retries insert with `on conflict do nothing`), `slug`, `design` (S17), `number`, `kind` (null or `problem`, `question`, `suggestion`, `keep`), `body` (at most 2,000 characters), `anchor` (jsonb: marked id, id or path, plus x and y fractions), `viewport_w`, `viewport_h`, `client_created_at`. Author: either `reviewer_id` plus `access_id` (cascade), or `team_user_id` for a team note; a check holds exactly one. `parent_id` (beat 2) is in from beat 1. |
+| `sandbox_review_versions` | `id` minted in the browser, `reviewer_id`, `access_id` (cascade), `slug`, `number` (unique per reviewer), `core_version`, `answers` (jsonb), `triage` (jsonb, keyed by comment id, with "matters most"), `created_at`. Results read each reviewer's latest.                                                                                                                                                                                                                                    |
+| `sandbox_actions`         | The record of actions (S12c): `at`, `actor_user_id`, `actor_email`, `action`, `slug`, `target_email` (role changes only: a team member, never a reviewer), `counts` (jsonb). No reviewer column of any kind (D-LAB-28), so erasure never touches it.                                                                                                                                                                                                                                           |
+| `sandbox_gate_attempts`   | `key_hash` (primary key), `failures`, `window_ends_at`, `locked_until`. No slug and no foreign key (gap 3).                                                                                                                                                                                                                                                                                                                                                                                    |
 
 **Threads without a tombstone.** `parent_id` has no foreign key, a reply always points at its root (one level), and a reply copies its root's `design` and `anchor`. Erasing or deleting a root hard-deletes it, and the surviving replies still know where to draw "Comment removed" (C-LAB-threads-5). Beat 2 adds no migration.
 
@@ -43,10 +43,15 @@ Each runs in one transaction and writes one `sandbox_actions` row with counts on
 ```ts
 type Viewer =
   | { kind: "reviewer"; slug: string; reviewerId: string; accessId: string }
-  | { kind: "team"; userId: string; email: string; role: "developer" | "admin" };
+  | {
+      kind: "team";
+      userId: string;
+      email: string;
+      role: "developer" | "admin";
+    };
 ```
 
-- Every function in `@pem/db/sandbox` takes `(db, viewer, input)`. The type makes an unscoped call impossible to write by accident; the isolation tests prove it.
+- Every function in `@pem/db/sandbox` takes `(db, viewer, input)`, except the gate group (`gate.ts`, Tickets-gate ruling), which runs before any viewer exists, takes `(db, input)` and returns only ids, versions and flags, or the access's email. The type makes an unscoped call impossible to write by accident; the isolation tests prove it, and their guard checks each function's arity against its group.
 - A reviewer function filters by `viewer.reviewerId` and `viewer.slug`. In beat 2's collaborate mode it widens reads to the slug's reviewer comments, never team notes.
 - A team function refuses a reviewer viewer. An admin-only function (deleting an experiment's data) refuses a developer.
 

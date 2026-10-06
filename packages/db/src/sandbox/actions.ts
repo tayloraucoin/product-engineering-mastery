@@ -29,10 +29,13 @@ const SLUG = new RegExp(SANDBOX_SLUG_PATTERN);
 
 export const ACTION_INPUT_INVALID = "The action record is not valid.";
 
+/** The one action that may name a person: a team member whose role changed (LAB-9). */
+export const ROLE_CHANGE_ACTION = "role-change";
+
 export type RecordActionInput = {
   action: string;
   slug?: string;
-  /** Role changes only: the team member's email, never a reviewer's. */
+  /** `role-change` only: the team member's email, trimmed and lower-cased; never a reviewer's. */
   targetEmail?: string;
   counts?: SandboxActionCounts;
 };
@@ -52,6 +55,20 @@ export async function recordAction(
       !SLUG.test(input.slug))
   )
     throw new SandboxAccessError(ACTION_INPUT_INVALID);
+  if (input.targetEmail !== undefined) {
+    // Only a role change names anyone, and only a team member: never free
+    // text, and never in any other action (an erasure would keep the address
+    // it erased).
+    const email = input.targetEmail;
+    if (
+      input.action !== ROLE_CHANGE_ACTION ||
+      typeof email !== "string" ||
+      email.length === 0 ||
+      email !== email.trim().toLowerCase() ||
+      !email.includes("@")
+    )
+      throw new SandboxAccessError(ACTION_INPUT_INVALID);
+  }
   if (input.counts !== undefined) {
     const names: readonly string[] = SANDBOX_ACTION_COUNT_NAMES;
     for (const [name, count] of Object.entries(input.counts ?? {}))

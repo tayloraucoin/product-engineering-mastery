@@ -11,12 +11,17 @@ import assert from "node:assert/strict";
 import { after, before, describe, test } from "node:test";
 import { and, count, eq, sql } from "drizzle-orm";
 
-import { ACTION_INPUT_INVALID } from "../../src/sandbox/actions.ts";
+// Through the package's own subpath, so a wrong `exports` entry fails here too.
+import * as sandbox from "@pem/db/sandbox";
+
+import {
+  ACTION_INPUT_INVALID,
+  ROLE_CHANGE_ACTION,
+} from "../../src/sandbox/actions.ts";
 import {
   ACCESS_INPUT_INVALID,
   EMAIL_NOT_NORMALISED,
 } from "../../src/sandbox/gate.ts";
-import * as sandbox from "../../src/sandbox/index.ts";
 import {
   NOT_A_TEAM_VIEWER,
   reviewerScope,
@@ -118,6 +123,21 @@ const recordAsReviewer = (kind: ViewerKind) => async (w: World) => {
   assert.equal(await actionRowCount(), before, "a refused call wrote a row");
 };
 
+/** A role change names the changed team member, and nothing else. */
+async function roleChangeAs(w: World, viewer: TeamViewer) {
+  const target = `promoted-${w.run}@example.test`;
+  await sandbox.recordAction(db(), viewer, {
+    action: ROLE_CHANGE_ACTION,
+    targetEmail: target,
+  });
+  const rows = (await actionsBy(viewer.userId)).filter(
+    (row) => row.action === ROLE_CHANGE_ACTION && row.targetEmail === target,
+  );
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0]!.slug, null);
+  await db().delete(sandboxActions).where(eq(sandboxActions.id, rows[0]!.id));
+}
+
 const recordAsTeam = (kind: "developer" | "admin") => async (w: World) => {
   const viewer = viewerFor(w, kind) as TeamViewer;
   const action = `probe-${kind}`;
@@ -151,6 +171,7 @@ const recordAsTeam = (kind: "developer" | "admin") => async (w: World) => {
   for (const r of [w.a1, w.a2, w.b])
     for (const secret of [r.label, r.email, r.code, r.viewer.reviewerId])
       assert.ok(secret && !text.includes(secret));
+  await roleChangeAs(w, viewer);
 };
 
 /** Registered cases for every runtime export of @pem/db/sandbox. */
@@ -499,6 +520,12 @@ const REGISTRY: Registry<World> = {
             { action: "erase", counts: { [w.a1.email!]: 1 } },
             { action: "erase", counts: { comments: -1 } },
             { action: "erase", counts: { comments: 1.5 } },
+            // targetEmail: a role change only, and only a normalised address.
+            { action: "erase-email", targetEmail: w.a1.email! },
+            { action: ROLE_CHANGE_ACTION, targetEmail: "Team@Example.test" },
+            { action: ROLE_CHANGE_ACTION, targetEmail: " team@example.test" },
+            { action: ROLE_CHANGE_ACTION, targetEmail: "not an email" },
+            { action: ROLE_CHANGE_ACTION, targetEmail: "" },
           ])
             await assert.rejects(
               sandbox.recordAction(db(), w.admin, input as never),
@@ -532,10 +559,16 @@ describe("C2: the coverage guard", () => {
   });
 
   test("C2: an export with no registered case fails it (a synthetic module)", () => {
+    // Stand-ins with the arity of a gate function and of a viewer function.
+    const withArity = (length: number) =>
+      Object.defineProperty(async () => null, "length", { value: length });
+    const gate = withArity(2);
+    const scoped = withArity(3);
     const synthetic = {
-      covered: async () => null,
-      uncovered: async () => null,
-      halfCovered: async () => null,
+      covered: gate,
+      uncovered: gate,
+      halfCovered: scoped,
+      misfiled: scoped,
     };
     const registry: Registry<null> = {
       covered: { group: "gate", cases: { "a case": () => {} } },
@@ -543,6 +576,7 @@ describe("C2: the coverage guard", () => {
         group: "viewer",
         byViewer: { developer: () => {} } as never,
       },
+      misfiled: { group: "support", cases: { "one happy path": () => {} } },
       gone: { group: "support", cases: { "a case": () => {} } },
     };
     assert.deepEqual(coverageProblems(synthetic, registry), [
@@ -550,6 +584,7 @@ describe("C2: the coverage guard", () => {
       ...VIEWER_KINDS.filter((kind) => kind !== "developer").map(
         (kind) => `halfCovered has no case for the ${kind}`,
       ),
+      "misfiled takes a viewer but is filed as support",
       "gone is registered but not exported",
     ]);
   });

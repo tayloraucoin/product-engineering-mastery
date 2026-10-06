@@ -9,6 +9,10 @@
  *   exists. It has named cases, including what it returns.
  * - `support`: anything else exported at runtime, with the cases that pin it.
  *
+ * The group is checked, not trusted: a function of three parameters
+ * `(db, viewer, input)` must be in `viewer`, a `gate` function takes two
+ * `(db, input)`, and a `viewer` entry must be a function of three.
+ *
  * Type-only exports are erased at runtime and need no entry.
  */
 
@@ -48,6 +52,16 @@ export function coverageProblems<W>(
       problems.push(`${name} has no isolation case`);
       continue;
     }
+    const value = module[name];
+    const arity = typeof value === "function" ? value.length : null;
+    if (arity === 3 && entry.group !== "viewer")
+      problems.push(`${name} takes a viewer but is filed as ${entry.group}`);
+    if (entry.group === "viewer" && arity !== 3)
+      problems.push(
+        `${name} is filed as viewer but does not take (db, viewer, input)`,
+      );
+    if (entry.group === "gate" && arity !== 2)
+      problems.push(`${name} is filed as gate but does not take (db, input)`);
     if (entry.group === "viewer") {
       for (const kind of VIEWER_KINDS)
         if (typeof entry.byViewer[kind] !== "function")

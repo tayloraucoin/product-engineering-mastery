@@ -33,6 +33,13 @@ test("requireTeam refuses a reviewer and admits a developer and an admin", () =>
   assert.throws(() => requireTeam(reviewer), { message: NOT_A_TEAM_VIEWER });
   assert.equal(requireTeam(developer), developer);
   assert.equal(requireTeam(admin), admin);
+  // A team viewer without a real user id or an email is refused.
+  for (const forged of [
+    { ...developer, userId: "" },
+    { ...developer, userId: "not-a-uuid" },
+    { ...developer, email: "" },
+  ])
+    assert.throws(() => requireTeam(forged), { message: NOT_A_TEAM_VIEWER });
   // A forged role on a team viewer is still refused.
   assert.throws(
     () => requireTeam({ ...developer, role: "user" as unknown as "admin" }),
@@ -78,6 +85,7 @@ test("the module imports neither next nor react, and never the getDb singleton",
   )) {
     const text = readFileSync(new URL(file, dir), "utf8");
     assert.doesNotMatch(text, /from "(next|react)(\/[^"]*)?"/, file);
-    assert.doesNotMatch(text, /\bgetDb\b/, file);
+    // db is always an argument: no singleton, and no client of its own.
+    assert.doesNotMatch(text, /\b(getDb|createDb|closeDb)\b/, file);
   }
 });

@@ -15,6 +15,14 @@
 - C4: `recordAction` writes one row with the actor's id and email, the action, the slug and the counts. The row holds no label, reviewer email, code or reviewer id.
   - It refuses all three reviewer viewers with a fixed message and writes nothing.
   - It refuses free text or an email as the action, a bad slug, and a count name outside the schema's closed list or a non-integer count.
+- After the first reviews (mason, warden, both PASS):
+  - `recordAction` admits `targetEmail` only with `ROLE_CHANGE_ACTION` (`role-change`), and only as a trimmed, lower-cased address. An erasure therefore cannot write the address it erased. It is refused with the fixed message otherwise.
+  - `requireTeam` also refuses a team viewer whose `userId` is not a UUID or whose email is empty.
+  - The coverage guard checks each entry's group against the function's arity: three parameters must be `viewer`, a `gate` takes two. A synthetic mis-filed export proves it.
+  - The suite imports the module as `@pem/db/sandbox`, so a wrong `exports` entry fails it.
+  - The purity check also bans `createDb` and `closeDb`.
+  - The LAB-3 boundary probes run as `C5 (LAB-3)`.
+  - `data-contract.md` names the gate group's `(db, input)` exception.
 - C5: `boundaries.js` adds `web-sandbox` (`apps/web/lib/sandbox/**`, before `app-web`) and `db-sandbox` (`packages/db/src/sandbox/**`, before `db`, transport-free). An override on `apps/web/app/experimental/**` and `apps/web/app/admin/**` bans `@pem/db/client` and `@pem/db/schema`, and keeps apps/web's SDK bans. `tooling/boundaries.test.ts` adds nine refusals and four allowed cases. `yarn lint:boundaries` passes on the whole repo.
 
 ## Deviations
@@ -36,5 +44,11 @@
 - Only one viewer function exists yet (`recordAction`). Reviewer-scoped reads arrive with the surface tickets. `reviewerScope` is proven against real rows here, but each new function's own cases are its ticket's.
 
 ## Next
+
+Points the reviews raised for later tickets:
+
+- `findAccessEmail` is the one gate function returning personal data. LAB-5's link-token verification is all that stands between a leaked access id and an address, so it needs its own verification item there (warden).
+- LAB-6's throttle should land before LAB-5's gate is reachable over HTTP. Until then, codes can be guessed with no lockout (warden).
+- The seven tables are still in the `@pem/db/schema` barrel. Only the experimental and admin route trees are kept off it, so a `./schema/sandbox` subpath that only `db-sandbox` may import would close the rest (warden, consider).
 
 LAB-5 binds the gate group in `apps/web/lib/sandbox/access.ts` (`resolveViewer`, `grantAccess`). Each surface ticket adds its functions to `src/sandbox/` together with their registry cases.

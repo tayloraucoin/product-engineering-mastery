@@ -49,7 +49,10 @@ export const NOT_A_REVIEWER_VIEWER = "This needs a reviewer.";
 export function requireTeam(viewer: Viewer): TeamViewer {
   if (
     viewer?.kind !== "team" ||
-    (viewer.role !== "developer" && viewer.role !== "admin")
+    (viewer.role !== "developer" && viewer.role !== "admin") ||
+    !isUuid(viewer.userId) ||
+    typeof viewer.email !== "string" ||
+    viewer.email.length === 0
   )
     throw new SandboxAccessError(NOT_A_TEAM_VIEWER);
   return viewer;

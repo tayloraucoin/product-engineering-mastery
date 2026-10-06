@@ -193,52 +193,6 @@ const DISALLOWED: [file: string, code: string, message: RegExp][] = [
     'import "@pem/catalog/manifest";',
     /^ui must not import catalog/,
   ],
-  // LAB-3: @pem/db/sandbox reaches only apps/web/lib/sandbox; sandbox routes never reach the client or schema (D-LAB-34).
-  [
-    "apps/web/app/zz-probe.ts",
-    'import "@pem/db/sandbox";',
-    /^app-web must not import db-sandbox/,
-  ],
-  [
-    "apps/web/lib/zz-probe.ts",
-    'import { checkAccess } from "@pem/db/sandbox";',
-    /^app-web must not import db-sandbox/,
-  ],
-  [
-    "apps/web/app/experimental/[slug]/zz-probe.ts",
-    'import "@pem/db/sandbox";',
-    /^app-web must not import db-sandbox/,
-  ],
-  [
-    "apps/web/app/experimental/[slug]/zz-probe.ts",
-    'import { getDb } from "@pem/db/client";',
-    /never @pem\/db\/client or @pem\/db\/schema/,
-  ],
-  [
-    "apps/web/app/admin/zz-probe.ts",
-    'import { sandboxComments } from "@pem/db/schema";',
-    /never @pem\/db\/client or @pem\/db\/schema/,
-  ],
-  [
-    "apps/web/app/admin/zz-probe.ts",
-    'import { streamText } from "ai";',
-    /ai is owned by @pem\/ai/,
-  ],
-  [
-    "packages/services/src/zz-probe.ts",
-    'import "@pem/db/sandbox";',
-    /^services must not import db-sandbox/,
-  ],
-  [
-    "packages/db/src/sandbox/zz-probe.ts",
-    'import "next/server";',
-    /next is a transport or framework/,
-  ],
-  [
-    "packages/db/src/sandbox/zz-probe.ts",
-    'import "react";',
-    /react is a transport or framework/,
-  ],
 ];
 
 for (const [file, code, message] of DISALLOWED)
@@ -314,7 +268,73 @@ const ALLOWED: [file: string, code: string][] = [
     "apps/web/app/zz-probe.ts",
     'import "@pem/ui/button"; import "@pem/ui/styles/globals.css"; import "@pem/brand/assets/logo.svg"; import "@/app/layout";',
   ],
-  // LAB-3: lib/sandbox imports @pem/db/sandbox; routes import lib/sandbox.
+];
+
+for (const [file, code] of ALLOWED)
+  test(`C2: ${code} in ${file} still passes`, async () => {
+    assert.deepEqual(await lint(file, code), []);
+  });
+
+// LAB-3 (its C5): @pem/db/sandbox reaches only apps/web/lib/sandbox, and the
+// experimental and admin routes never reach the client or schema (D-LAB-34).
+const SANDBOX_DISALLOWED: [file: string, code: string, message: RegExp][] = [
+  [
+    "apps/web/app/zz-probe.ts",
+    'import "@pem/db/sandbox";',
+    /^app-web must not import db-sandbox/,
+  ],
+  [
+    "apps/web/lib/zz-probe.ts",
+    'import { checkAccess } from "@pem/db/sandbox";',
+    /^app-web must not import db-sandbox/,
+  ],
+  [
+    "apps/web/app/experimental/[slug]/zz-probe.ts",
+    'import "@pem/db/sandbox";',
+    /^app-web must not import db-sandbox/,
+  ],
+  [
+    "apps/web/app/experimental/[slug]/zz-probe.ts",
+    'import { getDb } from "@pem/db/client";',
+    /never @pem\/db\/client or @pem\/db\/schema/,
+  ],
+  [
+    "apps/web/app/admin/zz-probe.ts",
+    'import { sandboxComments } from "@pem/db/schema";',
+    /never @pem\/db\/client or @pem\/db\/schema/,
+  ],
+  [
+    "apps/web/app/admin/zz-probe.ts",
+    'import { streamText } from "ai";',
+    /ai is owned by @pem\/ai/,
+  ],
+  [
+    "packages/services/src/zz-probe.ts",
+    'import "@pem/db/sandbox";',
+    /^services must not import db-sandbox/,
+  ],
+  [
+    "packages/db/src/sandbox/zz-probe.ts",
+    'import "next/server";',
+    /next is a transport or framework/,
+  ],
+  [
+    "packages/db/src/sandbox/zz-probe.ts",
+    'import "react";',
+    /react is a transport or framework/,
+  ],
+];
+
+for (const [file, code, message] of SANDBOX_DISALLOWED)
+  test(`C5 (LAB-3): ${code} in ${file} fails the boundaries lint`, async () => {
+    const messages = await lint(file, code);
+    assert.ok(
+      messages.some((text) => message.test(text)),
+      `expected ${message}, got ${JSON.stringify(messages)}`,
+    );
+  });
+
+const SANDBOX_ALLOWED: [file: string, code: string][] = [
   [
     "apps/web/lib/sandbox/zz-probe.ts",
     'import "@pem/db/sandbox"; import "@pem/db/client"; import "@/lib/supabase/context";',
@@ -333,7 +353,7 @@ const ALLOWED: [file: string, code: string][] = [
   ],
 ];
 
-for (const [file, code] of ALLOWED)
-  test(`C2: ${code} in ${file} still passes`, async () => {
+for (const [file, code] of SANDBOX_ALLOWED)
+  test(`C5 (LAB-3): ${code} in ${file} still passes`, async () => {
     assert.deepEqual(await lint(file, code), []);
   });
