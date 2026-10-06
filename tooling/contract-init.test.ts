@@ -41,6 +41,12 @@ test("A4 contract:init allocates sequential ids, from the template, then starts 
       r.out,
     );
   }
+  const initialised = read(
+    repo,
+    "specs/web/one-offs/WEB-001-first/contract.md",
+  );
+  assert.match(initialised, /^## Build notes$/m);
+  assert.match(initialised, /\*\*Approach:\*\*/);
   write(
     repo,
     "specs/web/one-offs/WEB-002-second/contract.md",

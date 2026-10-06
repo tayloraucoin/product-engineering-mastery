@@ -224,7 +224,10 @@ function contractFromTemplate(id: string, slug: string): string {
   const { body } = splitFrontmatter(readRepoText(CONTRACT_TEMPLATE));
   const yaml = body.match(/```yaml\n([\s\S]*?)```/)?.[1];
   if (!yaml) stop(`${CONTRACT_TEMPLATE} has no yaml block to copy`);
-  const notes = body.slice(body.indexOf("## Notes"));
+  const at = body.indexOf("## Build notes");
+  if (at === -1)
+    stop(`${CONTRACT_TEMPLATE} has no "## Build notes" section to copy`);
+  const notes = body.slice(at);
   return `---\n${yaml.replace(/^id: .*$/m, `id: ${id}`)}---\n\n# Contract — ${id} ${slug}\n\n${notes}`;
 }
 
