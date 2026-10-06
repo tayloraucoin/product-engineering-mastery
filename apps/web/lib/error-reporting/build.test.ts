@@ -50,5 +50,8 @@ test("the build script turns off the Sentry CLI's own telemetry", () => {
   const manifest = JSON.parse(
     readFileSync(new URL("../../package.json", import.meta.url), "utf8"),
   ) as { scripts: { build: string } };
-  assert.match(manifest.scripts.build, /^SENTRY_CLI_NO_TELEMETRY=1 next build$/);
+  assert.match(
+    manifest.scripts.build,
+    /^SENTRY_CLI_NO_TELEMETRY=1 next build$/,
+  );
 });
