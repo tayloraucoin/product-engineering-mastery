@@ -119,6 +119,18 @@ export async function enterGate(
   }
 }
 
+/** A `?state=` fixture's form: nothing is read, counted or written. */
+export async function holdGateFixture(
+  previous: GateActionState,
+): Promise<GateActionState> {
+  return previous;
+}
+
+/** A `?state=` fixture's "Sign out": back to the same gate, the session untouched. */
+export async function holdSignOutFixture(slug: string): Promise<never> {
+  redirect(gatePath(slug));
+}
+
 /**
  * The signed-in face's "Sign out" (S8): ends this device's session only
  * (local scope), through @pem/auth's one `signOut`, the function STK-24's

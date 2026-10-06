@@ -13,7 +13,7 @@
 - C5: a developer or admin gets the experiment on a known slug, open or closed. A live reviewer gets the experiment, or ended on a closed one.
 - C6: the ten gate.md keys are registered as `anyone` in `state.ts`, and every other key there is `team`. Each gate key renders the same fixture for a guest, a reviewer and the team, on a real and an unknown slug. A non-gate key is null for anyone but the team, and the page ignores it even then.
 - C7: `evidence/gate-notice.png` is the guest face at 1440, light: the notice's four points above "Your email". The Words are asserted verbatim in the test.
-- C8: `evidence/gate-throttled.png` is the real flow, not the fixture. On the local Postgres with a synthetic secret, five wrong codes on an unknown slug lock it. The page then shows "Too many tries. You can try again after 2:18 PM." with both fields filled and the button disabled. The browser pane reproduced it on a real slug.
+- C8: `evidence/gate-throttled.png` is the real flow, not the fixture. On the local Postgres with a synthetic secret, five wrong codes on an unknown slug lock it. The page then shows "Too many tries. You can try again after" and a time in the reader's own clock, with both fields filled and the button disabled. The browser pane reproduced it on a real slug.
 - C9: the builder checked the keyboard path and the ARIA wiring (`evidence/C9-steps.md`), then deferred the screen-reader pass to the operator.
 - C10: `evidence/gate-states.png` holds all ten keys at 390, 834 and 1440, light and dark. That is 60 headless-Chrome shots (DevTools protocol, reduced motion), set out one row per state. To reproduce C7, C8 and C10 at any head, serve the app on :3008 with a local database and a synthetic `SANDBOX_SECRET_LOCAL`, then run `node evidence/capture-gate.mjs <fresh-dir> states`, `notice` and `throttled`. The script uses no dependency.
 - C11: `app/experimental/layout.tsx` exports `robots: { index: false, follow: false }`, checked by a source scan.
@@ -35,7 +35,12 @@
   - A `?state=` fixture never spends a real try or ends a real session: both forms refuse to submit.
   - A `?r=` the page cannot read, even for want of a database, is ignored and the gate shows blank.
   - On a production runtime off Vercel, the action logs `sandbox.network_counter_off` once per process (LAB-6's second review). It names no address.
-  - Source-scan tests say so in their names. C12's diff output is kept in its evidence file, taken at the head it is recorded at.
+  - Source-scan tests say so in their names. C12's diff output is kept in its evidence file, which names the commit the server ran.
+- After the second reviews (assay and warden, both PASS):
+  - A fixture is bound server-side to `holdGateFixture` and `holdSignOutFixture`. These read, count and write nothing, so even a press before hydration, or with JavaScript off, spends no try and ends no session.
+  - The page builds the database handle inside the guarded promise, so a tier with no `DATABASE_URL` ignores `?r=` instead of failing.
+  - The team link has the same 44px target as Sign out.
+- **Captures come from a non-sanctioned harness.** `.claude/rules/testing.md` holds capture criteria UNVERIFIED until the P-C harness exists. These were taken with `evidence/capture-gate.mjs`, a DevTools-protocol script that hard-codes macOS Chrome's path, and recorded PASS because the pixels are real and re-runnable on this machine. The rule's silence on pre-P-C captures goes to the design director.
 - `gate-success` is fixture-only. In the real flow the action redirects, and the button reads "Checking" until the page changes.
 
 ## Not verified
@@ -45,7 +50,9 @@
 - `contact.email` in `@pem/brand` is still `hello@example.com`. A real, monitored address is the operator's before any real code is issued (out of scope).
 
 - Residuals recorded from the reviews:
-  - An enter action on a real slug makes one indexed query that an unknown slug skips, a timing channel (Warden). That is gate.md's "an unknown slug never reaches the database". It belongs on the epic's gap list beside gap 3.
+  - An enter action on a real slug makes one indexed query that an unknown slug skips, a timing channel (Warden). That is gate.md's "an unknown slug never reaches the database". It is now named in `technical.md`'s rabbit holes, so it outlives this folder.
+  - No event marks a lock (Warden). A `sandbox.gate_locked` signal would trade against gate.md's minimisation and is the epic's call.
+  - `inPlannedPaths` reads `[slug]` as a glob class, so this ticket's bracketed paths are missed by review prompts and by staleness. Drafted as WEB-11.
   - `?r=` tokens persist in browser history and platform request logs. The token grants nothing and is stripped on success. LAB-20 weighs it before confirmation emails send such links.
   - The demo root layout's theme toggle sits over the gate and is its first tab stop (Assay, cut as polish; not this ticket's path).
 

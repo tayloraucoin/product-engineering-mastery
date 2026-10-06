@@ -60,10 +60,12 @@ export default async function ExperimentPage({
     // The link prefills the email on the guest face only, and never grants
     // access. A token that cannot be read, even for want of a database, is
     // ignored: the gate shows blank.
-    else if (typeof query.r === "string")
-      prefilledEmail = await readLinkEmail(sandboxDb(), slug, query.r).catch(
-        () => null,
-      );
+    else if (typeof query.r === "string") {
+      const token = query.r;
+      prefilledEmail = await Promise.resolve()
+        .then(() => readLinkEmail(sandboxDb(), slug, token))
+        .catch(() => null);
+    }
   }
 
   const view = gateView(result, {
