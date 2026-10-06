@@ -57,9 +57,13 @@ export default async function ExperimentPage({
   if (result.kind === "gate" && state === null) {
     const auth = await getAuthContext();
     if (auth && !teamMemberOf(auth) && auth.email) accountEmail = auth.email;
-    // The link prefills the email on the guest face only, and never grants access.
+    // The link prefills the email on the guest face only, and never grants
+    // access. A token that cannot be read, even for want of a database, is
+    // ignored: the gate shows blank.
     else if (typeof query.r === "string")
-      prefilledEmail = await readLinkEmail(sandboxDb(), slug, query.r);
+      prefilledEmail = await readLinkEmail(sandboxDb(), slug, query.r).catch(
+        () => null,
+      );
   }
 
   const view = gateView(result, {

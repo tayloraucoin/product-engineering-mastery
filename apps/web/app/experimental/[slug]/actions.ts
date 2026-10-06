@@ -41,6 +41,18 @@ import { getAuthContext } from "../../../lib/supabase/context";
 
 const log = createLogger("sandbox");
 
+/**
+ * Off Vercel the client's address cannot be trusted, so only the browser
+ * counter runs. On a production runtime that is worth saying, once per
+ * process, without naming any address.
+ */
+let networkCounterOffNoted = false;
+function noteNetworkCounterOff() {
+  if (networkCounterOffNoted || !productionRuntime || deployed) return;
+  networkCounterOffNoted = true;
+  log.warn("sandbox.network_counter_off");
+}
+
 export async function enterGate(
   slug: string,
   _previous: GateActionState,
@@ -52,6 +64,7 @@ export async function enterGate(
   const account =
     auth && !teamMemberOf(auth) && auth.email ? { userId: auth.userId } : null;
 
+  noteNetworkCounterOff();
   const secret = sandboxSecret();
   const existingBrowserId = readBrowserId(jar.get(GATE_COOKIE)?.value);
   const browserId = existingBrowserId ?? newBrowserId();

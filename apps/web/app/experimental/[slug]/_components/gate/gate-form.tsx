@@ -59,10 +59,12 @@ function subscribeOnline(onChange: () => void) {
   };
 }
 
-function formatLocalTime(iso: string): string {
-  return new Intl.DateTimeFormat(undefined, {
+/** The lock's time in the reader's own locale and zone; before hydration, in UTC and named so. */
+function formatLockTime(iso: string, local: boolean): string {
+  return new Intl.DateTimeFormat(local ? undefined : "en-GB", {
     hour: "numeric",
     minute: "2-digit",
+    ...(local ? {} : { timeZone: "UTC", timeZoneName: "short" }),
   }).format(new Date(iso));
 }
 
@@ -99,7 +101,7 @@ export function GateForm({
   const errors = state.kind === "error" ? state.errors : {};
   const codeError =
     lockedUntil !== null
-      ? GATE_WORDS.throttled(mounted ? formatLocalTime(lockedUntil) : "")
+      ? GATE_WORDS.throttled(formatLockTime(lockedUntil, mounted))
       : errors.code;
 
   // One timer re-enables the button when the lock ends; a fixture stays locked.
@@ -131,7 +133,14 @@ export function GateForm({
   return (
     <div className="flex flex-col gap-6">
       {signedIn ? (
-        <form action={signOut} className="text-sm">
+        <form
+          action={signOut}
+          onSubmit={(event) => {
+            // A ?state= fixture never ends a real session.
+            if (initial.fixture) event.preventDefault();
+          }}
+          className="text-sm"
+        >
           <p>
             {GATE_WORDS.signedInAs} {accountEmail}. {GATE_WORDS.signedInSaved}{" "}
             {GATE_WORDS.notYou}{" "}
@@ -149,7 +158,9 @@ export function GateForm({
         action={formAction}
         noValidate
         onSubmit={(event) => {
-          if (!navigator.onLine || locked) event.preventDefault();
+          // A ?state= fixture never spends a real try.
+          if (initial.fixture || !navigator.onLine || locked)
+            event.preventDefault();
         }}
         className="flex flex-col gap-6"
       >

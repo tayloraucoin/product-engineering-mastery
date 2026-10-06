@@ -15,7 +15,7 @@
 - C7: `evidence/gate-notice.png` is the guest face at 1440, light: the notice's four points above "Your email". The Words are asserted verbatim in the test.
 - C8: `evidence/gate-throttled.png` is the real flow, not the fixture. On the local Postgres with a synthetic secret, five wrong codes on an unknown slug lock it. The page then shows "Too many tries. You can try again after 2:18 PM." with both fields filled and the button disabled. The browser pane reproduced it on a real slug.
 - C9: the builder checked the keyboard path and the ARIA wiring (`evidence/C9-steps.md`), then deferred the screen-reader pass to the operator.
-- C10: `evidence/gate-states.png` holds all ten keys at 390, 834 and 1440, light and dark. That is 60 headless-Chrome shots (DevTools protocol, reduced motion), set out one row per state.
+- C10: `evidence/gate-states.png` holds all ten keys at 390, 834 and 1440, light and dark. That is 60 headless-Chrome shots (DevTools protocol, reduced motion), set out one row per state. To reproduce C7, C8 and C10 at any head, serve the app on :3008 with a local database and a synthetic `SANDBOX_SECRET_LOCAL`, then run `node evidence/capture-gate.mjs <fresh-dir> states`, `notice` and `throttled`. The script uses no dependency.
 - C11: `app/experimental/layout.tsx` exports `robots: { index: false, follow: false }`, checked by a source scan.
 - C12: `evidence/C12-served-diff.md`. With the slug normalised, a real and an unknown slug's HTML differ only in Next's per-request id and React's `$ACTION_KEY`. `$ACTION_KEY` is a hash of the bound slug, so it is a function of the path alone. Both responses carry `X-Robots-Tag: noindex, nofollow`, and so does `/admin`. This is LAB-5's config-level proof, and it exercises `access.ts`, the request binding LAB-5 could not unit-test.
 
@@ -30,6 +30,12 @@
 - [ASSUMPTION] The lock time is `Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" })`, so it reads "2:18 PM" or "14:18" in the reader's own convention. It is formatted after mount, and one `setTimeout` re-enables the button. A fixture holds still, so the throttled capture keeps its disabled button.
 - The sign-out target is 44px tall through padding and a negative margin, so the account line keeps its line height.
 - Offline is read from `navigator.onLine` and its events. While offline, submitting does nothing and the line shows above the button.
+- After the first reviews (assay and warden, both PASS):
+  - Before hydration, the lock reads in UTC and is named so ("13:32 UTC"). After mount it switches to the reader's own time, so the sentence is never missing its time.
+  - A `?state=` fixture never spends a real try or ends a real session: both forms refuse to submit.
+  - A `?r=` the page cannot read, even for want of a database, is ignored and the gate shows blank.
+  - On a production runtime off Vercel, the action logs `sandbox.network_counter_off` once per process (LAB-6's second review). It names no address.
+  - Source-scan tests say so in their names. C12's diff output is kept in its evidence file, taken at the head it is recorded at.
 - `gate-success` is fixture-only. In the real flow the action redirects, and the button reads "Checking" until the page changes.
 
 ## Not verified
@@ -37,6 +43,11 @@
 - C9's screen-reader pass: the operator's, with the steps in `evidence/C9-steps.md`.
 - The ended and experiment branches are placeholders naming LAB-21 and LAB-11.
 - `contact.email` in `@pem/brand` is still `hello@example.com`. A real, monitored address is the operator's before any real code is issued (out of scope).
+
+- Residuals recorded from the reviews:
+  - An enter action on a real slug makes one indexed query that an unknown slug skips, a timing channel (Warden). That is gate.md's "an unknown slug never reaches the database". It belongs on the epic's gap list beside gap 3.
+  - `?r=` tokens persist in browser history and platform request logs. The token grants nothing and is stripped on success. LAB-20 weighs it before confirmation emails send such links.
+  - The demo root layout's theme toggle sits over the gate and is its first tab stop (Assay, cut as polish; not this ticket's path).
 
 ## Next
 

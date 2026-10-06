@@ -122,7 +122,7 @@ describe("C1: one face without access", () => {
     });
   });
 
-  test("C1: the path round-trips to its slug, and the title is fixed for every slug", () => {
+  test("C1: the path round-trips to its slug, and the title is fixed for every slug (the title by source scan)", () => {
     for (const slug of ["pricing-2026", "no-such-review", "a b/c"])
       assert.equal(slugOfGatePath(gatePath(slug)), slug);
     assert.equal(gatePath("pricing-2026"), "/experimental/pricing-2026");
@@ -306,7 +306,7 @@ describe("C2: one error for every code that does not open a review", () => {
     assert.ok(!text.includes("ana@example.com") && !text.includes("7KQM"));
   });
 
-  test("C2: the action keys the network counter only where the platform sets the address, and marks cookies Secure on any production runtime", () => {
+  test("C2: the action keys the network counter only where the platform sets the address, and marks cookies Secure on any production runtime (source scan)", () => {
     const action = readFileSync(
       new URL("../../app/experimental/[slug]/actions.ts", import.meta.url),
       "utf8",
@@ -320,7 +320,11 @@ describe("C2: one error for every code that does not open a review", () => {
     assert.doesNotMatch(action, /console\./);
     assert.deepEqual(
       [...action.matchAll(/log\.\w+\(\s*"([^"]+)"/g)].map((m) => m[1]),
-      ["sandbox.gate_failed", "auth.sign_out_unrevoked"],
+      [
+        "sandbox.network_counter_off",
+        "sandbox.gate_failed",
+        "auth.sign_out_unrevoked",
+      ],
     );
     assert.doesNotMatch(action, /log\.\w+\([^)]*(formData|email|input)/);
   });
@@ -590,7 +594,7 @@ describe("C6: the gate's ?state= keys", () => {
 });
 
 describe("C11: noindex metadata", () => {
-  test("C11: the experimental layout exports robots metadata with index and follow false", () => {
+  test("C11: the experimental layout exports robots metadata with index and follow false (source scan: node cannot load TSX; the served header backs it, C12)", () => {
     const layout = readFileSync(
       new URL("../../app/experimental/layout.tsx", import.meta.url),
       "utf8",
