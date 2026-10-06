@@ -8,10 +8,10 @@
       "run": {
         "command": "yarn workspace @pem/auth test",
         "exit": 0,
-        "at": "2026-10-06T18:44:36Z",
-        "head": "4c7c7a437fefbe077e1a55066cac19640c0a88f0",
+        "at": "2026-10-06T18:52:03Z",
+        "head": "9fae3c884630a63b042eade3f98042640bd82ebc",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-002-developer-role/evidence/C1.log",
-        "evidence_sha256": "cca58e371044c74e7cb889565b440727be2381ba62cdc84219c312a061592417",
+        "evidence_sha256": "a45bf9f622de6aba3a651febb720ef696c0dec33d0d4c90de2f96c9467cb6ac6",
         "tests": 36
       }
     },
@@ -21,10 +21,10 @@
       "run": {
         "command": "yarn workspace @pem/api test",
         "exit": 0,
-        "at": "2026-10-06T18:45:06Z",
-        "head": "4c7c7a437fefbe077e1a55066cac19640c0a88f0",
+        "at": "2026-10-06T18:52:33Z",
+        "head": "9fae3c884630a63b042eade3f98042640bd82ebc",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-002-developer-role/evidence/C2.log",
-        "evidence_sha256": "344970fb4192c1d8baabb3237cc13d388af534b2522b0d5de5d0d5107099a9a6",
+        "evidence_sha256": "d34bc55b94733b02b8a822e1b075e2ea83f93a0eec97541ed3466669915c41d3",
         "tests": 14
       }
     },
@@ -34,10 +34,10 @@
       "run": {
         "command": "yarn workspace @pem/db test",
         "exit": 0,
-        "at": "2026-10-06T18:45:11Z",
-        "head": "4c7c7a437fefbe077e1a55066cac19640c0a88f0",
+        "at": "2026-10-06T18:52:38Z",
+        "head": "9fae3c884630a63b042eade3f98042640bd82ebc",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-002-developer-role/evidence/C3.log",
-        "evidence_sha256": "7000b844dada96c998c36e3f66ce6b99fadf97e760ded456ccfedb95fcef88ad",
+        "evidence_sha256": "7abf6961fa87d26e852985fe4bb1cca9bd77319bdb5aa3f3304628565c9583ee",
         "tests": 68
       }
     },
@@ -47,11 +47,11 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-06T18:45:20Z",
-        "head": "4c7c7a437fefbe077e1a55066cac19640c0a88f0",
+        "at": "2026-10-06T18:52:47Z",
+        "head": "9fae3c884630a63b042eade3f98042640bd82ebc",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-002-developer-role/evidence/C4.log",
-        "evidence_sha256": "ddb987f631f1b33bb57492cd3dc6f998b732139bbd76b0ba4e4473baec3869f2",
-        "tests": 38
+        "evidence_sha256": "5ce8d146b15848e2ddeab77c8c5491c2ad5a0b4169bcfa40b357e26fd52393fb",
+        "tests": 39
       }
     },
     "C5": {
@@ -60,11 +60,11 @@
       "run": {
         "command": "yarn workspace web test",
         "exit": 0,
-        "at": "2026-10-06T18:45:27Z",
-        "head": "4c7c7a437fefbe077e1a55066cac19640c0a88f0",
+        "at": "2026-10-06T18:52:54Z",
+        "head": "9fae3c884630a63b042eade3f98042640bd82ebc",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-002-developer-role/evidence/C5.log",
-        "evidence_sha256": "1daf118916c7daf024e1c7a4f472f0f4ee6005aa15860863fd27e5d1738d1be9",
-        "tests": 82
+        "evidence_sha256": "8f857f35c54a6f142cf3595ab3d6c33cc78d41a9cd24d281a647de73c6317db6",
+        "tests": 83
       }
     },
     "review:mason": {
@@ -88,5 +88,5 @@
       }
     }
   },
-  "updated_at": "2026-10-06T18:50:27Z"
+  "updated_at": "2026-10-06T18:52:55Z"
 }
