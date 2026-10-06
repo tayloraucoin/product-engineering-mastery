@@ -17,6 +17,7 @@
 
 import { safeNextPath } from "@pem/auth/redirect";
 
+import { isAdminOnlyPath } from "./admin-nav.ts";
 import type { TeamMember } from "./team-check.ts";
 
 export const ADMIN_SIGN_IN_PATH = "/auth/sign-in";
@@ -32,7 +33,10 @@ export type AdminGateInput = {
    * carries the right `next`.
    */
   path: string | null;
-  /** True for a page or action only an admin may reach. */
+  /**
+   * True for a page or action only an admin may reach. A path under an
+   * admin-only nav entry (People) is admin-only whether or not this is set.
+   */
   adminOnly?: boolean;
 };
 
@@ -55,7 +59,8 @@ export function adminGate({
   adminOnly = false,
 }: AdminGateInput): AdminGateResult {
   if (member) {
-    if (adminOnly && member.role !== "admin") return { kind: "not-found" };
+    const onlyAdmins = adminOnly || (path !== null && isAdminOnlyPath(path));
+    if (onlyAdmins && member.role !== "admin") return { kind: "not-found" };
     return { kind: "team", member };
   }
   if (signedIn) return { kind: "not-found" };

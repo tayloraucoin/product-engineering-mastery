@@ -55,6 +55,16 @@ export function adminNavFor(
   return nav.filter((entry) => !entry.adminOnly || role === "admin");
 }
 
+/** True when `path` sits under an admin-only entry (People), whatever the caller passed. */
+export function isAdminOnlyPath(
+  path: string,
+  nav: readonly AdminNavEntry[] = ADMIN_NAV,
+): boolean {
+  return nav.some(
+    (e) => e.adminOnly && (path === e.href || path.startsWith(`${e.href}/`)),
+  );
+}
+
 /** The entry `pathname` sits under, if any: `/admin/experiments/x/codes` is under Experiments. */
 export function activeAdminHref(
   pathname: string,

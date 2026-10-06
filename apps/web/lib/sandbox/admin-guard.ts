@@ -2,12 +2,14 @@
  * The /admin guards, bound to the request (LAB-8). The rule is `adminGate`
  * in admin-gate.ts; this file only reads who is asking and acts on it.
  *
- * - Every /admin page calls `requireTeamPage(path)` before any read, and the
- *   layout calls `requireTeamPage(null)`. A layout does not re-render on
- *   client navigation, so a page never trusts it (Next 16, "Layouts and auth
- *   checks").
- * - Every exported /admin server action calls `requireTeamAction()` first
- *   and returns its refusal unchanged. `signOutAdmin` is the one exception.
+ * - Every /admin page calls `requireTeamPage(path)` before any read. Only a
+ *   layout may pass `null`, and must then return its children bare when no
+ *   member comes back. A layout does not re-render on client navigation, so
+ *   a page never trusts it (Next 16, "Layouts and auth checks").
+ * - Every exported /admin server action opens with
+ *   `const member = await requireTeamAction()` and
+ *   `if (isTeamActionRefusal(member)) return member;`. There is no exception:
+ *   sign-out posts to the hardened `/auth/sign-out` route.
  *
  * `admin-routes.test.ts` scans the route files to hold both rules.
  */

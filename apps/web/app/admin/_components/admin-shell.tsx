@@ -33,7 +33,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
-  SidebarRail,
   useSidebar,
 } from "@pem/ui/sidebar";
 import { ThemeToggle } from "@pem/ui/theme-toggle";
@@ -46,7 +45,6 @@ import {
 } from "../../../lib/sandbox/admin-nav";
 import { readSandboxState } from "../../../lib/sandbox/state";
 import type { TeamRole } from "../../../lib/sandbox/team-check";
-import { signOutAdmin } from "../actions";
 
 const ICONS: Record<AdminNavIcon, LucideIcon> = {
   experiments: FlaskConicalIcon,
@@ -71,7 +69,11 @@ export function AdminShell({ role, email, children }: AdminShellProps) {
   const view = adminShellView(state, role);
   if (view.notFound) notFound();
   return (
-    <SidebarProvider mobileBreakpoint="lg" defaultOpen={!view.collapsed}>
+    <SidebarProvider
+      mobileBreakpoint="lg"
+      defaultOpen={!view.collapsed}
+      data-admin-shell=""
+    >
       <a
         href={`#${ADMIN_MAIN_ID}`}
         className="sr-only z-50 rounded-md bg-background px-3 py-2 text-sm font-medium focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:ring-3 focus:ring-ring/50"
@@ -116,7 +118,7 @@ function AdminSidebar({
   }, [sheetOpen, setOpenMobile]);
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" sheetTitle="Admin" sheetDescription={null}>
       <nav aria-label="Admin" className="flex min-h-0 flex-1 flex-col">
         <SidebarHeader>
           <SidebarMenu>
@@ -151,7 +153,8 @@ function AdminSidebar({
       <SidebarFooter className="gap-3 group-data-[collapsible=icon]:hidden">
         <p className="truncate px-2 text-sm text-muted-foreground">{email}</p>
         <ThemeToggle className="self-start" />
-        <form action={signOutAdmin}>
+        {/* The hardened sign-out route (STK-24): clears every session cookie whatever Supabase answers. */}
+        <form method="post" action="/auth/sign-out">
           <Button
             type="submit"
             variant="ghost"
@@ -161,7 +164,6 @@ function AdminSidebar({
           </Button>
         </form>
       </SidebarFooter>
-      <SidebarRail />
     </Sidebar>
   );
 }
@@ -183,10 +185,7 @@ function AdminNavItem({
           className="cursor-default text-muted-foreground hover:bg-transparent hover:text-muted-foreground"
         >
           <Icon aria-hidden="true" />
-          <span>
-            {entry.title}
-            <span className="sr-only">, not built yet</span>
-          </span>
+          <span>{entry.title}, not built yet</span>
         </SidebarMenuButton>
       </SidebarMenuItem>
     );

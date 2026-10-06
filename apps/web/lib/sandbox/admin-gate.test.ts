@@ -150,3 +150,14 @@ test("C4: a developer passes a team action, and an admin passes both", async () 
     assert.equal(worked(), 1);
   }
 });
+
+test("C3: a path under People is admin-only even when the caller forgets to say so", () => {
+  for (const path of ["/admin/people", "/admin/people/anything"])
+    assert.deepEqual(adminGate({ member: developer, signedIn: true, path }), {
+      kind: "not-found",
+    });
+  assert.deepEqual(
+    adminGate({ member: developer, signedIn: true, path: "/admin/peoplex" }),
+    { kind: "team", member: developer },
+  );
+});
