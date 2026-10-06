@@ -5,7 +5,12 @@ import { test } from "node:test";
 
 import type { LogFields, Logger } from "@pem/observability/logger";
 
-import { createAi, createChatHandler, type AiConfig } from "./client.ts";
+import {
+  createAi,
+  createChatHandler,
+  createRateWindow,
+  type AiConfig,
+} from "./client.ts";
 import { FIXTURES } from "./fixtures/index.ts";
 
 const LOCAL: AiConfig = { tier: "local", deployed: false };
@@ -114,14 +119,67 @@ test("a body the gate refuses is 400, before any model is called", async () => {
   }
 });
 
-test("no key on a hosted tier is 503, naming nothing about the configuration", async () => {
-  const { handler } = setup(
+test("no key on a hosted tier is 503 with a body that names no key, variable or configuration", async () => {
+  const { calls, lines, handler } = setup(
     { tier: "staging", deployed: true },
     "user-synthetic",
   );
   const response = await handler(post(chat));
   assert.equal(response.status, 503);
-  assert.deepEqual(await response.json(), { error: "AI is not configured" });
+  const text = await response.text();
+  assert.deepEqual(JSON.parse(text), { error: "chat is unavailable" });
+  assert.doesNotMatch(text, /config|key|anthropic|env/i);
+  assert.equal(calls.length, 0);
+  // The reason stays in the server's log.
+  assert.ok(lines.some((line) => line.event === "chat.unconfigured"));
+});
+
+test("no key on a hosted tier answers 503 before asking who is signed in or reading the body", async () => {
+  const { handler, asked } = setup(
+    { tier: "production", deployed: true },
+    null,
+  );
+  let pulled = 0;
+  const body = new ReadableStream<Uint8Array>({
+    pull(controller) {
+      pulled += 1;
+      controller.enqueue(new TextEncoder().encode("{}"));
+      controller.close();
+    },
+  },
+  // Nothing buffered ahead: only a read pulls.
+  { highWaterMark: 0 },
+  );
+  const response = await handler(
+    new Request("http://localhost/api/ai/chat", {
+      method: "POST",
+      body,
+      duplex: "half",
+    } as RequestInit),
+  );
+  assert.equal(response.status, 503);
+  assert.equal(asked(), 0);
+  assert.equal(pulled, 0);
+});
+
+test("the rate window drops a user once their last call leaves it", () => {
+  let clock = 0;
+  const window = createRateWindow(
+    { requests: 2, windowMs: 60_000 },
+    () => clock,
+  );
+  assert.equal(window.admit("user-a"), true);
+  assert.equal(window.admit("user-b"), true);
+  assert.equal(window.size(), 2);
+  clock = 30_000;
+  assert.equal(window.admit("user-b"), true);
+  clock = 60_000;
+  // user-a's one call has left the window; user-b's second is still in it.
+  assert.equal(window.admit("user-c"), true);
+  assert.equal(window.size(), 2);
+  clock = 200_000;
+  assert.equal(window.admit("user-c"), true);
+  assert.equal(window.size(), 1);
 });
 
 test("past the per-user window a vendor call is 429, before any model is called; the window then reopens", async () => {

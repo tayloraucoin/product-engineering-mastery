@@ -12,7 +12,8 @@
  *   deployment never serves a fixture as if it were an answer.
  *
  * Every vendor call logs `[ai] vendor` with the case, the model and, when the
- * caller passes one, the user's id.
+ * caller passes one, the user's id. The line is written only once the input
+ * has passed every check before the model, so it counts calls that can spend.
  *
  * Server-only: it builds the keyed client, so a client component that imports
  * it fails to build rather than relying on the bundle scan.
@@ -29,6 +30,7 @@ import { createLogger, type Logger } from "@pem/observability/logger";
 import { parseChatRequest, streamChat } from "./cases/chat.ts";
 import { extractContact, type Contact } from "./cases/extract.ts";
 import { summarize } from "./cases/generate.ts";
+import { checkInput } from "./cases/options.ts";
 import { createFixtureModel } from "./fixture-model.ts";
 import { FIXTURES } from "./fixtures/index.ts";
 import { CASE_MODELS, type CaseId } from "./models.ts";
@@ -58,11 +60,13 @@ export type AiDeps = {
   fetch?: typeof globalThis.fetch;
 };
 
+/** Why a call cannot be served: for the server's log, never a response body. */
+const NOT_CONFIGURED =
+  "AI is not configured: set ANTHROPIC_API_KEY for this tier (packages/ai/README.md).";
+
 export class AiNotConfiguredError extends Error {
   constructor() {
-    super(
-      "AI is not configured: set ANTHROPIC_API_KEY for this tier (packages/ai/README.md).",
-    );
+    super(NOT_CONFIGURED);
     this.name = "AiNotConfiguredError";
   }
 }
@@ -115,12 +119,19 @@ export function createAi(config: AiConfig, deps: AiDeps = {}): Ai {
     throw new AiNotConfiguredError();
   }
 
+  // The input cap is checked before modelFor writes `[ai] vendor`; a text the
+  // case refuses is never logged as spend. The chat's gate is parseChatRequest,
+  // which the handler runs before streamChat.
   return {
     mode,
-    extractContact: async (text, options) =>
-      extractContact(modelFor("extract", options), text),
-    summarize: async (text, options) =>
-      summarize(modelFor("generate", options), text),
+    extractContact: async (text, options) => {
+      checkInput("extract", text);
+      return extractContact(modelFor("extract", options), text);
+    },
+    summarize: async (text, options) => {
+      checkInput("generate", text);
+      return summarize(modelFor("generate", options), text);
+    },
     streamChat: async (messages, options) =>
       streamChat(modelFor("chat", options), messages, logger, options),
   };
@@ -128,6 +139,47 @@ export function createAi(config: AiConfig, deps: AiDeps = {}): Ai {
 
 /** Per signed-in user, per process: a burst bound. The Anthropic Console's spend limit bounds the month. */
 export const CHAT_RATE = { requests: 20, windowMs: 60_000 } as const;
+
+export type RateWindow = {
+  /** Records a call for `userId`, or returns false when the window is full. */
+  admit(userId: string): boolean;
+  /** Users with a call still inside the window: the most the map holds. */
+  size(): number;
+};
+
+/**
+ * A sliding window per user, in this process. Each admit drops every call
+ * that has left the window and every user left with none, so the map holds
+ * only the users active in the last `windowMs`, never everyone who has ever
+ * chatted.
+ */
+export function createRateWindow(
+  rate: { requests: number; windowMs: number },
+  now: () => number = Date.now,
+): RateWindow {
+  const recent = new Map<string, number[]>();
+
+  function sweep(at: number): void {
+    for (const [userId, times] of recent) {
+      const kept = times.filter((time) => at - time < rate.windowMs);
+      if (kept.length === 0) recent.delete(userId);
+      else if (kept.length !== times.length) recent.set(userId, kept);
+    }
+  }
+
+  return {
+    admit(userId) {
+      const at = now();
+      sweep(at);
+      const kept = recent.get(userId) ?? [];
+      if (kept.length >= rate.requests) return false;
+      kept.push(at);
+      recent.set(userId, kept);
+      return true;
+    },
+    size: () => recent.size,
+  };
+}
 
 /** A body larger than this is refused before it is parsed (the text cap is 20,000 characters). */
 export const MAX_CHAT_BODY_BYTES = 256 * 1024;
@@ -179,7 +231,12 @@ async function readBounded(
  *   instances allows a multiple of it; it stops a loop, not a determined
  *   spender, which is the Console limit's job.
  * - 413 for a body over MAX_CHAT_BODY_BYTES, counted as it is read; 400 when it fails `parseChatRequest`.
- * - 503 when no key is set where fixtures may not answer.
+ * - 503 when no key is set where fixtures may not answer, answered first:
+ *   nobody is asked who they are and no body is read, and the answer names
+ *   nothing about the configuration. The reason is logged on the server, as a
+ *   warning, so a flood of requests is not a flood of error reports.
+ *
+ * The 401 gate rests on the session cookie being same-site (packages/ai/README.md).
  */
 export function createChatHandler(deps: {
   ai: Ai;
@@ -189,26 +246,16 @@ export function createChatHandler(deps: {
   logger?: Logger;
 }): (request: Request) => Promise<Response> {
   const rate = deps.rate ?? CHAT_RATE;
-  const now = deps.now ?? Date.now;
   const logger = deps.logger ?? createLogger("ai");
-  const recent = new Map<string, number[]>();
-
-  /** Records a call for `userId`, or returns false when the window is full. */
-  function admit(userId: string): boolean {
-    const at = now();
-    const kept = (recent.get(userId) ?? []).filter(
-      (time) => at - time < rate.windowMs,
-    );
-    if (kept.length >= rate.requests) {
-      recent.set(userId, kept);
-      return false;
-    }
-    kept.push(at);
-    recent.set(userId, kept);
-    return true;
-  }
+  const window = createRateWindow(rate, deps.now);
+  const unavailable = () =>
+    Response.json({ error: "chat is unavailable" }, { status: 503 });
 
   return async (request) => {
+    if (deps.ai.mode === "unconfigured") {
+      logger.warn("chat.unconfigured", { reason: NOT_CONFIGURED });
+      return unavailable();
+    }
     let userId: string | null = null;
     if (deps.ai.mode === "vendor") {
       userId = await deps.currentUserId();
@@ -228,7 +275,7 @@ export function createChatHandler(deps: {
     if (!parsed.ok)
       return Response.json({ error: parsed.error }, { status: 400 });
     // Counted here, after every refusal: only a call that reaches the vendor uses the window.
-    if (userId && !admit(userId)) {
+    if (userId && !window.admit(userId)) {
       logger.warn("chat.limited", { userId });
       return Response.json(
         { error: "too many requests" },
@@ -241,11 +288,10 @@ export function createChatHandler(deps: {
     try {
       return await deps.ai.streamChat(parsed.messages, { userId });
     } catch (error) {
-      if (error instanceof AiNotConfiguredError)
-        return Response.json(
-          { error: "AI is not configured" },
-          { status: 503 },
-        );
+      if (error instanceof AiNotConfiguredError) {
+        logger.warn("chat.unconfigured", { reason: NOT_CONFIGURED });
+        return unavailable();
+      }
       throw error;
     }
   };

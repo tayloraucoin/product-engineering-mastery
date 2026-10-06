@@ -227,9 +227,9 @@ test("with a key, the request names the case's model, its effort, the output cap
   );
 });
 
-test("a text over its case's input cap is refused before any model is called", async () => {
+test("a text over its case's input cap is refused before any model is called, and logs no [ai] vendor line", async () => {
   const { calls, fetch } = fakeFetch();
-  const { logger } = memoryLogger();
+  const { lines, logger } = memoryLogger();
   for (const config of [LOCAL, { ...LOCAL, apiKey: "sk-ant-synthetic" }]) {
     const ai = createAi(config, { fetch, logger });
     await assert.rejects(
@@ -242,6 +242,11 @@ test("a text over its case's input cap is refused before any model is called", a
     );
   }
   assert.equal(calls.length, 0);
+  // The spend record counts only calls that could spend (STK-26).
+  assert.deepEqual(
+    lines.filter((line) => line.event === "vendor"),
+    [],
+  );
 });
 
 test("the client module is server-only, so a client component cannot import the keyed client", () => {
