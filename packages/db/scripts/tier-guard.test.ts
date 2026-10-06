@@ -177,6 +177,20 @@ describe("WEB-9 C1: db:setup:local refuses before it connects", () => {
     assert.ok(result.ms < 5_000, `took ${result.ms} ms`);
   });
 
+  test("an unset _LOCAL URL is refused by name, never falling back to Docker's", () => {
+    const result = runScript("setup-local.ts", {
+      DATABASE_ENVIRONMENT: "local",
+    });
+    assert.equal(result.status, 1, result.stderr);
+    assert.equal(result.lines, 1, result.stderr);
+    assert.match(
+      result.firstLine,
+      /refused: DATABASE_MIGRATION_URL_LOCAL is unset/,
+    );
+    assert.doesNotMatch(result.stdout + result.stderr, /54322/);
+    assert.ok(result.ms < 5_000, `took ${result.ms} ms`);
+  });
+
   test("a hosted tier is refused before any URL is resolved", () => {
     const result = runScript("setup-local.ts", {
       DATABASE_ENVIRONMENT: "production",

@@ -11,7 +11,7 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { after, before, beforeEach, describe, mock, test } from "node:test";
-import postgres from "postgres";
+import type postgres from "postgres";
 
 import {
   applySetup,
@@ -31,7 +31,6 @@ import { assertLoopbackClient } from "../src/loopback.ts";
 
 const created: string[] = [];
 let admin: postgres.Sql | undefined;
-let authAdmin: postgres.Sql | undefined;
 
 /** A fresh synthetic user, removed again after the run. */
 function syntheticUser(label: string) {
@@ -83,16 +82,9 @@ before(async () => {
     "marked",
     "auth.identities exists: this database belongs to Supabase Auth (Mode B). Run yarn db:stop --no-backup, then yarn db:local.",
   );
-
-  // Supabase Auth's own role, which creates auth.identities on a real auth
-  // database. The CLI gives it the database password.
-  const auth = new URL(url);
-  auth.username = "supabase_auth_admin";
-  authAdmin = postgres(auth.toString(), { max: 1, onnotice: () => {} });
 });
 
 after(async () => {
-  await authAdmin?.end();
   if (!admin) return;
   if (created.length > 0) {
     await admin`delete from auth.users where id in ${admin(created)}`;
@@ -198,9 +190,13 @@ async function authCount(client: postgres.Sql, id: string) {
 describe("the guard inside the INSERT", () => {
   test("inserts zero rows when auth.identities exists", async () => {
     const user = syntheticUser("identities");
-    const client = authAdmin;
+    const client = admin;
     assert.ok(client);
     await rolledBack(client, async () => {
+      // Supabase Auth's own role creates auth.identities on a real auth
+      // database; it owns the auth schema, so the switch is enough, and the
+      // rollback ends it with the transaction.
+      await client.unsafe("set local role supabase_auth_admin");
       await client`create table auth.identities (id uuid primary key)`;
       assert.equal(await applyLocalAuthMirror(client, user), "refused");
       assert.equal(await authCount(client, user.id), 0);

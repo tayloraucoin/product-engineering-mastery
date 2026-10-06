@@ -20,7 +20,13 @@ import type { Tier } from "@pem/env/tier";
 import { describeUrl } from "../src/connection.ts";
 import { assertLoopbackClient, isLoopbackUrl } from "../src/loopback.ts";
 import { applySetup, openMigrationClient, runMigrations } from "./database.ts";
-import { ADD_RECIPE, EXAMPLE_FILE, migrationUrl, requireTier } from "./env.ts";
+import {
+  ADD_RECIPE,
+  EXAMPLE_FILE,
+  hasOwnLocalUrl,
+  migrationUrl,
+  requireTier,
+} from "./env.ts";
 import { markLocalAuthMirror } from "./local-auth-marker.ts";
 
 const COMMAND = "db:setup:local";
@@ -75,6 +81,10 @@ async function main(): Promise<void> {
     refuse(
       `DATABASE_ENVIRONMENT is ${tier}. This prepares a Postgres on this machine for the local tier only; a hosted tier changes by migration (yarn db:migrate, then yarn db:setup).`,
     );
+  if (!hasOwnLocalUrl("DATABASE_MIGRATION_URL"))
+    refuse(
+      `DATABASE_MIGRATION_URL_LOCAL is unset. Set it to your own Postgres, as ${EXAMPLE_FILE} does; unset means Docker's database (yarn db:local, ${ADD_RECIPE}).`,
+    );
   const url = migrationUrl();
   if (!isLoopbackUrl(url))
     refuse(
@@ -89,9 +99,18 @@ async function main(): Promise<void> {
   const client = openMigrationClient(url, tier);
   try {
     assertLoopbackClient(client);
+    // Supabase Auth's own database (Docker's full stack, Mode B) is refused
+    // before the shim touches its auth schema; the marker check below is the
+    // second guard.
+    const [owned] = await client<{ auth_owned: boolean }[]>`
+      select to_regclass('auth.identities') is not null as auth_owned`;
+    if (owned?.auth_owned)
+      refuse(
+        `this database belongs to Supabase Auth (auth.identities exists), so nothing here changes it. Point DATABASE_MIGRATION_URL_LOCAL at a database of your own.`,
+      );
     await client.unsafe(readFileSync(SHIM, "utf8"));
     console.log(
-      "  shim applied: roles anon, authenticated, service_role; auth.users",
+      "  shim applied: roles anon, authenticated, service_role, supabase_auth_admin (no login); auth.users",
     );
     await runMigrations(client);
     console.log("  migrations applied");

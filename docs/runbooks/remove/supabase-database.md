@@ -21,7 +21,7 @@ load_when:
 
 ## Before deleting anything
 
-On a developer's own Postgres (the default), the operator drops the `pem_local` database themselves (`dropdb pem_local`; agents never drop a database, D-STK-18) and the three roles the shim created if nothing else uses them. A hosted-only project has no local database and skips this. Where [`add/docker-local-database.md`](../add/docker-local-database.md) switched Docker's on, stop it and drop its volume while the CLI is still installed: `yarn db:stop --no-backup`. With the CLI already gone, `docker rm -f supabase_db_<project_id>` and `docker volume rm supabase_db_<project_id>` do the same, with `project_id` from `packages/db/supabase/config.toml`.
+On a developer's own Postgres (the default), the operator drops the `pem_local` database themselves (`dropdb pem_local`; agents never drop a database, D-STK-18), then the four roles the shim created (`anon`, `authenticated`, `service_role`, `supabase_auth_admin`) if nothing else on that server uses them. A hosted-only project has no local database and skips this. Where [`add/docker-local-database.md`](../add/docker-local-database.md) switched Docker's on, stop it and drop its volume while the CLI is still installed: `yarn db:stop --no-backup`. With the CLI already gone, `docker rm -f supabase_db_<project_id>` and `docker volume rm supabase_db_<project_id>` do the same, with `project_id` from `packages/db/supabase/config.toml`.
 
 ## Files to delete
 

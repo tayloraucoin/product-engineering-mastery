@@ -14,7 +14,8 @@
  * DATABASE_MIGRATION_URL is the session pooler, for migrations and setup SQL.
  * Each takes the _LOCAL and _STAGING suffixes, and a hosted tier reads only
  * its own suffix or the unsuffixed name, never _LOCAL. On the local tier an
- * unset value means the database `yarn db:local` starts.
+ * unset value means Docker's database, which `yarn db:local` starts;
+ * `db:setup:local` refuses that and asks for your own.
  *
  * NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are the auth
  * variables (D-STK-6). Their _LOCAL values select the local mode: a hosted
@@ -78,6 +79,13 @@ function resolve(name: "DATABASE_URL" | "DATABASE_MIGRATION_URL"): string {
   throw new Error(
     `Set ${tierName(name, tier)} (or ${name}) for ${TIER_SWITCH}=${tier}; see ${EXAMPLE_FILE}.`,
   );
+}
+
+/** Whether the local tier has its own value for `name`, rather than Docker's fallback. */
+export function hasOwnLocalUrl(
+  name: "DATABASE_URL" | "DATABASE_MIGRATION_URL",
+): boolean {
+  return pickTiered(raw, name, "local") !== undefined;
 }
 
 /** The runtime URL for this tier. */

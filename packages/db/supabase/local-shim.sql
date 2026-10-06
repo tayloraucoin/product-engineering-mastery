@@ -18,11 +18,11 @@ begin
     create role service_role nologin noinherit bypassrls;
   end if;
   -- Supabase Auth's own role, which owns the auth schema on a real auth
-  -- database and creates auth.identities there; the mirror's integration test
-  -- connects as it. No password: a local Postgres trusts loopback, and a
-  -- server that asks for one refuses this role, which is the safe side.
+  -- database and creates auth.identities there. No login: nothing connects as
+  -- it here; the mirror's integration test switches to it inside a rolled-back
+  -- transaction.
   if not exists (select 1 from pg_roles where rolname = 'supabase_auth_admin') then
-    create role supabase_auth_admin login noinherit;
+    create role supabase_auth_admin nologin noinherit;
   end if;
   -- The bridge runs `set local role authenticated` on the connecting user
   -- (src/rls.ts), which must be a member of the role; a superuser is already.
@@ -51,6 +51,7 @@ alter table auth.users
   alter column created_at drop default,
   alter column updated_at drop not null,
   alter column updated_at drop default;
+alter role supabase_auth_admin nologin;
 alter schema auth owner to supabase_auth_admin;
 alter table auth.users owner to supabase_auth_admin;
 grant usage on schema auth to anon, authenticated, service_role;
