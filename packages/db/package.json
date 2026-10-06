@@ -35,6 +35,10 @@
     "./stripe-event-ledger": {
       "types": "./src/billing/stripe-event-ledger.ts",
       "default": "./src/billing/stripe-event-ledger.ts"
+    },
+    "./sandbox": {
+      "types": "./src/sandbox/index.ts",
+      "default": "./src/sandbox/index.ts"
     }
   },
   "scripts": {

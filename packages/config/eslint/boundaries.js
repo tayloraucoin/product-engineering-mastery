@@ -20,6 +20,17 @@
  * file added there inherits the edge. It is listed before `app-web` because
  * the first match wins.
  *
+ * `web-sandbox` is `apps/web/lib/sandbox/`, and `db-sandbox` is
+ * `packages/db/src/sandbox/`, the subpath `@pem/db/sandbox` (D-LAB-34). Every
+ * sandbox table is service-only, so isolation rests on that one module: only
+ * `web-sandbox` may import it, besides @pem/db's own files. `web-sandbox`
+ * imports whatever apps/web may, and the rest of apps/web imports it.
+ * `db-sandbox` is transport-free and imports only what @pem/db may, and db.
+ * Route files under apps/web/app/experimental/ and apps/web/app/admin/ never
+ * import @pem/db/client or @pem/db/schema: their data goes through
+ * lib/sandbox. Each is listed before its parent element because the first
+ * match wins.
+ *
  * Each element in TRANSPORT_FREE imports no transport or framework: a service
  * is called the same way by a tRPC procedure, a Route Handler or a webhook
  * (D-STK-8), so `next`, `react` and `@trpc/*` never reach it.
@@ -68,6 +79,11 @@ const ELEMENTS = [
     pattern: ["apps/web/app/api/ai/**"],
     mode: "full",
   },
+  {
+    type: "web-sandbox",
+    pattern: ["apps/web/lib/sandbox/**"],
+    mode: "full",
+  },
   workspaceApp("app-web", "web"),
   workspaceApp("app-docs", "docs"),
   workspacePackage("config", "config"),
@@ -76,6 +92,14 @@ const ELEMENTS = [
   workspacePackage("brand", "brand"),
   workspacePackage("observability", "observability"),
   workspacePackage("validators", "validators"),
+  {
+    type: "db-sandbox",
+    pattern: [
+      "packages/db/src/sandbox/**",
+      "node_modules/@pem/db/src/sandbox/**",
+    ],
+    mode: "full",
+  },
   workspacePackage("db", "db"),
   workspacePackage("auth", "auth"),
   workspacePackage("email", "email"),
@@ -99,7 +123,8 @@ const PACKAGE_IMPORTS = {
   brand: ["config"],
   observability: ["config"],
   validators: ["config"],
-  db: ["config", "env"],
+  db: ["config", "env", "db-sandbox"],
+  "db-sandbox": ["config", "env", "db"],
   auth: ["config", "db", "observability"],
   email: ["config", "env", "brand", "observability"],
   ai: ["config", "env", "observability"],
@@ -140,15 +165,15 @@ function ownerName(type) {
 }
 
 /** Elements that import no transport or framework (D-STK-8), and what they are kept off. */
-const TRANSPORT_FREE = ["services"];
+const TRANSPORT_FREE = ["services", "db-sandbox"];
 const TRANSPORTS = ["next", "react", "react-dom", "@trpc/*"];
 
 const APP_TYPES = ELEMENTS.map((element) => element.type).filter((type) =>
   type.startsWith("app-"),
 );
 
-/** Apps import packages, never a package's workshop, never the shelf, and @pem/ai only from `web-ai-route`. */
-const NOT_FOR_APPS = new Set(["ui-workshop", "catalog", "ai"]);
+/** Apps import packages, never a package's workshop, never the shelf, @pem/ai only from `web-ai-route`, and @pem/db/sandbox only from `web-sandbox`. */
+const NOT_FOR_APPS = new Set(["ui-workshop", "catalog", "ai", "db-sandbox"]);
 const APP_IMPORTS = Object.keys(PACKAGE_IMPORTS).filter(
   (type) => !NOT_FOR_APPS.has(type),
 );
@@ -216,6 +241,28 @@ function transportFreeOverrides() {
   });
 }
 
+/** Sandbox route files reach data only through lib/sandbox (D-LAB-34): never the client or the schema. */
+const SANDBOX_ROUTE_FILES = [
+  `apps/web/app/experimental/${SOURCE_FILES}`,
+  `apps/web/app/admin/${SOURCE_FILES}`,
+];
+function sandboxRouteOverrides() {
+  return [
+    {
+      files: SANDBOX_ROUTE_FILES,
+      rules: {
+        "no-restricted-imports": restrictedImports("app-web", [
+          {
+            regex: "^@pem/db/(client|schema)(/.*)?$",
+            message:
+              "An experimental or admin route reaches sandbox data only through apps/web/lib/sandbox (D-LAB-34), never @pem/db/client or @pem/db/schema.",
+          },
+        ]),
+      },
+    },
+  ];
+}
+
 /** One override per SDK owner, so its own files may import what it owns. */
 function ownerOverrides() {
   const owners = [...new Set(Object.values(SDK_OWNERS))];
@@ -266,9 +313,19 @@ function buildDependencyRules() {
     allow: { to: { type: ["app-web", ...APP_IMPORTS, "ai"] } },
   });
 
+  // The sandbox's app side: what apps/web may import, and @pem/db/sandbox (D-LAB-34).
+  rules.push({
+    from: { type: "web-sandbox" },
+    allow: { to: { type: ["app-web", ...APP_IMPORTS, "db-sandbox"] } },
+  });
+  rules.push({
+    from: { type: "app-web" },
+    allow: { to: { type: "web-sandbox" } },
+  });
+
   rules.push({
     from: { type: Object.keys(PACKAGE_IMPORTS) },
-    disallow: { to: { type: APP_TYPES } },
+    disallow: { to: { type: [...APP_TYPES, "web-sandbox"] } },
   });
 
   return rules;
@@ -341,4 +398,5 @@ export const boundariesConfig = [
   },
   ...ownerOverrides(),
   ...transportFreeOverrides(),
+  ...sandboxRouteOverrides(),
 ];

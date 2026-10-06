@@ -193,6 +193,52 @@ const DISALLOWED: [file: string, code: string, message: RegExp][] = [
     'import "@pem/catalog/manifest";',
     /^ui must not import catalog/,
   ],
+  // LAB-3: @pem/db/sandbox reaches only apps/web/lib/sandbox; sandbox routes never reach the client or schema (D-LAB-34).
+  [
+    "apps/web/app/zz-probe.ts",
+    'import "@pem/db/sandbox";',
+    /^app-web must not import db-sandbox/,
+  ],
+  [
+    "apps/web/lib/zz-probe.ts",
+    'import { checkAccess } from "@pem/db/sandbox";',
+    /^app-web must not import db-sandbox/,
+  ],
+  [
+    "apps/web/app/experimental/[slug]/zz-probe.ts",
+    'import "@pem/db/sandbox";',
+    /^app-web must not import db-sandbox/,
+  ],
+  [
+    "apps/web/app/experimental/[slug]/zz-probe.ts",
+    'import { getDb } from "@pem/db/client";',
+    /never @pem\/db\/client or @pem\/db\/schema/,
+  ],
+  [
+    "apps/web/app/admin/zz-probe.ts",
+    'import { sandboxComments } from "@pem/db/schema";',
+    /never @pem\/db\/client or @pem\/db\/schema/,
+  ],
+  [
+    "apps/web/app/admin/zz-probe.ts",
+    'import { streamText } from "ai";',
+    /ai is owned by @pem\/ai/,
+  ],
+  [
+    "packages/services/src/zz-probe.ts",
+    'import "@pem/db/sandbox";',
+    /^services must not import db-sandbox/,
+  ],
+  [
+    "packages/db/src/sandbox/zz-probe.ts",
+    'import "next/server";',
+    /next is a transport or framework/,
+  ],
+  [
+    "packages/db/src/sandbox/zz-probe.ts",
+    'import "react";',
+    /react is a transport or framework/,
+  ],
 ];
 
 for (const [file, code, message] of DISALLOWED)
@@ -267,6 +313,23 @@ const ALLOWED: [file: string, code: string][] = [
   [
     "apps/web/app/zz-probe.ts",
     'import "@pem/ui/button"; import "@pem/ui/styles/globals.css"; import "@pem/brand/assets/logo.svg"; import "@/app/layout";',
+  ],
+  // LAB-3: lib/sandbox imports @pem/db/sandbox; routes import lib/sandbox.
+  [
+    "apps/web/lib/sandbox/zz-probe.ts",
+    'import "@pem/db/sandbox"; import "@pem/db/client"; import "@/lib/supabase/context";',
+  ],
+  [
+    "apps/web/app/experimental/[slug]/zz-probe.ts",
+    'import "@/lib/sandbox/team";',
+  ],
+  [
+    "apps/web/app/admin/zz-probe.ts",
+    'import "@/lib/sandbox/team"; import "@pem/ui/button";',
+  ],
+  [
+    "packages/db/src/sandbox/zz-probe.ts",
+    'import "../client.ts"; import "drizzle-orm";',
   ],
 ];
 
