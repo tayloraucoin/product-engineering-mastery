@@ -15,6 +15,10 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-06 — LAB-2: the removal runbook keeps every application role
+
+`developer` joined `APP_ROLES` (D-LAB-35). `docs/runbooks/remove/supabase-database.md` still told the operator to inline the old `["user", "admin"]` list when `@pem/db` is removed and auth stays. Followed, that sends every developer back to `user`. The runbook now inlines all three roles and says why: a role leaves the list only when nothing grants it.
+
 ## 2026-10-06 — STK-20: the new-project guide, run cold on a duplicate
 
 Two cold runs of `docs/runbooks/new-project/README.md` on a duplicate (a synthetic product keeping the database, API, email and Sentry, removing Supabase Auth, billing and AI) stopped 21 times, then 11. Every stop is fixed in the guide or a recipe; the logs are STK-20's evidence.
