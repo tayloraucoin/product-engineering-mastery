@@ -8,7 +8,7 @@
  */
 
 import assert from "node:assert/strict";
-import { randomBytes } from "node:crypto";
+import { randomBytes, randomUUID } from "node:crypto";
 import { after, before, describe, test } from "node:test";
 import { and, count, eq, inArray, sql } from "drizzle-orm";
 
@@ -19,6 +19,7 @@ import {
   ACTION_INPUT_INVALID,
   ROLE_CHANGE_ACTION,
 } from "../../src/sandbox/actions.ts";
+import { EXPERIMENT_STATS_INPUT_INVALID } from "../../src/sandbox/experiments.ts";
 import {
   ACCESS_INPUT_INVALID,
   EMAIL_NOT_NORMALISED,
@@ -203,6 +204,100 @@ async function lockAsAdmin(w: World) {
   });
   assert.equal(held, 1, "fn ran without the advisory lock");
 }
+
+/** listExperimentStats (LAB-10): numbers and one date per slug, for the team only. */
+const statsRefused = (kind: ViewerKind) => async (w: World) => {
+  await assert.rejects(
+    sandbox.listExperimentStats(db(), viewerFor(w, kind), {
+      slugs: [w.slugA, w.slugB],
+    }),
+    refusedWith(NOT_A_TEAM_VIEWER),
+  );
+};
+
+const statsAsTeam = (kind: "developer" | "admin") => async (w: World) => {
+  const viewer = viewerFor(w, kind);
+  const unknown = `iso-none-${w.run}`;
+  // A team note later than every reviewer row must not move last activity.
+  const noteId = randomUUID();
+  await db()
+    .insert(sandboxComments)
+    .values({
+      id: noteId,
+      slug: w.slugA,
+      design: "circle",
+      number: 2,
+      body: "Team note",
+      anchor: { id: "hero", x: 0.2, y: 0.2 },
+      viewportW: 1280,
+      viewportH: 800,
+      clientCreatedAt: new Date("2099-01-01T00:00:00Z"),
+      createdAt: new Date("2099-01-01T00:00:00Z"),
+      teamUserId: w.teamUser,
+    });
+  try {
+    const stats = await sandbox.listExperimentStats(db(), viewer, {
+      slugs: [w.slugA, w.slugB, unknown],
+    });
+    assert.deepEqual(
+      stats.map((s) => s.slug),
+      [w.slugA, w.slugB, unknown],
+    );
+    for (const entry of stats) {
+      exactKeys(entry, [
+        "slug",
+        "codes",
+        "sent",
+        "lastActivityAt",
+        "reviewersHoldingData",
+      ]);
+      assert.ok(
+        entry.lastActivityAt === null || entry.lastActivityAt instanceof Date,
+      );
+    }
+    const [a, b, none] = stats;
+    // Slug A holds a1, a2 and the signed-in reviewer, each with a version.
+    assert.deepEqual([a!.codes, a!.sent, a!.reviewersHoldingData], [3, 3, 3]);
+    assert.deepEqual([b!.codes, b!.sent, b!.reviewersHoldingData], [1, 1, 1]);
+    assert.deepEqual(none, {
+      slug: unknown,
+      codes: 0,
+      sent: 0,
+      lastActivityAt: null,
+      reviewersHoldingData: 0,
+    });
+    // The latest reviewer view, comment or send on each slug, and only that slug's.
+    for (const [entry, slug] of [
+      [a!, w.slugA],
+      [b!, w.slugB],
+    ] as const) {
+      const [row] = await database.admin<{ at: Date | string }[]>`
+        select greatest(
+          (select max(at) from public.sandbox_view_events where slug = ${slug}),
+          (select max(created_at) from public.sandbox_comments where slug = ${slug} and reviewer_id is not null),
+          (select max(created_at) from public.sandbox_review_versions where slug = ${slug})
+        ) as at`;
+      assert.equal(
+        entry.lastActivityAt?.getTime(),
+        new Date(row!.at).getTime(),
+      );
+      assert.ok(entry.lastActivityAt!.getUTCFullYear() < 2099);
+    }
+    // Nothing a reviewer gave is in the answer.
+    const text = JSON.stringify(stats);
+    for (const r of [w.a1, w.a2, w.b, w.signedIn])
+      for (const secret of [r.label, r.email, r.code, r.commentBody])
+        assert.ok(!secret || !text.includes(secret));
+    // A malformed slug list is refused without echoing it.
+    for (const slugs of [["Not A Slug"], [w.a1.email!], "x" as never])
+      await assert.rejects(
+        sandbox.listExperimentStats(db(), viewer, { slugs }),
+        refusedWith(EXPERIMENT_STATS_INPUT_INVALID),
+      );
+  } finally {
+    await db().delete(sandboxComments).where(eq(sandboxComments.id, noteId));
+  }
+};
 
 /** Registered cases for every runtime export of @pem/db/sandbox. */
 const REGISTRY: Registry<World> = {
@@ -679,6 +774,18 @@ const REGISTRY: Registry<World> = {
       ),
       developer: lockRefused("developer", NOT_AN_ADMIN_VIEWER),
       admin: lockAsAdmin,
+    },
+  },
+
+  listExperimentStats: {
+    group: "viewer",
+    criteria: ["LAB-10 C5"],
+    byViewer: {
+      "reviewer on slug A": statsRefused("reviewer on slug A"),
+      "second reviewer on slug A": statsRefused("second reviewer on slug A"),
+      "reviewer on slug B": statsRefused("reviewer on slug B"),
+      developer: statsAsTeam("developer"),
+      admin: statsAsTeam("admin"),
     },
   },
 

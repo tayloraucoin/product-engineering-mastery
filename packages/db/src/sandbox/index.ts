@@ -18,6 +18,7 @@ export {
 } from "./gate.ts";
 export { recordAction, type RecordActionInput } from "./actions.ts";
 export { withRoleChangeLock, type RoleChangeTx } from "./roles.ts";
+export { listExperimentStats, type ExperimentStats } from "./experiments.ts";
 export {
   SandboxAccessError,
   type ReviewerViewer,
