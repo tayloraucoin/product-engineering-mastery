@@ -272,16 +272,14 @@ describe("the sandbox schema (LAB-1)", () => {
     const kept = await rowsThrough(r, second, 2);
     // A reply to the erased root survives it: parent_id has no foreign key.
     const reply = randomUUID();
-    await db
-      .insert(sandboxComments)
-      .values(
-        commentValues({
-          id: reply,
-          reviewerId: r,
-          accessId: second,
-          parentId: gone.comment,
-        }),
-      );
+    await db.insert(sandboxComments).values(
+      commentValues({
+        id: reply,
+        reviewerId: r,
+        accessId: second,
+        parentId: gone.comment,
+      }),
+    );
 
     await db.delete(sandboxAccesses).where(eq(sandboxAccesses.id, first));
 
