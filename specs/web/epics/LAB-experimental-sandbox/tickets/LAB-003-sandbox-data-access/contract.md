@@ -59,6 +59,14 @@ criteria:
     statement: "An apps/web file outside lib/sandbox importing @pem/db/sandbox is refused, as is an experimental or admin route file importing @pem/db/client or @pem/db/schema; lib/sandbox importing @pem/db/sandbox is allowed."
     evidence: test
     command: "yarn test:boundaries"
+  - id: review:mason
+    statement: Mason reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run mason <id>
+  - id: review:warden
+    statement: Warden reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
 ---
 
 # Contract — LAB-3 sandbox-data-access
