@@ -17,7 +17,7 @@ import { FAQ, FEATURES, PLANS } from "./content.ts";
  */
 export function CircleDesign() {
   return (
-    <main className="mx-auto flex w-full max-w-4xl flex-col gap-16 px-6 py-12">
+    <div className="mx-auto flex w-full max-w-4xl flex-col gap-16 px-6 py-12">
       <section
         data-sandbox-region="intro"
         data-sandbox-name="Introduction"
@@ -65,7 +65,7 @@ export function CircleDesign() {
         data-sandbox-region="compare"
         data-sandbox-name="Comparison table"
         aria-labelledby="circle-compare-heading"
-        className="flex flex-col gap-6"
+        className="flex min-w-0 flex-col gap-6"
       >
         <h2 id="circle-compare-heading" className="text-xl font-semibold">
           What each plan includes
@@ -110,6 +110,6 @@ export function CircleDesign() {
           ))}
         </dl>
       </section>
-    </main>
+    </div>
   );
 }

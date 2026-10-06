@@ -3,9 +3,9 @@ import { readdirSync, readFileSync } from "node:fs";
 import { describe, test } from "node:test";
 
 import {
+  REGISTRY_ERRORS as E,
   experiments,
   findExperiment,
-  REGISTRY_ERRORS as E,
   registeredConfigs,
   validateRegistry,
 } from "../../app/experimental/_experiments/registry.ts";
@@ -115,9 +115,29 @@ describe("C2: the validator refuses a bad config, naming the field", () => {
   });
 
   test("C2: a duplicate slug", () => {
+    assert.deepEqual(validateRegistry([validConfig(), validConfig()], NOW), {
+      ok: false,
+      errors: [{ index: 1, message: E.slugDuplicate }],
+    });
+  });
+
+  test("C2: a duplicate slug is reported even when the first config has another error", () => {
     assert.deepEqual(
-      validateRegistry([validConfig(), validConfig()], NOW),
-      { ok: false, errors: [{ index: 1, message: E.slugDuplicate }] },
+      validateRegistry([validConfig({ mode: "public" }), validConfig()], NOW),
+      {
+        ok: false,
+        errors: [
+          { index: 0, message: E.mode },
+          { index: 1, message: E.slugDuplicate },
+        ],
+      },
+    );
+  });
+
+  test("C2: a misspelled field is refused, not dropped", () => {
+    assertRefused(
+      validConfig({ targetedquestion: "A misspelled field" }),
+      E.unknownField,
     );
   });
 
@@ -209,6 +229,18 @@ describe("C2: the validator refuses a bad config, naming the field", () => {
     const fixed = new Set<string>(Object.values(E));
     for (const message of messages) assert.ok(fixed.has(message), message);
   });
+
+  test("C2: a malformed config, design or question still gets a fixed message", () => {
+    const cases: [unknown, string][] = [
+      [null, E.config],
+      ["pricing-2026", E.config],
+      [validConfig({ designs: [null] }), E.design],
+      [validConfig({ questions: [null] }), E.questions],
+      [validConfig({ questions: [{ text: "No id" }] }), E.questions],
+    ];
+    for (const [config, message] of cases)
+      assert.deepEqual(messagesFor([config]), [message]);
+  });
 });
 
 describe("C3: closedOn is never after today in Europe/London", () => {
@@ -217,8 +249,14 @@ describe("C3: closedOn is never after today in Europe/London", () => {
   });
 
   test("C3: today passes and tomorrow is refused", () => {
-    assert.deepEqual(messagesFor([validConfig({ closedOn: "2026-10-06" })]), []);
-    assert.deepEqual(messagesFor([validConfig({ closedOn: "2025-01-31" })]), []);
+    assert.deepEqual(
+      messagesFor([validConfig({ closedOn: "2026-10-06" })]),
+      [],
+    );
+    assert.deepEqual(
+      messagesFor([validConfig({ closedOn: "2025-01-31" })]),
+      [],
+    );
     assertRefused(validConfig({ closedOn: "2026-10-07" }), E.closedOnFuture);
   });
 
@@ -233,6 +271,26 @@ describe("C3: closedOn is never after today in Europe/London", () => {
     assert.deepEqual(
       messagesFor([validConfig({ closedOn: "2026-07-17" })], lateSummer),
       [E.closedOnFuture],
+    );
+  });
+
+  test("C3: across both clock changes, London's date is the one checked", () => {
+    // The night the clocks go back: 23:30 UTC is 00:30 BST, the next day.
+    assert.equal(
+      todayIn(SANDBOX_TIME_ZONE, new Date("2026-10-24T23:30:00Z")),
+      "2026-10-25",
+    );
+    // The morning the clocks go forward: 00:30 UTC is still 00:30 GMT.
+    assert.equal(
+      todayIn(SANDBOX_TIME_ZONE, new Date("2026-03-29T00:30:00Z")),
+      "2026-03-29",
+    );
+    assert.deepEqual(
+      messagesFor(
+        [validConfig({ closedOn: "2026-10-25" })],
+        new Date("2026-10-24T23:30:00Z"),
+      ),
+      [],
     );
   });
 
@@ -261,7 +319,9 @@ describe("C3: closedOn is never after today in Europe/London", () => {
   });
 });
 
-describe("C4: every section of each demo design is marked", () => {
+// Reads the source as text: it sees literal `<section ...>` tags and literal
+// `data-sandbox-region="..."` attributes, which is how the demo marks regions.
+describe("C4: every <section> of each demo design is marked", () => {
   const demo = findExperiment("pricing-2026");
   assert.ok(demo);
   for (const { id } of demo.designs) {

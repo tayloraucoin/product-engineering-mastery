@@ -17,7 +17,7 @@ import { FAQ, FEATURES, PLANS } from "./content.ts";
  */
 export function SquareDesign() {
   return (
-    <main className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-6 py-12">
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-6 py-12">
       <section
         data-sandbox-region="intro"
         data-sandbox-name="Introduction"
@@ -35,7 +35,7 @@ export function SquareDesign() {
           data-sandbox-region="compare"
           data-sandbox-name="Comparison table"
           aria-labelledby="square-compare-heading"
-          className="flex flex-col gap-4 lg:col-span-2"
+          className="flex min-w-0 flex-col gap-4 lg:col-span-2"
         >
           <h2 id="square-compare-heading" className="sr-only">
             Plans compared
@@ -110,6 +110,6 @@ export function SquareDesign() {
           ))}
         </dl>
       </section>
-    </main>
+    </div>
   );
 }

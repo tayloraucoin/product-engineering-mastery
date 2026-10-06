@@ -22,19 +22,27 @@ export const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 export const SLUG_MAX_LENGTH = 48;
 
 /** Neutral labels, fixed per experiment, at most four (D-LAB-10, S15). */
-export const DESIGN_SHAPES = ["circle", "square", "triangle", "diamond"] as const;
+export const DESIGN_SHAPES = [
+  "circle",
+  "square",
+  "triangle",
+  "diamond",
+] as const;
 
 /**
  * Every refusal, as a fixed string that names its field and never echoes the
  * config's own values.
  */
 export const REGISTRY_ERRORS = {
+  config: "config: an object holding the experiment's fields",
+  unknownField: "config: a field the schema does not know",
   slugPattern:
     "slug: lower-case letters and digits in words joined by single hyphens",
   slugLength: `slug: at most ${SLUG_MAX_LENGTH} characters`,
   slugDuplicate: "slug: already used by another experiment",
   title: "title: required",
   designsCount: "designs: 1 to 4 designs",
+  design: "designs: each design is an object of id, shape and component",
   designId: "designs.id: lower-case letters and digits joined by hyphens",
   designIdDuplicate: "designs.id: each design has its own id",
   designShape: "designs.shape: circle, square, triangle or diamond",
@@ -73,56 +81,71 @@ const isoDate = z
     { error: E.closedOnFormat },
   );
 
-const designSchema = z.object({
-  id: z
-    .string({ error: E.designId })
-    .regex(SLUG_PATTERN, { error: E.designId })
-    .max(24, { error: E.designId }),
-  shape: z.enum(DESIGN_SHAPES, { error: E.designShape }),
-  component: z.custom<DesignLoader>((value) => typeof value === "function", {
-    error: E.designComponent,
-  }),
-});
+const designSchema = z.strictObject(
+  {
+    id: z
+      .string({ error: E.designId })
+      .regex(SLUG_PATTERN, { error: E.designId })
+      .max(24, { error: E.designId }),
+    shape: z.enum(DESIGN_SHAPES, { error: E.designShape }),
+    component: z.custom<DesignLoader>((value) => typeof value === "function", {
+      error: E.designComponent,
+    }),
+  },
+  { error: E.design },
+);
 
-export const experimentConfigSchema = z.object({
-  slug: z
-    .string({ error: E.slugPattern })
-    .max(SLUG_MAX_LENGTH, { error: E.slugLength })
-    .regex(SLUG_PATTERN, { error: E.slugPattern }),
-  title: nonEmpty(E.title),
-  designs: z
-    .array(designSchema, { error: E.designsCount })
-    .min(1, { error: E.designsCount })
-    .max(4, { error: E.designsCount })
-    .superRefine((designs, ctx) => {
-      if (new Set(designs.map((d) => d.id)).size !== designs.length)
-        ctx.addIssue({ code: "custom", message: E.designIdDuplicate });
-      if (new Set(designs.map((d) => d.shape)).size !== designs.length)
-        ctx.addIssue({ code: "custom", message: E.designShapeDuplicate });
-    }),
-  goals: z
-    .array(nonEmpty(E.goalText), { error: E.goalsCount })
-    .min(2, { error: E.goalsCount })
-    .max(3, { error: E.goalsCount }),
-  targetedQuestion: nonEmpty(E.targetedQuestion).optional(),
-  // [ASSUMPTION] an extra question is free text with a stable id; LAB-17 may
-  // extend the shape.
-  questions: z
-    .array(
-      z.object({
-        id: z.string().regex(SLUG_PATTERN, { error: E.questions }),
-        text: nonEmpty(E.questions),
+export const experimentConfigSchema = z.strictObject(
+  {
+    slug: z
+      .string({ error: E.slugPattern })
+      .max(SLUG_MAX_LENGTH, { error: E.slugLength })
+      .regex(SLUG_PATTERN, { error: E.slugPattern }),
+    title: nonEmpty(E.title),
+    designs: z
+      .array(designSchema, { error: E.designsCount })
+      .min(1, { error: E.designsCount })
+      .max(4, { error: E.designsCount })
+      .superRefine((designs, ctx) => {
+        if (new Set(designs.map((d) => d.id)).size !== designs.length)
+          ctx.addIssue({ code: "custom", message: E.designIdDuplicate });
+        if (new Set(designs.map((d) => d.shape)).size !== designs.length)
+          ctx.addIssue({ code: "custom", message: E.designShapeDuplicate });
       }),
-      { error: E.questions },
-    )
-    .superRefine((questions, ctx) => {
-      if (new Set(questions.map((q) => q.id)).size !== questions.length)
-        ctx.addIssue({ code: "custom", message: E.questionIdDuplicate });
-    }),
-  mode: z.enum(["private", "collaborate"], { error: E.mode }),
-  coreVersion: z.literal("v1", { error: E.coreVersion }),
-  closedOn: isoDate.nullable(),
-});
+    goals: z
+      .array(nonEmpty(E.goalText), { error: E.goalsCount })
+      .min(2, { error: E.goalsCount })
+      .max(3, { error: E.goalsCount }),
+    targetedQuestion: nonEmpty(E.targetedQuestion).optional(),
+    // [ASSUMPTION] an extra question is free text with a stable id; LAB-17 may
+    // extend the shape.
+    questions: z
+      .array(
+        z.strictObject(
+          {
+            id: z
+              .string({ error: E.questions })
+              .regex(SLUG_PATTERN, { error: E.questions }),
+            text: nonEmpty(E.questions),
+          },
+          { error: E.questions },
+        ),
+        { error: E.questions },
+      )
+      .superRefine((questions, ctx) => {
+        if (new Set(questions.map((q) => q.id)).size !== questions.length)
+          ctx.addIssue({ code: "custom", message: E.questionIdDuplicate });
+      }),
+    mode: z.enum(["private", "collaborate"], { error: E.mode }),
+    coreVersion: z.literal("v1", { error: E.coreVersion }),
+    closedOn: isoDate.nullable(),
+  },
+  {
+    // A misspelled field is refused, never silently dropped.
+    error: (issue) =>
+      issue.code === "unrecognized_keys" ? E.unknownField : E.config,
+  },
+);
 
 export type ExperimentConfig = z.infer<typeof experimentConfigSchema>;
 /** What a `config.ts` declares, checked with `satisfies`. */
@@ -152,6 +175,13 @@ export function validateRegistry(
   const seen = new Set<string>();
 
   configs.forEach((config, index) => {
+    // Duplicates are checked before the parse, so a config with another
+    // error still claims its slug.
+    const slug = (config as { slug?: unknown } | null)?.slug;
+    if (typeof slug === "string") {
+      if (seen.has(slug)) errors.push({ index, message: E.slugDuplicate });
+      seen.add(slug);
+    }
     const parsed = experimentConfigSchema.safeParse(config);
     if (!parsed.success) {
       for (const issue of parsed.error.issues)
@@ -159,9 +189,6 @@ export function validateRegistry(
       return;
     }
     const experiment = parsed.data;
-    if (seen.has(experiment.slug))
-      errors.push({ index, message: E.slugDuplicate });
-    seen.add(experiment.slug);
     if (experiment.closedOn !== null && experiment.closedOn > today)
       errors.push({ index, message: E.closedOnFuture });
     experiments.push(experiment);

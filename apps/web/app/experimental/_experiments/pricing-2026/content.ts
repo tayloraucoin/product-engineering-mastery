@@ -40,8 +40,14 @@ export const FEATURES: readonly Feature[] = [
   { name: "Editors", values: ["1", "Up to 25", "Unlimited"] },
   { name: "Version history", values: ["30 days", "1 year", "Unlimited"] },
   { name: "Review requests", values: ["Not included", "Included", "Included"] },
-  { name: "Single sign-on", values: ["Not included", "Not included", "Included"] },
-  { name: "Audit log export", values: ["Not included", "Not included", "Included"] },
+  {
+    name: "Single sign-on",
+    values: ["Not included", "Not included", "Included"],
+  },
+  {
+    name: "Audit log export",
+    values: ["Not included", "Not included", "Included"],
+  },
 ];
 
 export type Question = { question: string; answer: string };
