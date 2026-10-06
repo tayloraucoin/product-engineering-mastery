@@ -61,7 +61,7 @@ criteria:
     evidence: test
     command: "yarn workspace @pem/db test:db"
   - id: C4
-    statement: "On a collaborate experiment a make without a display name is refused; on a private one the field is absent and the stored display name is null; an empty label is refused with \"Enter who this code is for.\""
+    statement: 'On a collaborate experiment a make without a display name is refused; on a private one the field is absent and the stored display name is null; an empty label is refused with "Enter who this code is for."'
     evidence: test
     command: "yarn workspace web test"
   - id: C5
@@ -69,11 +69,11 @@ criteria:
     evidence: test
     command: "yarn workspace web test"
   - id: C6
-    statement: "On a closed experiment \"Make a code\" and \"Replace code\" are disabled with \"This experiment is closed.\""
+    statement: 'On a closed experiment "Make a code" and "Replace code" are disabled with "This experiment is closed."'
     evidence: capture
     path: "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-015-admin-access-codes/evidence/codes-closed.png"
   - id: C7
-    statement: "Emails used flags \"2 emails used with this code\" for two typed emails, and \"Email differs from the label\" only when the label is an email that differs ignoring case; a name label is never flagged."
+    statement: 'Emails used flags "2 emails used with this code" for two typed emails, and "Email differs from the label" only when the label is an email that differs ignoring case; a name label is never flagged.'
     evidence: test
     command: "yarn workspace web test"
   - id: C8
@@ -81,7 +81,7 @@ criteria:
     evidence: test
     command: "yarn workspace @pem/db test:db"
   - id: C9
-    statement: "With keyboard alone and a screen reader: make a code, copy it, revoke one and replace one; focus lands on \"Copy code\" and \"Code copied.\" is announced."
+    statement: 'With keyboard alone and a screen reader: make a code, copy it, revoke one and replace one; focus lands on "Copy code" and "Code copied." is announced.'
     evidence: manual
     reason: "Needs a person with a screen reader; there is no end-to-end runner (technical.md). The builder checks focus and names in the browser pane first, then hands it over with --verdict deferred."
   - id: C10

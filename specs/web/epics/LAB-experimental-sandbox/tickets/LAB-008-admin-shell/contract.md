@@ -7,7 +7,7 @@ non_negotiables:
   - "One pure decision, adminGate, in apps/web/lib/sandbox/admin-gate.ts: no session gives sign-in with next=<path> through safeNextPath; a user role or a code holder gives not-found; a developer on an admin-only path gives not-found."
   - "Every /admin page calls requireTeamPage(path) before any read, and the layout calls it too; every exported /admin server action calls requireTeamAction first and returns a fixed refusal; signOutAdmin is the one named exception."
   - "The team check is getTeamMember() (LAB-2) on each request; the sandbox_access cookie is never read here."
-  - "The nav is Experiments, People (admins only), Data, each { title, href, icon, ready }; a not-ready entry is a dimmed label, not a link; the active entry has aria-current=\"page\" and the selection token."
+  - 'The nav is Experiments, People (admins only), Data, each { title, href, icon, ready }; a not-ready entry is a dimmed label, not a link; the active entry has aria-current="page" and the selection token.'
   - "The layout exports robots { index: false, follow: false } metadata; next.config.ts is LAB-5's and is never edited here."
   - "Below 1024px the sidebar is off-canvas, through a backward-compatible option on @pem/ui's SidebarProvider; its default stays 768px, so no other consumer moves (Taylor, 2026-10-05)."
   - "shell.md's Words verbatim; only @pem/ui components and preset tokens; no slop tell (canon §2, A-01 to A-20)."
@@ -73,7 +73,7 @@ criteria:
     evidence: test
     command: "yarn workspace web test"
   - id: C6
-    statement: "A source scan finds every page.tsx and layout.tsx under apps/web/app/admin calling requireTeamPage before any other await, and every exported action in a \"use server\" file there calling requireTeamAction first; a synthetic page or action without it fails the scan."
+    statement: 'A source scan finds every page.tsx and layout.tsx under apps/web/app/admin calling requireTeamPage before any other await, and every exported action in a "use server" file there calling requireTeamAction first; a synthetic page or action without it fails the scan.'
     evidence: test
     command: "yarn workspace web test"
   - id: C7

@@ -31,18 +31,18 @@ See where each reviewer is. Open one to read everything they said, how it change
 
 ## States
 
-| State | Key | What shows | What the person can do | Copy |
-| --- | --- | --- | --- | --- |
-| empty list | `reviewer-empty` | One line | Go to Access codes | "No reviewers yet. Make a code in Access codes." |
-| not opened | `reviewer-not-opened` | Heading and status; no sections | Wait | "Ana Ruiz hasn't opened the review yet." |
-| looking | `reviewer-looking` | Comments and order log; no answers | Read | "No review sent yet." |
-| one version | `reviewer-success` | Latest answers; no "Earlier versions" | Read | — |
-| several versions | `reviewer-versions` | Latest, plus collapsed earlier versions | Expand | — |
-| loading | `reviewer-loading` | A static skeleton of the sections | Wait | — |
-| error | `reviewer-error` | A line | Reload | "Couldn't load this reviewer. Reload the page." |
-| partial | `reviewer-partial` | Sections that loaded; a line where one failed | Reload | "Couldn't load their comments. Reload to try again." |
-| offline | `reviewer-offline` | The last render, plus a line | Reconnect | "You're offline. This may be out of date." |
-| erased | `reviewer-erased` | The label reads "Erased reviewer"; no data | — | "Everything from this reviewer was erased." |
+| State            | Key                   | What shows                                    | What the person can do | Copy                                                 |
+| ---------------- | --------------------- | --------------------------------------------- | ---------------------- | ---------------------------------------------------- |
+| empty list       | `reviewer-empty`      | One line                                      | Go to Access codes     | "No reviewers yet. Make a code in Access codes."     |
+| not opened       | `reviewer-not-opened` | Heading and status; no sections               | Wait                   | "Ana Ruiz hasn't opened the review yet."             |
+| looking          | `reviewer-looking`    | Comments and order log; no answers            | Read                   | "No review sent yet."                                |
+| one version      | `reviewer-success`    | Latest answers; no "Earlier versions"         | Read                   | —                                                    |
+| several versions | `reviewer-versions`   | Latest, plus collapsed earlier versions       | Expand                 | —                                                    |
+| loading          | `reviewer-loading`    | A static skeleton of the sections             | Wait                   | —                                                    |
+| error            | `reviewer-error`      | A line                                        | Reload                 | "Couldn't load this reviewer. Reload the page."      |
+| partial          | `reviewer-partial`    | Sections that loaded; a line where one failed | Reload                 | "Couldn't load their comments. Reload to try again." |
+| offline          | `reviewer-offline`    | The last render, plus a line                  | Reconnect              | "You're offline. This may be out of date."           |
+| erased           | `reviewer-erased`     | The label reads "Erased reviewer"; no data    | —                      | "Everything from this reviewer was erased."          |
 
 ## Words
 
@@ -60,13 +60,13 @@ None.
 
 ## Criteria
 
-| ID | When | Then | Evidence |
-| --- | --- | --- | --- |
-| C-LAB-reviewer-1 | A reviewer sent 2 versions | "Version 2 of 2" shows its answers; version 1 is collapsed with its own triage | test |
-| C-LAB-reviewer-2 | An answer differs between versions | Version 1's answer carries "changed" | test |
-| C-LAB-reviewer-3 | One code was used with two emails | The list flags "2 emails used with this code" | test |
-| C-LAB-reviewer-4 | "Erase this reviewer…" is used | The Data page opens listing each email used with the code; no email is in the URL; nothing is erased yet | test |
-| C-LAB-reviewer-5 | Each `?state=` key | It renders at 390, 834 and 1440, light and dark | capture |
+| ID               | When                               | Then                                                                                                     | Evidence |
+| ---------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------- | -------- |
+| C-LAB-reviewer-1 | A reviewer sent 2 versions         | "Version 2 of 2" shows its answers; version 1 is collapsed with its own triage                           | test     |
+| C-LAB-reviewer-2 | An answer differs between versions | Version 1's answer carries "changed"                                                                     | test     |
+| C-LAB-reviewer-3 | One code was used with two emails  | The list flags "2 emails used with this code"                                                            | test     |
+| C-LAB-reviewer-4 | "Erase this reviewer…" is used     | The Data page opens listing each email used with the code; no email is in the URL; nothing is erased yet | test     |
+| C-LAB-reviewer-5 | Each `?state=` key                 | It renders at 390, 834 and 1440, light and dark                                                          | capture  |
 
 ## Decisions and open items
 

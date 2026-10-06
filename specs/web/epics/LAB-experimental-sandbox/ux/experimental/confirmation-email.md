@@ -20,12 +20,12 @@ Confirm a send reached the team, and give the reviewer a way back to change it. 
 
 ## States
 
-| State | Key | What shows | What the person can do | Copy |
-| --- | --- | --- | --- | --- |
-| first send | `email-first` | The confirmation | Open the review | as Words |
-| changes | `email-changes` | The subject and first line change | Open the review | as Words |
-| signed in | `email-signed-in` | Sent to the account email | Open the review | Same. The link opens the gate's signed-in face, which asks for the code only (unless this browser's access is still live) |
-| empty, loading, error, partial, offline, success | N/A | An email has no interactive states. A failed send is shown on `sent.md` (`sent-partial`) | — | — |
+| State                                            | Key               | What shows                                                                               | What the person can do | Copy                                                                                                                      |
+| ------------------------------------------------ | ----------------- | ---------------------------------------------------------------------------------------- | ---------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| first send                                       | `email-first`     | The confirmation                                                                         | Open the review        | as Words                                                                                                                  |
+| changes                                          | `email-changes`   | The subject and first line change                                                        | Open the review        | as Words                                                                                                                  |
+| signed in                                        | `email-signed-in` | Sent to the account email                                                                | Open the review        | Same. The link opens the gate's signed-in face, which asks for the code only (unless this browser's access is still live) |
+| empty, loading, error, partial, offline, success | N/A               | An email has no interactive states. A failed send is shown on `sent.md` (`sent-partial`) | —                      | —                                                                                                                         |
 
 ## Words
 
@@ -52,13 +52,13 @@ None. No open tracking or click tracking: it would widen the notice (S29).
 
 ## Criteria
 
-| ID | When | Then | Evidence |
-| --- | --- | --- | --- |
-| C-LAB-email-1 | A review is sent | One email goes to the recorded address with the first-send subject | test |
-| C-LAB-email-2 | A change is sent | One email goes with the changes subject | test |
-| C-LAB-email-3 | Any confirmation email | It contains no answer text, no experiment title, no code, and no email in any URL | test |
-| C-LAB-email-4 | The link is opened without a live code | The gate shows and asks for the code | test |
-| C-LAB-email-5 | Rendered plain text and HTML | They match the Words exactly | capture |
+| ID            | When                                   | Then                                                                              | Evidence |
+| ------------- | -------------------------------------- | --------------------------------------------------------------------------------- | -------- |
+| C-LAB-email-1 | A review is sent                       | One email goes to the recorded address with the first-send subject                | test     |
+| C-LAB-email-2 | A change is sent                       | One email goes with the changes subject                                           | test     |
+| C-LAB-email-3 | Any confirmation email                 | It contains no answer text, no experiment title, no code, and no email in any URL | test     |
+| C-LAB-email-4 | The link is opened without a live code | The gate shows and asks for the code                                              | test     |
+| C-LAB-email-5 | Rendered plain text and HTML           | They match the Words exactly                                                      | capture  |
 
 ## Decisions and open items
 

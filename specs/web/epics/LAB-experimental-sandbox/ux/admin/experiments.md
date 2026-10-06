@@ -34,16 +34,16 @@ See every experiment, which ones are open, how far each review has got, and whic
 
 ## States
 
-| State | Key | What shows | What the person can do | Copy |
-| --- | --- | --- | --- | --- |
-| empty | `expts-empty` | One line, no table, no header count | Read | "No experiments yet. Each one is a folder in the code; the demo experiment shows the shape." |
-| loading | `expts-loading` | A static skeleton of five rows in the final columns | Wait | — |
-| error | `expts-error` | A line in place of the table | Reload | "Couldn't load experiments. Reload the page." |
-| partial | `expts-partial` | The table, with "—" where a count failed, plus a line above it | Reload | "Some counts didn't load. Reload to try again." |
-| offline | `expts-offline` | The last render, plus a line above it | Reconnect | "You're offline. This list may be out of date." |
-| success | `expts-success` | The full table | Open, sort | — |
-| stale data | `expts-stale` | The header count and row markers | Delete (admin) | as Layout |
-| developer | `expts-developer` | Markers without "Delete data" | Open | — |
+| State      | Key               | What shows                                                     | What the person can do | Copy                                                                                         |
+| ---------- | ----------------- | -------------------------------------------------------------- | ---------------------- | -------------------------------------------------------------------------------------------- |
+| empty      | `expts-empty`     | One line, no table, no header count                            | Read                   | "No experiments yet. Each one is a folder in the code; the demo experiment shows the shape." |
+| loading    | `expts-loading`   | A static skeleton of five rows in the final columns            | Wait                   | —                                                                                            |
+| error      | `expts-error`     | A line in place of the table                                   | Reload                 | "Couldn't load experiments. Reload the page."                                                |
+| partial    | `expts-partial`   | The table, with "—" where a count failed, plus a line above it | Reload                 | "Some counts didn't load. Reload to try again."                                              |
+| offline    | `expts-offline`   | The last render, plus a line above it                          | Reconnect              | "You're offline. This list may be out of date."                                              |
+| success    | `expts-success`   | The full table                                                 | Open, sort             | —                                                                                            |
+| stale data | `expts-stale`     | The header count and row markers                               | Delete (admin)         | as Layout                                                                                    |
+| developer  | `expts-developer` | Markers without "Delete data"                                  | Open                   | —                                                                                            |
 
 ## Words
 
@@ -62,14 +62,14 @@ None.
 
 ## Criteria
 
-| ID | When | Then | Evidence |
-| --- | --- | --- | --- |
-| C-LAB-expts-1 | Two experiments, one open and one closed | Both list with their status words and counts | test |
-| C-LAB-expts-2 | A closed experiment holds guest data | The row marker shows days since the config's close date, and the header counts it | test |
-| C-LAB-expts-3 | A closed experiment's data was deleted | No marker; the header count drops | test |
-| C-LAB-expts-4 | A developer views a stale row | The marker shows without "Delete data" | test |
-| C-LAB-expts-5 | Keyboard alone | Sort, open an experiment, reach "Delete data" | manual |
-| C-LAB-expts-6 | Each `?state=` key | It renders at 390, 834 and 1440, light and dark | capture |
+| ID            | When                                     | Then                                                                              | Evidence |
+| ------------- | ---------------------------------------- | --------------------------------------------------------------------------------- | -------- |
+| C-LAB-expts-1 | Two experiments, one open and one closed | Both list with their status words and counts                                      | test     |
+| C-LAB-expts-2 | A closed experiment holds guest data     | The row marker shows days since the config's close date, and the header counts it | test     |
+| C-LAB-expts-3 | A closed experiment's data was deleted   | No marker; the header count drops                                                 | test     |
+| C-LAB-expts-4 | A developer views a stale row            | The marker shows without "Delete data"                                            | test     |
+| C-LAB-expts-5 | Keyboard alone                           | Sort, open an experiment, reach "Delete data"                                     | manual   |
+| C-LAB-expts-6 | Each `?state=` key                       | It renders at 390, 834 and 1440, light and dark                                   | capture  |
 
 ## Decisions and open items
 

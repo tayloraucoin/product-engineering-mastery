@@ -29,10 +29,10 @@ Verified 2026-10-05 against the docs bundled with the installed Next.js 16.3.8 (
 
 ## Cookies (D-LAB-32)
 
-| Cookie | Value | Scope |
-| --- | --- | --- |
+| Cookie           | Value                                                                                                  | Scope                                                                                                                      |
+| ---------------- | ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
 | `sandbox_access` | `v1.<accessId>.<slug>.<issuedAt>.<mac>`, `mac` = HMAC-SHA256 under `SANDBOX_SECRET`, label `access-v1` | `Path=/experimental/<slug>`, `HttpOnly`, `SameSite=Lax`, `Secure` when deployed, `Max-Age` 30 days, fixed from issue (S10) |
-| `sandbox_gate` | a random 128-bit id, the throttle's browser key | `Path=/experimental`, same flags, 1 day; set on any failed try, any slug |
+| `sandbox_gate`   | a random 128-bit id, the throttle's browser key                                                        | `Path=/experimental`, same flags, 1 day; set on any failed try, any slug                                                   |
 
 - `Lax`, not `Strict`: the email link is a cross-site top-level visit and must carry live access.
 - No `__Host-` prefix: it requires `Path=/`, and per-slug scope matters more.

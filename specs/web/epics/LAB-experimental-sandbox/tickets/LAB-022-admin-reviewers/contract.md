@@ -2,13 +2,13 @@
 id: LAB-22
 size: small
 objective: "The team sees where each reviewer of an experiment is, and opens one to read their latest answers, every earlier version with what changed, their comments and order log, with a way to erase them that carries no email."
-slice_type: "A team-only read of one person's full record (door 4); the risk is a reviewer id from another slug opening a record, a \"changed\" marker on the wrong version, or an email leaking into a URL."
+slice_type: 'A team-only read of one person''s full record (door 4); the risk is a reviewer id from another slug opening a record, a "changed" marker on the wrong version, or an email leaking into a URL.'
 non_negotiables:
   - "New queries live in packages/db/src/sandbox/reviewers.ts, take (db, viewer, input), refuse a reviewer viewer, scope every read by slug and reviewer id together, and each has its isolation case in packages/db/test/sandbox/."
-  - "Versions show newest first: the latest as \"Version n of n\" with its answers, each earlier one a collapsed disclosure with its answers and triage as they were then (S22); nothing is recomputed from current comments."
-  - "An answer that differs from the version after it carries a static text marker \"changed\", never colour or motion (A-14); \"Changed after choosing\" shows where the stored flag is true (D-LAB-21)."
-  - "\"Erase this reviewer…\" is a plain link to /admin/data?reviewer=<reviewer-id>; no email ever appears in a URL, and nothing on this surface deletes."
-  - "Status is a word: \"Not opened yet\", \"Looking\" or \"Sent · version n of m\", with \"Revoked\" after it for a revoked code."
+  - 'Versions show newest first: the latest as "Version n of n" with its answers, each earlier one a collapsed disclosure with its answers and triage as they were then (S22); nothing is recomputed from current comments.'
+  - 'An answer that differs from the version after it carries a static text marker "changed", never colour or motion (A-14); "Changed after choosing" shows where the stored flag is true (D-LAB-21).'
+  - '"Erase this reviewer…" is a plain link to /admin/data?reviewer=<reviewer-id>; no email ever appears in a URL, and nothing on this surface deletes.'
+  - 'Status is a word: "Not opened yet", "Looking" or "Sent · version n of m", with "Revoked" after it for a revoked code.'
   - "Both pages call requireTeamPage, then findExperiment; an unknown slug, or a reviewer id not on this slug, is notFound()."
   - "reviewer.md's Words verbatim; answers grouped as LAB-17's core v1 orders them, ratings shown as their labels."
 devs_call: "The component split, the view-model shape, how time per design is derived from view events (one as-built line), and how a failed section becomes the partial state."
@@ -47,19 +47,19 @@ out_of_scope:
   - "Storing versions and the changed-after-choosing flag: LAB-17, LAB-18."
 criteria:
   - id: C1
-    statement: "For a reviewer who sent 2 versions, the page shows \"Version 2 of 2 · sent 6 October 2026, 14:32\" with its answers, and version 1 collapsed under \"Earlier versions\" with its own triage."
+    statement: 'For a reviewer who sent 2 versions, the page shows "Version 2 of 2 · sent 6 October 2026, 14:32" with its answers, and version 1 collapsed under "Earlier versions" with its own triage.'
     evidence: test
     command: "yarn workspace web test"
   - id: C2
-    statement: "An answer that differs between versions 1 and 2 carries \"changed\" on version 1; an unchanged answer carries nothing."
+    statement: 'An answer that differs between versions 1 and 2 carries "changed" on version 1; an unchanged answer carries nothing.'
     evidence: test
     command: "yarn workspace web test"
   - id: C3
-    statement: "In the Reviewers list, one code used with two emails is flagged \"2 emails used with this code\", with its comment count, status word and last activity."
+    statement: 'In the Reviewers list, one code used with two emails is flagged "2 emails used with this code", with its comment count, status word and last activity.'
     evidence: test
     command: "yarn workspace web test"
   - id: C4
-    statement: "\"Erase this reviewer…\" links to /admin/data?reviewer=<reviewer-id>; the href and every other URL on the page hold no email, and rendering the page writes nothing."
+    statement: '"Erase this reviewer…" links to /admin/data?reviewer=<reviewer-id>; the href and every other URL on the page hold no email, and rendering the page writes nothing.'
     evidence: test
     command: "yarn workspace web test"
   - id: C5
@@ -67,7 +67,7 @@ criteria:
     evidence: test
     command: "yarn workspace @pem/db test:db"
   - id: C6
-    statement: "A reviewer with no access shows \"Not opened yet\" and no sections; one with comments and no version shows \"No review sent yet.\"; a revoked code reads \"Revoked\" after its status."
+    statement: 'A reviewer with no access shows "Not opened yet" and no sections; one with comments and no version shows "No review sent yet."; a revoked code reads "Revoked" after its status.'
     evidence: test
     command: "yarn workspace web test"
   - id: C7

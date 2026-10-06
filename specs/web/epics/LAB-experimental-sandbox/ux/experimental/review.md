@@ -33,19 +33,19 @@ Say, once and deliberately, how well the work meets its goals, which of your com
 
 ## States
 
-| State | Key | What shows | What the person can do | Copy |
-| --- | --- | --- | --- | --- |
-| empty | `review-empty` | Blank form | Answer | Lead: "Answers are kept in this browser until you send." |
-| no comments | `review-no-comments` | The comments section holds one line and a link | Go back or carry on | "You didn't leave any comments. That's fine; you can go back and add some, or carry on." Link: "Back to the designs" |
-| loading | `review-loading` | Section skeletons (static) while comments load | Wait | — |
-| error | `review-error` | Summary plus field errors | Fix | "3 answers are missing" |
-| partial | `review-partial` | A draft restored | Continue | — |
-| offline | `review-offline` | Line above the button; send disabled | Reconnect | "You're offline. Your answers are kept in this browser; send when you're back." |
-| sending | `review-sending` | Button reads "Sending" | Wait | "Sending" |
-| send failed | `review-send-failed` | Line above the button | Retry | "Your review didn't send. Your answers are still here. Try again." |
-| closed | `review-closed` | Line and link | Go to ended | "This review closed before your answers arrived, so they weren't saved." Link: "See what happened" |
-| edit | `review-edit` | Filled with the latest | Change, send | Lead: "You sent this on 5 October. The team sees your latest answers and can look back at earlier ones." |
-| success | `review-success` | Moves to `sent.md` | — | — |
+| State       | Key                  | What shows                                     | What the person can do | Copy                                                                                                                 |
+| ----------- | -------------------- | ---------------------------------------------- | ---------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| empty       | `review-empty`       | Blank form                                     | Answer                 | Lead: "Answers are kept in this browser until you send."                                                             |
+| no comments | `review-no-comments` | The comments section holds one line and a link | Go back or carry on    | "You didn't leave any comments. That's fine; you can go back and add some, or carry on." Link: "Back to the designs" |
+| loading     | `review-loading`     | Section skeletons (static) while comments load | Wait                   | —                                                                                                                    |
+| error       | `review-error`       | Summary plus field errors                      | Fix                    | "3 answers are missing"                                                                                              |
+| partial     | `review-partial`     | A draft restored                               | Continue               | —                                                                                                                    |
+| offline     | `review-offline`     | Line above the button; send disabled           | Reconnect              | "You're offline. Your answers are kept in this browser; send when you're back."                                      |
+| sending     | `review-sending`     | Button reads "Sending"                         | Wait                   | "Sending"                                                                                                            |
+| send failed | `review-send-failed` | Line above the button                          | Retry                  | "Your review didn't send. Your answers are still here. Try again."                                                   |
+| closed      | `review-closed`      | Line and link                                  | Go to ended            | "This review closed before your answers arrived, so they weren't saved." Link: "See what happened"                   |
+| edit        | `review-edit`        | Filled with the latest                         | Change, send           | Lead: "You sent this on 5 October. The team sees your latest answers and can look back at earlier ones."             |
+| success     | `review-success`     | Moves to `sent.md`                             | —                      | —                                                                                                                    |
 
 ## Words
 
@@ -66,18 +66,18 @@ The version record: the answers, the triage per pin id, the core version, and th
 
 ## Criteria
 
-| ID | When | Then | Evidence |
-| --- | --- | --- | --- |
-| C-LAB-review-1 | A one-design review page | The sections render in the order above with the exact core v1 wording | capture |
-| C-LAB-review-10 | Goal fit is unanswered on a first send | No comment text is in the page until it is answered | test |
-| C-LAB-review-2 | The reviewer has 3 pins | Each is played back with a 3-way choice, and the text edit changes the pin | test |
-| C-LAB-review-3 | Send with a required answer missing | Nothing is sent; the summary is focused and lists each gap | test |
-| C-LAB-review-4 | A valid send | One version is stored, holding the answers and every pin's triage | test |
-| C-LAB-review-5 | A second send | Version 2 is stored, version 1 is kept, and results use version 2 | test |
-| C-LAB-review-6 | Send while pins are queued | The pins send first; the version refers to their ids | test |
-| C-LAB-review-7 | The experiment closed before the send | Nothing is stored, and the closed state shows | test |
-| C-LAB-review-8 | Keyboard alone with a screen reader | The form is completable; the legends and errors are read | manual |
-| C-LAB-review-9 | Each `?state=` key | It renders at 390, 834 and 1440, light and dark | capture |
+| ID              | When                                   | Then                                                                       | Evidence |
+| --------------- | -------------------------------------- | -------------------------------------------------------------------------- | -------- |
+| C-LAB-review-1  | A one-design review page               | The sections render in the order above with the exact core v1 wording      | capture  |
+| C-LAB-review-10 | Goal fit is unanswered on a first send | No comment text is in the page until it is answered                        | test     |
+| C-LAB-review-2  | The reviewer has 3 pins                | Each is played back with a 3-way choice, and the text edit changes the pin | test     |
+| C-LAB-review-3  | Send with a required answer missing    | Nothing is sent; the summary is focused and lists each gap                 | test     |
+| C-LAB-review-4  | A valid send                           | One version is stored, holding the answers and every pin's triage          | test     |
+| C-LAB-review-5  | A second send                          | Version 2 is stored, version 1 is kept, and results use version 2          | test     |
+| C-LAB-review-6  | Send while pins are queued             | The pins send first; the version refers to their ids                       | test     |
+| C-LAB-review-7  | The experiment closed before the send  | Nothing is stored, and the closed state shows                              | test     |
+| C-LAB-review-8  | Keyboard alone with a screen reader    | The form is completable; the legends and errors are read                   | manual   |
+| C-LAB-review-9  | Each `?state=` key                     | It renders at 390, 834 and 1440, light and dark                            | capture  |
 
 ## Decisions and open items
 

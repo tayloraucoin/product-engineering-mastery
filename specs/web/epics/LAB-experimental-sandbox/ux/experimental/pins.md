@@ -43,17 +43,17 @@ Point at a spot on a design and say what is wrong or right there, by tap, mouse 
 
 ## States
 
-| State | Key | What shows | What the person can do | Copy |
-| --- | --- | --- | --- | --- |
-| empty | `pins-empty` | No pins | Turn on Comment | — |
-| comment mode | `comment-mode` | Crosshair; Tab stops | Place, or Escape | — |
-| composing | `composing` | Composer open | Write, type, save | as Layout |
-| loading | `pins-loading` | Pin shows at once (optimistic); the button reads "Saving" | Wait | "Saving" |
-| error | `pins-error` | Pin dashed; toast | Retry later | Toast: "Saved in this browser only. It will send when it can." |
-| partial | `pins-partial` | Some dashed | Retry from the bar | — |
-| offline | `pins-offline` | New pins dashed | Keep commenting | as error |
-| success | `pins-success` | Solid pin | Open it | — |
-| over limit | `too-long` | Counter in error; Save disabled | Shorten | "2,140 of 2,000 characters" |
+| State        | Key            | What shows                                                | What the person can do | Copy                                                           |
+| ------------ | -------------- | --------------------------------------------------------- | ---------------------- | -------------------------------------------------------------- |
+| empty        | `pins-empty`   | No pins                                                   | Turn on Comment        | —                                                              |
+| comment mode | `comment-mode` | Crosshair; Tab stops                                      | Place, or Escape       | —                                                              |
+| composing    | `composing`    | Composer open                                             | Write, type, save      | as Layout                                                      |
+| loading      | `pins-loading` | Pin shows at once (optimistic); the button reads "Saving" | Wait                   | "Saving"                                                       |
+| error        | `pins-error`   | Pin dashed; toast                                         | Retry later            | Toast: "Saved in this browser only. It will send when it can." |
+| partial      | `pins-partial` | Some dashed                                               | Retry from the bar     | —                                                              |
+| offline      | `pins-offline` | New pins dashed                                           | Keep commenting        | as error                                                       |
+| success      | `pins-success` | Solid pin                                                 | Open it                | —                                                              |
+| over limit   | `too-long`     | Counter in error; Save disabled                           | Shorten                | "2,140 of 2,000 characters"                                    |
 
 ## Words
 
@@ -78,17 +78,17 @@ The pin record: id, design, anchor, fractions, viewport, type, text and time. Th
 
 ## Criteria
 
-| ID | When | Then | Evidence |
-| --- | --- | --- | --- |
-| C-LAB-pins-1 | A pin is placed by click, by tap, and by Enter on a Tab stop | Each opens the composer, and each saves with its design tag | test |
-| C-LAB-pins-2 | Escape in comment mode | Comment mode is off and announced | test |
-| C-LAB-pins-3 | A send fails, then the page reloads | The pin is resent with the same id, and the server holds one row | test |
-| C-LAB-pins-4 | The reviewer switches design | Only the shown design's pins are drawn; the count is unchanged | test |
-| C-LAB-pins-5 | Two designs share a marked id | Each pin resolves inside its own design only | test |
-| C-LAB-pins-6 | A pin's anchor is missing | It is not drawn, and the list marks it not found | test |
-| C-LAB-pins-7 | A reviewer opens the page | Only their own pins are returned and drawn (S18) | test |
-| C-LAB-pins-8 | Screen reader, keyboard alone | A pin can be placed, read, edited and deleted; saves are announced | manual |
-| C-LAB-pins-9 | Each `?state=` key | It renders at 390, 834 and 1440, light and dark, with reduced motion | capture |
+| ID           | When                                                         | Then                                                                 | Evidence |
+| ------------ | ------------------------------------------------------------ | -------------------------------------------------------------------- | -------- |
+| C-LAB-pins-1 | A pin is placed by click, by tap, and by Enter on a Tab stop | Each opens the composer, and each saves with its design tag          | test     |
+| C-LAB-pins-2 | Escape in comment mode                                       | Comment mode is off and announced                                    | test     |
+| C-LAB-pins-3 | A send fails, then the page reloads                          | The pin is resent with the same id, and the server holds one row     | test     |
+| C-LAB-pins-4 | The reviewer switches design                                 | Only the shown design's pins are drawn; the count is unchanged       | test     |
+| C-LAB-pins-5 | Two designs share a marked id                                | Each pin resolves inside its own design only                         | test     |
+| C-LAB-pins-6 | A pin's anchor is missing                                    | It is not drawn, and the list marks it not found                     | test     |
+| C-LAB-pins-7 | A reviewer opens the page                                    | Only their own pins are returned and drawn (S18)                     | test     |
+| C-LAB-pins-8 | Screen reader, keyboard alone                                | A pin can be placed, read, edited and deleted; saves are announced   | manual   |
+| C-LAB-pins-9 | Each `?state=` key                                           | It renders at 390, 834 and 1440, light and dark, with reduced motion | capture  |
 
 ## Decisions and open items
 

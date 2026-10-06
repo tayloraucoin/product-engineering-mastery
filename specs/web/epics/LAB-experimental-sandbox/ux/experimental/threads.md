@@ -36,17 +36,17 @@ In a `collaborate` experiment, every reviewer sees everyone's comments and can r
 
 ## States
 
-| State | Key | What shows | What the person can do | Copy |
-| --- | --- | --- | --- | --- |
-| empty | `threads-empty` | No comments from anyone | Comment | "No comments yet. Turn on Comment and choose any part of the page." |
-| no replies | `threads-no-replies` | Popover with no replies | Reply | — |
-| loading | `threads-loading` | Popover replies area shows a static skeleton | Wait | — |
-| error | `threads-error` | Line in the popover | Retry | "Couldn't load replies. Retry" |
-| partial | `threads-partial` | A reply marked unsent | Retry | "Not sent yet" |
-| offline | `threads-offline` | Reply queued | Keep writing | "Kept in this browser; it will send when you're back." |
-| success | `threads-success` | The reply is listed | — | — |
-| deleted parent | `threads-deleted` | Placeholder with replies kept | Reply | "Comment removed" |
-| notice step | `threads-notice` | The one-time notice | Continue | as Layout |
+| State          | Key                  | What shows                                   | What the person can do | Copy                                                                |
+| -------------- | -------------------- | -------------------------------------------- | ---------------------- | ------------------------------------------------------------------- |
+| empty          | `threads-empty`      | No comments from anyone                      | Comment                | "No comments yet. Turn on Comment and choose any part of the page." |
+| no replies     | `threads-no-replies` | Popover with no replies                      | Reply                  | —                                                                   |
+| loading        | `threads-loading`    | Popover replies area shows a static skeleton | Wait                   | —                                                                   |
+| error          | `threads-error`      | Line in the popover                          | Retry                  | "Couldn't load replies. Retry"                                      |
+| partial        | `threads-partial`    | A reply marked unsent                        | Retry                  | "Not sent yet"                                                      |
+| offline        | `threads-offline`    | Reply queued                                 | Keep writing           | "Kept in this browser; it will send when you're back."              |
+| success        | `threads-success`    | The reply is listed                          | —                      | —                                                                   |
+| deleted parent | `threads-deleted`    | Placeholder with replies kept                | Reply                  | "Comment removed"                                                   |
+| notice step    | `threads-notice`     | The one-time notice                          | Continue               | as Layout                                                           |
 
 ## Words
 
@@ -66,17 +66,17 @@ The reply record: id, parent id, author (code or user), text and time. Reply rec
 
 ## Criteria
 
-| ID | When | Then | Evidence |
-| --- | --- | --- | --- |
-| C-LAB-threads-1 | A collaborate experiment with two reviewers | Each sees both reviewers' pins; only their own are numbered | test |
-| C-LAB-threads-2 | Any reviewer-visible name | It is the display name; no email or label appears | test |
-| C-LAB-threads-3 | A team note exists | No reviewer can fetch it; a team reply is visible | test |
-| C-LAB-threads-4 | A reply to a reply | It joins the same one-level thread | test |
-| C-LAB-threads-5 | A reviewer is erased | Their comments and replies are hard-deleted; others' replies under their comment stay under "Comment removed" | test |
-| C-LAB-threads-9 | A live code on a collaborate experiment, first time | The notice step shows before the page; an unknown or private slug never shows it | test |
-| C-LAB-threads-6 | A private experiment | No reviewer can fetch another's pins or replies | test |
-| C-LAB-threads-7 | Keyboard alone with a screen reader | Read the replies, reply, edit and delete | manual |
-| C-LAB-threads-8 | Each `?state=` key | It renders at 390, 834 and 1440, light and dark | capture |
+| ID              | When                                                | Then                                                                                                          | Evidence |
+| --------------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | -------- |
+| C-LAB-threads-1 | A collaborate experiment with two reviewers         | Each sees both reviewers' pins; only their own are numbered                                                   | test     |
+| C-LAB-threads-2 | Any reviewer-visible name                           | It is the display name; no email or label appears                                                             | test     |
+| C-LAB-threads-3 | A team note exists                                  | No reviewer can fetch it; a team reply is visible                                                             | test     |
+| C-LAB-threads-4 | A reply to a reply                                  | It joins the same one-level thread                                                                            | test     |
+| C-LAB-threads-5 | A reviewer is erased                                | Their comments and replies are hard-deleted; others' replies under their comment stay under "Comment removed" | test     |
+| C-LAB-threads-9 | A live code on a collaborate experiment, first time | The notice step shows before the page; an unknown or private slug never shows it                              | test     |
+| C-LAB-threads-6 | A private experiment                                | No reviewer can fetch another's pins or replies                                                               | test     |
+| C-LAB-threads-7 | Keyboard alone with a screen reader                 | Read the replies, reply, edit and delete                                                                      | manual   |
+| C-LAB-threads-8 | Each `?state=` key                                  | It renders at 390, 834 and 1440, light and dark                                                               | capture  |
 
 ## Decisions and open items
 

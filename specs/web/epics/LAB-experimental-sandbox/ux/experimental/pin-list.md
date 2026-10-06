@@ -26,16 +26,16 @@ See every comment you left, on every design, in one place. Jump to any one, fix 
 
 ## States
 
-| State | Key | What shows | What the person can do | Copy |
-| --- | --- | --- | --- | --- |
-| empty | `list-empty` | One line and one button; no group headings | Start commenting (closes the list and turns Comment on) | "No comments yet. Turn on Comment and choose any part of the page." Button: "Start commenting" |
-| loading | `list-loading` | Skeleton rows, three per group, the final layout's shape (static, no shimmer: A-14) | Wait | — |
-| error | `list-error` | Error line; queued comments still listed | Retry | "Couldn't load your comments. Retry" |
-| partial | `list-partial` | Unsent line at the top; items marked | Retry | "2 not sent yet." Button: "Retry" |
-| offline | `list-offline` | Offline line; Retry disabled | Reconnect | "You're offline. These will send when you're back." |
-| success | `list-success` | Full list | All actions | — |
-| not found | `list-detached` | Item marked; no "Show on page" | Edit, delete | "Not found on the page; the design may have changed since" |
-| retry done | `list-retried` | Unsent line gone; announced | — | "2 comments sent." |
+| State      | Key             | What shows                                                                          | What the person can do                                  | Copy                                                                                           |
+| ---------- | --------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| empty      | `list-empty`    | One line and one button; no group headings                                          | Start commenting (closes the list and turns Comment on) | "No comments yet. Turn on Comment and choose any part of the page." Button: "Start commenting" |
+| loading    | `list-loading`  | Skeleton rows, three per group, the final layout's shape (static, no shimmer: A-14) | Wait                                                    | —                                                                                              |
+| error      | `list-error`    | Error line; queued comments still listed                                            | Retry                                                   | "Couldn't load your comments. Retry"                                                           |
+| partial    | `list-partial`  | Unsent line at the top; items marked                                                | Retry                                                   | "2 not sent yet." Button: "Retry"                                                              |
+| offline    | `list-offline`  | Offline line; Retry disabled                                                        | Reconnect                                               | "You're offline. These will send when you're back."                                            |
+| success    | `list-success`  | Full list                                                                           | All actions                                             | —                                                                                              |
+| not found  | `list-detached` | Item marked; no "Show on page"                                                      | Edit, delete                                            | "Not found on the page; the design may have changed since"                                     |
+| retry done | `list-retried`  | Unsent line gone; announced                                                         | —                                                       | "2 comments sent."                                                                             |
 
 ## Words
 
@@ -58,15 +58,15 @@ None beyond `pins.md`.
 
 ## Criteria
 
-| ID | When | Then | Evidence |
-| --- | --- | --- | --- |
-| C-LAB-list-1 | A reviewer has pins on two designs | The list groups them by design in switcher order, numbered | capture |
-| C-LAB-list-2 | "Show on page" on a pin from the other design | The design switches, the list closes, and focus is in that pin's popover | test |
-| C-LAB-list-3 | Two comments are queued and Retry is pressed online | Both send with their original ids; the line clears and announces | test |
-| C-LAB-list-4 | No comments | The empty line and "Start commenting" show; no group headings | capture |
-| C-LAB-list-5 | A not-found pin | The item is marked and has no "Show on page" | capture |
-| C-LAB-list-6 | Keyboard alone with a screen reader | Open, read, edit, delete and close all work; focus returns as specified | manual |
-| C-LAB-list-7 | Each `?state=` key | It renders at 390, 834 and 1440, light and dark | capture |
+| ID           | When                                                | Then                                                                     | Evidence |
+| ------------ | --------------------------------------------------- | ------------------------------------------------------------------------ | -------- |
+| C-LAB-list-1 | A reviewer has pins on two designs                  | The list groups them by design in switcher order, numbered               | capture  |
+| C-LAB-list-2 | "Show on page" on a pin from the other design       | The design switches, the list closes, and focus is in that pin's popover | test     |
+| C-LAB-list-3 | Two comments are queued and Retry is pressed online | Both send with their original ids; the line clears and announces         | test     |
+| C-LAB-list-4 | No comments                                         | The empty line and "Start commenting" show; no group headings            | capture  |
+| C-LAB-list-5 | A not-found pin                                     | The item is marked and has no "Show on page"                             | capture  |
+| C-LAB-list-6 | Keyboard alone with a screen reader                 | Open, read, edit, delete and close all work; focus returns as specified  | manual   |
+| C-LAB-list-7 | Each `?state=` key                                  | It renders at 390, 834 and 1440, light and dark                          | capture  |
 
 ## Decisions and open items
 

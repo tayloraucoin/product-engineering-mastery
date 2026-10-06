@@ -32,16 +32,16 @@ A signed-in developer or admin sees what every reviewer pointed at, in place and
 
 ## States
 
-| State | Key | What shows | What the person can do | Copy |
-| --- | --- | --- | --- | --- |
-| empty | `team-empty` | No reviewer pins | Add a team note; go to Access codes | "No comments from reviewers yet. Share an access code from Access codes to start." |
-| loading | `team-loading` | As `experiment.md` loading; filter disabled | Wait | "Loading comments" |
-| error | `team-error` | As `experiment.md` | Retry | "Couldn't load comments. Retry" |
-| partial | `team-partial` | Some team notes unsent | Retry | "1 not sent yet · Retry" |
-| offline | `team-offline` | As `experiment.md` | Keep noting | as `experiment.md` |
-| success | `team-success` | All pins for the filter | Filter, read, note | — |
-| filtered to nothing | `team-filter-empty` | Line in the list | Change the filter | One reviewer: "Ana Ruiz hasn't left comments on the Square design." All reviewers: "No comments from reviewers on the Square design." Team notes: "No team notes on the Square design." |
-| closed | `team-closed` | "Closed" in the bar; all pins | Read, add notes | "Closed" |
+| State               | Key                 | What shows                                  | What the person can do              | Copy                                                                                                                                                                                    |
+| ------------------- | ------------------- | ------------------------------------------- | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| empty               | `team-empty`        | No reviewer pins                            | Add a team note; go to Access codes | "No comments from reviewers yet. Share an access code from Access codes to start."                                                                                                      |
+| loading             | `team-loading`      | As `experiment.md` loading; filter disabled | Wait                                | "Loading comments"                                                                                                                                                                      |
+| error               | `team-error`        | As `experiment.md`                          | Retry                               | "Couldn't load comments. Retry"                                                                                                                                                         |
+| partial             | `team-partial`      | Some team notes unsent                      | Retry                               | "1 not sent yet · Retry"                                                                                                                                                                |
+| offline             | `team-offline`      | As `experiment.md`                          | Keep noting                         | as `experiment.md`                                                                                                                                                                      |
+| success             | `team-success`      | All pins for the filter                     | Filter, read, note                  | —                                                                                                                                                                                       |
+| filtered to nothing | `team-filter-empty` | Line in the list                            | Change the filter                   | One reviewer: "Ana Ruiz hasn't left comments on the Square design." All reviewers: "No comments from reviewers on the Square design." Team notes: "No team notes on the Square design." |
+| closed              | `team-closed`       | "Closed" in the bar; all pins               | Read, add notes                     | "Closed"                                                                                                                                                                                |
 
 ## Words
 
@@ -59,15 +59,15 @@ None. Team activity is not recorded as views (D-LAB-14).
 
 ## Criteria
 
-| ID | When | Then | Evidence |
-| --- | --- | --- | --- |
-| C-LAB-team-1 | A developer or admin opens an experiment | All reviewers' pins for the shown design draw; no closing review link | test |
-| C-LAB-team-2 | The filter is set to one reviewer | Only their pins draw and list | test |
-| C-LAB-team-3 | A team note is saved | It is stored as team, is absent from every client tally, and is invisible to reviewers | test |
-| C-LAB-team-4 | A team member opens a reviewer's pin | No edit or delete control exists | test |
-| C-LAB-team-5 | The experiment is closed | The team still views it and can add notes; reviewers cannot add | test |
-| C-LAB-team-6 | A team member visits | No view or switch is recorded | test |
-| C-LAB-team-7 | Each `?state=` key | It renders at 390, 834 and 1440, light and dark | capture |
+| ID           | When                                     | Then                                                                                   | Evidence |
+| ------------ | ---------------------------------------- | -------------------------------------------------------------------------------------- | -------- |
+| C-LAB-team-1 | A developer or admin opens an experiment | All reviewers' pins for the shown design draw; no closing review link                  | test     |
+| C-LAB-team-2 | The filter is set to one reviewer        | Only their pins draw and list                                                          | test     |
+| C-LAB-team-3 | A team note is saved                     | It is stored as team, is absent from every client tally, and is invisible to reviewers | test     |
+| C-LAB-team-4 | A team member opens a reviewer's pin     | No edit or delete control exists                                                       | test     |
+| C-LAB-team-5 | The experiment is closed                 | The team still views it and can add notes; reviewers cannot add                        | test     |
+| C-LAB-team-6 | A team member visits                     | No view or switch is recorded                                                          | test     |
+| C-LAB-team-7 | Each `?state=` key                       | It renders at 390, 834 and 1440, light and dark                                        | capture  |
 
 ## Decisions and open items
 

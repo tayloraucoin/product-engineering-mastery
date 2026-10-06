@@ -46,22 +46,22 @@ Remove reviewers' data, in full, when it is no longer needed or when someone ask
 
 Keys starting `data-tab-` are on an experiment's Data tab; keys starting `data-page-` are on `/admin/data`. Where a row lists both, both pages have it.
 
-| State | Key | What shows | What the person can do | Copy |
-| --- | --- | --- | --- | --- |
-| nothing held | `data-tab-empty` | Counts are zero; no delete | — | "Pricing 2026 holds no reviewer data." |
-| loading | `data-tab-loading`, `data-page-loading` | A static skeleton | Wait | — |
-| error | `data-tab-error`, `data-page-error` | A line | Reload | "Couldn't load this. Reload the page." |
-| partial | `data-tab-partial` | The counts that loaded; "—" elsewhere; delete disabled | Reload | "Some counts didn't load, so deleting is paused. Reload to try again." |
-| offline | `data-tab-offline`, `data-page-offline` | Actions disabled | Reconnect | "You're offline. Nothing can be deleted until you're back." |
-| deleted | `data-tab-deleted` | The toast; the counts now zero | — | "Data deleted from 5 reviewers" |
-| developer | `data-tab-developer` | Counts, plus the admin-only line | — | "Only an admin can delete this data." |
-| no match | `data-page-no-match` | A line | Try another | "Nothing is held for that email." |
-| erase found | `data-page-erase-found` | Counts, labels and the button | Erase | as Layout |
-| from a reviewer | `data-page-reviewer` | Each email used with the code, with its counts and button | Erase each | "This code was used with 2 emails. Each is erased separately." |
-| erased | `data-page-erased` | The toast; the field emptied | Find another | "Erased 14 comments, 3 review versions and 41 views." |
-| action failed | `data-tab-action-error`, `data-page-action-error` | Toast; nothing changed | Retry | "Nothing was deleted. Try again." |
-| record empty | `data-page-record-empty` | A line | — | "No actions recorded yet." |
-| record | `data-page-success` | The erase section and the record table | Find, read | — |
+| State           | Key                                               | What shows                                                | What the person can do | Copy                                                                   |
+| --------------- | ------------------------------------------------- | --------------------------------------------------------- | ---------------------- | ---------------------------------------------------------------------- |
+| nothing held    | `data-tab-empty`                                  | Counts are zero; no delete                                | —                      | "Pricing 2026 holds no reviewer data."                                 |
+| loading         | `data-tab-loading`, `data-page-loading`           | A static skeleton                                         | Wait                   | —                                                                      |
+| error           | `data-tab-error`, `data-page-error`               | A line                                                    | Reload                 | "Couldn't load this. Reload the page."                                 |
+| partial         | `data-tab-partial`                                | The counts that loaded; "—" elsewhere; delete disabled    | Reload                 | "Some counts didn't load, so deleting is paused. Reload to try again." |
+| offline         | `data-tab-offline`, `data-page-offline`           | Actions disabled                                          | Reconnect              | "You're offline. Nothing can be deleted until you're back."            |
+| deleted         | `data-tab-deleted`                                | The toast; the counts now zero                            | —                      | "Data deleted from 5 reviewers"                                        |
+| developer       | `data-tab-developer`                              | Counts, plus the admin-only line                          | —                      | "Only an admin can delete this data."                                  |
+| no match        | `data-page-no-match`                              | A line                                                    | Try another            | "Nothing is held for that email."                                      |
+| erase found     | `data-page-erase-found`                           | Counts, labels and the button                             | Erase                  | as Layout                                                              |
+| from a reviewer | `data-page-reviewer`                              | Each email used with the code, with its counts and button | Erase each             | "This code was used with 2 emails. Each is erased separately."         |
+| erased          | `data-page-erased`                                | The toast; the field emptied                              | Find another           | "Erased 14 comments, 3 review versions and 41 views."                  |
+| action failed   | `data-tab-action-error`, `data-page-action-error` | Toast; nothing changed                                    | Retry                  | "Nothing was deleted. Try again."                                      |
+| record empty    | `data-page-record-empty`                          | A line                                                    | —                      | "No actions recorded yet."                                             |
+| record          | `data-page-success`                               | The erase section and the record table                    | Find, read             | —                                                                      |
 
 ## Words
 
@@ -80,15 +80,15 @@ Every deletion, erasure, code action and role change writes one record row: who,
 
 ## Criteria
 
-| ID | When | Then | Evidence |
-| --- | --- | --- | --- |
-| C-LAB-data-1 | An admin deletes an experiment's data | Every code, view, comment, version and team note for it is hard-deleted; one record row has counts | test |
-| C-LAB-data-2 | A developer calls the delete action | It is refused; the page shows no button | test |
-| C-LAB-data-3 | An email is erased | Every view, comment, version and reply from it, across experiments, is gone; no label or "Emails used" holds it | test |
-| C-LAB-data-4 | Any record row | It contains no reviewer email and no code label | test |
-| C-LAB-data-5 | The confirmation text doesn't match | The delete button stays disabled | test |
-| C-LAB-data-6 | Keyboard alone with a screen reader | Find, erase, delete and read the record | manual |
-| C-LAB-data-7 | Each `?state=` key | It renders at 390, 834 and 1440, light and dark | capture |
+| ID           | When                                  | Then                                                                                                            | Evidence |
+| ------------ | ------------------------------------- | --------------------------------------------------------------------------------------------------------------- | -------- |
+| C-LAB-data-1 | An admin deletes an experiment's data | Every code, view, comment, version and team note for it is hard-deleted; one record row has counts              | test     |
+| C-LAB-data-2 | A developer calls the delete action   | It is refused; the page shows no button                                                                         | test     |
+| C-LAB-data-3 | An email is erased                    | Every view, comment, version and reply from it, across experiments, is gone; no label or "Emails used" holds it | test     |
+| C-LAB-data-4 | Any record row                        | It contains no reviewer email and no code label                                                                 | test     |
+| C-LAB-data-5 | The confirmation text doesn't match   | The delete button stays disabled                                                                                | test     |
+| C-LAB-data-6 | Keyboard alone with a screen reader   | Find, erase, delete and read the record                                                                         | manual   |
+| C-LAB-data-7 | Each `?state=` key                    | It renders at 390, 834 and 1440, light and dark                                                                 | capture  |
 
 ## Decisions and open items
 

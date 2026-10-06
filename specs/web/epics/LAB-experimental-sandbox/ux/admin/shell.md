@@ -31,15 +31,15 @@ Get a team member to the right experiment or task in one move, and keep everyone
 
 ## States
 
-| State | Key | What shows | What the person can do | Copy |
-| --- | --- | --- | --- | --- |
-| admin | `shell-admin` | All three entries | Navigate | — |
-| developer | `shell-developer` | Experiments and Data | Navigate | — |
-| not ready | `shell-not-ready` | A dimmed label | Nothing | — |
-| collapsed | `shell-collapsed` | Icon strip; labels as tooltips | Expand | Expand control: "Show menu labels" |
-| phone | `shell-phone` | Top bar; sheet on open | Open, navigate | Menu button: "Open menu" |
-| loading, empty, error, partial, offline, success | per page | Owned by each page's file; the sidebar always renders at once | — | — |
-| not allowed | `shell-not-found` | The app's 404 | — | the app's own 404 copy |
+| State                                            | Key               | What shows                                                    | What the person can do | Copy                               |
+| ------------------------------------------------ | ----------------- | ------------------------------------------------------------- | ---------------------- | ---------------------------------- |
+| admin                                            | `shell-admin`     | All three entries                                             | Navigate               | —                                  |
+| developer                                        | `shell-developer` | Experiments and Data                                          | Navigate               | —                                  |
+| not ready                                        | `shell-not-ready` | A dimmed label                                                | Nothing                | —                                  |
+| collapsed                                        | `shell-collapsed` | Icon strip; labels as tooltips                                | Expand                 | Expand control: "Show menu labels" |
+| phone                                            | `shell-phone`     | Top bar; sheet on open                                        | Open, navigate         | Menu button: "Open menu"           |
+| loading, empty, error, partial, offline, success | per page          | Owned by each page's file; the sidebar always renders at once | —                      | —                                  |
+| not allowed                                      | `shell-not-found` | The app's 404                                                 | —                      | the app's own 404 copy             |
 
 ## Words
 
@@ -60,15 +60,15 @@ None.
 
 ## Criteria
 
-| ID | When | Then | Evidence |
-| --- | --- | --- | --- |
-| C-LAB-shell-1 | `/admin` is opened when not signed in | A redirect to sign-in with `next`, and back after | test |
-| C-LAB-shell-2 | Signed in with the `user` role, or holding only a code | 404 on every `/admin` path | test |
-| C-LAB-shell-3 | A developer | No People entry; `/admin/people` is a 404 | test |
-| C-LAB-shell-4 | Any `/admin` server action is called without a team role | It is refused | test |
-| C-LAB-shell-5 | Any `/admin` response | It carries noindex | test |
-| C-LAB-shell-6 | Keyboard alone at 390 | Open the menu, navigate, close; focus returns | manual |
-| C-LAB-shell-7 | Each `?state=` key | It renders at 390, 834 and 1440, light and dark | capture |
+| ID            | When                                                     | Then                                              | Evidence |
+| ------------- | -------------------------------------------------------- | ------------------------------------------------- | -------- |
+| C-LAB-shell-1 | `/admin` is opened when not signed in                    | A redirect to sign-in with `next`, and back after | test     |
+| C-LAB-shell-2 | Signed in with the `user` role, or holding only a code   | 404 on every `/admin` path                        | test     |
+| C-LAB-shell-3 | A developer                                              | No People entry; `/admin/people` is a 404         | test     |
+| C-LAB-shell-4 | Any `/admin` server action is called without a team role | It is refused                                     | test     |
+| C-LAB-shell-5 | Any `/admin` response                                    | It carries noindex                                | test     |
+| C-LAB-shell-6 | Keyboard alone at 390                                    | Open the menu, navigate, close; focus returns     | manual   |
+| C-LAB-shell-7 | Each `?state=` key                                       | It renders at 390, 834 and 1440, light and dark   | capture  |
 
 ## Decisions and open items
 

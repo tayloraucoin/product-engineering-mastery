@@ -4,7 +4,7 @@ size: small
 objective: "A product repo can drop the experimental sandbox from step 4 of new-project: toolkit.json lists it as a removable stack entry, and its runbook undoes every shared edit and proves it gone."
 slice_type: "Stack entry and removal runbook (door 5); the risk is a removal that leaves a shared edit behind, drops the record of actions unwarned, or edits an applied migration."
 non_negotiables:
-  - "toolkit.json stack[\"experimental-sandbox\"] holds exactly placement.md's files, env SANDBOX_SECRET, dependencies [], boundaries [\"web-sandbox\"], locked false and the runbook path; no new field."
+  - 'toolkit.json stack["experimental-sandbox"] holds exactly placement.md''s files, env SANDBOX_SECRET, dependencies [], boundaries ["web-sandbox"], locked false and the runbook path; no new field.'
   - "docs/runbooks/remove/experimental-sandbox.md has billing.md's sections, run as SITE-9's phases: a git tag as a STOP gate, delete, edit, migrate, verify, then the operator's steps."
   - "It lists every shared edit placement.md names, each with its exact file, and ends with a zero-hit git grep over apps/, packages/ and tooling/ that excludes applied migrations."
   - "Tables go by a new forward migration from yarn db:generate; no applied migration is edited; the warning that sandbox_actions goes with the tables, and how to export it first, sits before that step."

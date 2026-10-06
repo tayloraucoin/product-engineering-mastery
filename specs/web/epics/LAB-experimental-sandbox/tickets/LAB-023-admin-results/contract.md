@@ -5,11 +5,11 @@ objective: "The team reads every reviewer's latest review of one experiment on i
 slice_type: "A read-only tally over guest rows (S25, door 4); the risk is a number that overstates: a mean, a percentage under 10 or across wordings, a superseded version or a team note counted."
 non_negotiables:
   - "Reading rules (S25): one rating shows its label; across reviewers, counts per label with n; a % per label, and the median label on labelled scales, only at 10 or more answers on one wording version; never a mean, chart or hero number (A-09)."
-  - "Wording versions are counted apart by the version's core_version: no count, % or median spans two; \"Can't judge yet\" sits apart and is left out of n, % and median."
+  - 'Wording versions are counted apart by the version''s core_version: no count, % or median spans two; "Can''t judge yet" sits apart and is left out of n, % and median.'
   - "Only each reviewer's latest version counts; team notes (team_user_id set) appear in no count; replies count nowhere in beat 1."
   - "One team-only read in packages/db/src/sandbox/results.ts takes (db, viewer, { slug }), refuses a reviewer viewer, returns only that slug's rows, and has its isolation case."
   - "A pure module, apps/web/lib/sandbox/results.ts, produces every number and string, with the threshold as one constant (10); components render it and do no arithmetic."
-  - "Sections in results.md's order with its Words verbatim; designs as glyph, name and config id; quotes exactly as written, attributed to the code's label, trimmed only behind \"Show all\"."
+  - 'Sections in results.md''s order with its Words verbatim; designs as glyph, name and config id; quotes exactly as written, attributed to the code''s label, trimmed only behind "Show all".'
   - "Tables carry a caption and th scope, sections are h2, quotes are blockquote, numbers right-aligned and tabular (C-P10); every results-* key registers in state.ts as team-only, on synthetic fixtures."
 devs_call: "The read's SQL and return shape, the view model's shape, how a % is rounded, the component split, and how a failed read becomes the error state."
 cites:
@@ -52,19 +52,19 @@ out_of_scope:
   - "Beat 2's replies: beat 1 counts none."
 criteria:
   - id: C1
-    statement: "With 3 reviewers rating one design, each label shows its count with \"n = 3\", and the output holds no \"%\", no median and no mean."
+    statement: 'With 3 reviewers rating one design, each label shows its count with "n = 3", and the output holds no "%", no median and no mean.'
     evidence: test
     command: "yarn workspace web test"
   - id: C2
-    statement: "With 10 answers on one wording version, a % per label and the median label appear with n; with 9 plus one \"Can't judge yet\", neither appears and n is 9."
+    statement: 'With 10 answers on one wording version, a % per label and the median label appear with n; with 9 plus one "Can''t judge yet", neither appears and n is 9.'
     evidence: test
     command: "yarn workspace web test"
   - id: C3
-    statement: "With 10 answers on v1 and 2 on v2, the question shows two blocks under \"Asked in two wordings; counted separately.\", % and median in v1 only; with 6 and 6, no % or median anywhere, though the total is 12."
+    statement: 'With 10 answers on v1 and 2 on v2, the question shows two blocks under "Asked in two wordings; counted separately.", % and median in v1 only; with 6 and 6, no % or median anywhere, though the total is 12.'
     evidence: test
     command: "yarn workspace web test"
   - id: C4
-    statement: "A reviewer who sent 2 versions is counted once, from version 2; the summary reads \"3 of 5 reviewers have sent a review · 41 views · latest versions · core v1\" for the synthetic fixture."
+    statement: 'A reviewer who sent 2 versions is counted once, from version 2; the summary reads "3 of 5 reviewers have sent a review · 41 views · latest versions · core v1" for the synthetic fixture.'
     evidence: test
     command: "yarn workspace web test"
   - id: C5
@@ -72,7 +72,7 @@ criteria:
     evidence: test
     command: "yarn workspace web test"
   - id: C6
-    statement: "Team notes appear in no count; a comment left after the reviewer's latest send counts under \"Not triaged\"; Combine, None of these and No preference show \"—\" for strength with their count in Total; one design hides Preference."
+    statement: 'Team notes appear in no count; a comment left after the reviewer''s latest send counts under "Not triaged"; Combine, None of these and No preference show "—" for strength with their count in Total; one design hides Preference.'
     evidence: test
     command: "yarn workspace web test"
   - id: C7

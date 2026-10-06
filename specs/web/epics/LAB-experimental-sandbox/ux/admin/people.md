@@ -28,17 +28,17 @@ An admin sees who has signed up and gives or removes the developer and admin rol
 
 ## States
 
-| State | Key | What shows | What the person can do | Copy |
-| --- | --- | --- | --- | --- |
-| empty | `people-empty` | Only you | Read | "Only you so far. People appear here once they sign up." |
-| loading | `people-loading` | A static skeleton of the table | Wait | — |
-| error | `people-error` | A line | Reload | "Couldn't load people. Reload the page." |
-| partial | `people-partial` | The table; "—" where last sign-in failed | Read | — |
-| offline | `people-offline` | The last render; selects disabled | Reconnect | "You're offline. Roles can't be changed until you're back." |
-| success | `people-success` | The table | Change roles | — |
-| filtered to nothing | `people-filter-empty` | A line | Clear the filter | "No one matches that email." |
-| last admin | `people-last-admin` | Own select disabled, with the reason | — | as Layout |
-| change failed | `people-change-error` | Select reverted; toast | Retry | "The role wasn't changed. Try again." |
+| State               | Key                   | What shows                               | What the person can do | Copy                                                        |
+| ------------------- | --------------------- | ---------------------------------------- | ---------------------- | ----------------------------------------------------------- |
+| empty               | `people-empty`        | Only you                                 | Read                   | "Only you so far. People appear here once they sign up."    |
+| loading             | `people-loading`      | A static skeleton of the table           | Wait                   | —                                                           |
+| error               | `people-error`        | A line                                   | Reload                 | "Couldn't load people. Reload the page."                    |
+| partial             | `people-partial`      | The table; "—" where last sign-in failed | Read                   | —                                                           |
+| offline             | `people-offline`      | The last render; selects disabled        | Reconnect              | "You're offline. Roles can't be changed until you're back." |
+| success             | `people-success`      | The table                                | Change roles           | —                                                           |
+| filtered to nothing | `people-filter-empty` | A line                                   | Clear the filter       | "No one matches that email."                                |
+| last admin          | `people-last-admin`   | Own select disabled, with the reason     | —                      | as Layout                                                   |
+| change failed       | `people-change-error` | Select reverted; toast                   | Retry                  | "The role wasn't changed. Try again."                       |
 
 ## Words
 
@@ -57,14 +57,14 @@ None. Each change is recorded on the Data page: who, what, when (S12c). Role cha
 
 ## Criteria
 
-| ID | When | Then | Evidence |
-| --- | --- | --- | --- |
-| C-LAB-people-1 | An admin makes a user a developer | The role is written, the change is recorded, and the toast names it | test |
-| C-LAB-people-2 | The only admin tries to remove their own role, in the UI or by a direct action call | It is refused | test |
-| C-LAB-people-3 | A developer calls any People action | It is refused, and the page is a 404 | test |
-| C-LAB-people-4 | A role change | It requires confirmation naming the consequence | capture |
-| C-LAB-people-5 | Keyboard alone with a screen reader | Filter, change a role and confirm | manual |
-| C-LAB-people-6 | Each `?state=` key | It renders at 390, 834 and 1440, light and dark | capture |
+| ID             | When                                                                                | Then                                                                | Evidence |
+| -------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------- | -------- |
+| C-LAB-people-1 | An admin makes a user a developer                                                   | The role is written, the change is recorded, and the toast names it | test     |
+| C-LAB-people-2 | The only admin tries to remove their own role, in the UI or by a direct action call | It is refused                                                       | test     |
+| C-LAB-people-3 | A developer calls any People action                                                 | It is refused, and the page is a 404                                | test     |
+| C-LAB-people-4 | A role change                                                                       | It requires confirmation naming the consequence                     | capture  |
+| C-LAB-people-5 | Keyboard alone with a screen reader                                                 | Filter, change a role and confirm                                   | manual   |
+| C-LAB-people-6 | Each `?state=` key                                                                  | It renders at 390, 834 and 1440, light and dark                     | capture  |
 
 ## Decisions and open items
 

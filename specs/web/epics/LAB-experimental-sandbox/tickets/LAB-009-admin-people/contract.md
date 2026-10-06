@@ -8,7 +8,7 @@ non_negotiables:
   - "The last-admin guard runs in the action, inside withRoleChangeLock: pg_advisory_xact_lock in one transaction, in packages/db/src/sandbox/, refusing a reviewer and a developer, with its isolation case in packages/db/test/sandbox/. The disabled select is a courtesy only."
   - "Roles are written to app_metadata.role through apps/web/lib/supabase/admin.ts only; no other app_metadata key changes."
   - "Each change calls recordAction with the actor, the action and targetEmail, the changed team member's email, never a reviewer's (D-LAB-28)."
-  - "The line under the heading is R11's: \"Changes take effect the next time they open a page.\" Every other string is people.md's Words verbatim."
+  - 'The line under the heading is R11''s: "Changes take effect the next time they open a page." Every other string is people.md''s Words verbatim.'
   - "yarn workspace @pem/db db:grant-admin <email> makes an existing account admin through the Auth admin API: unknown email refused, idempotent, redirect: 'error', the key never printed."
   - "Only @pem/ui components and preset tokens; no slop tell (canon §2, A-01 to A-20)."
 devs_call: "The action's result names, how users are paged and filtered at 50, the record's action names, the lock key, and where the toast is raised."
@@ -51,7 +51,7 @@ out_of_scope:
   - "Running the script on a hosted project: the operator's step, written into LAB-24's runbook."
 criteria:
   - id: C1
-    statement: "An admin making a user a developer writes app_metadata.role developer, keeps their other app_metadata keys (provider, providers), records one action naming that user's email, and returns the outcome whose toast reads \"ben@example.com is now a developer.\"; for an admin the nav's People entry is a link."
+    statement: 'An admin making a user a developer writes app_metadata.role developer, keeps their other app_metadata keys (provider, providers), records one action naming that user''s email, and returns the outcome whose toast reads "ben@example.com is now a developer."; for an admin the nav''s People entry is a link.'
     evidence: test
     command: "yarn workspace web test"
   - id: C2

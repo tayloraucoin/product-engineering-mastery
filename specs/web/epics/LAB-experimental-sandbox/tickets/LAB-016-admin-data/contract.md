@@ -2,12 +2,12 @@
 id: LAB-16
 size: medium
 objective: "An admin deletes an experiment's reviewer data, the team erases one email everywhere it reached, and both read a record of every action that never names a reviewer."
-slice_type: "Hard deletion of personal data (S27, S28; one-way doors 2 and 4); the risk is an erasure that misses a copy in a label or \"Emails used\", takes the other email's data with it, or a developer reaching the admin-only delete."
+slice_type: 'Hard deletion of personal data (S27, S28; one-way doors 2 and 4); the risk is an erasure that misses a copy in a label or "Emails used", takes the other email''s data with it, or a developer reaching the admin-only delete.'
 non_negotiables:
   - "Each erasure runs in one transaction, by access, and writes one sandbox_actions row with counts only (data-contract.md, Erasure semantics)."
   - "deleteExperimentData refuses a developer inside the function, whatever the caller; the page and action also hold it to admins (D-LAB-26)."
   - "Erasing an email deletes only the accesses with that email, or a signed-in reviewer's accesses found by account email through apps/web/lib/supabase/admin.ts; the other email's data on the same code stays."
-  - "Labels and \"Emails used\" are scrubbed in code: a label equal to the email (ignoring case) becomes \"Erased reviewer\"; a reviewer left with no access is revoked and relabelled; a name label is cleared only when ticked (D-LAB-27)."
+  - 'Labels and "Emails used" are scrubbed in code: a label equal to the email (ignoring case) becomes "Erased reviewer"; a reviewer left with no access is revoked and relabelled; a name label is cleared only when ticked (D-LAB-27).'
   - "The delete confirm field matches the slug exactly; the server checks it again."
   - "No URL, log or record row holds a reviewer's email: the reviewer view is /admin/data?reviewer=<reviewer-id>, and emails travel only in POST bodies (D-LAB-28)."
   - "New queries live in packages/db/src/sandbox/erasure.ts, take (db, viewer, input), refuse a reviewer viewer, and each has its isolation case in packages/db/test/sandbox/."
@@ -61,19 +61,19 @@ criteria:
     evidence: test
     command: "yarn workspace @pem/db test:db"
   - id: C3
-    statement: "The delete action refuses a developer with a database stub, which throws when called, never called; the Data tab's view for a developer has the counts and \"Only an admin can delete this data.\", and no field or button."
+    statement: 'The delete action refuses a developer with a database stub, which throws when called, never called; the Data tab''s view for a developer has the counts and "Only an admin can delete this data.", and no field or button.'
     evidence: test
     command: "yarn workspace web test"
   - id: C4
-    statement: "One code used with ana@example.com and ben@example.com, and ana on a second slug: erasing ana leaves no row, label or \"Emails used\" entry holding ana in any sandbox table on either slug, keeps ben's views, comments and versions, and the record row holds counts only."
+    statement: 'One code used with ana@example.com and ben@example.com, and ana on a second slug: erasing ana leaves no row, label or "Emails used" entry holding ana in any sandbox table on either slug, keeps ben''s views, comments and versions, and the record row holds counts only.'
     evidence: test
     command: "yarn workspace @pem/db test:db"
   - id: C5
-    statement: "A code used only by the erased email is revoked and labelled \"Erased reviewer\"; a name label is cleared only when its box is ticked, and is unchanged otherwise."
+    statement: 'A code used only by the erased email is revoked and labelled "Erased reviewer"; a name label is cleared only when its box is ticked, and is unchanged otherwise.'
     evidence: test
     command: "yarn workspace @pem/db test:db"
   - id: C6
-    statement: "A signed-in reviewer whose account email is erased loses every access with their user id, found through a stubbed admin lookup; an unknown email gives \"Nothing is held for that email.\" and erases nothing."
+    statement: 'A signed-in reviewer whose account email is erased loses every access with their user id, found through a stubbed admin lookup; an unknown email gives "Nothing is held for that email." and erases nothing.'
     evidence: test
     command: "yarn workspace web test"
   - id: C7

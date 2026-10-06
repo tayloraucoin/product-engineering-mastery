@@ -42,19 +42,19 @@ Make a code for one person, hand it over once, and stop it when needed. Done: th
 
 ## States
 
-| State | Key | What shows | What the person can do | Copy |
-| --- | --- | --- | --- | --- |
-| empty | `codes-empty` | One line and the primary | Make a code | "No codes yet. Make one for each person who should review this." |
-| loading | `codes-loading` | A static skeleton of the table | Wait | — |
-| error | `codes-error` | A line | Reload | "Couldn't load codes. Reload the page." |
-| partial | `codes-partial` | The table; "—" where "Emails used" failed | Read | — |
-| offline | `codes-offline` | The last render; actions disabled | Reconnect | "You're offline. Codes can't be changed until you're back." |
-| success | `codes-success` | The table | All actions | — |
-| shown once | `codes-shown-once` | The dialog with the code | Copy, Done | as Layout |
-| copied | `codes-copied` | The button reads "Copied" for 2 seconds | — | "Copied" |
-| make failed | `codes-make-error` | A line in the dialog | Retry | "The code wasn't made. Try again." |
-| closed | `codes-closed` | The make and replace actions disabled with the reason | Revoke | "This experiment is closed." |
-| mismatch | `codes-mismatch` | "Emails used" flagged | Read | "2 emails used with this code", or "Email differs from the label" |
+| State       | Key                | What shows                                            | What the person can do | Copy                                                              |
+| ----------- | ------------------ | ----------------------------------------------------- | ---------------------- | ----------------------------------------------------------------- |
+| empty       | `codes-empty`      | One line and the primary                              | Make a code            | "No codes yet. Make one for each person who should review this."  |
+| loading     | `codes-loading`    | A static skeleton of the table                        | Wait                   | —                                                                 |
+| error       | `codes-error`      | A line                                                | Reload                 | "Couldn't load codes. Reload the page."                           |
+| partial     | `codes-partial`    | The table; "—" where "Emails used" failed             | Read                   | —                                                                 |
+| offline     | `codes-offline`    | The last render; actions disabled                     | Reconnect              | "You're offline. Codes can't be changed until you're back."       |
+| success     | `codes-success`    | The table                                             | All actions            | —                                                                 |
+| shown once  | `codes-shown-once` | The dialog with the code                              | Copy, Done             | as Layout                                                         |
+| copied      | `codes-copied`     | The button reads "Copied" for 2 seconds               | —                      | "Copied"                                                          |
+| make failed | `codes-make-error` | A line in the dialog                                  | Retry                  | "The code wasn't made. Try again."                                |
+| closed      | `codes-closed`     | The make and replace actions disabled with the reason | Revoke                 | "This experiment is closed."                                      |
+| mismatch    | `codes-mismatch`   | "Emails used" flagged                                 | Read                   | "2 emails used with this code", or "Email differs from the label" |
 
 ## Words
 
@@ -73,15 +73,15 @@ None. The code is never logged, and is never shown again after the dialog closes
 
 ## Criteria
 
-| ID | When | Then | Evidence |
-| --- | --- | --- | --- |
-| C-LAB-codes-1 | A code is made | It is shown once; after closing, no page or response holds it in clear | test |
-| C-LAB-codes-2 | A code is revoked | The reviewer's next request is refused; their sent data stays | test |
-| C-LAB-codes-3 | A code is replaced | The old code fails, the new one opens, and the reviewer's pins and review are still theirs | test |
-| C-LAB-codes-4 | A collaborate experiment | A display name is required; a private experiment hides the field | test |
-| C-LAB-codes-5 | A closed experiment | Make and Replace are disabled with the reason | capture |
-| C-LAB-codes-6 | Keyboard alone with a screen reader | Make, copy, revoke and replace are completable | manual |
-| C-LAB-codes-7 | Each `?state=` key | It renders at 390, 834 and 1440, light and dark | capture |
+| ID            | When                                | Then                                                                                       | Evidence |
+| ------------- | ----------------------------------- | ------------------------------------------------------------------------------------------ | -------- |
+| C-LAB-codes-1 | A code is made                      | It is shown once; after closing, no page or response holds it in clear                     | test     |
+| C-LAB-codes-2 | A code is revoked                   | The reviewer's next request is refused; their sent data stays                              | test     |
+| C-LAB-codes-3 | A code is replaced                  | The old code fails, the new one opens, and the reviewer's pins and review are still theirs | test     |
+| C-LAB-codes-4 | A collaborate experiment            | A display name is required; a private experiment hides the field                           | test     |
+| C-LAB-codes-5 | A closed experiment                 | Make and Replace are disabled with the reason                                              | capture  |
+| C-LAB-codes-6 | Keyboard alone with a screen reader | Make, copy, revoke and replace are completable                                             | manual   |
+| C-LAB-codes-7 | Each `?state=` key                  | It renders at 390, 834 and 1440, light and dark                                            | capture  |
 
 ## Decisions and open items
 

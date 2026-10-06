@@ -40,18 +40,18 @@ Read what every reviewer said about one experiment and choose a direction from h
 
 ## States
 
-| State | Key | What shows | What the person can do | Copy |
-| --- | --- | --- | --- | --- |
-| empty | `results-empty` | The summary and one line; no sections | Go to Access codes | "No reviews sent yet. 2 reviewers have opened it." |
-| no reviewers | `results-no-reviewers` | One line | Make a code | "No one has been sent a code yet." Link: "Access codes" |
-| loading | `results-loading` | A static skeleton of the sections | Wait | — |
-| error | `results-error` | A line | Reload | "Couldn't load results. Reload the page." |
-| partial | `results-partial` | Some reviewers sent; the summary says how many | Read | — |
-| offline | `results-offline` | The last render, plus a line | Reconnect | "You're offline. These results may be out of date." |
-| under 10 | `results-under-10` | Counts with n only | Read | as Layout |
-| 10 or more | `results-10-plus` | Counts, "%" and median, with n | Read | — |
-| mixed wording | `results-mixed-version` | The question's counts split by core version | Read | "Asked in two wordings; counted separately." |
-| success | `results-success` | All sections | Read, follow links | — |
+| State         | Key                     | What shows                                     | What the person can do | Copy                                                    |
+| ------------- | ----------------------- | ---------------------------------------------- | ---------------------- | ------------------------------------------------------- |
+| empty         | `results-empty`         | The summary and one line; no sections          | Go to Access codes     | "No reviews sent yet. 2 reviewers have opened it."      |
+| no reviewers  | `results-no-reviewers`  | One line                                       | Make a code            | "No one has been sent a code yet." Link: "Access codes" |
+| loading       | `results-loading`       | A static skeleton of the sections              | Wait                   | —                                                       |
+| error         | `results-error`         | A line                                         | Reload                 | "Couldn't load results. Reload the page."               |
+| partial       | `results-partial`       | Some reviewers sent; the summary says how many | Read                   | —                                                       |
+| offline       | `results-offline`       | The last render, plus a line                   | Reconnect              | "You're offline. These results may be out of date."     |
+| under 10      | `results-under-10`      | Counts with n only                             | Read                   | as Layout                                               |
+| 10 or more    | `results-10-plus`       | Counts, "%" and median, with n                 | Read                   | —                                                       |
+| mixed wording | `results-mixed-version` | The question's counts split by core version    | Read                   | "Asked in two wordings; counted separately."            |
+| success       | `results-success`       | All sections                                   | Read, follow links     | —                                                       |
 
 ## Words
 
@@ -69,16 +69,16 @@ None.
 
 ## Criteria
 
-| ID | When | Then | Evidence |
-| --- | --- | --- | --- |
-| C-LAB-results-1 | 3 reviewers rated one design | Counts per label with "n = 3"; no "%", no median, no mean anywhere | test |
-| C-LAB-results-2 | 10 reviewers on one wording | "%" and the median label appear with n | test |
-| C-LAB-results-3 | Answers on two wording versions | Counted apart; no percentage spans versions | test |
-| C-LAB-results-4 | A reviewer sent 2 versions | Only version 2 is counted | test |
-| C-LAB-results-5 | A slight preference matching the first-seen design | Flagged weak signal | test |
-| C-LAB-results-6 | Team notes exist | They appear in no count | test |
-| C-LAB-results-7 | Free-text answers | Quoted exactly, attributed to the code's label | capture |
-| C-LAB-results-8 | Each `?state=` key | It renders at 390, 834 and 1440, light and dark | capture |
+| ID              | When                                               | Then                                                               | Evidence |
+| --------------- | -------------------------------------------------- | ------------------------------------------------------------------ | -------- |
+| C-LAB-results-1 | 3 reviewers rated one design                       | Counts per label with "n = 3"; no "%", no median, no mean anywhere | test     |
+| C-LAB-results-2 | 10 reviewers on one wording                        | "%" and the median label appear with n                             | test     |
+| C-LAB-results-3 | Answers on two wording versions                    | Counted apart; no percentage spans versions                        | test     |
+| C-LAB-results-4 | A reviewer sent 2 versions                         | Only version 2 is counted                                          | test     |
+| C-LAB-results-5 | A slight preference matching the first-seen design | Flagged weak signal                                                | test     |
+| C-LAB-results-6 | Team notes exist                                   | They appear in no count                                            | test     |
+| C-LAB-results-7 | Free-text answers                                  | Quoted exactly, attributed to the code's label                     | capture  |
+| C-LAB-results-8 | Each `?state=` key                                 | It renders at 390, 834 and 1440, light and dark                    | capture  |
 
 ## Decisions and open items
 

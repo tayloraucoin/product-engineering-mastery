@@ -22,18 +22,18 @@ A reviewer with a link gets in with as little as possible. Someone without a liv
 
 ## States
 
-| State | Key | What shows | What the person can do | Copy |
-| --- | --- | --- | --- | --- |
-| empty | `gate-empty` | The blank form | Fill and submit | as Words |
-| loading | `gate-loading` | The button reads "Checking"; fields read-only | Wait | "Checking" |
-| error | `gate-error` | An inline error on the field at fault | Correct it | see Errors |
-| partial | `gate-partial` | Email prefilled from the email link; focus on the code | Enter the code | — |
-| offline | `gate-offline` | A line above the button | Reconnect, retry | "You're offline. Connect, then try again." |
-| success | `gate-success` | Briefly "Opening the review", then the page | — | "Opening the review" |
-| throttled | `gate-throttled` | Code error with a fixed time; button disabled until then, re-enabled without reload; fields stay filled | Wait | "Too many tries. You can try again after 14:32." (no "from this browser": the keying is gap 3) |
-| revoked | `gate-revoked` | Identical to `gate-empty`, with no hint | Enter a code | — |
-| signed-in | `gate-signed-in` | Code only, with the account line | Enter the code | see Layout |
-| server error | `gate-server-error` | Message above the button | Retry | "Something on our side stopped this. Try again in a minute; what you typed is still here." |
+| State        | Key                 | What shows                                                                                              | What the person can do | Copy                                                                                           |
+| ------------ | ------------------- | ------------------------------------------------------------------------------------------------------- | ---------------------- | ---------------------------------------------------------------------------------------------- |
+| empty        | `gate-empty`        | The blank form                                                                                          | Fill and submit        | as Words                                                                                       |
+| loading      | `gate-loading`      | The button reads "Checking"; fields read-only                                                           | Wait                   | "Checking"                                                                                     |
+| error        | `gate-error`        | An inline error on the field at fault                                                                   | Correct it             | see Errors                                                                                     |
+| partial      | `gate-partial`      | Email prefilled from the email link; focus on the code                                                  | Enter the code         | —                                                                                              |
+| offline      | `gate-offline`      | A line above the button                                                                                 | Reconnect, retry       | "You're offline. Connect, then try again."                                                     |
+| success      | `gate-success`      | Briefly "Opening the review", then the page                                                             | —                      | "Opening the review"                                                                           |
+| throttled    | `gate-throttled`    | Code error with a fixed time; button disabled until then, re-enabled without reload; fields stay filled | Wait                   | "Too many tries. You can try again after 14:32." (no "from this browser": the keying is gap 3) |
+| revoked      | `gate-revoked`      | Identical to `gate-empty`, with no hint                                                                 | Enter a code           | —                                                                                              |
+| signed-in    | `gate-signed-in`    | Code only, with the account line                                                                        | Enter the code         | see Layout                                                                                     |
+| server error | `gate-server-error` | Message above the button                                                                                | Retry                  | "Something on our side stopped this. Try again in a minute; what you typed is still here."     |
 
 The throttle time is shown in the reviewer's local time. There is no countdown (A-19). Unknown slugs throttle exactly like real ones.
 
@@ -63,17 +63,17 @@ No analytics. The wrong-code throttle keeps short-lived counters only, never sto
 
 ## Criteria
 
-| ID | When | Then | Evidence |
-| --- | --- | --- | --- |
-| C-LAB-gate-1 | An unknown slug and a real slug are opened without access | The two responses are identical apart from the path and per-request tokens | test |
-| C-LAB-gate-2 | A wrong, revoked or closed-without-live code is entered | The same error text shows for all of them, and for an unknown slug | test |
-| C-LAB-gate-3 | A guest not signed in opens the gate | The notice renders above the email field with all four Words points | capture |
-| C-LAB-gate-4 | A live code and email are submitted | The reviewer lands on the page requested; the email is recorded beside the code | test |
-| C-LAB-gate-5 | Wrong tries pass the threshold | The throttle state shows a fixed time, no countdown, and fields stay filled | capture |
-| C-LAB-gate-6 | A signed-in user without a role opens the gate | No email field; the account line shows; their account is used (S8) | test |
-| C-LAB-gate-7 | A developer or admin opens any experiment | No gate | test |
-| C-LAB-gate-8 | Keyboard alone with a screen reader | The form is completable; each error is announced on its field | manual |
-| C-LAB-gate-9 | Each `?state=` key in States | It renders at 390, 834 and 1440, light and dark | capture |
+| ID           | When                                                      | Then                                                                            | Evidence |
+| ------------ | --------------------------------------------------------- | ------------------------------------------------------------------------------- | -------- |
+| C-LAB-gate-1 | An unknown slug and a real slug are opened without access | The two responses are identical apart from the path and per-request tokens      | test     |
+| C-LAB-gate-2 | A wrong, revoked or closed-without-live code is entered   | The same error text shows for all of them, and for an unknown slug              | test     |
+| C-LAB-gate-3 | A guest not signed in opens the gate                      | The notice renders above the email field with all four Words points             | capture  |
+| C-LAB-gate-4 | A live code and email are submitted                       | The reviewer lands on the page requested; the email is recorded beside the code | test     |
+| C-LAB-gate-5 | Wrong tries pass the threshold                            | The throttle state shows a fixed time, no countdown, and fields stay filled     | capture  |
+| C-LAB-gate-6 | A signed-in user without a role opens the gate            | No email field; the account line shows; their account is used (S8)              | test     |
+| C-LAB-gate-7 | A developer or admin opens any experiment                 | No gate                                                                         | test     |
+| C-LAB-gate-8 | Keyboard alone with a screen reader                       | The form is completable; each error is announced on its field                   | manual   |
+| C-LAB-gate-9 | Each `?state=` key in States                              | It renders at 390, 834 and 1440, light and dark                                 | capture  |
 
 ## Decisions and open items
 

@@ -25,19 +25,19 @@ Look at each design, switch between them freely, turn on commenting, and go and 
 
 ## States
 
-| State | Key | What shows | What the person can do | Copy |
-| --- | --- | --- | --- | --- |
-| empty | `exp-empty` | No comments yet | Switch, comment, finish | Count: "Comments 0" |
-| loading | `exp-loading` | The design renders; the comments button reads "Loading comments" and is disabled | Switch, comment (queued) | "Loading comments" |
-| error | `exp-error` | Status: an error line with Retry | Retry; commenting still queues | "Couldn't load your comments. Retry" |
-| partial | `exp-partial` | Status shows the unsent count | Retry | "2 not sent yet · Retry" |
-| offline | `exp-offline` | Status line | Keep commenting | "Offline. New comments stay in this browser and send when you're back." |
-| success | `exp-success` | Status after a send | — | "Saved" |
-| single | `exp-single` | No switcher | Comment, finish | — |
-| returning | `exp-returning` | Primary reads "Back to your review" | Return | "Back to your review" |
-| sent | `exp-sent` | Primary reads "Edit your review" | Edit | "Edit your review" |
-| closed mid-session | `exp-closed` | Status line replaces the save status; placing is disabled | Reload | "This review has closed, so new comments can't be sent. Reload to see what was kept." |
-| access ended | `exp-revoked` | Status line; placing is disabled | Reload | "This page can't save comments any more. Reload the page." |
+| State              | Key             | What shows                                                                       | What the person can do         | Copy                                                                                  |
+| ------------------ | --------------- | -------------------------------------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------- |
+| empty              | `exp-empty`     | No comments yet                                                                  | Switch, comment, finish        | Count: "Comments 0"                                                                   |
+| loading            | `exp-loading`   | The design renders; the comments button reads "Loading comments" and is disabled | Switch, comment (queued)       | "Loading comments"                                                                    |
+| error              | `exp-error`     | Status: an error line with Retry                                                 | Retry; commenting still queues | "Couldn't load your comments. Retry"                                                  |
+| partial            | `exp-partial`   | Status shows the unsent count                                                    | Retry                          | "2 not sent yet · Retry"                                                              |
+| offline            | `exp-offline`   | Status line                                                                      | Keep commenting                | "Offline. New comments stay in this browser and send when you're back."               |
+| success            | `exp-success`   | Status after a send                                                              | —                              | "Saved"                                                                               |
+| single             | `exp-single`    | No switcher                                                                      | Comment, finish                | —                                                                                     |
+| returning          | `exp-returning` | Primary reads "Back to your review"                                              | Return                         | "Back to your review"                                                                 |
+| sent               | `exp-sent`      | Primary reads "Edit your review"                                                 | Edit                           | "Edit your review"                                                                    |
+| closed mid-session | `exp-closed`    | Status line replaces the save status; placing is disabled                        | Reload                         | "This review has closed, so new comments can't be sent. Reload to see what was kept." |
+| access ended       | `exp-revoked`   | Status line; placing is disabled                                                 | Reload                         | "This page can't save comments any more. Reload the page."                            |
 
 There is no page skeleton: the design is rendered on the server. `exp-revoked` stays neutral (S12b).
 
@@ -59,17 +59,17 @@ These are the sandbox's own records (S15; no analytics, which are pinned): a vie
 
 ## Criteria
 
-| ID | When | Then | Evidence |
-| --- | --- | --- | --- |
-| C-LAB-exp-1 | A reviewer opens a 2-design experiment for the first time | The first design is drawn at random, stored, and shown again on reload | test |
-| C-LAB-exp-2 | The same experiment is opened by many reviewers | The draw is uniform: over 1,000 simulated first visits, each of 2 designs is first 50% ± 5% | test |
-| C-LAB-exp-3 | The reviewer switches design | The swap is instant, the scroll is kept (clamped), and the switch is logged | test |
-| C-LAB-exp-4 | Any design label renders | It shows a glyph and a shape name; no A/B, no 1/2 | capture |
-| C-LAB-exp-5 | A single-design experiment | No switcher renders | capture |
-| C-LAB-exp-6 | The design has its own sticky header | The bar never covers it, and the page's last content clears the bar | capture |
-| C-LAB-exp-7 | Keyboard alone | Switcher, Comment, Comments and Finish are reachable and operable; switching is announced | manual |
-| C-LAB-exp-8 | A team member views the page | No view or switch is recorded | test |
-| C-LAB-exp-9 | Each `?state=` key | It renders at 390, 834 and 1440, light and dark | capture |
+| ID          | When                                                      | Then                                                                                        | Evidence |
+| ----------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------- | -------- |
+| C-LAB-exp-1 | A reviewer opens a 2-design experiment for the first time | The first design is drawn at random, stored, and shown again on reload                      | test     |
+| C-LAB-exp-2 | The same experiment is opened by many reviewers           | The draw is uniform: over 1,000 simulated first visits, each of 2 designs is first 50% ± 5% | test     |
+| C-LAB-exp-3 | The reviewer switches design                              | The swap is instant, the scroll is kept (clamped), and the switch is logged                 | test     |
+| C-LAB-exp-4 | Any design label renders                                  | It shows a glyph and a shape name; no A/B, no 1/2                                           | capture  |
+| C-LAB-exp-5 | A single-design experiment                                | No switcher renders                                                                         | capture  |
+| C-LAB-exp-6 | The design has its own sticky header                      | The bar never covers it, and the page's last content clears the bar                         | capture  |
+| C-LAB-exp-7 | Keyboard alone                                            | Switcher, Comment, Comments and Finish are reachable and operable; switching is announced   | manual   |
+| C-LAB-exp-8 | A team member views the page                              | No view or switch is recorded                                                               | test     |
+| C-LAB-exp-9 | Each `?state=` key                                        | It renders at 390, 834 and 1440, light and dark                                             | capture  |
 
 ## Decisions and open items
 

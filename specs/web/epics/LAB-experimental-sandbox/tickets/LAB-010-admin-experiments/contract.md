@@ -52,19 +52,19 @@ out_of_scope:
   - "A scheduled purge: out of bounds until D-LAB-24's 90-day trigger."
 criteria:
   - id: C1
-    statement: "One open and one closed experiment list with title, Open or Closed, the design count and \"5 codes · 2 sent\", open first by last activity, then closed by close date."
+    statement: 'One open and one closed experiment list with title, Open or Closed, the design count and "5 codes · 2 sent", open first by last activity, then closed by close date.'
     evidence: test
     command: "yarn workspace web test"
   - id: C2
-    statement: "A closed experiment with 3 reviewers holding data shows \"Holds data from 3 reviewers · closed 34 days ago\" on its row and under its heading, and the header line counts it."
+    statement: 'A closed experiment with 3 reviewers holding data shows "Holds data from 3 reviewers · closed 34 days ago" on its row and under its heading, and the header line counts it.'
     evidence: test
     command: "yarn workspace web test"
   - id: C3
-    statement: "Once its data is deleted the row shows \"—\" and the header count drops; with none left the header line is absent."
+    statement: 'Once its data is deleted the row shows "—" and the header count drops; with none left the header line is absent.'
     evidence: test
     command: "yarn workspace web test"
   - id: C4
-    statement: "A developer sees the marker on the row and under the heading without \"Delete data\"; an admin's links to /admin/experiments/<slug>/data."
+    statement: 'A developer sees the marker on the row and under the heading without "Delete data"; an admin''s links to /admin/experiments/<slug>/data.'
     evidence: test
     command: "yarn workspace web test"
   - id: C5
@@ -80,7 +80,7 @@ criteria:
     evidence: test
     command: "yarn workspace web test"
   - id: C8
-    statement: "With keyboard alone: sort, open an experiment, reach \"Delete data\"."
+    statement: 'With keyboard alone: sort, open an experiment, reach "Delete data".'
     evidence: manual
     reason: "Needs a person at a keyboard; there is no end-to-end runner (technical.md). The builder walks it in the browser pane first, then hands it over with --verdict deferred."
   - id: C9
