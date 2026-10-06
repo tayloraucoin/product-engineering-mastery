@@ -3,15 +3,31 @@
   "criteria_sha256": "57282faa72a640c0d696f6a2f229ad19fb837db0d3bb09bcac6bb67fe4ca75e1",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test",
+        "exit": 0,
+        "at": "2026-10-06T02:04:58Z",
+        "head": "6385e732f0903341311e8b270be220fc92d430e9",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-24-auth-sign-out/evidence/C1.log",
+        "evidence_sha256": "3b9a20ba3f95c08638d3ab1871e2f5f2fa06c05b5dee4711173b7d4345df785a",
+        "tests": 244
+      }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn contract:record STK-24 C2 --evidence specs/_shared/epics/STK-default-stack/tickets/STK-24-auth-sign-out/evidence/C2-operator.md --verdict deferred",
+        "exit": 0,
+        "at": "2026-10-06T02:05:29Z",
+        "head": "6385e732f0903341311e8b270be220fc92d430e9",
+        "evidence_path": "specs/_shared/epics/STK-default-stack/tickets/STK-24-auth-sign-out/evidence/C2-operator.md",
+        "evidence_sha256": "c4015eaef60e8a9584fd108532e67fa175497ff567f6d05f9cad89ba768b42f6",
+        "deferred": true
+      }
     }
   },
-  "updated_at": "2026-10-06T01:56:28Z"
+  "updated_at": "2026-10-06T02:05:29Z"
 }
