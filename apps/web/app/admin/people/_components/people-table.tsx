@@ -66,6 +66,7 @@ const ROLES: AppRole[] = ["user", "developer", "admin"];
 const ROLE_ITEMS = ROLES.map((value) => ({ value, label: W.roles[value] }));
 const FILTER_ID = "people-filter";
 
+/** This page's toasts: one manager, handed to its Toaster. */
 const toasts = createToastManager();
 
 const DATE = new Intl.DateTimeFormat("en-GB", {
@@ -114,11 +115,33 @@ function PeopleBody({ view }: { view: PeopleView }) {
   const [pending, setPending] = useState<Pending | null>(null);
   const [isChanging, startChange] = useTransition();
   const triggers = useRef(new Map<string, HTMLButtonElement | null>());
+  // One ref callback per row, kept across renders: a new one each render
+  // makes Base UI's merged ref update its store on every commit, in a loop.
+  const triggerRefs = useRef(
+    new Map<string, (el: HTMLButtonElement | null) => void>(),
+  );
+  const triggerRef = (id: string) => {
+    let ref = triggerRefs.current.get(id);
+    if (!ref) {
+      ref = (el) => {
+        triggers.current.set(id, el);
+      };
+      triggerRefs.current.set(id, ref);
+    }
+    return ref;
+  };
   const returnTo = useRef<HTMLElement | null>(null);
 
+  // `people-change-error` opens with the failed-change toast, once. A child's
+  // effect runs before the Toaster's own, so the add waits a tick.
+  const shownFailure = useRef(false);
   useEffect(() => {
-    if (view.changeFailed)
+    if (!view.changeFailed || shownFailure.current) return;
+    const timer = setTimeout(() => {
+      shownFailure.current = true;
       toasts.add({ type: "error", title: W.changeFailed, timeout: 0 });
+    }, 0);
+    return () => clearTimeout(timer);
   }, [view.changeFailed]);
 
   const rows = useMemo(
@@ -228,9 +251,7 @@ function PeopleBody({ view }: { view: PeopleView }) {
                           }}
                         >
                           <SelectTrigger
-                            ref={(el) => {
-                              triggers.current.set(row.id, el);
-                            }}
+                            ref={triggerRef(row.id)}
                             size="sm"
                             className="w-36"
                             aria-label={roleSelectLabel(row.email)}

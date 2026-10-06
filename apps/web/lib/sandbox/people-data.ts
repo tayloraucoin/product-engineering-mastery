@@ -71,12 +71,13 @@ export function changeRoleAs(
   input: unknown,
 ): Promise<ChangeRoleResult> {
   const viewer: TeamViewer = { kind: "team", ...actor };
-  const admin = createSupabaseAdminClient();
+  // Built inside each call, so an unset key fails the change, not the action.
+  const admin = () => createSupabaseAdminClient();
   return changeRoleWith<RoleChangeTx>(
     {
       withLock: (fn) => withRoleChangeLock(sandboxDb(), viewer, fn),
       async readPerson(userId) {
-        const { data, error } = await admin.auth.admin.getUserById(userId);
+        const { data, error } = await admin().auth.admin.getUserById(userId);
         if (error) {
           if (error.status === 404) return null;
           throw new Error("People: the Auth API did not read the user.");
@@ -89,7 +90,7 @@ export function changeRoleAs(
           .length;
       },
       async writeAppMetadata(userId, appMetadata) {
-        const { error } = await admin.auth.admin.updateUserById(userId, {
+        const { error } = await admin().auth.admin.updateUserById(userId, {
           app_metadata: appMetadata,
         });
         if (error)

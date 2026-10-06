@@ -283,7 +283,7 @@ function fixturePeople(me: { id: string; email: string }): AuthPerson[] {
   });
   return [
     { ...person(0, me.email, "admin"), id: me.id },
-    person(1, "ana@example.com", "admin"),
+    person(1, "fay@example.com", "admin"),
     person(2, "ben@example.com", "developer"),
     person(3, "chloe@example.com", "user"),
     person(4, "dev@example.com", "developer"),
