@@ -16,7 +16,11 @@ export {
   clearGateKey,
   type CreateAccessInput,
 } from "./gate.ts";
-export { recordAction, type RecordActionInput } from "./actions.ts";
+export {
+  recordAction,
+  ROLE_CHANGE_ACTION,
+  type RecordActionInput,
+} from "./actions.ts";
 export { withRoleChangeLock, type RoleChangeTx } from "./roles.ts";
 export { listExperimentStats, type ExperimentStats } from "./experiments.ts";
 export {

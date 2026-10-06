@@ -9,6 +9,7 @@ import "server-only";
 
 import {
   recordAction,
+  ROLE_CHANGE_ACTION,
   withRoleChangeLock,
   type RoleChangeTx,
   type TeamViewer,
@@ -27,9 +28,6 @@ import type { TeamMember } from "./team-check.ts";
 /** The Auth API's largest page; a team app has far fewer accounts. */
 const PER_PAGE = 1000;
 const MAX_PAGES = 50;
-
-/** `recordAction`'s one action that may name a person (LAB-3's ROLE_CHANGE_ACTION). */
-const ROLE_CHANGE_ACTION = "role-change";
 
 type AuthUser = {
   id: string;

@@ -15,11 +15,23 @@
  * row rolls back with it.
  */
 
-import { APP_ROLES, type AppRole } from "@pem/db/rls";
+import type { AppRole } from "@pem/db/rls";
 
 import type { TeamMember } from "./team-check.ts";
 
 export const PEOPLE_PAGE_SIZE = 50;
+
+/**
+ * The roles People can set: `APP_ROLES` by name, held here so the client
+ * table never pulls `@pem/db/rls` (and drizzle) into the browser. A
+ * `Record` over `AppRole` fails to compile if a role is added or dropped.
+ */
+const ROLE_SET: Record<AppRole, true> = {
+  user: true,
+  developer: true,
+  admin: true,
+};
+export const PEOPLE_ROLES = Object.keys(ROLE_SET) as AppRole[];
 
 export const PEOPLE_WORDS = {
   heading: "People",
@@ -58,7 +70,7 @@ export function roleFromMetadata(
   appMetadata: Record<string, unknown> | null | undefined,
 ): AppRole {
   const role = appMetadata?.role;
-  return (APP_ROLES as readonly unknown[]).includes(role)
+  return (PEOPLE_ROLES as readonly unknown[]).includes(role)
     ? (role as AppRole)
     : "user";
 }
@@ -142,7 +154,7 @@ export function parseRoleChange(
   if (!input || typeof input !== "object") return null;
   const { userId, role } = input as Record<string, unknown>;
   if (typeof userId !== "string" || !UUID.test(userId)) return null;
-  if (!(APP_ROLES as readonly unknown[]).includes(role)) return null;
+  if (!(PEOPLE_ROLES as readonly unknown[]).includes(role)) return null;
   return { userId, role: role as AppRole };
 }
 
@@ -268,7 +280,19 @@ const ISO = (day: number) =>
   `2026-09-${String(day).padStart(2, "0")}T09:30:00Z`;
 
 /** Synthetic accounts for the state keys; never a real person. */
-function fixturePeople(me: { id: string; email: string }): AuthPerson[] {
+/**
+ * The viewer the state keys show as "(you)": synthetic, never the real
+ * member, so no change made on a fixture row can reach a real account, and
+ * no real address appears in a fixture view.
+ */
+export const PEOPLE_FIXTURE_VIEWER = {
+  id: "00000000-0000-4000-8000-00000000f001",
+  email: "ana@example.com",
+} as const;
+
+function fixturePeople(
+  me: { id: string; email: string } = PEOPLE_FIXTURE_VIEWER,
+): AuthPerson[] {
   const person = (
     n: number,
     email: string,
@@ -295,10 +319,8 @@ function fixturePeople(me: { id: string; email: string }): AuthPerson[] {
  * What People shows for a `?state=` key that passed `readSandboxState`, or
  * null for the real page. Fixtures are synthetic, with the viewer as an admin.
  */
-export function peopleStateView(
-  state: string | null,
-  me: { id: string; email: string },
-): PeopleView | null {
+export function peopleStateView(state: string | null): PeopleView | null {
+  const me = PEOPLE_FIXTURE_VIEWER;
   const base: PeopleView = {
     rows: peopleRows(fixturePeople(me), me.id),
     loading: false,

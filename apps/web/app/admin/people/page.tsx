@@ -22,9 +22,7 @@ export default async function PeoplePage({
   const member = await requireTeamPage("/admin/people", { adminOnly: true });
   const params = await searchParams;
   const state = readSandboxState(params.state, "team");
-  const view =
-    peopleStateView(state, { id: member.userId, email: member.email }) ??
-    (await loadPeople(member.userId));
+  const view = peopleStateView(state) ?? (await loadPeople(member.userId));
   return (
     <>
       <div className="flex flex-col gap-2">

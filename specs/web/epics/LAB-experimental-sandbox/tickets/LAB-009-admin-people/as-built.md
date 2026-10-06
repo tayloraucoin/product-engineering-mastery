@@ -30,9 +30,25 @@
 - [ASSUMPTION] Singular count: "1 person matches."
 - [ASSUMPTION] The dialog's title repeats its button ("Make admin"); people.md gives only the question and the button.
 - The record names who changed and whose role changed, not the new role. `recordAction` accepts only `role-change` with a `targetEmail`, and counts only from a closed list. Drafted as LAB-28.
+- [ASSUMPTION] Inside the lock the order is read, count, record, then write, not the contract's "write, record". A thrown write then rolls the record back (`people.test.ts`), and the remaining window is the commit itself.
 - A change to the role a person already holds returns `changed` and writes nothing.
+- Strings people.md does not give, for `yarn truth:promote LAB` to fold into people.md: the dialog title (it repeats its button), the pager ("Page N of M", "Previous", "Next") and "1 person matches.". Promotion also replaces people.md's timing line and its open assumption with R11's line, which mason confirmed as the named reviewer.
 - Self-demotion: the page goes to `/admin/experiments` after the toast, and the guards give the 404 there when no role is left.
 - On this machine the action returns the fixed failure (no Auth API, no database); the success toast is proven by the tests only.
+
+## Reviews (Q3)
+
+- Mason: PASS, with two should-fixes, both fixed:
+  - The `?state=` fixtures used the real viewer's id and email as "(you)", so confirming a change on that row would have changed the real account. `peopleStateView(state)` now takes no identity and uses `PEOPLE_FIXTURE_VIEWER`, a synthetic id. A test checks every key's "(you)" row.
+  - The action name had two homes. `@pem/db/sandbox` now exports `ROLE_CHANGE_ACTION`, with its isolation-registry case, and `people-data.ts` imports it.
+  - The skeleton is static (`animate-none`), as people.md says. The primitive's pulse default is for the canon owner.
+- Warden: PASS, six "Consider" items, acted on in the same batch:
+  - `people.ts` no longer imports `APP_ROLES` at runtime, so the client table keeps `@pem/db/rls` out of the browser. `PEOPLE_ROLES` is an exhaustive `Record<AppRole, …>`, so a new role fails to compile there.
+  - `grant-admin.ts` now says why it may write outside the lock (it only grants) and that a script which removes a role must take it.
+  - Left as written:
+    - A failed commit after a successful Auth write can change a role with no record. The record row is written first and the window is the commit itself, so LAB-16 should read the record as possibly under-counting, never over-counting.
+    - A no-op change returns `changed`. The page never sends one.
+    - No announcement while the table loads; for the operator's C7 pass.
 
 ## Not verified
 

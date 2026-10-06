@@ -11,6 +11,10 @@
  * - Every request refuses redirects (`redirect: "error"`): one could carry the
  *   service-role key off to another host. The key is never printed.
  *
+ * It writes outside People's role-change lock, which is safe only because it
+ * never removes a role: it cannot bring the admins to zero. A script that
+ * removes one must take the lock.
+ *
  * It lives in @pem/db, beside `local-users.ts`, because `admin` predates the
  * sandbox: removing that stack entry keeps this script (LAB-24's runbook).
  */

@@ -52,6 +52,7 @@ import {
   filterPeople,
   matchAnnouncement,
   PEOPLE_PAGE_SIZE,
+  PEOPLE_ROLES,
   PEOPLE_WORDS,
   roleChangeConfirmation,
   roleSelectLabel,
@@ -62,8 +63,10 @@ import { SANDBOX_TIME_ZONE } from "../../../../lib/sandbox/time";
 import { changeRole } from "../actions";
 
 const W = PEOPLE_WORDS;
-const ROLES: AppRole[] = ["user", "developer", "admin"];
-const ROLE_ITEMS = ROLES.map((value) => ({ value, label: W.roles[value] }));
+const ROLE_ITEMS = PEOPLE_ROLES.map((value) => ({
+  value,
+  label: W.roles[value],
+}));
 const FILTER_ID = "people-filter";
 
 /** This page's toasts: one manager, handed to its Toaster. */
@@ -373,14 +376,14 @@ function RoleChangeDialog({
 export function PeopleSkeleton() {
   return (
     <div className="flex flex-col gap-4" aria-hidden="true">
-      <Skeleton className="h-9 w-full max-w-sm" />
+      <Skeleton className="animate-none h-9 w-full max-w-sm" />
       <div className="flex flex-col gap-3 rounded-lg border p-4">
         {[0, 1, 2, 3, 4].map((i) => (
           <div key={i} className="flex items-center gap-6">
-            <Skeleton className="h-4 flex-1" />
-            <Skeleton className="h-8 w-36" />
-            <Skeleton className="h-4 w-24" />
-            <Skeleton className="h-4 w-24" />
+            <Skeleton className="animate-none h-4 flex-1" />
+            <Skeleton className="animate-none h-8 w-36" />
+            <Skeleton className="animate-none h-4 w-24" />
+            <Skeleton className="animate-none h-4 w-24" />
           </div>
         ))}
       </div>

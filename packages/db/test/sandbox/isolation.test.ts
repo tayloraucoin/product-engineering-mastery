@@ -803,6 +803,24 @@ const REGISTRY: Registry<World> = {
     },
   },
 
+  ROLE_CHANGE_ACTION: {
+    group: "support",
+    criteria: ["LAB-9"],
+    cases: {
+      "is the one action that may name a team member, and the package exports the name recordAction checks":
+        async (w) => {
+          assert.equal(sandbox.ROLE_CHANGE_ACTION, ROLE_CHANGE_ACTION);
+          await assert.rejects(
+            sandbox.recordAction(db(), w.admin, {
+              action: "role-changed",
+              targetEmail: `x-${w.run}@example.test`,
+            }),
+            refusedWith(ACTION_INPUT_INVALID),
+          );
+        },
+    },
+  },
+
   SandboxAccessError: {
     group: "support",
     criteria: ["C4"],

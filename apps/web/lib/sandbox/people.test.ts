@@ -12,6 +12,7 @@ import {
   changeRoleWith,
   filterPeople,
   matchAnnouncement,
+  PEOPLE_FIXTURE_VIEWER,
   PEOPLE_STATE_KEYS,
   PEOPLE_WORDS,
   peopleRows,
@@ -383,26 +384,28 @@ describe("people.md's words and states", () => {
   });
 
   test("every people state key is team-only and has its view", () => {
-    const me = { id: ANA, email: "ana@example.com" };
     for (const key of PEOPLE_STATE_KEYS) {
       assert.equal(SANDBOX_STATE_KEYS[key], "team", key);
       assert.equal(readSandboxState(key, "reviewer"), null);
-      assert.ok(peopleStateView(key, me), key);
+      assert.ok(peopleStateView(key), key);
     }
-    assert.equal(peopleStateView(null, me), null);
-    assert.equal(peopleStateView("people-empty", me)!.rows!.length, 1);
-    assert.equal(peopleStateView("people-error", me)!.error, true);
+    assert.equal(peopleStateView(null), null);
+    assert.equal(peopleStateView("people-empty")!.rows!.length, 1);
+    assert.equal(peopleStateView("people-error")!.error, true);
     assert.ok(
-      peopleStateView("people-partial", me)!.rows!.some(
+      peopleStateView("people-partial")!.rows!.some(
         (r) => r.lastSignIn === null,
       ),
     );
     assert.equal(
-      peopleStateView("people-last-admin", me)!.rows!.find((r) => r.isYou)!
-        .locked,
+      peopleStateView("people-last-admin")!.rows!.find((r) => r.isYou)!.locked,
       true,
     );
-    const fixtures = JSON.stringify(peopleStateView("people-success", me));
+    // "(you)" in every fixture is the synthetic viewer, never a real account.
+    for (const key of PEOPLE_STATE_KEYS)
+      for (const row of peopleStateView(key)!.rows ?? [])
+        if (row.isYou) assert.equal(row.id, PEOPLE_FIXTURE_VIEWER.id, key);
+    const fixtures = JSON.stringify(peopleStateView("people-success"));
     assert.doesNotMatch(fixtures, /@(?!example\.com)/);
   });
 });
