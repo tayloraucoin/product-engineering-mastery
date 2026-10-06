@@ -1,7 +1,8 @@
 /**
  * The record of actions (S12c): one row per team action on the sandbox, with
  * counts only. It never names a reviewer or a reviewer's email (D-LAB-28):
- * there is no reviewer column of any kind, so erasure never touches it.
+ * there is no reviewer column of any kind, so erasure never touches it, and
+ * `counts` takes only the closed names below.
  * `target_email` is set only on role changes, and holds a team member's.
  *
  * Retention: kept. `actor_user_id` is not a foreign key, so the record
@@ -22,8 +23,28 @@ import {
 import { serviceOnlyPolicies } from "../../policies.ts";
 import { slugIsValid } from "./columns.ts";
 
+/**
+ * The names a count may have. Closed, so no key is ever built from what was
+ * acted on (an erased email as a key would outlive its own erasure here);
+ * a ticket that needs a new count adds its name to this list.
+ */
+export const SANDBOX_ACTION_COUNT_NAMES = [
+  "reviewers",
+  "accesses",
+  "viewEvents",
+  "comments",
+  "reviewVersions",
+  "teamNotes",
+  "labelsScrubbed",
+  "reviewersRevoked",
+] as const;
+export type SandboxActionCountName =
+  (typeof SANDBOX_ACTION_COUNT_NAMES)[number];
+
 /** How many rows an action touched, by name; never who. */
-export type SandboxActionCounts = Record<string, number>;
+export type SandboxActionCounts = Partial<
+  Record<SandboxActionCountName, number>
+>;
 
 export const sandboxActions = pgTable(
   "sandbox_actions",

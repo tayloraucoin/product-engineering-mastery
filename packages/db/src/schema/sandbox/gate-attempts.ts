@@ -23,10 +23,7 @@ export const sandboxGateAttempts = pgTable(
     lockedUntil: timestamp("locked_until", { withTimezone: true }),
   },
   (table) => [
-    check(
-      "sandbox_gate_attempts_failures_check",
-      sql`${table.failures} >= 0`,
-    ),
+    check("sandbox_gate_attempts_failures_check", sql`${table.failures} >= 0`),
     ...serviceOnlyPolicies("sandbox_gate_attempts"),
   ],
 );

@@ -146,7 +146,15 @@ async function refused(statement: Promise<unknown>, constraint: string) {
 
 describe("the sandbox schema (LAB-1)", () => {
   test("C2: a bad or over-long slug is refused, and a good one at 48 characters is taken", async () => {
-    for (const bad of ["Bad", "bad_slug", "-lead", "trail-", "two--hyphens", "a b", ""]) {
+    for (const bad of [
+      "Bad",
+      "bad_slug",
+      "-lead",
+      "trail-",
+      "two--hyphens",
+      "a b",
+      "",
+    ]) {
       await refused(
         db
           .insert(sandboxReviewers)
@@ -202,7 +210,9 @@ describe("the sandbox schema (LAB-1)", () => {
     await refused(
       db
         .insert(sandboxComments)
-        .values(commentValues({ reviewerId: r, accessId: a, teamUserId: teamUser })),
+        .values(
+          commentValues({ reviewerId: r, accessId: a, teamUserId: teamUser }),
+        ),
       "sandbox_comments_one_author_check",
     );
     await refused(
@@ -216,13 +226,17 @@ describe("the sandbox schema (LAB-1)", () => {
     await refused(
       db
         .insert(sandboxComments)
-        .values(commentValues({ teamUserId: teamUser, body: "x".repeat(2001) })),
+        .values(
+          commentValues({ teamUserId: teamUser, body: "x".repeat(2001) }),
+        ),
       "sandbox_comments_body_check",
     );
     await db
       .insert(sandboxComments)
       .values(commentValues({ reviewerId: r, accessId: a }));
-    await db.insert(sandboxComments).values(commentValues({ teamUserId: teamUser }));
+    await db
+      .insert(sandboxComments)
+      .values(commentValues({ teamUserId: teamUser }));
   });
 
   test("C2: a row cannot claim another reviewer's access or another slug", async () => {
@@ -241,9 +255,11 @@ describe("the sandbox schema (LAB-1)", () => {
     );
     const a1 = await access(r1, "mine@example.test");
     await refused(
-      db.insert(sandboxComments).values(
-        commentValues({ reviewerId: r1, accessId: a1, slug: `other-${run}` }),
-      ),
+      db
+        .insert(sandboxComments)
+        .values(
+          commentValues({ reviewerId: r1, accessId: a1, slug: `other-${run}` }),
+        ),
       "sandbox_comments_reviewer_fk",
     );
   });
@@ -256,9 +272,16 @@ describe("the sandbox schema (LAB-1)", () => {
     const kept = await rowsThrough(r, second, 2);
     // A reply to the erased root survives it: parent_id has no foreign key.
     const reply = randomUUID();
-    await db.insert(sandboxComments).values(
-      commentValues({ id: reply, reviewerId: r, accessId: second, parentId: gone.comment }),
-    );
+    await db
+      .insert(sandboxComments)
+      .values(
+        commentValues({
+          id: reply,
+          reviewerId: r,
+          accessId: second,
+          parentId: gone.comment,
+        }),
+      );
 
     await db.delete(sandboxAccesses).where(eq(sandboxAccesses.id, first));
 
@@ -266,7 +289,10 @@ describe("the sandbox schema (LAB-1)", () => {
       .select({ id: sandboxViewEvents.id })
       .from(sandboxViewEvents)
       .where(inArray(sandboxViewEvents.id, [gone.view, kept.view]));
-    assert.deepEqual(views.map((v) => v.id), [kept.view]);
+    assert.deepEqual(
+      views.map((v) => v.id),
+      [kept.view],
+    );
     const comments = await db
       .select({ id: sandboxComments.id })
       .from(sandboxComments)
@@ -279,7 +305,10 @@ describe("the sandbox schema (LAB-1)", () => {
       .select({ id: sandboxReviewVersions.id })
       .from(sandboxReviewVersions)
       .where(inArray(sandboxReviewVersions.id, [gone.version, kept.version]));
-    assert.deepEqual(versions.map((v) => v.id), [kept.version]);
+    assert.deepEqual(
+      versions.map((v) => v.id),
+      [kept.version],
+    );
     const reviewers = await db
       .select({ id: sandboxReviewers.id })
       .from(sandboxReviewers)
@@ -301,7 +330,7 @@ describe("the sandbox schema (LAB-1)", () => {
     assert.equal(Number(left), 0);
   });
 
-  test("C4: a bridged user or admin reads and writes no row of any sandbox table", async () => {
+  test("C4: a bridged user, developer or admin reads and writes no row of any sandbox table", async () => {
     const r = await reviewer();
     const a = await access(r, "rls@example.test");
     await rowsThrough(r, a, 1);
@@ -319,66 +348,90 @@ describe("the sandbox schema (LAB-1)", () => {
       windowEndsAt: new Date(Date.now() + 60_000),
     });
 
-    const tables = [
-      sandboxReviewers,
-      sandboxAccesses,
-      sandboxViewEvents,
-      sandboxComments,
-      sandboxReviewVersions,
-      sandboxActions,
-      sandboxGateAttempts,
+    // One well-formed row per table, so only row-level security can refuse it.
+    const forged: [PgTable, Record<string, unknown>][] = [
+      [
+        sandboxReviewers,
+        { slug, label: "forged", codeHash: hash(randomUUID()) },
+      ],
+      [
+        sandboxAccesses,
+        { reviewerId: r, email: "forged@example.test", codeVersion: 1 },
+      ],
+      [
+        sandboxViewEvents,
+        { reviewerId: r, accessId: a, slug, kind: "load", design: "circle" },
+      ],
+      [sandboxComments, commentValues({ teamUserId: teamUser })],
+      [
+        sandboxReviewVersions,
+        {
+          id: randomUUID(),
+          reviewerId: r,
+          accessId: a,
+          slug,
+          number: 99,
+          coreVersion: "v1",
+          answers: {},
+          triage: {},
+        },
+      ],
+      [
+        sandboxActions,
+        {
+          actorUserId: teamUser,
+          actorEmail: "forged@example.test",
+          action: "forged",
+        },
+      ],
+      [
+        sandboxGateAttempts,
+        { keyHash: hash(randomUUID()), windowEndsAt: new Date() },
+      ],
     ];
-    for (const role of ["user", "admin"] as const) {
+    assert.equal(forged.length, 7);
+
+    for (const role of ["user", "developer", "admin"] as const) {
       const rls = createRlsClient(db, { userId: teamUser, role });
-      for (const table of tables) {
+      for (const [table, values] of forged) {
+        const name = getTableConfig(table).name;
         assert.deepEqual(
           await rls.execute((tx) => tx.select().from(table)),
           [],
-          `${role} read a row`,
+          `${role} read a row of ${name}`,
         );
         const deleted = await rls.execute((tx) =>
           tx.execute(sql`delete from ${table} returning 1`),
         );
-        assert.equal(deleted.length, 0, `${role} deleted a row`);
+        assert.equal(deleted.length, 0, `${role} deleted a row of ${name}`);
+        const column = sql.raw(firstColumn(table));
         const updated = await rls.execute((tx) =>
-          tx.execute(sql`update ${table} set ${sql.raw(firstColumn(table))} = ${sql.raw(firstColumn(table))} returning 1`),
+          tx.execute(
+            sql`update ${table} set ${column} = ${column} returning 1`,
+          ),
         );
-        assert.equal(updated.length, 0, `${role} updated a row`);
+        assert.equal(updated.length, 0, `${role} updated a row of ${name}`);
+        await assert.rejects(
+          rls.execute((tx) => tx.insert(table).values(values)),
+          (error: unknown) => {
+            // 42501: new row violates row-level security policy.
+            assert.equal(
+              codeOf(error),
+              "42501",
+              `${role} inserting into ${name}`,
+            );
+            return true;
+          },
+        );
       }
-      await assert.rejects(
-        rls.execute((tx) =>
-          tx.insert(sandboxReviewers).values({
-            slug,
-            label: "forged",
-            codeHash: hash(randomUUID()),
-          }),
-        ),
-      );
-      await assert.rejects(
-        rls.execute((tx) =>
-          tx.insert(sandboxComments).values(commentValues({ teamUserId: teamUser })),
-        ),
-      );
-      await assert.rejects(
-        rls.execute((tx) =>
-          tx.insert(sandboxActions).values({
-            actorUserId: teamUser,
-            actorEmail: "forged@example.test",
-            action: "forged",
-          }),
-        ),
-      );
-      await assert.rejects(
-        rls.execute((tx) =>
-          tx.insert(sandboxGateAttempts).values({
-            keyHash: hash(randomUUID()),
-            windowEndsAt: new Date(),
-          }),
-        ),
-      );
     }
   });
 });
+
+function codeOf(error: unknown): string | undefined {
+  const cause = (error as { cause?: { code?: string } }).cause;
+  return cause?.code ?? (error as { code?: string }).code;
+}
 
 function firstColumn(table: PgTable): string {
   return `"${getTableConfig(table).columns[0]!.name}"`;

@@ -104,7 +104,10 @@ export const sandboxComments = pgTable(
       columns: [table.reviewerId, table.slug],
       foreignColumns: [sandboxReviewers.id, sandboxReviewers.slug],
     }).onDelete("cascade"),
-    index("sandbox_comments_slug_reviewer_idx").on(table.slug, table.reviewerId),
+    index("sandbox_comments_slug_reviewer_idx").on(
+      table.slug,
+      table.reviewerId,
+    ),
     index("sandbox_comments_access_idx").on(table.accessId),
     index("sandbox_comments_parent_idx").on(table.parentId),
     ...serviceOnlyPolicies("sandbox_comments"),
