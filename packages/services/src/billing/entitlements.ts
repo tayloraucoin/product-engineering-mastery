@@ -139,6 +139,16 @@ export async function completeCheckout(
     const link = await currentLink(tx, checkout.userId);
     if (entitledElsewhere(link, checkout.customerId))
       return { outcome: "customer-mismatch", userId: checkout.userId };
+    // An unpaid checkout for a second subscription (a delayed payment method)
+    // never downgrades a live one; the new subscription's own events apply
+    // once it is paid.
+    if (
+      !checkout.paid &&
+      link !== undefined &&
+      isEntitled(link) &&
+      link.subscriptionId !== checkout.subscriptionId
+    )
+      return { outcome: "stale", userId: checkout.userId };
     // A new subscription's plan and period arrive with its own events; the
     // last one's must not be read as this one's meanwhile.
     const fresh = link?.subscriptionId !== checkout.subscriptionId;
@@ -201,6 +211,11 @@ export async function syncSubscription(
         .where(
           and(
             eq(billingEntitlements.userId, userId),
+            // Only the same subscription: an old one's late plan never lands on its successor.
+            eq(
+              billingEntitlements.stripeSubscriptionId,
+              subscription.subscriptionId,
+            ),
             or(
               isNull(billingEntitlements.priceId),
               isNull(billingEntitlements.currentPeriodEnd),

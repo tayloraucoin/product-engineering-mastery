@@ -26,7 +26,10 @@ export function checkoutSessionCompleted(
         userId: session.client_reference_id,
         customerId: stripeId(session.customer),
         subscriptionId: stripeId(session.subscription),
-        paid: session.payment_status !== "unpaid",
+        // An allowlist: a status Stripe adds later is unpaid until named here.
+        paid:
+          session.payment_status === "paid" ||
+          session.payment_status === "no_payment_required",
         occurredAt: occurredAt(event),
       }),
     );

@@ -264,3 +264,24 @@ test("on a same-second tie an ending event never overwrites a granting one", asy
     /"stripe_event_at" = \$\d+ and true/,
   );
 });
+
+test("an unpaid checkout for a second subscription never downgrades a live one", async () => {
+  const ctx = systemContext(
+    script({ user: true, link: ["cus_synthetic", "sub_live", "active"] }),
+  );
+  assert.deepEqual(await completeCheckout(ctx, { ...checkout, paid: false }), {
+    outcome: "stale",
+    userId: USER_ID,
+  });
+  assert.equal(inserts(ctx.calls).length, 0);
+});
+
+test("the late fill matches the subscription, so an old one's plan never lands on its successor", async () => {
+  const ctx = systemContext(script({ linkedTo: USER_ID, written: false }));
+  await syncSubscription(ctx, subscription);
+  const update = ctx.calls.find((call) =>
+    call.sql.startsWith('update "billing_entitlements"'),
+  );
+  assert.match(update!.sql, /"stripe_subscription_id" = \$\d+/);
+  assert.ok(update!.params.includes("sub_synthetic"));
+});

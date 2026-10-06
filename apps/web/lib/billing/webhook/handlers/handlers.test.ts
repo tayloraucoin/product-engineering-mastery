@@ -230,3 +230,19 @@ test("a database failure in the service is retried: the delivery answers 500", a
   );
   assert.equal(result.status, 500);
 });
+
+test("a checkout payment status Stripe has not named here is read as unpaid", async () => {
+  const { calls, deliver } = standIn();
+  await deliver(
+    signed("evt_new_status", "checkout.session.completed", {
+      id: "cs_new",
+      object: "checkout.session",
+      mode: "subscription",
+      client_reference_id: USER_ID,
+      customer: "cus_synthetic",
+      subscription: "sub_synthetic",
+      payment_status: "some_future_status",
+    }),
+  );
+  assert.equal((calls[0]!.input as { paid: boolean }).paid, false);
+});
