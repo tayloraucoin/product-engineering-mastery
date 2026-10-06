@@ -90,7 +90,8 @@ CREATE TABLE "sandbox_actions" (
 	"slug" text,
 	"target_email" text,
 	"counts" jsonb,
-	CONSTRAINT "sandbox_actions_slug_check" CHECK ("sandbox_actions"."slug" is null or ("sandbox_actions"."slug" ~ '^[a-z0-9]+(-[a-z0-9]+)*$' and char_length("sandbox_actions"."slug") <= 48))
+	CONSTRAINT "sandbox_actions_slug_check" CHECK ("sandbox_actions"."slug" is null or ("sandbox_actions"."slug" ~ '^[a-z0-9]+(-[a-z0-9]+)*$' and char_length("sandbox_actions"."slug") <= 48)),
+	CONSTRAINT "sandbox_actions_counts_check" CHECK ("sandbox_actions"."counts" is null or (jsonb_typeof("sandbox_actions"."counts") = 'object' and "sandbox_actions"."counts" - '{reviewers,accesses,viewEvents,comments,reviewVersions,teamNotes,labelsScrubbed,reviewersRevoked}'::text[] = '{}'::jsonb))
 );
 --> statement-breakpoint
 ALTER TABLE "sandbox_actions" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint

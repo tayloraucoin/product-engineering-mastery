@@ -183,6 +183,26 @@ describe("the sandbox schema (LAB-1)", () => {
     await reviewer(fortyEight);
   });
 
+  test("C2: an action's counts take only the closed names: an email as a key, or an array, is refused", async () => {
+    const action = (counts: unknown) =>
+      db.insert(sandboxActions).values({
+        actorUserId: teamUser,
+        actorEmail: "team@example.test",
+        action: "erase-email",
+        slug,
+        counts: counts as Record<string, number>,
+      });
+    for (const counts of [
+      { "erased@example.test": 1 },
+      { comments: 1, label: 2 },
+      [1, 2],
+      3,
+    ])
+      await refused(action(counts), "sandbox_actions_counts_check");
+    await action({ comments: 2, accesses: 1, reviewersRevoked: 0 });
+    await action(null);
+  });
+
   test("C2: an access with both or neither of email and user_id is refused", async () => {
     const r = await reviewer();
     await refused(

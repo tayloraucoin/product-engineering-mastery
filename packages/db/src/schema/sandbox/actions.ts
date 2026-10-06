@@ -26,8 +26,10 @@ import { slugIsValid } from "./columns.ts";
 /**
  * The names a count may have. Closed, so no key is ever built from what was
  * acted on (an erased email as a key would outlive its own erasure here);
- * a ticket that needs a new count adds its name to this list.
+ * a ticket that needs a new count adds its name to this list and to the
+ * check, by migration.
  */
+// Keep each name to letters: the SQL check below writes them into an array literal.
 export const SANDBOX_ACTION_COUNT_NAMES = [
   "reviewers",
   "accesses",
@@ -64,6 +66,12 @@ export const sandboxActions = pgTable(
     check(
       "sandbox_actions_slug_check",
       sql`${table.slug} is null or ${slugIsValid(table.slug)}`,
+    ),
+    // Keys outside the closed names are refused in SQL too: jsonb minus the
+    // allowed keys must leave nothing.
+    check(
+      "sandbox_actions_counts_check",
+      sql`${table.counts} is null or (jsonb_typeof(${table.counts}) = 'object' and ${table.counts} - ${sql.raw(`'{${SANDBOX_ACTION_COUNT_NAMES.join(",")}}'::text[]`)} = '{}'::jsonb)`,
     ),
     index("sandbox_actions_at_idx").on(table.at),
     ...serviceOnlyPolicies("sandbox_actions"),

@@ -3,11 +3,11 @@
 > Written by `yarn review:run mason LAB-1`. Never edit it: check-specs binds it to the hashes below, and Taylor reads it before merge.
 
 - contract_sha256: 863a59148797fa54c42b204eac568f6e99028198a4c51d3de5dd0198d4387e45
-- as_built_sha256: 71778c4c3c8ab7dc152f36b36658a7ab57ecebb1f12452b13a2e9b9b71e504a9
-- head: 34d619b7603f4a093f0e993806b5e1e2788ca144
+- as_built_sha256: d3da8d6f11c074cbfa9209dd70c90f1c5b49c7106cd1411be798dbde82b0728d
+- head: d7d57077699ddc5679d9f96ef5639cb0699f903b
 - runner: claude 2.1.232 (Claude Code) (role docs/roles/engineering/mason-cto-principal-dev.md; tools Read,Grep,Glob)
 - model: claude-opus-5[1m]
-- at: 2026-10-06T18:41:58Z
+- at: 2026-10-06T18:49:43Z
 - verdict: PASS
 
 ## Prompt
@@ -21,11 +21,11 @@ Read, in this order:
 2. The results: specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/results.json. Each criterion's run record and evidence file.
 3. The as-built: specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/as-built.md. What the builder says shipped, and every deviation. Check its claims against the code; do not trust them.
 4. The evidence:
-   - C1 test: specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/evidence/C1.log (sha256 29837fb6b3f4)
-   - C2 test: specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/evidence/C2.log (sha256 8fab0f7e663f)
-   - C3 test: specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/evidence/C3.log (sha256 8fab0f7e663f)
-   - C4 test: specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/evidence/C4.log (sha256 8fab0f7e663f)
-   - C5 check: specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/evidence/C5.log (sha256 bd8dc6637c5f)
+   - C1 test: specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/evidence/C1.log (sha256 c5cafa66b508)
+   - C2 test: specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/evidence/C2.log (sha256 eeece9b84f74)
+   - C3 test: specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/evidence/C3.log (sha256 eeece9b84f74)
+   - C4 test: specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/evidence/C4.log (sha256 eeece9b84f74)
+   - C5 check: specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/evidence/C5.log (sha256 7f60ba0c6872)
 5. The files this ticket changes against main (its planned paths; other tickets share the branch): packages/db/migrations/0000_example_schema.sql, packages/db/migrations/0001_stripe_events.sql, packages/db/migrations/0002_billing_entitlements.sql, packages/db/migrations/0003_sandbox_schema.sql, packages/db/migrations/meta/0000_snapshot.json, packages/db/migrations/meta/0001_snapshot.json, packages/db/migrations/meta/0002_snapshot.json, packages/db/migrations/meta/0003_snapshot.json, packages/db/migrations/meta/_journal.json, packages/db/src/schema/index.test.ts, packages/db/src/schema/index.ts, packages/db/src/schema/sandbox/accesses.ts, packages/db/src/schema/sandbox/actions.ts, packages/db/src/schema/sandbox/columns.ts, packages/db/src/schema/sandbox/comments.ts, packages/db/src/schema/sandbox/gate-attempts.ts, packages/db/src/schema/sandbox/review-versions.ts, packages/db/src/schema/sandbox/reviewers.ts, packages/db/src/schema/sandbox/view-events.ts, packages/db/test/sandbox/schema.test.ts.
 6. The surface the ticket cites: specs/web/epics/LAB-experimental-sandbox/technical/data-contract.md. Every state and criterion it names.
 
@@ -39,34 +39,32 @@ VERDICT: FAIL
 
 ## Review — LAB-1 sandbox-schema (mason, fresh context)
 
-**Verdict up top: PASS.** The seven tables, the composite cascade, the identity and author checks, the deny-all policies and the forward-only migration all hold. Every as-built claim I checked against the code is true, including the two I expected to be loose (frontmatter added to the three `technical/` detail files does match `technical.md:2-3`, and `bytea` is defined once, not duplicated).
+**Verdict up top: pass.** Seven non-negotiables, all met; the one defect I found is mechanical and does not touch the shape.
 
 ### Criteria
 
-**C1 — met.** `packages/db/src/schema/index.test.ts:49-98` asserts the exact set of seven `sandbox_` names (`deepEqual` on the sorted list, so an eighth table would fail), `schema === undefined` for each, exactly one policy per table named `<table>_all_denied`, `for: "all"`, `to: authenticatedRole`, `using`/`withCheck` both `false`; no `reviewer|access|label|display` column and no FK on `sandbox_actions`; exactly four columns and no FK on `sandbox_gate_attempts`; no default on the comment and version ids; `parent_id` present with no FK. The migration agrees (`0003_sandbox_schema.sql:84-105` and the seven policies at `:127-133`). All seven files carry `...serviceOnlyPolicies(name)` last, and all seven are exported from `src/schema/index.ts:11-17`. C1.log subtests 24-27 pass, exit 0.
+**C1 — met.** `C1.log` exit 0 (60 tests + 8 suites = the 68 in `results.json`), with the four C1 tests at `ok 25–28`. The code backs it: `packages/db/src/schema/index.ts:11-17` exports all seven; `index.test.ts:53` is a `deepEqual` against a sorted list of exactly seven `sandbox_` names, so an eighth table fails the test, not just a missing one; `:57-63` pins each to one policy named `<table>_all_denied`, `for all`, `to authenticated`, `using false`, `with check false`, and `:56` holds it in `public`. `:67-73` asserts no column on `sandbox_actions` matching `/reviewer|access|label|display/` and no foreign key — `actions.ts:49-71` has neither, and `actor_user_id` is deliberately unreferenced. `:75-82` pins `sandbox_gate_attempts` to exactly four columns with no foreign key (`gate-attempts.ts:16-29`). `:84-98` asserts no default on `sandbox_comments.id` and `sandbox_review_versions.id` (`comments.ts:56`, `review-versions.ts:44`) and `parent_id` present with no key (`comments.ts:81`). The migration agrees: `0003_sandbox_schema.sql:127-133` creates all seven denial policies, with `ENABLE ROW LEVEL SECURITY` on each table.
 
-**C2 — met.** Checks are in SQL, not application code: slug at `0003:14,40,61,79,93`, identity at `0003:28`, one-author at `0003:64`, body ≤ 2000 at `0003:63`. `test/sandbox/schema.test.ts:148-249` refuses each by *named constraint* (the `refused` helper at `:136` asserts `constraint_name`), covering seven malformed slugs including the empty string, a 49-character slug, a bad slug on `sandbox_actions`, both-and-neither identity, two authors / none / `reviewer_id` without `access_id`, and a 2,001-character body — and takes the 48-character boundary case (`:174-175`). C2.log subtests 1-4 pass.
+**C2 — met.** `test/sandbox/schema.test.ts:148-265`. The `refused` helper (`:136-145`) asserts the *constraint name*, so a row rejected for the wrong reason fails the test — that is what makes this evidence worth something. Covered: seven malformed slugs and a 49-character one (`:149-172`), a bad slug on `sandbox_actions` (`:173-181`), a 48-character slug accepted (`:182-183`), both-or-neither identity (`:186-205`), three bad comment-author shapes including `reviewer_id` with no `access_id` (`:207-225`), and a 2,001-character body (`:226-233`). Each maps to SQL in `0003:14, 28, 61-64, 93`.
 
-**C3 — met.** The cascade is structural: `(access_id, reviewer_id) → sandbox_accesses(id, reviewer_id)` and `(reviewer_id, slug) → sandbox_reviewers(id, slug)`, both `on delete cascade`, on all three child tables (`0003:108-114`), with the two uniques as targets (`0003:13,27`). `schema.test.ts:251-302` deletes one access and asserts the other access's view, comment and version survive, the reply to the erased root survives (`parent_id` has no FK), the reviewer stays, and that deleting the reviewer leaves zero. The deviation to composite keys is stricter than the contract asked for, not looser: under MATCH SIMPLE a team note (all three columns null) escapes both keys, which is the intended shape.
+**C3 — met.** `:267-317` deletes one of two accesses and asserts the view, comment and version through it are gone, the second access's three rows survive, a reply whose root was erased survives, and the reviewer stays; `:319-331` asserts deleting the reviewer leaves zero. The cascades are `0003:108-114`. The property that matters for erasure holds in SQL rather than in code: `sandbox_comments_one_author_check` (`0003:64`) makes `reviewer_id` and `access_id` non-null together, so no reviewer's comment can exist outside the access cascade — under MATCH SIMPLE that was the real hole, and it is closed.
 
-**C4 — met, with the evidence gap below.** `src/rls.ts:61` switches to `set local role authenticated`, so the policies genuinely apply rather than running as an RLS-bypassing owner; rows are inserted through the singleton first (`:305-320`), so the empty reads are meaningful. Select, update and delete return nothing on all seven tables for both `user` and `admin`.
+**C4 — met, and broader than the criterion asks.** `:333-428` loops `user`, `developer`, `admin` across all seven tables: select returns `[]`, delete and update touch zero rows, and insert is rejected with `42501` specifically, not merely rejected. `assert.equal(forged.length, 7)` (`:392`) stops a table quietly dropping off the list, and every table holds rows before the loop (`:334-349`), so "reads nothing" is not vacuous. `src/rls.ts:61` does `set local role authenticated`, so the policies genuinely apply — had the role switch not taken, the selects would have returned rows.
 
-**C5 — met.** `check-migrations` scans every file in the directory and reported `4 migration(s) … none touch the auth schema`, exit 0; `0003` references only `public.*`. Forward-only and correctly numbered: journal idx 3, `when` 1791310212020 > 0002's 1791253971852, and `0003_snapshot.prevId` = `0002_snapshot.id` (`0ac19aae-…`), which is the evidence that no earlier migration was regenerated. No `sandbox` DDL appears in 0000-0002.
+**C5 — met.** `check-migrations` exit 0 over 4 migrations; `0003` names only `public` objects (`:107`, `:110` are foreign keys to `public.users`). The checker is itself covered by `C1.log ok 1-6`, including "DDL against auth fails" and "a foreign key to auth.users is allowed", so the pass means something. Forward-only: `0003` is `CREATE TABLE` / `ALTER TABLE … ADD CONSTRAINT` / `CREATE INDEX` / `CREATE POLICY` only, no `DROP`; journal `idx 3`, `when 1791310212020` after `0002`'s `1791253971852`; `0003_snapshot.prevId` equals `0002_snapshot.id`, so the chain is intact.
+
+*Limit of this review:* read-only tools, so I could not diff `0000`–`0002` against main. The chain is consistent and the as-built's own account puts `0002`'s rewrite in its own ticket before LAB-1 (the drifted local copy, `as-built.md:23`), so I record "no applied migration edited" as unfalsified, not independently proven.
+
+The deviations check out against the code: composite `(access_id, reviewer_id)` and `(reviewer_id, slug)` keys are stricter than the contract's single-column requirement and are proven by `:242-265`; `columns.ts` sits inside the planned `schema/sandbox/**`; the frontmatter added to the three `technical/` detail files inherits `status: approved` from `technical.md:3`, which is what it says it does.
 
 ### Findings
 
-**Should-fix**
+**Should-fix — `packages/db/src/schema/index.test.ts:57` and `:71` will fail `yarn format:check`.** Both exceed `printWidth: 80` (`packages/config/prettier/index.js:12`) as breakable call arguments, which Prettier reformats; the file is not in `.prettierignore`. They are the only such lines in `packages/db` — every other over-80 line in these tests is an unbreakable template literal or a `test("…", fn)` call Prettier preserves. `format:check` is the first step of `yarn verify` (`package.json:14`), so batch close fails until `yarn format` runs. I could not run Prettier to confirm; this is inference from config plus the outlier, and it is one command to settle.
 
-- `packages/db/test/sandbox/schema.test.ts:348-378` — C4 says "writes no row of any sandbox table", but insert refusal is proven on only four of the seven (`sandbox_reviewers`, `sandbox_comments`, `sandbox_actions`, `sandbox_gate_attempts`). `sandbox_accesses`, `sandbox_view_events` and `sandbox_review_versions` get update and delete coverage but no insert attempt. The policy is `FOR ALL … WITH CHECK (false)` and C1 asserts that policy on all seven, so this is incomplete proof rather than an open door — but at Q3 on personal data the criterion's "any" should be literal. Three more `assert.rejects` calls close it.
+**Should-fix — the `review:warden` record predates the fixes it asked for.** `results.json:77-87` records warden PASS at head `34d619b` with an older `contract_sha256`/`as_built_sha256`, i.e. before `a48b777`, the commit that widened C4 to all seven tables with `42501` and `developer`, and added `SANDBOX_ACTION_COUNT_NAMES` (`actions.ts:31-40`) — the as-built attributes all three to warden (`as-built.md:18-21`). Warden's PASS therefore does not cover them. Not mine to re-run; `yarn check-specs --strict` is the gate before merge, and `yarn review:run warden LAB-1` is the fix.
 
-**Consider**
+**Consider — `bytea` is a package-wide primitive living in a domain folder** (`src/schema/sandbox/columns.ts:24-26`). Two sandbox consumers justify the file today, but the first non-sandbox table needing raw bytes will import across domains from `sandbox/`. Move it to a schema-level module at that point, not before.
 
-- `packages/db/test/sandbox/schema.test.ts:348` — the four RLS insert assertions are bare `assert.rejects` with no predicate, so a rejection for an unrelated reason would also pass. The file already has the named-constraint helper at `:136`; asserting the RLS error code would make these as specific as the C2 proofs.
-- `packages/db/src/schema/sandbox/actions.ts:47` — only `at` is indexed, though the record of actions is read per experiment. Reversible, and indexes are the dev's call per the contract; worth adding when LAB-16 or the admin log queries it.
-- `packages/db/src/schema/sandbox/columns.ts:16` — `slugIsValid` interpolates via `sql.raw`. Safe here because both operands are module constants, but this is a function agents will copy; one line in the doc comment saying the arguments must stay literals would keep a future call site from passing a value.
-
-### Notes, not findings
-
-Proofs were run at `ebff4de`; `HEAD` is `34d619b`, whose message says it carries only `results.json` and `as-built.md`. I confirmed no sandbox code exists outside the planned paths (`sandbox` appears in exactly the eleven expected files), but this venue is read-only, so staleness remains `yarn check-specs --strict`'s gate before the merge. The `tests: 67` / `tests: 37` headers in the evidence logs are the harness counting suites alongside tests (59+8, 30+7), not a builder defect.
+**Consider — leave the two redundant uniques alone.** `sandbox_reviewers_id_slug_key` (`reviewers.ts:59`) and `sandbox_accesses_id_reviewer_key` (`accesses.ts:57`) are supersets of their primary keys and exist only as composite-FK targets; both carry a comment saying so. Worth the write cost for the integrity they buy — flagging it so a later index-pruning pass does not drop them and take six foreign keys with them.
 
 VERDICT: PASS

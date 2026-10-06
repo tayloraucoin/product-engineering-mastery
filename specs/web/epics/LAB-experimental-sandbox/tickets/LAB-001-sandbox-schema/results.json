@@ -67,9 +67,19 @@
       }
     },
     "review:mason": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run mason LAB-1",
+        "exit": 0,
+        "at": "2026-10-06T18:49:43Z",
+        "head": "d7d57077699ddc5679d9f96ef5639cb0699f903b",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/review-mason.md",
+        "evidence_sha256": "9926a4d3ad8cf0f3de60cbc59a31a7ee69a5b83eac8a6f1afaf84f950427a432",
+        "contract_sha256": "863a59148797fa54c42b204eac568f6e99028198a4c51d3de5dd0198d4387e45",
+        "as_built_sha256": "d3da8d6f11c074cbfa9209dd70c90f1c5b49c7106cd1411be798dbde82b0728d",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/mason-cto-principal-dev.md; tools Read,Grep,Glob)"
+      }
     },
     "review:warden": {
       "status": "PASS",
@@ -77,15 +87,15 @@
       "run": {
         "command": "yarn review:run warden LAB-1",
         "exit": 0,
-        "at": "2026-10-06T18:41:58Z",
-        "head": "34d619b7603f4a093f0e993806b5e1e2788ca144",
+        "at": "2026-10-06T18:56:20Z",
+        "head": "d1a5a03f3b9f1e5892e6b635215e958f9549c39c",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/review-warden.md",
-        "evidence_sha256": "debf6fa4f3dd2b276da10c6f48ab5dad43730f22e6a9c7961ae4e14857732a30",
+        "evidence_sha256": "5c1028c6aff7ed1e16a5c260380462e48a3a170f2e9214bd734b05b3b53c41da",
         "contract_sha256": "863a59148797fa54c42b204eac568f6e99028198a4c51d3de5dd0198d4387e45",
-        "as_built_sha256": "71778c4c3c8ab7dc152f36b36658a7ab57ecebb1f12452b13a2e9b9b71e504a9",
+        "as_built_sha256": "d3da8d6f11c074cbfa9209dd70c90f1c5b49c7106cd1411be798dbde82b0728d",
         "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
       }
     }
   },
-  "updated_at": "2026-10-06T18:49:28Z"
+  "updated_at": "2026-10-06T19:02:11Z"
 }

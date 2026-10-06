@@ -1,5 +1,5 @@
 {
-  "id": "64f8c05f-ffb3-4a85-8e10-dc5869223af2",
+  "id": "c6e98dca-22ad-4d39-9763-c50df01ddafe",
   "prevId": "0ac19aae-3dfc-4a26-aaec-a84cc6a67fc4",
   "version": "7",
   "dialect": "postgresql",
@@ -1290,6 +1290,10 @@
         "sandbox_actions_slug_check": {
           "name": "sandbox_actions_slug_check",
           "value": "\"sandbox_actions\".\"slug\" is null or (\"sandbox_actions\".\"slug\" ~ '^[a-z0-9]+(-[a-z0-9]+)*$' and char_length(\"sandbox_actions\".\"slug\") <= 48)"
+        },
+        "sandbox_actions_counts_check": {
+          "name": "sandbox_actions_counts_check",
+          "value": "\"sandbox_actions\".\"counts\" is null or (jsonb_typeof(\"sandbox_actions\".\"counts\") = 'object' and \"sandbox_actions\".\"counts\" - '{reviewers,accesses,viewEvents,comments,reviewVersions,teamNotes,labelsScrubbed,reviewersRevoked}'::text[] = '{}'::jsonb)"
         }
       },
       "isRLSEnabled": false
