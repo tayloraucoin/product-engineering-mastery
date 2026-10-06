@@ -11,7 +11,7 @@
 
 ## Deviations
 
-- **Pure cores, one server-only binding.** `node --test` cannot load `env.ts` (its extensionless imports) or anything importing `server-only`. So `code.ts`, `secret.ts`, `cookie.ts` and `link.ts` take the secret, clock and site URL as arguments, and `access.ts` is the one `server-only` file that binds them. This follows `team-check.ts` and `team.ts`. The contract's request-bound forms live in `access.ts`: `resolveViewer(slug)`, `readLinkEmail(db, slug, token)`, `linkUrl(slug, accessId)` and `accessCookieOptions(slug)`. Beside them sit `setAccessCookie(slug, accessId)`, `sandboxSecret()` and `sandboxDb()`, the database bound as `billing/webhook/ledger.ts` binds the ledger. `cookie.ts`'s pure `accessCookieOptions(slug, deployed)` takes `deployed` as an argument.
+- **Pure cores, one server-only binding.** `node --test` cannot load `env.ts` (its extensionless imports) or anything importing `server-only`. So `code.ts`, `secret.ts`, `cookie.ts` and `link.ts` take the secret, clock and site URL as arguments, and `access.ts` is the one `server-only` file that binds them. This follows `team-check.ts` and `team.ts`. The contract's request-bound forms live in `access.ts`: `resolveViewer(slug)`, `readLinkEmail(db, slug, token)`, `linkUrl(slug, accessId)` and `accessCookieOptions(slug)`. Beside them sit `setAccessCookie(slug, accessId)`, `sandboxSecret()` and `sandboxDb()`, the database bound as `billing/webhook/ledger.ts` binds the ledger. `cookie.ts`'s pure `accessCookieOptions(slug, secure)` takes the flag as an argument (see the review fixes below).
 - **`secret-check.ts`.** `env.ts` reaches the browser bundle through `instrumentation-client.ts`, so the length check it imports cannot import `node:crypto`. `secret.ts` re-exports it.
 - **The result type** is `{ kind: "team" | "reviewer" | "ended", viewer, experiment }`, `{ kind: "gate" }` or `{ kind: "not-found" }`. The viewer is LAB-3's `TeamViewer` or `ReviewerViewer`. Closed means `closedOn !== null`, since the registry refuses a future date.
 - **`grantAccess(db, input)`** sits in `access-check.ts` beside `grantAccessWith(deps, input)`, which LAB-7's tests stub. Both are re-exported from `access.ts`.
@@ -28,6 +28,11 @@
 - `review:mason` and `review:warden` are recorded by `yarn review:run`.
 - **The noindex header on the config Next actually receives.** C7 reads `next.config.ts`'s source because `node --test` cannot load the file: it imports `env.ts`. `withSentryConfig` composes the export. The installed `@sentry/nextjs` sets no `headers`, so nothing overrides it today (Warden). LAB-7's served check (C12) reads the `X-Robots-Tag` header off real responses.
 - **`access.ts` itself**, the request binding, has no unit test, for the same reason. LAB-7's served check exercises it on a real and an unknown slug.
+- Accepted residuals from the second reviews (both PASS):
+  - The contract's non-negotiable still reads "Secure when deployed". The code is stronger, and the contract is left as frozen.
+  - `readAccessCookies` verifies every value before choosing (Mason). With a 256-character cap per value this costs little.
+  - A reviewer cannot end their own access on a shared device before 30 days (Warden). S10 sets that; a "forget this device" control would be a scope change.
+  - A future `issuedAt` is refused with no clock-skew grace, as C3 requires (Warden).
 - Accepted residual (Warden): the link token carries no issue time, as D-LAB-38 defines it. An old link prefills only the address its own message was sent to, and `findAccessEmail` re-checks slug and revocation on every use.
 
 ## Next

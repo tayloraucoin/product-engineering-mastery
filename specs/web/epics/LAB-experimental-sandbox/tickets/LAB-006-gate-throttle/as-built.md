@@ -29,6 +29,7 @@
 - Residual risk, recorded (Warden):
   - Without a `sandbox_gate` cookie and without a trusted address, as on localhost, a client that discards cookies is not throttled. That is gate.md's sanctioned fallback, and 80-bit codes cannot be guessed online. But C7's fallback ("trusted false") leaves the gate effectively unthrottled against cookie-droppers.
   - An HMAC over an IPv4 address resists a leak of the table alone, not of the table and the secret together. Rows live 30 minutes at most and hold no slug.
+  - The lock check is not atomic with the attempt (second review). A burst of parallel tries all pass `readGateLock` before any of them records, so the limit is exceeded by the in-flight count. The counting stays exact (C4), and 80-bit codes make this negligible. It would matter only if the wrapper guarded a guessable secret.
   - Pruning runs a full-table delete on every write, which is free at gate volume. Because it runs only on writes, the last expired row stays until the next try.
 
 - C7, on a Vercel deployment: the operator's, on the first deploy.

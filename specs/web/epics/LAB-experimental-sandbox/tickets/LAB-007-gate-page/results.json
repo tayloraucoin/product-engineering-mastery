@@ -168,15 +168,35 @@
       }
     },
     "review:assay": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run assay LAB-7",
+        "exit": 0,
+        "at": "2026-10-06T21:11:38Z",
+        "head": "0026476d95103d8260efd115fd305d694c8d4d17",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/review-assay.md",
+        "evidence_sha256": "01553bd37d3ebca6c8c13e5d34777242eb965a2983d882af49e00c763349871b",
+        "contract_sha256": "0f69c949b10bb9a0019f1af7b0a2a6cac0efe67ae5a8db3db5be47c6f831efa2",
+        "as_built_sha256": "d607d446bcfad5fb68f538c9850cdd90d5398d405e11dc28e158f080d7ba9737",
+        "runner": "claude 2.1.232 (Claude Code) (agent assay; tools Read,Grep,Glob)"
+      }
     },
     "review:warden": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run warden LAB-7",
+        "exit": 0,
+        "at": "2026-10-06T21:17:55Z",
+        "head": "0026476d95103d8260efd115fd305d694c8d4d17",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/review-warden.md",
+        "evidence_sha256": "27df42ae9de769c0c746331ab68aad295376df3004a405ba126f380e48810a00",
+        "contract_sha256": "0f69c949b10bb9a0019f1af7b0a2a6cac0efe67ae5a8db3db5be47c6f831efa2",
+        "as_built_sha256": "d607d446bcfad5fb68f538c9850cdd90d5398d405e11dc28e158f080d7ba9737",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
+      }
     }
   },
-  "updated_at": "2026-10-06T21:11:10Z"
+  "updated_at": "2026-10-06T21:25:18Z"
 }

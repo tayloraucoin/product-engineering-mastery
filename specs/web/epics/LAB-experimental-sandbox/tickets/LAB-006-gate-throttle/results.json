@@ -99,15 +99,15 @@
       "run": {
         "command": "yarn review:run warden LAB-6",
         "exit": 0,
-        "at": "2026-10-06T20:49:52Z",
-        "head": "916a6a1be395973776e65a8ad6af21f91e718eb3",
+        "at": "2026-10-06T21:11:38Z",
+        "head": "0026476d95103d8260efd115fd305d694c8d4d17",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-006-gate-throttle/review-warden.md",
-        "evidence_sha256": "935411e097f045d037fa729b372f00ba688c44e65d3b1e3bb810427768148d54",
+        "evidence_sha256": "7cdbbe3baea1b07de225cc960605bb0858f70bc092eca092995dbccad47a8a83",
         "contract_sha256": "314f5b48d3b5f37154f54a4d12571f1cb2159afe59fdbd06132716cbf02d8ed0",
-        "as_built_sha256": "8a40e5c28bf44f574d9a262734c12352860bb26100fb8ac7a5c7564ec6ee210c",
+        "as_built_sha256": "9bb6f33df6d8a0e57a8219eeb328ea62f02d7ffbc36e791d73ec8a64f88ee051",
         "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
       }
     }
   },
-  "updated_at": "2026-10-06T21:09:51Z"
+  "updated_at": "2026-10-06T21:18:56Z"
 }
