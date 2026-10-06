@@ -57,6 +57,14 @@ criteria:
     statement: "teamMemberOf returns the user id, email and role for a developer and for an admin, and null for a user and for no session."
     evidence: test
     command: "yarn workspace web test"
+  - id: review:mason
+    statement: Mason reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run mason <id>
+  - id: review:warden
+    statement: Warden reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
 ---
 
 # Contract — LAB-2 developer-role

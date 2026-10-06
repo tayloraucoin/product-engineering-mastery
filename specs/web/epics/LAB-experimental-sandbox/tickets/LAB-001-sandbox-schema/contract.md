@@ -59,6 +59,14 @@ criteria:
     statement: "The new migration touches no auth-schema object."
     evidence: check
     command: "yarn check-migrations"
+  - id: review:mason
+    statement: Mason reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run mason <id>
+  - id: review:warden
+    statement: Warden reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
 ---
 
 # Contract — LAB-1 sandbox-schema

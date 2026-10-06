@@ -1,3 +1,8 @@
+---
+epic: LAB
+status: approved
+---
+
 # LAB — placement and the stack entry
 
 > Detail for D-LAB-35, D-LAB-39 and D-LAB-43 (`../technical.md`). Decided by one question, who imports this (codebase-conventions §1). Mason, 2026-10-05.

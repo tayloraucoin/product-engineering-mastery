@@ -1,3 +1,8 @@
+---
+epic: LAB
+status: approved
+---
+
 # LAB — the gate, codes, cookies and links
 
 > Detail for D-LAB-30 to D-LAB-33, D-LAB-37 and D-LAB-38 (`../technical.md`). Shared by every ticket that touches the gate, the experiment and review pages, the confirmation email or `/admin` access. Mason, with Warden, 2026-10-05.

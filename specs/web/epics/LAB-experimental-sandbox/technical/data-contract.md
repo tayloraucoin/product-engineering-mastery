@@ -1,3 +1,8 @@
+---
+epic: LAB
+status: approved
+---
+
 # LAB — data contract
 
 > Detail for D-LAB-34, D-LAB-36, D-LAB-37 and D-LAB-41 (`../technical.md`). Shared by every ticket that reads or writes sandbox data. Mason, with Warden on erasure, 2026-10-05. Column order, relations and row types follow D-STK-5; this lists what the shape commits to, not every column.
