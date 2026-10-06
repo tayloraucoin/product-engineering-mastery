@@ -8,11 +8,11 @@
       "run": {
         "command": "yarn workspace @pem/db test",
         "exit": 0,
-        "at": "2026-10-06T01:41:59Z",
-        "head": "16f21774e2e71dcba5d5f53c3bf36da40d445843",
+        "at": "2026-10-06T01:57:50Z",
+        "head": "6d4e070792e524c011489922daffab9c07fda17a",
         "evidence_path": "specs/web/one-offs/WEB-009-local-postgres/evidence/C1.log",
-        "evidence_sha256": "7984d429310592c0490a1ce8dd75a0378a531102c34c0e863e1fb39e852d873a",
-        "tests": 62
+        "evidence_sha256": "55923947c625863d3119771474e769128ab70d7abb5045372c558f607de4bda5",
+        "tests": 63
       }
     },
     "C2": {
@@ -45,10 +45,10 @@
       "run": {
         "command": "yarn test:hooks",
         "exit": 0,
-        "at": "2026-10-06T01:42:10Z",
-        "head": "16f21774e2e71dcba5d5f53c3bf36da40d445843",
+        "at": "2026-10-06T01:58:00Z",
+        "head": "6d4e070792e524c011489922daffab9c07fda17a",
         "evidence_path": "specs/web/one-offs/WEB-009-local-postgres/evidence/C4.log",
-        "evidence_sha256": "ce164adbdd1ca6b766a6a6a0dbfd0b7aae71d93ac7a4e434d7a2f54c46310c83"
+        "evidence_sha256": "ec389d80553d874d95539a76d778efa674b1b0692165a97f7d7a52ef10e3da53"
       }
     },
     "C5": {
@@ -57,12 +57,12 @@
       "run": {
         "command": "yarn check-types",
         "exit": 0,
-        "at": "2026-10-06T01:42:23Z",
-        "head": "16f21774e2e71dcba5d5f53c3bf36da40d445843",
+        "at": "2026-10-06T01:58:13Z",
+        "head": "6d4e070792e524c011489922daffab9c07fda17a",
         "evidence_path": "specs/web/one-offs/WEB-009-local-postgres/evidence/C5.log",
-        "evidence_sha256": "4dc9b9fb34b38be97ad7ceb674aa1810f195753a5c583a414547d38c61a1d8f4"
+        "evidence_sha256": "380941469cf6cb108f328fccd294a46a9dbb910b7deb69b4370af3a5e79f95a1"
       }
     }
   },
-  "updated_at": "2026-10-06T01:42:51Z"
+  "updated_at": "2026-10-06T01:58:22Z"
 }
