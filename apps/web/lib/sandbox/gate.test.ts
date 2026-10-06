@@ -54,7 +54,7 @@ function resolveAs(
     {
       getTeamMember: async () => null,
       findExperiment,
-      readAccessCookie: () => undefined,
+      readAccessCookies: () => [],
       secret: SECRET,
       now: NOW,
       getUserId: async () => null,
@@ -85,7 +85,7 @@ describe("C1: one face without access", () => {
       [
         "pricing-2026",
         await resolveAs("pricing-2026", {
-          readAccessCookie: () => revokedCookie,
+          readAccessCookies: () => [revokedCookie],
           checkAccess: async () => null,
         }),
       ],
@@ -306,6 +306,25 @@ describe("C2: one error for every code that does not open a review", () => {
     assert.ok(!text.includes("ana@example.com") && !text.includes("7KQM"));
   });
 
+  test("C2: the action keys the network counter only where the platform sets the address, and marks cookies Secure on any production runtime", () => {
+    const action = readFileSync(
+      new URL("../../app/experimental/[slug]/actions.ts", import.meta.url),
+      "utf8",
+    );
+    assert.match(
+      action,
+      /networkKeyOf\(\s*\(await headers\(\)\)\.get\("x-forwarded-for"\),\s*deployed,\s*\)/,
+    );
+    assert.match(action, /gateCookieOptions\(productionRuntime\)/);
+    // The action logs two fixed events and nothing a reviewer typed.
+    assert.doesNotMatch(action, /console\./);
+    assert.deepEqual(
+      [...action.matchAll(/log\.\w+\(\s*"([^"]+)"/g)].map((m) => m[1]),
+      ["sandbox.gate_failed", "auth.sign_out_unrevoked"],
+    );
+    assert.doesNotMatch(action, /log\.\w+\([^)]*(formData|email|input)/);
+  });
+
   test("C2: no result ever carries the code or the email", async () => {
     for (const live of [true, false]) {
       const { deps: d } = deps({ live });
@@ -455,7 +474,7 @@ describe("C5: the team never sees the gate", () => {
     assert.deepEqual(
       gateView(
         await resolveAs("pricing-2026", {
-          readAccessCookie: () => cookie("pricing-2026"),
+          readAccessCookies: () => [cookie("pricing-2026")],
           checkAccess: live,
         }),
         blank(gatePath("pricing-2026")),
@@ -465,7 +484,7 @@ describe("C5: the team never sees the gate", () => {
     assert.deepEqual(
       gateView(
         await resolveAs("closed-2026", {
-          readAccessCookie: () => cookie("closed-2026"),
+          readAccessCookies: () => [cookie("closed-2026")],
           checkAccess: live,
         }),
         blank(gatePath("closed-2026")),

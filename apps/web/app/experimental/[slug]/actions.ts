@@ -13,7 +13,7 @@ import { redirect } from "next/navigation";
 import { signOut } from "@pem/auth/session";
 import { createLogger } from "@pem/observability/logger";
 
-import { deployed } from "../../../env";
+import { deployed, productionRuntime } from "../../../env";
 import {
   grantAccess,
   sandboxDb,
@@ -79,7 +79,7 @@ export async function enterGate(
       setAccessCookie: (accessId) => setAccessCookie(slug, accessId),
       markFailedTry: async () => {
         if (!existingBrowserId)
-          jar.set(GATE_COOKIE, browserId, gateCookieOptions(deployed));
+          jar.set(GATE_COOKIE, browserId, gateCookieOptions(productionRuntime));
       },
     },
     {
