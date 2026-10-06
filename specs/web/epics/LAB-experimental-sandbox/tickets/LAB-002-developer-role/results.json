@@ -73,12 +73,12 @@
       "run": {
         "command": "yarn review:run mason LAB-2",
         "exit": 0,
-        "at": "2026-10-06T18:53:10Z",
-        "head": "d1a5a03f3b9f1e5892e6b635215e958f9549c39c",
+        "at": "2026-10-06T19:25:59Z",
+        "head": "cbe33b58a2e5290342efccbf8dff03f4045e72a8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-002-developer-role/review-mason.md",
-        "evidence_sha256": "0b45329b0e98ae46c1d614788db7eae5ee9c4e868c0c49f11c14b6b6313baac4",
-        "contract_sha256": "2cf746037a766c9ff5d8edb22f9a96cff7720f20ef56b84089440be283822574",
-        "as_built_sha256": "7e82bff2de387a35d5d60901544b4e7ecf79e82550c4f86c5adce263ea587642",
+        "evidence_sha256": "08da5ef3ff1e707113d2b1c01aa316a7d8806d84b8c7c7ae6d2a14bbe68cff9f",
+        "contract_sha256": "17a4b8ed2ac2c283eb1b06770dd0b2e82baa9e654e09d2177b5bdd88bc070303",
+        "as_built_sha256": "7c9de44c7b7b862b9b9c8d754633891c3eac3a1ab56bb17a0725c73fbe8c80bb",
         "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/mason-cto-principal-dev.md; tools Read,Grep,Glob)"
       }
     },
@@ -88,15 +88,15 @@
       "run": {
         "command": "yarn review:run warden LAB-2",
         "exit": 0,
-        "at": "2026-10-06T18:57:08Z",
-        "head": "d1a5a03f3b9f1e5892e6b635215e958f9549c39c",
+        "at": "2026-10-06T19:31:11Z",
+        "head": "1da0d7dc0a32fd7ee48d0b14b1293d506934b238",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-002-developer-role/review-warden.md",
-        "evidence_sha256": "48e93ee4033d92b069c08ae7a4711747c48d3d500c01fe6e0423f402559d2d7b",
-        "contract_sha256": "2cf746037a766c9ff5d8edb22f9a96cff7720f20ef56b84089440be283822574",
-        "as_built_sha256": "7e82bff2de387a35d5d60901544b4e7ecf79e82550c4f86c5adce263ea587642",
+        "evidence_sha256": "7a8c12c1f0ed1665263db892d5160c16351812cbfe062b11dde650547a791a3e",
+        "contract_sha256": "17a4b8ed2ac2c283eb1b06770dd0b2e82baa9e654e09d2177b5bdd88bc070303",
+        "as_built_sha256": "7c9de44c7b7b862b9b9c8d754633891c3eac3a1ab56bb17a0725c73fbe8c80bb",
         "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
       }
     }
   },
-  "updated_at": "2026-10-06T19:25:02Z"
+  "updated_at": "2026-10-06T19:47:33Z"
 }
