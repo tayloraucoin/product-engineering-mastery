@@ -3,39 +3,95 @@
   "criteria_sha256": "d2cd47cdf7148953f2e2ee278bd5fe341325c2d1566bcabb13d6491b13451cf6",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-06T20:48:01Z",
+        "head": "d99923572232a6cdb6c0ec237f645c0712071102",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-006-gate-throttle/evidence/C1.log",
+        "evidence_sha256": "ec2d394a293abed6053641dfe68699873359814e97fcb008b473d1533b5b0707",
+        "tests": 174
+      }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-06T20:48:01Z",
+        "head": "d99923572232a6cdb6c0ec237f645c0712071102",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-006-gate-throttle/evidence/C2.log",
+        "evidence_sha256": "ec2d394a293abed6053641dfe68699873359814e97fcb008b473d1533b5b0707",
+        "tests": 174
+      }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-06T20:48:11Z",
+        "head": "d99923572232a6cdb6c0ec237f645c0712071102",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-006-gate-throttle/evidence/C3.log",
+        "evidence_sha256": "74da13d48bc3ef3ddf402180ffe6be5e4318bb1ef6e0021c888481cf0a18b9ae",
+        "tests": 90
+      }
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-06T20:48:11Z",
+        "head": "d99923572232a6cdb6c0ec237f645c0712071102",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-006-gate-throttle/evidence/C4.log",
+        "evidence_sha256": "74da13d48bc3ef3ddf402180ffe6be5e4318bb1ef6e0021c888481cf0a18b9ae",
+        "tests": 90
+      }
     },
     "C5": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-06T20:48:11Z",
+        "head": "d99923572232a6cdb6c0ec237f645c0712071102",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-006-gate-throttle/evidence/C5.log",
+        "evidence_sha256": "74da13d48bc3ef3ddf402180ffe6be5e4318bb1ef6e0021c888481cf0a18b9ae",
+        "tests": 90
+      }
     },
     "C6": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-06T20:48:11Z",
+        "head": "d99923572232a6cdb6c0ec237f645c0712071102",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-006-gate-throttle/evidence/C6.log",
+        "evidence_sha256": "74da13d48bc3ef3ddf402180ffe6be5e4318bb1ef6e0021c888481cf0a18b9ae",
+        "tests": 90
+      }
     },
     "C7": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn contract:record LAB-6 C7 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-006-gate-throttle/evidence/C7-steps.md --verdict deferred",
+        "exit": 0,
+        "at": "2026-10-06T20:48:47Z",
+        "head": "d99923572232a6cdb6c0ec237f645c0712071102",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-006-gate-throttle/evidence/C7-steps.md",
+        "evidence_sha256": "d6aa29157cbd9649850bdcabb536cd2b6cd7ef300930d2d341058e5655debf4e",
+        "deferred": true
+      }
     },
     "review:warden": {
       "status": "FAIL",
@@ -43,5 +99,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-06T20:40:15Z"
+  "updated_at": "2026-10-06T20:48:47Z"
 }
