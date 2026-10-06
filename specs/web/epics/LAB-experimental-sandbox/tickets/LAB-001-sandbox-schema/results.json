@@ -3,29 +3,68 @@
   "criteria_sha256": "df6d357a160040bfdf86af9ce1ff27e7a61f8d13aa299f3b42d61a472c9e98d4",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace @pem/db test",
+        "exit": 0,
+        "at": "2026-10-06T18:40:50Z",
+        "head": "ebff4de4510ebfedb32984da4f920659fe2052e4",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/evidence/C1.log",
+        "evidence_sha256": "29837fb6b3f4b42119d68c3ee7e6cafe7b66d904125753fc1b39d8ddd4d1bc2e",
+        "tests": 67
+      }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-06T18:40:59Z",
+        "head": "ebff4de4510ebfedb32984da4f920659fe2052e4",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/evidence/C2.log",
+        "evidence_sha256": "8fab0f7e663fc5e6b1efff32e169c02be67dfabbba276603873c7da8e7c28afd",
+        "tests": 37
+      }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-06T18:40:59Z",
+        "head": "ebff4de4510ebfedb32984da4f920659fe2052e4",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/evidence/C3.log",
+        "evidence_sha256": "8fab0f7e663fc5e6b1efff32e169c02be67dfabbba276603873c7da8e7c28afd",
+        "tests": 37
+      }
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-06T18:40:59Z",
+        "head": "ebff4de4510ebfedb32984da4f920659fe2052e4",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/evidence/C4.log",
+        "evidence_sha256": "8fab0f7e663fc5e6b1efff32e169c02be67dfabbba276603873c7da8e7c28afd",
+        "tests": 37
+      }
     },
     "C5": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn check-migrations",
+        "exit": 0,
+        "at": "2026-10-06T18:41:13Z",
+        "head": "ebff4de4510ebfedb32984da4f920659fe2052e4",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-001-sandbox-schema/evidence/C5.log",
+        "evidence_sha256": "bd8dc6637c5f362610ba58a30449ff197029fa17c3ad8251f0a891baa4858ec3"
+      }
     },
     "review:mason": {
       "status": "FAIL",
@@ -38,5 +77,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-06T18:07:02Z"
+  "updated_at": "2026-10-06T18:41:14Z"
 }
