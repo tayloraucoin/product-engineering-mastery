@@ -8,11 +8,11 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-06T19:01:04Z",
-        "head": "19bb3d81c2a2f520090764a8031cab1dd4434dde",
+        "at": "2026-10-06T19:25:08Z",
+        "head": "829bc707818342814c400eda37e94ecfb91a3328",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-003-sandbox-data-access/evidence/C1.log",
-        "evidence_sha256": "cdc0a9e7c5e57a2e5748d8cd18d302c5d40d9677b5c69b12bd316f1be65daac4",
-        "tests": 69
+        "evidence_sha256": "7499ea8228cd300f7e1577dfac3587f74987e55692a0c8b65ee0252d81ea50d7",
+        "tests": 70
       }
     },
     "C2": {
@@ -21,11 +21,11 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-06T19:01:04Z",
-        "head": "19bb3d81c2a2f520090764a8031cab1dd4434dde",
+        "at": "2026-10-06T19:25:08Z",
+        "head": "829bc707818342814c400eda37e94ecfb91a3328",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-003-sandbox-data-access/evidence/C2.log",
-        "evidence_sha256": "cdc0a9e7c5e57a2e5748d8cd18d302c5d40d9677b5c69b12bd316f1be65daac4",
-        "tests": 69
+        "evidence_sha256": "7499ea8228cd300f7e1577dfac3587f74987e55692a0c8b65ee0252d81ea50d7",
+        "tests": 70
       }
     },
     "C3": {
@@ -34,11 +34,11 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-06T19:01:04Z",
-        "head": "19bb3d81c2a2f520090764a8031cab1dd4434dde",
+        "at": "2026-10-06T19:25:08Z",
+        "head": "829bc707818342814c400eda37e94ecfb91a3328",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-003-sandbox-data-access/evidence/C3.log",
-        "evidence_sha256": "cdc0a9e7c5e57a2e5748d8cd18d302c5d40d9677b5c69b12bd316f1be65daac4",
-        "tests": 69
+        "evidence_sha256": "7499ea8228cd300f7e1577dfac3587f74987e55692a0c8b65ee0252d81ea50d7",
+        "tests": 70
       }
     },
     "C4": {
@@ -47,11 +47,11 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-06T19:01:04Z",
-        "head": "19bb3d81c2a2f520090764a8031cab1dd4434dde",
+        "at": "2026-10-06T19:25:08Z",
+        "head": "829bc707818342814c400eda37e94ecfb91a3328",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-003-sandbox-data-access/evidence/C4.log",
-        "evidence_sha256": "cdc0a9e7c5e57a2e5748d8cd18d302c5d40d9677b5c69b12bd316f1be65daac4",
-        "tests": 69
+        "evidence_sha256": "7499ea8228cd300f7e1577dfac3587f74987e55692a0c8b65ee0252d81ea50d7",
+        "tests": 70
       }
     },
     "C5": {
@@ -60,10 +60,10 @@
       "run": {
         "command": "yarn test:boundaries",
         "exit": 0,
-        "at": "2026-10-06T19:01:28Z",
-        "head": "19bb3d81c2a2f520090764a8031cab1dd4434dde",
+        "at": "2026-10-06T19:25:29Z",
+        "head": "829bc707818342814c400eda37e94ecfb91a3328",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-003-sandbox-data-access/evidence/C5.log",
-        "evidence_sha256": "6a5aa8c65099329b2627bf98cd52b132c517f498cbb4171bc8d3c0197dd6c934",
+        "evidence_sha256": "29047347c67800b199ea8fc3919a56e37b66036b45e0b4e642a2871e093c5735",
         "tests": 65
       }
     },
@@ -98,5 +98,5 @@
       }
     }
   },
-  "updated_at": "2026-10-06T19:15:34Z"
+  "updated_at": "2026-10-06T19:25:30Z"
 }

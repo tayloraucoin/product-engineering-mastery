@@ -5,7 +5,7 @@ objective: "developer joins the application roles, so roleOf and the RLS bridge 
 slice_type: "Authorization topology (one-way door 1); the risk is a developer passing an admin-only check, or a role name that later needs a data change on every holder."
 non_negotiables:
   - "APP_ROLES in packages/db/src/rls.ts becomes user, developer, admin; no other file defines a role list."
-  - "appUserIsAdmin stays an exact 'admin' match, and the tRPC adminProcedure stays role === \"admin\"."
+  - 'appUserIsAdmin stays an exact ''admin'' match, and the tRPC adminProcedure stays role === "admin".'
   - "No developer-or-admin policy twin in v1 (R3): no table would read it."
   - "roleOf returns developer for app_metadata.role developer, and still returns user for a missing or unknown value."
   - "No database constraint on role values: removal relies on unknown roles falling back to user."
