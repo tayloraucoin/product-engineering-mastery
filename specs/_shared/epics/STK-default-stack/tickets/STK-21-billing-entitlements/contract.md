@@ -27,6 +27,13 @@ planned_paths:
   - "packages/db/migrations/**"
   - "toolkit.json"
   - "docs/runbooks/remove/billing.md"
+  - "packages/services/src/context.ts"
+  - "packages/services/package.json"
+  - "packages/validators/package.json"
+  - "packages/db/src/schema/index.ts"
+  - "packages/db/src/billing/**"
+  - "packages/db/test/stripe-event-ledger.test.ts"
+  - "apps/web/lib/billing/webhook/ledger.ts"
 depends_on:
   - STK-16
 out_of_scope:
@@ -50,6 +57,14 @@ criteria:
     statement: "stripe listen delivers a test event that changes a local user's entitlement end to end."
     evidence: manual
     reason: "needs the Stripe CLI and a test account"
+  - id: review:vigil
+    statement: Vigil reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run vigil <id>
+  - id: review:warden
+    statement: Warden reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
 qa: Q3
 ---
 

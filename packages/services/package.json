@@ -15,6 +15,10 @@
     "./notes": {
       "types": "./src/notes/notes.ts",
       "default": "./src/notes/notes.ts"
+    },
+    "./billing": {
+      "types": "./src/billing/entitlements.ts",
+      "default": "./src/billing/entitlements.ts"
     }
   },
   "scripts": {

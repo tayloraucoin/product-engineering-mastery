@@ -21,6 +21,7 @@ import { migrationUrl, requireTier, runtimeUrl } from "../scripts/env.ts";
 import {
   claimStripeEvent,
   markStripeEventProcessed,
+  pruneStripeEvents,
   releaseStripeEvent,
 } from "../src/billing/stripe-event-ledger.ts";
 import { createDb, type Db } from "../src/client.ts";
@@ -133,6 +134,28 @@ describe("the Stripe event ledger", () => {
       await claimStripeEvent(db, { id, type: "invoice.paid" }),
       "claimed",
     );
+  });
+
+  test("the prune drops processed rows past the retention and keeps the rest (STK-21)", async () => {
+    const old = eventId("prune-old");
+    const recent = eventId("prune-recent");
+    const held = eventId("prune-held");
+    for (const id of [old, recent, held])
+      await claimStripeEvent(db, { id, type: "invoice.paid" });
+    await markStripeEventProcessed(db, old);
+    await markStripeEventProcessed(db, recent);
+    await db
+      .update(stripeEvents)
+      .set({ processedAt: sql`now() - interval '31 days'` })
+      .where(eq(stripeEvents.id, old));
+    await db
+      .update(stripeEvents)
+      .set({ claimedAt: sql`now() - interval '31 days'` })
+      .where(eq(stripeEvents.id, held));
+    assert.ok((await pruneStripeEvents(db, 30)) >= 1);
+    assert.equal(await statusOf(old), undefined);
+    assert.equal(await statusOf(recent), "processed");
+    assert.equal(await statusOf(held), "processing");
   });
 
   test("a signed-in user reads and writes nothing in the ledger", async () => {

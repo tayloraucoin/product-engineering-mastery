@@ -7,3 +7,4 @@
 export * from "./account/users.ts";
 export * from "./notes/notes.ts";
 export * from "./billing/stripe-events.ts";
+export * from "./billing/entitlements.ts";

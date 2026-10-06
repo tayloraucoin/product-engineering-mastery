@@ -67,3 +67,23 @@ export async function releaseStripeEvent(db: Db, id: string): Promise<void> {
     .delete(stripeEvents)
     .where(and(eq(stripeEvents.id, id), eq(stripeEvents.status, "processing")));
 }
+
+/** How long a `processed` row is kept: well past Stripe's three days of retries (remove/billing.md). */
+export const STRIPE_EVENT_RETENTION_DAYS = 30;
+
+/** Deletes `processed` rows older than the retention; returns how many went. A `processing` row is never pruned. */
+export async function pruneStripeEvents(
+  db: Db,
+  retentionDays: number = STRIPE_EVENT_RETENTION_DAYS,
+): Promise<number> {
+  const pruned = await db
+    .delete(stripeEvents)
+    .where(
+      and(
+        eq(stripeEvents.status, "processed"),
+        sql`${stripeEvents.processedAt} < now() - make_interval(days => ${retentionDays})`,
+      ),
+    )
+    .returning({ id: stripeEvents.id });
+  return pruned.length;
+}

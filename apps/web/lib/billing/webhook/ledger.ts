@@ -11,13 +11,16 @@ import { getDb } from "@pem/db/client";
 import {
   claimStripeEvent,
   markStripeEventProcessed,
+  pruneStripeEvents,
   releaseStripeEvent,
 } from "@pem/db/stripe-event-ledger";
+import { createLogger } from "@pem/observability/logger";
 
 import { env } from "../../../env";
 import type { WebhookLedger } from "./handle.ts";
 
-function db() {
+/** The singleton for this tier; the ledger and the entitlement handlers share it. */
+export function webhookDb() {
   if (!env.DATABASE_URL)
     throw new Error(
       "DATABASE_URL is unset for this tier; the webhook ledger has nowhere to write.",
@@ -25,8 +28,19 @@ function db() {
   return getDb({ url: env.DATABASE_URL, tier: env.DATABASE_ENVIRONMENT });
 }
 
+const log = createLogger("billing");
+
 export const databaseLedger: WebhookLedger = {
-  claim: (event) => claimStripeEvent(db(), event),
-  markProcessed: (id) => markStripeEventProcessed(db(), id),
-  release: (id) => releaseStripeEvent(db(), id),
+  claim: (event) => claimStripeEvent(webhookDb(), event),
+  markProcessed: async (id) => {
+    await markStripeEventProcessed(webhookDb(), id);
+    // Retention (STK-21): processed rows go after 30 days. Best effort: a
+    // failed prune is logged and never fails the delivery it rode on.
+    try {
+      await pruneStripeEvents(webhookDb());
+    } catch (error) {
+      log.error("webhook.prune_failed", { error });
+    }
+  },
+  release: (id) => releaseStripeEvent(webhookDb(), id),
 };

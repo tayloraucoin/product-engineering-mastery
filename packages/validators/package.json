@@ -11,6 +11,10 @@
     "./notes": {
       "types": "./src/notes/notes.ts",
       "default": "./src/notes/notes.ts"
+    },
+    "./billing": {
+      "types": "./src/billing/billing.ts",
+      "default": "./src/billing/billing.ts"
     }
   },
   "scripts": {

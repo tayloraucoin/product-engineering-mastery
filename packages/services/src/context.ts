@@ -28,3 +28,19 @@ export function createServiceContext(
     db: createRlsClient(db, user),
   };
 }
+
+/**
+ * What a service takes when no user is asking: a verified Stripe webhook, a
+ * scheduled job. Its queries run in one transaction on the singleton, outside
+ * row-level security, so only a caller that has proven its source some other
+ * way (a webhook's signature) may build one, and only a service that names
+ * the user it acts for from that proven source takes one.
+ */
+export type SystemContext = {
+  db: RlsClient;
+};
+
+/** The context for a system caller on `db`'s pool. */
+export function createSystemContext(db: Db): SystemContext {
+  return { db: { execute: (callback) => db.transaction(callback) } };
+}
