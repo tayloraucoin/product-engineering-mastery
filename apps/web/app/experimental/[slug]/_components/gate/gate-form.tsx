@@ -61,7 +61,7 @@ function subscribeOnline(onChange: () => void) {
 
 function formatLocalTime(iso: string): string {
   return new Intl.DateTimeFormat(undefined, {
-    hour: "2-digit",
+    hour: "numeric",
     minute: "2-digit",
   }).format(new Date(iso));
 }
@@ -137,7 +137,7 @@ export function GateForm({
             {GATE_WORDS.notYou}{" "}
             <button
               type="submit"
-              className="min-h-11 underline underline-offset-4"
+              className="-my-3 inline-block py-3 underline underline-offset-4"
             >
               {GATE_WORDS.signOut}
             </button>
