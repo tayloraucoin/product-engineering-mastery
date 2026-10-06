@@ -15,6 +15,10 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-05 — PEM: reviewer rows reach the RLS bridge and the policy factories
+
+No `reviewers` row in `toolkit.json` matched `packages/db/src/rls.ts` (the bridge from a request's identity to row-level security, D-STK-5) or `packages/db/src/policies.ts` (the three policy factories): Warden's `**/policies/**` is a folder glob, so a single `policies.ts` slips past it, and nothing named the bridge. Four rows close the gap, in `toolkit.json` and `docs/engineering/templates/toolkit.template.json` alike: `**/rls.ts` and `**/policies.ts`, each for Mason (one-way doors: every table's RLS is built from the factories and every user-scoped query runs through the bridge) and Warden (who each query runs as; deny-by-default policies). They are file globs rather than a brace form such as `**/policies{,.ts,/**}`: `node:path` `matchesGlob` accepts braces, but the J8 sampler in `tooling/lib/specs.ts` splits a row's glob on `/` to borrow its basename, which a brace holding `/` cuts in two, while a plain basename is added to the samples. LAB's `apps/web/lib/sandbox/**` stays with the LAB tickets; it is not generic enough for the template.
+
 ## 2026-10-05 — PEM: Turbo stops hashing env files globally; the sandbox stays shut (EN-15)
 
 `turbo.json` listed `**/.env.*local` and `**/.env` as `globalDependencies`, and the root `build` task listed `.env*` as an input for every package. Turbo hashes those files by reading them, the agent sandbox denies the read, so `yarn check-types`, `yarn test`, `yarn build` and `yarn verify` failed inside it (`I/O error while hashing packages/db/.env.local: Operation not permitted`) as soon as one `.env.local` existed anywhere. Two fixes were weighed.
