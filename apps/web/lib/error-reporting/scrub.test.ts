@@ -147,3 +147,8 @@ test("a thread's stack frames lose their local variables too", () => {
   assert.equal(frame?.function, "charge");
   assert.equal(frame && "vars" in frame, false);
 });
+
+test("the host's name is dropped", () => {
+  const scrubbed = scrubEvent({ server_name: "adas-macbook" });
+  assert.equal("server_name" in scrubbed, false);
+});

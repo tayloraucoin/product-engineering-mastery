@@ -1,11 +1,12 @@
 import assert from "node:assert/strict";
+import { createRequire } from "node:module";
 import { test } from "node:test";
 
 import type { ErrorReporter } from "@pem/observability/error-reporter";
 
 import { connectErrorReporting, type ReportingDeps } from "./connect.ts";
 import { resolveSentryDsn } from "./dsn.ts";
-import { DATA_COLLECTION } from "./options.ts";
+import { DATA_COLLECTION, UNWANTED_INTEGRATIONS } from "./options.ts";
 
 const PRODUCTION_DSN = "https://public@o0.ingest.us.sentry.io/1";
 const STAGING_DSN = "https://public@o0.ingest.us.sentry.io/2";
@@ -135,4 +136,30 @@ test("every dataCollection category is set explicitly", () => {
     "urlQueryParams",
     "userInfo",
   ]);
+});
+
+test("the integrations dropped by name are the SDK's own names, so an upgrade that renames one fails here", () => {
+  // The browser and node SDKs @sentry/nextjs itself depends on, at its version.
+  const sdk = createRequire(
+    createRequire(import.meta.url).resolve("@sentry/nextjs"),
+  );
+  const browser = sdk("@sentry/browser") as Record<
+    string,
+    () => { name: string }
+  >;
+  const node = sdk("@sentry/node") as Record<string, () => { name: string }>;
+  const factories = [
+    browser.browserTracingIntegration,
+    browser.browserSessionIntegration,
+    node.processSessionIntegration,
+    browser.replayIntegration,
+    browser.replayCanvasIntegration,
+    browser.feedbackIntegration,
+    browser.browserProfilingIntegration,
+  ];
+  const names = factories.map((factory) => {
+    assert.equal(typeof factory, "function", "an integration factory is gone");
+    return factory!().name;
+  });
+  assert.deepEqual(new Set(names), UNWANTED_INTEGRATIONS);
 });

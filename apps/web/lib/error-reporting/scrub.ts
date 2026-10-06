@@ -49,6 +49,7 @@ export type ScrubbableEvent = {
   tags?: Record<string, unknown>;
   transaction?: string;
   logentry?: { message?: string; params?: unknown[] };
+  server_name?: string;
 };
 
 type Frames = { frames?: { vars?: unknown }[] };
@@ -153,6 +154,8 @@ export function scrubEvent<E extends ScrubbableEvent>(event: E): E {
         : { params: event.logentry.params.map((param) => redactValue(param)) }),
     };
 
+  // The node SDK sets it to os.hostname(): off Vercel, often a person's name.
+  delete scrubbed.server_name;
   delete scrubbed.extra;
   return scrubbed as E;
 }

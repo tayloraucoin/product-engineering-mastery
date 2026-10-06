@@ -381,7 +381,7 @@
         "NEXT_RUNTIME"
       ],
       "dependencies": ["@sentry/nextjs"],
-      "boundaries": [],
+      "boundaries": ["@sentry/*"],
       "locked": false,
       "runbook": "docs/runbooks/remove/error-monitoring.md"
     },
