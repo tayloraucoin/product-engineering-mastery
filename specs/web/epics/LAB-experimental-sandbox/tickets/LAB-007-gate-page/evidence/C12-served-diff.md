@@ -1,6 +1,6 @@
 # LAB-7 C12 — one served face for a real and an unknown slug
 
-Builder check, 2026-10-06, `next dev` on the branch at 3705f13 with a fresh client (no cookies):
+Builder check, 2026-10-06, `next dev` on this ticket's code (8bdf3d9) with a fresh client (no cookies):
 
 - `GET /experimental/pricing-2026` and `GET /experimental/no-such-review` both answer `200 OK` with `X-Robots-Tag: noindex, nofollow`. `/admin` sends the same header. `/` does not.
 - The two bodies are 30,546 and 30,560 bytes. The 14 bytes are the slug's length, which appears in seven places.
