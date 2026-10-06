@@ -1,6 +1,8 @@
 /**
  * The address field: a visible label above the input, never a placeholder
- * doing its job (A-16). `errorId` ties an error message to the field.
+ * doing its job (A-16). `errorId` ties an error message to the field. Its
+ * resting boundary is `--input`, a control's boundary at 3:1 against the page
+ * (WCAG 1.4.11, STK-25); `--border` is the decorative hairline.
  */
 export function EmailField({ errorId }: { errorId?: string }) {
   return (
@@ -16,7 +18,7 @@ export function EmailField({ errorId }: { errorId?: string }) {
         required
         aria-invalid={errorId ? true : undefined}
         aria-describedby={errorId}
-        className="h-9 rounded-md border border-border bg-background px-3 text-base transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+        className="h-9 rounded-md border border-input bg-background px-3 text-base transition-colors hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
       />
     </div>
   );

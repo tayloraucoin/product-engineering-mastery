@@ -171,6 +171,13 @@ const PAIRS: Pair[] = [
     min: NON_TEXT,
     use: "a control's boundary",
   },
+  // A hovered text field fills with --accent; its boundary must still show (STK-25).
+  {
+    fg: "--input",
+    bg: "--accent",
+    min: NON_TEXT,
+    use: "a hovered control's boundary",
+  },
   // Focus changes a control's boundary from --input to --ring: the change itself must show.
   {
     fg: "--ring",
