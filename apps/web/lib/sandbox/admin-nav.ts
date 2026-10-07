@@ -2,7 +2,7 @@
  * The /admin nav and the tree's metadata (LAB-8, D-LAB-22, S23). The nav is
  * Experiments, People (admins only) and Data. Each entry carries a `ready`
  * flag: an entry that is not ready renders as a dimmed label, never a link.
- * People and Data ship not ready; LAB-9 and LAB-16 each flip their own.
+ * People and Data shipped not ready; LAB-9 and LAB-16 each flipped their own.
  *
  * `icon` is a name, not a component, so this file runs under `node --test`;
  * the shell's client leaf maps it to the drawn icon.
@@ -42,7 +42,7 @@ export const ADMIN_NAV: readonly AdminNavEntry[] = [
     title: "Data",
     href: "/admin/data",
     icon: "data",
-    ready: false,
+    ready: true,
     adminOnly: false,
   },
 ];

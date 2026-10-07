@@ -86,6 +86,25 @@ export const SANDBOX_STATE_KEYS: Readonly<
   "exp-sent": "team",
   "exp-closed": "team",
   "exp-revoked": "team",
+  // Data (LAB-16, data.md).
+  "data-tab-empty": "team",
+  "data-tab-loading": "team",
+  "data-tab-error": "team",
+  "data-tab-partial": "team",
+  "data-tab-offline": "team",
+  "data-tab-deleted": "team",
+  "data-tab-developer": "team",
+  "data-tab-action-error": "team",
+  "data-page-loading": "team",
+  "data-page-error": "team",
+  "data-page-offline": "team",
+  "data-page-no-match": "team",
+  "data-page-erase-found": "team",
+  "data-page-reviewer": "team",
+  "data-page-erased": "team",
+  "data-page-action-error": "team",
+  "data-page-record-empty": "team",
+  "data-page-success": "team",
 };
 
 /**
