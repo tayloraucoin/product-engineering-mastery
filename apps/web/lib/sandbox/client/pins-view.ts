@@ -337,7 +337,12 @@ export function pinsFixture(key: PinsStateKey): PinsFixture {
     case "pins-partial":
       return { ...base, pins: withSync({ 2: "unsent", 4: "unsent" }) };
     case "pins-offline":
-      return { ...base, pins: withSync({ 4: "unsent" }), online: false };
+      return {
+        ...base,
+        pins: withSync({ 4: "unsent" }),
+        online: false,
+        toast: "kept",
+      };
     case "pins-success":
       return { ...base, saved: true };
     case "too-long":

@@ -147,7 +147,15 @@ export const ANCHOR_REF_MAX = 1024;
 export const PLACE_MAX = 80;
 
 const fitsRef = (ref: string | null | undefined): ref is string =>
-  !!ref && ref.length <= ANCHOR_REF_MAX;
+  !!ref && ref.length <= ANCHOR_REF_MAX && fitsBytes(ref);
+
+/** The server counts the anchor's JSON in bytes: a reference with many quotes or non-ASCII characters can pass the character cap and still not fit. */
+function fitsBytes(ref: string): boolean {
+  return (
+    new TextEncoder().encode(JSON.stringify(ref)).length + 4 * PLACE_MAX + 64 <=
+    ANCHOR_BYTES_MAX
+  );
+}
 
 /** A place name cut to what the server stores. */
 export function storedPlace(place: string): string {
@@ -181,7 +189,7 @@ export function buildAnchor(
   if (target !== root && fitsRef(target.id))
     return withPlace({ id: target.id, ...fractionsAt(target, point) });
   const path = pathFrom(root, target);
-  if (path.length <= ANCHOR_REF_MAX)
+  if (path.length <= ANCHOR_REF_MAX && fitsBytes(path))
     return withPlace({ path, ...fractionsAt(target, point) });
   const region = nearestMarked(root, target);
   const regionId = region?.getAttribute(REGION_ATTRIBUTE);

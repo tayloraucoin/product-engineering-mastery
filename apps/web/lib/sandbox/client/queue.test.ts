@@ -260,6 +260,61 @@ describe("C3: a failed pin stays queued and is resent under the same id", () => 
   });
 });
 
+describe("C3: storage that reads but refuses writes", () => {
+  test("an offline pin stays queued in memory, and a later flush sends it once under its id", async () => {
+    const storage = memoryStorage();
+    const quota: StorageLike = {
+      getItem: (key) => storage.getItem(key),
+      setItem: () => {
+        throw new Error("QuotaExceededError");
+      },
+      removeItem: (key) => storage.removeItem(key),
+    };
+    const net = network();
+    net.setOnline(false);
+    const queue = createQueueStore(quota, KEY);
+    const sender = createPinSender({ queue, ...net });
+    assert.equal(await sender.save(entry(1)), "offline");
+    assert.deepEqual(queue.all(), [entry(1)]);
+    net.setOnline(true);
+    const { sent } = await sender.flush();
+    assert.deepEqual(sent, [entry(1).id]);
+    assert.deepEqual(
+      net.requests.map((r) => r.id),
+      [entry(1).id],
+    );
+  });
+});
+
+describe("C9: a delete waiting behind a send that comes back closed", () => {
+  test("is never sent, and the pin stays queued", async () => {
+    let release: () => void = () => undefined;
+    const gate = new Promise<void>((r) => (release = r));
+    const removed: string[] = [];
+    const queue = createQueueStore(memoryStorage(), KEY);
+    const sender = createPinSender({
+      queue,
+      online: () => true,
+      save: async () => {
+        await gate;
+        return "closed";
+      },
+      remove: async (id) => {
+        removed.push(id);
+        return "ok";
+      },
+    });
+    const saving = sender.save(entry(1));
+    await inFlight();
+    const deleting = sender.remove(entry(1).id);
+    release();
+    assert.equal(await saving, "closed");
+    assert.equal(await deleting, "held");
+    assert.deepEqual(removed, []);
+    assert.deepEqual(queue.all(), [entry(1)]);
+  });
+});
+
 describe("C3: two tabs for one reviewer share one queue", () => {
   test("a pin queued in each tab survives, whichever closes first", async () => {
     const storage = memoryStorage();

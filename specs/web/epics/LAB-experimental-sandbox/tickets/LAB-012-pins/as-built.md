@@ -29,7 +29,7 @@
 - C9's Retry: the bar's Retry gives way to the closed or revoked line (experiment.md), so it is never shown disabled with a reason here; Retry on each pin is LAB-13's.
 - Comment mode gives each marked region `role="group"` (not `button`), so the design's own controls stay inside it; its name is "Comment on: …".
 - Placing waits for the reviewer's pins to load, so a new pin's number never repeats one the server holds.
-- The queue re-reads storage before every step, so two tabs for one reviewer share it; another tab's change re-syncs the pins through the `storage` event.
+- The queue re-reads storage before every step, so two tabs for one reviewer share it; while storage refuses writes, memory is the truth. Another tab's change re-marks which pins are unsent (`storage` event); a pin placed in another tab is not added here until a reload, so this tab may repeat its number, which the contract's numbering assumption tolerates.
 - Accepted, from mason (grey): a save whose request fails after the server received it counts as finished, so a delete sent next could land first and the row return. Narrow; a server tombstone would close it.
 
 ## Review (Q2, in the thread: assay, and mason on the focus line)
@@ -37,8 +37,16 @@
 Round 1, both FAIL; fixed, then one re-review each.
 
 - **Mason, fixed:** red, two tabs overwrote each other's queue (now read before every step, with a two-store test for a lost pin, a revived delete and a reverted edit); orange, anchors the server refuses (a reference capped at 1,024 and a place at 80 in the browser, the server's limits, tested through `pinInput`); orange, placing during the load (now waits); yellow, the failed-delete put-back moved into the sender, with tests for it and for Undo during a delete; grey, the body is stored as typed.
-- **Assay, fixed:** black, focus after a delete was invisible (now the next pin, else the previous, else the Comment toggle); black, a raw `2rem` in the popover's width (now `--spacing(8)`); red, closed and revoked with pins were not reachable (fixtures and captures added); orange, the offline save now shows the kept toast; orange, the composer is titled "On: …", and regions are groups, not buttons; orange, a chosen type carries a check; orange, a pin's text is `text-base`; yellow, an edit draws with its pin's state; yellow, announcements clear before they repeat; yellow, only the counter turns to error; yellow, Ctrl or Cmd+Enter saves from anywhere in the composer; yellow, the hour is numeric; yellow, a draft being typed when the review closes stays, with Save disabled and the reason.
+- **Assay, fixed:** black, focus after a delete was invisible (now the next pin, else the previous, else the Comment toggle); black, a raw `2rem` in the popover's width (now `--spacing(8)`); red, closed and revoked with pins were not reachable (fixtures and captures added); orange, the offline save now shows the kept toast; orange, the composer is titled "On: …", and regions are groups, not buttons; orange, a chosen type carries a check; orange, a pin's text is `text-base`; yellow, an edit draws with its pin's state; yellow, announcements clear before they repeat; yellow, the label no longer turns to error (the field keeps `aria-invalid`'s border, which assay accepted in round 2); yellow, Ctrl or Cmd+Enter saves from anywhere in the composer; yellow, the hour is numeric; yellow, a draft being typed when the review closes stays, with Save disabled and the reason.
 - **Assay, routed:** grey, no Retry below 768px until LAB-13's list; grey, "Comment 3 wasn't deleted. Try again." and "Type" to pins.md's Words through the brief owner; rubric and token gaps for Plumb: `tokens.js` misses a unit after an operator in `calc()`, pins.md's "hover outline token" does not exist (the build uses `ring`), and C11 names only pins.md's keys.
+
+Round 2 (the one re-review each FAIL earns), both FAIL; fixed, no third run.
+
+- **Mason, fixed:** red, a regression from round 1: with storage that reads but refuses writes, a new pin was lost (memory is now the truth while writes fail; tested); grey, a delete waiting behind a send that comes back closed is no longer sent (tested); grey, a reference must also fit 2 KB in bytes, the server's check (tested).
+- **Mason, drafted:** yellow, one request per pin holds only within a tab: LAB-31 pin-queue-cross-tab.
+- **Mason, noted:** grey, a pin placed in another tab is not drawn here until a reload (Deviations).
+- **Assay, fixed:** red, Edit, Delete and a held Save are focusable while disabled, so `@pem/ui`'s `disabled:` look never applied; each now carries `data-disabled:opacity-50`; yellow, `pins-offline` shows the kept toast; grey, the comment on the field's error look corrected.
+- **Assay, routed:** the Button's missing focusable-disabled style is `@pem/ui`'s (`button.variants.ts`), for Plumb and the catalog owner.
 
 ## Not verified
 

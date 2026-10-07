@@ -94,7 +94,7 @@ export function Composer({
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
-      {/* Only the counter shows the error (pins.md); the field keeps its colours. */}
+      {/* The field (aria-invalid) and the counter show the error; the label keeps its colour. */}
       <Field>
         <FieldLabel htmlFor={ids.body}>{W.bodyLabel}</FieldLabel>
         <Textarea
@@ -128,7 +128,7 @@ export function Composer({
       <div className="flex flex-wrap gap-2">
         <Button
           type="submit"
-          className="h-11 px-4"
+          className="h-11 px-4 data-disabled:opacity-50"
           disabled={draft.saving || empty || tooLong || !!reason}
           focusableWhenDisabled={!!reason}
           aria-describedby={reason ? ids.reason : undefined}

@@ -107,7 +107,8 @@ export function PinMarker({
         <div className="flex gap-2">
           <Button
             variant="outline"
-            className="h-11 px-4"
+            // Focusable while disabled, so it needs the disabled look itself.
+            className="h-11 px-4 data-disabled:opacity-50"
             disabled={!!reason}
             focusableWhenDisabled
             aria-describedby={reason ? reasonId : undefined}
@@ -117,7 +118,8 @@ export function PinMarker({
           </Button>
           <Button
             variant="outline"
-            className="h-11 px-4"
+            // Focusable while disabled, so it needs the disabled look itself.
+            className="h-11 px-4 data-disabled:opacity-50"
             disabled={!!reason}
             focusableWhenDisabled
             aria-describedby={reason ? reasonId : undefined}

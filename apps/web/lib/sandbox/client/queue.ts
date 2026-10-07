@@ -89,8 +89,11 @@ export function createQueueStore(
   // share one queue: neither writes back an array the other has changed.
   // Memory holds the queue only when storage cannot.
   let memory: QueueEntry[] = [];
+  // Set while storage refuses writes (a full quota, a private window): memory
+  // is then the truth, and each write tries storage again.
+  let unwritten = false;
   const read = (): QueueEntry[] => {
-    if (!storage) return memory;
+    if (!storage || unwritten) return memory;
     try {
       const raw = storage.getItem(key);
       const parsed: unknown = raw ? JSON.parse(raw) : [];
@@ -105,8 +108,10 @@ export function createQueueStore(
     try {
       if (entries.length) storage?.setItem(key, JSON.stringify(entries));
       else storage?.removeItem(key);
+      unwritten = false;
     } catch {
-      // Memory still holds it for this page.
+      // Memory holds it for this page; storage is not read over it.
+      unwritten = true;
     }
   };
   return {
@@ -214,6 +219,11 @@ export function createPinSender(deps: PinSenderDeps): PinSender {
       const queued = deps.queue.get(id);
       deps.queue.drop(id);
       return inTurn(id, async (): Promise<SendOutcome> => {
+        // Held while this waited its turn: nothing is sent, the pin stays.
+        if (held) {
+          if (queued && !deps.queue.get(id)) deps.queue.put(queued);
+          return "held";
+        }
         let result: SendResult;
         try {
           result = await deps.remove(id);

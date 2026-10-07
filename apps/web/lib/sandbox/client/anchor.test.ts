@@ -276,6 +276,14 @@ describe("C1: every anchor built here is one the server accepts", () => {
     assert.ok(send(last));
   });
 
+  test("an id of quotes and non-ASCII characters within 1,024 but past 2 KB in bytes falls back to the path", () => {
+    const heavy = el("div", { id: '€"'.repeat(400) });
+    const root = el("div", {}, [heavy]);
+    const anchor = buildAnchor(root, heavy, { x: 0, y: 0 })!;
+    assert.equal(anchor.path, "div:nth-of-type(1)");
+    assert.ok(send(anchor));
+  });
+
   test("the demo design's anchors all pass", () => {
     const d = design("circle");
     for (const target of [d.plans, d.hero, d.para, d.choose, d.note, d.footer])
