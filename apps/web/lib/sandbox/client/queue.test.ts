@@ -137,7 +137,10 @@ describe("C3: a failed pin stays queued and is resent under the same id", () => 
     net.setOnline(true);
     const { sent } = await sender.flush();
     assert.deepEqual(sent, [entry(1).id]);
-    assert.deepEqual(net.requests.map((r) => r.id), [entry(1).id]);
+    assert.deepEqual(
+      net.requests.map((r) => r.id),
+      [entry(1).id],
+    );
     assert.deepEqual(queue.all(), []);
   });
 

@@ -80,7 +80,11 @@ function deps(
   };
 }
 
-const reviewer: ViewerResult = { kind: "reviewer", viewer: REVIEWER, experiment: CONFIG };
+const reviewer: ViewerResult = {
+  kind: "reviewer",
+  viewer: REVIEWER,
+  experiment: CONFIG,
+};
 
 describe("C9: a send answered closed or revoked", () => {
   const cases: [ViewerResult, "closed" | "revoked"][] = [
@@ -95,7 +99,9 @@ describe("C9: a send answered closed or revoked", () => {
         listMyComments: throwing,
       });
       assert.deepEqual(await saveCommentWith(d, SLUG, PIN), { kind });
-      assert.deepEqual(await deleteCommentWith(d, SLUG, { id: PIN.id }), { kind });
+      assert.deepEqual(await deleteCommentWith(d, SLUG, { id: PIN.id }), {
+        kind,
+      });
       assert.deepEqual(await listMyCommentsWith(d, SLUG), { kind });
     });
   }
@@ -113,7 +119,9 @@ describe("the save's fixed results", () => {
 
   test("C4: an id held by someone else is taken, answered as the fixed not-saved", async () => {
     const d = deps(reviewer, { saveComment: async () => "taken" });
-    assert.deepEqual(await saveCommentWith(d, SLUG, PIN), { kind: "not-saved" });
+    assert.deepEqual(await saveCommentWith(d, SLUG, PIN), {
+      kind: "not-saved",
+    });
   });
 
   test("C8: past the cap is limit", async () => {
@@ -125,13 +133,23 @@ describe("the save's fixed results", () => {
     for (const result of [
       {
         kind: "team",
-        viewer: { kind: "team", userId: "u", email: "t@example.com", role: "admin" },
+        viewer: {
+          kind: "team",
+          userId: "u",
+          email: "t@example.com",
+          role: "admin",
+        },
         experiment: CONFIG,
       },
       { kind: "not-found" },
     ] as ViewerResult[]) {
-      const d = deps(result, { saveComment: throwing, deleteComment: throwing });
-      assert.deepEqual(await saveCommentWith(d, SLUG, PIN), { kind: "not-saved" });
+      const d = deps(result, {
+        saveComment: throwing,
+        deleteComment: throwing,
+      });
+      assert.deepEqual(await saveCommentWith(d, SLUG, PIN), {
+        kind: "not-saved",
+      });
       assert.deepEqual(await deleteCommentWith(d, SLUG, { id: PIN.id }), {
         kind: "not-saved",
       });
@@ -209,13 +227,21 @@ describe("the load and the delete", () => {
 
   test("a failed load, the team's load and a bad slug are failed", async () => {
     assert.deepEqual(
-      await listMyCommentsWith(deps(reviewer, { listMyComments: throwing }), SLUG),
+      await listMyCommentsWith(
+        deps(reviewer, { listMyComments: throwing }),
+        SLUG,
+      ),
       { kind: "failed" },
     );
-    assert.deepEqual(await listMyCommentsWith(deps({ kind: "not-found" }), SLUG), {
+    assert.deepEqual(
+      await listMyCommentsWith(deps({ kind: "not-found" }), SLUG),
+      {
+        kind: "failed",
+      },
+    );
+    assert.deepEqual(await listMyCommentsWith(deps(reviewer), "../x"), {
       kind: "failed",
     });
-    assert.deepEqual(await listMyCommentsWith(deps(reviewer), "../x"), { kind: "failed" });
   });
 
   test("a delete takes the id only, and answers ok or not-saved", async () => {
@@ -223,13 +249,21 @@ describe("the load and the delete", () => {
     const d = deps(reviewer, {
       deleteComment: async (_viewer, input) => void ids.push(input.id),
     });
-    assert.deepEqual(await deleteCommentWith(d, SLUG, { id: PIN.id }), { kind: "ok" });
+    assert.deepEqual(await deleteCommentWith(d, SLUG, { id: PIN.id }), {
+      kind: "ok",
+    });
     assert.deepEqual(ids, [PIN.id]);
-    assert.deepEqual(await deleteCommentWith(d, SLUG, { id: "x" }), { kind: "not-saved" });
+    assert.deepEqual(await deleteCommentWith(d, SLUG, { id: "x" }), {
+      kind: "not-saved",
+    });
     assert.deepEqual(
-      await deleteCommentWith(deps(reviewer, { deleteComment: throwing }), SLUG, {
-        id: PIN.id,
-      }),
+      await deleteCommentWith(
+        deps(reviewer, { deleteComment: throwing }),
+        SLUG,
+        {
+          id: PIN.id,
+        },
+      ),
       { kind: "not-saved" },
     );
   });
@@ -245,7 +279,10 @@ describe("pins.md's ?state= keys", () => {
   });
 
   test("the actions log fixed events only, never what the reviewer sent (source scan)", () => {
-    const source = readFileSync(new URL("./comments-data.ts", import.meta.url), "utf8");
+    const source = readFileSync(
+      new URL("./comments-data.ts", import.meta.url),
+      "utf8",
+    );
     assert.deepEqual(
       [...source.matchAll(/log\.\w+\(\s*"([^"]+)"/g)].map((m) => m[1]),
       [

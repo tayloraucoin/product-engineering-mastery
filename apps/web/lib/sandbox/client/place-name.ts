@@ -17,11 +17,12 @@ export const PLACE_TEXT_MAX = 40;
 export const PLACE_FALLBACK = "this part of the page";
 
 /** "Pricing table", or "\"Choose annual\"", or "this part of the page". */
-export function placeName(
-  root: AnchorElement,
-  element: AnchorElement,
-): string {
-  for (let at: AnchorElement | null = element; at && at !== root; at = at.parentElement) {
+export function placeName(root: AnchorElement, element: AnchorElement): string {
+  for (
+    let at: AnchorElement | null = element;
+    at && at !== root;
+    at = at.parentElement
+  ) {
     if (at.getAttribute(REGION_ATTRIBUTE)) {
       const name = at.getAttribute(REGION_NAME_ATTRIBUTE)?.trim();
       if (name) return name;

@@ -55,7 +55,7 @@ function isInside(root: AnchorElement, element: AnchorElement): boolean {
 /** `section:nth-of-type(2)>p:nth-of-type(1)`, from just below the root down to the element; "" is the root. */
 export function pathFrom(root: AnchorElement, element: AnchorElement): string {
   const steps: string[] = [];
-  for (let at = element; at !== root; ) {
+  for (let at = element; at !== root;) {
     const parent = at.parentElement;
     if (!parent) return "";
     const tag = at.tagName.toLowerCase();
@@ -107,7 +107,10 @@ export function resolveAnchor(
   anchor: Anchor,
 ): AnchorElement | null {
   if (typeof anchor.marked === "string")
-    return find(root, (e) => e.getAttribute(REGION_ATTRIBUTE) === anchor.marked);
+    return find(
+      root,
+      (e) => e.getAttribute(REGION_ATTRIBUTE) === anchor.marked,
+    );
   if (typeof anchor.id === "string")
     return find(root, (e) => e.id === anchor.id);
   if (typeof anchor.path === "string") return byPath(root, anchor.path);
@@ -129,13 +132,19 @@ function nearestMarked(
   root: AnchorElement,
   element: AnchorElement,
 ): AnchorElement | null {
-  for (let at: AnchorElement | null = element; at && at !== root; at = at.parentElement)
+  for (
+    let at: AnchorElement | null = element;
+    at && at !== root;
+    at = at.parentElement
+  )
     if (at.getAttribute(REGION_ATTRIBUTE)) return at;
   return null;
 }
 
 function fits(anchor: Anchor): boolean {
-  return new TextEncoder().encode(JSON.stringify(anchor)).length <= ANCHOR_BYTES_MAX;
+  return (
+    new TextEncoder().encode(JSON.stringify(anchor)).length <= ANCHOR_BYTES_MAX
+  );
 }
 
 /**

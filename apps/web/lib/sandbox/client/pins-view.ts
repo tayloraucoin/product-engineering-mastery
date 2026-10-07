@@ -42,7 +42,8 @@ export const PIN_WORDS = {
   // [ASSUMPTION] contract Gotchas: copy pins.md lacks, for assay to check.
   notDeleted: (n: number) => `Comment ${n} wasn't deleted. Try again.`,
   keptToast: "Saved in this browser only. It will send when it can.",
-  modeOn: "Comment mode on. Choose any part of the page, or press Escape to stop.",
+  modeOn:
+    "Comment mode on. Choose any part of the page, or press Escape to stop.",
   modeOff: "Comment mode off.",
   saved: (n: number) => `Comment ${n} saved.`,
   keptOffline: (n: number) =>
@@ -68,7 +69,9 @@ export function placeOf(anchor: Anchor): string {
 }
 
 /** "Comment 3, Problem, on Pricing table", plus ", not sent" when it applies. */
-export function pinName(pin: Pick<Pin, "number" | "kind" | "anchor" | "sync">): string {
+export function pinName(
+  pin: Pick<Pin, "number" | "kind" | "anchor" | "sync">,
+): string {
   const parts = [`Comment ${pin.number}`];
   if (pin.kind) parts.push(PIN_WORDS.kinds[pin.kind]);
   parts.push(`on ${placeOf(pin.anchor)}`);
@@ -226,20 +229,51 @@ function fixturePin(
 /** Synthetic pins on the demo's two designs: three on Circle, one on Square. */
 function basePins(): Pin[] {
   return [
-    fixturePin(1, "circle", "plans", "Plans", "problem",
-      "I can't tell which plan includes review.", "sent", { x: 0.85, y: 0.15 }),
-    fixturePin(2, "circle", "compare", "Comparison table", "question",
-      "Does Team include the audit log?", "sent", { x: 0.9, y: 0.4 }),
-    fixturePin(3, "square", "compare", "Comparison table", "suggestion",
-      "Put the annual price first."),
-    fixturePin(4, "circle", "faq", "Questions", "keep",
-      "The refund answer is clear.", "sent", { x: 0.7, y: 0.2 }),
+    fixturePin(
+      1,
+      "circle",
+      "plans",
+      "Plans",
+      "problem",
+      "I can't tell which plan includes review.",
+      "sent",
+      { x: 0.85, y: 0.15 },
+    ),
+    fixturePin(
+      2,
+      "circle",
+      "compare",
+      "Comparison table",
+      "question",
+      "Does Team include the audit log?",
+      "sent",
+      { x: 0.9, y: 0.4 },
+    ),
+    fixturePin(
+      3,
+      "square",
+      "compare",
+      "Comparison table",
+      "suggestion",
+      "Put the annual price first.",
+    ),
+    fixturePin(
+      4,
+      "circle",
+      "faq",
+      "Questions",
+      "keep",
+      "The refund answer is clear.",
+      "sent",
+      { x: 0.7, y: 0.2 },
+    ),
   ];
 }
 
-const LONG_BODY = (
+const LONG_BODY =
   "The plan names say who each plan is for, but the prices sit two screens below them. "
-).repeat(26).slice(0, 2140);
+    .repeat(26)
+    .slice(0, 2140);
 
 export function pinsFixture(key: PinsStateKey): PinsFixture {
   const base: PinsFixture = {
@@ -251,13 +285,20 @@ export function pinsFixture(key: PinsStateKey): PinsFixture {
     toast: null,
   };
   const draft = (body: string, saving = false) => ({
-    anchor: { marked: "intro", x: 0.6, y: 0.5, place: "Introduction" } as Anchor,
+    anchor: {
+      marked: "intro",
+      x: 0.6,
+      y: 0.5,
+      place: "Introduction",
+    } as Anchor,
     body,
     kind: null,
     saving,
   });
   const withSync = (sync: Record<number, Pin["sync"]>) =>
-    basePins().map((p) => (sync[p.number] ? { ...p, sync: sync[p.number]! } : p));
+    basePins().map((p) =>
+      sync[p.number] ? { ...p, sync: sync[p.number]! } : p,
+    );
   switch (key) {
     case "pins-empty":
       return { ...base, pins: [] };

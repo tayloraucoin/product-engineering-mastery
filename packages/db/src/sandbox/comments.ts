@@ -23,13 +23,13 @@
 
 import { and, asc, count, eq } from "drizzle-orm";
 
+import { sandboxComments, sandboxReviewers } from "../schema/index.ts";
 import {
   SANDBOX_COMMENT_BODY_MAX,
   SANDBOX_COMMENT_KINDS,
   type SandboxAnchor,
   type SandboxCommentKind,
 } from "../schema/sandbox/comments.ts";
-import { sandboxComments, sandboxReviewers } from "../schema/index.ts";
 import { REVIEWER_NOT_FOUND } from "./experiment.ts";
 import {
   isUuid,
@@ -41,7 +41,8 @@ import {
 } from "./viewer.ts";
 
 export const COMMENT_INPUT_INVALID = "The comment input is not valid.";
-export const COMMENT_BODY_INVALID = "The comment must be 1 to 2,000 characters.";
+export const COMMENT_BODY_INVALID =
+  "The comment must be 1 to 2,000 characters.";
 
 /** At most this many comments per reviewer per experiment ([PROPOSED], data-contract.md). */
 export const COMMENTS_PER_REVIEWER_MAX = 500;
@@ -137,7 +138,11 @@ function validAnchor(value: unknown): CommentAnchor {
 }
 
 function wholeNumber(value: unknown, max: number): number {
-  if (!Number.isInteger(value) || (value as number) < 1 || (value as number) > max)
+  if (
+    !Number.isInteger(value) ||
+    (value as number) < 1 ||
+    (value as number) > max
+  )
     invalid();
   return value as number;
 }
@@ -154,7 +159,10 @@ function validInput(input: unknown): SaveCommentInput {
   )
     invalid();
   const kind = raw.kind ?? null;
-  if (kind !== null && !(SANDBOX_COMMENT_KINDS as readonly unknown[]).includes(kind))
+  if (
+    kind !== null &&
+    !(SANDBOX_COMMENT_KINDS as readonly unknown[]).includes(kind)
+  )
     invalid();
   const body = raw.body;
   if (

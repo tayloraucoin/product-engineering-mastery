@@ -121,7 +121,11 @@ export async function saveCommentWith(
     });
     return {
       kind:
-        outcome === "saved" ? "ok" : outcome === "limit" ? "limit" : "not-saved",
+        outcome === "saved"
+          ? "ok"
+          : outcome === "limit"
+            ? "limit"
+            : "not-saved",
     };
   } catch {
     return { kind: "not-saved" };

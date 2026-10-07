@@ -37,9 +37,7 @@ function el(
     parentElement: null,
     children,
     get textContent() {
-      return (
-        options.text ?? children.map((c) => c.textContent ?? "").join(" ")
-      );
+      return options.text ?? children.map((c) => c.textContent ?? "").join(" ");
     },
     getAttribute: (name) => options.attrs?.[name] ?? null,
     getBoundingClientRect: () =>
@@ -92,7 +90,12 @@ describe("C1: a click, or Enter on a Tab stop, gives the composer a place name a
   test("a click on a marked region anchors to its marked id, fractions of its box", () => {
     const d = design("circle");
     const anchor = buildAnchor(d.root, d.plans, { x: 200, y: 300 }, "Plans");
-    assert.deepEqual(anchor, { marked: "plans", x: 0.25, y: 0.25, place: "Plans" });
+    assert.deepEqual(anchor, {
+      marked: "plans",
+      x: 0.25,
+      y: 0.25,
+      place: "Plans",
+    });
     assert.equal(placeName(d.root, d.plans), "Plans");
   });
 
@@ -131,7 +134,11 @@ describe("C1: a click, or Enter on a Tab stop, gives the composer a place name a
 
   test("Enter on a design control anchors at its centre, and names its place by the nearest marked region", () => {
     const d = design("circle");
-    const anchor = buildAnchor(d.root, d.choose, keyboardPoint(d.choose, "control"))!;
+    const anchor = buildAnchor(
+      d.root,
+      d.choose,
+      keyboardPoint(d.choose, "control"),
+    )!;
     assert.equal(anchor.x, 0.5);
     assert.equal(anchor.y, 0.5);
     assert.equal(placeName(d.root, d.choose), "Plans");
@@ -140,7 +147,9 @@ describe("C1: a click, or Enter on a Tab stop, gives the composer a place name a
   test("outside every region the place is the element's text, at most 40 characters in quotes, else the fallback", () => {
     const d = design("circle");
     assert.equal(placeName(d.root, d.note), '"Prices exclude tax"');
-    const long = el("a", { text: "Choose annual billing for the whole team today, and save" });
+    const long = el("a", {
+      text: "Choose annual billing for the whole team today, and save",
+    });
     const root = el("div", {}, [long]);
     const name = placeName(root, long);
     assert.ok(name.startsWith('"Choose annual billing'));
@@ -155,7 +164,9 @@ describe("C1: a click, or Enter on a Tab stop, gives the composer a place name a
   });
 
   test("a path past 2 KB falls back to the nearest marked region", () => {
-    let deep = el("span", { box: { left: 10, top: 210, width: 10, height: 10 } });
+    let deep = el("span", {
+      box: { left: 10, top: 210, width: 10, height: 10 },
+    });
     const leaf = deep;
     for (let i = 0; i < 120; i++) deep = el("div", {}, [deep]);
     const region = el(
@@ -184,7 +195,10 @@ describe("C6: each pin resolves inside its own design's root only", () => {
     assert.deepEqual(pinOffset(circle.root, anchor), { left: 400, top: 400 });
     assert.deepEqual(pinOffset(square.root, anchor), { left: 400, top: 400 });
     // An id shared by both designs resolves the same way.
-    assert.equal(resolveAnchor(square.root, { id: "hero", x: 0, y: 0 }), square.hero);
+    assert.equal(
+      resolveAnchor(square.root, { id: "hero", x: 0, y: 0 }),
+      square.hero,
+    );
   });
 
   test("a pin whose anchor is missing is not drawn", () => {
