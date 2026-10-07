@@ -26,8 +26,42 @@ import { loadToolkit } from "./lib/toolkit.ts";
 const PENDING = "tooling/refs-pending.json";
 const toolkit = loadToolkit();
 
+/** Day one's file list (MIG T2); installed into an overlay target at this same path. */
+const MANIFEST = "docs/runbooks/migrate/manifest.json";
+
+/**
+ * Under the overlay tiers the host's own docs are left alone, as lint:docs
+ * leaves them (MIG T3): the live files are the manifest's paths that exist,
+ * folders expanded to their markdown, plus the spine.
+ */
+function overlayFiles(): string[] {
+  const manifest = JSON.parse(
+    readFileSync(path.join(REPO_ROOT, MANIFEST), "utf8"),
+  ) as { entries: { path: string }[] };
+  const files = manifest.entries.flatMap(({ path: rel }) => {
+    const clean = rel.replace(/\/+$/, "");
+    if (!existsSync(path.join(REPO_ROOT, clean))) return [];
+    if (statSync(path.join(REPO_ROOT, clean)).isDirectory())
+      return listMarkdown(clean);
+    return clean.endsWith(".md") ? [clean] : [];
+  });
+  return [
+    ...new Set([
+      ...["AGENTS.md", "CLAUDE.md", "docs/index.md"].filter((f) =>
+        existsSync(path.join(REPO_ROOT, f)),
+      ),
+      ...files.filter(
+        (f) =>
+          !f.startsWith("docs/roles/") &&
+          !f.startsWith("docs/decisions/records/"),
+      ),
+    ]),
+  ];
+}
+
 /** Live files: what an agent loads or a person follows. Byte-preserved bodies are out. */
 function liveFiles(): string[] {
+  if (toolkit.tier !== "starter") return overlayFiles();
   const roots = ["AGENTS.md", "CLAUDE.md", "README.md"];
   const under = (dir: string) =>
     existsSync(path.join(REPO_ROOT, dir)) ? listMarkdown(dir) : [];
