@@ -30,7 +30,7 @@ import { usePins } from "./pins-provider";
 
 /** Popovers appear with opacity only, and not at all under keyboard modality (A-15). */
 export const POPOVER_MOTION =
-  "w-80 max-w-[calc(100vw-2rem)] data-open:zoom-in-100 data-closed:zoom-out-100 data-[side=bottom]:slide-in-from-top-0 data-[side=top]:slide-in-from-bottom-0 data-[side=left]:slide-in-from-right-0 data-[side=right]:slide-in-from-left-0 has-focus-visible:animate-none";
+  "w-80 max-w-[calc(100vw-(--spacing(8)))] data-open:zoom-in-100 data-closed:zoom-out-100 data-[side=bottom]:slide-in-from-top-0 data-[side=top]:slide-in-from-bottom-0 data-[side=left]:slide-in-from-right-0 data-[side=right]:slide-in-from-left-0 has-focus-visible:animate-none";
 
 /** The circle itself: 28px inside a 44px target, centred on its point. */
 export function PinDot({
@@ -92,7 +92,9 @@ export function PinMarker({
               ? `Comment ${pin.number}, ${W.kinds[pin.kind]}`
               : `Comment ${pin.number}`}
           </PopoverTitle>
-          <p className="whitespace-pre-wrap break-words">{pin.body}</p>
+          <p className="text-base whitespace-pre-wrap break-words">
+            {pin.body}
+          </p>
           <p className="text-sm text-muted-foreground">
             {pinTime(pin.createdAt ?? pin.clientCreatedAt)}
           </p>

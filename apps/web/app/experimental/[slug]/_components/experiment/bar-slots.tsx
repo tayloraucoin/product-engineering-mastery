@@ -22,9 +22,10 @@ import {
 import { usePins } from "../pins/pins-provider";
 
 export function CommentToggle() {
-  const { bar, mode, toggleMode } = usePins();
+  const { bar, mode, toggleMode, toggleRef } = usePins();
   return (
     <Toggle
+      ref={toggleRef}
       variant="outline"
       pressed={mode !== "off"}
       onPressedChange={toggleMode}

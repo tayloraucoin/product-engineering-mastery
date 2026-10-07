@@ -88,7 +88,7 @@ export function pinTime(iso: string, locale?: string): string {
     month: "short",
   }).format(date);
   const time = new Intl.DateTimeFormat(locale, {
-    hour: "2-digit",
+    hour: "numeric",
     minute: "2-digit",
   }).format(date);
   return `${day}, ${time}`;
@@ -197,6 +197,8 @@ export type PinsFixture = {
   online: boolean;
   saved: boolean;
   toast: "kept" | null;
+  /** A pin whose popover opens on arrival, or null. */
+  openPin: string | null;
 };
 
 const fixtureTime = "2026-10-05T13:32:00.000Z";
@@ -275,6 +277,22 @@ const LONG_BODY =
     .repeat(26)
     .slice(0, 2140);
 
+/**
+ * LAB-11's closed and revoked keys, with pins on the page and comment 1's
+ * popover open, so Edit and Delete are seen disabled with their reason (C9).
+ */
+export function heldPinsFixture(): PinsFixture {
+  return {
+    pins: basePins(),
+    mode: "off",
+    draft: null,
+    online: true,
+    saved: false,
+    toast: null,
+    openPin: basePins()[0]!.id,
+  };
+}
+
 export function pinsFixture(key: PinsStateKey): PinsFixture {
   const base: PinsFixture = {
     pins: basePins(),
@@ -283,6 +301,7 @@ export function pinsFixture(key: PinsStateKey): PinsFixture {
     online: true,
     saved: false,
     toast: null,
+    openPin: null,
   };
   const draft = (body: string, saving = false) => ({
     anchor: {
@@ -292,7 +311,8 @@ export function pinsFixture(key: PinsStateKey): PinsFixture {
       place: "Introduction",
     } as Anchor,
     body,
-    kind: null,
+    // The loading key shows a chosen type, so its pressed state is seen.
+    kind: saving ? ("problem" as const) : null,
     saving,
   });
   const withSync = (sync: Record<number, Pin["sync"]>) =>

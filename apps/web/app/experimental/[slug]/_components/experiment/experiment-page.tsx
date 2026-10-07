@@ -20,6 +20,7 @@ import {
   isExperimentStateKey,
 } from "../../../../../lib/sandbox/client/experiment-view";
 import {
+  heldPinsFixture,
   isPinsStateKey,
   pinsFixture,
 } from "../../../../../lib/sandbox/client/pins-view";
@@ -62,7 +63,11 @@ export async function Experiment({
       ? { kind: "reviewer", reviewerId: who.viewer.reviewerId }
       : {
           kind: "preview",
-          fixture: isPinsStateKey(state) ? pinsFixture(state) : null,
+          fixture: isPinsStateKey(state)
+            ? pinsFixture(state)
+            : state === "exp-closed" || state === "exp-revoked"
+              ? heldPinsFixture()
+              : null,
           bar: fixture?.bar ?? null,
         };
 

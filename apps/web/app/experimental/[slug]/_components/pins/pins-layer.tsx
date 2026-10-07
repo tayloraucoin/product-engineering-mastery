@@ -20,7 +20,7 @@ import { usePins } from "./pins-provider";
 
 export function PinsLayer() {
   const pins = usePins();
-  const { draft, draftAt } = pins;
+  const { draft, draftAt, draftSync } = pins;
 
   return (
     <>
@@ -49,12 +49,12 @@ export function PinsLayer() {
                 number: draft.number,
                 kind: draft.pinKind,
                 anchor: draft.anchor,
-                sync: "unsent",
+                sync: draftSync,
               })}
               className={PIN_BUTTON}
               style={{ left: draftAt.left, top: draftAt.top }}
             >
-              <PinDot number={draft.number} unsent />
+              <PinDot number={draft.number} unsent={draftSync !== "sent"} />
             </PopoverTrigger>
             <PopoverContent
               side="bottom"

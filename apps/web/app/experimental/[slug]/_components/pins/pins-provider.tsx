@@ -100,6 +100,8 @@ type PinsContextValue = {
   drawn: { pin: Pin; at: { left: number; top: number } | null }[];
   draft: Draft | null;
   draftAt: { left: number; top: number } | null;
+  /** The draft pin's state: a new one is unsent; an edit keeps its pin's. */
+  draftSync: Pin["sync"];
   openPin: string | null;
   toggleMode(): void;
   retry(): void;
@@ -114,6 +116,7 @@ type PinsContextValue = {
   registerPin(id: string, element: HTMLButtonElement | null): void;
   announcement: string;
   regionRef: React.RefObject<HTMLDivElement | null>;
+  toggleRef: React.RefObject<HTMLButtonElement | null>;
 };
 
 const PinsContext = createContext<PinsContextValue | null>(null);
@@ -201,7 +204,9 @@ export function PinsProvider({
   );
   const [announcement, setAnnouncement] = useState("");
   const [root, setRoot] = useState<HTMLElement | null>(null);
-  const [openPin, setOpenPin] = useState<string | null>(null);
+  const [openPin, setOpenPin] = useState<string | null>(
+    fixture?.openPin ?? null,
+  );
   const [positions, setPositions] = useState<
     Map<string, { left: number; top: number } | null>
   >(new Map());
@@ -211,13 +216,17 @@ export function PinsProvider({
   const queue = useRef<QueueStore | null>(null);
   const pinButtons = useRef(new Map<string, HTMLButtonElement>());
   const regionRef = useRef<HTMLDivElement | null>(null);
+  const toggleRef = useRef<HTMLButtonElement | null>(null);
   const onlineRef = useRef(online);
   onlineRef.current = online;
   const pinsRef = useRef(pins);
   pinsRef.current = pins;
 
+  // Cleared first, so the same words twice in a row are read twice.
   const announce = useCallback((text: string | null) => {
-    if (text) setAnnouncement(text);
+    if (!text) return;
+    setAnnouncement("");
+    setTimeout(() => setAnnouncement(text), 50);
   }, []);
 
   const step = useCallback(
@@ -267,7 +276,9 @@ export function PinsProvider({
       if (outcome === "closed" || outcome === "revoked") {
         setHeld(outcome);
         step({ type: "disable" });
-        setDraft(null);
+        // A draft being typed stays, its Save disabled with the reason; one
+        // being saved is already in the held queue.
+        setDraft((current) => (current && !current.saving ? current : null));
       }
     },
     [step],
@@ -383,6 +394,8 @@ export function PinsProvider({
         announce(W.saved(entry.number));
       } else if (outcome === "offline") {
         announce(W.keptOffline(entry.number));
+        // pins.md's offline row: its copy is the error's.
+        toasts.add({ title: W.keptToast, timeout: 8000 });
       } else if (
         outcome !== "closed" &&
         outcome !== "revoked" &&
@@ -496,6 +509,13 @@ export function PinsProvider({
       const s = sender.current;
       if (held || !s) return;
       setOpenPin(null);
+      // Focus goes to the next pin on this design, else the previous one,
+      // else the Comment toggle; the region only when neither is there.
+      const onDesign = pinsOnDesign(pinsRef.current, pin.design).filter(
+        (p) => p.id !== pin.id,
+      );
+      const neighbour =
+        onDesign.find((p) => p.number > pin.number) ?? onDesign.at(-1) ?? null;
       setPins((current) => current.filter((p) => p.id !== pin.id));
       const restore = () =>
         setPins((current) =>
@@ -515,7 +535,12 @@ export function PinsProvider({
           },
         },
       });
-      focusLater(() => regionRef.current);
+      focusLater(
+        () =>
+          (neighbour && pinButtons.current.get(neighbour.id)) ||
+          toggleRef.current ||
+          regionRef.current,
+      );
       void s.remove(pin.id).then((outcome) => {
         noteHeld(outcome);
         if (outcome === "ok" || outcome === "held") return;
@@ -564,7 +589,8 @@ export function PinsProvider({
         region.getAttribute(REGION_NAME_ATTRIBUTE) ??
         region.getAttribute(REGION_ATTRIBUTE)!;
       region.setAttribute("tabindex", "0");
-      region.setAttribute("role", "button");
+      // A group, not a button: the design's own controls stay inside it.
+      region.setAttribute("role", "group");
       region.setAttribute("aria-label", W.regionStop(name));
       region.removeAttribute("aria-labelledby");
     }
@@ -695,8 +721,14 @@ export function PinsProvider({
   }, [root, relay]);
 
   const bar = useMemo<BarData>(
-    () => preview?.bar ?? pinsBar({ pins, load, held, online, saved }),
-    [preview, pins, load, held, online, saved],
+    () =>
+      preview?.bar
+        ? // LAB-11's bar fixture; with pins drawn, its count is theirs.
+          fixture
+          ? { ...preview.bar, commentCount: pins.length }
+          : preview.bar
+        : pinsBar({ pins, load, held, online, saved }),
+    [preview, fixture, pins, load, held, online, saved],
   );
 
   const counts = useMemo(() => {
@@ -719,6 +751,10 @@ export function PinsProvider({
         .map((pin) => ({ pin, at: positions.get(pin.id) ?? null })),
       draft: draft && draft.design === shown ? draft : null,
       draftAt: draft ? (positions.get(`draft:${draft.id}`) ?? null) : null,
+      draftSync:
+        draft?.kind === "edit"
+          ? (pins.find((p) => p.id === draft.id)?.sync ?? "unsent")
+          : "unsent",
       openPin,
       toggleMode,
       retry,
@@ -736,6 +772,7 @@ export function PinsProvider({
       },
       announcement,
       regionRef,
+      toggleRef,
     }),
     [
       bar,
@@ -743,6 +780,7 @@ export function PinsProvider({
       held,
       mode,
       shown,
+      pins,
       shownPins,
       positions,
       draft,

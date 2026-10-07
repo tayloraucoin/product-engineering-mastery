@@ -8,15 +8,18 @@
  * new pin and for an edit alike.
  */
 import { useId } from "react";
+import { CheckIcon } from "lucide-react";
 
 import { Button } from "@pem/ui/button";
 import { Field, FieldDescription, FieldLabel } from "@pem/ui/field";
+import { PopoverTitle } from "@pem/ui/popover";
 import { Textarea } from "@pem/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@pem/ui/toggle-group";
 
 import {
   COMMENT_BODY_MAX,
   COMMENT_COUNTER_FROM,
+  heldReason,
   placeOf,
   PIN_WORDS as W,
 } from "../../../../../lib/sandbox/client/pins-view";
@@ -24,7 +27,7 @@ import {
   PIN_KINDS,
   type PinKind,
 } from "../../../../../lib/sandbox/client/queue";
-import type { Draft } from "./pins-provider";
+import { usePins, type Draft } from "./pins-provider";
 
 export function Composer({
   draft,
@@ -42,11 +45,14 @@ export function Composer({
     body: `${id}-body`,
     hint: `${id}-hint`,
     counter: `${id}-counter`,
+    reason: `${id}-reason`,
   };
   const length = draft.body.length;
   const tooLong = length > COMMENT_BODY_MAX;
   const showCounter = length >= COMMENT_COUNTER_FROM;
   const empty = draft.body.trim() === "";
+  const { held } = usePins();
+  const reason = heldReason(held);
 
   return (
     <form
@@ -55,8 +61,15 @@ export function Composer({
         event.preventDefault();
         onSave();
       }}
+      // Ctrl or Cmd+Enter saves from anywhere in the composer.
+      onKeyDown={(event) => {
+        if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
+          event.preventDefault();
+          onSave();
+        }
+      }}
     >
-      <p className="font-medium">{W.on(placeOf(draft.anchor))}</p>
+      <PopoverTitle>{W.on(placeOf(draft.anchor))}</PopoverTitle>
       <ToggleGroup
         aria-label={W.typeGroup}
         variant="outline"
@@ -74,11 +87,15 @@ export function Composer({
             value={kind}
             className="h-11 aria-pressed:bg-selected aria-pressed:font-semibold aria-pressed:text-selected-foreground"
           >
+            {draft.pinKind === kind ? (
+              <CheckIcon aria-hidden="true" data-icon="inline-start" />
+            ) : null}
             {W.kinds[kind]}
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
-      <Field data-invalid={tooLong ? true : undefined}>
+      {/* Only the counter shows the error (pins.md); the field keeps its colours. */}
+      <Field>
         <FieldLabel htmlFor={ids.body}>{W.bodyLabel}</FieldLabel>
         <Textarea
           id={ids.body}
@@ -89,12 +106,6 @@ export function Composer({
             showCounter ? `${ids.hint} ${ids.counter}` : ids.hint
           }
           onChange={(event) => onChange({ body: event.target.value })}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
-              event.preventDefault();
-              onSave();
-            }
-          }}
           className="max-h-60 min-h-24"
         />
         <FieldDescription id={ids.hint}>{W.bodyHint}</FieldDescription>
@@ -109,11 +120,18 @@ export function Composer({
           </FieldDescription>
         ) : null}
       </Field>
+      {reason ? (
+        <p id={ids.reason} className="text-sm text-muted-foreground">
+          {reason}
+        </p>
+      ) : null}
       <div className="flex flex-wrap gap-2">
         <Button
           type="submit"
           className="h-11 px-4"
-          disabled={draft.saving || empty || tooLong}
+          disabled={draft.saving || empty || tooLong || !!reason}
+          focusableWhenDisabled={!!reason}
+          aria-describedby={reason ? ids.reason : undefined}
         >
           {draft.saving ? W.saving : W.save}
         </Button>
