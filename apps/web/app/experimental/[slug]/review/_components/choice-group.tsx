@@ -54,7 +54,13 @@ export function ChoiceGroup({
   const item = (choice: Choice) => {
     const itemId = `${id}-${choice.id}`;
     return (
-      <Field key={choice.id} orientation="horizontal" className="w-fit">
+      // `role="none"`: each option is a radio in the group, not a group of its own.
+      <Field
+        key={choice.id}
+        role="none"
+        orientation="horizontal"
+        className="w-fit"
+      >
         <RadioGroupItem
           id={itemId}
           value={choice.id}

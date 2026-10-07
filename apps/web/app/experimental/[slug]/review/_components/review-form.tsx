@@ -123,12 +123,22 @@ function storageOrNull(kind: "localStorage" | "sessionStorage") {
   }
 }
 
+const COMMENTS_SECTION = "your-comments";
+
 const FOCUSABLE =
   "[role=radio]:not([data-disabled]), textarea:not(:disabled), button:not(:disabled)";
 
-/** Focus a field by its gap id: its first control, else the field itself. */
+/**
+ * Focus a field by its gap id: its checked or first control, else the field
+ * itself. A comment's triage is not in the page while the comments are shut
+ * (goal fit first): its link goes to the comments section.
+ */
 function focusField(id: string) {
-  const field = document.getElementById(id);
+  const field =
+    document.getElementById(id) ??
+    (id.startsWith("triage-") || id === GAP_IDS.mattersMost
+      ? document.getElementById(COMMENTS_SECTION)
+      : null);
   const control =
     field?.querySelector<HTMLElement>("[role=radio][data-checked]") ??
     field?.querySelector<HTMLElement>(FOCUSABLE);
@@ -176,6 +186,11 @@ export function ReviewFormView({
   const queue = useRef<QueueStore | null>(null);
   const sender = useRef<PinSender | null>(null);
   const key = reviewer ? draftKey(config.slug, reviewer.reviewerId) : null;
+
+  // The sent line takes focus once it is in the page, so it is read first.
+  useEffect(() => {
+    if (sent && !fixture) sentRef.current?.focus();
+  }, [sent, fixture]);
 
   // The edit lead's date, in the reader's own locale: after mount, never on
   // the server, whose locale is not theirs.
@@ -326,7 +341,6 @@ export function ReviewFormView({
         if (key) clearDraft(storageOrNull("localStorage"), key);
         setStatus("idle");
         setSent(editing ? "later" : "first");
-        setTimeout(() => sentRef.current?.focus(), 0);
         return;
       case "invalid":
         setStatus("idle");
@@ -429,7 +443,7 @@ export function ReviewFormView({
         ) : null}
       </Section>
 
-      <Section heading={W.comments.heading}>
+      <Section heading={W.comments.heading} id={COMMENTS_SECTION}>
         <ReviewComments
           comments={pins}
           designs={config.designs}
@@ -601,13 +615,19 @@ export function ReviewFormView({
 
 function Section({
   heading,
+  id,
   children,
 }: {
   heading: string;
+  id?: string;
   children: ReactNode;
 }) {
   return (
-    <section className="flex flex-col gap-4">
+    <section
+      id={id}
+      tabIndex={id ? -1 : undefined}
+      className="flex flex-col gap-4 outline-none"
+    >
       <h2 className="text-xl font-semibold tracking-tight">{heading}</h2>
       {children}
     </section>
