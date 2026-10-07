@@ -741,6 +741,31 @@ export function qaOf(contract: Pick<Contract, "qa" | "tier">): Qa {
  * The planned paths that reach a critical path (money, auth, schema, personal
  * data, agent permissions). A planned path reaches one when it names one, or
  * when it is a glob that holds a tracked critical file. Never by sampling: a
+/**
+ * Q2 is one reviewer (docs/workflows/qa-levels.md; the audit's C6). A further
+ * seat is allowed only where a focus line names what that reviewer examines,
+ * as the template's "the webhook handler: every event type handled (warden)".
+ * Returns the problem, or null. contract:init and contract:qa refuse on it;
+ * check-specs warns on a draft, whose seats the operator settles at the
+ * Tickets gate. Q3 is untouched: its reviewers are the operator's list.
+ */
+export function q2ReviewerProblem(
+  contract: Pick<Contract, "qa" | "tier" | "reviewers" | "focus">,
+): string | null {
+  if (qaOf(contract) !== "Q2" || contract.reviewers.length <= 1) return null;
+  const focus = (Array.isArray(contract.focus) ? contract.focus : []).map(
+    (line) => String(line).toLowerCase(),
+  );
+  const unfocused = contract.reviewers.filter(
+    (role) =>
+      !focus.some((line) =>
+        new RegExp(`\\b${role.toLowerCase()}\\b`).test(line),
+      ),
+  );
+  if (unfocused.length <= 1) return null;
+  return `names ${contract.reviewers.length} reviewers at Q2 (${contract.reviewers.join(", ")}); Q2 is one reviewer unless a focus line names what each other seat examines, as in "the webhook handler: every event type handled (${unfocused[1]})" (docs/workflows/qa-levels.md)`;
+}
+
  * folder glob is not critical because an env.ts could one day sit in it.
  */
 export function criticalPathsOf(

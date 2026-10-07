@@ -15,6 +15,15 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-06 — PEM: Q2 is one reviewer, enforced
+
+Serves the audit's O6 and C6 (dump 6), decided 2026-10-06. `docs/workflows/qa-levels.md` is unchanged: Q2 was already one reviewer in fresh context, and the focus section already said how a second lens is asked for. The reviewer map and every draft's reviewers are untouched; the seats are the operator's.
+
+- `contract:init` and `contract:qa` refuse a Q2 contract that names more than one reviewer unless a `focus` line names what each further seat examines, as the template's `"… (warden)"`; the message points at `qa-levels.md`. `q2ReviewerProblem` in `tooling/lib/specs.ts` is the rule's one home. Q3 is untouched.
+- `check-specs` warns on a draft (never started) that trips the rule and names it; `contract:init --draft` prints the same note. Neither fails, under `--strict` included: the draft's seats are settled at the Tickets gate, and the start is where the refusal lives. Read against the LAB drafts, each of LAB-11, 12, 14, 17 and 23 already carries a focus line naming its second reviewer, so none warns; the audit's count read the reviewer lists alone.
+- `docs/workflows/stages/tickets.md` §6: the ticket table's reviewers cell shows the `toolkit.json` map's suggestion beside the proposed reviewers, so a hand-added seat reads as one, and says a second Q2 seat needs a focus line.
+- Fixtures: `tooling/fixtures/specs/pass-q2-draft-second-reviewer-warns/` and two scratch-repo tests in `tooling/contract-init.test.ts` (refused at init and at qa; allowed with a focus line naming the seat; a focus line naming nothing is not enough).
+
 ## 2026-10-06 — PEM: the Stop hook prints the context size and skips the status call on an unchanged tree
 
 `tooling/hooks/stop-gate.ts` ends every stop's message to the person with the thread's context at its last call, read from the usage fields of the transcript's last assistant record (a subagent's sidechain record is skipped; the text is never read). Above 200k, the audit's O1 threshold, it adds: start a fresh thread for the next ticket; resuming this one after a break re-writes the whole context. The line informs and never blocks. On an unchanged tree the hook reuses the status line stored beside the tree fingerprint (`tooling/hooks/session-state.ts`) instead of calling `yarn status --brief` (Y2): measured on 2026-10-06, an unchanged stop fell from 5.7 s to 0.3 s. Fixtures cover a transcript at 150k, one at 450k, and an unchanged tree reusing the stored line; the timings are in `docs/engineering/tooling.md`.

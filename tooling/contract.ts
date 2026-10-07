@@ -28,7 +28,8 @@
  *
  * The level is the operator's choice, never computed. contract:init reads
  * `qa:` from the contract (Q1 when absent) and flags once any planned path
- * that reaches a critical path below Q3.
+ * that reaches a critical path below Q3. Q2 is one reviewer: init and qa
+ * refuse a further seat unless a `focus` line names what it examines (C6).
  */
 
 import { spawnSync } from "node:child_process";
@@ -76,6 +77,7 @@ import {
   now,
   openDecisions,
   preflightPath,
+  q2ReviewerProblem,
   QA_LEVELS,
   qaOf,
   readContract,
@@ -333,6 +335,9 @@ function init() {
     });
     if (problems.length)
       stop(`${item.id} is drafted, with problems:\n  ${problems.join("\n  ")}`);
+    // A draft's seats are the operator's to settle at the Tickets gate: said, not refused.
+    const q2 = drafted.contract ? q2ReviewerProblem(drafted.contract) : null;
+    if (q2) console.log(`contract:init — note: ${item.id} ${q2}`);
     console.log(
       `contract:init — ${item.id} drafted at ${item.dir}/; nothing started (--draft).`,
     );
@@ -441,6 +446,9 @@ function start(item: Item, tree: SpecsTree) {
     refusals.push(
       `this is ${branch}, where agents do not commit; the operator picks a work branch (git switch -c <name>), then run this again`,
     );
+  // Q2 is one reviewer; a second seat needs a focus line that names it (C6).
+  const q2 = q2ReviewerProblem(contract);
+  if (q2) refusals.push(q2);
   if (refusals.length)
     stop(`${item.id} cannot start:\n  ${refusals.join("\n  ")}`);
 
@@ -880,6 +888,9 @@ function setQa() {
   const roles = [
     ...new Set(qa === "Q3" && given.length === 0 ? ["vigil"] : given),
   ].sort();
+  // Q2 is one reviewer; a second seat needs a focus line that names it (C6).
+  const q2 = q2ReviewerProblem({ qa, reviewers: roles, focus: contract.focus });
+  if (q2) stop(`${item.id} ${q2}`);
   // Only Q3 reviewers are criteria; below Q3 the review happens in the thread.
   const wanted = new Set(
     qa === "Q3" ? roles.map((role) => `review:${role}`) : [],

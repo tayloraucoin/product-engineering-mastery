@@ -54,6 +54,7 @@ import {
   readRepoText,
   readResults,
   readSpecsTree,
+  q2ReviewerProblem,
   renderStatusFile,
   resultsPath,
   SPEC_FILE_CAPS,
@@ -121,6 +122,13 @@ function checkItems(tree: SpecsTree, toolkit: Toolkit, report: Report) {
     const rel = resultsPath(item);
     if (results.id !== item.id)
       report.errors.push(
+      // A draft's seats are the operator's to settle at the Tickets gate (C6);
+      // contract:init is where a second Q2 seat without a focus line is refused.
+      const q2 = contract ? q2ReviewerProblem(contract) : null;
+      if (q2)
+        report.warnings.push(
+          `${contractPath(item)} ${q2}; the operator settles the seats at the Tickets gate`,
+        );
         `${rel}: id is ${results.id}, but the folder is ${item.id}`,
       );
     const contractIds = new Set(contract.criteria.map((c) => c.id));

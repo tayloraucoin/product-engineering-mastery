@@ -50,7 +50,7 @@ One `tickets/<EPIC>-<n>-<slug>/contract.md` per ticket through `yarn contract:in
 ## 6. Gate
 
 1. `yarn check-specs` green on every contract.
-2. **The ticket table,** put to the operator once as a question: a row per ticket with its QA level, reviewers, focus, batch and wave, and a rough cost for the whole (an estimate). The operator confirms all, or changes rows.
+2. **The ticket table,** put to the operator once as a question: a row per ticket with its QA level, reviewers, focus, batch and wave, and a rough cost for the whole (an estimate). The reviewers cell shows the `toolkit.json` map's suggestion beside the proposed reviewers, so a seat added by hand reads as one; a second seat at Q2 needs a focus line that names what it examines, or `contract:init` refuses the start (`qa-levels.md`). The operator confirms all, or changes rows.
 3. For Q3 tickets, Vigil's pre-flight from the spec before any code: seats, unhappy paths, the promises the ticket touches. Its findings are fixed in the contracts before the build.
 
 ## 7. Handoff
