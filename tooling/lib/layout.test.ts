@@ -9,7 +9,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { after, test } from "node:test";
 
-import { findCodeRoot, probeLayout } from "./layout.ts";
+import { findCodeRoot, findTool, probeLayout } from "./layout.ts";
 
 const scratch = mkdtempSync(
   path.join(process.env.TMPDIR ?? tmpdir(), "pem-layout-"),
@@ -46,6 +46,7 @@ test("C1 a single app at the root: no Turbo, no workspaces, one code root at '.'
     turboTasks: [],
     workspaces: [],
     codeRoots: ["."],
+    specsRoot: "specs",
     hasSpecsRoot: false,
     scripts: ["format", "check-types"],
   });
@@ -121,6 +122,7 @@ test("C1 a monorepo: code roots are the app paths plus each workspace folder", (
     "apps/web",
     "packages/ui",
   ]);
+  assert.equal(layout.specsRoot, "work/specs");
   assert.equal(layout.hasSpecsRoot, true);
   assert.equal(findCodeRoot(layout, "apps/web/app/page.tsx"), "apps/web");
   assert.equal(findCodeRoot(layout, "tooling/budget.ts"), null);
@@ -160,4 +162,19 @@ test("C1 a file at a '.' code root is in it; a deeper root wins", () => {
   assert.deepEqual(layout.codeRoots, [".", "packages/ui"]);
   assert.equal(findCodeRoot(layout, "src/index.ts"), ".");
   assert.equal(findCodeRoot(layout, "packages/ui/index.ts"), "packages/ui");
+});
+
+test("C1 a tool is declared by a script of its name or a dependency, in the folder asked", () => {
+  const dir = root({
+    "package.json": {
+      scripts: { eslint: "node lint.js" },
+      devDependencies: { prettier: "3.0.0" },
+    },
+    "apps/web/package.json": { dependencies: { turbo: "2.0.0" } },
+  });
+  assert.equal(findTool(dir, ".", "eslint"), "script");
+  assert.equal(findTool(dir, ".", "prettier"), "dependency");
+  assert.equal(findTool(dir, ".", "turbo"), null);
+  assert.equal(findTool(dir, "apps/web", "turbo"), "dependency");
+  assert.equal(findTool(dir, "apps/missing", "turbo"), null);
 });

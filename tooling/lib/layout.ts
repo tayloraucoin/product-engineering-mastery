@@ -27,7 +27,9 @@ export type RepoLayout = {
    * is neither (a single app at the root).
    */
   codeRoots: string[];
-  /** toolkit.json's specsRoot (or `specs`) exists. */
+  /** toolkit.json's specsRoot, or `specs` without one. */
+  specsRoot: string;
+  /** The specs root exists. */
   hasSpecsRoot: boolean;
   /** The root package.json's script names. */
   scripts: string[];
@@ -146,9 +148,32 @@ export function probeLayout(root: string): RepoLayout {
     turboTasks,
     workspaces,
     codeRoots,
+    specsRoot,
     hasSpecsRoot: isDir(root, specsRoot),
     scripts,
   };
+}
+
+/**
+ * What `yarn <tool>` run in `dir` finds: Yarn runs a script of that name
+ * first, else a binary of a dependency that folder's package.json declares;
+ * null when it finds neither. A root dependency's binary is reached from a
+ * child workspace with `yarn run -T <tool>`, in that workspace's folder; a
+ * root script is not (it runs in the root).
+ */
+export function findTool(
+  root: string,
+  dir: string,
+  tool: string,
+): "script" | "dependency" | null {
+  const pkg = readJson(path.join(root, dir, "package.json"));
+  if (!isObject(pkg)) return null;
+  const has = (key: string) => {
+    const map = pkg[key];
+    return isObject(map) && typeof map[tool] === "string";
+  };
+  if (has("scripts")) return "script";
+  return has("dependencies") || has("devDependencies") ? "dependency" : null;
 }
 
 /** The code root a repo path sits in, the deepest one first; null when it is in none. */

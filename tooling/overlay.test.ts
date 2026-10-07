@@ -8,7 +8,7 @@
 
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { existsSync, readdirSync, symlinkSync } from "node:fs";
+import { existsSync, readdirSync, rmSync, symlinkSync } from "node:fs";
 import path from "node:path";
 import { describe, test } from "node:test";
 
@@ -31,13 +31,15 @@ const CLEAN_EDIT =
   "export const sum = (a: number, b: number): number => a + b;\nexport const twice = (n: number): number => sum(n, n);\n";
 
 /** verify:fast as the stop gate runs it: scoped to the given files, or the whole branch. */
-const verifyFast = (repo: string, files?: string[]) =>
-  exec(
-    repo,
-    "yarn",
-    ["verify:fast"],
-    files ? { PEM_VERIFY_FAST_FILES: files.join("\n") } : {},
-  );
+const verifyFast = (
+  repo: string,
+  files?: string[],
+  env: Record<string, string> = {},
+) =>
+  exec(repo, "yarn", ["verify:fast"], {
+    ...env,
+    ...(files ? { PEM_VERIFY_FAST_FILES: files.join("\n") } : {}),
+  });
 
 /** A hook as Claude Code runs it: the event on stdin, the project dir set. */
 function hook(repo: string, script: string, input: Record<string, unknown>) {
@@ -349,6 +351,118 @@ test("C4 an ESLint config with no ESLint installed is named as not run, never a 
     r.out,
   );
   assert.doesNotMatch(ranSteps(r.out), /lint/);
+});
+
+const UNUSED_JS = "const unused = 1;\nexport const one = 1;\n";
+const ESLINTRC = JSON.stringify({
+  root: true,
+  parserOptions: { ecmaVersion: 2022, sourceType: "module" },
+  rules: { "no-unused-vars": "error" },
+});
+
+test("C2 an .eslintrc config lints in eslintrc mode, without the flat-config-only flag", () => {
+  const repo = eslintRepo(true);
+  rmSync(path.join(repo, "eslint.config.mjs"));
+  write(repo, ".eslintrc.json", ESLINTRC);
+  const eslintrc = { ESLINT_USE_FLAT_CONFIG: "false" };
+  write(repo, "src/one.js", "export const one = 1;\n");
+  const clean = verifyFast(repo, ["src/one.js"], eslintrc);
+  assert.equal(clean.status, 0, clean.out);
+  assert.match(ranSteps(clean.out), /lint \(changed code\)/);
+  write(repo, "src/one.js", UNUSED_JS);
+  const red = verifyFast(repo, ["src/one.js"], eslintrc);
+  assert.equal(red.status, 1, red.out);
+  assert.match(red.out, /lint \(changed code\) failed/);
+  assert.match(red.out, /no-unused-vars/);
+});
+
+test("C4 an ESLint that cannot start (exit 2) is named as not run, never a pass or a blocked stop", () => {
+  // ESLint 9 in flat mode finds no eslint.config.* beside an .eslintrc and exits 2.
+  const repo = eslintRepo(true);
+  rmSync(path.join(repo, "eslint.config.mjs"));
+  write(repo, ".eslintrc.json", ESLINTRC);
+  write(repo, "src/one.js", UNUSED_JS);
+  const r = verifyFast(repo, ["src/one.js"]);
+  assert.equal(r.status, 0, r.out);
+  assert.match(
+    r.out,
+    /^not run: lint \(changed code\) \(could not start: .+\)$/m,
+  );
+  assert.doesNotMatch(ranSteps(r.out), /lint/);
+});
+
+/**
+ * A two-folder repo: the app at the root and workspace apps/a with its own
+ * flat config, ESLint declared only at the root as `rootEslint` gives it.
+ */
+function workspaceRepo(rootEslint: "dependency" | "script") {
+  const repo = singleAppRepo();
+  const eslintBin = path.join(REPO_ROOT, "node_modules/eslint/bin/eslint.js");
+  const pkg = JSON.parse(read(repo, "package.json"));
+  if (rootEslint === "dependency") {
+    // A local package standing in for eslint: its binary runs this repo's ESLint.
+    write(
+      repo,
+      "fake-eslint/package.json",
+      JSON.stringify({
+        name: "eslint",
+        version: "9.0.0",
+        bin: { eslint: "cli.js" },
+      }),
+    );
+    write(
+      repo,
+      "fake-eslint/cli.js",
+      `#!/usr/bin/env node\nrequire(${JSON.stringify(eslintBin)});\n`,
+    );
+    pkg.devDependencies = { eslint: "portal:./fake-eslint" };
+  } else pkg.scripts.eslint = `node ${eslintBin}`;
+  write(
+    repo,
+    "package.json",
+    JSON.stringify({ ...pkg, workspaces: ["apps/*"] }, null, 2),
+  );
+  write(
+    repo,
+    "apps/a/package.json",
+    JSON.stringify({ name: "a", private: true }),
+  );
+  write(repo, "apps/a/eslint.config.mjs", ESLINT.config);
+  const install = exec(repo, "yarn", ["install"]);
+  assert.equal(install.status, 0, install.out);
+  for (const name of ["typescript", "yaml"])
+    if (!existsSync(path.join(repo, "node_modules", name)))
+      symlinkSync(
+        path.join(REPO_ROOT, "node_modules", name),
+        path.join(repo, "node_modules", name),
+      );
+  return repo;
+}
+
+test("C2 a workspace with its own ESLint config and no ESLint of its own lints through the root's dependency", () => {
+  const repo = workspaceRepo("dependency");
+  write(repo, "apps/a/one.js", UNUSED_JS);
+  const red = verifyFast(repo, ["apps/a/one.js"]);
+  assert.equal(red.status, 1, red.out);
+  assert.match(red.out, /lint \(changed code\) failed/);
+  assert.match(red.out, /no-unused-vars/);
+  write(repo, "apps/a/one.js", "export const one = 1;\n");
+  const clean = verifyFast(repo, ["apps/a/one.js"]);
+  assert.equal(clean.status, 0, clean.out);
+  assert.match(ranSteps(clean.out), /lint \(changed code\)/);
+});
+
+test("C4 a root script named eslint cannot lint a workspace from its folder, so it is named as not run", () => {
+  const repo = workspaceRepo("script");
+  write(repo, "apps/a/one.js", UNUSED_JS);
+  const r = verifyFast(repo, ["apps/a/one.js"]);
+  assert.equal(r.status, 0, r.out);
+  assert.ok(
+    r.out.includes(
+      "not run: lint (changed code) (no eslint dependency in apps/a or the root)",
+    ),
+    r.out,
+  );
 });
 
 // MIG-3: the work loop and the generator on the same repo.

@@ -33,7 +33,12 @@ import path from "node:path";
 
 import { REPO_ROOT } from "./lib/docs.ts";
 import { getBaseRef, runGit } from "./lib/git.ts";
-import { findCodeRoot, probeLayout, TURBO_TASKS } from "./lib/layout.ts";
+import {
+  findCodeRoot,
+  findTool,
+  probeLayout,
+  TURBO_TASKS,
+} from "./lib/layout.ts";
 
 /**
  * A step runs when the changed set reaches it (`when`) and it can run here.
@@ -47,44 +52,39 @@ type Step = {
   when: boolean;
   missing?: string;
   cwd?: string;
+  /**
+   * The exit code that means the tool could not start (ESLint's 2: a config
+   * or usage fault, never a finding): named as not run, never as a pass.
+   */
+  cannotStart?: number;
 };
 
 const layout = probeLayout(REPO_ROOT);
-const rootPackage = JSON.parse(
-  readFileSync(path.join(REPO_ROOT, "package.json"), "utf8"),
-) as {
-  scripts?: Record<string, string>;
-  dependencies?: Record<string, string>;
-  devDependencies?: Record<string, string>;
-};
 /** Why a toolkit step cannot run, or undefined when its script exists. */
 const needsScript = (script: string) =>
   layout.scripts.includes(script) ? undefined : `no ${script} script`;
 /**
- * Why `yarn <tool>` cannot run from `dir`, or undefined when it can: Yarn runs
- * a script of that name first, else a binary of a dependency that folder's
- * package.json declares (a missing binary would fail the step, and block the
- * stop, for want of an install rather than a fault in the code).
+ * Why `yarn <tool>` cannot run at the root, or undefined when it can. A
+ * missing binary would fail the step, and block the stop, for want of an
+ * install rather than a fault in the code.
  */
-const needsTool = (tool: string, dir = ".") => {
-  const pkg =
-    dir === "."
-      ? rootPackage
-      : (() => {
-          try {
-            return JSON.parse(
-              readFileSync(path.join(REPO_ROOT, dir, "package.json"), "utf8"),
-            ) as typeof rootPackage;
-          } catch {
-            return {};
-          }
-        })();
-  return pkg.scripts?.[tool] ||
-    pkg.dependencies?.[tool] ||
-    pkg.devDependencies?.[tool]
+const needsTool = (tool: string) =>
+  findTool(REPO_ROOT, ".", tool)
     ? undefined
-    : `${tool} is not a ${dir === "." ? "root" : dir} dependency`;
-};
+    : `${tool} is not a root dependency`;
+const formatCheck = (() => {
+  try {
+    return (
+      JSON.parse(
+        readFileSync(path.join(REPO_ROOT, "package.json"), "utf8"),
+      ) as {
+        scripts?: Record<string, string>;
+      }
+    ).scripts?.["format:check"];
+  } catch {
+    return undefined;
+  }
+})();
 
 const base = getBaseRef();
 const fork = base ? runGit(["merge-base", base, "HEAD"]) : null;
@@ -111,17 +111,13 @@ function branchChanges(): string[] {
  * The toolkit's own folders are never product code, even when an app sits at
  * the root ("."): each has its own step below.
  */
-const specsRoot = (() => {
-  try {
-    const toolkit = JSON.parse(
-      readFileSync(path.join(REPO_ROOT, "toolkit.json"), "utf8"),
-    ) as { specsRoot?: string };
-    return toolkit.specsRoot ?? "specs";
-  } catch {
-    return "specs";
-  }
-})();
-const TOOLKIT_DIRS = ["tooling", "docs", ".claude", ".github", specsRoot];
+const TOOLKIT_DIRS = [
+  "tooling",
+  "docs",
+  ".claude",
+  ".github",
+  layout.specsRoot,
+];
 /** The code root a changed file sits in, or null for a file outside every one. */
 const rootOf = (file: string) =>
   TOOLKIT_DIRS.some((dir) => file.startsWith(`${dir}/`))
@@ -150,8 +146,7 @@ const workspaceFilters =
 const touches = (pattern: RegExp) => changed.some((file) => pattern.test(file));
 /** The extensions `yarn format:check` covers, read from its glob so the two never disagree. */
 const formatExtensions = (
-  rootPackage.scripts?.["format:check"]?.match(/\{([a-z,]+)\}/)?.[1] ??
-  "ts,tsx,md"
+  formatCheck?.match(/\{([a-z,]+)\}/)?.[1] ?? "ts,tsx,md"
 ).split(",");
 const formattable = changed.filter((file) =>
   formatExtensions.includes(path.extname(file).slice(1)),
@@ -184,29 +179,37 @@ const ESLINT_CONFIGS = [
   ".eslintrc.yaml",
   ".eslintrc",
 ];
-const hasEslintConfig = (dir: string) =>
-  ESLINT_CONFIGS.some((name) => existsSync(path.join(REPO_ROOT, dir, name)));
+
+const FLAT_CONFIG = /^eslint\.config\./;
+const eslintConfigIn = (dir: string) =>
+  ESLINT_CONFIGS.find((name) => existsSync(path.join(REPO_ROOT, dir, name)));
 
 /**
  * ESLint on the changed files. A root config lints every code root in one
  * run; without one, each code root with its own config is linted from there,
- * and changed code under a root with none is named. The fallback skips
- * ignored files rather than failing on ESLint's "File ignored" warning; the
- * starter's boundaries step is unchanged.
+ * through the root's ESLint dependency (`yarn run -T`, which keeps that
+ * folder as the cwd) when that folder declares none.
+ * Changed code under a root with no config is named. Without Turbo, a flat
+ * config skips ignored files rather than failing on ESLint's "File ignored"
+ * warning (the flag does not exist for an .eslintrc), and an ESLint that
+ * cannot start is named as not run; the starter's boundaries step is unchanged.
  */
 function eslintSteps(name: string, files: string[], fallback: boolean): Step[] {
-  const flags = [
+  const flags = (config: string) => [
     "--max-warnings",
     "0",
-    ...(fallback ? ["--no-warn-ignored"] : []),
+    ...(fallback && FLAT_CONFIG.test(config) ? ["--no-warn-ignored"] : []),
   ];
-  if (hasEslintConfig("."))
+  const cannotStart = fallback ? 2 : undefined;
+  const rootConfig = eslintConfigIn(".");
+  if (rootConfig)
     return [
       {
         name,
-        command: ["yarn", "eslint", ...flags, ...files],
+        command: ["yarn", "eslint", ...flags(rootConfig), ...files],
         when: files.length > 0,
         missing: needsTool("eslint"),
+        cannotStart,
       },
     ];
   const byRoot = new Map<string, string[]>();
@@ -219,14 +222,26 @@ function eslintSteps(name: string, files: string[], fallback: boolean): Step[] {
     const local = (byRoot.get(dir) ?? []).map((file) =>
       dir === "." ? file : path.posix.relative(dir, file),
     );
+    const config = eslintConfigIn(dir);
+    const own = findTool(REPO_ROOT, dir, "eslint") !== null;
+    const top = !own && findTool(REPO_ROOT, ".", "eslint") === "dependency";
     return {
       name: roots.length > 1 ? `${name} in ${dir}` : name,
-      command: ["yarn", "eslint", ...flags, ...local],
+      command: [
+        "yarn",
+        ...(top ? ["run", "-T"] : []),
+        "eslint",
+        ...flags(config ?? ""),
+        ...local,
+      ],
       when: local.length > 0,
-      missing: hasEslintConfig(dir)
-        ? needsTool("eslint", dir) && needsTool("eslint")
-        : "no ESLint config",
+      missing: !config
+        ? "no ESLint config"
+        : own || top
+          ? undefined
+          : `no eslint dependency in ${dir} or the root`,
       cwd: dir,
+      cannotStart,
     };
   });
 }
@@ -336,7 +351,7 @@ const plainEnv: NodeJS.ProcessEnv = {
 delete plainEnv.FORCE_COLOR;
 
 /** One short line per step that cannot run here; the stop gate quotes this within its reason. */
-const notRun = steps
+const notRun: string[] = steps
   .filter((step) => step.missing !== undefined)
   .map((step) => `not run: ${step.name} (${step.missing})`);
 
@@ -352,18 +367,24 @@ for (const step of steps) {
     env: plainEnv,
   });
   const seconds = ((Date.now() - t) / 1000).toFixed(1);
+  const output = `${result.stdout ?? ""}${result.stderr ?? ""}`.trim();
+  // Yarn itself absent, or the tool unable to start: named, never counted.
+  const unstarted =
+    (result.error as NodeJS.ErrnoException | undefined)?.code === "ENOENT"
+      ? `${step.command[0]} not found`
+      : step.cannotStart !== undefined && result.status === step.cannotStart
+        ? `could not start: ${output.split("\n").find(Boolean)?.slice(0, 120) ?? `exit ${result.status}`}`
+        : null;
+  if (unstarted) {
+    notRun.push(`not run: ${step.name} (${unstarted})`);
+    continue;
+  }
   timings.push(`${step.name} ${seconds} s`);
   if (result.status !== 0) {
-    const output = `${result.stdout}${result.stderr}`
-      .trim()
-      .split("\n")
-      .slice(-25)
-      .join("\n");
+    const tail = output.split("\n").slice(-25).join("\n");
     // The not-run lines go first so the failure stays in the tail the stop gate quotes.
     if (notRun.length) console.error(notRun.join("\n"));
-    console.error(
-      `verify:fast — ${step.name} failed (${seconds} s):\n${output}`,
-    );
+    console.error(`verify:fast — ${step.name} failed (${seconds} s):\n${tail}`);
     process.exit(1);
   }
 }
