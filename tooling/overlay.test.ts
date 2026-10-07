@@ -404,3 +404,132 @@ test("C4 contract:init for an epic ticket, then status, on the single-app repo w
     /\| ACME-1 \| epic ticket \| draft \|.*first-slice/,
   );
 });
+
+// MIG-2: the settings floor, the operator's local rows and the spine on the same repo.
+const SETTINGS_FIXTURES = "tooling/fixtures/settings";
+const settingsFixture = (name: string) =>
+  JSON.parse(read(REPO_ROOT, `${SETTINGS_FIXTURES}/${name}`)) as {
+    settings: Record<string, unknown>;
+    local?: Record<string, unknown>;
+  };
+/** What a team gets on merge: the floor and the two team hooks, tracked. */
+const FLOOR_ONLY = JSON.stringify(
+  settingsFixture("overlay-c1-pass-floor-only.json").settings,
+  null,
+  2,
+);
+/** The operator's rows: the git push deny, bash-guard.ts and stop-gate.ts. */
+const OPERATOR_ROWS = settingsFixture(
+  "overlay-c2-pass-operator-rows-local.json",
+).local!;
+
+function setTier(repo: string, tier: string) {
+  const toolkit = JSON.parse(read(repo, "toolkit.json"));
+  write(repo, "toolkit.json", JSON.stringify({ ...toolkit, tier }, null, 2));
+}
+const doctor = (repo: string, localFile: string) =>
+  tool(repo, "doctor.ts", ["--local-settings", localFile]);
+
+test("C1 check-settings passes the floor-only tracked file at tier overlay, and fails it at starter", () => {
+  const repo = singleAppRepo();
+  write(repo, ".claude/settings.json", FLOOR_ONLY);
+  const overlay = tool(repo, "check-settings.ts", [".claude/settings.json"]);
+  assert.equal(overlay.status, 0, overlay.out);
+  setTier(repo, "starter");
+  const starter = tool(repo, "check-settings.ts", [".claude/settings.json"]);
+  assert.equal(starter.status, 1, starter.out);
+  assert.match(starter.out, /permissions\.deny is missing Bash\(git push\)/);
+  assert.match(starter.out, /does not register tooling\/hooks\/bash-guard\.ts/);
+  assert.match(starter.out, /does not register tooling\/hooks\/stop-gate\.ts/);
+  assert.match(starter.out, /sandbox\.enabled must be true/);
+});
+
+test("C4 doctor at tier overlay exits 1 naming each operator row the local file lacks, and 0 when it holds them", () => {
+  const repo = singleAppRepo();
+  write(repo, ".claude/settings.json", FLOOR_ONLY);
+  const ROWS = [
+    "the git push deny",
+    "tooling/hooks/bash-guard.ts on PreToolUse",
+    "tooling/hooks/stop-gate.ts on Stop",
+  ];
+
+  write(repo, "operator-empty.json", "{}\n");
+  let r = doctor(repo, "operator-empty.json");
+  assert.equal(r.status, 1, r.out);
+  for (const row of ROWS)
+    assert.ok(
+      r.out.includes(`operator-empty.json lacks the operator row ${row}`),
+      `"${row}" not named in:\n${r.out}`,
+    );
+
+  // A bare-push deny alone does not stop `git push origin HEAD`.
+  write(
+    repo,
+    "operator-partial.json",
+    JSON.stringify({
+      permissions: { deny: ["Bash(git push)"] },
+      hooks: {
+        PreToolUse: (OPERATOR_ROWS.hooks as { PreToolUse: unknown }).PreToolUse,
+      },
+    }),
+  );
+  r = doctor(repo, "operator-partial.json");
+  assert.equal(r.status, 1, r.out);
+  assert.ok(r.out.includes(`lacks the operator row ${ROWS[0]}`), r.out);
+  assert.ok(r.out.includes(`lacks the operator row ${ROWS[2]}`), r.out);
+  assert.ok(!r.out.includes(`lacks the operator row ${ROWS[1]}`), r.out);
+
+  write(repo, "operator.json", JSON.stringify(OPERATOR_ROWS, null, 2));
+  r = doctor(repo, "operator.json");
+  assert.equal(r.status, 0, r.out);
+  assert.match(r.out, /operator\.json: operator rows present/);
+});
+
+test("C4 doctor at starter only scans the local file: an empty one passes", () => {
+  const repo = singleAppRepo();
+  setTier(repo, "starter");
+  write(repo, ".claude/settings.json", FLOOR_ONLY);
+  write(repo, "operator-empty.json", "{}\n");
+  const r = doctor(repo, "operator-empty.json");
+  assert.equal(r.status, 0, r.out);
+  assert.doesNotMatch(r.out, /operator row/);
+  assert.match(r.out, /operator-empty\.json: no credential-shaped strings/);
+});
+
+test("C5 session-start names only the spine files that exist, under 600 characters", () => {
+  const repo = singleAppRepo();
+  const start = () =>
+    hook(repo, "session-start.ts", {
+      hook_event_name: "SessionStart",
+      source: "startup",
+      cwd: repo,
+    });
+  exec(repo, "rm", ["docs/index.md"]);
+  let r = start();
+  assert.equal(r.status, 0, r.stderr);
+  assert.match(
+    r.stdout,
+    /^Spine \(AGENTS\.md, CLAUDE\.md\) as of [0-9a-f]{7,} \d{4}-\d{2}-\d{2}\. /,
+  );
+  assert.ok(r.stdout.trim().length <= 600, r.stdout);
+
+  exec(repo, "rm", ["AGENTS.md", "CLAUDE.md"]);
+  r = start();
+  assert.equal(r.status, 0, r.stderr);
+  assert.match(
+    r.stdout,
+    /^Spine: none of AGENTS\.md, CLAUDE\.md, docs\/index\.md exists\. /,
+  );
+
+  // A spine no commit has held yet, as a run stopped part-way leaves it on a
+  // branch whose history has never had one.
+  exec(repo, "git", ["checkout", "-q", "--orphan", "fresh"]);
+  exec(repo, "git", ["add", "-A"]);
+  exec(repo, "git", ["commit", "-q", "--no-verify", "-m", "host code"]);
+  write(repo, "CLAUDE.md", "# Shim\n");
+  r = start();
+  assert.match(
+    r.stdout,
+    /^Spine \(CLAUDE\.md\) as of uncommitted, plus 1 uncommitted edit\(s\): reread them\. /,
+  );
+});
