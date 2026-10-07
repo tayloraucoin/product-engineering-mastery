@@ -38,7 +38,7 @@ out_of_scope:
   - "A monorepo-without-Turbo fixture (overlay.md: not a separate fixture) and any second adoption mode (settled)."
 criteria:
   - id: C1
-    statement: "The probe reports hasTurbo false with no turbo.json and true with the tasks turbo.json defines; workspaces is [] without the key; codeRoots is [\".\"] for a single app at the root; scripts lists the root package.json script names."
+    statement: 'The probe reports hasTurbo false with no turbo.json and true with the tasks turbo.json defines; workspaces is [] without the key; codeRoots is ["."] for a single app at the root; scripts lists the root package.json script names.'
     evidence: test
     command: "yarn test:tooling"
   - id: C2

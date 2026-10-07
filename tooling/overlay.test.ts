@@ -8,7 +8,7 @@
 
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, readdirSync, symlinkSync } from "node:fs";
 import path from "node:path";
 import { describe, test } from "node:test";
 
@@ -22,6 +22,8 @@ import {
 } from "./lib/scratch-repo.ts";
 
 useScratchRepo();
+
+const REPO_ROOT = path.resolve(import.meta.dirname, "..");
 
 const TYPE_ERROR =
   'export const sum = (a: number, b: number): number => a + b;\nexport const broken: number = "not a number";\n';
@@ -265,8 +267,91 @@ test("C4 a step whose script exists runs: the budget is counted, unscoped", () =
   assert.match(r.out, /not run: check-specs \(no check-specs script\)/);
 });
 
+test("C4 turbo.json with both tasks but no Turbo installed is named as not run, and the fallback runs", () => {
+  const repo = singleAppRepo({ turboTasks: ["lint", "check-types"] });
+  write(repo, "src/sum.ts", CLEAN_EDIT);
+  const r = verifyFast(repo, ["src/sum.ts"]);
+  assert.equal(r.status, 0, r.out);
+  assert.ok(
+    r.out.includes(
+      "not run: lint and types via Turbo (turbo is not a root dependency)",
+    ),
+    r.out,
+  );
+  assert.match(ranSteps(r.out), /types \(check-types\)/);
+});
+
+test("C2 a config change under the code root runs the type check", () => {
+  const repo = singleAppRepo();
+  write(
+    repo,
+    "tsconfig.json",
+    JSON.stringify({
+      compilerOptions: { strict: true, noEmit: true, target: "es2022" },
+      include: ["src"],
+      files: ["src/missing.ts"],
+    }),
+  );
+  const r = verifyFast(repo, ["tsconfig.json"]);
+  assert.equal(r.status, 1, r.out);
+  assert.match(r.out, /types \(check-types\) failed/);
+});
+
+/** ESLint through a script of its name (Yarn runs a script before a binary), over this repo's install. */
+const ESLINT = {
+  config:
+    'export default [{ files: ["**/*.{js,jsx}"], languageOptions: { parserOptions: { ecmaFeatures: { jsx: true } } }, rules: { "no-unused-vars": "error" } }];\n',
+  script: { eslint: "node node_modules/eslint/bin/eslint.js" },
+};
+function eslintRepo(installed: boolean) {
+  const repo = singleAppRepo({ scripts: installed ? ESLINT.script : {} });
+  if (installed)
+    symlinkSync(
+      path.join(REPO_ROOT, "node_modules/eslint"),
+      path.join(repo, "node_modules/eslint"),
+    );
+  write(repo, "eslint.config.mjs", ESLINT.config);
+  return repo;
+}
+
+test("C2 with an ESLint config the fallback lints a changed .jsx file, and a lint error fails naming the step", () => {
+  const repo = eslintRepo(true);
+  write(repo, "src/view.jsx", "export const View = () => <p>ok</p>;\n");
+  const clean = verifyFast(repo, ["src/view.jsx"]);
+  assert.equal(clean.status, 0, clean.out);
+  assert.match(ranSteps(clean.out), /lint \(changed code\)/);
+  assert.doesNotMatch(clean.out, /not run: lint \(changed code\)/);
+
+  write(
+    repo,
+    "src/view.jsx",
+    "const unused = 1;\nexport const View = () => <p>ok</p>;\n",
+  );
+  const red = verifyFast(repo, ["src/view.jsx"]);
+  assert.equal(red.status, 1, red.out);
+  assert.match(red.out, /lint \(changed code\) failed/);
+  assert.match(red.out, /no-unused-vars/);
+});
+
+test("C4 an ESLint config with no ESLint installed is named as not run, never a blocked stop", () => {
+  const repo = eslintRepo(false);
+  write(
+    repo,
+    "src/view.jsx",
+    "const unused = 1;\nexport const View = () => <p>ok</p>;\n",
+  );
+  const r = verifyFast(repo, ["src/view.jsx"]);
+  assert.equal(r.status, 0, r.out);
+  assert.ok(
+    r.out.includes(
+      "not run: lint (changed code) (eslint is not a root dependency)",
+    ),
+    r.out,
+  );
+  assert.doesNotMatch(ranSteps(r.out), /lint/);
+});
+
 // MIG-3: the work loop and the generator on the same repo.
-const REPO_ROOT = path.resolve(import.meta.dirname, "..");
 const OVERLAY_FIXTURES = "tooling/fixtures/overlay";
 
 test("C3 gen-agents skips a host role file without frontmatter and generates the copied role that opts in", () => {

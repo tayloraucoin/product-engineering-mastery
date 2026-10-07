@@ -250,16 +250,9 @@ const pathRules = Math.max(
       .reduce((s, rel) => s + tokensOf(rel), 0),
   ),
 );
-/** Folders never searched for a nested AGENTS.md: installs, builds and the toolkit's own. */
-const NOT_CODE = new Set([
-  "node_modules",
-  "dist",
-  "build",
-  "coverage",
-  "tooling",
-  "docs",
-  toolkit.specsRoot,
-]);
+/** Folders never searched for a nested AGENTS.md: installs and builds at any depth, and the toolkit's own at the root. */
+const NOT_CODE_NAMES = new Set(["node_modules", "dist", "build", "coverage"]);
+const TOOLKIT_FOLDERS = new Set(["tooling", "docs", toolkit.specsRoot]);
 /** Every AGENTS.md below a code root, the root's own spine file excluded. */
 function nestedAgentsFiles(dir: string): string[] {
   if (!exists(dir)) return [];
@@ -267,7 +260,9 @@ function nestedAgentsFiles(dir: string): string[] {
     .flatMap((entry) => {
       const rel = dir === "." ? entry.name : `${dir}/${entry.name}`;
       if (entry.isDirectory())
-        return entry.name.startsWith(".") || NOT_CODE.has(rel)
+        return entry.name.startsWith(".") ||
+          NOT_CODE_NAMES.has(entry.name) ||
+          TOOLKIT_FOLDERS.has(rel)
           ? []
           : nestedAgentsFiles(rel);
       return entry.name === "AGENTS.md" && rel !== "AGENTS.md" ? [rel] : [];

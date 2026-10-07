@@ -60,11 +60,31 @@ const rootPackage = JSON.parse(
 /** Why a toolkit step cannot run, or undefined when its script exists. */
 const needsScript = (script: string) =>
   layout.scripts.includes(script) ? undefined : `no ${script} script`;
-/** Why a step on a tool cannot run, or undefined when the root package.json declares it. */
-const needsTool = (tool: string) =>
-  rootPackage.dependencies?.[tool] || rootPackage.devDependencies?.[tool]
+/**
+ * Why `yarn <tool>` cannot run from `dir`, or undefined when it can: Yarn runs
+ * a script of that name first, else a binary of a dependency that folder's
+ * package.json declares (a missing binary would fail the step, and block the
+ * stop, for want of an install rather than a fault in the code).
+ */
+const needsTool = (tool: string, dir = ".") => {
+  const pkg =
+    dir === "."
+      ? rootPackage
+      : (() => {
+          try {
+            return JSON.parse(
+              readFileSync(path.join(REPO_ROOT, dir, "package.json"), "utf8"),
+            ) as typeof rootPackage;
+          } catch {
+            return {};
+          }
+        })();
+  return pkg.scripts?.[tool] ||
+    pkg.dependencies?.[tool] ||
+    pkg.devDependencies?.[tool]
     ? undefined
-    : `${tool} is not a root dependency`;
+    : `${tool} is not a ${dir === "." ? "root" : dir} dependency`;
+};
 
 const base = getBaseRef();
 const fork = base ? runGit(["merge-base", base, "HEAD"]) : null;
@@ -108,7 +128,12 @@ const rootOf = (file: string) =>
     ? null
     : findCodeRoot(layout, file);
 const inCode = changed.filter((file) => rootOf(file) !== null);
+/** What the starter's boundaries lint covers: unchanged since E-18. */
 const code = inCode.filter((file) => /\.(ts|tsx|mjs)$/.test(file));
+/** Without Turbo, every extension ESLint lints by default in a flat config. */
+const lintable = inCode.filter((file) =>
+  /\.(js|jsx|mjs|cjs|ts|tsx|mts|cts)$/.test(file),
+);
 
 /** The workspaces the scoped files sit in, each with its dependents; unscoped, whatever the branch changed. */
 const workspaceFilters =
@@ -132,12 +157,18 @@ const formattable = changed.filter((file) =>
   formatExtensions.includes(path.extname(file).slice(1)),
 );
 
-/** Turbo runs lint and types only when turbo.json defines both tasks; otherwise the fallback below does. */
+/**
+ * Turbo runs lint and types only when turbo.json defines both tasks and Turbo
+ * is installed; otherwise the fallback below does, and this names why.
+ */
+const absentTasks = TURBO_TASKS.filter(
+  (task) => !layout.turboTasks.includes(task),
+);
 const turboMissing = !layout.hasTurbo
   ? "no turbo.json"
-  : TURBO_TASKS.filter((task) => !layout.turboTasks.includes(task)).length
-    ? `turbo.json has no ${TURBO_TASKS.filter((task) => !layout.turboTasks.includes(task)).join(" or ")} task`
-    : undefined;
+  : absentTasks.length
+    ? `turbo.json has no ${absentTasks.join(" or ")} task`
+    : needsTool("turbo");
 
 const ESLINT_CONFIGS = [
   "eslint.config.js",
@@ -157,34 +188,44 @@ const hasEslintConfig = (dir: string) =>
   ESLINT_CONFIGS.some((name) => existsSync(path.join(REPO_ROOT, dir, name)));
 
 /**
- * ESLint on the changed code. A root config lints every code root in one run;
- * without one, each code root with its own config is linted from there, and
- * changed code under a root with none is named.
+ * ESLint on the changed files. A root config lints every code root in one
+ * run; without one, each code root with its own config is linted from there,
+ * and changed code under a root with none is named. The fallback skips
+ * ignored files rather than failing on ESLint's "File ignored" warning; the
+ * starter's boundaries step is unchanged.
  */
-function eslintSteps(name: string): Step[] {
+function eslintSteps(name: string, files: string[], fallback: boolean): Step[] {
+  const flags = [
+    "--max-warnings",
+    "0",
+    ...(fallback ? ["--no-warn-ignored"] : []),
+  ];
   if (hasEslintConfig("."))
     return [
       {
         name,
-        command: ["yarn", "eslint", "--max-warnings", "0", ...code],
-        when: code.length > 0,
+        command: ["yarn", "eslint", ...flags, ...files],
+        when: files.length > 0,
+        missing: needsTool("eslint"),
       },
     ];
   const byRoot = new Map<string, string[]>();
-  for (const file of code) {
+  for (const file of files) {
     const dir = rootOf(file)!;
     byRoot.set(dir, [...(byRoot.get(dir) ?? []), file]);
   }
   const roots = byRoot.size ? [...byRoot.keys()] : layout.codeRoots;
   return roots.map((dir) => {
-    const files = (byRoot.get(dir) ?? []).map((file) =>
+    const local = (byRoot.get(dir) ?? []).map((file) =>
       dir === "." ? file : path.posix.relative(dir, file),
     );
     return {
       name: roots.length > 1 ? `${name} in ${dir}` : name,
-      command: ["yarn", "eslint", "--max-warnings", "0", ...files],
-      when: files.length > 0,
-      missing: hasEslintConfig(dir) ? undefined : "no ESLint config",
+      command: ["yarn", "eslint", ...flags, ...local],
+      when: local.length > 0,
+      missing: hasEslintConfig(dir)
+        ? needsTool("eslint", dir) && needsTool("eslint")
+        : "no ESLint config",
       cwd: dir,
     };
   });
@@ -224,7 +265,7 @@ const steps: Step[] = [
           ],
           when: inCode.length > 0,
         },
-        ...eslintSteps("boundaries (changed code)"),
+        ...eslintSteps("boundaries (changed code)", code, false),
       ]
     : [
         {
@@ -233,11 +274,12 @@ const steps: Step[] = [
           when: false,
           missing: turboMissing,
         },
-        ...eslintSteps("lint (changed code)"),
+        ...eslintSteps("lint (changed code)", lintable, true),
         {
           name: `types (${typeCheckScript ?? "type-check script"})`,
           command: ["yarn", typeCheckScript ?? ""],
-          when: code.length > 0,
+          // Any change under a code root: a tsconfig.json or package.json edit can break types too.
+          when: inCode.length > 0,
           missing: typeCheckScript
             ? undefined
             : `no ${TYPE_CHECK_SCRIPTS.join(", ")} script`,
