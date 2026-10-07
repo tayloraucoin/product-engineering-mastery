@@ -23,11 +23,7 @@ import type { Registry, ViewerKind } from "./registry.ts";
 
 type Deps = { db: () => Db; viewerFor: (w: World, kind: ViewerKind) => Viewer };
 
-const REVIEWER_KINDS = [
-  "reviewer on slug A",
-  "second reviewer on slug A",
-  "reviewer on slug B",
-] as const;
+type ReviewerKind = Exclude<ViewerKind, "developer" | "admin">;
 
 function refusedWith(message: string) {
   return (error: unknown) => {
@@ -135,7 +131,7 @@ export function codesCases({ db, viewerFor }: Deps): Registry<World> {
 
   const byReviewer = (
     call: (w: World, viewer: Viewer) => Promise<unknown>,
-  ): Record<(typeof REVIEWER_KINDS)[number], (w: World) => Promise<void>> => ({
+  ): Record<ReviewerKind, (w: World) => Promise<void>> => ({
     "reviewer on slug A": refusedFor("reviewer on slug A", call),
     "second reviewer on slug A": refusedFor("second reviewer on slug A", call),
     "reviewer on slug B": refusedFor("reviewer on slug B", call),
