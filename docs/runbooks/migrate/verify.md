@@ -55,7 +55,7 @@ yarn <build>; echo "build $?"
 
 **Operator:** before the base `build`, the untracked env files. The worktree has none, and the thread cannot read them (the floor), so the operator copies their `.env` files into the worktree, or the base `build` is skipped and recorded as "not run at base" and the live tree's build in section 7 is its first proof. A build that fails only on missing env is not a failing build.
 
-A `build` that reads `.env` files (51 said so) runs unsandboxed with the operator's yes, here and at every later `yarn verify`: the floor denies those reads to a sandboxed session, and a build failing on a denied read is not a failing build.
+A `build` that reads `.env` files (51 said so) runs unsandboxed with the operator's yes, here and at every later `yarn verify`: the floor denies those reads to a sandboxed session, and a build failing on a denied read is not a failing build. The same yes covers every Turbo task when `turbo.json` names env files in `globalDependencies` or a task's `inputs` (51): Turbo reads them to hash before the task runs, so a sandboxed `lint` can fail at the hash, and that is not a failing lint either.
 
 Write a four-row table in `rulings.md`: check, script, exit code at base, what happens (enters as written; frozen by section 3; a gap). A check that passes enters as written. A check that fails is frozen by its kind below, or stays out as a gap when its recipe says so or the operator rules so (53). Remove the worktree when the table is written.
 
@@ -69,11 +69,12 @@ Each recipe freezes what is red today so that the same debt passes and new debt 
 
 Needs ESLint 9.24.0 or later (`yarn eslint --version`), and a lint script that runs the ESLint CLI. Older, and the lint freeze is a gap: it stays out of `verify` and the gap's plan is "upgrade ESLint, then this recipe". A script that runs `next lint` goes through the Node API, never reads the suppressions file and lints a different file set: the baseline commit changes the script to `eslint .` (Next 16 removes `next lint` anyway); a repo whose config cannot run under the CLI makes the freeze a gap.
 
-1. `yarn eslint . --suppress-all`. It writes `eslint-suppressions.json` at the repo root, one entry per file and rule with a count, and exits 0.
-2. Commit the file alone: `ACM: migrate step 6, the lint baseline`.
-3. The lint script enters `verify` unchanged: ESLint reads the suppressions file on every run, fails a file whose count for a rule rises, and reports a count that fell as prunable. `yarn eslint . --prune-suppressions` lowers the counts; run it in the commit that fixes the code, never alone.
+1. Run the suppression through the lint script's own runner, so the file lands where that run reads it (ESLint reads `eslint-suppressions.json` relative to its working directory). A root script that runs the ESLint CLI: `yarn eslint . --suppress-all`, one file at the repo root. A Turbo script that runs ESLint in each workspace (`turbo run lint`, the workspace's `lint` being `eslint …`): `yarn <lint> -- --suppress-all` (the arguments after `--` pass through Turbo to each task), which appends the flag to each workspace's command and writes one `eslint-suppressions.json` per workspace, every one committed; a root boundaries lint (`eslint . --max-warnings 0` at the root) is a second run with its own root file. Each file holds one entry per file and rule with a count, and the run exits 0.
+2. Commit the file or files alone: `ACM: migrate step 6, the lint baseline`.
+3. The lint script enters `verify` unchanged: ESLint reads its suppressions file on every run, fails a file whose count for a rule rises, and reports a count that fell as prunable. `yarn eslint . --prune-suppressions` (or the Turbo form) lowers the counts; run it in the commit that fixes the code, never alone.
+4. Suppressions cover errors only, never warnings. A run that is red because `--max-warnings 0` meets warnings at base is frozen by first raising those rules from `warn` to `error` in the lint config, so the suppressions file holds them (a tightening, not a loosening); then step 1. [secondary: ESLint 9.24's bulk-suppressions notes; verify at the run.]
 
-**Check:** `yarn <lint>` exits 0 on the migration branch, and the suppressions file is read: lowering one count in `eslint-suppressions.json` by one makes `yarn <lint>` fail, and restoring it passes again.
+**Check:** `yarn <lint>` exits 0 on the migration branch, and each suppressions file is read: lowering one count in it by one makes `yarn <lint>` fail, and restoring it passes again.
 
 **Never:** `--max-warnings` raised to today's count (it freezes a number, not the lines, so a fix in one file licenses a regression in another); turning a rule off to make the run green.
 
@@ -81,8 +82,8 @@ Needs ESLint 9.24.0 or later (`yarn eslint --version`), and a lint script that r
 
 The repo's own `tsc` reports its errors; each gets one line above it, so the baseline is one line per error and rebases with the file. A fix then fails as TS2578 (an unused directive), which removes its own line.
 
-1. **Pin `strict` to its current value.** In the root `tsconfig.json`, if `strict` is not written there, write its effective value, read from `yarn tsc --showConfig` (an `extends` chain may set it `true`), never a literal `false`. Nothing changes today; TypeScript 6 defaults it to `true`, and an unpinned repo would fail every file at once on that upgrade (layer 3, part 1).
-2. **Insert the tags.** Run the type check with `--pretty false` into a file, parse each `path(line,col): error TScode` line, and insert `// @ts-expect-error MIG-BASELINE(TScode)` on its own line above the reported line, keeping the reported line's indentation. Work bottom-up within each file so line numbers stay true. The script is a few lines of Node, written in the thread and not kept:
+1. **Pin `strict` to its current value.** In the config the type check actually compiles with: the root `tsconfig.json` for a single app, or the shared base every workspace extends (`packages/config/tsconfig/base.json` or the like) in a workspace repo whose root `tsconfig.json` is project references with `files: []`. If `strict` is not written there, write its effective value, read from `yarn tsc --showConfig` in one workspace (an `extends` chain may set it `true`), never a literal `false`; a base that already writes it is left alone. Nothing changes today; TypeScript 6 defaults it to `true`, and an unpinned repo would fail every file at once on that upgrade (layer 3, part 1).
+2. **Insert the tags.** Run the type check with `--pretty false` into a file, parse each `path(line,col): error TScode` line, and insert `// @ts-expect-error MIG-BASELINE(TScode)` on its own line above the reported line, keeping the reported line's indentation. Work bottom-up within each file so line numbers stay true. Under Turbo the check runs per workspace and reports workspace-relative paths, so run the script once per workspace from that workspace's folder. The script is a few lines of Node, written in the thread and not kept:
 
    ```js
    // node insert-baseline.mjs < tsc-output.txt
@@ -195,13 +196,13 @@ Before a change lands, the gates are the stop hook (`verify:fast` at every stop,
 
 ## 6. CI wiring
 
-**Where CI exists** (52 named a workflow): in that file, replace the chained check steps (lint, boundaries, types, build, in whatever order) with one step that runs `yarn verify`, under the same triggers and the same setup steps (checkout, Node, Corepack, install). One commit: `ACM: migrate step 6, CI runs verify`. Keep the file's other jobs (deploy, preview) as they are.
+**Where CI exists** (52 named a workflow): in that file, replace the chained check steps (lint, boundaries, types, build, in whatever order) with one step that runs `yarn verify`, under the same triggers and the same setup steps (checkout, Node, Corepack, install). Any `env:` a replaced step carried (a `SKIP_ENV_VALIDATION` on the build step, a cache token) moves onto the verify step, since `verify` runs that same command. The toolkit's diff checks (`check-test-weakening`, `check-specs`) compare with `origin/<protected-branch>`, which a checkout at `fetch-depth: 2` does not have: in the same commit set the checkout's `fetch-depth` to `0` so they run in CI, or leave the depth and read their "skipped, no base" lines in the first run and say so in record 0001. One commit: `ACM: migrate step 6, CI runs verify`. Keep the file's other jobs (deploy, preview) as they are.
 
 **Operator:** the first CI run. It is hosted and comes after the operator's push, which the thread never makes. Step 9 hands it over by name (54). A workflow that needs a secret `verify` does not need is left as it was.
 
 **Where CI is absent:** writing a workflow needs repository settings, secrets and branch protection, so it is a drafted gap (step 7) and a hosted step. The plan in its Build notes: one workflow, `yarn verify` on push and pull request to the protected branch, written by the operator's thread after the merge; the first run is the operator's.
 
-**Check:** the workflow's diff changes only the steps and keeps the triggers (`git diff HEAD~1 -- <workflow>`), or the gap ticket exists.
+**Check:** the workflow's diff changes only the steps, the verify step's `env:` and the checkout depth, and keeps the triggers (`git diff HEAD~1 -- <workflow>`), or the gap ticket exists.
 
 ## 7. Done
 
