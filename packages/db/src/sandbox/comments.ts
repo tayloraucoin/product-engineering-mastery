@@ -69,6 +69,9 @@ export type MyComment = {
   kind: SandboxCommentKind | null;
   body: string;
   anchor: CommentAnchor;
+  viewportW: number;
+  viewportH: number;
+  clientCreatedAt: Date;
   createdAt: Date;
 };
 
@@ -191,6 +194,9 @@ export async function listMyComments(
       kind: sandboxComments.kind,
       body: sandboxComments.body,
       anchor: sandboxComments.anchor,
+      viewportW: sandboxComments.viewportW,
+      viewportH: sandboxComments.viewportH,
+      clientCreatedAt: sandboxComments.clientCreatedAt,
       createdAt: sandboxComments.createdAt,
     })
     .from(sandboxComments)

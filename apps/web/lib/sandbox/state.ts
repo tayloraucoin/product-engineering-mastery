@@ -86,6 +86,16 @@ export const SANDBOX_STATE_KEYS: Readonly<
   "exp-sent": "team",
   "exp-closed": "team",
   "exp-revoked": "team",
+  // Pins (LAB-12, pins.md).
+  "pins-empty": "team",
+  "comment-mode": "team",
+  composing: "team",
+  "pins-loading": "team",
+  "pins-error": "team",
+  "pins-partial": "team",
+  "pins-offline": "team",
+  "pins-success": "team",
+  "too-long": "team",
   // Data (LAB-16, data.md).
   "data-tab-empty": "team",
   "data-tab-loading": "team",

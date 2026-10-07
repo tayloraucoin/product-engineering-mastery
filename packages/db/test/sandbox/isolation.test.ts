@@ -589,6 +589,9 @@ const listCommentsAs = (kind: ViewerKind) => async (w: World) => {
     "kind",
     "body",
     "anchor",
+    "viewportW",
+    "viewportH",
+    "clientCreatedAt",
     "createdAt",
   ]);
   assert.equal(read[0]!.id, rows.commentId);

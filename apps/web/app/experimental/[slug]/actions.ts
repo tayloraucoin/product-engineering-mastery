@@ -21,6 +21,16 @@ import {
   sandboxSecret,
   setAccessCookie,
 } from "../../../lib/sandbox/access";
+import type { QueueEntry } from "../../../lib/sandbox/client/queue";
+import type {
+  CommentResult,
+  ListCommentsResult,
+} from "../../../lib/sandbox/comments";
+import {
+  deleteCommentFor,
+  listCommentsFor,
+  saveCommentFor,
+} from "../../../lib/sandbox/comments-data";
 import {
   recordViewWith,
   viewDepsFor,
@@ -177,4 +187,29 @@ export async function recordView(
   );
   if (result.kind === "failed") log.warn("sandbox.view_failed");
   return result;
+}
+
+/**
+ * The pins (LAB-12, pins.md): load the reviewer's own, save one under its
+ * browser-minted id, delete one. Each validates, resolves the viewer, makes
+ * one call and returns a fixed result (lib/sandbox/comments.ts).
+ */
+export async function listMyComments(
+  slug: string,
+): Promise<ListCommentsResult> {
+  return listCommentsFor(slug);
+}
+
+export async function saveComment(
+  slug: string,
+  input: QueueEntry,
+): Promise<CommentResult> {
+  return saveCommentFor(slug, input);
+}
+
+export async function deleteComment(
+  slug: string,
+  input: { id: string },
+): Promise<CommentResult> {
+  return deleteCommentFor(slug, input);
 }
