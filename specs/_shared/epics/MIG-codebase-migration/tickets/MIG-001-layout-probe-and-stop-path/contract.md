@@ -22,6 +22,7 @@ reviewers:
   - mason
 focus:
   - "the stop path: verify-fast never blocks on a missing Turbo and never passes a step it did not run (mason)"
+  - "a third review round after two FAILs, approved by the operator 2026-10-07: the round-2 fixes (mason)"
 operator_review: false
 planned_paths:
   - "tooling/lib/layout.ts"
