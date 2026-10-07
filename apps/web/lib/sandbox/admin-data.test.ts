@@ -241,7 +241,9 @@ describe("C6: erasing a signed-in reviewer, and an email that holds nothing", ()
       counts: { comments: 3, versions: 1, views: 9 },
     });
     assert.equal(
-      erasedToast((result as Extract<typeof result, { outcome: "erased" }>).counts),
+      erasedToast(
+        (result as Extract<typeof result, { outcome: "erased" }>).counts,
+      ),
       "Erased 3 comments, 1 review version and 9 views.",
     );
     // The lookup matches Auth's email trimmed and lower-cased.

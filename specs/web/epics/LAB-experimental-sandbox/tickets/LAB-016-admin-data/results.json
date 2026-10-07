@@ -157,8 +157,14 @@
     "review:warden": {
       "status": "FAIL",
       "evidence": "manual",
-      "run": null
+      "run": null,
+      "refused": [
+        {
+          "at": "2026-10-07T18:44:38Z",
+          "reason": "prove the other criteria first: C3 (last run exited 1); C6 (last run exited 1); C8 (last run exited 1); C9 (last run exited 1)"
+        }
+      ]
     }
   },
-  "updated_at": "2026-10-07T18:44:16Z"
+  "updated_at": "2026-10-07T18:44:38Z"
 }
