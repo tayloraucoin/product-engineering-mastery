@@ -505,6 +505,13 @@ test("WEB-12 C3: a FAIL written by hand earns no run, an edited review file earn
     tool(repo, "status.ts", ["WEB-1"]).out,
     /review:vigil manual \(the criteria changed after this review/,
   );
+  // The merge gate sees the same staleness: --strict fails the PASS.
+  r = checkSpecs(repo);
+  assert.notEqual(r.status, 0);
+  assert.match(
+    r.out,
+    /review:vigil's PASS no longer holds: the criteria changed after this review/,
+  );
   r = tool(repo, "contract.ts", ["run", "WEB-1"]);
   assert.equal(r.status, 0, r.out);
   r = tool(repo, "review-run.ts", ["vigil", "WEB-1"], RUNNER(repo));
@@ -513,4 +520,47 @@ test("WEB-12 C3: a FAIL written by hand earns no run, an edited review file earn
   r = tool(repo, "review-run.ts", ["vigil", "WEB-1"], RUNNER(repo));
   assert.notEqual(r.status, 0);
   assert.match(r.out, /a third run needs the operator's word/);
+});
+
+test("WEB-12 C3: the count and the criteria hash are read from the hash-bound review file, so an edit to results.json earns nothing", () => {
+  // Two FAIL runs, then `runs` deleted by hand: the file still says run 2.
+  let repo = startOneOff({ qa: "Q3" });
+  buildAndProve(repo);
+  write(repo, `${WEB1}/as-built.md`, AS_BUILT("WEB-1"));
+  const failing = { ...RUNNER(repo), PEM_FIXTURE_VERDICT: "FAIL" };
+  assert.notEqual(
+    tool(repo, "review-run.ts", ["vigil", "WEB-1"], failing).status,
+    0,
+  );
+  assert.notEqual(
+    tool(repo, "review-run.ts", ["vigil", "WEB-1"], failing).status,
+    0,
+  );
+  assert.equal(resultsOf(repo).criteria["review:vigil"]!.runs, 2);
+  const edited = JSON.parse(read(repo, `${WEB1}/results.json`));
+  delete edited.criteria["review:vigil"].runs;
+  write(repo, `${WEB1}/results.json`, JSON.stringify(edited, null, 2) + "\n");
+  let r = tool(repo, "review-run.ts", ["vigil", "WEB-1"], RUNNER(repo));
+  assert.notEqual(r.status, 0);
+  assert.match(r.out, /a third run needs the operator's word/);
+  // `runs` set to 1 by hand: results.json disagrees with the file, refused as an edit.
+  edited.criteria["review:vigil"].runs = 1;
+  write(repo, `${WEB1}/results.json`, JSON.stringify(edited, null, 2) + "\n");
+  r = tool(repo, "review-run.ts", ["vigil", "WEB-1"], RUNNER(repo));
+  assert.notEqual(r.status, 0);
+  assert.match(r.out, /results\.json is never edited/);
+
+  // After a PASS, the run record's criteria hash changed by hand reopens nothing.
+  repo = startOneOff({ qa: "Q3" });
+  buildAndProve(repo);
+  write(repo, `${WEB1}/as-built.md`, AS_BUILT("WEB-1"));
+  r = tool(repo, "review-run.ts", ["vigil", "WEB-1"], RUNNER(repo));
+  assert.equal(r.status, 0, r.out);
+  const forged = JSON.parse(read(repo, `${WEB1}/results.json`));
+  forged.criteria["review:vigil"].run.criteria_sha256 = "0".repeat(64);
+  write(repo, `${WEB1}/results.json`, JSON.stringify(forged, null, 2) + "\n");
+  r = tool(repo, "review-run.ts", ["vigil", "WEB-1"], RUNNER(repo));
+  assert.notEqual(r.status, 0);
+  assert.match(r.out, /results\.json is never edited/);
+  assert.equal(resultsOf(repo).criteria["review:vigil"]!.status, "PASS");
 });

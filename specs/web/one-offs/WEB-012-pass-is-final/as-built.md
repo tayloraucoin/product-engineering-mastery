@@ -27,15 +27,16 @@ Total: 26 recorded runs, 15 refused (the report's 19 counts per ticket, not per 
 ## Deviations
 
 - The cap guard records its refusals through the `refuse` helper and `refused` field the C4 thread added to `review-run.ts` and `results.schema.json` in the same tree; both threads' hunks sit in the same files, committed through private indexes.
-- [ASSUMPTION] `--operator` lifts both refusals (a second run after a PASS and any third run); the decision names only the third.
-- [ASSUMPTION] A run that gave no verdict (the reviewer failed to finish) is not counted: it was not a review.
-- `runs` can be hand-edited in `results.json` like any other field; the results-gate hook and A9 are that boundary, as before.
+- The count and the criteria hash are read from the review file the run record hash-binds, never from `results.json` alone; a `results.json` that disagrees with the file is refused as an edit. (Vigil's Blocking finding on the first pass, fixed on review; the test corpus gained the case.)
+- [NEEDS DECISION] `--operator` lifts both refusals (a second run after a PASS and any third run); PR-20 names only the third. Kept as built; Taylor says whether the escape hatch is that wide.
+- A run that gave no verdict (the reviewer failed to finish) is not counted: the file's `run:` line is the attempt number, read back as one less when the file carries no verdict. Not pinned by a test: a no-verdict `--operator` run after a PASS leaves the next plain run allowed (Vigil, Consider); a follow-up, not drafted as a ticket.
+- The prose said a `focus` line raises the cap; the tooling reads only `--operator`. The four spots (`qa-levels.md`, `build.md`, `tk-batch`, ledger PR-20) now say the focus line is the record and the flag the mechanism (Vigil, Should-fix).
+
+## Review
+
+Q2, Vigil in fresh context, findings in the thread. First pass FAIL: one Blocking (above), two Should-fix (the criteria-change staleness was pinned only through `yarn status`, now also through `check-specs --strict`; the focus-line prose), three Consider (the first-refusal escape hatch, the no-verdict run, PR-20 filed above PR-19 in the ledger, now below it). The Blocking and both Should-fix are fixed and re-proven; the review is not re-run (PR-20).
 
 ## Not verified
 
-- C4 to C7 have not run yet (the usage limit stopped the thread); C1 to C3 pass under `node --test tooling/contract-review.test.ts` (6 of 6).
-- No Vigil review yet (Q2).
-
-## Next
-
-Commit this ticket's paths through a private index (`git commit -- <paths>`), prove in a detached worktree (`yarn contract:run WEB-12`), run Vigil in fresh context on the cap (a criteria edit to reset a PASS; a FAIL forced to earn a run), then one `yarn verify`.
+- C4 (`yarn check-specs`), C6 (`yarn lint:docs`) and C7 (`yarn budget`) fail on this tree for reasons outside this ticket, each present before it: LAB-7's contract over the 2,500-token cap and its as-built's Not verified missing C12 and C13; `docs/research/ui-patterns/working-dashboards.md` (no frontmatter) and `specs/_shared/epics/MIG-codebase-migration/technical.md` (over its cap), both untracked intake files; the budget's two standing overages (brief and package, UI build). Those files are other threads' and the operator's; left alone and named in the report.
+- The no-verdict `--operator` run after a PASS (above).

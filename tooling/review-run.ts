@@ -286,21 +286,36 @@ function reviewTicket(item: Item) {
   // verdict are not counted: they were not reviews.
   const prior = results.criteria[criterionId];
   const priorRun = prior?.run ?? null;
-  // A record from before the counter counts as one run only when it carried
-  // a verdict: a run that gave none was not a review and earns no refusal.
-  let runs = prior?.runs ?? 0;
+  // The count and the criteria hash are read from the review file, whose
+  // hash the run record binds; results.json alone is not trusted, and a
+  // results.json that disagrees with the file is refused as an edit. The
+  // file's `run:` line is the attempt number: an attempt that gave no
+  // verdict was not a review and is not counted. A file from before the
+  // counter counts as one run when it carried a verdict.
+  let runs = 0;
   if (priorRun) {
     const file = reviewPath(item, role!);
     if (!fileExists(file) || hashFile(file) !== priorRun.evidence_sha256)
       refuse(
         `${file} is not the review recorded in ${resultsPath(item)} (missing or edited); git restore it. A review file is never edited`,
       );
-    const recorded =
-      readRepoText(file).match(/^- verdict: (PASS|FAIL)$/m)?.[1] ?? null;
-    if (prior!.runs === undefined && recorded) runs = 1;
+    const text = readRepoText(file);
+    const recorded = text.match(/^- verdict: (PASS|FAIL)$/m)?.[1] ?? null;
+    const attempt = text.match(/^- run: (\d+) of /m)?.[1];
+    runs = attempt ? Number(attempt) - (recorded ? 0 : 1) : recorded ? 1 : 0;
+    const judged =
+      text.match(/^- criteria_sha256: ([0-9a-f]{64})$/m)?.[1] ?? null;
+    if (
+      (prior!.runs !== undefined && prior!.runs !== runs) ||
+      (judged !== null &&
+        priorRun.criteria_sha256 !== undefined &&
+        judged !== priorRun.criteria_sha256)
+    )
+      refuse(
+        `${resultsPath(item)} disagrees with ${file} on ${criterionId}'s runs or criteria hash; git restore it. results.json is never edited`,
+      );
     const criteriaChanged =
-      priorRun.criteria_sha256 !== undefined &&
-      priorRun.criteria_sha256 !== results.criteria_sha256;
+      judged !== null && judged !== results.criteria_sha256;
     const past = `yarn review:run ${role} ${item.id} --operator "<reason>"`;
     if (runs >= 2 && !operatorReason)
       refuse(
