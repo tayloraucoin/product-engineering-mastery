@@ -78,6 +78,7 @@ For each part: **keep** or **remove**. Recommend "remove" only when the briefing
 | C6 | AI (the AI SDK, Anthropic) | Nothing: without a key the local tier replays recorded answers | [`remove/ai.md`](../remove/ai.md) | None |
 | C7 | Error monitoring (Sentry) | Nothing: without a DSN errors are logged and not reported | [`remove/error-monitoring.md`](../remove/error-monitoring.md) | None |
 | C8 | Component catalog (the shelf beside the kit) | A folder no app imports | [`remove/catalog.md`](../remove/catalog.md) | Offer "keep until the components thread" (Recommended): that thread takes what the product needs from the shelf, then removes it |
+| C9 | Experimental sandbox (gated design reviews under `/experimental`, the team's `/admin`, seven tables) | Nothing visible: without its secret every reviewer sees the gate and no code can be entered; seven empty tables and the `developer` role | [`remove/experimental-sandbox.md`](../remove/experimental-sandbox.md) | Needs the database, auth and email. Removing the database or auth removes it first. |
 
 After the round, ask one more: **anything to add that is off by default?** Each needs a recipe in [`add/`](../add/README.md). Today there is one, the local Docker database, asked next.
 
@@ -173,7 +174,7 @@ Strip first. It deletes about 200 files that name the old scope, so the rename h
 
 For each part answered "remove" in round C, follow its recipe from top to bottom. Its last section marks the part `"removed": true` in `toolkit.json` and runs its checks.
 
-Remove in this order, from the top of the package graph down, so nothing still present imports something already gone: billing, error monitoring, API layer, AI, auth, database, catalog. The catalog waits for the components thread unless C8 said "remove now".
+Remove in this order, from the top of the package graph down, so nothing still present imports something already gone: billing, error monitoring, API layer, AI, experimental sandbox, auth, database, catalog. The sandbox goes before auth and the database, which it needs. The catalog waits for the components thread unless C8 said "remove now".
 
 **Proof:** `yarn check-stack` and `yarn verify` exit 0 after each recipe, and once at the end of the step even when no recipe ran.
 

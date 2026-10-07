@@ -436,6 +436,21 @@
       "boundaries": ["stripe"],
       "locked": false,
       "runbook": "docs/runbooks/remove/billing.md"
+    },
+    "experimental-sandbox": {
+      "files": [
+        "apps/web/app/experimental",
+        "apps/web/app/admin",
+        "apps/web/lib/sandbox",
+        "packages/db/src/schema/sandbox",
+        "packages/db/src/sandbox",
+        "packages/db/test/sandbox"
+      ],
+      "env": ["SANDBOX_SECRET"],
+      "dependencies": [],
+      "boundaries": ["web-sandbox"],
+      "locked": false,
+      "runbook": "docs/runbooks/remove/experimental-sandbox.md"
     }
   }
 }
