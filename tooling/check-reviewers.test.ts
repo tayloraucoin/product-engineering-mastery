@@ -81,7 +81,7 @@ test("C1 every static, re-exported, required and dynamic import is read, subpath
   ]);
 });
 
-test("C1 a module named only in a comment, a string, a template, JSX text or a member call is not an import", () => {
+test("C1 a module named only in a comment, a string, a template, a regex, a member call or an object key is not an import", () => {
   const source = [
     '// import Stripe from "stripe";',
     '/* const s = require("stripe"); */',
@@ -91,9 +91,21 @@ test("C1 a module named only in a comment, a string, a template, JSX text or a m
     'const pattern = /"stripe"/;',
     'client.require("stripe");',
     'const options = { from: "stripe", require: "stripe" };',
-    'export const Note = () => <p>Don\'t import from "stripe"</p>;',
   ].join("\n");
   assert.deepEqual(listImportedModules(source), []);
+});
+
+test('C1 JSX text: an apostrophe drops the rest of its line; without one, from "x" in text reads as an import (a known limit)', () => {
+  assert.deepEqual(
+    listImportedModules(
+      'export const A = () => <p>Don\'t import from "stripe"</p>;',
+    ),
+    [],
+  );
+  assert.deepEqual(
+    listImportedModules('export const B = () => <p>Import from "stripe"</p>;'),
+    ["stripe"],
+  );
 });
 
 test("C1 a module matches itself, its subpaths and a scope wildcard, never a longer name", () => {
@@ -175,6 +187,32 @@ test("C2 validateToolkit rejects an empty imports list and a malformed module, n
   );
   assert.ok(
     problems.some((p) => p.startsWith('"reviewers[1].imports[1]"')),
+    problems.join("\n"),
+  );
+});
+
+test("C2 validateToolkit rejects an unknown row key and a module listed twice, naming each", () => {
+  const problems = validateToolkit(
+    withReviewers([
+      {
+        glob: "**/billing/**",
+        import: ["stripe"],
+        role: "warden",
+        why: "Typo.",
+      },
+      { imports: ["stripe", "stripe"], role: "mason", why: "Twice." },
+    ]),
+  );
+  assert.ok(
+    problems.some(
+      (p) =>
+        p.startsWith('"reviewers[0].import"') &&
+        p.includes("is not a reviewer field"),
+    ),
+    problems.join("\n"),
+  );
+  assert.ok(
+    problems.some((p) => p.startsWith('"reviewers[1].imports[1]" repeats')),
     problems.join("\n"),
   );
 });
@@ -276,6 +314,30 @@ test("C4 at tier overlay, check-reviewers fails naming a row that matches no tra
   assert.match(passing.out, /2 reviewer rows, each matching/);
 });
 
+test("C4 at tier overlay, a row carrying a glob and imports fails when either half matches nothing, naming the half", () => {
+  const repo = freshRepo();
+  write(
+    repo,
+    "src/pricing/card.ts",
+    'import Stripe from "stripe";\nexport const s = Stripe;\n',
+  );
+  setToolkit(repo, "overlay", [
+    { ...stripeRow, glob: "**/billing/**", role: "mason" },
+  ]);
+  commit(repo, "PEM: billing renamed away; the stripe import remains");
+  const run = checkReviewers(repo);
+  assert.equal(run.status, 1, run.out);
+  assert.match(
+    run.out,
+    /reviewers\[0\] \(glob \*\*\/billing\/\*\*; imports stripe; role mason\): its glob matches nothing/,
+  );
+
+  write(repo, "src/billing/plan.ts", "export const plan = 1;\n");
+  commit(repo, "PEM: a billing file");
+  const passing = checkReviewers(repo);
+  assert.equal(passing.status, 0, passing.out);
+});
+
 test("C4 at tier starter, check-reviewers says it is skipped and exits 0 with the same dead row", () => {
   const repo = freshRepo();
   setToolkit(repo, "starter", [
@@ -330,7 +392,12 @@ test("C7 the template and this repo's toolkit.json validate, each carrying the s
         .filter((row) => row.imports?.includes(module))
         .map((row) => row.role)
         .sort();
-    assert.deepEqual(seated("stripe"), ["chancery", "mason", "warden"], file);
+    for (const module of ["stripe", "@stripe/*"])
+      assert.deepEqual(
+        seated(module),
+        ["chancery", "mason", "warden"],
+        `${file} ${module}`,
+      );
     for (const module of [
       "@supabase/*",
       "next-auth",

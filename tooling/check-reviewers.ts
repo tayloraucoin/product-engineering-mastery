@@ -28,14 +28,15 @@ if (toolkit.tier === "starter") {
   process.exit(0);
 }
 
-const listed = runGit(["ls-files"], REPO_ROOT);
+// -z: paths verbatim, never C-quoted, so a non-ASCII path still matches.
+const listed = runGit(["ls-files", "-z"], REPO_ROOT);
 if (listed === null) {
   console.error(
     "check-reviewers — git ls-files failed; run it from a git checkout.",
   );
   process.exit(1);
 }
-const tracked = listed.split("\n").filter(Boolean);
+const tracked = listed.split("\0").filter(Boolean);
 
 /** A row as the operator wrote it, so the failure names the line to fix. */
 const describe = (row: ToolkitReviewer, i: number) =>
@@ -47,24 +48,41 @@ const describe = (row: ToolkitReviewer, i: number) =>
     .filter(Boolean)
     .join("; ")})`;
 
-const dead = toolkit.reviewers
-  .map((row, i) => ({ row, i }))
-  .filter(
-    ({ row }) =>
-      !tracked.some(
-        (file) =>
-          findRowReach(
-            row,
-            file,
-            row.imports ? readImportedModules(file, REPO_ROOT) : [],
-          ) !== null,
-      ),
+/** Whether any tracked file reaches the row through findRowReach, the matcher suggestReviewers shares. */
+const reaches = (row: ToolkitReviewer) =>
+  tracked.some(
+    (file) =>
+      findRowReach(
+        row,
+        file,
+        row.imports ? readImportedModules(file, REPO_ROOT) : [],
+      ) !== null,
   );
+
+/**
+ * A row's dead halves. A row carrying both a glob and imports is checked
+ * half by half: either half seats on its own, so a glob that stopped
+ * matching would otherwise hide behind a live imports list.
+ */
+const deadHalves = (row: ToolkitReviewer): string[] => {
+  if (!(row.glob && row.imports)) return reaches(row) ? [] : ["the row"];
+  const halves: string[] = [];
+  if (!reaches({ ...row, imports: undefined })) halves.push("its glob");
+  if (!reaches({ ...row, glob: undefined })) halves.push("its imports");
+  return halves;
+};
+
+const dead = toolkit.reviewers
+  .map((row, i) => ({ row, i, halves: deadHalves(row) }))
+  .filter(({ halves }) => halves.length > 0);
 
 if (dead.length > 0) {
   console.error(
     `check-reviewers — ${dead.length} reviewer row(s) match no tracked file at tier ${toolkit.tier}; correct each or delete it from toolkit.json:\n${dead
-      .map(({ row, i }) => `  ${describe(row, i)}`)
+      .map(
+        ({ row, i, halves }) =>
+          `  ${describe(row, i)}${halves[0] === "the row" ? "" : `: ${halves.join(" and ")} match${halves.length === 1 ? "es" : ""} nothing`}`,
+      )
       .join("\n")}`,
   );
   process.exit(1);

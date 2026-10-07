@@ -191,19 +191,19 @@
       "status": "draft"
     },
     {
-      "imports": ["stripe"],
+      "imports": ["stripe", "@stripe/*"],
       "role": "mason",
       "why": "One-way door: billing, wherever the Stripe SDK is called.",
       "status": "draft"
     },
     {
-      "imports": ["stripe"],
+      "imports": ["stripe", "@stripe/*"],
       "role": "warden",
       "why": "Payment credentials stay with the processor, wherever the Stripe SDK is called.",
       "status": "draft"
     },
     {
-      "imports": ["stripe"],
+      "imports": ["stripe", "@stripe/*"],
       "role": "chancery",
       "why": "Billing copy and what it promises, wherever the Stripe SDK is called.",
       "status": "draft"

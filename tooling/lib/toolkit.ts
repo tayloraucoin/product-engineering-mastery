@@ -26,7 +26,8 @@ const ROLE = /^[a-z]+$/;
  * in a scope (`@supabase/*`).
  */
 const MODULE =
-  /^(?:@[a-z0-9][a-z0-9._-]*\/(?:\*|[a-z0-9][a-z0-9._-]*(?:\/[a-z0-9._-]+)*)|[a-z0-9][a-z0-9._-]*(?:\/[a-z0-9._-]+)*)$/;
+  /^(?:@[a-z0-9][a-z0-9._-]*\/(?:\*|[a-z0-9][a-z0-9._-]*(?:\/[A-Za-z0-9._-]+)*)|[a-z0-9][a-z0-9._-]*(?:\/[A-Za-z0-9._-]+)*)$/;
+const REVIEWER_FIELDS = ["glob", "imports", "role", "why", "status"] as const;
 
 export type ToolkitApp = {
   /** Repo-relative folder of the app. */
@@ -236,6 +237,12 @@ export function validateToolkit(
           bad(at, "must be { glob or imports, role, why }");
           return;
         }
+        for (const key of Object.keys(row))
+          if (!(REVIEWER_FIELDS as readonly string[]).includes(key))
+            bad(
+              `${at}.${key}`,
+              `is not a reviewer field; the fields are ${REVIEWER_FIELDS.join(", ")}`,
+            );
         if (!("glob" in row) && !("imports" in row))
           bad(
             at,
@@ -256,6 +263,8 @@ export function validateToolkit(
                   `${at}.imports[${j}]`,
                   'must be a module name ("stripe"), a subpath ("stripe/webhooks") or a scope ("@supabase/*")',
                 );
+              else if ((row.imports as unknown[]).indexOf(module) !== j)
+                bad(`${at}.imports[${j}]`, `repeats ${module}; list it once`);
             });
         }
         if (typeof row.role !== "string" || !ROLE.test(row.role))
