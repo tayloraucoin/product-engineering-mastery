@@ -43,6 +43,7 @@ load_when:
 | [`bug.md`](bug.md) | Read when something that worked, or should work, does not: reproduce it, find the cause, fix it, prove the fix, and trace how it got in. |
 | [`epic.md`](epic.md) | Read when work needs several tickets, a new surface or an unsettled problem, or when teaching someone how a feature goes from idea to shipped: the levels, who plays each, what each writes, and the gates between them. |
 | [`feature-exploration.md`](feature-exploration.md) | Read when the work is early product thinking: trying directions, showing them to clients or teammates and collecting what they say, before anything is committed to the product. |
+| [`migrate.md`](migrate.md) | Read when an existing repo with history is being brought under the practice in place: the builder asks the three questions the assessment needs, then hands the work to the migrate runbook, which interviews from the assess report and walks layer 1. |
 | [`new-project.md`](new-project.md) | Read when the boilerplate is being duplicated for a new product: the builder runs the expanded set-up interview and hands the work to the new-project runbook. |
 | [`one-off.md`](one-off.md) | Read when a piece of work is one buildable change with a known outcome, or when teaching someone the day-to-day loop: brain dump, one build thread, a short report. |
 | [`product-spec.md`](product-spec.md) | Read when a product lead is preparing work to hand to developers: the UX spec alone, or the spec plus UI and basic function, ending in a ticket the developer can start from. |

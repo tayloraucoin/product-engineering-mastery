@@ -16,7 +16,7 @@ load_when:
 > **Who runs it:** an agent in Claude Code, opened in the target repo, with the operator answering questions and a toolkit checkout beside the target. On the deepest model available: the interview is design work, and a smaller model turns it into a checklist with no recommendations.
 > **When:** a repo with a history is brought under the practice without a rewrite ([track](../../workflows/tracks/migrate.md)). The rule is move the way of working on day one; tech that cannot cross becomes a named gap with a plan.
 > **Done means:** the end check exits 0, every layer-1 commit is on the migration branch, record 0001 is written, each gap is a drafted ticket under the target's migration epic, and the thread has printed the branch name and the follow-on prompts. The operator pushes and merges; the thread never does.
-> **Status:** draft. Never run or rehearsed on a real repo. The three desk walks (near, middle, far) are the next ticket; the operator's first real run is a dry run on the near repo after the epic closes.
+> **Status:** draft. Never run or rehearsed on a real repo. The three desk walks (near, middle, far) are the next ticket; the operator's first real run is a dry run on the near repo after the epic closes. Steps 0 and 8 use the `--check`, `--end` and `--protected` flags of `yarn migrate:assess`, which land in MIG-7; until then the command accepts `--json` only, and the two steps cannot run.
 
 This folder holds the guide and what it hands out:
 
@@ -24,8 +24,8 @@ This folder holds the guide and what it hands out:
 | ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | This file                          | The interview, then the layer-1 steps                                                                                                           |
 | [`manifest.json`](manifest.json)   | Day one's file list: each path with `copy` or `derive` and the signal or ruling that includes it. Step 4 walks the copy entries, step 5 the rest |
-| `verify.md`                        | Layer 2: the repo's own checks become one `verify` command, with the freeze recipes and the CI wiring (step 6). Lands in MIG-9                   |
-| `layer-3.md`                       | Layer 3: the twelve ordered gap tickets, and the two prompts the run prints at its end (steps 7 and 9). Lands in MIG-9                           |
+| [`verify.md`](verify.md)           | Layer 2: the repo's own checks become one `verify` command, with the freeze recipes and the CI wiring (step 6)                                  |
+| [`layer-3.md`](layer-3.md)         | Layer 3: the twelve ordered gap tickets, and the two prompts the run prints at its end (steps 7 and 9)                                          |
 
 Every example below is synthetic: a repo called `acme-shop`, with the prefix `ACM`. Paths are relative to the target's root unless they say "toolkit". `<toolkit>` is the toolkit checkout's path from the prompt.
 
@@ -60,7 +60,7 @@ The builder asked these once ([track](../../workflows/tracks/migrate.md), M1 to 
 | #  | Confirms                                                      | Sets                                                              |
 | -- | ------------------------------------------------------------- | ----------------------------------------------------------------- |
 | 01 | The target's path and the toolkit checkout's path             | Every command below; the toolkit commit in record 0001            |
-| 02 | The protected branch: where merged work lives                 | `protectedBranch`; the `--protected` argument of every check      |
+| 02 | The protected branch: where merged work lives (for a solo repo, the branch deployed from, fast-forwarded by the operator before the run when it was left behind) | `protectedBranch`; the `--protected` argument of every check      |
 | 03 | The migration branch's name, created by the operator from 02  | The branch every step commits on; the name printed at the end     |
 
 ### Round 1: names and layout
@@ -75,7 +75,7 @@ The builder asked these once ([track](../../workflows/tracks/migrate.md), M1 to 
 
 ### Round 2: conflicts and settings
 
-Asked in full on the middle and far paths. On the near path, only the rows the report lists under "conflicts", plus the settings table confirmed in one click.
+22 and 23 are asked on every path. 21 is asked once per conflict the report lists, so a repo with none (a solo repo often has none) skips it, whatever its path; on the near path the settings table is confirmed in one click.
 
 | #  | Question                                                                 | Options                                                                                                                                                                                                                                                                                                                                                                                                             | Sets                                                                                   |
 | -- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
@@ -102,7 +102,7 @@ The report lists conflicts, not every line. Before this round, read the old `AGE
 | #  | Question                                                                 | Options                                                                                                                                                                                                                                                                                                                                                                                       | Sets                                                      |
 | -- | ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
 | 31 | For each human-written line: where does it go, verbatim?                 | `AGENTS.md` "House rules" (Recommended when it is global and still true). The nested `AGENTS.md` of the folder it is about (Recommended when it names one folder). `.claude/rules/house-<topic>.md` with `paths:` (Recommended when it is about one file type, as "the interface wins over the atmosphere" is about UI files). Not carried: overruled in round 2, cited in record 0001.           | Step 5's spine and path rules                             |
-| 32 | When House rules would push `AGENTS.md` past 100 lines: what gives?      | The largest cluster of lines on one topic moves whole into a house rule with `paths:` (Recommended; the cap is unchanged under overlay). The operator names lines to cut, each cited in record 0001.                                                                                                                                                                                           | The line count step 5 checks with `yarn budget`           |
+| 32 | When House rules would push `AGENTS.md` past 100 lines: what gives?      | Cut more toolkit lines first: anything a hook or check enforces, the role and skill listings, the boundaries section where no boundaries exist yet (Recommended; the cap is unchanged under overlay, and a global human line is never demoted to a path rule). Then any human line that is about one file type moves to a house rule with `paths:`. Last, the operator names lines to cut, each cited in record 0001. | The line count step 5 checks with `yarn budget`           |
 | 33 | The agent-readability brief for the proof in step 5?                     | One line of work that needs a fact found only in the old file, written by the operator (Recommended: the operator knows which rule the team relies on). The agent proposes one from the moved lines.                                                                                                                                                                                         | Step 5's proof                                            |
 
 ### Round 4: records and collisions
@@ -132,7 +132,7 @@ The default mapping per kind:
 
 | #  | Question                                                                   | Options                                                                                                                                                                                                                                                                       | Sets                                                              |
 | -- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| 51 | Which of the repo's scripts is each of lint, boundaries, types, test, build and format? | The names read from the root `package.json` (Recommended, shown filled). "None" for a check the repo does not have; `verify.md` says what each absence becomes.                                                                                                     | The mapping in step 6                                             |
+| 51 | Which of the repo's scripts is each of lint, boundaries, types, test, build and format, and does `build` read environment files? | The names read from the root `package.json` (Recommended, shown filled). "None" for a check the repo does not have; `verify.md` says what each absence becomes. A `build` that reads `.env` files (a Next app with hosted SDKs usually does) cannot run under the floor's read deny in a sandboxed session: it runs unsandboxed with the operator's yes, in step 6 and at every later `yarn verify`. | The mapping in step 6; how `build` is run                         |
 | 52 | Where does CI run these today?                                             | The workflow file the report found (Recommended; step 6 replaces its chained steps with one `yarn verify` step under the same triggers). None: CI is a drafted gap and a hosted step, since it needs repo settings and secrets.                                                | Step 6's CI edit, or a gap in step 7                               |
 | 53 | A freeze that touches more than about 50 files: last commit of the day, or a gap? | Last commit of the day, in a window the team names (Recommended when the team is small or the window exists). A drafted gap, with the count in its Build notes.                                                                                                      | `verify.md`'s live-team rule                                      |
 | 54 | Who runs the first hosted steps: the push, the first CI run, the merge?    | The operator, by name (Recommended when they own the remote). Another person, by name. A credential is never typed into the thread.                                                                                                                                           | Step 9's hand-over lines; record 0001                             |
@@ -167,22 +167,22 @@ yarn migrate:assess <target>
 
 It reads and never writes: every read goes through `git ls-files`, so no worktree, no env file and nothing outside the index. The report prints the total of the seventeen signals, the gate, the path and why, a table per group with each score and its evidence, and the listings the interview rules on: the policy conflicts with their file and line, the SDK importers with the reviewer glob that matches each or "none", the records by kind, the practice paths that already exist, and the hygiene lines (branch state, worktrees, tracked files over 10 MB).
 
-File it byte for byte in the target as `specs/_shared/epics/<P>-migration/assess.md`, making the folder by hand (the prefix is round 1's, so file it once 11 is answered; until then hold the text in the thread). Read the hygiene lines to the operator: a tracked file over 10 MB is documented and never rewritten; a worktree is never removed by the thread.
+Hold the text in the thread; it is filed in step 2, once round 1 has named the prefix. Read the hygiene lines to the operator: a tracked file over 10 MB is documented and never rewritten; a worktree is never removed by the thread.
 
-**Proof:** the filed file's bytes equal the command's output (`diff <(yarn migrate:assess <target>) <target>/specs/_shared/epics/<P>-migration/assess.md` prints nothing), and `git status` in the target shows only that new folder.
+**Proof:** the report is in the thread with its path and total, the hygiene lines have been read out, and `git status` in the target is still clean.
 
 ### 2. The interview
 
-Run the rounds above from the report. Write `rulings.md` beside `assess.md`.
+As soon as 11 names the prefix, file the report byte for byte as `specs/_shared/epics/<P>-migration/assess.md`, making the folder by hand. Then run the rest of the rounds from it, and write `rulings.md` beside it.
 
-**Proof:** the operator has said yes to the answer table, and the table names a value for every row this guide's steps read: 01 to 03, 11 to 15, every conflict and policy row, every human line, every record kind and collision, 51 to 54.
+**Proof:** `diff <(cd <toolkit> && yarn -s migrate:assess <target>) specs/_shared/epics/<P>-migration/assess.md` prints nothing; `git status` in the target shows only that new folder; the operator has said yes to the answer table, and the table names a value for every row this guide's steps read: 01 to 03, 11 to 15, every conflict and policy row, every human line, every record kind and collision, 51 to 54.
 
 ### 3. Commit 1: the layout file and the dependencies
 
 In the target, on the migration branch:
 
 1. Write `toolkit.json` from the toolkit's `docs/engineering/templates/toolkit.template.json`: `tier` from 13; `specsRoot` `specs`; `apps` from 12 (for a single app, `{ "web": { "path": ".", "prefix": "WEB", "designLayer": null } }`); `toolkitPrefixes` `["<P>"]`; `verify` naming `yarn verify` and `yarn verify:fast` (the scripts land in step 6 and step 5); `migrationsDir` and `branchPattern` from 14; `protectedBranch` from 02; `reviewers` as the template's rows whose globs match a tracked file, plus one `imports` row per SDK family the report lists (Stripe to mason, warden and chancery; auth SDKs to mason and warden; email to warden; AI SDKs listed only, no row); `stack` `{}`.
-2. In the root `package.json`, add the toolkit's scripts that the copied tooling needs (every `node tooling/<script>.ts` line from the toolkit's own `package.json` whose script step 4 copies: the contract loop, `status`, `check-settings`, `check-reviewers`, `check-specs`, `check-refs`, `check-test-weakening`, `test:hooks`, `budget`, `gen:agents`, `doctor`, `hooks:install`, `verify:fast`, `check-types:tooling`), and the devDependencies `yaml`, plus `typescript` and `@types/node` where absent. Then `yarn install`.
+2. In the root `package.json`, add every script from the toolkit's own `package.json` whose command names a file step 4 copies, under the same name, because the copied docs name them and `check-refs` will look for each: `contract:init`, `contract:run`, `contract:record`, `contract:add`, `contract:qa`, `review:run`, `status`, `spec:init`, `specs:archive`, `truth:promote`, `check-settings`, `check-reviewers`, `check-specs`, `check-refs`, `check-test-weakening`, `test:hooks`, `budget`, `gen:agents`, `doctor`, `hooks:install`, `lint:docs`, `directory-map`, `verify:fast`, `check-types:tooling`. Add the devDependencies `yaml`, plus `typescript` and `@types/node` where absent. Then `yarn install`.
 3. Commit `toolkit.json`, `package.json` and `yarn.lock` only: `ACM: migrate step 3, toolkit.json and the toolkit's dependencies`.
 
 The hooks are not registered yet, so this commit runs under plain git. From step 5 on, the bash guard checks the prefix.
@@ -197,11 +197,13 @@ Before the first copy, keep the old instruction files: `cp AGENTS.md docs/decisi
 
 Order inside the step: the collision rulings from 42 first (a host folder moved whole by `git mv`), then the path rules, the practice docs, the skills, the tooling, the decisions README. A copy that would overwrite a host file the interview did not rule on stops: add the file to 42's table, get the ruling, go on.
 
+One copied file is then edited in place: `tooling/tsconfig.json` extends `@pem/config/tsconfig/base.json`, a workspace package no target has. Replace its `extends` line with the `compilerOptions` of the toolkit's `packages/config/tsconfig/base.json`, merged under the file's own options. [ASSUMPTION: until the manifest carries this file as `derive`, a follow-up for MIG-3.]
+
 Then `yarn gen:agents`, which writes `.claude/agents/` from the copied roles and skips a host role file without the practice's frontmatter.
 
 Commit: `ACM: migrate step 4, the copied files`.
 
-**Proof:** for every copied entry, `diff -r <toolkit>/<path> <path>` prints nothing; `yarn gen:agents --check` exits 0; `yarn check-types:tooling` exits 0 in the target.
+**Proof:** for every copied entry but `tooling/tsconfig.json`, `diff -r <toolkit>/<path> <path>` prints nothing; `yarn gen:agents --check` exits 0; `yarn check-types:tooling` exits 0 in the target.
 
 ### 5. Derive
 
@@ -210,18 +212,19 @@ Take every manifest entry whose `mode` is `derive`, in this order. Each is writt
 1. **The human lines (round 3).** Place each line verbatim where 31 said: House rules, a nested `AGENTS.md`, or a `.claude/rules/house-<topic>.md` with `paths:` globs. Create the nested file or the rule where none exists.
 2. **The spine.** `AGENTS.md`: the toolkit's contract with its commands table replaced by the target's scripts (51), its "Start here" items 1 and 2 rewritten for the target, and a "House rules" section holding the lines from 1; at most 100 lines. `CLAUDE.md`: `@AGENTS.md`, `@docs/index.md` and the Claude-only lines; at most 20. `docs/index.md`: the target's own map, with the layers table listing what step 4 installed and the target's own docs folders by name, and the "What loads when" and "Budget per build" sections copied from the toolkit's file unchanged, because `yarn budget` reads its caps there.
 3. **The path rules.** From the toolkit's `ui.md`, `ts.md`, `testing.md` and, by signal, `next.md` and `turbo.md`: the same body with the `paths:` globs rewritten to the target's folders (the single app's globs start at the root). `ui.md` keeps the canon and says, in one line, that the repo's own components and tokens are the vocabulary until layer 3 lands the preset and the kit.
-4. **The settings (22, 23).** The tracked `.claude/settings.json`: the `settings` block of the toolkit fixture `tooling/fixtures/settings/overlay-c1-pass-floor-only.json` (the floor and the two team hooks), plus each row ruled team. The operator's `.claude/settings.local.json`: the push deny, every hook and rule ruled operator, the sandbox with 23's hosts, and the allow list; add `.claude/settings.local.json` to `.gitignore` when it is not there. Under `overlay-local`, everything goes to the local file and the tracked file is not written.
+4. **The settings (22, 23).** The tracked `.claude/settings.json`: the `permissions` block of the toolkit fixture `tooling/fixtures/settings/overlay-c1-pass-floor-only.json` (the floor), then each row exactly as 22 ruled it: the two team hooks, the push deny, the bash guard and the stop gate go to this file when ruled team and to the local file when ruled operator, nothing by default. The operator's `.claude/settings.local.json`: the rows ruled operator, the sandbox with 23's hosts, and the allow list; add `.claude/settings.local.json` to `.gitignore` when it is not there. Under `overlay-local`, everything goes to the local file and the tracked file is not written.
 5. **The specs root.** `specs/_shared/epics/<P>-migration/brief.md` from the copied `docs/product/brief.template.md`, three lines pointing at `assess.md` and `rulings.md`; `specs/<app>/ux/` for each app, empty until promotion; then `yarn status`, which writes `specs/_status.md`. The migration epic is made by hand, not by `yarn spec:init`, because its two files already exist.
-6. **The decisions scaffold.** `docs/decisions/ledger.md` and `docs/decisions/changelog.md`, each with its heading and no rows yet; the record itself is step 8. `tooling/refs-pending.json` as `{}`.
-7. **Verify, fast.** Add the `verify:fast` script (`node tooling/verify-fast.ts`) to `package.json` now, so the stop gate has something to run; the full `verify` is step 6.
+6. **The decisions scaffold.** `docs/decisions/ledger.md` and `docs/decisions/changelog.md`, each with its heading and no rows yet; the record itself is step 8.
+7. **The pending references.** The copied docs link files that stay in the toolkit: the tracks link their runbooks (`new-project/`, `migrate/`), and others may link references or templates the manifest leaves out. Run `yarn check-refs`; each missing path that stays in the toolkit goes into `tooling/refs-pending.json` as `"stays in the toolkit"`, and each missing script is one step 3 missed, added there. Nothing in the target is invented to satisfy a link.
+8. **Verify, fast.** The `verify:fast` script landed in step 3, so the stop gate has something to run; the full `verify` is step 6.
 
-Commit: `ACM: migrate step 5, the spine, rules, settings and specs root from the rulings`. From here the bash guard, if ruled operator, is live in this session: `yarn hooks:install` is the operator's own one-liner when the sandbox refuses to write git config, and reaches only this clone.
+Commit: `ACM: migrate step 5, the spine, rules, settings and specs root from the rulings`. From here the bash guard, if ruled operator, is live in this session. `yarn hooks:install` writes local git config and reaches only this clone; when the sandbox refuses the write, the thread runs it once unsandboxed with the operator's yes.
 
-**Proof:** `yarn check-settings`, `yarn doctor`, `yarn budget`, `yarn check-refs`, `yarn check-specs`, `yarn check-reviewers` and `yarn verify:fast` exit 0 in the target; every `paths:` glob in `.claude/rules/` matches at least one tracked file (`git ls-files | grep`); and the agent-readability test (the toolkit's `docs/runbooks/onboard-agent.md` §5) passes with 33's brief: a fresh session given only `CLAUDE.md` names the file holding the moved line. Record the brief and the answer in `rulings.md`.
+**Proof:** `yarn check-settings`, `yarn doctor`, `yarn budget`, `yarn check-refs`, `yarn check-specs`, `yarn check-reviewers` and `yarn verify:fast` exit 0 in the target; every `paths:` glob in `.claude/rules/` matches at least one tracked file (`git ls-files | grep`), except a rule for files the repo does not have yet (`testing.md` before step 6's smoke test), which is named and checked again after step 6; and the agent-readability test (the toolkit's `docs/runbooks/onboard-agent.md` §5) passes with 33's brief: a fresh session given only `CLAUDE.md` names the file holding the moved line. Record the brief and the answer in `rulings.md`.
 
 ### 6. Verify: layer 2
 
-Follow `verify.md` (lands in MIG-9) with 51 to 53: every one of the repo's own checks runs once on the base commit; a check that passes enters `verify` as written; one that fails is frozen by its recipe or becomes a drafted gap; the toolkit's checks follow; a failing build stops the run. Where 52 named a workflow, its chained steps become one `yarn verify` step under the same triggers, in one commit. **Operator:** the first CI run, after the operator's push. Where 52 said none, CI is a gap in step 7 and a hosted step.
+Follow [`verify.md`](verify.md) with 51 to 53: every one of the repo's own checks runs once on the base commit; a check that passes enters `verify` as written; one that fails is frozen by its recipe or becomes a drafted gap; the toolkit's checks follow; a failing build stops the run. Where 52 named a workflow, its chained steps become one `yarn verify` step under the same triggers, in one commit. **Operator:** the first CI run, after the operator's push. Where 52 said none, CI is a gap in step 7 and a hosted step.
 
 Commit: `ACM: migrate step 6, verify over the repo's own checks`, and one more for the CI edit when there is one.
 
@@ -232,7 +235,7 @@ Commit: `ACM: migrate step 6, verify over the repo's own checks`, and one more f
 Run at the time 43 ruled: now, or as the last commit of the day. On the middle and far paths, note its start and end on their own.
 
 1. **The moves (41).** For each kind with a move: `git mv <old> <new>`, bodies untouched. Then the index lines: one line per moved file in `docs/index.md` under a "Records from before the practice" heading, and one ledger line per decision log.
-2. **The gaps.** Each named gap is a drafted ticket under the migration epic: `yarn contract:init <P> <slug> --draft`, one per gap, with Build notes that hold the layer, what did not cross and why, the plan (a recipe path or the steps), the conflict-risk flag with the trigger to start, and an estimate labelled as one. The twelve layer-3 parts, in their order, are drafted from `layer-3.md` (lands in MIG-9); the day's own gaps join them: the promotion of the imported UX spec, entry-by-entry indexing of the decision logs, the per-rule guard split for a team, a frozen check left out of `verify`, CI where none exists, and layers 2 and 3 whole for a non-JavaScript target.
+2. **The gaps.** Each named gap is a drafted ticket under the migration epic: `yarn contract:init <P> <slug> --draft`, one per gap, with Build notes that hold the layer, what did not cross and why, the plan (a recipe path or the steps), the conflict-risk flag with the trigger to start, and an estimate labelled as one. The twelve layer-3 parts, in their order, are drafted from [`layer-3.md`](layer-3.md); the day's own gaps join them: the promotion of the imported UX spec, entry-by-entry indexing of the decision logs, the per-rule guard split for a team, a frozen check left out of `verify`, CI where none exists, and layers 2 and 3 whole for a non-JavaScript target.
 
 Commit: `ACM: migrate step 7, the records moved and the gaps drafted`.
 
@@ -240,7 +243,7 @@ Commit: `ACM: migrate step 7, the records moved and the gaps drafted`.
 
 ### 8. Record 0001, and the end check
 
-Fill the copied `docs/decisions/decision.template.md` as record 0001, `records/0001-adopt-the-practice.md` under the target's `docs/decisions/`: the rulings table from `rulings.md`, the toolkit's remote and commit, the conflicts ruled and which way, each human line not carried and why, the record kinds and where each went, the settings rows ruled operator (the doctor check is their guard), and the id of every drafted gap. Add its ledger line and the first changelog entry.
+Fill the toolkit checkout's `docs/decisions/decision.template.md` (not in the manifest; read it from `<toolkit>`) as record 0001, `records/0001-adopt-the-practice.md` under the target's `docs/decisions/`: the rulings table from `rulings.md`, the toolkit's remote and commit, the conflicts ruled and which way, each human line not carried and why, the record kinds and where each went, the settings rows ruled operator (the doctor check is their guard), and the id of every drafted gap. Add its ledger line and the first changelog entry.
 
 Then, from the toolkit checkout:
 
@@ -261,7 +264,7 @@ Print, each in its own block so it can be copied whole:
 
 1. The migration branch's name from 03, with the commit count and `git log --oneline <protected-branch>..HEAD`.
 2. The hand-over to the person named in 54, one line each: the push, the first CI run, the merge, and any hosted step a gap named (CI creation and secrets, branch protection, a hosted migration, a vendor dashboard, a coverage service).
-3. The two follow-on prompts from `layer-3.md` (lands in MIG-9): the layer-3 opening prompt, and the living-truth promotion prompt.
+3. The two follow-on prompts from [`layer-3.md`](layer-3.md): the layer-3 opening prompt, and the living-truth promotion prompt.
 
 Report to the operator in eight lines or fewer: the path and the total, the minutes per step, each `[ASSUMPTION]` made, the gaps drafted by id, what waits for them, and the prompts printed.
 
@@ -273,7 +276,15 @@ Report to the operator in eight lines or fewer: the path and the total, the minu
 - The yes on the answer table (step 2) and, on "check in at gates", the start of the records step (step 7).
 - Every push and merge; the first CI run; creating CI, its secrets and branch protection (steps 6 and 9).
 - A copy that would overwrite a host file no ruling covers (step 4).
-- `yarn hooks:install` when the sandbox refuses to write git config (step 5).
+- The yes to run `yarn hooks:install` (step 5) and a `build` that reads `.env` files (step 6) unsandboxed.
 - A freeze over about 50 files (53), a hosted database migration, a vendor dashboard, a coverage service, and removing a worktree or a tracked large file: never done by the thread.
 
 <!-- Generated by `yarn directory-map` from each file's frontmatter. Everything below this line is rewritten; edit above it. -->
+
+## In this folder
+
+| File | What it is for |
+| --- | --- |
+| [`layer-3.md`](layer-3.md) | Open from step 7 of the migrate guide to draft the gap tickets, and from step 9 to print the prompts. Lists layer 3's twelve parts in order, each as a drafted ticket's Build notes (layer, what did not cross, plan, conflict risk and trigger, estimate), the hosted steps that stop for the operator, and the two prompts that open layer 3 part by part and promote the imported UX spec. |
+| [`manifest.json`](manifest.json) | A `json` file; see the notes above. |
+| [`verify.md`](verify.md) | Open from step 6 of the migrate guide, with the verify inputs answered. Maps the repo's own checks, then the toolkit's, into one verify command; runs each once on the base commit; freezes a failing check by kind (ESLint bulk suppressions, tagged ts-expect-error lines with a count ratchet, expected-fail markers, a literal-path node test) or leaves it as a gap; the live-team rule; the CI edit. |
