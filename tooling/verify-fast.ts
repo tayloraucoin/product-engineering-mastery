@@ -28,7 +28,7 @@
  */
 
 import { spawnSync } from "node:child_process";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync } from "node:fs";
 import path from "node:path";
 
 import { REPO_ROOT } from "./lib/docs.ts";
@@ -56,7 +56,7 @@ type Step = {
    * The exit code that means the tool could not start (ESLint's 2: a config
    * or usage fault, never a finding): named as not run, never as a pass.
    */
-  cannotStart?: number;
+  cannotStart?: RegExp;
 };
 
 const layout = probeLayout(REPO_ROOT);
@@ -72,19 +72,7 @@ const needsTool = (tool: string) =>
   findTool(REPO_ROOT, ".", tool)
     ? undefined
     : `${tool} is not a root dependency`;
-const formatCheck = (() => {
-  try {
-    return (
-      JSON.parse(
-        readFileSync(path.join(REPO_ROOT, "package.json"), "utf8"),
-      ) as {
-        scripts?: Record<string, string>;
-      }
-    ).scripts?.["format:check"];
-  } catch {
-    return undefined;
-  }
-})();
+const formatCheck = layout.scriptCommands["format:check"];
 
 const base = getBaseRef();
 const fork = base ? runGit(["merge-base", base, "HEAD"]) : null;
@@ -181,6 +169,9 @@ const ESLINT_CONFIGS = [
 ];
 
 const FLAT_CONFIG = /^eslint\.config\./;
+/** ESLint's own words when it finds no config it can read, or rejects a flag of another mode. */
+const ESLINT_CANNOT_START =
+  /couldn't find an eslint\.config|No ESLint configuration found|Invalid option '--/i;
 const eslintConfigIn = (dir: string) =>
   ESLINT_CONFIGS.find((name) => existsSync(path.join(REPO_ROOT, dir, name)));
 
@@ -200,7 +191,9 @@ function eslintSteps(name: string, files: string[], fallback: boolean): Step[] {
     "0",
     ...(fallback && FLAT_CONFIG.test(config) ? ["--no-warn-ignored"] : []),
   ];
-  const cannotStart = fallback ? 2 : undefined;
+  // Only a missing or unreadable-by-this-ESLint config counts as "could not
+  // start"; any other exit 2 (a config the change broke, a crashing rule) fails.
+  const cannotStart = fallback ? ESLINT_CANNOT_START : undefined;
   const rootConfig = eslintConfigIn(".");
   if (rootConfig)
     return [
@@ -369,12 +362,21 @@ for (const step of steps) {
   const seconds = ((Date.now() - t) / 1000).toFixed(1);
   const output = `${result.stdout ?? ""}${result.stderr ?? ""}`.trim();
   // Yarn itself absent, or the tool unable to start: named, never counted.
+  // Under the overlay tiers, a tool that is absent or cannot start is named,
+  // never a failure, so the stop never blocks for want of an install. At
+  // starter every tool is the toolkit's own, so either still fails, as before.
+  const errno = (result.error as NodeJS.ErrnoException | undefined)?.code;
+  const firstLine = output.split("\n").find(Boolean)?.slice(0, 120);
   const unstarted =
-    (result.error as NodeJS.ErrnoException | undefined)?.code === "ENOENT"
-      ? `${step.command[0]} not found`
-      : step.cannotStart !== undefined && result.status === step.cannotStart
-        ? `could not start: ${output.split("\n").find(Boolean)?.slice(0, 120) ?? `exit ${result.status}`}`
-        : null;
+    layout.tier === "starter"
+      ? null
+      : errno === "ENOENT"
+        ? `${step.command[0]} not found`
+        : result.status === 127
+          ? `could not start: ${firstLine ?? "command not found"}`
+          : result.status === 2 && step.cannotStart?.test(output)
+            ? `could not start: ${firstLine}`
+            : null;
   if (unstarted) {
     notRun.push(`not run: ${step.name} (${unstarted})`);
     continue;

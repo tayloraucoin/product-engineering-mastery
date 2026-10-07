@@ -49,6 +49,11 @@ test("C1 a single app at the root: no Turbo, no workspaces, one code root at '.'
     specsRoot: "specs",
     hasSpecsRoot: false,
     scripts: ["format", "check-types"],
+    scriptCommands: {
+      format: "prettier --write .",
+      "check-types": "tsc -p .",
+    },
+    tier: "starter",
   });
 });
 

@@ -33,6 +33,10 @@ export type RepoLayout = {
   hasSpecsRoot: boolean;
   /** The root package.json's script names. */
   scripts: string[];
+  /** The root package.json's scripts, each name with its command. */
+  scriptCommands: Record<string, string>;
+  /** toolkit.json's tier, or `starter` without one (lib/toolkit.ts validates it). */
+  tier: string;
 };
 
 const readJson = (file: string): unknown => {
@@ -94,8 +98,14 @@ function isDir(root: string, rel: string): boolean {
 /** The layout of the repo at `root`, read fresh each call. */
 export function probeLayout(root: string): RepoLayout {
   const pkg = readJson(path.join(root, "package.json"));
-  const scripts =
-    isObject(pkg) && isObject(pkg.scripts) ? Object.keys(pkg.scripts) : [];
+  const scriptCommands = Object.fromEntries(
+    Object.entries(
+      isObject(pkg) && isObject(pkg.scripts) ? pkg.scripts : {},
+    ).filter(
+      (entry): entry is [string, string] => typeof entry[1] === "string",
+    ),
+  );
+  const scripts = Object.keys(scriptCommands);
   const declared = isObject(pkg) ? pkg.workspaces : undefined;
   // Yarn and npm take an array; Yarn 1 also takes { packages: [...] }.
   const list = Array.isArray(declared)
@@ -151,6 +161,11 @@ export function probeLayout(root: string): RepoLayout {
     specsRoot,
     hasSpecsRoot: isDir(root, specsRoot),
     scripts,
+    scriptCommands,
+    tier:
+      isObject(toolkit) && typeof toolkit.tier === "string"
+        ? toolkit.tier
+        : "starter",
   };
 }
 

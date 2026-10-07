@@ -391,6 +391,31 @@ test("C4 an ESLint that cannot start (exit 2) is named as not run, never a pass 
   assert.doesNotMatch(ranSteps(r.out), /lint/);
 });
 
+test("C4 a type-check script that runs an uninstalled Turbo is named as not run, never a blocked stop", () => {
+  const repo = singleAppRepo({
+    turboTasks: ["lint", "check-types"],
+    scripts: { "check-types": "turbo run check-types" },
+  });
+  write(repo, "src/sum.ts", TYPE_ERROR);
+  const r = verifyFast(repo, ["src/sum.ts"]);
+  assert.equal(r.status, 0, r.out);
+  assert.match(
+    r.out,
+    /^not run: types \(check-types\) \(could not start: .+\)$/m,
+  );
+  assert.doesNotMatch(ranSteps(r.out), /types/);
+});
+
+test("C2 an ESLint config the change broke fails the lint step, never reads as could not start", () => {
+  const repo = eslintRepo(true);
+  write(repo, "eslint.config.mjs", "export default [{ rules: { \n");
+  write(repo, "src/one.js", "export const one = 1;\n");
+  const r = verifyFast(repo, ["eslint.config.mjs", "src/one.js"]);
+  assert.equal(r.status, 1, r.out);
+  assert.match(r.out, /lint \(changed code\) failed/);
+  assert.doesNotMatch(r.out, /could not start/);
+});
+
 /**
  * A two-folder repo: the app at the root and workspace apps/a with its own
  * flat config, ESLint declared only at the root as `rootEslint` gives it.
