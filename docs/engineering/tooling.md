@@ -325,6 +325,23 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Its required list is a second copy of the deny list, kept in step by hand.
 - **Verdict:** **keep.**
 
+#### check-reviewers
+
+- **What:** `yarn check-reviewers` fails, under the overlay tiers, when a reviewer row in `toolkit.json` matches no tracked file by its glob or by its `imports` list, naming the row. A row that reaches nothing seats nobody, so the change it was written for ships at a lower QA level unnoticed (MIG T6). At `starter` it prints that it is skipped and exits 0: a starter's rows are seats for modules not built yet. Import rows are matched by the same scanner `suggestReviewers` uses (`tooling/lib/specs.ts`), which reads static imports, re-exports, `require` and `import()` and never a name in a comment or a string.
+- **Area:** the reviewer map (`tooling/check-reviewers.ts`, `toolkit.json`, `docs/engineering/templates/toolkit.template.json`).
+- **Trigger:** verify, right after check-settings.
+- **Scores:**
+  - Importance **3.5**: in a migrated repo it is the only guard on a glob that stopped matching; in this repo, at `starter`, it does nothing yet.
+  - Token cost **0.5**: one line, or one line per dead row.
+  - Wall time **1.0**: 0.5 s at `starter`; the overlay pass over this repo's 1,786 tracked files took 0.2 s more (measured 2026-10-07).
+  - Standard **0.5**: house.
+- **Pros:**
+  - Names the row to correct or delete.
+  - Reads tracked source files only; an env file is never opened.
+- **Cons:**
+  - Skipped in this repo, so its overlay path is proven only by its tests.
+- **Verdict:** **keep.**
+
 #### test:hooks
 
 - **What:** `yarn test:hooks` runs each of the four agent hooks against its fixture file: 147 synthetic inputs, each with the answer it must produce. It also fails a hook whose median run exceeds 200 ms, or whose denial exceeds about 60 tokens.
@@ -1330,36 +1347,37 @@ Net = importance − (token cost + wall time) ÷ 2, lowest first. A low net with
 |  43 | db:setup                  |        3.0 |   0.5 |  0.0 |  2.8 | keep                                                         |
 |  44 | format                    |        3.0 |   0.5 |  0.0 |  2.8 | keep                                                         |
 |  45 | session-state             |        3.0 |   0.0 |  0.5 |  2.8 | keep                                                         |
-|  46 | check-stack               |        3.5 |   0.5 |  1.0 |  2.8 | keep                                                         |
-|  47 | test:hooks                |        5.0 |   0.5 |  4.0 |  2.8 | keep but simplify                                            |
-|  48 | dev                       |        3.0 |   0.0 |  0.0 |  3.0 | keep                                                         |
-|  49 | lib/work-ids.ts           |        3.0 |   0.0 |  0.0 |  3.0 | keep                                                         |
-|  50 | tooling/package.json      |        3.0 |   0.0 |  0.0 |  3.0 | keep                                                         |
-|  51 | tooling/tsconfig.json     |        3.0 |   0.0 |  0.0 |  3.0 | keep                                                         |
-|  52 | ui:storybook              |        3.0 |   0.0 |  0.0 |  3.0 | keep                                                         |
-|  53 | web:dev                   |        3.0 |   0.0 |  0.0 |  3.0 | keep                                                         |
-|  54 | db:local                  |        3.5 |   1.0 |  0.0 |  3.0 | keep                                                         |
-|  55 | contract:init †           |        5.0 |   3.0 |  1.0 |  3.0 | keep until the overhaul lands                                |
-|  56 | check-migrations          |        4.0 |   0.5 |  1.0 |  3.3 | keep                                                         |
-|  57 | contract:record †         |        4.0 |   1.0 |  0.5 |  3.3 | keep until the overhaul lands                                |
-|  58 | gen:agents                |        4.0 |   0.5 |  1.0 |  3.3 | keep                                                         |
-|  59 | lint:docs                 |        4.0 |   0.5 |  1.0 |  3.3 | keep                                                         |
-|  60 | test:db                   |        4.0 |   1.5 |  0.0 |  3.3 | keep                                                         |
-|  61 | check-test-weakening      |        4.5 |   1.0 |  1.0 |  3.5 | keep                                                         |
-|  62 | check-types:tooling       |        4.5 |   0.0 |  2.0 |  3.5 | keep                                                         |
-|  63 | lint                      |        5.5 |   1.0 |  3.0 |  3.5 | keep                                                         |
-|  64 | db:generate               |        4.0 |   0.5 |  0.0 |  3.8 | keep                                                         |
-|  65 | db:migrate                |        4.0 |   0.5 |  0.0 |  3.8 | keep                                                         |
-|  66 | check-client-bundle       |        6.0 |   0.5 |  4.0 |  3.8 | keep                                                         |
-|  67 | build                     |        6.5 |   1.5 |  4.0 |  3.8 | keep                                                         |
-|  68 | lib/docs.ts               |        4.0 |   0.0 |  0.0 |  4.0 | keep                                                         |
-|  69 | lib/git.ts                |        4.0 |   0.0 |  0.0 |  4.0 | keep                                                         |
-|  70 | budget                    |        5.0 |   1.0 |  1.0 |  4.0 | keep                                                         |
-|  71 | lint:boundaries           |        6.0 |   0.0 |  3.0 |  4.5 | keep                                                         |
-|  72 | check-types               |        6.5 |   1.0 |  3.0 |  4.5 | keep                                                         |
-|  73 | check-settings            |        5.5 |   0.5 |  1.0 |  4.8 | keep                                                         |
-|  74 | bash-guard                |        6.0 |   1.5 |  1.0 |  4.8 | keep but simplify                                            |
-|  75 | lib/specs.ts †            |        5.0 |   0.0 |  0.0 |  5.0 | rewritten by the overhaul                                    |
-|  76 | lib/toolkit.ts            |        5.0 |   0.0 |  0.0 |  5.0 | keep                                                         |
+|  46 | check-reviewers           |        3.5 |   0.5 |  1.0 |  2.8 | keep                                                         |
+|  47 | check-stack               |        3.5 |   0.5 |  1.0 |  2.8 | keep                                                         |
+|  48 | test:hooks                |        5.0 |   0.5 |  4.0 |  2.8 | keep but simplify                                            |
+|  49 | dev                       |        3.0 |   0.0 |  0.0 |  3.0 | keep                                                         |
+|  50 | lib/work-ids.ts           |        3.0 |   0.0 |  0.0 |  3.0 | keep                                                         |
+|  51 | tooling/package.json      |        3.0 |   0.0 |  0.0 |  3.0 | keep                                                         |
+|  52 | tooling/tsconfig.json     |        3.0 |   0.0 |  0.0 |  3.0 | keep                                                         |
+|  53 | ui:storybook              |        3.0 |   0.0 |  0.0 |  3.0 | keep                                                         |
+|  54 | web:dev                   |        3.0 |   0.0 |  0.0 |  3.0 | keep                                                         |
+|  55 | db:local                  |        3.5 |   1.0 |  0.0 |  3.0 | keep                                                         |
+|  56 | contract:init †           |        5.0 |   3.0 |  1.0 |  3.0 | keep until the overhaul lands                                |
+|  57 | check-migrations          |        4.0 |   0.5 |  1.0 |  3.3 | keep                                                         |
+|  58 | contract:record †         |        4.0 |   1.0 |  0.5 |  3.3 | keep until the overhaul lands                                |
+|  59 | gen:agents                |        4.0 |   0.5 |  1.0 |  3.3 | keep                                                         |
+|  60 | lint:docs                 |        4.0 |   0.5 |  1.0 |  3.3 | keep                                                         |
+|  61 | test:db                   |        4.0 |   1.5 |  0.0 |  3.3 | keep                                                         |
+|  62 | check-test-weakening      |        4.5 |   1.0 |  1.0 |  3.5 | keep                                                         |
+|  63 | check-types:tooling       |        4.5 |   0.0 |  2.0 |  3.5 | keep                                                         |
+|  64 | lint                      |        5.5 |   1.0 |  3.0 |  3.5 | keep                                                         |
+|  65 | db:generate               |        4.0 |   0.5 |  0.0 |  3.8 | keep                                                         |
+|  66 | db:migrate                |        4.0 |   0.5 |  0.0 |  3.8 | keep                                                         |
+|  67 | check-client-bundle       |        6.0 |   0.5 |  4.0 |  3.8 | keep                                                         |
+|  68 | build                     |        6.5 |   1.5 |  4.0 |  3.8 | keep                                                         |
+|  69 | lib/docs.ts               |        4.0 |   0.0 |  0.0 |  4.0 | keep                                                         |
+|  70 | lib/git.ts                |        4.0 |   0.0 |  0.0 |  4.0 | keep                                                         |
+|  71 | budget                    |        5.0 |   1.0 |  1.0 |  4.0 | keep                                                         |
+|  72 | lint:boundaries           |        6.0 |   0.0 |  3.0 |  4.5 | keep                                                         |
+|  73 | check-types               |        6.5 |   1.0 |  3.0 |  4.5 | keep                                                         |
+|  74 | check-settings            |        5.5 |   0.5 |  1.0 |  4.8 | keep                                                         |
+|  75 | bash-guard                |        6.0 |   1.5 |  1.0 |  4.8 | keep but simplify                                            |
+|  76 | lib/specs.ts †            |        5.0 |   0.0 |  0.0 |  5.0 | rewritten by the overhaul                                    |
+|  77 | lib/toolkit.ts            |        5.0 |   0.0 |  0.0 |  5.0 | keep                                                         |
 
 † Changing in the workflow overhaul.

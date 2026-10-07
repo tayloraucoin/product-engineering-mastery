@@ -34,7 +34,7 @@ import {
   runGit,
 } from "./git.ts";
 import { validateJson } from "./json-schema.ts";
-import type { Toolkit } from "./toolkit.ts";
+import type { Toolkit, ToolkitReviewer } from "./toolkit.ts";
 
 // ---------------------------------------------------------------- constants
 
@@ -684,6 +684,7 @@ function samplePaths(
   if (!/[*?[{]/.test(planned)) return [planned];
   const basenames = new Set(["x", "x.ts", "x.tsx", "x.md", "x.json", "x.sql"]);
   for (const row of toolkit.reviewers) {
+    if (!row.glob) continue;
     const last = row.glob.split("/").at(-1)!;
     if (!/[*?[{]/.test(last)) basenames.add(last);
     else if (/^\*\.[a-z]+$/.test(last)) basenames.add(`x${last.slice(1)}`);
@@ -707,30 +708,245 @@ function samplePaths(
   return [...samples, ...tracked.filter((file) => matchesGlob(file, planned))];
 }
 
+type SourceToken = {
+  kind: "word" | "punct" | "string" | "other";
+  text: string;
+};
+
+/** Words after which a slash opens a regular expression, not a division. */
+const REGEX_AFTER = new Set([
+  "return",
+  "typeof",
+  "instanceof",
+  "case",
+  "do",
+  "else",
+  "in",
+  "of",
+  "new",
+  "delete",
+  "void",
+  "throw",
+  "yield",
+  "await",
+]);
+
+/**
+ * A JS or TS source as the tokens an import can be read from: words,
+ * punctuation and quoted strings with their contents. Comments are dropped,
+ * and template and regular-expression literals become opaque tokens, so a
+ * module named inside a comment, a template or another string is never read
+ * as an import. A quote left open at the end of a line (an apostrophe in JSX
+ * text) is dropped with the rest of that line.
+ */
+function tokenizeSource(source: string): SourceToken[] {
+  const tokens: SourceToken[] = [];
+  const braces: ("code" | "template")[] = [];
+  const n = source.length;
+  let i = 0;
+
+  const regexMayStart = () => {
+    const last = tokens.at(-1);
+    if (!last) return true;
+    if (last.kind === "word") return REGEX_AFTER.has(last.text);
+    if (last.kind === "punct") return !/^[)\]}]$/.test(last.text);
+    return false;
+  };
+  /** From just inside a template (or after its `}`), to its end or its next `${`. */
+  const scanTemplate = () => {
+    while (i < n) {
+      const c = source[i]!;
+      if (c === "\\") i += 2;
+      else if (c === "`") {
+        i++;
+        tokens.push({ kind: "other", text: "`" });
+        return;
+      } else if (c === "$" && source[i + 1] === "{") {
+        i += 2;
+        braces.push("template");
+        return;
+      } else i++;
+    }
+  };
+
+  while (i < n) {
+    const c = source[i]!;
+    const next = source[i + 1];
+    if (/\s/.test(c)) i++;
+    else if (c === "/" && next === "/") {
+      while (i < n && source[i] !== "\n") i++;
+    } else if (c === "/" && next === "*") {
+      const end = source.indexOf("*/", i + 2);
+      i = end === -1 ? n : end + 2;
+    } else if (c === '"' || c === "'") {
+      let text = "";
+      let j = i + 1;
+      while (j < n && source[j] !== c && source[j] !== "\n") {
+        if (source[j] === "\\") j++;
+        text += source[j] ?? "";
+        j++;
+      }
+      if (source[j] === c) tokens.push({ kind: "string", text });
+      i = j + 1;
+    } else if (c === "`") {
+      i++;
+      scanTemplate();
+    } else if (c === "/" && regexMayStart()) {
+      let j = i + 1;
+      let inClass = false;
+      while (j < n && source[j] !== "\n") {
+        const r = source[j]!;
+        if (r === "\\") j++;
+        else if (r === "[") inClass = true;
+        else if (r === "]") inClass = false;
+        else if (r === "/" && !inClass) break;
+        j++;
+      }
+      i = j + 1;
+      while (i < n && /[a-z]/i.test(source[i]!)) i++;
+      tokens.push({ kind: "other", text: "/regex/" });
+    } else if (/[\w$#]/.test(c)) {
+      let j = i + 1;
+      while (j < n && /[\w$]/.test(source[j]!)) j++;
+      tokens.push({ kind: "word", text: source.slice(i, j) });
+      i = j;
+    } else {
+      if (c === "{") braces.push("code");
+      if (c === "}" && braces.pop() === "template") {
+        i++;
+        scanTemplate();
+        continue;
+      }
+      tokens.push({ kind: "punct", text: c });
+      i++;
+    }
+  }
+  return tokens;
+}
+
+/**
+ * The module specifiers a JS or TS source names in a static import or
+ * export-from (`import x from "m"`, `import "m"`, `export * from "m"`), a
+ * `require("m")` or an `import("m")`. Never a name in a comment or a string.
+ */
+export function listImportedModules(source: string): string[] {
+  const tokens = tokenizeSource(source);
+  const found = new Set<string>();
+  tokens.forEach((token, k) => {
+    if (token.kind !== "word" || tokens[k - 1]?.text === ".") return;
+    const at = (offset: number) => tokens[k + offset];
+    const called = at(1)?.text === "(" && at(2)?.kind === "string";
+    if (token.text === "from" && at(1)?.kind === "string")
+      found.add(at(1)!.text);
+    else if (token.text === "import" && at(1)?.kind === "string")
+      found.add(at(1)!.text);
+    else if ((token.text === "import" || token.text === "require") && called)
+      found.add(at(2)!.text);
+  });
+  return [...found];
+}
+
+/** Whether a specifier names a module of an imports row: the module, a subpath of it, or a package in its `@scope/*`. */
+export function importsModule(specifier: string, module: string): boolean {
+  if (module.endsWith("/*"))
+    return (
+      specifier.startsWith(module.slice(0, -1)) &&
+      specifier.length > module.length - 1
+    );
+  return specifier === module || specifier.startsWith(`${module}/`);
+}
+
+/** Source files the import scan reads; anything else (env files among them) is never opened. */
+const SOURCE_FILE = /\.(?:[cm]?[jt]sx?)$/;
+const importsCache = new Map<string, string[]>();
+
+/** The modules a tracked source file imports; empty for a file that is not source, or cannot be read. */
+export function readImportedModules(
+  file: string,
+  root: string = REPO_ROOT,
+): string[] {
+  if (!SOURCE_FILE.test(file) || path.basename(file).startsWith(".env"))
+    return [];
+  const key = path.join(root, file);
+  let modules = importsCache.get(key);
+  if (!modules) {
+    try {
+      modules = listImportedModules(readFileSync(key, "utf8"));
+    } catch {
+      modules = [];
+    }
+    importsCache.set(key, modules);
+  }
+  return modules;
+}
+
+/** The first imported specifier that reaches a row's imports list, or null. */
+export function findImportMatch(
+  row: Pick<ToolkitReviewer, "imports">,
+  modules: readonly string[],
+): string | null {
+  for (const specifier of modules)
+    if (row.imports?.some((module) => importsModule(specifier, module)))
+      return specifier;
+  return null;
+}
+
+/**
+ * Why an existing file reaches a reviewer row, or null: by the row's glob,
+ * else by a module it imports (T6). The one matcher for a file that exists;
+ * suggestReviewers' import pass and check-reviewers both go through
+ * findImportMatch, so the two never disagree.
+ */
+export function findRowReach(
+  row: ToolkitReviewer,
+  file: string,
+  modules: readonly string[],
+): string | null {
+  if (row.glob && matchesGlob(file, row.glob))
+    return `${file} reaches ${row.glob}`;
+  const specifier = findImportMatch(row, modules);
+  return specifier ? `${file} imports ${specifier}` : null;
+}
+
 export type RequiredReviewers = Map<string, string[]>;
 let trackedCache: string[] | null = null;
 
 /**
  * The reviewers a contract's planned paths suggest (PR-19): every toolkit.json
- * row whose glob they reach. Evidence for the builder's recommendation and
- * for a warning, never an assignment: the operator confirms who reviews.
- * Globs are compared by sampling.
+ * row whose glob they reach, and every imports row a tracked file they hold
+ * imports (T6). The tracked files a ticket's planned paths hold include every
+ * committed file of its diff; a planned file that does not exist yet matches
+ * by glob only. Evidence for the builder's recommendation and for a warning,
+ * never an assignment: the operator confirms who reviews. Globs are compared
+ * by sampling.
  */
 export function suggestReviewers(
   contract: Pick<Contract, "planned_paths">,
   toolkit: Toolkit,
 ): RequiredReviewers {
   const suggested: RequiredReviewers = new Map();
-  const add = (role: string, why: string) =>
-    suggested.set(role, [...(suggested.get(role) ?? []), why]);
+  const add = (role: string, why: string) => {
+    const reasons = suggested.get(role) ?? [];
+    if (!reasons.includes(why)) suggested.set(role, [...reasons, why]);
+  };
   trackedCache ??= (runGit(["ls-files"]) ?? "").split("\n").filter(Boolean);
   const tracked = trackedCache;
+  const importRows = toolkit.reviewers.filter((row) => row.imports);
 
   for (const planned of contract.planned_paths) {
     const samples = samplePaths(planned, toolkit, tracked);
     for (const row of toolkit.reviewers)
-      if (samples.some((sample) => matchesGlob(sample, row.glob)))
+      if (row.glob && samples.some((sample) => matchesGlob(sample, row.glob!)))
         add(row.role, `${planned} reaches ${row.glob}`);
+    if (importRows.length === 0) continue;
+    for (const file of tracked) {
+      if (!inPlannedPaths(file, [planned])) continue;
+      const modules = readImportedModules(file);
+      for (const row of importRows) {
+        const specifier = findImportMatch(row, modules);
+        if (specifier) add(row.role, `${file} imports ${specifier}`);
+      }
+    }
   }
   return suggested;
 }
