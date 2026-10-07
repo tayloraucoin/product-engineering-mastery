@@ -7,6 +7,8 @@
  * `BarData`. Placing is disabled once the review has closed or access has
  * ended.
  */
+import { CheckIcon } from "lucide-react";
+
 import { Button } from "@pem/ui/button";
 import { Toggle } from "@pem/ui/toggle";
 
@@ -27,9 +29,14 @@ export function CommentToggle() {
       pressed={mode !== "off"}
       onPressedChange={toggleMode}
       disabled={placingDisabled(bar.status)}
-      // The Comments button's outline, so the two read as one kind of control.
-      className="h-11 border-border bg-background px-4 dark:border-input dark:bg-input/30"
+      // The Comments button's outline, so the two read as one kind of
+      // control; pressed, the selection token and a check, never the
+      // primary's fill: the bar keeps one primary (C-P02, C-P07).
+      className="h-11 border-border bg-background px-4 aria-pressed:bg-selected aria-pressed:font-semibold aria-pressed:text-selected-foreground aria-pressed:hover:bg-selected aria-pressed:hover:text-selected-foreground dark:border-input dark:bg-input/30"
     >
+      {mode !== "off" ? (
+        <CheckIcon aria-hidden="true" data-icon="inline-start" />
+      ) : null}
       {W.comment}
     </Toggle>
   );

@@ -231,8 +231,10 @@ export function PinsProvider({
     [announce],
   );
 
+  // After React's commit and the popover's own focus return: a task, not a
+  // frame, so it also runs in a tab that draws no frames.
   const focusLater = useCallback((target: () => HTMLElement | null) => {
-    requestAnimationFrame(() => target()?.focus());
+    setTimeout(() => target()?.focus(), 0);
   }, []);
 
   // The preview's sender keeps pins in memory and never sends. The
