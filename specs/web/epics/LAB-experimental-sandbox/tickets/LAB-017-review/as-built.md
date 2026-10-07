@@ -30,6 +30,25 @@
 - [ASSUMPTION] A failed server read of comments or the latest version falls to Next's error page; review.md designs no load-failure state.
 - "Look at the design again" (one design) stores the question in sessionStorage, so focus returns there on the way back.
 
+## Review (Q2, in the thread: assay, and mason on the focus line)
+
+- assay, round 1: PASS, Should-fix 2. Both fixed, with the cheap yellows (75f0621):
+  - Orange: the send-failed, offline and closed lines read at 14px; they now use the base size, weight 500.
+  - Orange: a missing triage's summary link read "Comment 3"; it now names its group.
+  - Yellow: "Can't judge yet" now sits a spacing step apart.
+  - Yellow: the comments section now shows focus.
+  - Yellow: leaving from the no-comments line now brings focus back.
+  - Yellow: a matters-most excerpt now ends on a whole word.
+  - Left as notes:
+    - The textarea's 14px from 768px is `@pem/ui`'s own default.
+    - review.md says both "goals listed above" and "the goals below", and asks for a "native radio group" where the spec names Base UI's `RadioGroup`; both lines need the spec owner.
+- mason, round 1: FAIL. Red: a send refused because the comments changed in another tab (a pin added, or one deleted) was a silent dead end. Fixed in 5eace7c: on `invalid`, or a `not-saved` whose comments differ, the flow reloads the comments through `listMyComments`; the page plays back the server's set, keeps only triage that still applies, and asks for what is missing; otherwise it shows send-failed. Also fixed:
+  - Yellow: a pin the queue still holds after a send reads "not sent".
+  - Grey: a restored draft whose triage lost a comment mints a new version id.
+  - Grey: targeted labels cap at 200 characters.
+- mason, round 2: PASS, Should-fix 0. One grey: after a deletion elsewhere with the rest complete, the page shows send-failed and the retry succeeds.
+- Re-proven and recaptured after the fixes.
+
 ## Not verified
 
 - C9 with a screen reader (handed to the operator).
