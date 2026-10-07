@@ -14,6 +14,7 @@
  */
 import { useEffect, useRef, type ReactNode } from "react";
 import Link from "next/link";
+import { CheckIcon } from "lucide-react";
 
 import { buttonVariants } from "@pem/ui/button";
 import { cn } from "@pem/ui/cn";
@@ -77,11 +78,15 @@ export function ReviewBar({
       aria-label={EXPERIMENT_WORDS.barRegion}
       className="fixed inset-x-0 bottom-0 z-40 border-t bg-background text-foreground"
     >
-      {statusLine ? (
-        <p role="status" className="border-b bg-muted px-4 py-2 text-sm">
-          {statusLine}
-        </p>
-      ) : null}
+      {/* Always present, so a line that arrives later is announced once. */}
+      <p
+        role="status"
+        className={
+          statusLine ? "border-b bg-muted px-4 py-2 text-sm" : "sr-only"
+        }
+      >
+        {statusLine}
+      </p>
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 py-2 md:flex-row md:items-center md:gap-4">
         {designs.length > 1 ? (
           <ToggleGroup
@@ -99,8 +104,13 @@ export function ReviewBar({
                 key={design.id}
                 value={design.id}
                 aria-label={design.accessibleName}
-                className="h-11 flex-1 px-4 md:flex-none"
+                // The selection token and a check, never the primary's fill:
+                // the bar keeps one primary (C-P02, C-P07).
+                className="h-11 flex-1 group-data-[spacing=0]/toggle-group:px-4 aria-pressed:bg-selected aria-pressed:font-semibold aria-pressed:text-selected-foreground aria-pressed:hover:bg-selected aria-pressed:hover:text-selected-foreground md:flex-none"
               >
+                {design.id === shown ? (
+                  <CheckIcon aria-hidden="true" data-icon="inline-start" />
+                ) : null}
                 {design.label}
               </ToggleGroupItem>
             ))}

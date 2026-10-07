@@ -145,13 +145,29 @@ export async function recordViewEvent(
       )
       .returning({ id: sandboxReviewers.id });
     if (updated.length !== 1) throw new SandboxAccessError(REVIEWER_NOT_FOUND);
-    // The composite keys refuse an access that is not this reviewer's.
-    await tx.insert(sandboxViewEvents).values({
-      reviewerId: reviewer.reviewerId,
-      accessId: reviewer.accessId,
-      slug: reviewer.slug,
-      kind,
-      design,
-    });
+    // The composite keys refuse an access that is not this reviewer's, or
+    // one erased since the request began: a fixed error, never Postgres's,
+    // whose detail echoes the key.
+    try {
+      await tx.insert(sandboxViewEvents).values({
+        reviewerId: reviewer.reviewerId,
+        accessId: reviewer.accessId,
+        slug: reviewer.slug,
+        kind,
+        design,
+      });
+    } catch (error) {
+      if (isForeignKeyViolation(error))
+        throw new SandboxAccessError(REVIEWER_NOT_FOUND);
+      throw error;
+    }
   });
+}
+
+function isForeignKeyViolation(error: unknown): boolean {
+  const code = (e: unknown) => (e as { code?: unknown } | null)?.code;
+  return (
+    code(error) === "23503" ||
+    code((error as { cause?: unknown } | null)?.cause) === "23503"
+  );
 }

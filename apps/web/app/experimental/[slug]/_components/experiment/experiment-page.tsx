@@ -7,6 +7,8 @@
  * A team `?state=exp-*` key renders its fixture: the bar's data, the
  * primary, and for `exp-single` one design. Fixtures read and write nothing.
  */
+import { randomInt } from "node:crypto";
+
 import { createLogger } from "@pem/observability/logger";
 
 import type { ExperimentConfig } from "../../../_experiments/registry";
@@ -18,6 +20,7 @@ import {
   isExperimentStateKey,
 } from "../../../../../lib/sandbox/client/experiment-view";
 import {
+  drawFirstDesign,
   experimentDepsFor,
   openingDesignWith,
   type Opening,
@@ -75,8 +78,9 @@ export async function Experiment({
 
 /**
  * A reviewer's opening reads and may claim. If the database fails, the page
- * still renders, on the config's first design, and logs nothing, so no view
- * is recorded against a design the reviewer was never stored as seeing first.
+ * still renders, uncounted, on a design drawn the same way, so an outage
+ * never shows every reviewer the config's first design. Nothing is stored,
+ * so a later visit draws again.
  * [ASSUMPTION: rendering uncounted beats an error page for a reviewer.]
  */
 async function openingFor(
@@ -93,7 +97,13 @@ async function openingFor(
     );
   } catch (error) {
     log.warn("sandbox.opening_failed", { error });
+    const shown = drawFirstDesign(experiment.designs, randomInt);
     const ids = experiment.designs.map((d) => d.id);
-    return { shown: ids[0]!, order: ids, primary: "finish", counted: false };
+    return {
+      shown,
+      order: [shown, ...ids.filter((id) => id !== shown)],
+      primary: request.from === "review" ? "back" : "finish",
+      counted: false,
+    };
   }
 }

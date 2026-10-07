@@ -27,7 +27,8 @@ export function CommentToggle({ status }: { status: SaveStatus }) {
       pressed={pressed}
       onPressedChange={setPressed}
       disabled={placingDisabled(status)}
-      className="h-11 px-4"
+      // The Comments button's outline, so the two read as one kind of control.
+      className="h-11 border-border bg-background px-4 dark:border-input dark:bg-input/30"
     >
       {W.comment}
     </Toggle>
@@ -67,7 +68,7 @@ export function SaveStatusText({ status }: { status: SaveStatus }) {
 
 function RetryButton() {
   return (
-    <Button variant="link" className="h-11 px-0">
+    <Button variant="link" className="h-11 min-w-11 px-2">
       {W.retry}
     </Button>
   );

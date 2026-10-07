@@ -391,6 +391,30 @@ const readDesignsAs = (kind: ViewerKind) => async (w: World) => {
       lastDesign: `last-${mine}`,
       hasSent: true,
     });
+    // hasSent is the viewer's own: with their version gone it reads false,
+    // while every other reviewer, each still holding one, reads true.
+    const [version] = await db()
+      .select()
+      .from(sandboxReviewVersions)
+      .where(eq(sandboxReviewVersions.reviewerId, own.reviewerId));
+    await db()
+      .delete(sandboxReviewVersions)
+      .where(eq(sandboxReviewVersions.id, version!.id));
+    try {
+      assert.equal(
+        (await sandbox.readReviewerDesigns(db(), own, {})).hasSent,
+        false,
+      );
+      for (const r of [w.a1, w.a2, w.b, w.signedIn].filter(
+        (r) => r.viewer.reviewerId !== own.reviewerId,
+      ))
+        assert.equal(
+          (await sandbox.readReviewerDesigns(db(), r.viewer, {})).hasSent,
+          true,
+        );
+    } finally {
+      await db().insert(sandboxReviewVersions).values(version!);
+    }
     // Another slug, or a reviewer id from another slug, reads nothing.
     const other = own.slug === w.slugA ? w.b.viewer : w.a1.viewer;
     for (const crossed of [
@@ -491,6 +515,7 @@ const recordViewAs = (kind: ViewerKind) => async (w: World) => {
           kind: "load",
           design: "circle",
         }),
+        refusedWith(REVIEWER_NOT_FOUND),
       );
     }
     for (const input of [

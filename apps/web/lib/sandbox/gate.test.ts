@@ -316,7 +316,7 @@ describe("C2: one error for every code that does not open a review", () => {
       /networkKeyOf\(\s*\(await headers\(\)\)\.get\("x-forwarded-for"\),\s*deployed,\s*\)/,
     );
     assert.match(action, /gateCookieOptions\(productionRuntime\)/);
-    // The action logs two fixed events and nothing a reviewer typed.
+    // The actions log fixed events only, and nothing a reviewer typed.
     assert.doesNotMatch(action, /console\./);
     assert.deepEqual(
       [...action.matchAll(/log\.\w+\(\s*"([^"]+)"/g)].map((m) => m[1]),
