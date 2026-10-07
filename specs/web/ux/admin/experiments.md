@@ -1,6 +1,5 @@
 ---
-target: specs/web/ux/admin/experiments.md
-status: approved
+source: specs/web/epics/LAB-experimental-sandbox/ux/admin/experiments.md
 promoted: 2026-10-07
 ---
 

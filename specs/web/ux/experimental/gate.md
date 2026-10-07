@@ -1,6 +1,5 @@
 ---
-target: specs/web/ux/experimental/gate.md
-status: approved
+source: specs/web/epics/LAB-experimental-sandbox/ux/experimental/gate.md
 promoted: 2026-10-07
 ---
 
