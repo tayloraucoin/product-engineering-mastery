@@ -3,45 +3,106 @@
   "criteria_sha256": "b4ec650273021925bb5fbb5efbd2f125055e388de0d6444a1659cd7193cef208",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-07T19:38:56Z",
+        "head": "9db66357d32c7eb79e39c9e94fa2cbaaca17e756",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-001-layout-probe-and-stop-path/evidence/C1.log",
+        "evidence_sha256": "fc556037c5061d30cdad4c14d96699ecf8536b25316d7d4cdf600b7fb17b94a1",
+        "tests": 236
+      }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-07T19:38:56Z",
+        "head": "9db66357d32c7eb79e39c9e94fa2cbaaca17e756",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-001-layout-probe-and-stop-path/evidence/C2.log",
+        "evidence_sha256": "fc556037c5061d30cdad4c14d96699ecf8536b25316d7d4cdf600b7fb17b94a1",
+        "tests": 236
+      }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-07T19:38:56Z",
+        "head": "9db66357d32c7eb79e39c9e94fa2cbaaca17e756",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-001-layout-probe-and-stop-path/evidence/C3.log",
+        "evidence_sha256": "fc556037c5061d30cdad4c14d96699ecf8536b25316d7d4cdf600b7fb17b94a1",
+        "tests": 236
+      }
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-07T19:38:56Z",
+        "head": "9db66357d32c7eb79e39c9e94fa2cbaaca17e756",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-001-layout-probe-and-stop-path/evidence/C4.log",
+        "evidence_sha256": "fc556037c5061d30cdad4c14d96699ecf8536b25316d7d4cdf600b7fb17b94a1",
+        "tests": 236
+      }
     },
     "C5": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-07T19:38:56Z",
+        "head": "9db66357d32c7eb79e39c9e94fa2cbaaca17e756",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-001-layout-probe-and-stop-path/evidence/C5.log",
+        "evidence_sha256": "fc556037c5061d30cdad4c14d96699ecf8536b25316d7d4cdf600b7fb17b94a1",
+        "tests": 236
+      }
     },
     "C6": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn check-types:tooling",
+        "exit": 0,
+        "at": "2026-10-07T19:40:57Z",
+        "head": "9db66357d32c7eb79e39c9e94fa2cbaaca17e756",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-001-layout-probe-and-stop-path/evidence/C6.log",
+        "evidence_sha256": "f571303fb83ac47bb756ef45085fec65f738f69e5c1fdbf9526c67d960aaf2a4"
+      }
     },
     "C7": {
       "status": "FAIL",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn budget",
+        "exit": 1,
+        "at": "2026-10-07T19:41:03Z",
+        "head": "9db66357d32c7eb79e39c9e94fa2cbaaca17e756",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-001-layout-probe-and-stop-path/evidence/C7.log",
+        "evidence_sha256": "d2e046de632ded5c0dd6af41e6cdf2cd5ba10af8c3ac1df8d8b3cf1c86731636"
+      }
     },
     "C8": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn test:hooks",
+        "exit": 0,
+        "at": "2026-10-07T19:41:09Z",
+        "head": "9db66357d32c7eb79e39c9e94fa2cbaaca17e756",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-001-layout-probe-and-stop-path/evidence/C8.log",
+        "evidence_sha256": "aabe3159a61ba79ba910a831f66407105ff1bb693610a9e235ee23512c08d34b"
+      }
     }
   },
-  "updated_at": "2026-10-07T19:29:42Z"
+  "updated_at": "2026-10-07T19:41:18Z"
 }
