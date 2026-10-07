@@ -45,6 +45,8 @@ From the module's `files` list in `toolkit.json`:
 
 And the product's living truth for them, once promoted: `specs/<app>/ux/experimental/` and `specs/<app>/ux/admin/`.
 
+Then stop the dev server and delete `apps/web/.next`. The baseline run left route types there that still name the deleted pages, and `yarn check-types` fails on them until they go.
+
 ## 3. Edit
 
 ### Files to edit
@@ -56,7 +58,7 @@ And the product's living truth for them, once promoted: `specs/<app>/ux/experime
 - `apps/web/next.config.ts`: delete the `SANDBOX_NOINDEX_HEADERS` import and the `headers()` function with its comment. Keep `headers()` if the product has added its own headers there.
 - `apps/web/app/_components/floating-theme-toggle.tsx`: delete the two `[body:has([data-admin-shell])_&]:hidden` and `[body:has([data-sandbox-design])_&]:hidden` classes, and the comment's sentences on the `/admin` shell and an experiment's design. The component stays: the root layout uses it.
 - `tooling/boundaries.test.ts`: delete LAB-3's block, from the comment `// LAB-3 (its C5)` through the `SANDBOX_ALLOWED` loop.
-- `packages/db/scripts/grant-admin.ts`: in the header comment, drop "after that People grants roles", the last-admin race sentence, and the closing clause that names this runbook. The script stays (below).
+- `packages/db/scripts/grant-admin.ts`: in the header comment, drop every sentence that names People, its role-change lock, the last-admin race or this runbook. The script stays (below).
 - `docs/engineering/tech-stack.md`: in the `lucide-react` row, drop `apps/web` when the dependency goes (below).
 
 ### Variables
@@ -90,7 +92,7 @@ In `packages/config/eslint/boundaries.js`, both sandbox elements go, `web-sandbo
 git grep -n -E "[\"']developer[\"']" -- apps packages tooling ':!packages/db/migrations'
 ```
 
-- **Only `packages/db/src/rls.ts` and LAB-2's tests print:** remove it. `APP_ROLES` goes back to `["user", "admin"]`. Delete LAB-2's tests: "C2: an admin procedure refuses a developer" (`packages/api/src/context.test.ts`), "C3: the bridge accepts developer" (`packages/db/src/rls.test.ts`), the two "C4: a developer …" tests (`packages/db/test/rls.test.ts`), and in "C1: roleOf returns developer …" (`packages/auth/src/context.test.ts`) the `developer` assertion and the `" developer"` case, renaming the test. Drop `"developer"` from the `APP_ROLES` line quoted in [`supabase-database.md`](supabase-database.md).
+- **Only `packages/db/src/rls.ts` and LAB-2's tests print:** remove it. `APP_ROLES` goes back to `["user", "admin"]`. Delete LAB-2's tests: "C2: an admin procedure refuses a developer" (`packages/api/src/context.test.ts`), "C3: the bridge accepts developer" (`packages/db/src/rls.test.ts`), the two "C4: a developer …" tests (`packages/db/test/rls.test.ts`), and in "C1: roleOf returns developer …" (`packages/auth/src/context.test.ts`) make the `developer` line expect `user`, which proves the fallback below, and rename the test. Drop `"developer"` from the `APP_ROLES` line quoted in [`supabase-database.md`](supabase-database.md).
 - **Anything else prints:** keep it, and say so in the set-up record.
 
 Either way no data change is forced. An account still holding `developer` in `app_metadata` reads as `user` through `roleOf`, which maps any unknown role to `user`. Clearing the value is the operator's (phase 6).
@@ -105,7 +107,7 @@ yarn workspace @pem/db db:grant-admin <email>
 
 > **Warning: the record goes with the tables.** The drop deletes every row of the seven tables: reviewers and their access codes, views, comments, review versions, gate attempts, and `sandbox_actions`, the record of who did what in `/admin`. Nothing keeps a copy. Export first wherever the data matters.
 
-Export each table to CSV while it still exists, on each tier that holds data, with the tier's `DATABASE_MIGRATION_URL` from `packages/db/.env.local`. The files hold reviewers' labels and comments, which are personal data: keep them where the product keeps such files, and delete them when they are no longer needed.
+Export each table to CSV while it still exists, on each tier that holds data, with the tier's `DATABASE_MIGRATION_URL` from the database package's .env.local. The files hold reviewers' labels and comments, which are personal data: keep them where the product keeps such files, and delete them when they are no longer needed.
 
 ```bash
 psql "<the tier's migration URL>" -c "\copy sandbox_actions to 'sandbox_actions.csv' csv header"
