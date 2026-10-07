@@ -19,6 +19,10 @@ import {
   ACTION_INPUT_INVALID,
   ROLE_CHANGE_ACTION,
 } from "../../src/sandbox/actions.ts";
+import {
+  DESIGN_INPUT_INVALID,
+  REVIEWER_NOT_FOUND,
+} from "../../src/sandbox/experiment.ts";
 import { EXPERIMENT_STATS_INPUT_INVALID } from "../../src/sandbox/experiments.ts";
 import {
   ACCESS_INPUT_INVALID,
@@ -26,6 +30,7 @@ import {
   THROTTLE_INPUT_INVALID,
 } from "../../src/sandbox/gate.ts";
 import {
+  NOT_A_REVIEWER_VIEWER,
   NOT_A_TEAM_VIEWER,
   NOT_AN_ADMIN_VIEWER,
   reviewerScope,
@@ -297,6 +302,207 @@ const statsAsTeam = (kind: "developer" | "admin") => async (w: World) => {
   } finally {
     await db().delete(sandboxComments).where(eq(sandboxComments.id, noteId));
   }
+};
+
+/** The reviewer row's two design columns, read past the module. */
+async function designsOf(reviewerId: string) {
+  const [row] = await db()
+    .select({
+      first: sandboxReviewers.firstDesign,
+      last: sandboxReviewers.lastDesign,
+    })
+    .from(sandboxReviewers)
+    .where(eq(sandboxReviewers.id, reviewerId));
+  return row!;
+}
+
+async function setDesigns(
+  reviewerId: string,
+  first: string | null,
+  last: string | null,
+) {
+  await db()
+    .update(sandboxReviewers)
+    .set({ firstDesign: first, lastDesign: last })
+    .where(eq(sandboxReviewers.id, reviewerId));
+}
+
+/** Every reviewer row's designs and every view row, to prove a call changed nothing else. */
+async function experimentSnapshot(w: World) {
+  const reviewers = await db()
+    .select({
+      id: sandboxReviewers.id,
+      first: sandboxReviewers.firstDesign,
+      last: sandboxReviewers.lastDesign,
+    })
+    .from(sandboxReviewers)
+    .where(inArray(sandboxReviewers.slug, [w.slugA, w.slugB]))
+    .orderBy(sandboxReviewers.id);
+  const views = await db()
+    .select({ id: sandboxViewEvents.id })
+    .from(sandboxViewEvents)
+    .where(inArray(sandboxViewEvents.slug, [w.slugA, w.slugB]))
+    .orderBy(sandboxViewEvents.id);
+  return { reviewers, views };
+}
+
+function rowsFor(w: World, kind: ViewerKind) {
+  return kind === "reviewer on slug A"
+    ? w.a1
+    : kind === "second reviewer on slug A"
+      ? w.a2
+      : w.b;
+}
+
+/** LAB-11 C6: the team is refused by every experiment function, and nothing changes. */
+const experimentRefused =
+  (name: "readReviewerDesigns" | "claimFirstDesign" | "recordViewEvent") =>
+  (kind: "developer" | "admin") =>
+  async (w: World) => {
+    const before = await experimentSnapshot(w);
+    const viewer = viewerFor(w, kind);
+    const call =
+      name === "readReviewerDesigns"
+        ? sandbox.readReviewerDesigns(db(), viewer, {})
+        : name === "claimFirstDesign"
+          ? sandbox.claimFirstDesign(db(), viewer, { design: "circle" })
+          : sandbox.recordViewEvent(db(), viewer, {
+              kind: "load",
+              design: "circle",
+            });
+    await assert.rejects(call, refusedWith(NOT_A_REVIEWER_VIEWER));
+    assert.deepEqual(await experimentSnapshot(w), before);
+  };
+
+const readDesignsAs = (kind: ViewerKind) => async (w: World) => {
+  const own = rowsFor(w, kind).viewer;
+  const everyone = [w.a1, w.a2, w.b].map((r) => r.viewer.reviewerId);
+  try {
+    // Each reviewer row gets its own designs, so a read of another's shows.
+    for (const [i, id] of everyone.entries())
+      await setDesigns(id, `first-${i}`, `last-${i}`);
+    const mine = everyone.indexOf(own.reviewerId);
+    const read = await sandbox.readReviewerDesigns(db(), own, {});
+    exactKeys(read, ["firstDesign", "lastDesign", "hasSent"]);
+    assert.deepEqual(read, {
+      firstDesign: `first-${mine}`,
+      lastDesign: `last-${mine}`,
+      hasSent: true,
+    });
+    // Another slug, or a reviewer id from another slug, reads nothing.
+    const other = own.slug === w.slugA ? w.b.viewer : w.a1.viewer;
+    for (const crossed of [
+      { ...own, slug: other.slug },
+      { ...own, reviewerId: other.reviewerId },
+    ])
+      await assert.rejects(
+        sandbox.readReviewerDesigns(db(), crossed, {}),
+        refusedWith(REVIEWER_NOT_FOUND),
+      );
+  } finally {
+    for (const id of everyone) await setDesigns(id, null, null);
+  }
+};
+
+const claimAs = (kind: ViewerKind) => async (w: World) => {
+  const own = rowsFor(w, kind).viewer;
+  const before = await experimentSnapshot(w);
+  try {
+    assert.equal(
+      await sandbox.claimFirstDesign(db(), own, { design: "square" }),
+      "square",
+    );
+    // A later claim never overwrites the first.
+    assert.equal(
+      await sandbox.claimFirstDesign(db(), own, { design: "circle" }),
+      "square",
+    );
+    assert.deepEqual(await designsOf(own.reviewerId), {
+      first: "square",
+      last: null,
+    });
+    // No other reviewer row and no view row changed.
+    const after = await experimentSnapshot(w);
+    assert.deepEqual(after.views, before.views);
+    assert.deepEqual(
+      after.reviewers.filter((r) => r.id !== own.reviewerId),
+      before.reviewers.filter((r) => r.id !== own.reviewerId),
+    );
+    // A slug that is not the viewer's matches no row and claims nothing.
+    await assert.rejects(
+      sandbox.claimFirstDesign(
+        db(),
+        { ...own, slug: own.slug === w.slugA ? w.slugB : w.slugA },
+        { design: "circle" },
+      ),
+      refusedWith(REVIEWER_NOT_FOUND),
+    );
+    // A malformed design is refused without a write or an echo.
+    for (const design of ["Circle", "", "a".repeat(25), w.a1.email, 3])
+      await assert.rejects(
+        sandbox.claimFirstDesign(db(), own, { design: design as string }),
+        refusedWith(DESIGN_INPUT_INVALID),
+      );
+  } finally {
+    await setDesigns(own.reviewerId, null, null);
+  }
+  assert.deepEqual(await experimentSnapshot(w), before);
+};
+
+const recordViewAs = (kind: ViewerKind) => async (w: World) => {
+  const rows = rowsFor(w, kind);
+  const own = rows.viewer;
+  const before = await experimentSnapshot(w);
+  try {
+    await sandbox.recordViewEvent(db(), own, {
+      kind: "switch",
+      design: "square",
+    });
+    const mine = await db()
+      .select()
+      .from(sandboxViewEvents)
+      .where(eq(sandboxViewEvents.reviewerId, own.reviewerId));
+    const added = mine.filter((row) => row.id !== rows.viewId);
+    assert.equal(added.length, 1);
+    assert.equal(added[0]!.accessId, own.accessId);
+    assert.equal(added[0]!.slug, own.slug);
+    assert.equal(added[0]!.kind, "switch");
+    assert.equal(added[0]!.design, "square");
+    assert.equal((await designsOf(own.reviewerId)).last, "square");
+    const after = await experimentSnapshot(w);
+    assert.deepEqual(
+      after.reviewers.filter((r) => r.id !== own.reviewerId),
+      before.reviewers.filter((r) => r.id !== own.reviewerId),
+    );
+    await db()
+      .delete(sandboxViewEvents)
+      .where(eq(sandboxViewEvents.id, added[0]!.id));
+    // Another slug, another reviewer's id or another's access writes nothing.
+    const other = own.slug === w.slugA ? w.b.viewer : w.a1.viewer;
+    for (const crossed of [
+      { ...own, slug: other.slug },
+      { ...own, reviewerId: other.reviewerId },
+      { ...own, accessId: other.accessId },
+    ]) {
+      await assert.rejects(
+        sandbox.recordViewEvent(db(), crossed, {
+          kind: "load",
+          design: "circle",
+        }),
+      );
+    }
+    for (const input of [
+      { kind: "scroll", design: "circle" },
+      { kind: "load", design: "Not A Design" },
+    ])
+      await assert.rejects(
+        sandbox.recordViewEvent(db(), own, input as never),
+        refusedWith(DESIGN_INPUT_INVALID),
+      );
+  } finally {
+    await setDesigns(own.reviewerId, null, null);
+  }
+  assert.deepEqual(await experimentSnapshot(w), before);
 };
 
 /** Registered cases for every runtime export of @pem/db/sandbox. */
@@ -786,6 +992,42 @@ const REGISTRY: Registry<World> = {
       "reviewer on slug B": statsRefused("reviewer on slug B"),
       developer: statsAsTeam("developer"),
       admin: statsAsTeam("admin"),
+    },
+  },
+
+  readReviewerDesigns: {
+    group: "viewer",
+    criteria: ["LAB-11 C6"],
+    byViewer: {
+      "reviewer on slug A": readDesignsAs("reviewer on slug A"),
+      "second reviewer on slug A": readDesignsAs("second reviewer on slug A"),
+      "reviewer on slug B": readDesignsAs("reviewer on slug B"),
+      developer: experimentRefused("readReviewerDesigns")("developer"),
+      admin: experimentRefused("readReviewerDesigns")("admin"),
+    },
+  },
+
+  claimFirstDesign: {
+    group: "viewer",
+    criteria: ["LAB-11 C6"],
+    byViewer: {
+      "reviewer on slug A": claimAs("reviewer on slug A"),
+      "second reviewer on slug A": claimAs("second reviewer on slug A"),
+      "reviewer on slug B": claimAs("reviewer on slug B"),
+      developer: experimentRefused("claimFirstDesign")("developer"),
+      admin: experimentRefused("claimFirstDesign")("admin"),
+    },
+  },
+
+  recordViewEvent: {
+    group: "viewer",
+    criteria: ["LAB-11 C6"],
+    byViewer: {
+      "reviewer on slug A": recordViewAs("reviewer on slug A"),
+      "second reviewer on slug A": recordViewAs("second reviewer on slug A"),
+      "reviewer on slug B": recordViewAs("reviewer on slug B"),
+      developer: experimentRefused("recordViewEvent")("developer"),
+      admin: experimentRefused("recordViewEvent")("admin"),
     },
   },
 

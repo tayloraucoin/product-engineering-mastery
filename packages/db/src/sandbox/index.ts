@@ -24,6 +24,12 @@ export {
 export { withRoleChangeLock, type RoleChangeTx } from "./roles.ts";
 export { listExperimentStats, type ExperimentStats } from "./experiments.ts";
 export {
+  claimFirstDesign,
+  readReviewerDesigns,
+  recordViewEvent,
+  type ReviewerDesigns,
+} from "./experiment.ts";
+export {
   SandboxAccessError,
   type ReviewerViewer,
   type SandboxDb,
