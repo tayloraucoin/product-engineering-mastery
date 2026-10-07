@@ -10,7 +10,9 @@
  * The reviewer is `claude -p` with Read, Grep and Glob only: the generated
  * subagent when `.claude/agents/<role>.md` exists, otherwise the role file as
  * an appended system prompt. Its prompt is generated from the contract, the
- * results and the evidence index, never from the builder's words. The review
+ * results and the evidence index, never from the builder's words; it scopes the
+ * reviewer to the planned-path changes, one import hop out only to confirm a
+ * Blocking, and says this is the only pass unless it FAILs (C3). The review
  * file carries the contract and as-built hashes it read; editing either
  * afterwards resets the review to FAIL in check-specs.
  *
@@ -288,25 +290,30 @@ function reviewTicket(item: Item) {
       return `   - ${c.id} ${c.evidence}: ${run ? `${run.evidence_path} (sha256 ${run.evidence_sha256.slice(0, 12)})` : "no run"}`;
     });
   const surfaces = contract.cites.filter((c) => c.includes("/"));
+  const citedIds = contract.cites.filter((c) => !c.includes("/"));
   const prompt = [
     venue(command),
     "",
     `You are ${role}, reviewing ticket ${item.id} in fresh context. You have not seen the builder's conversation and must not ask for it: judge only from the files.`,
     "",
+    "This is the only review pass unless you FAIL it, so list every finding now. A PASS is final for its round: Should-fix and Consider findings become follow-ups the builder fixes without reopening the review, and nothing you hold back is asked for later. Only a Blocking finding earns a second pass.",
+    "",
     "Read, in this order:",
-    `1. The contract: ${contractPath(item)}. Its criteria, non-negotiables, planned paths and out of scope are what was promised.`,
+    `1. The contract: ${contractPath(item)}. Its criteria, non-negotiables, planned paths and out of scope are what was promised, and what you judge the changes against.`,
     `2. The results: ${resultsPath(item)}. Each criterion's run record and evidence file.`,
-    `3. The as-built: ${asBuiltPath(item)}. What the builder says shipped, and every deviation. Check its claims against the code; do not trust them.`,
+    `3. The as-built: ${asBuiltPath(item)}. What the builder says shipped, and every deviation. It is a claim to check inside the changed files, not an invitation to read the repo.`,
     "4. The evidence:",
     ...evidence,
-    `5. The files this ticket changes against main (its planned paths; other tickets share the branch): ${changed ? changed.join(", ") || "none" : "unknown (no main branch)"}.`,
+    `5. The changed files, this ticket's planned paths against main (other tickets share the branch): ${changed ? changed.join(", ") || "none" : "unknown (no main branch)"}. Judge these changes against the criteria and the non-negotiables.`,
     ...(surfaces.length
       ? [
-          `6. The surface the ticket cites: ${surfaces.join(", ")}. Every state and criterion it names.`,
+          `6. The surface the ticket cites: ${surfaces.join(", ")}. Read only the parts the contract names (${citedIds.join(", ") || "the states its criteria name"}), not the whole file.`,
         ]
       : []),
     "",
-    "For each criterion, say whether the evidence and the code show it is met. Then list findings as Blocking, Should-fix or Consider, each with a file and line. A Blocking finding means FAIL.",
+    "Stay inside the changed files. Follow an import one hop out of a changed file only to confirm a Blocking finding, never to look for one, and never further than that hop.",
+    "",
+    "For each criterion, say whether the evidence and the changed code show it is met. Then list every finding, graded Blocking, Should-fix or Consider, each with a file and line. A Blocking finding means FAIL; a Should-fix or Consider finding never does.",
     "",
     "Your last line must be exactly one of:",
     "VERDICT: PASS",

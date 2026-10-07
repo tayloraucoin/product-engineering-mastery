@@ -197,6 +197,41 @@ test("Vigil 9 and 10, Q3 epic ticket: pre-flight gates the start, review:run fol
     /^  review:vigil: PASS, 1,200 in, 3,400 read, 500 write, 260 out, \d+(\.\d+)? s, \d{4}-/m,
   );
   assert.equal(status.match(/^  review:vigil: PASS/gm)?.length, 1);
+  // C3: the generated prompt is single-pass and scoped to the planned-path
+  // changes, one import hop out only to confirm a Blocking.
+  const reviewFile = read(
+    repo,
+    "specs/web/epics/OB2-onboarding/tickets/OB2-001-welcome/review-vigil.md",
+  );
+  assert.match(
+    reviewFile,
+    /^This is the only review pass unless you FAIL it, so list every finding now\./m,
+  );
+  assert.match(
+    reviewFile,
+    /Should-fix and Consider findings become follow-ups the builder fixes without reopening the review/,
+  );
+  assert.match(
+    reviewFile,
+    /It is a claim to check inside the changed files, not an invitation to read the repo\./,
+  );
+  assert.match(
+    reviewFile,
+    /^5\. The changed files, this ticket's planned paths against main .*Judge these changes against the criteria and the non-negotiables\.$/m,
+  );
+  assert.match(
+    reviewFile,
+    /^6\. The surface the ticket cites: specs\/web\/ux\/onboarding\/welcome\.md\. Read only the parts the contract names \(OB2-W1\), not the whole file\.$/m,
+  );
+  assert.match(
+    reviewFile,
+    /^Stay inside the changed files\. Follow an import one hop out of a changed file only to confirm a Blocking finding, never to look for one, and never further than that hop\.$/m,
+  );
+  assert.match(
+    reviewFile,
+    /graded Blocking, Should-fix or Consider, each with a file and line\. A Blocking finding means FAIL; a Should-fix or Consider finding never does\./,
+  );
+  assert.doesNotMatch(reviewFile, /Check its claims against the code/);
   r = tool(repo, "truth-promote.ts", ["OB2"]);
   assert.equal(r.status, 0, r.out);
   assert.match(r.out, /1 promoted/);

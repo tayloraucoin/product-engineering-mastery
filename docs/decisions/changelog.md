@@ -15,6 +15,10 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-07 — PEM: the headless reviewer prompt is single-pass and scoped (C3)
+
+The ticket prompt `tooling/review-run.ts` generates now tells the reviewer this is the only pass unless it FAILs, so every finding is listed now, graded with a file and line; judges the planned-path changes against the criteria and non-negotiables; follows an import one hop out of a changed file only to confirm a Blocking; reads the as-built as a claim to check inside the changed files; and reads only the parts of the cited surface the contract names. Should-fix and Consider findings become follow-ups and never reopen the review; the VERDICT contract is unchanged, and `tooling/contract-review.test.ts` pins the text. Kept after one calibration (`specs/_shared/reports/2026-10-07-reviewer-prompt-calibration.md`): the old and the new prompt ran once each as Warden on STK-21 at `6960357`; both returned PASS with no Blocking, so the new prompt missed none; the pair was 0.04M weighted tokens and 7 seconds apart, inside between-run variance, so the saving per run stays the audit's estimate.
+
 ## 2026-10-06 — PEM: `yarn verify` as a criterion is a check, not prose
 
 Serves the audit's O3 and C5 (dump 5), decided 2026-10-06. The rule in `.claude/rules/specs.md` and the contract template is unchanged; it is now enforced in `tooling/`.
