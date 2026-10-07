@@ -105,6 +105,22 @@
       }
     },
     {
+      "rule": "unchanged",
+      "expect": "allow",
+      "name": "nothing changed: the status line stored at the last stop is reused, no status call",
+      "input": {
+        "hook_event_name": "Stop",
+        "session_id": "fixture-session",
+        "stop_hook_active": false,
+        "cwd": "$ROOT"
+      },
+      "context": {
+        "changed": false,
+        "cached": "Active: WEB-41 filter (open; left: C1 capture). Stored at the last green stop (synthetic)."
+      },
+      "message": "Stored at the last green stop"
+    },
+    {
       "rule": "reason-budget",
       "expect": "deny",
       "name": "a long failure is cut to the reason budget",
@@ -135,6 +151,59 @@
         "verifyExit": 0,
         "verifyOutput": "synthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\nsynthetic ok line\n"
       }
+    },
+    {
+      "rule": "context",
+      "expect": "allow",
+      "name": "a transcript at 150k: the context size, no advice",
+      "input": {
+        "hook_event_name": "Stop",
+        "session_id": "fixture-session",
+        "stop_hook_active": false,
+        "cwd": "$ROOT",
+        "transcript_path": "$ROOT/tooling/hooks/fixtures/transcripts/stop-gate-150k.jsonl"
+      },
+      "context": {
+        "changed": true,
+        "verifyExit": 0,
+        "left": "Active: none."
+      },
+      "message": "Context about 150k tokens."
+    },
+    {
+      "rule": "context",
+      "expect": "allow",
+      "name": "a transcript at 450k on an unchanged tree: the size and the fresh-thread advice",
+      "input": {
+        "hook_event_name": "Stop",
+        "session_id": "fixture-session",
+        "stop_hook_active": false,
+        "cwd": "$ROOT",
+        "transcript_path": "$ROOT/tooling/hooks/fixtures/transcripts/stop-gate-450k.jsonl"
+      },
+      "context": {
+        "changed": false,
+        "cached": "Active: none."
+      },
+      "message": "Context about 450k tokens: start a fresh thread for the next ticket; resuming this one after a break re-writes the whole context."
+    },
+    {
+      "rule": "context",
+      "expect": "deny",
+      "name": "a transcript at 450k and a red verify: the block still carries the advice",
+      "input": {
+        "hook_event_name": "Stop",
+        "session_id": "fixture-session",
+        "stop_hook_active": false,
+        "cwd": "$ROOT",
+        "transcript_path": "$ROOT/tooling/hooks/fixtures/transcripts/stop-gate-450k.jsonl"
+      },
+      "context": {
+        "changed": true,
+        "verifyExit": 1,
+        "verifyOutput": "verify:fast — lint and types (affected workspaces) failed (2.0 s):\nweb:check-types: app/page.tsx(45,14): error TS2322: Type 'string' is not assignable to type 'number'. (synthetic)"
+      },
+      "message": "start a fresh thread for the next ticket"
     }
   ]
 }
