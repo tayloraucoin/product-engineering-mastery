@@ -56,13 +56,15 @@ export type ReviewerDesigns = {
   hasSent: boolean;
 };
 
-/** The viewer's own first and last design, and whether they have sent a review. */
+/** The viewer's own first and last design, and whether they have sent a review. Takes an empty input. */
 export async function readReviewerDesigns(
   db: SandboxDb,
   viewer: Viewer,
-  _input: Record<string, never>,
+  input: Record<string, never>,
 ): Promise<ReviewerDesigns> {
   const reviewer = requireReviewer(viewer);
+  if (input === null || typeof input !== "object" || Object.keys(input).length)
+    throw new SandboxAccessError(DESIGN_INPUT_INVALID);
   const [row] = await db
     .select({
       firstDesign: sandboxReviewers.firstDesign,
