@@ -8,10 +8,10 @@
       "run": {
         "command": "yarn check-stack",
         "exit": 0,
-        "at": "2026-10-07T22:47:35Z",
-        "head": "c9b7c21390ddc655ab6bf9aa84c0267a216c6537",
+        "at": "2026-10-07T22:49:34Z",
+        "head": "e4243fee0f740f1a6bcaea8b04c9373bba892814",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-024-stack-entry-removal/evidence/C1.log",
-        "evidence_sha256": "fe181fc439b3ae32b0efc6e72644fd86ec875977261098b6e3553399127d679b"
+        "evidence_sha256": "20fa0a36d8f3dde8e6a9a1b38c4d20f6c3665ff6e8bcd0b07a1362e4080b9d58"
       }
     },
     "C2": {
@@ -20,10 +20,10 @@
       "run": {
         "command": "yarn lint:docs",
         "exit": 1,
-        "at": "2026-10-07T22:47:42Z",
-        "head": "c9b7c21390ddc655ab6bf9aa84c0267a216c6537",
+        "at": "2026-10-07T22:49:41Z",
+        "head": "e4243fee0f740f1a6bcaea8b04c9373bba892814",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-024-stack-entry-removal/evidence/C2.log",
-        "evidence_sha256": "8c6f6b162375015dac4ff8cc8d6d3b36dfb991751b3c7f3ea4b38200670e5bb5"
+        "evidence_sha256": "02e2e80c6ab70f0d5bbe490bbfafebc06d2bbe623bbab2ae606bc417ad140194"
       }
     },
     "C3": {
@@ -32,10 +32,10 @@
       "run": {
         "command": "yarn check-refs",
         "exit": 0,
-        "at": "2026-10-07T22:47:49Z",
-        "head": "c9b7c21390ddc655ab6bf9aa84c0267a216c6537",
+        "at": "2026-10-07T22:49:48Z",
+        "head": "e4243fee0f740f1a6bcaea8b04c9373bba892814",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-024-stack-entry-removal/evidence/C3.log",
-        "evidence_sha256": "d2677b910f45dad429f899aaf17e7fb90d757773a6bc47a6e487d68099e82865"
+        "evidence_sha256": "a7ac1eb3e8f61f947260c2c55a52442c7fe0eed2af90fe737998cd7f476007fb"
       }
     },
     "C4": {
@@ -63,5 +63,5 @@
       }
     }
   },
-  "updated_at": "2026-10-07T22:47:51Z"
+  "updated_at": "2026-10-07T22:49:50Z"
 }
