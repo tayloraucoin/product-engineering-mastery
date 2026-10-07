@@ -298,3 +298,101 @@ export function buildAndProve(repo: string) {
   const r = tool(repo, "contract.ts", ["run", "WEB-1"]);
   assert.equal(r.status, 0, r.out);
 }
+
+/** What a single-app repo starts with; each case changes what it tests. */
+export type SingleAppOptions = {
+  /** Write a specs root (`specs/_status.md`); the default has none. */
+  specsRoot?: boolean;
+  /** Write a turbo.json defining these tasks; the default has no turbo.json. */
+  turboTasks?: string[];
+  /** Extra root package.json scripts, merged over the default ones. */
+  scripts?: Record<string, string>;
+};
+
+/**
+ * A fresh repo shaped as an overlay target (MIG T3): one app at the root, no
+ * `workspaces`, no `turbo.json`, `toolkit.json` at tier `overlay` with
+ * `apps.web.path` ".", a `prettier --write` format script with no Prettier
+ * installed, no CI and, by default, no specs root. The spine is this repo's
+ * own three files, so the budget reads real caps. The setup is committed on
+ * main and the work branch restarts there, so a case's edits are the
+ * branch's only changes. Needs `useScratchRepo()` in the calling file.
+ */
+export function singleAppRepo(options: SingleAppOptions = {}): string {
+  const repo = freshRepo();
+  git(repo, "switch", "-q", "main");
+  for (const rel of ["sample.test.ts", "review-runner.ts", "docs"])
+    rmSync(path.join(repo, rel), { recursive: true, force: true });
+  for (const rel of ["AGENTS.md", "CLAUDE.md", "docs/index.md"])
+    write(repo, rel, read(REPO, rel));
+  const toolkit = JSON.parse(read(repo, "toolkit.json"));
+  for (const app of Object.values(toolkit.apps) as { path: string }[])
+    rmSync(path.join(repo, app.path), { recursive: true, force: true });
+  write(
+    repo,
+    "toolkit.json",
+    JSON.stringify(
+      {
+        ...toolkit,
+        tier: "overlay",
+        apps: { web: { path: ".", prefix: "WEB", designLayer: null } },
+        migrationsDir: null,
+        reviewers: [],
+        stack: {},
+      },
+      null,
+      2,
+    ),
+  );
+  write(
+    repo,
+    "package.json",
+    JSON.stringify(
+      {
+        // The template's name: Yarn's install state is keyed on it.
+        name: "loop-scratch",
+        private: true,
+        packageManager: "yarn@4.13.0",
+        scripts: {
+          format: "prettier --write .",
+          // The scratch install has no devDependencies: tsc comes through the symlink below.
+          "check-types": "node node_modules/typescript/bin/tsc -p .",
+          "verify:fast": "node tooling/verify-fast.ts",
+          budget: "node tooling/budget.ts",
+          ...options.scripts,
+        },
+      },
+      null,
+      2,
+    ),
+  );
+  symlinkSync(
+    path.join(REPO, "node_modules/typescript"),
+    path.join(repo, "node_modules/typescript"),
+  );
+  write(
+    repo,
+    "tsconfig.json",
+    JSON.stringify({
+      compilerOptions: { strict: true, noEmit: true, target: "es2022" },
+      include: ["src"],
+    }),
+  );
+  write(
+    repo,
+    "src/sum.ts",
+    "export const sum = (a: number, b: number): number => a + b;\n",
+  );
+  if (options.specsRoot) write(repo, "specs/_status.md", "# Status\n");
+  if (options.turboTasks)
+    write(
+      repo,
+      "turbo.json",
+      JSON.stringify({
+        tasks: Object.fromEntries(options.turboTasks.map((t) => [t, {}])),
+      }),
+    );
+  commit(repo, "PEM: single-app overlay repo");
+  git(repo, "switch", "-q", "-C", WORK_BRANCH);
+  return repo;
+}

@@ -13,6 +13,11 @@
  *   - the repo's own checks when their inputs change: the docs lint, the
  *     settings check, the hook fixtures;
  *   - check-specs and budget, when run by hand over the whole branch.
+ * The layout probe (lib/layout.ts; MIG T3) says what this repo can run. Turbo
+ * runs only when turbo.json defines both tasks; otherwise ESLint runs on the
+ * changed code (when a config exists) and the repo's type-check script once.
+ * A toolkit step runs only when its script exists. Each step that cannot run
+ * is printed as `not run: <step> (<why>)`, never counted as passed.
  * The build and the contract-loop tests (16 s) stay in `yarn verify` and CI. Fails fast;
  * prints each step's time.
  *
@@ -28,8 +33,38 @@ import path from "node:path";
 
 import { REPO_ROOT } from "./lib/docs.ts";
 import { getBaseRef, runGit } from "./lib/git.ts";
+import { findCodeRoot, probeLayout, TURBO_TASKS } from "./lib/layout.ts";
 
-type Step = { name: string; command: string[]; when: boolean };
+/**
+ * A step runs when the changed set reaches it (`when`) and it can run here.
+ * `missing` says why it cannot (its script, task, tool or config is absent):
+ * such a step is named as not run, never counted as passed, whether or not
+ * the changed set reached it.
+ */
+type Step = {
+  name: string;
+  command: string[];
+  when: boolean;
+  missing?: string;
+  cwd?: string;
+};
+
+const layout = probeLayout(REPO_ROOT);
+const rootPackage = JSON.parse(
+  readFileSync(path.join(REPO_ROOT, "package.json"), "utf8"),
+) as {
+  scripts?: Record<string, string>;
+  dependencies?: Record<string, string>;
+  devDependencies?: Record<string, string>;
+};
+/** Why a toolkit step cannot run, or undefined when its script exists. */
+const needsScript = (script: string) =>
+  layout.scripts.includes(script) ? undefined : `no ${script} script`;
+/** Why a step on a tool cannot run, or undefined when the root package.json declares it. */
+const needsTool = (tool: string) =>
+  rootPackage.dependencies?.[tool] || rootPackage.devDependencies?.[tool]
+    ? undefined
+    : `${tool} is not a root dependency`;
 
 const base = getBaseRef();
 const fork = base ? runGit(["merge-base", base, "HEAD"]) : null;
@@ -52,32 +87,113 @@ function branchChanges(): string[] {
   ];
 }
 
+/**
+ * The toolkit's own folders are never product code, even when an app sits at
+ * the root ("."): each has its own step below.
+ */
+const specsRoot = (() => {
+  try {
+    const toolkit = JSON.parse(
+      readFileSync(path.join(REPO_ROOT, "toolkit.json"), "utf8"),
+    ) as { specsRoot?: string };
+    return toolkit.specsRoot ?? "specs";
+  } catch {
+    return "specs";
+  }
+})();
+const TOOLKIT_DIRS = ["tooling", "docs", ".claude", ".github", specsRoot];
+/** The code root a changed file sits in, or null for a file outside every one. */
+const rootOf = (file: string) =>
+  TOOLKIT_DIRS.some((dir) => file.startsWith(`${dir}/`))
+    ? null
+    : findCodeRoot(layout, file);
+const inCode = changed.filter((file) => rootOf(file) !== null);
+const code = inCode.filter((file) => /\.(ts|tsx|mjs)$/.test(file));
+
 /** The workspaces the scoped files sit in, each with its dependents; unscoped, whatever the branch changed. */
 const workspaceFilters =
   scoped !== undefined
     ? [
         ...new Set(
-          changed
-            .map((file) => file.match(/^((?:apps|packages)\/[^/]+)\//)?.[1])
-            .filter((dir): dir is string => Boolean(dir)),
+          inCode
+            .map(rootOf)
+            .filter((dir): dir is string => dir !== null && dir !== "."),
         ),
       ].map((dir) => `--filter=...{./${dir}}`)
     : [`--filter=...[${fork ?? "HEAD"}]`];
 
 const touches = (pattern: RegExp) => changed.some((file) => pattern.test(file));
-const code = changed.filter((file) =>
-  /^(apps|packages)\/.+\.(ts|tsx|mjs)$/.test(file),
-);
 /** The extensions `yarn format:check` covers, read from its glob so the two never disagree. */
 const formatExtensions = (
-  (
-    JSON.parse(readFileSync(path.join(REPO_ROOT, "package.json"), "utf8")) as {
-      scripts: Record<string, string>;
-    }
-  ).scripts["format:check"]?.match(/\{([a-z,]+)\}/)?.[1] ?? "ts,tsx,md"
+  rootPackage.scripts?.["format:check"]?.match(/\{([a-z,]+)\}/)?.[1] ??
+  "ts,tsx,md"
 ).split(",");
 const formattable = changed.filter((file) =>
   formatExtensions.includes(path.extname(file).slice(1)),
+);
+
+/** Turbo runs lint and types only when turbo.json defines both tasks; otherwise the fallback below does. */
+const turboMissing = !layout.hasTurbo
+  ? "no turbo.json"
+  : TURBO_TASKS.filter((task) => !layout.turboTasks.includes(task)).length
+    ? `turbo.json has no ${TURBO_TASKS.filter((task) => !layout.turboTasks.includes(task)).join(" or ")} task`
+    : undefined;
+
+const ESLINT_CONFIGS = [
+  "eslint.config.js",
+  "eslint.config.mjs",
+  "eslint.config.cjs",
+  "eslint.config.ts",
+  "eslint.config.mts",
+  "eslint.config.cts",
+  ".eslintrc.js",
+  ".eslintrc.cjs",
+  ".eslintrc.json",
+  ".eslintrc.yml",
+  ".eslintrc.yaml",
+  ".eslintrc",
+];
+const hasEslintConfig = (dir: string) =>
+  ESLINT_CONFIGS.some((name) => existsSync(path.join(REPO_ROOT, dir, name)));
+
+/**
+ * ESLint on the changed code. A root config lints every code root in one run;
+ * without one, each code root with its own config is linted from there, and
+ * changed code under a root with none is named.
+ */
+function eslintSteps(name: string): Step[] {
+  if (hasEslintConfig("."))
+    return [
+      {
+        name,
+        command: ["yarn", "eslint", "--max-warnings", "0", ...code],
+        when: code.length > 0,
+      },
+    ];
+  const byRoot = new Map<string, string[]>();
+  for (const file of code) {
+    const dir = rootOf(file)!;
+    byRoot.set(dir, [...(byRoot.get(dir) ?? []), file]);
+  }
+  const roots = byRoot.size ? [...byRoot.keys()] : layout.codeRoots;
+  return roots.map((dir) => {
+    const files = (byRoot.get(dir) ?? []).map((file) =>
+      dir === "." ? file : path.posix.relative(dir, file),
+    );
+    return {
+      name: roots.length > 1 ? `${name} in ${dir}` : name,
+      command: ["yarn", "eslint", "--max-warnings", "0", ...files],
+      when: files.length > 0,
+      missing: hasEslintConfig(dir) ? undefined : "no ESLint config",
+      cwd: dir,
+    };
+  });
+}
+
+/** The repo's own type-check script, run once when Turbo cannot run check-types. */
+const TYPE_CHECK_SCRIPTS = ["check-types", "typecheck", "type-check", "tsc"];
+const typeCheckScript = TYPE_CHECK_SCRIPTS.find((script) =>
+  layout.scripts.includes(script),
 );
 
 const steps: Step[] = [
@@ -91,35 +207,53 @@ const steps: Step[] = [
       ...formattable,
     ],
     when: formattable.length > 0,
+    missing: needsTool("prettier"),
   },
-  {
-    name: "lint and types (affected workspaces)",
-    command: [
-      "yarn",
-      "turbo",
-      "run",
-      "lint",
-      "check-types",
-      ...workspaceFilters,
-      "--output-logs=errors-only",
-      "--ui=stream",
-    ],
-    when: touches(/^(apps|packages)\//),
-  },
-  {
-    name: "boundaries (changed code)",
-    command: ["yarn", "eslint", "--max-warnings", "0", ...code],
-    when: code.length > 0,
-  },
+  ...(turboMissing === undefined
+    ? [
+        {
+          name: "lint and types (affected workspaces)",
+          command: [
+            "yarn",
+            "turbo",
+            "run",
+            ...TURBO_TASKS,
+            ...workspaceFilters,
+            "--output-logs=errors-only",
+            "--ui=stream",
+          ],
+          when: inCode.length > 0,
+        },
+        ...eslintSteps("boundaries (changed code)"),
+      ]
+    : [
+        {
+          name: "lint and types via Turbo",
+          command: [],
+          when: false,
+          missing: turboMissing,
+        },
+        ...eslintSteps("lint (changed code)"),
+        {
+          name: `types (${typeCheckScript ?? "type-check script"})`,
+          command: ["yarn", typeCheckScript ?? ""],
+          when: code.length > 0,
+          missing: typeCheckScript
+            ? undefined
+            : `no ${TYPE_CHECK_SCRIPTS.join(", ")} script`,
+        },
+      ]),
   {
     name: "types (tooling)",
     command: ["yarn", "check-types:tooling"],
     when: touches(/^tooling\/.+\.ts$/),
+    missing: needsScript("check-types:tooling"),
   },
   {
     name: "docs lint",
     command: ["yarn", "lint:docs"],
     when: touches(/^(docs\/|\.claude\/rules\/|toolkit\.json$)/),
+    missing: needsScript("lint:docs"),
   },
   {
     name: "settings",
@@ -127,18 +261,28 @@ const steps: Step[] = [
     when: touches(
       /^(\.claude\/settings\.json|tooling\/check-settings\.ts|tooling\/fixtures\/settings\/)/,
     ),
+    missing: needsScript("check-settings"),
   },
   {
     name: "hook fixtures",
     command: ["yarn", "test:hooks"],
-    when: touches(/^tooling\/(hooks\/|lib\/work-ids\.ts|test-hooks\.ts)/),
+    when: touches(
+      /^tooling\/(hooks\/|lib\/(work-ids|layout)\.ts|test-hooks\.ts)/,
+    ),
+    missing: needsScript("test:hooks"),
   },
   {
     name: "check-specs",
     command: ["yarn", "check-specs"],
     when: scoped === undefined,
+    missing: needsScript("check-specs"),
   },
-  { name: "budget", command: ["yarn", "budget"], when: scoped === undefined },
+  {
+    name: "budget",
+    command: ["yarn", "budget"],
+    when: scoped === undefined,
+    missing: needsScript("budget"),
+  },
 ];
 
 /** No colour codes in output the stop gate quotes: picocolors colours whenever FORCE_COLOR is present, even as "0". */
@@ -149,13 +293,18 @@ const plainEnv: NodeJS.ProcessEnv = {
 };
 delete plainEnv.FORCE_COLOR;
 
+/** One short line per step that cannot run here; the stop gate quotes this within its reason. */
+const notRun = steps
+  .filter((step) => step.missing !== undefined)
+  .map((step) => `not run: ${step.name} (${step.missing})`);
+
 const started = Date.now();
 const timings: string[] = [];
 for (const step of steps) {
-  if (!step.when) continue;
+  if (!step.when || step.missing !== undefined) continue;
   const t = Date.now();
   const result = spawnSync(step.command[0]!, step.command.slice(1), {
-    cwd: REPO_ROOT,
+    cwd: path.join(REPO_ROOT, step.cwd ?? "."),
     encoding: "utf8",
     maxBuffer: 64 * 1024 * 1024,
     env: plainEnv,
@@ -168,6 +317,8 @@ for (const step of steps) {
       .split("\n")
       .slice(-25)
       .join("\n");
+    // The not-run lines go first so the failure stays in the tail the stop gate quotes.
+    if (notRun.length) console.error(notRun.join("\n"));
     console.error(
       `verify:fast — ${step.name} failed (${seconds} s):\n${output}`,
     );
@@ -177,3 +328,4 @@ for (const step of steps) {
 console.log(
   `verify:fast — ${changed.length} changed file(s); ${((Date.now() - started) / 1000).toFixed(1)} s: ${timings.join(", ") || "nothing to check"}.`,
 );
+if (notRun.length) console.log(notRun.join("\n"));
