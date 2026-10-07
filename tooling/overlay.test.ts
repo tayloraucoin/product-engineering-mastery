@@ -397,7 +397,13 @@ test("C4 a type-check script that runs an uninstalled Turbo is named as not run,
     scripts: { "check-types": "turbo run check-types" },
   });
   write(repo, "src/sum.ts", TYPE_ERROR);
-  const r = verifyFast(repo, ["src/sum.ts"]);
+  // Run under `yarn test:tooling`, PATH carries this repo's own binaries,
+  // Turbo among them: drop every entry that holds one.
+  const PATH = (process.env.PATH ?? "")
+    .split(path.delimiter)
+    .filter((dir) => !existsSync(path.join(dir, "turbo")))
+    .join(path.delimiter);
+  const r = verifyFast(repo, ["src/sum.ts"], { PATH });
   assert.equal(r.status, 0, r.out);
   assert.match(
     r.out,
