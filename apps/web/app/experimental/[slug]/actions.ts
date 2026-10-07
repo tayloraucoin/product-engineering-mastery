@@ -1,7 +1,7 @@
 "use server";
 
 /**
- * The gate's two actions (LAB-7). `enterGate` binds the request to
+ * The experiment's actions. The gate's (LAB-7): `enterGate` binds the request to
  * `enterGateWith` (lib/sandbox/gate.ts): env's secret, the throttle's
  * cookie and address, the signed-in account, and the database. Neither the
  * code nor the email is logged or put in a URL; the form learns only which
@@ -16,10 +16,16 @@ import { createLogger } from "@pem/observability/logger";
 import { deployed, productionRuntime } from "../../../env";
 import {
   grantAccess,
+  resolveViewer,
   sandboxDb,
   sandboxSecret,
   setAccessCookie,
 } from "../../../lib/sandbox/access";
+import {
+  recordViewWith,
+  viewDepsFor,
+  type RecordViewResult,
+} from "../../../lib/sandbox/experiment";
 import {
   enterGateWith,
   gatePath,
@@ -152,4 +158,23 @@ export async function signOutHere(slug: string): Promise<never> {
       });
   }
   redirect(gatePath(slug));
+}
+
+/**
+ * One page load or design switch (LAB-11, S15), sent by the switcher after
+ * mount, never during render. Only a reviewer on an open experiment is
+ * counted; the team and a closed experiment write nothing (D-LAB-14). The
+ * result says only which of those happened.
+ */
+export async function recordView(
+  slug: string,
+  input: { kind: "load" | "switch"; design: string },
+): Promise<RecordViewResult> {
+  const result = await recordViewWith(
+    { resolveViewer, recordViewEvent: viewDepsFor(sandboxDb) },
+    slug,
+    input,
+  );
+  if (result.kind === "failed") log.warn("sandbox.view_failed");
+  return result;
 }

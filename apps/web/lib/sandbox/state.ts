@@ -62,6 +62,18 @@ export const SANDBOX_STATE_KEYS: Readonly<
   "expts-header-stale": "team",
   "expts-header-developer": "team",
   "expts-header-partial": "team",
+  // The experiment page (LAB-11, experiment.md).
+  "exp-empty": "team",
+  "exp-loading": "team",
+  "exp-error": "team",
+  "exp-partial": "team",
+  "exp-offline": "team",
+  "exp-success": "team",
+  "exp-single": "team",
+  "exp-returning": "team",
+  "exp-sent": "team",
+  "exp-closed": "team",
+  "exp-revoked": "team",
 };
 
 /**

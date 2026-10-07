@@ -4,8 +4,8 @@
  * place, with status 200, the same for every slug. The team on an unknown
  * slug gets the app's 404. The title is fixed for every slug.
  *
- * The experiment itself is LAB-11's and the ended page LAB-21's: their
- * branches below are placeholders until those tickets land.
+ * The experiment is LAB-11's (`_components/experiment/`); the ended page is
+ * LAB-21's, a placeholder until that ticket lands.
  */
 
 import type { Metadata } from "next";
@@ -28,6 +28,7 @@ import {
 } from "../../../lib/sandbox/state";
 import { teamMemberOf } from "../../../lib/sandbox/team";
 import { getAuthContext } from "../../../lib/supabase/context";
+import { Experiment } from "./_components/experiment/experiment-page";
 import { Gate } from "./_components/gate/gate";
 
 export const metadata: Metadata = { title: GATE_WORDS.title };
@@ -83,7 +84,20 @@ export default async function ExperimentPage({
     case "ended":
       return <Placeholder ticket="LAB-21" />;
     case "experiment":
-      return <Placeholder ticket="LAB-11" />;
+      if (result.kind !== "team" && result.kind !== "reviewer")
+        return notFound();
+      return (
+        <Experiment
+          experiment={result.experiment}
+          who={
+            result.kind === "team"
+              ? { kind: "team" }
+              : { kind: "reviewer", viewer: result.viewer }
+          }
+          request={{ design: query.design, from: query.from }}
+          state={stateKey}
+        />
+      );
   }
 }
 
