@@ -32,6 +32,26 @@ export {
   type CodeRow,
 } from "./codes.ts";
 export {
+  ACTIONS_PAGE_SIZE,
+  countExperimentData,
+  deleteExperimentData,
+  ERASED_LABEL,
+  ERASURE_ACTIONS,
+  eraseEmail,
+  findErasure,
+  findReviewerEmails,
+  listActions,
+  type ActionRow,
+  type ActionsPage,
+  type ErasureCounts,
+  type ErasureFound,
+  type ExperimentDataCounts,
+  type ExperimentDataCountsRead,
+  type HeldCounts,
+  type NameLabel,
+  type ReviewerEmails,
+} from "./erasure.ts";
+export {
   claimFirstDesign,
   readReviewerDesigns,
   recordViewEvent,

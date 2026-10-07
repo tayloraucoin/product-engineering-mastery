@@ -47,6 +47,7 @@ import {
   sandboxViewEvents,
 } from "../../src/schema/index.ts";
 import { codesCases } from "./codes-cases.ts";
+import { erasureCases } from "./erasure-cases.ts";
 import {
   buildWorld,
   codeHash,
@@ -509,6 +510,7 @@ const recordViewAs = (kind: ViewerKind) => async (w: World) => {
 /** Registered cases for every runtime export of @pem/db/sandbox. */
 const REGISTRY: Registry<World> = {
   ...codesCases({ db, viewerFor }),
+  ...erasureCases({ db, viewerFor }),
   findLiveReviewerByCodeHash: {
     group: "gate",
     criteria: ["C3"],
