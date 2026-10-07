@@ -62,6 +62,18 @@ export const SANDBOX_STATE_KEYS: Readonly<
   "expts-header-stale": "team",
   "expts-header-developer": "team",
   "expts-header-partial": "team",
+  // Access codes (LAB-15, access-codes.md).
+  "codes-empty": "team",
+  "codes-loading": "team",
+  "codes-error": "team",
+  "codes-partial": "team",
+  "codes-offline": "team",
+  "codes-success": "team",
+  "codes-shown-once": "team",
+  "codes-copied": "team",
+  "codes-make-error": "team",
+  "codes-closed": "team",
+  "codes-mismatch": "team",
   // The experiment page (LAB-11, experiment.md).
   "exp-empty": "team",
   "exp-loading": "team",

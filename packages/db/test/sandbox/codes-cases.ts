@@ -54,7 +54,10 @@ export function codesCases({ db, viewerFor }: Deps): Registry<World> {
   }
 
   async function actionsOn(slug: string) {
-    return db().select().from(sandboxActions).where(eq(sandboxActions.slug, slug));
+    return db()
+      .select()
+      .from(sandboxActions)
+      .where(eq(sandboxActions.slug, slug));
   }
 
   async function reviewerRow(id: string) {
@@ -74,7 +77,9 @@ export function codesCases({ db, viewerFor }: Deps): Registry<World> {
     try {
       await fn(slug);
     } finally {
-      await db().delete(sandboxReviewers).where(eq(sandboxReviewers.slug, slug));
+      await db()
+        .delete(sandboxReviewers)
+        .where(eq(sandboxReviewers.slug, slug));
       await db().delete(sandboxActions).where(eq(sandboxActions.slug, slug));
     }
   }
@@ -109,7 +114,11 @@ export function codesCases({ db, viewerFor }: Deps): Registry<World> {
         call(w, viewerFor(w, kind)),
         refusedWith(NOT_A_TEAM_VIEWER),
       );
-      assert.equal(await reviewerCount(w.slugA), before, "a refused call wrote");
+      assert.equal(
+        await reviewerCount(w.slugA),
+        before,
+        "a refused call wrote",
+      );
       const [afterA] = await db()
         .select({ n: count() })
         .from(sandboxActions)
@@ -164,8 +173,7 @@ export function codesCases({ db, viewerFor }: Deps): Registry<World> {
     assert.ok(signedIn.lastUsedAt instanceof Date);
     // No code, no hash, nothing of slug B.
     const text = JSON.stringify(rows);
-    for (const r of [w.a1, w.a2, w.signedIn])
-      assert.ok(!text.includes(r.code));
+    for (const r of [w.a1, w.a2, w.signedIn]) assert.ok(!text.includes(r.code));
     for (const secret of [w.b.label, w.b.email!, w.b.viewer.reviewerId])
       assert.ok(!text.includes(secret));
     const [stored] = await db()
@@ -342,12 +350,15 @@ export function codesCases({ db, viewerFor }: Deps): Registry<World> {
       assert.equal((await reviewerRow(made.reviewerId))!.codeVersion, 3);
       // Records: made, replaced, revoked, replaced; bare.
       const records = await actionsOn(slug);
-      assert.deepEqual(records.map((r) => r.action).sort(), [
-        sandbox.CODE_ACTIONS.made,
-        sandbox.CODE_ACTIONS.replaced,
-        sandbox.CODE_ACTIONS.replaced,
-        sandbox.CODE_ACTIONS.revoked,
-      ].sort());
+      assert.deepEqual(
+        records.map((r) => r.action).sort(),
+        [
+          sandbox.CODE_ACTIONS.made,
+          sandbox.CODE_ACTIONS.replaced,
+          sandbox.CODE_ACTIONS.replaced,
+          sandbox.CODE_ACTIONS.revoked,
+        ].sort(),
+      );
       for (const record of records)
         assertBareRecord(record, viewer, record.action, slug, [
           label,
@@ -394,18 +405,18 @@ export function codesCases({ db, viewerFor }: Deps): Registry<World> {
         }),
         { revoked: true },
       );
-      assert.deepEqual(
-        (await reviewerRow(made.reviewerId))!.revokedAt,
-        first,
-      );
+      assert.deepEqual((await reviewerRow(made.reviewerId))!.revokedAt, first);
       const revoked = (await actionsOn(slug)).filter(
         (r) => r.action === sandbox.CODE_ACTIONS.revoked,
       );
       assert.equal(revoked.length, 1);
-      assertBareRecord(revoked[0]!, viewer, sandbox.CODE_ACTIONS.revoked, slug, [
-        "Dee",
-        made.reviewerId,
-      ]);
+      assertBareRecord(
+        revoked[0]!,
+        viewer,
+        sandbox.CODE_ACTIONS.revoked,
+        slug,
+        ["Dee", made.reviewerId],
+      );
       // Another slug's reviewer is out of reach from this slug.
       assert.equal(
         await sandbox.revokeCode(db(), viewer, {
@@ -414,7 +425,10 @@ export function codesCases({ db, viewerFor }: Deps): Registry<World> {
         }),
         null,
       );
-      assert.equal((await reviewerRow(w.a1.viewer.reviewerId))!.revokedAt, null);
+      assert.equal(
+        (await reviewerRow(w.a1.viewer.reviewerId))!.revokedAt,
+        null,
+      );
       await assert.rejects(
         sandbox.revokeCode(db(), viewer, { slug, reviewerId: "x" }),
         refusedWith(CODES_INPUT_INVALID),

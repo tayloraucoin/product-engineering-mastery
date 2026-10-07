@@ -18,11 +18,11 @@
 import { and, desc, eq, inArray, isNotNull, max, sql } from "drizzle-orm";
 
 import { sandboxAccesses } from "../schema/sandbox/accesses.ts";
-import { sandboxReviewers } from "../schema/sandbox/reviewers.ts";
 import {
   SANDBOX_SLUG_MAX,
   SANDBOX_SLUG_PATTERN,
 } from "../schema/sandbox/columns.ts";
+import { sandboxReviewers } from "../schema/sandbox/reviewers.ts";
 import { recordAction } from "./actions.ts";
 import {
   isUuid,
