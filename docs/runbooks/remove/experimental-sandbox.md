@@ -39,7 +39,7 @@ git add -A
 git write-tree
 ```
 
-**STOP** if `git write-tree` fails. Note the tree id it prints in the thread. `git diff --cached <tree>` shows what went, and `git restore --source=<tree> --staged --worktree -- <path>` brings a file back. Stage again (`git add -A`) before every `git grep` below: it sees only tracked files. A staged file is deleted with `git rm -rf`.
+**STOP** if `git write-tree` fails. Note the tree id it prints in the thread. It is a restore point within this session: nothing points to it, so `git gc` may prune it in a couple of weeks. `git diff --cached <tree>` shows what went, and `git restore --source=<tree> --staged --worktree -- <path>` brings a file back. Stage again (`git add -A`) before every `git grep` below: it sees only tracked files. A staged file is deleted with `git rm -rf`.
 
 Before deleting, record the 404 baseline if the app runs (`yarn web:dev`). `/experimental/pricing-2026` shows the gate, with its code field. `/admin/experiments` sends a signed-out visitor to `/auth/sign-in?next=/admin/experiments`, never to a 404. Take a screenshot of each. If the app cannot run yet, because a duplicate's environment is set in step 5, record the baseline as skipped. The after-check in phase 5 still applies.
 
@@ -105,7 +105,7 @@ In `packages/config/eslint/boundaries.js`, both sandbox elements go, `web-sandbo
 `developer` sits in `APP_ROLES` (`packages/db/src/rls.ts`) for the sandbox's team check. It leaves only when no other feature reads it. This decides:
 
 ```bash
-git grep -n -E "[\"'`]developer[\"'`]" -- apps packages tooling ':!packages/db/migrations'
+git grep -n -E "[\"'\`]developer[\"'\`]" -- apps packages tooling ':!packages/db/migrations'
 ```
 
 - **Only `packages/db/src/rls.ts` and LAB-2's tests print:** remove it. `APP_ROLES` goes back to `["user", "admin"]`. Delete LAB-2's tests: "C2: an admin procedure refuses a developer" (`packages/api/src/context.test.ts`), "C3: the bridge accepts developer" (`packages/db/src/rls.test.ts`), the two "C4: a developer …" tests (`packages/db/test/rls.test.ts`), and in "C1: roleOf returns developer …" (`packages/auth/src/context.test.ts`) make the `developer` line expect `user`, which proves the fallback below, and rename the test. Drop `"developer"` from the `APP_ROLES` line quoted in [`supabase-database.md`](supabase-database.md).
@@ -157,7 +157,7 @@ It writes a new migration that drops the seven `sandbox_` tables and nothing els
 7. `yarn check-refs` names the deleted paths this runbook and other kept docs still list. Add each to `tooling/refs-pending.json`, keyed exactly as printed: `"<deleted path>": "removed by docs/runbooks/remove/experimental-sandbox.md"`.
 8. `yarn verify` exits 0. Its test-weakening check fails on the deleted LAB tests unless the commit says why: give it a `Test-changes: LAB's tests go with the experimental sandbox (docs/runbooks/remove/experimental-sandbox.md)` trailer.
 
-Delete the tag once the change is committed and the operator's steps are done: `git tag -d pre-sandbox-removal`.
+Delete the tag once the change is committed and the operator's steps are done: `git tag -d pre-sandbox-removal`. A duplicate's tree id needs no clean-up.
 
 ## 6. The operator's steps
 
