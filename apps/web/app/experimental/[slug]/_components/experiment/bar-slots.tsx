@@ -1,13 +1,12 @@
 "use client";
 
 /**
- * What the review bar's slots show until LAB-12 and LAB-13 wire them: the
- * Comment toggle, the Comments button, the save status and the line above
- * the bar, each drawn from `BarData` (here, the page's fixtures). Placing
- * is disabled once the review has closed or access has ended.
+ * The review bar's slots, wired to the pins (LAB-12): the Comment toggle,
+ * the Comments button (LAB-13 opens its list), the save status with Retry,
+ * and the line above the bar, each drawn from the pins provider's
+ * `BarData`. Placing is disabled once the review has closed or access has
+ * ended.
  */
-import { useState } from "react";
-
 import { Button } from "@pem/ui/button";
 import { Toggle } from "@pem/ui/toggle";
 
@@ -18,15 +17,16 @@ import {
   type BarData,
   type SaveStatus,
 } from "../../../../../lib/sandbox/client/experiment-view";
+import { usePins } from "../pins/pins-provider";
 
-export function CommentToggle({ status }: { status: SaveStatus }) {
-  const [pressed, setPressed] = useState(false);
+export function CommentToggle() {
+  const { bar, mode, toggleMode } = usePins();
   return (
     <Toggle
       variant="outline"
-      pressed={pressed}
-      onPressedChange={setPressed}
-      disabled={placingDisabled(status)}
+      pressed={mode !== "off"}
+      onPressedChange={toggleMode}
+      disabled={placingDisabled(bar.status)}
       // The Comments button's outline, so the two read as one kind of control.
       className="h-11 border-border bg-background px-4 dark:border-input dark:bg-input/30"
     >
@@ -35,7 +35,8 @@ export function CommentToggle({ status }: { status: SaveStatus }) {
   );
 }
 
-export function CommentsButton({ bar }: { bar: BarData }) {
+export function CommentsButton() {
+  const { bar } = usePins();
   const view = commentsButtonView(bar);
   return (
     <Button variant="outline" disabled={view.disabled} className="h-11 px-4">
@@ -45,18 +46,20 @@ export function CommentsButton({ bar }: { bar: BarData }) {
 }
 
 /** The save status in the bar: empty at rest; the error and unsent lines carry Retry. */
-export function SaveStatusText({ status }: { status: SaveStatus }) {
+export function SaveStatusText() {
+  const { bar, retry } = usePins();
+  const status = bar.status;
   switch (status.kind) {
     case "error":
       return (
         <>
-          {W.loadError} <RetryButton />
+          {W.loadError} <RetryButton onRetry={retry} />
         </>
       );
     case "partial":
       return (
         <>
-          {W.unsent(status.unsent)} · <RetryButton />
+          {W.unsent(status.unsent)} · <RetryButton onRetry={retry} />
         </>
       );
     case "saved":
@@ -66,9 +69,9 @@ export function SaveStatusText({ status }: { status: SaveStatus }) {
   }
 }
 
-function RetryButton() {
+function RetryButton({ onRetry }: { onRetry(): void }) {
   return (
-    <Button variant="link" className="h-11 min-w-11 px-2">
+    <Button variant="link" className="h-11 min-w-11 px-2" onClick={onRetry}>
       {W.retry}
     </Button>
   );
@@ -86,6 +89,11 @@ export function statusLineFor(status: SaveStatus): string | null {
     default:
       return null;
   }
+}
+
+/** The status line, read from the pins. */
+export function useStatusLine(): string | null {
+  return statusLineFor(usePins().bar.status);
 }
 
 export type { BarData };

@@ -5,7 +5,8 @@
  * lib/sandbox/experiment.ts; the team is never counted (D-LAB-14).
  *
  * A team `?state=exp-*` key renders its fixture: the bar's data, the
- * primary, and for `exp-single` one design. Fixtures read and write nothing.
+ * primary, and for `exp-single` one design. A team pins.md key renders its
+ * pins (LAB-12). Fixtures read and write nothing.
  */
 import { randomInt } from "node:crypto";
 
@@ -14,11 +15,14 @@ import { createLogger } from "@pem/observability/logger";
 import type { ExperimentConfig } from "../../../_experiments/registry";
 import { sandboxDb } from "../../../../../lib/sandbox/access";
 import {
-  BAR_AT_REST,
   designOption,
   experimentFixture,
   isExperimentStateKey,
 } from "../../../../../lib/sandbox/client/experiment-view";
+import {
+  isPinsStateKey,
+  pinsFixture,
+} from "../../../../../lib/sandbox/client/pins-view";
 import {
   drawFirstDesign,
   experimentDepsFor,
@@ -27,6 +31,7 @@ import {
   type OpeningRequest,
   type OpeningViewer,
 } from "../../../../../lib/sandbox/experiment";
+import type { PinsSource } from "../pins/pins-provider";
 import { ExperimentSwitcher } from "./experiment-switcher";
 
 const log = createLogger("sandbox");
@@ -50,6 +55,17 @@ export async function Experiment({
       ? experimentFixture(state)
       : null;
 
+  // The team previews pins on a pins.md fixture, or LAB-11's bar fixture;
+  // a reviewer's pins load in the browser after mount.
+  const pins: PinsSource =
+    who.kind === "reviewer"
+      ? { kind: "reviewer", reviewerId: who.viewer.reviewerId }
+      : {
+          kind: "preview",
+          fixture: isPinsStateKey(state) ? pinsFixture(state) : null,
+          bar: fixture?.bar ?? null,
+        };
+
   const opening = await openingFor(experiment, who, request);
   const order = fixture?.single ? opening.order.slice(0, 1) : opening.order;
 
@@ -70,8 +86,7 @@ export async function Experiment({
       }
       primary={fixture?.primary ?? opening.primary}
       counted={opening.counted}
-      bar={fixture?.bar ?? BAR_AT_REST}
-      commentsOn={null}
+      pins={pins}
     />
   );
 }

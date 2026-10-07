@@ -23,7 +23,6 @@ import {
 } from "react";
 
 import {
-  type BarData,
   type DesignOption,
   type PrimaryKind,
 } from "../../../../../lib/sandbox/client/experiment-view";
@@ -33,11 +32,13 @@ import {
   type SwitchLog,
 } from "../../../../../lib/sandbox/client/switcher";
 import { recordView } from "../../actions";
+import { PinsLayer } from "../pins/pins-layer";
+import { PinsProvider, usePins, type PinsSource } from "../pins/pins-provider";
 import {
   CommentsButton,
   CommentToggle,
   SaveStatusText,
-  statusLineFor,
+  useStatusLine,
 } from "./bar-slots";
 import { ReviewBar } from "./review-bar";
 
@@ -49,9 +50,8 @@ export type ExperimentSwitcherProps = {
   primary: PrimaryKind;
   /** Whether views are logged: a reviewer only (D-LAB-14). */
   counted: boolean;
-  bar: BarData;
-  /** The viewer's comment count per design, for the switch announcement; null until LAB-12 loads them. */
-  commentsOn: Readonly<Record<string, number>> | null;
+  /** Whose pins: the reviewer's, or the team's preview of a fixture (LAB-12). */
+  pins: PinsSource;
 };
 
 function sendLog(
@@ -62,18 +62,47 @@ function sendLog(
   void recordView(slug, log).catch(() => undefined);
 }
 
-export function ExperimentSwitcher({
+export function ExperimentSwitcher(props: ExperimentSwitcherProps) {
+  const [shown, setShown] = useState(props.initialShown);
+  const [barHeight, setBarHeight] = useState(0);
+  return (
+    <PinsProvider
+      slug={props.slug}
+      source={props.pins}
+      shown={shown}
+      barHeight={barHeight}
+    >
+      <SwitcherBody
+        {...props}
+        shown={shown}
+        setShown={setShown}
+        barHeight={barHeight}
+        setBarHeight={setBarHeight}
+      />
+    </PinsProvider>
+  );
+}
+
+function SwitcherBody({
   slug,
   designs,
   initialShown,
   primary,
   counted,
-  bar,
-  commentsOn,
-}: ExperimentSwitcherProps) {
-  const [shown, setShown] = useState(initialShown);
+  shown,
+  setShown,
+  barHeight,
+  setBarHeight,
+}: ExperimentSwitcherProps & {
+  shown: string;
+  setShown(design: string): void;
+  barHeight: number;
+  setBarHeight(height: number): void;
+}) {
+  const pins = usePins();
+  const commentsOn = pins.counts;
+  const statusLine = useStatusLine();
   const [announcement, setAnnouncement] = useState("");
-  const [barHeight, setBarHeight] = useState(0);
   const loadLogged = useRef(false);
   const pendingScroll = useRef<number | null>(null);
   const pendingLog = useRef<SwitchLog | null>(null);
@@ -131,7 +160,7 @@ export function ExperimentSwitcher({
       setShown(plan.shown);
       setAnnouncement(plan.announcement);
     },
-    [designs, shown, counted, commentsOn],
+    [designs, shown, counted, commentsOn, setShown],
   );
 
   const current = designs.find((d) => d.id === shown) ?? designs[0]!;
@@ -142,10 +171,18 @@ export function ExperimentSwitcher({
       className="contents"
     >
       <main className="min-h-dvh pb-(--review-bar-height)">
-        <div key={current.id} data-sandbox-design={current.id}>
+        <div
+          key={current.id}
+          ref={pins.setRoot}
+          data-sandbox-design={current.id}
+          // Comment mode (LAB-12): the crosshair, the hovered element's
+          // outline, and a visible ring on each region's Tab stop.
+          className="data-commenting:cursor-crosshair data-commenting:**:cursor-crosshair data-commenting:[&_[data-pin-hover]]:outline-2 data-commenting:[&_[data-pin-hover]]:outline-offset-2 data-commenting:[&_[data-pin-hover]]:outline-ring data-commenting:[&_[data-sandbox-region]:focus-visible]:outline-3 data-commenting:[&_[data-sandbox-region]:focus-visible]:outline-offset-4 data-commenting:[&_[data-sandbox-region]:focus-visible]:outline-ring"
+        >
           {current.element}
         </div>
       </main>
+      <PinsLayer />
       <p aria-live="polite" className="sr-only">
         {announcement}
       </p>
@@ -155,10 +192,10 @@ export function ExperimentSwitcher({
         shown={current.id}
         onSwitch={onSwitch}
         primary={primary}
-        commentToggle={<CommentToggle status={bar.status} />}
-        commentsButton={<CommentsButton bar={bar} />}
-        saveStatus={<SaveStatusText status={bar.status} />}
-        statusLine={statusLineFor(bar.status)}
+        commentToggle={<CommentToggle />}
+        commentsButton={<CommentsButton />}
+        saveStatus={<SaveStatusText />}
+        statusLine={statusLine}
         onHeight={setBarHeight}
       />
     </div>
