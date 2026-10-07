@@ -324,6 +324,7 @@ describe("C2: one error for every code that does not open a review", () => {
         "sandbox.network_counter_off",
         "sandbox.gate_failed",
         "auth.sign_out_unrevoked",
+        "sandbox.view_failed",
       ],
     );
     assert.doesNotMatch(action, /log\.\w+\([^)]*(formData|email|input)/);

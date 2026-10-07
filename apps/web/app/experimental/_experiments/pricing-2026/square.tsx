@@ -14,16 +14,12 @@ import { FAQ, FEATURES, PLANS } from "./content.ts";
  * beside a short guide to choosing, then questions, under a header pinned
  * to the top (the review bar must never cover it, C-LAB-exp-6). Every
  * section carries its region marker (`data-sandbox-region`,
- * `data-sandbox-name`), read by the pins.
+ * `data-sandbox-name`), read by the pins; the header is not a section.
  */
 export function SquareDesign() {
   return (
     <>
-      <header
-        data-sandbox-region="header"
-        data-sandbox-name="Page header"
-        className="sticky top-0 z-10 border-b bg-background"
-      >
+      <header className="sticky top-0 z-10 border-b bg-background">
         <nav
           aria-label="Pricing"
           className="mx-auto flex w-full max-w-6xl items-center gap-6 px-6 py-3 text-sm"
