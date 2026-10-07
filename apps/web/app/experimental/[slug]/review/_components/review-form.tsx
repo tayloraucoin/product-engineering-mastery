@@ -243,7 +243,6 @@ export function ReviewFormView({
       window.removeEventListener("offline", goOffline);
     };
     // The source is fixed for the page's life.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /** Every change: the form, the draft kept, and a new version id on the next send. */
