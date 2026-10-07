@@ -45,6 +45,7 @@ export function ReviewComments({
   open,
   errors,
   backHref,
+  onLeave,
   disabled,
   onTriage,
   onMattersMost,
@@ -59,6 +60,8 @@ export function ReviewComments({
   /** Field errors by gap id, once a send has been refused. */
   errors: Readonly<Record<string, string>>;
   backHref: string;
+  /** Leaving for the designs: focus comes back here on return. */
+  onLeave(): void;
   /** Closed or sending: nothing changes. */
   disabled: boolean;
   onTriage(id: string, choice: TriageId): void;
@@ -70,7 +73,11 @@ export function ReviewComments({
     return (
       <p>
         {W.comments.none}{" "}
-        <Link href={backHref} className="underline underline-offset-4">
+        <Link
+          href={backHref}
+          className="underline underline-offset-4"
+          onClick={onLeave}
+        >
           {W.back}
         </Link>
       </p>
@@ -122,7 +129,11 @@ export function ReviewComments({
 /** The first words of a comment, to tell the choices apart. */
 function excerpt(body: string): string {
   const flat = body.replace(/\s+/g, " ").trim();
-  return flat.length > 60 ? `${flat.slice(0, 59)}…` : flat;
+  if (flat.length <= 60) return flat;
+  // Cut at the last whole word that fits.
+  const cut = flat.slice(0, 60);
+  const space = cut.lastIndexOf(" ");
+  return `${space > 30 ? cut.slice(0, space) : cut.slice(0, 59)}…`;
 }
 
 function CommentRow({

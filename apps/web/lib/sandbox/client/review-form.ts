@@ -251,7 +251,7 @@ export function requiredGaps(
     if (!triage.comments[c.id])
       gaps.push({
         id: GAP_IDS.triage(c.id),
-        label: `Comment ${c.number}`,
+        label: REVIEW_CORE.comments.triageGroup(c.number),
         message: REVIEW_ERRORS.triage,
       });
   const most = mattersMostView(

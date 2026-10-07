@@ -318,7 +318,7 @@ describe("C4: a send missing a required answer", () => {
     assert.equal(REVIEW_CORE.missing(1), "1 answer is missing");
     assert.deepEqual(gaps.map((g) => g.label).slice(0, 2), [
       "How well does this design meet the goals below?",
-      "Comment 3",
+      "Comment 3: Must change, Should change or Fine either way",
     ]);
   });
 

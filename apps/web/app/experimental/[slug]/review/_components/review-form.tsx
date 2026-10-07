@@ -115,6 +115,15 @@ export type ReviewSource =
 /** Where "Look at the design again" was pressed from, so focus returns to it. */
 const returnKey = (slug: string) => `sandbox:review-return:${slug}`;
 
+/** Leaving for the designs from a question: focus comes back to it on return. */
+function rememberReturn(slug: string, fieldId: string) {
+  try {
+    storageOrNull("sessionStorage")?.setItem(returnKey(slug), fieldId);
+  } catch {
+    // Focus will not return; the page still does.
+  }
+}
+
 function storageOrNull(kind: "localStorage" | "sessionStorage") {
   try {
     return window[kind];
@@ -426,16 +435,7 @@ export function ReviewFormView({
             <Link
               href={config.lookAgainHref}
               className="-my-3 inline-block py-3 underline underline-offset-4"
-              onClick={() => {
-                try {
-                  storageOrNull("sessionStorage")?.setItem(
-                    returnKey(config.slug),
-                    GAP_IDS.overall,
-                  );
-                } catch {
-                  // Focus will not return; the page still does.
-                }
-              }}
+              onClick={() => rememberReturn(config.slug, GAP_IDS.overall)}
             >
               {W.overall.lookAgain}
             </Link>
@@ -451,6 +451,7 @@ export function ReviewFormView({
           open={commentsOpen(form, editing)}
           errors={errors}
           backHref={config.backHref}
+          onLeave={() => rememberReturn(config.slug, COMMENTS_SECTION)}
           disabled={locked}
           onTriage={(id, choice: TriageId) =>
             change((f) => ({ ...f, triage: { ...f.triage, [id]: choice } }))
@@ -582,7 +583,7 @@ export function ReviewFormView({
       </Section>
 
       <div className="flex flex-col gap-4">
-        <p role="status" className={line ? "text-sm" : "sr-only"}>
+        <p role="status" className={line ? "font-medium" : "sr-only"}>
           {line}
           {shownStatus === "closed" ? (
             <>
@@ -626,7 +627,7 @@ function Section({
     <section
       id={id}
       tabIndex={id ? -1 : undefined}
-      className="flex flex-col gap-4 outline-none"
+      className="flex flex-col gap-4 rounded-md outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
     >
       <h2 className="text-xl font-semibold tracking-tight">{heading}</h2>
       {children}

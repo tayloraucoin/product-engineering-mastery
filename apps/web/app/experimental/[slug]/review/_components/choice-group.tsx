@@ -100,7 +100,7 @@ export function ChoiceGroup({
       >
         {options.map(item)}
         {apart.length ? (
-          <div className="mt-2 flex flex-col gap-3">{apart.map(item)}</div>
+          <div className="mt-4 flex flex-col gap-3">{apart.map(item)}</div>
         ) : null}
       </RadioGroup>
       {error ? <FieldError id={errorId}>{error}</FieldError> : null}
