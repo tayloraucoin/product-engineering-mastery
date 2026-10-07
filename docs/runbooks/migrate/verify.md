@@ -46,8 +46,14 @@ Before a check enters the chain, it runs once on the base commit, in a detached 
 ```sh
 BASE=$(git merge-base <protected-branch> HEAD)
 git worktree add --detach "$TMPDIR/base" "$BASE"
-cd "$TMPDIR/base" && yarn install && yarn <lint> ; yarn <types> ; yarn <test> ; yarn <build>
+cd "$TMPDIR/base" && yarn install
+yarn <lint>; echo "lint $?"
+yarn <types>; echo "types $?"
+yarn <test>; echo "test $?"
+yarn <build>; echo "build $?"
 ```
+
+**Operator:** before the base `build`, the untracked env files. The worktree has none, and the thread cannot read them (the floor), so the operator copies their `.env` files into the worktree, or the base `build` is skipped and recorded as "not run at base" and the live tree's build in section 7 is its first proof. A build that fails only on missing env is not a failing build.
 
 A `build` that reads `.env` files (51 said so) runs unsandboxed with the operator's yes, here and at every later `yarn verify`: the floor denies those reads to a sandboxed session, and a build failing on a denied read is not a failing build.
 
@@ -61,13 +67,13 @@ Each recipe freezes what is red today so that the same debt passes and new debt 
 
 ### 3.1 Lint: ESLint bulk suppressions
 
-Needs ESLint 9.24.0 or later (`yarn eslint --version`). Older, and the lint freeze is a gap: it stays out of `verify` and the gap's plan is "upgrade ESLint, then this recipe".
+Needs ESLint 9.24.0 or later (`yarn eslint --version`), and a lint script that runs the ESLint CLI. Older, and the lint freeze is a gap: it stays out of `verify` and the gap's plan is "upgrade ESLint, then this recipe". A script that runs `next lint` goes through the Node API, never reads the suppressions file and lints a different file set: the baseline commit changes the script to `eslint .` (Next 16 removes `next lint` anyway); a repo whose config cannot run under the CLI makes the freeze a gap.
 
 1. `yarn eslint . --suppress-all`. It writes `eslint-suppressions.json` at the repo root, one entry per file and rule with a count, and exits 0.
 2. Commit the file alone: `ACM: migrate step 6, the lint baseline`.
 3. The lint script enters `verify` unchanged: ESLint reads the suppressions file on every run, fails a file whose count for a rule rises, and reports a count that fell as prunable. `yarn eslint . --prune-suppressions` lowers the counts; run it in the commit that fixes the code, never alone.
 
-**Check:** `yarn <lint>` exits 0 on the migration branch, and the same command with `--no-config-lookup` is not used anywhere (nothing bypasses the config).
+**Check:** `yarn <lint>` exits 0 on the migration branch, and the suppressions file is read: lowering one count in `eslint-suppressions.json` by one makes `yarn <lint>` fail, and restoring it passes again.
 
 **Never:** `--max-warnings` raised to today's count (it freezes a number, not the lines, so a fix in one file licenses a regression in another); turning a rule off to make the run green.
 
@@ -75,8 +81,8 @@ Needs ESLint 9.24.0 or later (`yarn eslint --version`). Older, and the lint free
 
 The repo's own `tsc` reports its errors; each gets one line above it, so the baseline is one line per error and rebases with the file. A fix then fails as TS2578 (an unused directive), which removes its own line.
 
-1. **Pin `strict` to its current value.** In the root `tsconfig.json`, if `strict` is not written, write `"strict": false`. Nothing changes today; TypeScript 6 defaults it to `true`, and an unpinned repo would fail every file at once on that upgrade (layer 3, part 1).
-2. **Insert the tags.** Run the type check, parse each `path(line,col): error TScode` line, and insert `// @ts-expect-error MIG-BASELINE(TScode)` on its own line above the reported line, keeping the reported line's indentation. Work bottom-up within each file so line numbers stay true. The script is a few lines of Node, written in the thread and not kept:
+1. **Pin `strict` to its current value.** In the root `tsconfig.json`, if `strict` is not written there, write its effective value, read from `yarn tsc --showConfig` (an `extends` chain may set it `true`), never a literal `false`. Nothing changes today; TypeScript 6 defaults it to `true`, and an unpinned repo would fail every file at once on that upgrade (layer 3, part 1).
+2. **Insert the tags.** Run the type check with `--pretty false` into a file, parse each `path(line,col): error TScode` line, and insert `// @ts-expect-error MIG-BASELINE(TScode)` on its own line above the reported line, keeping the reported line's indentation. Work bottom-up within each file so line numbers stay true. The script is a few lines of Node, written in the thread and not kept:
 
    ```js
    // node insert-baseline.mjs < tsc-output.txt
@@ -105,7 +111,7 @@ The repo's own `tsc` reports its errors; each gets one line above it, so the bas
    ```
 
 3. **Re-run until clean.** A line inside JSX children takes the block form, `{/* @ts-expect-error MIG-BASELINE(TScode) */}`; the second run names those lines, and they are done by hand. Two errors on one line share one tag. Repeat until `tsc` exits 0.
-4. **The count file.** Write the number of tags to `type-baseline.count` at the repo root (`git grep -c "MIG-BASELINE(" | awk -F: '{ s += $2 } END { print s }'`), as `212`.
+4. **The count file.** Write the number of tags to `type-baseline.count` at the repo root, with the same command the ratchet in step 5 runs (`git grep -c 'MIG-BASELINE(' -- '*.ts' '*.tsx' | awk -F: '{ s += $2 } END { print s+0 }'`), as `212`.
 5. **The ratchet, as a verify step.** Add the script and put it in the chain right after the type check:
 
    ```json

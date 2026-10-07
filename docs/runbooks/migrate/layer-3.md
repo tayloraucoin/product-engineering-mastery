@@ -26,7 +26,7 @@ For each part below, in order:
 yarn contract:init ACM <slug> --draft
 ```
 
-Then fill the drafted `contract.md`'s Build notes with the five items from the part's block: **Layer**, **What did not cross**, **Plan**, **Conflict risk** (the flag and the trigger that starts the part), **Estimate** (labelled as an estimate). Its objective is the part's first line; its `qa` is `Q1` unless the block says otherwise; its `planned_paths` are the plan's paths. A part the target already satisfies (the report scored it 0) is skipped and the skip is one line in record 0001.
+Then fill the drafted `contract.md`'s Build notes with the five items from the part's block: **Layer**, **What did not cross**, **Plan**, **Conflict risk** (the flag and the trigger that starts the part), **Estimate** (labelled as an estimate). Its objective is the part's first line; its `qa` is `Q1` unless the block says otherwise (parts 2 and 6 say Q3: schema, money, auth and personal data are Q3 by `AGENTS.md`); its `planned_paths` are the plan's paths. A part the target already satisfies (the report scored it 0) is skipped and the skip is one line in record 0001.
 
 The conflict-risk flag is **high** when the part touches more than about 50 files, or a file the team edits daily (`package.json`, the lint config, the root layout). A high-risk part runs in a window the team names, as the day's last commit, and never alongside a release.
 
@@ -44,7 +44,7 @@ Day one's own gaps are drafted first, from the guide's step 7, then these twelve
 
 ### 2. Database and migrations
 
-- **Layer:** 3, part 2.
+- **Layer:** 3, part 2. Q3, with Mason and Warden (schema).
 - **What did not cross:** the toolkit's migration check and local database conventions. `migrationsDir` stays the existing folder; nothing moves.
 - **Plan:** install the migration check (`check-migrations`, modelled on `packages/db/scripts/check-migrations.ts`), which scans migration contents for DDL against the auth schema and never reads names, so Drizzle's random file names need no rename. Add it to `verify`. A local database follows the operator's choice: their own Postgres (the default), hosted only, or Docker through `docs/runbooks/add/docker-local-database.md` only when Docker is chosen. **Operator:** any hosted migration.
 - **Conflict risk:** low (one script, one `verify` step). Trigger: the first ticket that writes a migration under the practice.
@@ -62,7 +62,7 @@ Day one's own gaps are drafted first, from the guide's step 7, then these twelve
 
 - **Layer:** 3, part 4 (signal V1).
 - **What did not cross:** the layer graph check, `packages/config/eslint/boundaries.js`.
-- **Plan:** write the target's element graph (apps import packages; packages never import apps; apps never import each other; the module folders by name), install the config, run `yarn eslint . --suppress-all` so today's violations are frozen in `eslint-suppressions.json` (layer 2, 3.1), and add the lint to `verify`. In the target the graph is a Mason one-way door: the ticket is Q2 with Mason, and the graph is a decision record.
+- **Plan:** write the target's element graph (apps import packages; packages never import apps; apps never import each other; the module folders by name; for a root app before part 11, the top-level folders are the elements), install the config, run `yarn eslint . --suppress-all` so today's violations are frozen in `eslint-suppressions.json` (layer 2, 3.1), and add the lint to `verify`. In the target the graph is a Mason one-way door: the ticket is Q2 with Mason, and the graph is a decision record.
 - **Conflict risk:** medium (the lint config; the suppressions file touches every violating file's row, not the files). Trigger: part 1 done where ESLint was below 9.24.0; otherwise any time.
 - **Estimate:** half a day for the graph, an hour to install. Estimates.
 
@@ -70,13 +70,13 @@ Day one's own gaps are drafted first, from the guide's step 7, then these twelve
 
 - **Layer:** 3, part 5 (signal V3).
 - **What did not cross:** one `process.env` reader per workspace and the tier picker (`docs/engineering/codebase-conventions.md` §5). The report counts the files that read `process.env` elsewhere.
-- **Plan:** create `env.ts` in each app from the convention, with the tier picker; a lint rule against `process.env` outside `env.ts`, installed with suppressions so the count only falls; then one ticket per module folder that moves its reads behind `env.ts`. `env.ts` is a Warden row in `toolkit.json` from the day it exists.
+- **Plan:** adopt the repo's existing environment reader where it has one (the report's V3 row names it) or create `env.ts` in each app from the convention, with the tier picker; a lint rule against `process.env` outside `env.ts`, installed with suppressions so the count only falls; then one ticket per module folder that moves its reads behind `env.ts`. `env.ts` is a Warden row in `toolkit.json` from the day it exists.
 - **Conflict risk:** high when the count is over 25 (every reader is a file the team edits). Trigger: the lint with suppressions can land any time; the moves follow part 6's module order.
 - **Estimate:** half a day for the seam and the rule; the moves a day per 25 files. Estimates.
 
 ### 6. SDK seams
 
-- **Layer:** 3, part 6 (signal V5).
+- **Layer:** 3, part 6 (signal V5). Q3 per family: billing with Mason, Warden and Chancery; auth with Mason and Warden; email with Warden; AI at Q2 with Mason.
 - **What did not cross:** money, auth, email and AI calls behind their module folders. The report lists every importer no reviewer glob matches.
 - **Plan:** one ticket per SDK family, in this order: billing, auth, email, AI. Each module's remove recipe is the checklist of what conformant looks like, read backwards: the files, variables, dependencies and boundaries names it would delete are what the module must own (`docs/runbooks/remove/billing.md`, `docs/runbooks/remove/supabase-auth.md`, `docs/runbooks/remove/supabase-database.md`, `docs/runbooks/remove/ai.md`, `docs/runbooks/remove/api.md`, `docs/runbooks/remove/error-monitoring.md`). When a module conforms, its `stack` entry is added to `toolkit.json`, and `check-stack` is installed into `verify` with the first entry. A module the toolkit never had gets an add recipe written the first time, under `docs/runbooks/add/README.md`. Until a family conforms, its `imports` reviewer row (from step 3) keeps every change at the right QA level. **Operator:** vendor dashboards (Stripe webhooks, Supabase settings) when a seam changes an endpoint.
 - **Conflict risk:** high per family (the call sites). Trigger: the operator opens one family at a time; billing first because it is money.
@@ -118,7 +118,7 @@ Day one's own gaps are drafted first, from the guide's step 7, then these twelve
 
 - **Layer:** 3, part 11 (signal S1).
 - **What did not cross:** workspaces and Turbo. The app sits at the repo root; `toolkit.json` says `"path": "."`.
-- **Plan:** its own epic in the product repo, opened through the prompt builder, last: the root app moves into `apps/web`, workspaces and `turbo.json` arrive, `toolkit.json`'s app path changes, every path rule's globs change, and `verify` gains the Turbo steps. It is last because every path in the repo changes, and every earlier part's suppressions and baselines move with their files.
+- **Plan:** its own epic in the product repo, opened through the prompt builder, last: the root app moves into `apps/web`, workspaces and `turbo.json` arrive, `toolkit.json`'s app path changes, every path rule's globs change, and `verify` gains the Turbo steps. It is last because every path in the repo changes, and every earlier part's baselines are re-derived in the move commit: `eslint-suppressions.json` is keyed by path and does not follow a moved file, so the commit re-runs `yarn eslint . --suppress-all` and the per-rule totals must not rise; the tagged type lines and `type-baseline.count` move with their files.
 - **Conflict risk:** high (every file). Trigger: the operator's call, after parts 1 to 10 that the repo wants, in a window with no open branches.
 - **Estimate:** two to three days. An estimate.
 
@@ -150,6 +150,7 @@ Step 9 prints both, each in its own block so it can be copied whole, with the pl
 ```text
 Venue: Claude Code, in <target>, on a branch the operator creates from <protected-branch>.
 Model: the deepest available (Fable 5.1 today). A part's plan is a judgment about a live team; a smaller model turns it into a sweep.
+Toolkit checkout: <toolkit path>. The recipes and checks a part cites (remove recipes, the boundaries config, the preset, the migration check) live there, not in this repo.
 
 Build <ACM-NNN> (layer 3, part <n>: <part title>).
 
