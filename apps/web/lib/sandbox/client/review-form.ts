@@ -362,7 +362,12 @@ export function readDraft(
         ? d.triage.mattersMost
         : null,
   };
-  return typeof d.versionId === "string"
+  // A triage that lost a deleted comment is new content: a new version.
+  const kept =
+    Object.keys(triage).length ===
+      Object.keys(d.triage?.comments ?? {}).length &&
+    (d.triage?.mattersMost ?? null) === form.mattersMost;
+  return typeof d.versionId === "string" && kept
     ? { form, versionId: d.versionId }
     : { form };
 }

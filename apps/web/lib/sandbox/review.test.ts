@@ -486,6 +486,7 @@ describe("C7: queued pins send first", () => {
       {
         flushPins: () => sender.flush(),
         queuedPins: () => queue.all().length,
+        reloadComments: never("reloadComments"),
         sendReview: async (input) => {
           order.push("version");
           assert.deepEqual(
@@ -497,6 +498,7 @@ describe("C7: queued pins send first", () => {
       },
       VERSION_ID,
       payload,
+      PINS,
     );
     assert.deepEqual(order, [`pin ${P2}`, `pin ${P3}`, "version"]);
     assert.deepEqual(outcome, {
@@ -520,9 +522,11 @@ describe("C7: queued pins send first", () => {
         flushPins: () => sender.flush(),
         queuedPins: () => queue.all().length,
         sendReview: never("sendReview"),
+        reloadComments: never("reloadComments"),
       },
       VERSION_ID,
       toPayload(complete(), PINS),
+      PINS,
     );
     assert.deepEqual(outcome, { kind: "send-failed" });
     assert.deepEqual(
@@ -548,11 +552,90 @@ describe("C7: queued pins send first", () => {
         flushPins: () => sender.flush(),
         queuedPins: () => queue.all().length,
         sendReview: never("sendReview"),
+        reloadComments: never("reloadComments"),
       },
       VERSION_ID,
       toPayload(complete(), PINS),
+      PINS,
     );
     assert.deepEqual(outcome, { kind: "closed" });
+  });
+});
+
+describe("C7: a refused send replays the comments the server holds", () => {
+  const flushDeps = {
+    flushPins: async () => ({ sent: [], last: null }),
+    queuedPins: () => 0,
+  };
+  const extra: QueueEntry = {
+    ...PINS[0]!,
+    id: "00000000-0000-4000-8000-000000000104",
+    number: 4,
+  };
+
+  test("C7: a pin added in another tab: the refusal carries the server's comments, so its triage is asked for", async () => {
+    const outcome = await sendReviewFlow(
+      {
+        ...flushDeps,
+        sendReview: async () => ({
+          kind: "invalid",
+          missing: [`triage-${extra.id}`],
+        }),
+        reloadComments: async () => [...PINS, extra],
+      },
+      VERSION_ID,
+      toPayload(complete(), PINS),
+      PINS,
+    );
+    assert.equal(outcome.kind, "invalid");
+    assert.ok(outcome.kind === "invalid" && outcome.comments);
+    const shown = outcome.kind === "invalid" ? outcome.comments! : [];
+    assert.deepEqual(
+      requiredGaps(toPayload(complete(), shown), shown, CONFIG).map(
+        (g) => g.id,
+      ),
+      [`triage-${extra.id}`],
+    );
+  });
+
+  test("C7: a pin deleted in another tab: the not-saved refusal becomes a replay, never a dead end", async () => {
+    const outcome = await sendReviewFlow(
+      {
+        ...flushDeps,
+        sendReview: async () => ({ kind: "not-saved" }),
+        reloadComments: async () => PINS.slice(0, 2),
+      },
+      VERSION_ID,
+      toPayload(complete(), PINS),
+      PINS,
+    );
+    assert.equal(outcome.kind, "invalid");
+    assert.deepEqual(
+      outcome.kind === "invalid" ? outcome.comments!.map((c) => c.id) : [],
+      [P1, P2],
+    );
+  });
+
+  test("C7: with the same comments, a not-saved stays send-failed", async () => {
+    const outcome = await sendReviewFlow(
+      {
+        ...flushDeps,
+        sendReview: async () => ({ kind: "not-saved" }),
+        reloadComments: async () => PINS,
+      },
+      VERSION_ID,
+      toPayload(complete(), PINS),
+      PINS,
+    );
+    assert.deepEqual(outcome, { kind: "send-failed" });
+  });
+
+  test("C7: a pin the queue still holds after a send is named not sent", () => {
+    const rows = commentPlayback(
+      [{ ...PINS[0]!, sync: "unsent" }],
+      [designOption({ id: "circle", shape: "circle" })],
+    );
+    assert.equal(rows[0]!.meta, "Comment 1 · Plans · Problem · not sent");
   });
 });
 
@@ -656,6 +739,16 @@ describe("the draft in this browser", () => {
     assert.deepEqual(read, { form: complete(), versionId: VERSION_ID });
     clearDraft(storage, key);
     assert.equal(data.has(key), false);
+  });
+
+  test("a draft whose triage lost a deleted comment drops its version id: it is new content", () => {
+    const { storage } = fakeStorage();
+    writeDraft(storage, key, draftOf(complete(), VERSION_ID));
+    assert.equal(
+      readDraft(storage, key, PINS.slice(0, 2))!.versionId,
+      undefined,
+    );
+    assert.equal(readDraft(storage, key, PINS)!.versionId, VERSION_ID);
   });
 
   test("a deleted comment's triage is dropped on read; malformed or throwing storage reads as none", () => {

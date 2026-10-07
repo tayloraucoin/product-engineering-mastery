@@ -198,7 +198,7 @@ export type CommentPlayback = {
 };
 
 export function commentPlayback(
-  pins: readonly QueueEntry[],
+  pins: readonly (QueueEntry & { sync?: "sent" | "sending" | "unsent" })[],
   designs: readonly DesignOption[],
 ): CommentPlayback[] {
   const several = designs.length > 1;
@@ -212,6 +212,8 @@ export function commentPlayback(
         several ? designs.find((d) => d.id === pin.design)?.label : null,
         placeOf(pin.anchor),
         pin.kind ? PIN_WORDS.kinds[pin.kind] : null,
+        // A pin still queued after a send: the reason the review did not go.
+        pin.sync === "unsent" ? PIN_WORDS.notSent : null,
       ]
         .filter(Boolean)
         .join(" · "),

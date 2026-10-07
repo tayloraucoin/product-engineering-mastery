@@ -86,7 +86,12 @@ import {
   type ReviewFixture,
   type ReviewStatus,
 } from "../../../../../lib/sandbox/client/review-view";
-import { deleteComment, saveComment, sendReview } from "../../actions";
+import {
+  deleteComment,
+  listMyComments,
+  saveComment,
+  sendReview,
+} from "../../actions";
 import { ChoiceGroup } from "./choice-group";
 import { ReviewComments } from "./review-comments";
 
@@ -341,9 +346,21 @@ export function ReviewFormView({
         flushPins: () => sender.current!.flush(),
         queuedPins: () => queue.current?.all().length ?? 0,
         sendReview: (input) => sendReview(config.slug, input),
+        reloadComments: async () => {
+          const result = await listMyComments(config.slug);
+          return result.kind === "ok" ? result.comments : null;
+        },
       },
       id,
       payload,
+      pins,
+    );
+    // Which pins the queue still holds: a pin that will not send is named.
+    setPins((current) =>
+      current.map((p) => ({
+        ...p,
+        sync: queue.current?.get(p.id) ? "unsent" : "sent",
+      })),
     );
     switch (outcome.kind) {
       case "sent":
@@ -351,11 +368,34 @@ export function ReviewFormView({
         setStatus("idle");
         setSent(editing ? "later" : "first");
         return;
-      case "invalid":
+      case "invalid": {
+        // The server judged other comments than the page shows (a pin added
+        // or deleted in another tab): play back the server's, and ask again.
+        let shown = pins;
+        let next = form;
+        if (outcome.comments) {
+          shown = mergeLoaded(outcome.comments, queue.current?.all() ?? []);
+          next = { ...form, triage: {}, mattersMost: null };
+          for (const p of shown)
+            if (form.triage[p.id]) next.triage[p.id] = form.triage[p.id]!;
+          if (
+            next.mattersMost === null &&
+            form.mattersMost &&
+            next.triage[form.mattersMost]
+          )
+            next.mattersMost = form.mattersMost;
+          setPins(shown);
+          change(() => next);
+        }
+        if (requiredGaps(toPayload(next, shown), shown, config).length === 0) {
+          setStatus("send-failed");
+          return;
+        }
         setStatus("idle");
         setShowErrors(true);
         setTimeout(() => summaryRef.current?.focus(), 0);
         return;
+      }
       case "closed":
         setStatus("closed");
         return;

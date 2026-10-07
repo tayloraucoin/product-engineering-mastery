@@ -130,7 +130,14 @@ export const experimentConfigSchema = z.strictObject(
         {
           text: nonEmpty(E.targetedQuestion),
           labels: z
-            .array(nonEmpty(E.targetedQuestion), { error: E.targetedQuestion })
+            .array(
+              nonEmpty(E.targetedQuestion).max(200, {
+                error: E.targetedQuestion,
+              }),
+              {
+                error: E.targetedQuestion,
+              },
+            )
             .length(5, { error: E.targetedQuestion }),
         },
         { error: E.targetedQuestion },

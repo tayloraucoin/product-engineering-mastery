@@ -10,7 +10,7 @@
  * drops it (`nextVersionId`), so a changed retry is a new version.
  */
 
-import type { SendOutcome } from "./queue.ts";
+import type { QueueEntry, SendOutcome } from "./queue.ts";
 import type { ReviewPayload } from "./review-form.ts";
 
 /** The send action's fixed results (`lib/sandbox/review.ts`). */
@@ -28,19 +28,50 @@ export type ReviewSendDeps = {
   sendReview(
     input: ReviewPayload & { versionId: string },
   ): Promise<SendReviewResult>;
+  /** The reviewer's comments as the server holds them now, or null when they cannot be read. */
+  reloadComments(): Promise<QueueEntry[] | null>;
 };
 
-/** What a send came to, for the page: sent, refused with gaps, closed, or not sent. */
+/**
+ * What a send came to, for the page: sent, refused with gaps, closed, or not
+ * sent. A refusal carries the comments as the server holds them now, when
+ * they differ from the page's (a pin added or deleted in another tab), so
+ * the page plays back what the server judges and asks for what is missing.
+ */
 export type ReviewSendOutcome =
   | { kind: "sent"; number: number; createdAt: string }
-  | { kind: "invalid"; missing: string[] }
+  | { kind: "invalid"; missing: string[]; comments: QueueEntry[] | null }
   | { kind: "closed" }
   | { kind: "send-failed" };
+
+/** The comments, reloaded, when they no longer match what the triage was built on. */
+async function changedComments(
+  deps: ReviewSendDeps,
+  payload: ReviewPayload,
+  shown: readonly { id: string }[],
+): Promise<QueueEntry[] | null> {
+  let comments: QueueEntry[] | null;
+  try {
+    comments = await deps.reloadComments();
+  } catch {
+    return null;
+  }
+  if (!comments) return null;
+  const now = new Set(comments.map((c) => c.id));
+  const before = new Set(shown.map((c) => c.id));
+  const named = Object.keys(payload.triage.comments);
+  const same =
+    now.size === before.size &&
+    [...now].every((id) => before.has(id)) &&
+    named.every((id) => now.has(id));
+  return same ? null : comments;
+}
 
 export async function sendReviewFlow(
   deps: ReviewSendDeps,
   versionId: string,
   payload: ReviewPayload,
+  shown: readonly { id: string }[],
 ): Promise<ReviewSendOutcome> {
   let flushed: { last: SendOutcome | null };
   try {
@@ -67,11 +98,21 @@ export async function sendReviewFlow(
         createdAt: result.createdAt,
       };
     case "invalid":
-      return { kind: "invalid", missing: result.missing };
+      return {
+        kind: "invalid",
+        missing: result.missing,
+        comments: await changedComments(deps, payload, shown),
+      };
     case "closed":
       return { kind: "closed" };
-    default:
-      return { kind: "send-failed" };
+    default: {
+      // A triage naming a pin deleted elsewhere is refused; the page then
+      // plays back the comments as they are and asks again.
+      const comments = await changedComments(deps, payload, shown);
+      return comments
+        ? { kind: "invalid", missing: [], comments }
+        : { kind: "send-failed" };
+    }
   }
 }
 
