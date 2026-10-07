@@ -29,6 +29,7 @@ load_when:
 | [Question or report](question-report.md)       | The output is an answer or a document, not a change                                               | Answer, or Scope then Report                                  | No                   | Q0                                           |
 | [Audit](audit.md)                              | We want existing code or user journeys examined for problems                                      | Scope, Sweep, Findings                                        | No                   | Q0; the findings are the product             |
 | [New project](new-project.md)                  | The boilerplate is being duplicated for a new product                                             | Interview, then the new-project runbook                       | No                   | Q1, with `yarn verify` after every step      |
+| [Migrate](migrate.md)                          | A repo that already exists, with its history and team, is brought under the practice in place     | Open, then the migrate runbook: assess, interview, layer 1, layer 2, hand over | No, in the toolkit; the target's migration epic holds the run | Q1 in the target, with `yarn verify:fast` after each step and `yarn verify` at the end |
 
 **When two fit.** A bug whose fix needs a new surface is an epic that starts from a bug report. An exploration that has picked a direction becomes a product spec or an epic. An audit never fixes what it finds: each finding worth fixing becomes a bug, a one-off or an epic. The builder says which hand-off applies.
 

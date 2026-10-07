@@ -22,6 +22,7 @@ load_when:
 | Use case | Go to |
 | --- | --- |
 | A product repo starts from this one | [`new-project/`](new-project/README.md): the interview, then the steps, which run the removal recipes |
+| A repo that already exists is brought under the practice in place | [`migrate/`](migrate/README.md): the assessment, the interview from its report, then layer 1 over the manifest; `verify.md` for layer 2 and `layer-3.md` for the gap tickets |
 | Drop a module of the default stack | [`remove/`](remove/README.md), one recipe per module |
 | Bring a module into a product repo, or switch on one that is off by default | [`add/`](add/README.md): the local Docker database |
 | Something went wrong: an incident, a bad merge, an agent, an AI answer | [`postmortem/`](postmortem/README.md) |
