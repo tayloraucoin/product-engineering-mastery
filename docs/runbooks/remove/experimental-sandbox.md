@@ -79,7 +79,7 @@ Then stop the dev server and delete `apps/web/.next`. The baseline run left rout
 
 ### Variables
 
-`SANDBOX_SECRET`, with its `_LOCAL` and `_STAGING` forms: delete the "Experimental sandbox" block from `.env.example` and the three names from `turbo.json`'s `globalEnv`. Each developer deletes them from `apps/web/.env.local` too. Every host's copy is the operator's (phase 6).
+`SANDBOX_SECRET`, with its `_LOCAL` and `_STAGING` forms: delete the "Experimental sandbox" block from `.env.example` and the three names from `turbo.json`'s `globalEnv`. Each developer deletes them from the web app's .env.local too. Every host's copy is the operator's (phase 6).
 
 ### Dependencies
 
