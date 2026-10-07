@@ -122,12 +122,17 @@ function EraseBody({ view }: { view: DataPageView }) {
   const [confirming, setConfirming] = useState(false);
   const [unticked, setUnticked] = useState<Set<string>>(new Set());
 
-  // A fixture's toast shows on arrival, as the action's would.
+  // A fixture's toast shows on arrival, as the action's would: one task
+  // later, since this effect runs before the Toaster's own has subscribed.
   useEffect(() => {
-    if (view.toast?.kind === "erased")
-      toasts.add({ type: "success", title: erasedToast(view.toast.counts) });
-    else if (view.toast?.kind === "failed")
-      toasts.add({ type: "error", title: W.actionFailed });
+    const toast = view.toast;
+    if (!toast) return;
+    const timer = setTimeout(() => {
+      if (toast.kind === "erased")
+        toasts.add({ type: "success", title: erasedToast(toast.counts) });
+      else toasts.add({ type: "error", title: W.actionFailed });
+    }, 0);
+    return () => clearTimeout(timer);
   }, [view.toast]);
 
   // A new result moves focus to it, so a screen reader hears what was found.

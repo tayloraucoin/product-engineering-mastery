@@ -71,15 +71,17 @@ function DataTabBody({ view }: { view: DataTabView }) {
   const offline = view.offline || !online;
   const countsRef = useRef<HTMLParagraphElement>(null);
 
-  // A fixture's toast shows on arrival, as the action's would.
+  // A fixture's toast shows on arrival, as the action's would: one task
+  // later, since this effect runs before the Toaster's own has subscribed.
   useEffect(() => {
-    if (view.toast?.kind === "deleted")
-      toasts.add({
-        type: "success",
-        title: deletedToast(view.toast.reviewers),
-      });
-    else if (view.toast?.kind === "failed")
-      toasts.add({ type: "error", title: W.actionFailed });
+    const toast = view.toast;
+    if (!toast) return;
+    const timer = setTimeout(() => {
+      if (toast.kind === "deleted")
+        toasts.add({ type: "success", title: deletedToast(toast.reviewers) });
+      else toasts.add({ type: "error", title: W.actionFailed });
+    }, 0);
+    return () => clearTimeout(timer);
   }, [view.toast]);
 
   if (view.loading) return <DataTabSkeleton />;
