@@ -32,6 +32,7 @@
     "test:tooling": "node --test \"tooling/**/*.test.ts\"",
     "test": "turbo run test --log-prefix=none",
     "spec:init": "node tooling/spec-init.ts",
+    "migrate:assess": "node tooling/migrate-assess.ts",
     "contract:init": "node tooling/contract.ts init",
     "contract:run": "node tooling/contract.ts run",
     "contract:record": "node tooling/contract.ts record",
