@@ -96,12 +96,24 @@ export function ExperimentSwitcher({
     });
   }, [shown]);
 
-  // After paint: the one switch log.
+  // After paint: the one switch log. React flushes a click's effects before
+  // the browser paints, so the send waits for the next frame, then a task.
+  // A tab that draws no frame (hidden) sends after a short wait instead.
   useEffect(() => {
     const log = pendingLog.current;
     if (!log) return;
     pendingLog.current = null;
-    sendLog(slug, log);
+    let sent = false;
+    const send = () => {
+      if (sent) return;
+      sent = true;
+      sendLog(slug, log);
+    };
+    const fallback = setTimeout(send, 250);
+    requestAnimationFrame(() => {
+      clearTimeout(fallback);
+      setTimeout(send, 0);
+    });
   }, [shown, slug]);
 
   const onSwitch = useCallback(
@@ -144,7 +156,7 @@ export function ExperimentSwitcher({
         onSwitch={onSwitch}
         primary={primary}
         commentToggle={<CommentToggle status={bar.status} />}
-        commentsButton={<CommentsButton count={bar.commentCount} />}
+        commentsButton={<CommentsButton bar={bar} />}
         saveStatus={<SaveStatusText status={bar.status} />}
         statusLine={statusLineFor(bar.status)}
         onHeight={setBarHeight}

@@ -2,7 +2,12 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { describe, test } from "node:test";
 
-import { designOption, EXPERIMENT_WORDS } from "./experiment-view.ts";
+import {
+  commentsButtonView,
+  designOption,
+  EXPERIMENT_WORDS,
+  experimentFixture,
+} from "./experiment-view.ts";
 import { clampScroll, planSwitch, switchAnnouncement } from "./switcher.ts";
 
 const DESIGNS = [
@@ -103,5 +108,22 @@ describe("C7 (unit): labels are glyph plus shape name", () => {
       ],
     );
     assert.equal(EXPERIMENT_WORDS.comments(5), "Comments 5");
+  });
+});
+
+describe("C11 (unit): the bar's fixtures", () => {
+  test("the Comments button loads, counts, and has no count when the load failed", () => {
+    assert.deepEqual(commentsButtonView(experimentFixture("exp-loading").bar), {
+      label: "Loading comments",
+      disabled: true,
+    });
+    assert.deepEqual(commentsButtonView(experimentFixture("exp-error").bar), {
+      label: "Comments",
+      disabled: false,
+    });
+    assert.deepEqual(commentsButtonView(experimentFixture("exp-empty").bar), {
+      label: "Comments 0",
+      disabled: false,
+    });
   });
 });

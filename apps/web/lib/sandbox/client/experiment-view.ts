@@ -47,6 +47,8 @@ export const EXPERIMENT_WORDS = {
   switcherGroup: "Designs",
   comment: "Comment",
   comments: (count: number) => `Comments ${count}`,
+  // [ASSUMPTION] the button's name when the count failed to load; the Words give none.
+  commentsUncounted: "Comments",
   loadingComments: "Loading comments",
   loadError: "Couldn't load your comments.",
   retry: "Retry",
@@ -103,6 +105,21 @@ export const BAR_AT_REST: BarData = {
   commentCount: 0,
   status: { kind: "none" },
 };
+
+/** The Comments button: its count, "Loading comments" while loading, and no count when the load failed. */
+export function commentsButtonView(bar: BarData): {
+  label: string;
+  disabled: boolean;
+} {
+  if (bar.commentCount !== null)
+    return {
+      label: EXPERIMENT_WORDS.comments(bar.commentCount),
+      disabled: false,
+    };
+  if (bar.status.kind === "error")
+    return { label: EXPERIMENT_WORDS.commentsUncounted, disabled: false };
+  return { label: EXPERIMENT_WORDS.loadingComments, disabled: true };
+}
 
 /** Placing is disabled once the review has closed or access has ended. */
 export function placingDisabled(status: SaveStatus): boolean {

@@ -12,6 +12,7 @@ import { Button } from "@pem/ui/button";
 import { Toggle } from "@pem/ui/toggle";
 
 import {
+  commentsButtonView,
   placingDisabled,
   EXPERIMENT_WORDS as W,
   type BarData,
@@ -33,10 +34,11 @@ export function CommentToggle({ status }: { status: SaveStatus }) {
   );
 }
 
-export function CommentsButton({ count }: { count: number | null }) {
+export function CommentsButton({ bar }: { bar: BarData }) {
+  const view = commentsButtonView(bar);
   return (
-    <Button variant="outline" disabled={count === null} className="h-11 px-4">
-      {count === null ? W.loadingComments : W.comments(count)}
+    <Button variant="outline" disabled={view.disabled} className="h-11 px-4">
+      {view.label}
     </Button>
   );
 }
