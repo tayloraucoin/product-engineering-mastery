@@ -22,6 +22,7 @@ import {
   setAccessCookie,
 } from "../../../lib/sandbox/access";
 import type { QueueEntry } from "../../../lib/sandbox/client/queue";
+import type { SendReviewResult } from "../../../lib/sandbox/client/review-send";
 import type {
   CommentResult,
   ListCommentsResult,
@@ -41,6 +42,7 @@ import {
   gatePath,
   type GateActionState,
 } from "../../../lib/sandbox/gate";
+import { sendReviewFor } from "../../../lib/sandbox/review-data";
 import { teamMemberOf } from "../../../lib/sandbox/team";
 import {
   bindGateThrottle,
@@ -212,4 +214,16 @@ export async function deleteComment(
   input: { id: string },
 ): Promise<CommentResult> {
   return deleteCommentFor(slug, input);
+}
+
+/**
+ * The closing review's send (LAB-17, review.md): the browser has flushed its
+ * queued pins first; this judges and stores one numbered version and returns
+ * a fixed result (lib/sandbox/review.ts). The team stores nothing (S18).
+ */
+export async function sendReview(
+  slug: string,
+  input: unknown,
+): Promise<SendReviewResult> {
+  return sendReviewFor(slug, input);
 }

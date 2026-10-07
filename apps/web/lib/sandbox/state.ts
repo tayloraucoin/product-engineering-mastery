@@ -96,6 +96,18 @@ export const SANDBOX_STATE_KEYS: Readonly<
   "pins-offline": "team",
   "pins-success": "team",
   "too-long": "team",
+  // The closing review (LAB-17, review.md).
+  "review-empty": "team",
+  "review-no-comments": "team",
+  "review-loading": "team",
+  "review-error": "team",
+  "review-partial": "team",
+  "review-offline": "team",
+  "review-sending": "team",
+  "review-send-failed": "team",
+  "review-closed": "team",
+  "review-edit": "team",
+  "review-success": "team",
   // Data (LAB-16, data.md).
   "data-tab-empty": "team",
   "data-tab-loading": "team",

@@ -29,6 +29,9 @@ export const DESIGN_SHAPES = [
   "diamond",
 ] as const;
 
+/** The kinds of extra question a config may ask in the review (LAB-17). */
+export const QUESTION_KINDS = ["scale", "choice", "text"] as const;
+
 /**
  * Every refusal, as a fixed string that names its field and never echoes the
  * config's own values.
@@ -50,8 +53,12 @@ export const REGISTRY_ERRORS = {
   designComponent: "designs.component: a function that loads the design",
   goalsCount: "goals: 2 to 3 goals",
   goalText: "goals: each goal is non-empty text",
-  targetedQuestion: "targetedQuestion: non-empty text when present",
+  targetedQuestion:
+    "targetedQuestion: non-empty text and five non-empty labels when present",
   questions: "questions: each question has an id and non-empty text",
+  questionKind: "questions.kind: scale, choice or text",
+  questionOptions:
+    "questions.options: 2 to 7 non-empty options for a scale or choice, none for text",
   questionIdDuplicate: "questions.id: each question has its own id",
   mode: "mode: private or collaborate",
   coreVersion: "coreVersion: v1",
@@ -116,20 +123,49 @@ export const experimentConfigSchema = z.strictObject(
       .array(nonEmpty(E.goalText), { error: E.goalsCount })
       .min(2, { error: E.goalsCount })
       .max(3, { error: E.goalsCount }),
-    targetedQuestion: nonEmpty(E.targetedQuestion).optional(),
-    // [ASSUMPTION] an extra question is free text with a stable id; LAB-17 may
-    // extend the shape.
+    // review.md's optional targeted question: a 5-point item-specific scale,
+    // its labels in order (LAB-17).
+    targetedQuestion: z
+      .strictObject(
+        {
+          text: nonEmpty(E.targetedQuestion),
+          labels: z
+            .array(nonEmpty(E.targetedQuestion), { error: E.targetedQuestion })
+            .length(5, { error: E.targetedQuestion }),
+        },
+        { error: E.targetedQuestion },
+      )
+      .optional(),
+    // The review's extra questions (LAB-17): a scale or a choice among its
+    // options, in order, or free text; optional unless marked required. A
+    // question with no kind is text.
     questions: z
       .array(
-        z.strictObject(
-          {
-            id: z
-              .string({ error: E.questions })
-              .regex(SLUG_PATTERN, { error: E.questions }),
-            text: nonEmpty(E.questions),
-          },
-          { error: E.questions },
-        ),
+        z
+          .strictObject(
+            {
+              id: z
+                .string({ error: E.questions })
+                .regex(SLUG_PATTERN, { error: E.questions }),
+              text: nonEmpty(E.questions),
+              kind: z
+                .enum(QUESTION_KINDS, { error: E.questionKind })
+                .default("text"),
+              options: z
+                .array(nonEmpty(E.questionOptions), {
+                  error: E.questionOptions,
+                })
+                .min(2, { error: E.questionOptions })
+                .max(7, { error: E.questionOptions })
+                .optional(),
+              required: z.boolean({ error: E.questions }).default(false),
+            },
+            { error: E.questions },
+          )
+          .superRefine((question, ctx) => {
+            if ((question.kind === "text") !== (question.options === undefined))
+              ctx.addIssue({ code: "custom", message: E.questionOptions });
+          }),
         { error: E.questions },
       )
       .superRefine((questions, ctx) => {
@@ -151,6 +187,7 @@ export type ExperimentConfig = z.infer<typeof experimentConfigSchema>;
 /** What a `config.ts` declares, checked with `satisfies`. */
 export type ExperimentConfigInput = z.input<typeof experimentConfigSchema>;
 export type DesignShape = (typeof DESIGN_SHAPES)[number];
+export type ConfigQuestion = ExperimentConfig["questions"][number];
 
 /** One refusal: which config (by its place in the list) and why. */
 export type RegistryError = { index: number; message: string };
