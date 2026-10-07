@@ -17,18 +17,31 @@ load_when:
 > **Built by:** the LAB epic (LAB-1 to LAB-23). The edit list below was read from the code, not from the contracts.
 > **Run from:** step 4 of [`new-project/README.md`](../new-project/README.md), before auth and the database: the sandbox needs both, and email, which is locked.
 
-Run it in six phases, in order: tag, delete, edit, migrate, verify, then the operator's steps. Phase 1 is a STOP gate: nothing is deleted until the tag exists. Phase 6 is the operator's, and an agent stops before it.
+Run it in six phases, in order: tag, delete, edit, migrate, verify, then the operator's steps. Phase 1 is a STOP gate: nothing is deleted until the restore point exists. Phase 6 is the operator's, and an agent stops before it.
 
 ## 1. Tag: the STOP gate
+
+The restore point holds everything the removal takes. Which form it takes depends on whether the repo has a commit yet.
+
+**A repo with commits** (a product repo dropping the sandbox later):
 
 ```bash
 git status --short
 git tag pre-sandbox-removal
 ```
 
-The tree must be clean before the tag, so the tag holds everything the removal takes. **STOP** if `git status --short` prints anything, or the tag cannot be created. The tag is the way back: `git diff pre-sandbox-removal` shows what went, and any file comes back with `git checkout pre-sandbox-removal -- <path>`.
+**STOP** if `git status --short` prints anything, or the tag cannot be created. `git diff pre-sandbox-removal` shows what went, and `git checkout pre-sandbox-removal -- <path>` brings a file back.
 
-Before deleting, record the 404 baseline: with `yarn web:dev` running, `/experimental/pricing-2026` shows the gate (the code field), and `/admin/experiments` sends a signed-out visitor to `/auth/sign-in?next=/admin/experiments`, never a 404. Take a screenshot of each.
+**A new-project duplicate** (step 4, where nothing is committed until step 7): stage everything and record the staged tree.
+
+```bash
+git add -A
+git write-tree
+```
+
+**STOP** if `git write-tree` fails. Note the tree id it prints in the thread. `git diff --cached <tree>` shows what went, and `git restore --source=<tree> --staged --worktree -- <path>` brings a file back. Stage again (`git add -A`) before every `git grep` below: it sees only tracked files. A staged file is deleted with `git rm -rf`.
+
+Before deleting, record the 404 baseline if the app runs (`yarn web:dev`). `/experimental/pricing-2026` shows the gate, with its code field. `/admin/experiments` sends a signed-out visitor to `/auth/sign-in?next=/admin/experiments`, never to a 404. Take a screenshot of each. If the app cannot run yet, because a duplicate's environment is set in step 5, record the baseline as skipped. The after-check in phase 5 still applies.
 
 ## 2. Delete
 
@@ -60,10 +73,13 @@ Then stop the dev server and delete `apps/web/.next`. The baseline run left rout
 - `tooling/boundaries.test.ts`: delete LAB-3's block, from the comment `// LAB-3 (its C5)` through the `SANDBOX_ALLOWED` loop.
 - `packages/db/scripts/grant-admin.ts`: in the header comment, drop every sentence that names People, its role-change lock, the last-admin race or this runbook. The script stays (below).
 - `docs/engineering/tech-stack.md`: in the `lucide-react` row, drop `apps/web` when the dependency goes (below).
+- Leftover comments: the sandbox's paragraph in `boundaries.js`'s header (below). Also every sentence in `apps/web/env.ts` and `apps/web/next.config.ts` naming D-LAB or the experimental sandbox, which goes with the lines above.
+
+**Kept, and so named:** LAB-8's `mobileBreakpoint` option in `packages/ui/src/hooks/use-mobile.ts` and `sidebar/sidebar.tsx` (with its story), which is backward-compatible. LAB-8's `FloatingThemeToggle` in `apps/web/app/layout.tsx`, which stays as the root toggle. LAB-2's `supabaseUser(role: AuthContext["role"])` in `packages/api/src/test-helpers.ts`, which takes whatever roles remain.
 
 ### Variables
 
-`SANDBOX_SECRET`, with its `_LOCAL` and `_STAGING` forms: delete the "Experimental sandbox" block from `.env.example` and the three names from `turbo.json`'s `globalEnv`. Every host's copy is the operator's (phase 6).
+`SANDBOX_SECRET`, with its `_LOCAL` and `_STAGING` forms: delete the "Experimental sandbox" block from `.env.example` and the three names from `turbo.json`'s `globalEnv`. Each developer deletes them from `apps/web/.env.local` too. Every host's copy is the operator's (phase 6).
 
 ### Dependencies
 
@@ -89,7 +105,7 @@ In `packages/config/eslint/boundaries.js`, both sandbox elements go, `web-sandbo
 `developer` sits in `APP_ROLES` (`packages/db/src/rls.ts`) for the sandbox's team check. It leaves only when no other feature reads it. This decides:
 
 ```bash
-git grep -n -E "[\"']developer[\"']" -- apps packages tooling ':!packages/db/migrations'
+git grep -n -E "[\"'`]developer[\"'`]" -- apps packages tooling ':!packages/db/migrations'
 ```
 
 - **Only `packages/db/src/rls.ts` and LAB-2's tests print:** remove it. `APP_ROLES` goes back to `["user", "admin"]`. Delete LAB-2's tests: "C2: an admin procedure refuses a developer" (`packages/api/src/context.test.ts`), "C3: the bridge accepts developer" (`packages/db/src/rls.test.ts`), the two "C4: a developer …" tests (`packages/db/test/rls.test.ts`), and in "C1: roleOf returns developer …" (`packages/auth/src/context.test.ts`) make the `developer` line expect `user`, which proves the fallback below, and rename the test. Drop `"developer"` from the `APP_ROLES` line quoted in [`supabase-database.md`](supabase-database.md).
@@ -107,7 +123,7 @@ yarn workspace @pem/db db:grant-admin <email>
 
 > **Warning: the record goes with the tables.** The drop deletes every row of the seven tables: reviewers and their access codes, views, comments, review versions, gate attempts, and `sandbox_actions`, the record of who did what in `/admin`. Nothing keeps a copy. Export first wherever the data matters.
 
-Export each table to CSV while it still exists, on each tier that holds data, with the tier's `DATABASE_MIGRATION_URL` from the database package's .env.local. The files hold reviewers' labels and comments, which are personal data: keep them where the product keeps such files, and delete them when they are no longer needed.
+If a local database exists (a new-project duplicate has none until step 5, so skip to the generate), export each table to CSV while it still exists, on each tier that holds data. Use the tier's migration URL from the database package's .env.local (`DATABASE_MIGRATION_URL_LOCAL` on the local tier). The files hold reviewers' labels and comments, which are personal data: keep them where the product keeps such files, and delete them when they are no longer needed.
 
 ```bash
 psql "<the tier's migration URL>" -c "\copy sandbox_actions to 'sandbox_actions.csv' csv header"
@@ -121,24 +137,25 @@ Then, after the schema edit in phase 3:
 yarn db:generate
 ```
 
-It writes a new migration that drops the seven `sandbox_` tables and nothing else. Read it before going on: seven `DROP TABLE` statements, with any policy and constraint drops that belong to them, and no other table touched. Never edit or delete `0003_sandbox_schema.sql` or any applied migration, and never its snapshot or journal entry. Apply it on the local tier with `yarn db:migrate`; a hosted tier is the operator's.
+It writes a new migration that drops the seven `sandbox_` tables and nothing else. Read it before going on: seven `DROP TABLE` statements, with any policy and constraint drops that belong to them, and no other table touched. Never edit or delete `0003_sandbox_schema.sql` or any applied migration, nor 0003's snapshot or journal entry; the generate appends its own entry to `_journal.json`. Apply it on the local tier with `yarn db:migrate` when a local database exists; a hosted tier is the operator's.
 
 ## 5. Verify
 
-1. In `toolkit.json`, set `"removed": true` on the `experimental-sandbox` entry in `stack`.
+1. In `toolkit.json`, set `"removed": true` on the `experimental-sandbox` entry in `stack`. This is the recipe's last section of its own work (new-project step 4); phase 6 is handed over.
 2. `yarn check-stack` exits 0. It proves the listed files, the variable and the (empty) dependency list are gone. It does not read the shared files edited in phase 3: the next three steps prove those.
 3. The zero-hit grep prints nothing:
 
    ```bash
-   git grep -n -E 'sandbox_|SANDBOX_|-sandbox|/sandbox([^.a-z\]|\.[^a-z]|\.?$)|sandbox[A-Z]|data-admin-shell|apps/web/app/admin|/experimental|pricing-2026' -- apps packages tooling ':!packages/db/migrations'
+   git grep -n -E 'sandbox_|SANDBOX_|-sandbox|/sandbox([^.a-z\]|\.[^a-z]|\.?$)|sandbox[A-Z]|data-admin-shell|D-LAB-|[Ee]xperimental sandbox|apps/web/app/(experimental|admin)|href=.{0,2}/(experimental|admin)|pricing-2026' -- apps packages tooling ':!packages/db/migrations' ':!tooling/refs-pending.json'
    ```
 
-   It skips the applied migrations, which keep their history. It never searches for a bare `admin`, since `adminProcedure` and the admin role predate the sandbox, nor a bare `sandbox`, which the agent harness's own settings use.
+   It skips the applied migrations, which keep their history, and `tooling/refs-pending.json`, which names the deleted paths on purpose (step 6). It never searches for a bare `admin`, since `adminProcedure` and the admin role predate the sandbox, nor a bare `sandbox`, which the agent harness's own settings use.
 
 4. `yarn check-types` and `yarn lint:boundaries` exit 0.
-5. The 404 check, after: with `yarn web:dev` running, `/experimental/pricing-2026` and `/admin/experiments` both return the app's 404 page. Take a screenshot of each, beside the phase-1 pair.
-6. `yarn check-refs` names the deleted paths this runbook and other kept docs still list. Add each to `tooling/refs-pending.json`, keyed exactly as printed: `"<deleted path>": "removed by docs/runbooks/remove/experimental-sandbox.md"`.
-7. `yarn verify` exits 0.
+5. Read back what no grep sees: `lucide-react` is gone from `apps/web/package.json` and the tech-stack row (when it went), the `floating-theme-toggle.tsx` comment, the `grant-admin.ts` header, the `APP_ROLES` line quoted in `supabase-database.md`, and `.env.local`.
+6. The 404 check, after: with `yarn web:dev` running, `/experimental/pricing-2026` and `/admin/experiments` both return the app's 404 page. Take a screenshot of each, beside the phase-1 pair.
+7. `yarn check-refs` names the deleted paths this runbook and other kept docs still list. Add each to `tooling/refs-pending.json`, keyed exactly as printed: `"<deleted path>": "removed by docs/runbooks/remove/experimental-sandbox.md"`.
+8. `yarn verify` exits 0. Its test-weakening check fails on the deleted LAB tests unless the commit says why: give it a `Test-changes: LAB's tests go with the experimental sandbox (docs/runbooks/remove/experimental-sandbox.md)` trailer.
 
 Delete the tag once the change is committed and the operator's steps are done: `git tag -d pre-sandbox-removal`.
 

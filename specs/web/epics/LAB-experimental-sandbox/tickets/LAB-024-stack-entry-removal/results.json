@@ -3,30 +3,65 @@
   "criteria_sha256": "12c8eb197e0eea70f561be73c8513ec883e15f41c7e3176ce6177dcdf7246cd0",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn check-stack",
+        "exit": 0,
+        "at": "2026-10-07T22:37:33Z",
+        "head": "448f8a4516472b0a390005463a572a0ad63f5b84",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-024-stack-entry-removal/evidence/C1.log",
+        "evidence_sha256": "027d2eee9760253dbbaacb988ee35e2a43604c91463cd3a1e3125f8938a64c3c"
+      }
     },
     "C2": {
       "status": "FAIL",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn lint:docs",
+        "exit": 1,
+        "at": "2026-10-07T22:37:40Z",
+        "head": "448f8a4516472b0a390005463a572a0ad63f5b84",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-024-stack-entry-removal/evidence/C2.log",
+        "evidence_sha256": "3b9204bcd331eed3eceeda75c9274c0211e643c41dacb7d074999b046cc7f52f"
+      }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn check-refs",
+        "exit": 0,
+        "at": "2026-10-07T22:37:47Z",
+        "head": "448f8a4516472b0a390005463a572a0ad63f5b84",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-024-stack-entry-removal/evidence/C3.log",
+        "evidence_sha256": "9a666458e2b90af2224a71a3f38ed711171ada26f2f3d541e2c8868fa98ac8a1"
+      }
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "capture",
-      "run": null
+      "run": {
+        "command": "yarn contract:record LAB-24 C4 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-024-stack-entry-removal/evidence/removal-checks.png",
+        "exit": 0,
+        "at": "2026-10-07T22:38:00Z",
+        "head": "448f8a4516472b0a390005463a572a0ad63f5b84",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-024-stack-entry-removal/evidence/removal-checks.png",
+        "evidence_sha256": "3881fc48ab4a8e324b2445117eb436893fe74ae798e1236b56d971c1a9c0a5e8"
+      }
     },
     "C5": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "capture",
-      "run": null
+      "run": {
+        "command": "yarn contract:record LAB-24 C5 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-024-stack-entry-removal/evidence/removal-404.png",
+        "exit": 0,
+        "at": "2026-10-07T22:38:07Z",
+        "head": "448f8a4516472b0a390005463a572a0ad63f5b84",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-024-stack-entry-removal/evidence/removal-404.png",
+        "evidence_sha256": "3ce0855b375f0b8771388bf3bcc145e6ed99b584ff1e26f995ddb73ae87e91a6"
+      }
     }
   },
-  "updated_at": "2026-10-07T22:22:53Z"
+  "updated_at": "2026-10-07T22:38:07Z"
 }
