@@ -61,6 +61,12 @@ export {
   type SaveCommentOutcome,
 } from "./comments.ts";
 export {
+  readMyLatestVersion,
+  saveReviewVersion,
+  type MyReviewVersion,
+  type SaveReviewVersionInput,
+} from "./review.ts";
+export {
   claimFirstDesign,
   readReviewerDesigns,
   recordViewEvent,

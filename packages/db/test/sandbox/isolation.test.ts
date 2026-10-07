@@ -34,6 +34,12 @@ import {
   THROTTLE_INPUT_INVALID,
 } from "../../src/sandbox/gate.ts";
 import {
+  REVIEW_ANSWERS_BYTES_MAX,
+  REVIEW_INPUT_INVALID,
+  REVIEW_TRIAGE_INVALID,
+  REVIEW_VERSION_TAKEN,
+} from "../../src/sandbox/review.ts";
+import {
   NOT_A_REVIEWER_VIEWER,
   NOT_A_TEAM_VIEWER,
   NOT_AN_ADMIN_VIEWER,
@@ -726,6 +732,134 @@ const deleteCommentAs = (kind: ViewerKind) => async (w: World) => {
   }
 };
 
+/** Every version on both slugs, to prove a call changed nothing else. */
+async function versionsSnapshot(w: World) {
+  return db()
+    .select()
+    .from(sandboxReviewVersions)
+    .where(inArray(sandboxReviewVersions.slug, [w.slugA, w.slugB]))
+    .orderBy(sandboxReviewVersions.id);
+}
+
+function newVersion(triage: object = {}) {
+  return {
+    id: randomUUID(),
+    coreVersion: "v1",
+    answers: { overall: "very", "next-step": "approve" },
+    triage,
+  };
+}
+
+/** LAB-17 C11: the team is refused by both review functions, and nothing is stored. */
+const reviewRefused =
+  (name: "saveReviewVersion" | "readMyLatestVersion") =>
+  (kind: "developer" | "admin") =>
+  async (w: World) => {
+    const before = await versionsSnapshot(w);
+    const viewer = viewerFor(w, kind);
+    await assert.rejects(
+      name === "saveReviewVersion"
+        ? sandbox.saveReviewVersion(db(), viewer, newVersion())
+        : sandbox.readMyLatestVersion(db(), viewer, {}),
+      refusedWith(NOT_A_REVIEWER_VIEWER),
+    );
+    assert.deepEqual(await versionsSnapshot(w), before);
+  };
+
+/**
+ * A reviewer saves a version triaging their own pin, retries it under the
+ * same id, and is refused another's comment, another's version id, a
+ * crossed slug and answers over 64 KB. The version is removed after, so the
+ * world keeps one version each.
+ */
+const saveVersionAs = (kind: ViewerKind) => async (w: World) => {
+  const rows = rowsFor(w, kind);
+  const own = rows.viewer;
+  const other = [w.a1, w.a2, w.b].find(
+    (r) => r.viewer.reviewerId !== own.reviewerId,
+  )!;
+  const version = newVersion({
+    comments: { [rows.commentId]: "must" },
+    mattersMost: rows.commentId,
+  });
+  try {
+    const saved = await sandbox.saveReviewVersion(db(), own, version);
+    exactKeys(saved, ["number", "createdAt"]);
+    // The world holds version 1 for each reviewer.
+    assert.equal(saved.number, 2);
+    assert.deepEqual(
+      await sandbox.saveReviewVersion(db(), own, version),
+      saved,
+    );
+    const before = await versionsSnapshot(w);
+    for (const triage of [
+      { comments: { [other.commentId]: "fine" } },
+      { comments: { [w.teamNoteId]: "must" } },
+      { comments: {}, mattersMost: other.commentId },
+    ])
+      await assert.rejects(
+        sandbox.saveReviewVersion(db(), own, newVersion(triage)),
+        refusedWith(REVIEW_TRIAGE_INVALID),
+      );
+    // Another reviewer cannot take this version's id, and learns nothing of it.
+    await assert.rejects(
+      sandbox.saveReviewVersion(db(), other.viewer, { ...version, triage: {} }),
+      refusedWith(REVIEW_VERSION_TAKEN),
+    );
+    await assert.rejects(
+      sandbox.saveReviewVersion(
+        db(),
+        { ...own, slug: own.slug === w.slugA ? w.slugB : w.slugA },
+        newVersion(),
+      ),
+      refusedWith(REVIEWER_NOT_FOUND),
+    );
+    for (const bad of [
+      { ...newVersion(), id: "not-a-uuid" },
+      { ...newVersion(), coreVersion: "core one" },
+      { ...newVersion(), triage: { comments: { [rows.commentId]: "maybe" } } },
+      {
+        ...newVersion(),
+        answers: { gaps: "x".repeat(REVIEW_ANSWERS_BYTES_MAX) },
+      },
+      { ...newVersion(), slug: w.slugB },
+    ])
+      await assert.rejects(
+        sandbox.saveReviewVersion(db(), own, bad as never),
+        refusedWith(REVIEW_INPUT_INVALID),
+      );
+    assert.deepEqual(await versionsSnapshot(w), before);
+  } finally {
+    await db()
+      .delete(sandboxReviewVersions)
+      .where(eq(sandboxReviewVersions.id, version.id));
+  }
+};
+
+/** A reviewer reads their own latest version: never another's, never across slugs. */
+const readLatestAs = (kind: ViewerKind) => async (w: World) => {
+  const rows = rowsFor(w, kind);
+  const own = rows.viewer;
+  const latest = await sandbox.readMyLatestVersion(db(), own, {});
+  exactKeys(latest, ["number", "createdAt", "answers", "triage"]);
+  const [stored] = await db()
+    .select()
+    .from(sandboxReviewVersions)
+    .where(eq(sandboxReviewVersions.id, rows.versionId));
+  assert.equal(latest!.number, 1);
+  assert.deepEqual(latest!.answers, stored!.answers);
+  const other = own.slug === w.slugA ? w.b.viewer : w.a1.viewer;
+  for (const crossed of [
+    { ...own, slug: other.slug },
+    { ...own, reviewerId: other.reviewerId },
+  ])
+    assert.equal(await sandbox.readMyLatestVersion(db(), crossed, {}), null);
+  await assert.rejects(
+    sandbox.readMyLatestVersion(db(), own, { slug: w.slugB } as never),
+    refusedWith(REVIEW_INPUT_INVALID),
+  );
+};
+
 /** Registered cases for every runtime export of @pem/db/sandbox. */
 const REGISTRY: Registry<World> = {
   ...codesCases({ db, viewerFor }),
@@ -1215,6 +1349,30 @@ const REGISTRY: Registry<World> = {
       "reviewer on slug B": statsRefused("reviewer on slug B"),
       developer: statsAsTeam("developer"),
       admin: statsAsTeam("admin"),
+    },
+  },
+
+  saveReviewVersion: {
+    group: "viewer",
+    criteria: ["LAB-17 C11"],
+    byViewer: {
+      "reviewer on slug A": saveVersionAs("reviewer on slug A"),
+      "second reviewer on slug A": saveVersionAs("second reviewer on slug A"),
+      "reviewer on slug B": saveVersionAs("reviewer on slug B"),
+      developer: reviewRefused("saveReviewVersion")("developer"),
+      admin: reviewRefused("saveReviewVersion")("admin"),
+    },
+  },
+
+  readMyLatestVersion: {
+    group: "viewer",
+    criteria: ["LAB-17 C11"],
+    byViewer: {
+      "reviewer on slug A": readLatestAs("reviewer on slug A"),
+      "second reviewer on slug A": readLatestAs("second reviewer on slug A"),
+      "reviewer on slug B": readLatestAs("reviewer on slug B"),
+      developer: reviewRefused("readMyLatestVersion")("developer"),
+      admin: reviewRefused("readMyLatestVersion")("admin"),
     },
   },
 
