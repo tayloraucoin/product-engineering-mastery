@@ -99,7 +99,8 @@ const RUNNER_DEPS = [
 ];
 const RUNNER_SCRIPT =
   /\b(?:vitest|jest|mocha|ava|uvu|playwright test|cypress run|node (?:[^\n]*\s)?--test)\b/;
-const TEST_FILE = /(?:\.(?:test|spec)\.[cm]?[jt]sx?$|(?:^|\/)__tests__\/)/;
+const TEST_FILE =
+  /(?:\.(?:test|spec|cy)\.[cm]?[jt]sx?$|(?:^|\/)(?:__tests__|tests?)\/[^/]+\.[cm]?[jt]sx?$)/;
 
 export const C3: Signal = {
   id: "C3",
@@ -134,9 +135,10 @@ export const C3: Signal = {
 };
 
 const TYPES_SCRIPT = /^(?:check-types|typecheck|type-check|types|tsc)$/;
-const TYPES_COMMAND = /\b(?:tsc|check-types|typecheck|type-check)\b/;
+// A hyphen is a word boundary, so `tsc-alias` and `lint-staged` are fenced off.
+const TYPES_COMMAND = /\b(?:tsc|check-types|typecheck|type-check)\b(?!-)/;
 const LINT_SCRIPT = /^lint$/;
-const LINT_COMMAND = /\b(?:eslint|biome (?:lint|check)|oxlint)\b|\blint\b/;
+const LINT_COMMAND = /\b(?:eslint|biome (?:lint|check)|oxlint|lint)\b(?!-)/;
 
 export const C4: Signal = {
   id: "C4",
@@ -165,6 +167,9 @@ export const C4: Signal = {
 };
 
 const FORMATTER = /\b(?:prettier|biome (?:format|check)|dprint)\b/;
+/** Prettier's -c, -l and their long forms; dprint check; biome format or check without --write. */
+const READ_ONLY_FORMAT =
+  /(?:\s(?:--check|-c|--list-different|-l)\b|\bdprint check\b|\bbiome (?:format|check)\b(?![^\n&|;]*--write))/;
 
 export const C5: Signal = {
   id: "C5",
@@ -172,11 +177,12 @@ export const C5: Signal = {
   layer: 2,
   title: "Read-only format check",
   measure(repo): Measure {
-    const scripts = Object.entries(rootScripts(repo)).filter(([, c]) =>
-      FORMATTER.test(c),
+    // A root that hands formatting to the workspaces (turbo run format:check) counts by name.
+    const scripts = Object.entries(rootScripts(repo)).filter(
+      ([n, c]) => FORMATTER.test(c) || /^format(?::|$)/.test(n),
     );
-    const check = scripts.find(([, c]) =>
-      /--check\b|\bdprint check\b|--list-different\b/.test(c),
+    const check = scripts.find(([n, c]) =>
+      FORMATTER.test(c) ? READ_ONLY_FORMAT.test(c) : /^format:check$/.test(n),
     );
     if (check)
       return {

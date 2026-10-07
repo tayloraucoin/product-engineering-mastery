@@ -79,7 +79,11 @@ type Found = { tool: Tool; major: number; from: string };
 
 function findToolchain(repo: Repo): Found[] {
   const found: Found[] = [];
-  const packages = listPackages(repo);
+  // The root and the apps: a package or an example pinning an older React is not the app's toolchain.
+  const packages = listPackages(repo).filter(
+    (p) =>
+      p.rel === "package.json" || /^apps\/[^/]+\/package\.json$/.test(p.rel),
+  );
   const root = packages.find((p) => p.rel === "package.json")?.pkg;
   const manager = root?.packageManager;
   if (manager) {
@@ -92,6 +96,8 @@ function findToolchain(repo: Repo): Found[] {
     found.push({ tool: "yarn", major: 0, from: "package-lock.json (npm)" });
   } else if (repo.tracked.has("pnpm-lock.yaml")) {
     found.push({ tool: "yarn", major: 0, from: "pnpm-lock.yaml (pnpm)" });
+  } else if (repo.read("yarn.lock")?.startsWith("# yarn lockfile v1")) {
+    found.push({ tool: "yarn", major: 1, from: "yarn.lock v1 (Yarn 1)" });
   }
   const engine = root?.engines?.node;
   if (engine) {

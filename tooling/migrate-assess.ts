@@ -39,9 +39,11 @@ if (unknown.length || positional.length !== 1) {
   process.exit(2);
 }
 
-// yarn runs scripts from the toolkit root; a relative target is the caller's.
+// yarn runs scripts from the toolkit root, so under yarn a relative target is
+// the caller's (INIT_CWD); under plain node it is the shell's, whatever an
+// earlier yarn left in the environment.
 const target = path.resolve(
-  process.env.INIT_CWD ?? process.cwd(),
+  (process.env.npm_lifecycle_event && process.env.INIT_CWD) || process.cwd(),
   positional[0] ?? ".",
 );
 

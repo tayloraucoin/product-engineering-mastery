@@ -16,7 +16,8 @@ import type { Score } from "./signal.ts";
 
 export const FAR_FROM = 22;
 export const MIDDLE_FROM = 16;
-export const NEAR_UP_TO = 15;
+/** Derived, so moving MIDDLE_FROM moves the near band with it. */
+export const NEAR_UP_TO = MIDDLE_FROM - 1;
 export const MAX_SCORE = 2;
 
 export type Path = "near" | "middle" | "far";

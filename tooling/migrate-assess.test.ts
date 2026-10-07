@@ -7,7 +7,14 @@
 
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { readdirSync, readFileSync } from "node:fs";
+import {
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  utimesSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { after, test } from "node:test";
 import { fileURLToPath } from "node:url";
@@ -214,6 +221,52 @@ test("C2 readMajor takes the floor of a range and ignores tags and protocols", (
   assert.equal(readMajor("workspace:*"), null);
 });
 
+test("C2 edge cases: lint-staged and tsc-alias are not lint or types; prettier -c and a turbo format:check are read-only; tests in test/ count", () => {
+  let s = scoresOf(
+    scratchTarget({
+      "package.json": pkg({
+        scripts: {
+          precommit: "lint-staged",
+          "build:paths": "tsc-alias",
+          "format:check": "prettier -c .",
+        },
+      }),
+    }),
+  );
+  assert.deepEqual([s.C4, s.C5], [2, 0]);
+  s = scoresOf(
+    scratchTarget({
+      "package.json": pkg({
+        scripts: {
+          "format:check": "turbo run format:check",
+          test: "node --test",
+        },
+      }),
+      "test/sum.js": "export {};\n",
+    }),
+  );
+  assert.deepEqual([s.C3, s.C5], [0, 0]);
+});
+
+test("C2 edge cases: S2 reads the root and apps only, and a Yarn 1 lockfile is a major off", () => {
+  const s = scoresOf(
+    scratchTarget({
+      "package.json": pkg({ engines: { node: ">=22" } }),
+      "yarn.lock": "# yarn lockfile v1\n",
+      "packages/emails/package.json": pkg({
+        dependencies: { react: "18.3.1" },
+      }),
+      "examples/legacy/package.json": pkg({
+        dependencies: { next: "^13.0.0" },
+      }),
+      "apps/web/package.json": pkg({
+        dependencies: { next: "16.3.8", react: "19.2.8" },
+      }),
+    }),
+  );
+  assert.equal(s.S2, 1);
+});
+
 const CONTRACT_KEYS = [
   "target",
   "commit",
@@ -232,6 +285,9 @@ const CONTRACT_KEYS = [
 
 test("C3 --json prints one object with every data-contract key, and the target is byte for byte unchanged", () => {
   const dir = scratchTarget(MONOREPO);
+  // A tracked file newer than the index: any index refresh would rewrite .git/index.
+  const later = new Date(Date.now() + 60_000);
+  utimesSync(path.join(dir, "turbo.json"), later, later);
   const before = snapshotTree(dir);
   const r = runAssess([dir, "--json"], "yarn");
   assert.equal(r.status, 0, r.err);
@@ -245,10 +301,63 @@ test("C3 --json prints one object with every data-contract key, and the target i
   assert.deepEqual(snapshotTree(dir), before);
 });
 
-test("C3 a target that is not a git repository exits 2 with a reason", () => {
-  const r = runAssess([path.join(REPO, "does-not-exist-assess")]);
+test("C3 a missing folder, or a folder outside any git repository, exits 2 with a reason", () => {
+  let r = runAssess([path.join(REPO, "does-not-exist-assess")]);
   assert.equal(r.status, 2);
   assert.match(r.err, /not a folder/);
+  const loose = path.join(
+    process.env.TMPDIR ?? tmpdir(),
+    `pem-assess-loose-${process.pid}`,
+  );
+  mkdirSync(loose, { recursive: true });
+  r = runAssess([loose]);
+  assert.equal(r.status, 2);
+  assert.match(r.err, /not inside a git repository/);
+});
+
+test("C3 the run opens tracked files only, never an env file, tracked or not", () => {
+  const dir = scratchTarget({
+    "package.json": pkg({
+      workspaces: ["apps/*"],
+      scripts: { lint: "eslint ." },
+    }),
+    ".env": "SECRET=synthetic\n",
+    ".env.example": "SECRET=\n",
+  });
+  writeFileSync(path.join(dir, "turbo.json"), "{}\n");
+  writeFileSync(path.join(dir, ".env.local"), "SECRET=synthetic\n");
+  mkdirSync(path.join(dir, "apps/x"), { recursive: true });
+  writeFileSync(
+    path.join(dir, "apps/x/package.json"),
+    pkg({ dependencies: { next: "13.0.0" } }),
+  );
+  const repo = openRepo(dir);
+  const scores = Object.fromEntries(
+    measureSignals(repo).map((s) => [s.id, s.score]),
+  );
+  assert.equal(scores.S1, 1, "an untracked turbo.json does not count");
+  assert.equal(scores.S2, 0, "an untracked app's Next 13 does not count");
+  assert.ok(repo.opened.length > 0);
+  for (const abs of repo.opened) {
+    const rel = path.relative(repo.root, abs);
+    assert.ok(repo.tracked.has(rel), `opened untracked ${rel}`);
+    assert.doesNotMatch(path.basename(rel), /^\.env/, `opened ${rel}`);
+  }
+});
+
+test("C3 a relative target under plain node is the shell's folder, whatever INIT_CWD says", () => {
+  const dir = scratchTarget({ "package.json": pkg({ scripts: {} }) });
+  const r = spawnSync(
+    process.execPath,
+    [path.join(REPO, "tooling/migrate-assess.ts"), ".", "--json"],
+    {
+      cwd: dir,
+      encoding: "utf8",
+      env: { ...process.env, INIT_CWD: REPO, npm_lifecycle_event: "" },
+    },
+  );
+  assert.equal(r.status, 0, r.stderr);
+  assert.equal(JSON.parse(r.stdout).target, openRepo(dir).root);
 });
 
 test("C4 the markdown names each signal with its score and evidence, the total, the path, the gate and what is not yet measured", () => {

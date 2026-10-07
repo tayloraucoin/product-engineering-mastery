@@ -5,7 +5,7 @@
  * hygiene MIG-6) are present and empty until then.
  */
 
-import { listPackages, runGit, type Repo } from "./repo.ts";
+import { runGit, type Repo } from "./repo.ts";
 import {
   FAR_FROM,
   MIDDLE_FROM,
@@ -49,7 +49,7 @@ export const readToolkitCommit = (toolkitRoot: string) =>
 
 export function assessRepo(repo: Repo, toolkitRoot: string): AssessData {
   const signals = measureSignals(repo, SIGNALS);
-  const javascript = listPackages(repo).length > 0;
+  const javascript = repo.tracked.has("package.json");
   const verdict = scoreSignals(signals, { javascript });
   return {
     target: repo.root,
@@ -88,12 +88,20 @@ export function renderMarkdown(data: AssessData): string {
     `- Target: \`${data.target}\` at \`${data.commit ?? "no commit"}\``,
     `- Toolkit: \`${data.toolkitCommit ?? "not a git checkout"}\``,
     `- Total: **${data.total}** of ${verdict.measured * 2} measured (${verdict.measured} of ${data.signals.length} signals)`,
-    `- Gate: ${data.gate.failed ? `**failed** (${data.gate.reasons.join("; ")})` : "passed"}`,
+    `- Gate: ${data.gate.failed ? `**failed** (${data.gate.reasons.join("; ")})` : data.signals.find((s) => s.id === "S1")?.score === null ? "not measured (S1 has no score)" : "passed"}`,
     `- Path: **${data.path ?? "not decided"}**${pathWhy(data, verdict)}`,
   ];
-  if (verdict.unmeasured.length)
+  const pending = data.signals.filter((s) => s.evidence === "not yet measured");
+  const failed = data.signals.filter(
+    (s) => s.score === null && s.evidence !== "not yet measured",
+  );
+  if (pending.length)
     out.push(
-      `- Not yet measured: ${verdict.unmeasured.join(", ")} (left out of the total; with them the total could reach ${verdict.ceiling})`,
+      `- Not yet measured: ${pending.map((s) => s.id).join(", ")} (left out of the total; with them the total could reach ${verdict.ceiling})`,
+    );
+  if (failed.length)
+    out.push(
+      `- Detector failed, left out of the total: ${failed.map((s) => `${s.id} (${s.evidence})`).join(", ")}`,
     );
   for (const group of Object.keys(GROUP_TITLES)) {
     const rows = data.signals.filter((s) => byId.get(s.id)?.group === group);
