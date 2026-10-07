@@ -46,8 +46,9 @@ function one(id: string) {
     console.error(`status — no item ${id} under ${toolkit.specsRoot}/`);
     process.exit(1);
   }
-  // One ticket, asked for by name: the one place staleness is shown while a
-  // ticket is in build, and only a Q3 ticket's proofs can be stale (PR-19).
+  // One ticket, asked for by name: with --strict, the one place a rewritten
+  // evidence log or (at Q3 only) a later commit is shown (PR-19, C7). A
+  // review PASS goes stale only when the criteria changed after it (WEB-12).
   const state = readItemState(item, tree.specsRoot, { staleness: true });
   const qa = state.contract ? qaOf(state.contract) : null;
   const lines = [

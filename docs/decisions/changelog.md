@@ -15,6 +15,10 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-06 — WEB-12: a review PASS is final for its round
+
+The audit's R1 and R2 (`specs/_shared/reports/2026-10-06-token-and-speed-audit.md`): at Q3 every fix after a review PASS made the review stale, a fresh reviewer found different orange items, and the loop ran 17 then 26 headless runs with no Blocking found after any PASS. Now `readItemState` resets a `review:<role>` PASS only when the contract's criteria change (the run record carries `criteria_sha256`); a later as-built edit or planned-path commit leaves it standing. `review:run` keeps a `runs` count per reviewer and ticket: a second run is allowed only after a recorded FAIL, read from the hash-bound review file so a status flipped by hand earns nothing, and any third run needs `--operator "<reason>"`, written into the review file. `qa-levels.md`, `stages/build.md` and `tk-batch` say what follows a PASS: orange findings fixed when cheap and re-proven with `contract:run`, never re-reviewed; yellow and grey drafted as follow-ups; a Should-fix count that does not fall across rounds is the signal to stop; a `focus` line raises the cap. Ledger PR-20. The LAB-1 to LAB-7 review histories are walked in the ticket's as-built: 15 of the 26 recorded runs would have been refused, and none of the 15 found a Blocking.
+
 ## 2026-10-06 — PEM: the brief line lists only tickets in build (C7)
 
 The audit's O7: `yarn status --brief`, printed into every session start and stop, opened with LAB-5, a closed ticket, listing its criteria as "evidence changed after it was recorded"; `yarn check-specs` warned the same of LAB-8. The logs are git-ignored and had been rewritten by a later run; no code had changed. PR-19 ruled that only `check-specs --strict` and `yarn status <id>` look at staleness; the evidence-hash check looked on every read, and the stage then fell back to closing.

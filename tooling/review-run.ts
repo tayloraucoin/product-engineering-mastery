@@ -6,6 +6,9 @@
  *                                    and records review:<role> in results.json
  *   yarn review:run vigil <EPIC>     the Tickets gate: pre-flights every drafted
  *                                    ticket and writes tickets/_preflight.md
+ *   yarn review:run <role> <id> --operator "<reason>"
+ *                                    past the cap (a second run after a PASS,
+ *                                    any third run); the reason is kept
  *
  * The reviewer is `claude -p` with Read, Grep and Glob only: the generated
  * subagent when `.claude/agents/<role>.md` exists, otherwise the role file as
@@ -13,8 +16,11 @@
  * results and the evidence index, never from the builder's words; it scopes the
  * reviewer to the planned-path changes, one import hop out only to confirm a
  * Blocking, and says this is the only pass unless it FAILs (C3). The review
- * file carries the contract and as-built hashes it read; editing either
- * afterwards resets the review to FAIL in check-specs.
+ * file carries the contract, criteria and as-built hashes it read. A PASS is
+ * final for its round (WEB-12): a later as-built edit or planned-path commit
+ * does not reset it, only a change to the criteria does; a FAIL earns one
+ * re-review; a third run of the same reviewer on one ticket needs
+ * `--operator "<reason>"`, which is written into the review file.
  *
  * What this proves: a review ran against that contract. It does not prove the
  * review was independent: the builder starts it and owns the tree it reads.
@@ -64,7 +70,17 @@ const TOOLS = "Read,Grep,Glob";
 const TIMEOUT_MS = 20 * 60 * 1000;
 
 const toolkit = loadToolkit();
-const [role, target] = process.argv.slice(2);
+const argv = process.argv.slice(2);
+const operatorAt = argv.indexOf("--operator");
+/** The operator's reason for a run past the cap (WEB-12); null when none was given. */
+const operatorReason =
+  operatorAt === -1
+    ? null
+    : argv[operatorAt + 1]?.replace(/\s+/g, " ").trim() || null;
+const [role, target] =
+  operatorAt === -1
+    ? argv
+    : argv.filter((_, i) => i !== operatorAt && i !== operatorAt + 1);
 
 function stop(message: string): never {
   console.error(`review:run — ${message}`);
@@ -260,8 +276,46 @@ function reviewTicket(item: Item) {
     );
   if (!fileExists(asBuiltPath(item)))
     refuse(
-      `write ${asBuiltPath(item)} first (from docs/engineering/templates/as-built.template.md): reviewers read it, and editing it later resets their verdicts`,
+      `write ${asBuiltPath(item)} first (from docs/engineering/templates/as-built.template.md): reviewers read it; a later edit does not reset their verdicts, so write it once, as the template says`,
     );
+  // A PASS is final for its round (WEB-12, the audit's C1). The verdict is
+  // read from the recorded review file, whose hash the run record binds, so a
+  // status flipped by hand in results.json earns nothing. A second run is
+  // allowed only after a FAIL, or after the criteria changed (contract:add
+  // reset the PASS); any third run needs the operator. Runs that gave no
+  // verdict are not counted: they were not reviews.
+  const prior = results.criteria[criterionId];
+  const priorRun = prior?.run ?? null;
+  // A record from before the counter counts as one run only when it carried
+  // a verdict: a run that gave none was not a review and earns no refusal.
+  let runs = prior?.runs ?? 0;
+  if (priorRun) {
+    const file = reviewPath(item, role!);
+    if (!fileExists(file) || hashFile(file) !== priorRun.evidence_sha256)
+      refuse(
+        `${file} is not the review recorded in ${resultsPath(item)} (missing or edited); git restore it. A review file is never edited`,
+      );
+    const recorded =
+      readRepoText(file).match(/^- verdict: (PASS|FAIL)$/m)?.[1] ?? null;
+    if (prior!.runs === undefined && recorded) runs = 1;
+    const criteriaChanged =
+      priorRun.criteria_sha256 !== undefined &&
+      priorRun.criteria_sha256 !== results.criteria_sha256;
+    const past = `yarn review:run ${role} ${item.id} --operator "<reason>"`;
+    if (runs >= 2 && !operatorReason)
+      refuse(
+        `${criterionId} has run ${runs} times on ${item.id}; a third run needs the operator's word: ${past}`,
+      );
+    if (
+      runs === 1 &&
+      recorded === "PASS" &&
+      !criteriaChanged &&
+      !operatorReason
+    )
+      refuse(
+        `${criterionId} is PASS on ${item.id}, and a PASS is final for its round: fix cheap Should-fix findings and re-prove with yarn contract:run ${item.id}; draft the rest as follow-ups. Only the operator reopens it: ${past}`,
+      );
+  }
   const state = readItemState(item, toolkit.specsRoot);
   const unproven = state.criteria.filter(
     (c) => !c.id.startsWith("review:") && c.status !== "PASS",
@@ -338,11 +392,14 @@ function reviewTicket(item: Item) {
       `> Written by \`${command}\`. Never edit it: check-specs binds it to the hashes below, and Taylor reads it before merge.`,
       "",
       `- contract_sha256: ${contractHash}`,
+      `- criteria_sha256: ${results.criteria_sha256}`,
       `- as_built_sha256: ${asBuiltHash}`,
       `- head: ${head}`,
       `- runner: ${review.runner}`,
       `- model: ${review.model}`,
       `- at: ${at}`,
+      `- run: ${runs + 1} of ${role} on ${item.id}`,
+      ...(operatorReason ? [`- operator: ${operatorReason}`] : []),
       ...costLines(review.cost),
       `- verdict: ${verdict ?? "none (the reviewer did not finish with a VERDICT line)"}`,
       "",
@@ -367,6 +424,7 @@ function reviewTicket(item: Item) {
       evidence_path: rel,
       evidence_sha256: hashFile(rel),
       contract_sha256: contractHash,
+      criteria_sha256: results.criteria_sha256,
       as_built_sha256: asBuiltHash,
       runner: review.runner,
       ...pickCost(review.cost),
@@ -374,6 +432,7 @@ function reviewTicket(item: Item) {
     ...(results.criteria[criterionId]?.refused?.length && {
       refused: results.criteria[criterionId]!.refused,
     }),
+    ...(runs + (verdict ? 1 : 0) > 0 && { runs: runs + (verdict ? 1 : 0) }),
   };
   results.updated_at = now();
   writeRepoText(resultsPath(item), formatResults(results));
@@ -383,7 +442,7 @@ function reviewTicket(item: Item) {
       `${role} gave no verdict (${review.error ? `the run failed: ${review.error}; from the sandbox, re-run unsandboxed, or Taylor runs: ${command}` : "no VERDICT line"}). ${criterionId} stays FAIL; see ${rel}`,
     );
   console.log(
-    `review:run — ${criterionId} ${verdict}. Read ${rel} before merge.`,
+    `review:run — ${criterionId} ${verdict}. Read ${rel} before merge.${verdict === "PASS" ? ` This PASS is final for its round: fix cheap Should-fix findings and re-prove with yarn contract:run ${item.id}; do not run ${role} again on this ticket.` : " A FAIL earns one re-review."}`,
   );
   if (verdict !== "PASS") process.exit(1);
 }
@@ -510,7 +569,10 @@ function preflight(epic: Epic, items: Item[]) {
 
 // ---------------------------------------------------------------- main
 
-if (!role || !target) stop("usage: yarn review:run <role> <id | EPIC>");
+if (!role || !target)
+  stop('usage: yarn review:run <role> <id | EPIC> [--operator "<reason>"]');
+if (operatorAt !== -1 && !operatorReason)
+  stop('--operator needs the operator\'s reason: --operator "<reason>"');
 if (!/^[a-z]+$/.test(role))
   stop(`"${role}" is not a role name; use the lower-case name, as in vigil`);
 if (!findRoleFile(role)) stop(`no role file for ${role} under docs/roles/`);

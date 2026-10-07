@@ -185,6 +185,8 @@ export type RunRecord = {
   evidence_sha256: string;
   tests?: number;
   contract_sha256?: string;
+  /** For a review: the criteria set it judged; a criterion added later makes its PASS stale (WEB-12). */
+  criteria_sha256?: string;
   as_built_sha256?: string;
   runner?: string;
   /** A manual criterion only a person can check, handed to the operator: it never holds the ticket (PR-16). */
@@ -200,6 +202,8 @@ export type CriterionResult = {
   run: RunRecord | null;
   /** Every refused attempt, oldest first; a completed run never clears them. */
   refused?: Refusal[];
+  /** For a review: completed runs that gave a verdict. The cap reads it (WEB-12): a second run only after a FAIL, a third only with --operator. */
+  runs?: number;
 };
 
 export type Results = {
@@ -738,10 +742,6 @@ export function qaOf(contract: Pick<Contract, "qa" | "tier">): Qa {
 }
 
 /**
- * The planned paths that reach a critical path (money, auth, schema, personal
- * data, agent permissions). A planned path reaches one when it names one, or
- * when it is a glob that holds a tracked critical file. Never by sampling: a
-/**
  * Q2 is one reviewer (docs/workflows/qa-levels.md; the audit's C6). A further
  * seat is allowed only where a focus line names what that reviewer examines,
  * as the template's "the webhook handler: every event type handled (warden)".
@@ -766,6 +766,10 @@ export function q2ReviewerProblem(
   return `names ${contract.reviewers.length} reviewers at Q2 (${contract.reviewers.join(", ")}); Q2 is one reviewer unless a focus line names what each other seat examines, as in "the webhook handler: every event type handled (${unfocused[1]})" (docs/workflows/qa-levels.md)`;
 }
 
+/**
+ * The planned paths that reach a critical path (money, auth, schema, personal
+ * data, agent permissions). A planned path reaches one when it names one, or
+ * when it is a glob that holds a tracked critical file. Never by sampling: a
  * folder glob is not critical because an env.ts could one day sit in it.
  */
 export function criticalPathsOf(
@@ -867,6 +871,9 @@ export function formatResults(results: Results): string {
           ...(result.run.contract_sha256 && {
             contract_sha256: result.run.contract_sha256,
           }),
+          ...(result.run.criteria_sha256 && {
+            criteria_sha256: result.run.criteria_sha256,
+          }),
           ...(result.run.as_built_sha256 && {
             as_built_sha256: result.run.as_built_sha256,
           }),
@@ -877,6 +884,7 @@ export function formatResults(results: Results): string {
         ...(result.refused?.length && {
           refused: result.refused.map((r) => ({ at: r.at, reason: r.reason })),
         }),
+        ...(result.runs && { runs: result.runs }),
       },
     ]),
   );
@@ -1039,6 +1047,7 @@ export function readItemState(
   options: { staleness?: boolean } = {},
 ): ItemState {
   const { contract } = readContract(item);
+  const lookAtEvidence = options.staleness === true;
   const checkStaleness =
     lookAtEvidence && contract !== null && qaOf(contract) === "Q3";
   const { results } = readResults(item);
@@ -1047,7 +1056,6 @@ export function readItemState(
   const { head } = gitFacts();
   const criteria: CriterionState[] = [];
   // A closed ticket's proofs are frozen (PR-16): every criterion recorded PASS
-  const lookAtEvidence = options.staleness === true;
   // and the as-built written. A later edit to a file it shares with another
   // ticket no longer reopens it; the batch's yarn verify guards regressions.
   const frozen =
@@ -1162,9 +1170,24 @@ export function readItemState(
         );
         continue;
       }
-      // A review binds the code it read (the planned-paths rule below) and
-      // the frozen criteria, never the prose around them: a build note or an
-      // as-built wording fix does not cost a second review (PR-15).
+      // A review PASS is final for its round (WEB-12, the audit's C1). It
+      // judged the frozen criteria, so only a change to them resets it: never
+      // the as-built, never a later planned-path commit (those reset proofs
+      // of code, below). The run record carries the criteria hash it judged.
+      if (
+        checkStaleness &&
+        !merged &&
+        !frozen &&
+        run.criteria_sha256 &&
+        results &&
+        run.criteria_sha256 !== results.criteria_sha256
+      ) {
+        fail(
+          "the criteria changed after this review; it judged the earlier set",
+          "stale",
+        );
+        continue;
+      }
     }
     state.deferred = run.deferred === true;
     if (checkStaleness && !merged && !frozen && head) {
@@ -1175,11 +1198,9 @@ export function readItemState(
         );
         continue;
       }
-      const changed = changedAfter(
-        run.head,
-        contract?.planned_paths ?? [],
-        specsRoot,
-      );
+      const changed = isReview(criterion)
+        ? []
+        : changedAfter(run.head, contract?.planned_paths ?? [], specsRoot);
       if (changed.length > 0) {
         fail(
           `${changed.slice(0, 3).join(", ")}${changed.length > 3 ? ` and ${changed.length - 3} more` : ""} changed after it was recorded`,
@@ -1226,27 +1247,6 @@ function recordedStage(state: ItemState): string {
   return left.length === 0 ? "proven" : "open";
 }
 
-/** The generated view of every item (E-26). Deterministic: it reads files, never git or the clock. */
-export function renderStatusFile(tree: SpecsTree): string {
-  const states = tree.items.map((item) => readItemState(item, tree.specsRoot));
-  const link = (dir: string) => `${path.posix.relative(tree.specsRoot, dir)}/`;
-  const rows = states
-    .filter((state) => !state.item.archived)
-    .map((state) => {
-      const left = recordedLeft(state);
-      return `| ${state.item.id} | ${state.item.kind} | ${recordedStage(state)} | ${left.length ? left.join(", ") : "none"} | [\`${state.item.slug}\`](${link(state.item.dir)}) |`;
-    });
-  const operatorRows = states.flatMap((state) =>
-    (state.contract?.criteria ?? [])
-      .filter((c) => state.results?.criteria[c.id]?.run?.deferred === true)
-      .map(
-        (c) =>
-          `| ${state.item.id} | ${c.id} | ${c.statement.replaceAll("|", "\\|")} | \`${relocate(state.item, state.results!.criteria[c.id]!.run!.evidence_path)}\` |`,
-      ),
-  );
-  const ticketsOf = (epic: Epic) =>
-    tree.items.filter((item) => item.epic?.prefix === epic.prefix);
-  const epicRows = tree.epics
 /** What a criterion still needs, as the brief line and `yarn status <id>` print it. */
 export function leftOf(state: ItemState): string[] {
   return state.criteria
@@ -1289,6 +1289,27 @@ export function renderBrief(tree: SpecsTree, limit: number): string {
   return line.length > limit ? `${line.slice(0, limit - 1)}…` : line;
 }
 
+/** The generated view of every item (E-26). Deterministic: it reads files, never git or the clock. */
+export function renderStatusFile(tree: SpecsTree): string {
+  const states = tree.items.map((item) => readItemState(item, tree.specsRoot));
+  const link = (dir: string) => `${path.posix.relative(tree.specsRoot, dir)}/`;
+  const rows = states
+    .filter((state) => !state.item.archived)
+    .map((state) => {
+      const left = recordedLeft(state);
+      return `| ${state.item.id} | ${state.item.kind} | ${recordedStage(state)} | ${left.length ? left.join(", ") : "none"} | [\`${state.item.slug}\`](${link(state.item.dir)}) |`;
+    });
+  const operatorRows = states.flatMap((state) =>
+    (state.contract?.criteria ?? [])
+      .filter((c) => state.results?.criteria[c.id]?.run?.deferred === true)
+      .map(
+        (c) =>
+          `| ${state.item.id} | ${c.id} | ${c.statement.replaceAll("|", "\\|")} | \`${relocate(state.item, state.results!.criteria[c.id]!.run!.evidence_path)}\` |`,
+      ),
+  );
+  const ticketsOf = (epic: Epic) =>
+    tree.items.filter((item) => item.epic?.prefix === epic.prefix);
+  const epicRows = tree.epics
     .filter((epic) => !epic.archived)
     .map(
       (epic) =>

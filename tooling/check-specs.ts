@@ -21,11 +21,13 @@
  *
  * Fails on: a layout or id problem; a contract that breaks its schema or its
  * rules; results that do not match the contract or its frozen criteria; a
- * PASS without a valid run record (always), or one the code has outrun (once
- * an as-built exists); an as-built missing a section, or present while any
- * criterion is not PASS; a merged record edited; a spec file over its cap;
- * _status.md out of date. Warns on A8's promotion and truth-file gaps, and on
- * a stale PASS while the ticket is still open.
+ * PASS without a valid run record (always), or, under --strict, one whose
+ * evidence log was rewritten or whose code has moved on (once an as-built
+ * exists; a review PASS only when its criteria changed, WEB-12); an as-built missing a section, or present while any criterion is
+ * not PASS; a merged record edited; a spec file over its cap; _status.md out
+ * of date. Warns on A8's promotion and truth-file gaps, under --strict on a
+ * stale PASS while the ticket is still open, and on a draft that names a
+ * second Q2 reviewer no focus line covers (C6; init refuses it).
  */
 
 import { readdirSync, readFileSync } from "node:fs";
@@ -52,12 +54,13 @@ import {
   isReview,
   isWholeChain,
   parseAsBuilt,
+  q2ReviewerProblem,
   readContract,
   readItemState,
   readRepoText,
   readResults,
   readSpecsTree,
-  q2ReviewerProblem,
+  renderBrief,
   renderStatusFile,
   resultsPath,
   SPEC_FILE_CAPS,
@@ -69,11 +72,11 @@ import {
 import { loadToolkit, type Toolkit } from "./lib/toolkit.ts";
 
 const FIXTURES = "tooling/fixtures/specs";
+/** The brief line's cap, as status.ts prints it (SessionStart). */
+const BRIEF_LIMIT = 600;
 
 type Report = { errors: string[]; warnings: string[] };
 
-/** The brief line's cap, as status.ts prints it (SessionStart). */
-const BRIEF_LIMIT = 600;
 /** Fixtures and the pre-merge check judge the finished state; a build in flight does not. */
 let strict = process.argv.includes("--strict");
 
@@ -119,6 +122,13 @@ function checkItems(tree: SpecsTree, toolkit: Toolkit, report: Report) {
         report.errors.push(
           `${asBuiltPath(item)} exists, but ${item.id} never started; run yarn contract:init first`,
         );
+      // A draft's seats are the operator's to settle at the Tickets gate (C6);
+      // contract:init is where a second Q2 seat without a focus line is refused.
+      const q2 = contract ? q2ReviewerProblem(contract) : null;
+      if (q2)
+        report.warnings.push(
+          `${contractPath(item)} ${q2}; the operator settles the seats at the Tickets gate`,
+        );
       continue;
     }
     if (!contract) continue;
@@ -127,13 +137,6 @@ function checkItems(tree: SpecsTree, toolkit: Toolkit, report: Report) {
     const rel = resultsPath(item);
     if (results.id !== item.id)
       report.errors.push(
-      // A draft's seats are the operator's to settle at the Tickets gate (C6);
-      // contract:init is where a second Q2 seat without a focus line is refused.
-      const q2 = contract ? q2ReviewerProblem(contract) : null;
-      if (q2)
-        report.warnings.push(
-          `${contractPath(item)} ${q2}; the operator settles the seats at the Tickets gate`,
-        );
         `${rel}: id is ${results.id}, but the folder is ${item.id}`,
       );
     const contractIds = new Set(contract.criteria.map((c) => c.id));
@@ -406,11 +409,11 @@ function runFixtures(toolkit: Toolkit): string[] {
       message?: string;
       warning?: string;
       status?: boolean;
+      lenient?: { warnings?: string[]; brief?: string };
     };
     const root = `${FIXTURES}/${name}/specs`;
     const report = checkTree(toolkit, root, {
       status: fixture.status ?? false,
-      lenient?: { warnings?: string[]; brief?: string };
     });
     const failed = report.errors.length > 0;
     if (failed !== (fixture.expect === "fail"))
@@ -431,9 +434,6 @@ function runFixtures(toolkit: Toolkit): string[] {
       failures.push(
         `${name}: no warning mentions "${fixture.warning}"; got: ${report.warnings.join(" | ") || "none"}`,
       );
-  }
-  if (cases.length === 0) failures.push(`no fixtures in ${FIXTURES}`);
-  return failures.length ? failures : [String(cases.length)];
     if (!fixture.lenient) continue;
     strict = false;
     const lenient = checkTree(toolkit, root, {
@@ -457,6 +457,9 @@ function runFixtures(toolkit: Toolkit): string[] {
       if (line !== brief)
         failures.push(`${name}: expected brief "${brief}"; got "${line}"`);
     }
+  }
+  if (cases.length === 0) failures.push(`no fixtures in ${FIXTURES}`);
+  return failures.length ? failures : [String(cases.length)];
 }
 
 const toolkit = loadToolkit();

@@ -40,6 +40,11 @@
           "description": "The last run that set this status; null until one has.",
           "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/run" }]
         },
+        "runs": {
+          "description": "For a review: completed review:run runs that gave a verdict. The cap reads it: a second run only after a FAIL, a third only with --operator (WEB-12).",
+          "type": "integer",
+          "minimum": 1
+        },
         "refused": {
           "description": "Every review:run attempt a guard stopped before the reviewer ran, oldest first: when and why. A completed run never clears them.",
           "type": "array",
@@ -80,6 +85,10 @@
           "minimum": 0
         },
         "contract_sha256": { "$ref": "#/$defs/sha256" },
+        "criteria_sha256": {
+          "description": "For a review: the criteria set it judged (the results' criteria_sha256 at the time). A criterion added later makes the PASS stale; nothing else does (WEB-12).",
+          "$ref": "#/$defs/sha256"
+        },
         "as_built_sha256": { "$ref": "#/$defs/sha256" },
         "runner": { "type": "string", "minLength": 1 },
         "deferred": {

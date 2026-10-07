@@ -315,3 +315,202 @@ test("a pre-flight written by the fixture reviewer does not start a ticket outsi
   assert.notEqual(r.status, 0);
   assert.match(r.out, /written by a fixture reviewer, not Claude/);
 });
+
+// ---------------------------------------------------------------- WEB-12: a PASS is final for its round
+
+const RUNNER = (repo: string) => ({
+  PEM_REVIEW_RUNNER: path.join(repo, "review-runner.ts"),
+});
+const WEB1 = "specs/web/one-offs/WEB-001-filter";
+const resultsOf = (repo: string) =>
+  JSON.parse(read(repo, `${WEB1}/results.json`)) as {
+    criteria_sha256: string;
+    criteria: Record<
+      string,
+      {
+        status: string;
+        runs?: number;
+        refused?: { reason: string }[];
+        run: { criteria_sha256?: string } | null;
+      }
+    >;
+  };
+
+test("WEB-12 C1: a review PASS survives an as-built edit and a planned-path commit while the ticket is still closing", () => {
+  const repo = startOneOff({ qa: "Q3", reviewers: ["vigil", "warden"] });
+  buildAndProve(repo);
+  write(repo, `${WEB1}/as-built.md`, AS_BUILT("WEB-1"));
+  let r = tool(repo, "review-run.ts", ["vigil", "WEB-1"], RUNNER(repo));
+  assert.equal(r.status, 0, r.out);
+  assert.match(r.out, /This PASS is final for its round/);
+  const review = read(repo, `${WEB1}/review-vigil.md`);
+  assert.match(review, /^- contract_sha256: [0-9a-f]{64}$/m);
+  assert.match(review, /^- criteria_sha256: [0-9a-f]{64}$/m);
+  assert.match(review, /^- as_built_sha256: [0-9a-f]{64}$/m);
+  assert.match(review, /^- run: 1 of vigil on WEB-1$/m);
+  assert.equal(resultsOf(repo).criteria["review:vigil"]!.runs, 1);
+  assert.equal(
+    resultsOf(repo).criteria["review:vigil"]!.run!.criteria_sha256,
+    resultsOf(repo).criteria_sha256,
+  );
+
+  // The orange fix: the as-built changes, a planned path changes, the proofs re-run.
+  write(
+    repo,
+    `${WEB1}/as-built.md`,
+    AS_BUILT("WEB-1").replace("Nothing.", "A Should-fix finding was fixed."),
+  );
+  write(
+    repo,
+    "src/filter.ts",
+    "export const keep = (n: number) => Number.isFinite(n) && n > 1;\n",
+  );
+  commit(repo, "WEB-1: review fix");
+  r = tool(repo, "contract.ts", ["run", "WEB-1"]);
+  assert.equal(r.status, 0, r.out);
+
+  // Not frozen (warden has not run), staleness asked for: vigil's PASS stands.
+  r = checkSpecs(repo);
+  assert.notEqual(r.status, 0, "warden is still FAIL, so the close is open");
+  assert.doesNotMatch(r.out, /review:vigil's PASS no longer holds/);
+  assert.match(r.out, /review:warden \(not proven yet\)/);
+  const status = tool(repo, "status.ts", ["WEB-1"]).out;
+  assert.match(status, /^  review:warden manual/m);
+  assert.doesNotMatch(status, /^  review:vigil manual/m);
+
+  // A second vigil run after the PASS is refused, on record, and the file is untouched.
+  const before = read(repo, `${WEB1}/review-vigil.md`);
+  r = tool(repo, "review-run.ts", ["vigil", "WEB-1"], RUNNER(repo));
+  assert.notEqual(r.status, 0);
+  assert.match(r.out, /a PASS is final for its round/);
+  assert.match(r.out, /--operator "<reason>"/);
+  assert.equal(read(repo, `${WEB1}/review-vigil.md`), before);
+  const vigil = resultsOf(repo).criteria["review:vigil"]!;
+  assert.equal(vigil.status, "PASS");
+  assert.equal(vigil.runs, 1);
+  assert.match(vigil.refused!.at(-1)!.reason, /a PASS is final for its round/);
+
+  // Warden runs once; the ticket closes, and the strict check passes.
+  r = tool(repo, "review-run.ts", ["warden", "WEB-1"], RUNNER(repo));
+  assert.equal(r.status, 0, r.out);
+  commit(repo, "WEB-1: as-built and reviews");
+  r = checkSpecs(repo);
+  assert.equal(r.status, 0, r.out);
+});
+
+test("WEB-12 C2: a FAIL earns one re-review; a third run needs --operator, and the reason is written into the review file", () => {
+  const repo = startOneOff({ qa: "Q3" });
+  buildAndProve(repo);
+  write(repo, `${WEB1}/as-built.md`, AS_BUILT("WEB-1"));
+  let r = tool(repo, "review-run.ts", ["vigil", "WEB-1"], {
+    ...RUNNER(repo),
+    PEM_FIXTURE_VERDICT: "FAIL",
+  });
+  assert.notEqual(r.status, 0);
+  assert.match(r.out, /A FAIL earns one re-review/);
+  assert.equal(resultsOf(repo).criteria["review:vigil"]!.runs, 1);
+
+  // The second run is the one re-review the FAIL earned.
+  r = tool(repo, "review-run.ts", ["vigil", "WEB-1"], RUNNER(repo));
+  assert.equal(r.status, 0, r.out);
+  assert.match(read(repo, `${WEB1}/review-vigil.md`), /^- run: 2 of vigil/m);
+  assert.equal(resultsOf(repo).criteria["review:vigil"]!.runs, 2);
+
+  // The third is refused without the operator's word...
+  r = tool(repo, "review-run.ts", ["vigil", "WEB-1"], RUNNER(repo));
+  assert.notEqual(r.status, 0);
+  assert.match(
+    r.out,
+    /has run 2 times on WEB-1; a third run needs the operator's word/,
+  );
+  assert.equal(resultsOf(repo).criteria["review:vigil"]!.runs, 2);
+  r = tool(
+    repo,
+    "review-run.ts",
+    ["vigil", "WEB-1", "--operator"],
+    RUNNER(repo),
+  );
+  assert.notEqual(r.status, 0);
+  assert.match(r.out, /--operator needs the operator's reason/);
+
+  // ... and runs with it, the reason kept in the file.
+  r = tool(
+    repo,
+    "review-run.ts",
+    [
+      "vigil",
+      "WEB-1",
+      "--operator",
+      "Taylor: the webhook handler changed shape; look again",
+    ],
+    RUNNER(repo),
+  );
+  assert.equal(r.status, 0, r.out);
+  const review = read(repo, `${WEB1}/review-vigil.md`);
+  assert.match(review, /^- run: 3 of vigil on WEB-1$/m);
+  assert.match(
+    review,
+    /^- operator: Taylor: the webhook handler changed shape; look again$/m,
+  );
+  assert.equal(resultsOf(repo).criteria["review:vigil"]!.runs, 3);
+});
+
+test("WEB-12 C3: a FAIL written by hand earns no run, an edited review file earns none, and contract:add is the one reset", () => {
+  // Hand edits: the verdict is read from the hash-bound review file.
+  let repo = startOneOff({ qa: "Q3" });
+  buildAndProve(repo);
+  write(repo, `${WEB1}/as-built.md`, AS_BUILT("WEB-1"));
+  let r = tool(repo, "review-run.ts", ["vigil", "WEB-1"], RUNNER(repo));
+  assert.equal(r.status, 0, r.out);
+  const flipped = JSON.parse(read(repo, `${WEB1}/results.json`));
+  flipped.criteria["review:vigil"].status = "FAIL";
+  write(repo, `${WEB1}/results.json`, JSON.stringify(flipped, null, 2) + "\n");
+  r = tool(repo, "review-run.ts", ["vigil", "WEB-1"], RUNNER(repo));
+  assert.notEqual(r.status, 0);
+  assert.match(r.out, /a PASS is final for its round/);
+  write(
+    repo,
+    `${WEB1}/review-vigil.md`,
+    read(repo, `${WEB1}/review-vigil.md`).replace(
+      "- verdict: PASS",
+      "- verdict: FAIL",
+    ),
+  );
+  r = tool(repo, "review-run.ts", ["vigil", "WEB-1"], RUNNER(repo));
+  assert.notEqual(r.status, 0);
+  assert.match(
+    r.out,
+    /is not the review recorded in .*results\.json \(missing or edited\)/,
+  );
+
+  // contract:add changes the criteria: the PASS is stale, one run is allowed, the third still needs the operator.
+  repo = startOneOff({ qa: "Q3" });
+  buildAndProve(repo);
+  write(repo, `${WEB1}/as-built.md`, AS_BUILT("WEB-1"));
+  r = tool(repo, "review-run.ts", ["vigil", "WEB-1"], RUNNER(repo));
+  assert.equal(r.status, 0, r.out);
+  r = tool(repo, "contract.ts", [
+    "add",
+    "WEB-1",
+    "C3",
+    "--evidence",
+    "check",
+    "--statement",
+    "The second check passes.",
+    "--command",
+    "yarn check:ok",
+  ]);
+  assert.equal(r.status, 0, r.out);
+  assert.match(
+    tool(repo, "status.ts", ["WEB-1"]).out,
+    /review:vigil manual \(the criteria changed after this review/,
+  );
+  r = tool(repo, "contract.ts", ["run", "WEB-1"]);
+  assert.equal(r.status, 0, r.out);
+  r = tool(repo, "review-run.ts", ["vigil", "WEB-1"], RUNNER(repo));
+  assert.equal(r.status, 0, r.out);
+  assert.equal(resultsOf(repo).criteria["review:vigil"]!.runs, 2);
+  r = tool(repo, "review-run.ts", ["vigil", "WEB-1"], RUNNER(repo));
+  assert.notEqual(r.status, 0);
+  assert.match(r.out, /a third run needs the operator's word/);
+});

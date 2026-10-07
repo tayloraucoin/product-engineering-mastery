@@ -394,7 +394,7 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
 
 **[changing in the workflow overhaul]**
 
-- **What:** `yarn check-specs` checks the specs tree: layout and ids, each contract against its schema, results against frozen criteria, every PASS against its run record and evidence hash, closure, immutability against `main`, spec-file caps and drift in `_status.md`. It runs its 26 fixtures first, and `--strict` turns the in-flight warnings into failures.
+- **What:** `yarn check-specs` checks the specs tree: layout and ids, each contract against its schema, results against frozen criteria, every PASS against its run record (a review PASS goes stale only when the criteria change, WEB-12), closure, immutability against `main`, spec-file caps and drift in `_status.md`. It runs its fixtures first, and `--strict` turns the in-flight warnings into failures. Staleness is `--strict`'s question alone (PR-19; the audit's C7): only `--strict` reads a rewritten evidence log, or at Q3 a later commit to a planned path; without it neither is a warning, since `contract:run` rewrites its git-ignored logs on every run and a warning there invited a thread to re-prove another thread's closed work. A `results.json` that contradicts itself (a PASS with no run record, a failing exit, the wrong command, zero tests) fails at every level. A fixture's `case.json` may carry `lenient` to pin what the tree says without `--strict` and in the brief line.
 - **Area:** `specs/` (`tooling/check-specs.ts`, `tooling/lib/specs.ts`, `tooling/fixtures/specs/`).
 - **Trigger:** verify step 8; verify:fast unscoped; the pre-commit hook if installed.
 - **Scores:**
@@ -826,7 +826,7 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
 - **Trigger:** by an agent for each reviewer the operator confirmed on a Q3 ticket (PR-19); below Q3 a review happens in the thread, without this command.
 - **Scores:**
   - Importance **5.0**: the builder never grades its own work, and the reviewer's tools are read-only by construction.
-  - Token cost **6.0**: each review is a full model session (_estimate_ tens of thousands of tokens per role per ticket, billed). It needs the network, so it runs outside the sandbox, and it reruns whenever a planned path changes.
+  - Token cost **6.0**: each review is a full model session (_estimate_ tens of thousands of tokens per role per ticket, billed). It needs the network, so it runs outside the sandbox. A PASS is final for its round (WEB-12): a planned-path or as-built change no longer reruns it, only a criteria change does; a second run is allowed only after a FAIL and a third needs `--operator "<reason>"`.
   - Wall time **7.0**: _estimate_ minutes per review.
   - Standard **1.0**: model-as-reviewer is emerging practice; this wiring is house.
 - **Pros:**

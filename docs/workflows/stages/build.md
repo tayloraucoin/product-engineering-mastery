@@ -58,7 +58,7 @@ Per ticket, in build order:
 3. **Prove at the level.** With a ticket: `yarn contract:run <id>` runs each distinct command once (criteria that share a command share the run) and notes pass or fail in `results.json`; a check that needs a person is handed over as an operator check. Below Q3 that file is a status note and nothing in it goes stale; at Q3 it is the ledger. Without a ticket: run the commands and say what passed.
 4. **Fix and prove again** until the criteria pass. Give up on one failure only after three different fixes, and say what was tried.
 5. **Write down what the level asks for,** and nothing more.
-6. **Review at the level.** Q2: one subagent given the brief, the changed files and the reviewer's role, never the builder's summary. Q3: `yarn review:run <role> <id>` per confirmed specialist. Black and red findings are fixed and re-proven; cheap orange ones too; the rest become drafted follow-ups.
+6. **Review at the level.** Q2: one subagent given the brief, the changed files and the reviewer's role, never the builder's summary. Q3: `yarn review:run <role> <id>` per confirmed specialist. Black and red findings are fixed and re-proven; cheap orange ones too; the rest become drafted follow-ups. A review PASS is final for its round: after it, orange findings are fixed when cheap and re-proven with `yarn contract:run`, never re-reviewed; a FAIL earns one re-review; a third run of the same reviewer on one ticket needs the operator's word (`--operator "<reason>"`, or a `focus` line raising the cap). A Should-fix count that does not fall across rounds says stop.
 
 Once per batch: `yarn verify`, then the report.
 
