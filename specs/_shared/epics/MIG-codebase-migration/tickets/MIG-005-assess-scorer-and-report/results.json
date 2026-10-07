@@ -8,11 +8,11 @@
       "run": {
         "command": "yarn test:tooling",
         "exit": 0,
-        "at": "2026-10-07T19:38:52Z",
-        "head": "9db66357d32c7eb79e39c9e94fa2cbaaca17e756",
+        "at": "2026-10-07T19:48:44Z",
+        "head": "df453479372bc493cbe077d9667ce9124ecc129f",
         "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-005-assess-scorer-and-report/evidence/C1.log",
-        "evidence_sha256": "1045ead4201c00f208e6c131e1703e6e1fef142a7868189966eb31eadcbf9d6a",
-        "tests": 236
+        "evidence_sha256": "818730a3145683c84ce9bb98e08fa914f294d276e4b8e8c2c9ba7a75a89cfc4b",
+        "tests": 265
       }
     },
     "C2": {
@@ -21,11 +21,11 @@
       "run": {
         "command": "yarn test:tooling",
         "exit": 0,
-        "at": "2026-10-07T19:38:52Z",
-        "head": "9db66357d32c7eb79e39c9e94fa2cbaaca17e756",
+        "at": "2026-10-07T19:48:44Z",
+        "head": "df453479372bc493cbe077d9667ce9124ecc129f",
         "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-005-assess-scorer-and-report/evidence/C2.log",
-        "evidence_sha256": "1045ead4201c00f208e6c131e1703e6e1fef142a7868189966eb31eadcbf9d6a",
-        "tests": 236
+        "evidence_sha256": "818730a3145683c84ce9bb98e08fa914f294d276e4b8e8c2c9ba7a75a89cfc4b",
+        "tests": 265
       }
     },
     "C3": {
@@ -34,11 +34,11 @@
       "run": {
         "command": "yarn test:tooling",
         "exit": 0,
-        "at": "2026-10-07T19:38:52Z",
-        "head": "9db66357d32c7eb79e39c9e94fa2cbaaca17e756",
+        "at": "2026-10-07T19:48:44Z",
+        "head": "df453479372bc493cbe077d9667ce9124ecc129f",
         "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-005-assess-scorer-and-report/evidence/C3.log",
-        "evidence_sha256": "1045ead4201c00f208e6c131e1703e6e1fef142a7868189966eb31eadcbf9d6a",
-        "tests": 236
+        "evidence_sha256": "818730a3145683c84ce9bb98e08fa914f294d276e4b8e8c2c9ba7a75a89cfc4b",
+        "tests": 265
       }
     },
     "C4": {
@@ -47,11 +47,11 @@
       "run": {
         "command": "yarn test:tooling",
         "exit": 0,
-        "at": "2026-10-07T19:38:52Z",
-        "head": "9db66357d32c7eb79e39c9e94fa2cbaaca17e756",
+        "at": "2026-10-07T19:48:44Z",
+        "head": "df453479372bc493cbe077d9667ce9124ecc129f",
         "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-005-assess-scorer-and-report/evidence/C4.log",
-        "evidence_sha256": "1045ead4201c00f208e6c131e1703e6e1fef142a7868189966eb31eadcbf9d6a",
-        "tests": 236
+        "evidence_sha256": "818730a3145683c84ce9bb98e08fa914f294d276e4b8e8c2c9ba7a75a89cfc4b",
+        "tests": 265
       }
     },
     "C5": {
@@ -60,11 +60,11 @@
       "run": {
         "command": "yarn test:tooling",
         "exit": 0,
-        "at": "2026-10-07T19:38:52Z",
-        "head": "9db66357d32c7eb79e39c9e94fa2cbaaca17e756",
+        "at": "2026-10-07T19:48:44Z",
+        "head": "df453479372bc493cbe077d9667ce9124ecc129f",
         "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-005-assess-scorer-and-report/evidence/C5.log",
-        "evidence_sha256": "1045ead4201c00f208e6c131e1703e6e1fef142a7868189966eb31eadcbf9d6a",
-        "tests": 236
+        "evidence_sha256": "818730a3145683c84ce9bb98e08fa914f294d276e4b8e8c2c9ba7a75a89cfc4b",
+        "tests": 265
       }
     },
     "C6": {
@@ -73,12 +73,12 @@
       "run": {
         "command": "yarn check-types:tooling",
         "exit": 0,
-        "at": "2026-10-07T19:40:53Z",
-        "head": "9db66357d32c7eb79e39c9e94fa2cbaaca17e756",
+        "at": "2026-10-07T19:50:40Z",
+        "head": "df453479372bc493cbe077d9667ce9124ecc129f",
         "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-005-assess-scorer-and-report/evidence/C6.log",
-        "evidence_sha256": "cf9ac68ec681bb739b2f6c4fd3ba497ea4e2708fe4d5db002765f24cd975538a"
+        "evidence_sha256": "745dff9a6be0ecf30ab491d0eac2894edc104ac3902db0bc4849a49e5f69eb60"
       }
     }
   },
-  "updated_at": "2026-10-07T19:40:55Z"
+  "updated_at": "2026-10-07T19:50:41Z"
 }
