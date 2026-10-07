@@ -198,7 +198,10 @@ describe("names, numbers and the merge", () => {
   });
 
   test("the time is the locale's short form", () => {
-    assert.match(pinTime("2026-10-05T13:32:00Z", "en-GB"), /^5 Oct, \d{1,2}:32$/);
+    assert.match(
+      pinTime("2026-10-05T13:32:00Z", "en-GB"),
+      /^5 Oct, \d{1,2}:32$/,
+    );
     assert.equal(pinTime("nope"), "");
   });
 });
