@@ -16,13 +16,13 @@ import { and, count, eq, inArray, sql } from "drizzle-orm";
 import * as sandbox from "@pem/db/sandbox";
 
 import {
-  COMMENT_BODY_INVALID,
-  COMMENT_INPUT_INVALID,
-} from "../../src/sandbox/comments.ts";
-import {
   ACTION_INPUT_INVALID,
   ROLE_CHANGE_ACTION,
 } from "../../src/sandbox/actions.ts";
+import {
+  COMMENT_BODY_INVALID,
+  COMMENT_INPUT_INVALID,
+} from "../../src/sandbox/comments.ts";
 import {
   DESIGN_INPUT_INVALID,
   REVIEWER_NOT_FOUND,
@@ -683,7 +683,9 @@ const saveCommentAs = (kind: ViewerKind) => async (w: World) => {
         refusedWith(COMMENT_BODY_INVALID),
       );
   } finally {
-    await db().delete(sandboxComments).where(eq(sandboxComments.id, comment.id));
+    await db()
+      .delete(sandboxComments)
+      .where(eq(sandboxComments.id, comment.id));
   }
   assert.deepEqual(await commentsSnapshot(w), before);
 };
@@ -718,7 +720,9 @@ const deleteCommentAs = (kind: ViewerKind) => async (w: World) => {
       refusedWith(COMMENT_INPUT_INVALID),
     );
   } finally {
-    await db().delete(sandboxComments).where(eq(sandboxComments.id, comment.id));
+    await db()
+      .delete(sandboxComments)
+      .where(eq(sandboxComments.id, comment.id));
   }
 };
 
