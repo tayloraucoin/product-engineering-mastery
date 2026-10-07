@@ -17,7 +17,6 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
 import { appIcon } from "@pem/brand/icon";
-import type { ReviewerViewer } from "@pem/db/sandbox";
 
 import type { ExperimentConfig } from "../../_experiments/registry";
 import { resolveViewer } from "../../../../lib/sandbox/access";
@@ -26,7 +25,11 @@ import type { QueueEntry } from "../../../../lib/sandbox/client/queue";
 import { REVIEW_CORE as W } from "../../../../lib/sandbox/client/review-core";
 import { reviewFixture } from "../../../../lib/sandbox/client/review-view";
 import { GATE_WORDS } from "../../../../lib/sandbox/gate";
-import { experimentPath, reviewPageView } from "../../../../lib/sandbox/review";
+import {
+  experimentPath,
+  reviewPageView,
+  type ReviewPageView,
+} from "../../../../lib/sandbox/review";
 import { loadReviewFor } from "../../../../lib/sandbox/review-data";
 import {
   readSandboxState,
@@ -99,7 +102,7 @@ async function ReviewerForm({
   viewer,
   experiment,
 }: {
-  viewer: ReviewerViewer;
+  viewer: Extract<ReviewPageView, { kind: "reviewer" }>["viewer"];
   experiment: ExperimentConfig;
 }) {
   const { comments, latest } = await loadReviewFor(viewer);

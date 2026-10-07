@@ -242,8 +242,9 @@ export function ReviewFormView({
       window.removeEventListener("online", goOnline);
       window.removeEventListener("offline", goOffline);
     };
-    // The source is fixed for the page's life.
-  }, []);
+    // The source is the server's read; a new one (a refresh) reads the
+    // browser's draft and queue again.
+  }, [config.slug, key, reviewer]);
 
   /** Every change: the form, the draft kept, and a new version id on the next send. */
   const change = useCallback(
