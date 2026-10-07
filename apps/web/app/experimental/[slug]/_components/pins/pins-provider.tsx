@@ -345,6 +345,18 @@ export function PinsProvider({
     };
   }, [reviewerId, flush]);
 
+  // Another tab for this reviewer sent or queued a pin: re-read the shared
+  // queue for what is still unsent.
+  useEffect(() => {
+    if (!reviewerId) return;
+    const key = queueKey(slug, reviewerId);
+    const onStorage = (event: StorageEvent) => {
+      if (event.key === key) syncFromQueue();
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, [slug, reviewerId, syncFromQueue]);
+
   // A fixture's toast opens once, after the Toaster has subscribed.
   const fixtureToast = useRef(false);
   useEffect(() => {
@@ -484,7 +496,6 @@ export function PinsProvider({
       const s = sender.current;
       if (held || !s) return;
       setOpenPin(null);
-      const queued = queue.current?.get(pin.id);
       setPins((current) => current.filter((p) => p.id !== pin.id));
       const restore = () =>
         setPins((current) =>
@@ -508,9 +519,9 @@ export function PinsProvider({
       void s.remove(pin.id).then((outcome) => {
         noteHeld(outcome);
         if (outcome === "ok" || outcome === "held") return;
-        // Not deleted: the pin comes back in place, queued again if it was.
+        // Not deleted: the pin comes back in place (the sender has queued
+        // it again if it was unsent).
         toasts.close(toastId);
-        if (queued) queue.current?.put(queued);
         restore();
         syncFromQueue();
         toasts.add({ title: W.notDeleted(pin.number), timeout: 8000 });
@@ -519,11 +530,13 @@ export function PinsProvider({
     [held, toasts, send, noteHeld, syncFromQueue, focusLater],
   );
 
+  // Placing waits for the reviewer's pins, so a new pin's number never
+  // repeats one the server holds.
   const toggleMode = useCallback(() => {
-    if (held) return;
+    if (held || load !== "ok") return;
     if (draft?.kind === "new" && !draft.saving) setDraft(null);
     step({ type: "toggle" });
-  }, [held, draft, step]);
+  }, [held, load, draft, step]);
 
   // Comment mode on the shown design's root: Tab stops, the crosshair, and
   // the design's own clicks and keys swallowed in the capture phase.

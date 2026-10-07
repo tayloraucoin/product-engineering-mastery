@@ -28,7 +28,8 @@ export function CommentToggle() {
       variant="outline"
       pressed={mode !== "off"}
       onPressedChange={toggleMode}
-      disabled={placingDisabled(bar.status)}
+      // Closed or revoked, or the pins not yet loaded.
+      disabled={placingDisabled(bar.status) || bar.commentCount === null}
       // The Comments button's outline, so the two read as one kind of
       // control; pressed, the selection token and a check, never the
       // primary's fill: the bar keeps one primary (C-P02, C-P07).

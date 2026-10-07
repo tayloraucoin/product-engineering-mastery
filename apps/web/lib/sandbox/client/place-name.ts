@@ -10,6 +10,7 @@
 import {
   REGION_ATTRIBUTE,
   REGION_NAME_ATTRIBUTE,
+  storedPlace,
   type AnchorElement,
 } from "./anchor.ts";
 
@@ -25,7 +26,7 @@ export function placeName(root: AnchorElement, element: AnchorElement): string {
   ) {
     if (at.getAttribute(REGION_ATTRIBUTE)) {
       const name = at.getAttribute(REGION_NAME_ATTRIBUTE)?.trim();
-      if (name) return name;
+      if (name) return storedPlace(name);
     }
   }
   const text = (element.textContent ?? "").replace(/\s+/g, " ").trim();

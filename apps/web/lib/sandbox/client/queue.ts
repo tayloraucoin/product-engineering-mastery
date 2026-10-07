@@ -10,6 +10,9 @@
  *   reconnect and on Retry (`flush`).
  * - One request at a time per id: a delete or an edit waits for the send in
  *   flight, or the earlier request could land after it.
+ * - Two tabs for one reviewer share the queue: storage is read before every
+ *   step, never cached.
+ * - A delete that fails puts an unsent pin back in the queue.
  * - Closed or revoked holds the queue untouched and sends nothing more; it is
  *   LAB-21's to show.
  *
@@ -82,15 +85,23 @@ export function createQueueStore(
   storage: StorageLike | null,
   key: string,
 ): QueueStore {
-  let entries: QueueEntry[] = [];
-  try {
-    const raw = storage?.getItem(key);
-    const parsed: unknown = raw ? JSON.parse(raw) : [];
-    if (Array.isArray(parsed)) entries = parsed.filter(isEntry);
-  } catch {
-    entries = [];
-  }
-  const persist = () => {
+  // Storage is read again before every step, so two tabs for one reviewer
+  // share one queue: neither writes back an array the other has changed.
+  // Memory holds the queue only when storage cannot.
+  let memory: QueueEntry[] = [];
+  const read = (): QueueEntry[] => {
+    if (!storage) return memory;
+    try {
+      const raw = storage.getItem(key);
+      const parsed: unknown = raw ? JSON.parse(raw) : [];
+      memory = Array.isArray(parsed) ? parsed.filter(isEntry) : [];
+    } catch {
+      // Unreadable: keep what this page last knew.
+    }
+    return memory;
+  };
+  const write = (entries: QueueEntry[]) => {
+    memory = entries;
     try {
       if (entries.length) storage?.setItem(key, JSON.stringify(entries));
       else storage?.removeItem(key);
@@ -99,19 +110,19 @@ export function createQueueStore(
     }
   };
   return {
-    all: () => entries.slice(),
-    get: (id) => entries.find((e) => e.id === id),
+    all: () => read().slice(),
+    get: (id) => read().find((e) => e.id === id),
     put(entry) {
+      const entries = read();
       const at = entries.findIndex((e) => e.id === entry.id);
-      entries =
+      write(
         at === -1
           ? [...entries, entry]
-          : entries.map((e, i) => (i === at ? entry : e));
-      persist();
+          : entries.map((e, i) => (i === at ? entry : e)),
+      );
     },
     drop(id) {
-      entries = entries.filter((e) => e.id !== id);
-      persist();
+      write(read().filter((e) => e.id !== id));
     },
   };
 }
@@ -200,6 +211,7 @@ export function createPinSender(deps: PinSenderDeps): PinSender {
     remove(id) {
       if (held) return Promise.resolve("held");
       // Dropped before the delete is sent: a retry later finds nothing.
+      const queued = deps.queue.get(id);
       deps.queue.drop(id);
       return inTurn(id, async (): Promise<SendOutcome> => {
         let result: SendResult;
@@ -209,6 +221,10 @@ export function createPinSender(deps: PinSenderDeps): PinSender {
           result = "not-saved";
         }
         hold(result);
+        // Not deleted: an unsent pin goes back in the queue, unless an Undo
+        // has queued it again meanwhile.
+        if (result !== "ok" && queued && !deps.queue.get(id))
+          deps.queue.put(queued);
         return result;
       });
     },

@@ -260,6 +260,92 @@ describe("C3: a failed pin stays queued and is resent under the same id", () => 
   });
 });
 
+describe("C3: two tabs for one reviewer share one queue", () => {
+  test("a pin queued in each tab survives, whichever closes first", async () => {
+    const storage = memoryStorage();
+    const tab1 = createQueueStore(storage, KEY);
+    const tab2 = createQueueStore(storage, KEY);
+    tab1.put(entry(1));
+    tab2.put(entry(2));
+    assert.deepEqual(
+      createQueueStore(storage, KEY)
+        .all()
+        .map((e) => e.number),
+      [1, 2],
+    );
+  });
+
+  test("a pin deleted in one tab is not revived by the other's reconnect", async () => {
+    const storage = memoryStorage();
+    const a = createQueueStore(storage, KEY);
+    const b = createQueueStore(storage, KEY);
+    a.put(entry(1));
+    assert.ok(b.get(entry(1).id));
+    await createPinSender({ queue: a, ...network() }).remove(entry(1).id);
+    const net = network();
+    await createPinSender({ queue: b, ...net }).flush();
+    assert.deepEqual(net.requests, []);
+  });
+
+  test("an edit sent from one tab is not reverted by the other's older body", async () => {
+    const storage = memoryStorage();
+    const a = createQueueStore(storage, KEY);
+    const b = createQueueStore(storage, KEY);
+    b.put(entry(1, "Old body"));
+    await createPinSender({ queue: a, ...network() }).save(
+      entry(1, "New body"),
+    );
+    const net = network();
+    await createPinSender({ queue: b, ...net }).flush();
+    assert.deepEqual(net.requests, []);
+  });
+});
+
+describe("C3: a delete that fails, and Undo", () => {
+  test("a failed delete puts an unsent pin back in the queue", async () => {
+    const queue = createQueueStore(memoryStorage(), KEY);
+    const sender = createPinSender({ queue, ...network(["not-saved"]) });
+    queue.put(entry(1));
+    assert.equal(await sender.remove(entry(1).id), "not-saved");
+    assert.deepEqual(queue.all(), [entry(1)]);
+  });
+
+  test("a failed delete of a sent pin queues nothing", async () => {
+    const queue = createQueueStore(memoryStorage(), KEY);
+    const sender = createPinSender({ queue, ...network(["not-saved"]) });
+    await sender.remove(entry(1).id);
+    assert.deepEqual(queue.all(), []);
+  });
+
+  test("Undo during an in-flight delete is sent after it, under the same id", async () => {
+    let release: () => void = () => undefined;
+    const gate = new Promise<void>((r) => (release = r));
+    const order: string[] = [];
+    const queue = createQueueStore(memoryStorage(), KEY);
+    const sender = createPinSender({
+      queue,
+      online: () => true,
+      save: async (e) => {
+        order.push(`save ${e.id}`);
+        return "ok";
+      },
+      remove: async (id) => {
+        order.push(`delete ${id}`);
+        await gate;
+        return "ok";
+      },
+    });
+    const deleting = sender.remove(entry(1).id);
+    await inFlight();
+    const undo = sender.save(entry(1));
+    release();
+    assert.equal(await deleting, "ok");
+    assert.equal(await undo, "ok");
+    assert.deepEqual(order, [`delete ${entry(1).id}`, `save ${entry(1).id}`]);
+    assert.deepEqual(queue.all(), []);
+  });
+});
+
 describe("C9: closed or revoked holds the queue as it was", () => {
   for (const held of ["closed", "revoked"] as const) {
     test(`a send answered ${held} sends nothing more and leaves every entry queued`, async () => {

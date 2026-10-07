@@ -7,6 +7,7 @@
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 
+import { pinInput } from "../validators.ts";
 import {
   ANCHOR_BYTES_MAX,
   buildAnchor,
@@ -212,5 +213,81 @@ describe("C6: each pin resolves inside its own design's root only", () => {
       assert.equal(resolveAnchor(d.root, anchor), null);
       assert.equal(pinOffset(d.root, anchor), null);
     }
+  });
+});
+
+describe("C1: every anchor built here is one the server accepts", () => {
+  function send(anchor: unknown) {
+    return pinInput.safeParse({
+      id: "0b7b0c1e-0000-4000-8000-000000000001",
+      number: 1,
+      design: "circle",
+      kind: null,
+      body: "A comment",
+      anchor,
+      viewportW: 390,
+      viewportH: 844,
+      clientCreatedAt: "2026-10-07T10:00:00.000Z",
+    }).success;
+  }
+
+  test("a deep path past 1,024 characters falls back to its region; a long region name is cut to 80", () => {
+    let deep = el("span", {
+      box: { left: 10, top: 210, width: 10, height: 10 },
+    });
+    const leaf = deep;
+    for (let i = 0; i < 60; i++) deep = el("div", {}, [deep]);
+    const region = el(
+      "section",
+      {
+        attrs: {
+          "data-sandbox-region": "faq",
+          "data-sandbox-name":
+            "Questions people ask before they choose a plan for a team of more than fifty editors",
+        },
+        box: { left: 0, top: 200, width: 100, height: 100 },
+      },
+      [deep],
+    );
+    const root = el("div", {}, [region]);
+    const anchor = buildAnchor(
+      root,
+      leaf,
+      { x: 15, y: 215 },
+      placeName(root, leaf),
+    )!;
+    assert.equal(anchor.marked, "faq");
+    assert.ok(anchor.place!.length <= 80);
+    assert.ok(send(anchor));
+  });
+
+  test("an id past 1,024 characters falls back to the path, and the root anchors as a last resort", () => {
+    const long = el("div", { id: "x".repeat(1100) });
+    const root = el("div", {}, [long]);
+    const anchor = buildAnchor(root, long, { x: 0, y: 0 })!;
+    assert.equal(anchor.path, "div:nth-of-type(1)");
+    assert.ok(send(anchor));
+    let deep = el("span");
+    const leaf = deep;
+    for (let i = 0; i < 60; i++) deep = el("div", {}, [deep]);
+    const bare = el("div", {}, [deep]);
+    const last = buildAnchor(bare, leaf, { x: 0, y: 0 })!;
+    assert.equal(last.path, "");
+    assert.ok(send(last));
+  });
+
+  test("the demo design's anchors all pass", () => {
+    const d = design("circle");
+    for (const target of [d.plans, d.hero, d.para, d.choose, d.note, d.footer])
+      assert.ok(
+        send(
+          buildAnchor(
+            d.root,
+            target,
+            { x: 1, y: 1 },
+            placeName(d.root, target),
+          ),
+        ),
+      );
   });
 });

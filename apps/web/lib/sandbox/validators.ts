@@ -10,6 +10,8 @@
 
 import { z } from "zod";
 
+import { ANCHOR_REF_MAX, PLACE_MAX } from "./client/anchor.ts";
+
 const EMAIL_EMPTY = "Enter your email.";
 const EMAIL_MALFORMED = "Enter an email address, like name@example.com.";
 const CODE_EMPTY = "Enter the access code you were sent.";
@@ -39,7 +41,7 @@ export const signedInGateForm = z.object({ code });
  * one-reference rule and 2 KB bound. A refusal says nothing about the input.
  */
 const fraction = z.number().min(0).max(1);
-const anchorRef = z.string().min(1).max(1024);
+const anchorRef = z.string().min(1).max(ANCHOR_REF_MAX);
 
 export const pinInput = z.strictObject({
   id: z.uuid(),
@@ -49,25 +51,29 @@ export const pinInput = z.strictObject({
     .max(24)
     .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/),
   kind: z.enum(["problem", "question", "suggestion", "keep"]).nullable(),
-  body: z.string().trim().min(1).max(2000),
+  // Stored as typed: refused when blank, never trimmed.
+  body: z
+    .string()
+    .max(2000)
+    .refine((body) => body.trim().length > 0),
   anchor: z.union([
     z.strictObject({
       marked: anchorRef,
       x: fraction,
       y: fraction,
-      place: z.string().max(80).optional(),
+      place: z.string().max(PLACE_MAX).optional(),
     }),
     z.strictObject({
       id: anchorRef,
       x: fraction,
       y: fraction,
-      place: z.string().max(80).optional(),
+      place: z.string().max(PLACE_MAX).optional(),
     }),
     z.strictObject({
-      path: z.string().max(1024),
+      path: z.string().max(ANCHOR_REF_MAX),
       x: fraction,
       y: fraction,
-      place: z.string().max(80).optional(),
+      place: z.string().max(PLACE_MAX).optional(),
     }),
   ]),
   viewportW: z.number().int().min(1).max(100_000),

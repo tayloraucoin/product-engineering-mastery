@@ -141,17 +141,28 @@ function nearestMarked(
   return null;
 }
 
-function fits(anchor: Anchor): boolean {
-  return (
-    new TextEncoder().encode(JSON.stringify(anchor)).length <= ANCHOR_BYTES_MAX
-  );
+/** A marked id, an id or a path is at most this many characters (the server's limit too). */
+export const ANCHOR_REF_MAX = 1024;
+/** A stored place name is at most this many characters (the server's limit too). */
+export const PLACE_MAX = 80;
+
+const fitsRef = (ref: string | null | undefined): ref is string =>
+  !!ref && ref.length <= ANCHOR_REF_MAX;
+
+/** A place name cut to what the server stores. */
+export function storedPlace(place: string): string {
+  return place.length > PLACE_MAX
+    ? `${place.slice(0, PLACE_MAX - 1).trimEnd()}…`
+    : place;
 }
 
 /**
  * The anchor for a point on `target`, in viewport coordinates: the target's
- * own marked id, else its id, else its path from the root. A path too long
- * for 2 KB falls back to the nearest marked region, then to the root.
- * Null when the target is not inside the root.
+ * own marked id, else its id, else its path from the root. A reference past
+ * 1,024 characters falls back to the nearest marked region, then to the
+ * root, so every anchor built here is one the server accepts (with the
+ * place cut to 80, the JSON stays far under 2 KB). Null when the target is
+ * not inside the root.
  */
 export function buildAnchor(
   root: AnchorElement,
@@ -161,22 +172,21 @@ export function buildAnchor(
 ): Anchor | null {
   if (!isInside(root, target)) return null;
   const withPlace = <T extends object>(anchor: T) =>
-    (place === undefined ? anchor : { ...anchor, place }) as unknown as Anchor;
+    (place === undefined
+      ? anchor
+      : { ...anchor, place: storedPlace(place) }) as unknown as Anchor;
   const marked = target === root ? null : target.getAttribute(REGION_ATTRIBUTE);
-  if (marked) return withPlace({ marked, ...fractionsAt(target, point) });
-  if (target !== root && target.id)
+  if (fitsRef(marked))
+    return withPlace({ marked, ...fractionsAt(target, point) });
+  if (target !== root && fitsRef(target.id))
     return withPlace({ id: target.id, ...fractionsAt(target, point) });
-  const byPathAnchor = withPlace({
-    path: pathFrom(root, target),
-    ...fractionsAt(target, point),
-  });
-  if (fits(byPathAnchor)) return byPathAnchor;
+  const path = pathFrom(root, target);
+  if (path.length <= ANCHOR_REF_MAX)
+    return withPlace({ path, ...fractionsAt(target, point) });
   const region = nearestMarked(root, target);
-  if (region)
-    return withPlace({
-      marked: region.getAttribute(REGION_ATTRIBUTE)!,
-      ...fractionsAt(region, point),
-    });
+  const regionId = region?.getAttribute(REGION_ATTRIBUTE);
+  if (region && fitsRef(regionId))
+    return withPlace({ marked: regionId, ...fractionsAt(region, point) });
   return withPlace({ path: "", ...fractionsAt(root, point) });
 }
 
