@@ -329,7 +329,7 @@ function FromReviewer({
             className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between"
           >
             <div className="flex min-w-0 flex-col gap-1">
-              <p className="font-medium break-all">{entry.email}</p>
+              <p className="font-medium wrap-anywhere">{entry.email}</p>
               <p className="text-sm text-muted-foreground">
                 {onThisCode(entry)}
               </p>
@@ -367,7 +367,7 @@ function FoundPanel({
   const id = useId();
   return (
     <div className="flex max-w-2xl flex-col gap-4">
-      <h3 ref={headingRef} tabIndex={-1} className="font-medium break-all">
+      <h3 ref={headingRef} tabIndex={-1} className="font-medium wrap-anywhere">
         {foundLine(found.email, found.totals)}
       </h3>
       <div className="flex flex-col gap-2">
