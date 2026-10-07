@@ -24,6 +24,14 @@ export {
 export { withRoleChangeLock, type RoleChangeTx } from "./roles.ts";
 export { listExperimentStats, type ExperimentStats } from "./experiments.ts";
 export {
+  CODE_ACTIONS,
+  listCodes,
+  makeCode,
+  replaceCode,
+  revokeCode,
+  type CodeRow,
+} from "./codes.ts";
+export {
   claimFirstDesign,
   readReviewerDesigns,
   recordViewEvent,

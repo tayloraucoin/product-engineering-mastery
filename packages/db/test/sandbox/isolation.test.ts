@@ -46,6 +46,7 @@ import {
   sandboxReviewVersions,
   sandboxViewEvents,
 } from "../../src/schema/index.ts";
+import { codesCases } from "./codes-cases.ts";
 import {
   buildWorld,
   codeHash,
@@ -507,6 +508,7 @@ const recordViewAs = (kind: ViewerKind) => async (w: World) => {
 
 /** Registered cases for every runtime export of @pem/db/sandbox. */
 const REGISTRY: Registry<World> = {
+  ...codesCases({ db, viewerFor }),
   findLiveReviewerByCodeHash: {
     group: "gate",
     criteria: ["C3"],

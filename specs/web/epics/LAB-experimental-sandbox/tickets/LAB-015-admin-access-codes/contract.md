@@ -27,8 +27,8 @@ cites:
 truth_files: "none: the approved proposal ux/admin/access-codes.md reaches specs/web/ux/admin/access-codes.md through yarn truth:promote LAB once its citing tickets close"
 qa: Q3
 reviewers:
-  - warden
   - assay
+  - warden
 focus:
   - "the code exists in clear only in the shown-once response (warden)"
 operator_review: false
@@ -88,6 +88,14 @@ criteria:
     statement: "Every access-codes.md ?state= key renders at 390, 834 and 1440, light and dark."
     evidence: capture
     path: "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-015-admin-access-codes/evidence/codes-states.png"
+  - id: review:assay
+    statement: Assay reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run assay <id>
+  - id: review:warden
+    statement: Warden reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
 ---
 
 # Contract — LAB-15 admin-access-codes
