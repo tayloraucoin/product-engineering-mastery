@@ -383,6 +383,9 @@ function FoundPanel({
               <Field key={label.reviewerId} orientation="horizontal">
                 <Checkbox
                   id={`${id}-${label.reviewerId}`}
+                  // Base UI's box is a span: name it from the label, which
+                  // otherwise reaches only its hidden input.
+                  aria-labelledby={`${id}-${label.reviewerId}-label`}
                   checked={!unticked.has(label.reviewerId)}
                   onCheckedChange={(checked) =>
                     onTick(label.reviewerId, checked === true)
@@ -390,6 +393,7 @@ function FoundPanel({
                   disabled={disabled}
                 />
                 <FieldLabel
+                  id={`${id}-${label.reviewerId}-label`}
                   htmlFor={`${id}-${label.reviewerId}`}
                   className="font-normal"
                 >

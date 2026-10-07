@@ -8,7 +8,13 @@
  * button (D-LAB-26). The action decides; this leaf asks and reports.
  * A `?state=` fixture never reaches the action: its delete answers locally.
  */
-import { useEffect, useId, useState, useSyncExternalStore } from "react";
+import {
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@pem/ui/button";
@@ -63,6 +69,7 @@ export function DataTab({ view }: { view: DataTabView }) {
 function DataTabBody({ view }: { view: DataTabView }) {
   const online = useOnline();
   const offline = view.offline || !online;
+  const countsRef = useRef<HTMLParagraphElement>(null);
 
   // A fixture's toast shows on arrival, as the action's would.
   useEffect(() => {
@@ -84,11 +91,12 @@ function DataTabBody({ view }: { view: DataTabView }) {
     <section className="flex max-w-2xl flex-col gap-4">
       <h2 className="sr-only">{W.heading}</h2>
       {offline ? <p role="status">{W.offline}</p> : null}
-      {panel.kind === "nothing-held" ? (
-        <p>{W.nothingHeld(view.title)}</p>
-      ) : (
-        <p>{holdsLine(view.title, view.counts)}</p>
-      )}
+      {/* One element in both forms, so focus can land here after a delete. */}
+      <p ref={countsRef} tabIndex={-1}>
+        {panel.kind === "nothing-held"
+          ? W.nothingHeld(view.title)
+          : holdsLine(view.title, view.counts)}
+      </p>
       {panel.kind === "developer" ? (
         <p className="text-muted-foreground">{W.developerOnly}</p>
       ) : null}
@@ -100,6 +108,7 @@ function DataTabBody({ view }: { view: DataTabView }) {
           view={view}
           reviewers={panel.reviewers}
           enabled={panel.enabled && !offline}
+          onDeleted={() => countsRef.current?.focus()}
         />
       ) : null}
     </section>
@@ -110,10 +119,13 @@ function DeleteForm({
   view,
   reviewers,
   enabled,
+  onDeleted,
 }: {
   view: DataTabView;
   reviewers: number;
   enabled: boolean;
+  /** The form leaves with the data: focus moves to the counts line. */
+  onDeleted: () => void;
 }) {
   const router = useRouter();
   const [typed, setTyped] = useState("");
@@ -141,6 +153,7 @@ function DeleteForm({
       setTyped("");
       toasts.add({ type: "success", title: deletedToast(result.reviewers) });
       if (!view.fixture) router.refresh();
+      onDeleted();
     } else {
       toasts.add({
         type: "error",
