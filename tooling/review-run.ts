@@ -39,6 +39,7 @@ import {
   hashText,
   inPlannedPaths,
   now,
+  pickCost,
   preflightPath,
   readContract,
   readItemState,
@@ -49,6 +50,7 @@ import {
   resultsPath,
   reviewPath,
   writeRepoText,
+  type Cost,
   type Epic,
   type Item,
 } from "./lib/specs.ts";
@@ -74,26 +76,87 @@ type Verdict = {
   exit: number;
   /** Why the reviewer produced no review, when it did not. */
   error: string | null;
+  /** What the run cost: the headless result's usage, when it printed one, and the seconds it took. */
+  cost: Partial<Cost>;
 };
+
+/** The headless result's usage, as `claude -p --output-format json` prints it. */
+type HeadlessResult = {
+  result?: string;
+  is_error?: boolean;
+  model?: string;
+  usage?: {
+    input_tokens?: number;
+    cache_read_input_tokens?: number;
+    cache_creation_input_tokens?: number;
+    output_tokens?: number;
+  };
+  modelUsage?: Record<
+    string,
+    {
+      inputTokens?: number;
+      cacheReadInputTokens?: number;
+      cacheCreationInputTokens?: number;
+      outputTokens?: number;
+    }
+  >;
+};
+
+/**
+ * The cost fields of a run (O4): `usage` when the result carries it, else the
+ * sum over `modelUsage`; the seconds are review:run's own wall clock, so a run
+ * that printed no JSON still records how long it took.
+ */
+function costOf(parsed: HeadlessResult, seconds: number): Partial<Cost> {
+  const u = parsed.usage;
+  if (u)
+    return {
+      tokens_input: u.input_tokens ?? 0,
+      tokens_cache_read: u.cache_read_input_tokens ?? 0,
+      tokens_cache_write: u.cache_creation_input_tokens ?? 0,
+      tokens_output: u.output_tokens ?? 0,
+      seconds,
+    };
+  const models = Object.values(parsed.modelUsage ?? {});
+  if (models.length === 0) return { seconds };
+  const sum = (pick: (m: (typeof models)[number]) => number | undefined) =>
+    models.reduce((total, m) => total + (pick(m) ?? 0), 0);
+  return {
+    tokens_input: sum((m) => m.inputTokens),
+    tokens_cache_read: sum((m) => m.cacheReadInputTokens),
+    tokens_cache_write: sum((m) => m.cacheCreationInputTokens),
+    tokens_output: sum((m) => m.outputTokens),
+    seconds,
+  };
+}
+
+const secondsSince = (started: number) =>
+  Math.round((Date.now() - started) / 100) / 10;
+
+/** The header lines a review or pre-flight file carries for the run's cost. */
+const costLines = (cost: Partial<Cost>) =>
+  Object.entries(pickCost(cost)).map(
+    ([field, value]) => `- ${field}: ${value}`,
+  );
 
 /** Runs the reviewer on a prompt; returns its raw final text. */
 function runReviewer(prompt: string): Verdict {
   const fixture = process.env[FIXTURE_RUNNER_ENV];
   if (fixture) {
+    const started = Date.now();
     const result = spawnSync(process.execPath, [fixture], {
       input: prompt,
       encoding: "utf8",
     });
-    const parsed = JSON.parse(result.stdout || "{}") as {
-      result?: string;
-      model?: string;
-    };
+    const seconds = secondsSince(started);
+    const parsed = JSON.parse(result.stdout || "{}") as HeadlessResult;
     return {
       text: parsed.result ?? "",
       model: parsed.model ?? "fixture",
       runner: `fixture: ${path.basename(fixture)}`,
       exit: result.status ?? 1,
       error: parsed.result ? null : "the fixture runner printed no result",
+      cost: costOf(parsed, seconds),
     };
   }
   const args = [
@@ -121,6 +184,7 @@ function runReviewer(prompt: string): Verdict {
   const version =
     spawnSync("claude", ["--version"], { encoding: "utf8" }).stdout?.trim() ??
     "unknown";
+  const started = Date.now();
   const result = spawnSync("claude", args, {
     input: prompt,
     encoding: "utf8",
@@ -130,18 +194,17 @@ function runReviewer(prompt: string): Verdict {
     // and blocking its stop replaces the review with a reply to the hook.
     env: { ...process.env, PEM_HEADLESS_REVIEW: "1" },
   });
+  const seconds = secondsSince(started);
   let text = "";
   let model = "unknown";
   let error: string | null = null;
+  let cost: Partial<Cost> = { seconds };
   try {
-    const parsed = JSON.parse(result.stdout) as {
-      result?: string;
-      is_error?: boolean;
-      modelUsage?: Record<string, unknown>;
-    };
+    const parsed = JSON.parse(result.stdout) as HeadlessResult;
     if (parsed.is_error) error = parsed.result ?? "the run reported an error";
     else text = parsed.result ?? "";
     model = Object.keys(parsed.modelUsage ?? {})[0] ?? model;
+    cost = costOf(parsed, seconds);
   } catch {
     error =
       result.error?.message ??
@@ -153,6 +216,7 @@ function runReviewer(prompt: string): Verdict {
     runner: `claude ${version} (${how}; tools ${TOOLS})`,
     exit: text ? (result.status ?? 1) : 1,
     error: text ? null : (error ?? "no output"),
+    cost,
   };
 }
 
@@ -172,17 +236,28 @@ function reviewTicket(item: Item) {
     stop(
       `${item.id} has not started, or its contract is invalid; run yarn check-specs`,
     );
+  const criterionId = `review:${role}`;
+  // A guard that stops the review leaves its time and reason under the
+  // criterion (Y5: attempts that stopped at once were never explained).
+  const refuse = (reason: string): never => {
+    const result = results.criteria[criterionId];
+    if (result) {
+      (result.refused ??= []).push({ at: now(), reason });
+      results.updated_at = now();
+      writeRepoText(resultsPath(item), formatResults(results));
+    }
+    stop(reason);
+  };
   if (hashCriteria(contract.criteria) !== results.criteria_sha256)
-    stop(
+    refuse(
       `${contractPath(item)}: the criteria changed after init; restore them first`,
     );
-  const criterionId = `review:${role}`;
   if (!contract.criteria.some((c) => c.id === criterionId))
     stop(
       `${item.id} has no ${criterionId} criterion; add it with yarn contract:add ${item.id} ${criterionId}`,
     );
   if (!fileExists(asBuiltPath(item)))
-    stop(
+    refuse(
       `write ${asBuiltPath(item)} first (from docs/engineering/templates/as-built.template.md): reviewers read it, and editing it later resets their verdicts`,
     );
   const state = readItemState(item, toolkit.specsRoot);
@@ -190,7 +265,7 @@ function reviewTicket(item: Item) {
     (c) => !c.id.startsWith("review:") && c.status !== "PASS",
   );
   if (unproven.length)
-    stop(
+    refuse(
       `prove the other criteria first: ${unproven.map((c) => `${c.id} (${c.reason})`).join("; ")}`,
     );
   // Other tickets' uncommitted files are theirs: the branch is shared (PR-14).
@@ -198,7 +273,7 @@ function reviewTicket(item: Item) {
     inPlannedPaths(f, contract.planned_paths),
   );
   if (dirty.length)
-    stop(
+    refuse(
       `commit the code first, so the review binds a commit: ${dirty.slice(0, 5).join(", ")}`,
     );
 
@@ -261,6 +336,7 @@ function reviewTicket(item: Item) {
       `- runner: ${review.runner}`,
       `- model: ${review.model}`,
       `- at: ${at}`,
+      ...costLines(review.cost),
       `- verdict: ${verdict ?? "none (the reviewer did not finish with a VERDICT line)"}`,
       "",
       "## Prompt",
@@ -286,7 +362,11 @@ function reviewTicket(item: Item) {
       contract_sha256: contractHash,
       as_built_sha256: asBuiltHash,
       runner: review.runner,
+      ...pickCost(review.cost),
     },
+    ...(results.criteria[criterionId]?.refused?.length && {
+      refused: results.criteria[criterionId]!.refused,
+    }),
   };
   results.updated_at = now();
   writeRepoText(resultsPath(item), formatResults(results));
@@ -303,15 +383,53 @@ function reviewTicket(item: Item) {
 
 // ---------------------------------------------------------------- pre-flight
 
+/** The pre-flight file's `- refused:` lines, kept across runs: a completed run never clears them. */
+const refusalLines = (text: string | null) =>
+  text?.split("\n").filter((line) => line.startsWith("- refused: ")) ?? [];
+
+const preflightNote = (command: string) =>
+  `> Written by \`${command}\` (the Tickets gate). Never edit it: \`contract:init\` starts a ticket only on its PASS line, and only while the contract's hash still matches.`;
+
+/**
+ * A guard that stops the pre-flight leaves one line in the file's header (Y5),
+ * after the header's last line when the file exists, else in a header of its own.
+ */
+function refusePreflight(epic: Epic, command: string, reason: string): never {
+  const rel = preflightPath(epic);
+  const line = `- refused: ${now()}: ${reason}`;
+  const existing = fileExists(rel) ? readRepoText(rel) : null;
+  let text: string;
+  if (existing) {
+    const lines = existing.split("\n");
+    let at = lines.findIndex((l) => l.startsWith("## "));
+    if (at === -1) at = lines.length;
+    while (at > 0 && lines[at - 1]!.trim() === "") at--;
+    lines.splice(at, 0, line);
+    text = lines.join("\n");
+  } else
+    text = [
+      `# Pre-flight — ${epic.prefix}`,
+      "",
+      preflightNote(command),
+      "",
+      line,
+      "",
+    ].join("\n");
+  writeRepoText(rel, text);
+  stop(reason);
+}
+
 function preflight(epic: Epic, items: Item[]) {
+  const command = `yarn review:run vigil ${epic.prefix}`;
   const drafts = items.filter(
     (i) => i.epic?.prefix === epic.prefix && !fileExists(resultsPath(i)),
   );
   if (drafts.length === 0)
-    stop(
+    refusePreflight(
+      epic,
+      command,
       `${epic.prefix} has no drafted tickets; draft them with yarn contract:init ${epic.prefix} <slug> --draft`,
     );
-  const command = `yarn review:run vigil ${epic.prefix}`;
   const hashes = new Map(
     drafts.map((i) => [i.id, hashText(readRepoText(contractPath(i)))]),
   );
@@ -346,17 +464,20 @@ function preflight(epic: Epic, items: Item[]) {
     return `- ${i.id}: ${said ?? "FAIL"} (contract ${hashes.get(i.id)!.slice(0, 12)})`;
   });
   const rel = preflightPath(epic);
+  const refused = refusalLines(fileExists(rel) ? readRepoText(rel) : null);
   writeRepoText(
     rel,
     [
       `# Pre-flight — ${epic.prefix}`,
       "",
-      `> Written by \`${command}\` (the Tickets gate). Never edit it: \`contract:init\` starts a ticket only on its PASS line, and only while the contract's hash still matches.`,
+      preflightNote(command),
       "",
       `- head: ${getHead()}`,
       `- runner: ${review.runner}`,
       `- model: ${review.model}`,
       `- at: ${now()}`,
+      ...costLines(review.cost),
+      ...refused,
       "",
       "## Verdicts",
       "",

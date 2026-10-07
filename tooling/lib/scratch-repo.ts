@@ -103,7 +103,9 @@ const prompt = readFileSync(0, "utf8");
 const verdict = process.env.PEM_FIXTURE_VERDICT ?? "PASS";
 const ids = [...prompt.matchAll(/^- ([A-Z][A-Z0-9]{1,4}-\\d+): /gm)].map((m) => m[1]);
 const lines = ids.map((id) => id + ": " + verdict + " (synthetic)");
-console.log(JSON.stringify({ result: [...lines, "No findings (synthetic).", "VERDICT: " + verdict].join("\\n"), model: "fixture-model" }));
+// The usage shape is the headless result's (synthetic numbers).
+const usage = { input_tokens: 1200, cache_read_input_tokens: 3400, cache_creation_input_tokens: 500, output_tokens: 260 };
+console.log(JSON.stringify({ result: [...lines, "No findings (synthetic).", "VERDICT: " + verdict].join("\\n"), model: "fixture-model", usage, modelUsage: { "fixture-model": { inputTokens: 1200, cacheReadInputTokens: 3400, cacheCreationInputTokens: 500, outputTokens: 260 } } }));
 `;
 
 /** Registers the scratch repo's setup and teardown in the calling test file. */

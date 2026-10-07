@@ -821,6 +821,7 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
 **[changing in the workflow overhaul]**
 
 - **What:** `yarn review:run` starts a reviewer as `claude -p` with Read, Grep and Glob only, prompted from the contract, results and evidence index rather than the builder's words, and records its verdict as `review-<role>.md` and `review:<role>`. Its `vigil <EPIC>` form pre-flights an epic's drafted tickets.
+- **What it records of the cost (2026-10-06, the audit's O4 and Y5):** the headless result's `usage` is kept, and `tokens_input`, `tokens_cache_read`, `tokens_cache_write`, `tokens_output` and `seconds` (the process's wall clock, measured by the script) are written into the review file's header and the `review:<role>` run record; the pre-flight file's header carries the same five. A guard that stops a ticket review before the reviewer runs appends `{ at, reason }` to the criterion's `refused` list in `results.json`; one that stops the pre-flight adds a `- refused: <at>: <reason>` line to `_preflight.md`'s header, kept across later runs. `yarn status <id>` prints one line per recorded review with its cost, and one per refused attempt. The field names have one home, `COST_FIELDS` in `tooling/lib/specs.ts`, and the schema is `docs/engineering/schemas/results.schema.json`.
 - **Area:** `specs/`, the generated subagents (`tooling/review-run.ts`).
 - **Trigger:** by an agent for each reviewer the operator confirmed on a Q3 ticket (PR-19); below Q3 a review happens in the thread, without this command.
 - **Scores:**

@@ -16,6 +16,7 @@ import {
   compareIds,
   fileExists,
   findItem,
+  formatCost,
   openDecisions,
   parseAsBuilt,
   qaOf,
@@ -92,6 +93,24 @@ function one(id: string) {
   lines.push(
     left.length ? `Left to go:\n  ${left.join("\n  ")}` : "Left to go: none.",
   );
+  // Each recorded review's cost (O4) and every attempt a guard refused (Y5).
+  const reviews = (state.contract?.criteria ?? [])
+    .filter((c) => c.id.startsWith("review:"))
+    .flatMap((c) => {
+      const result = state.results?.criteria[c.id];
+      const run = result?.run;
+      return [
+        ...(run
+          ? [
+              `${c.id}: ${result.status}${run.exit === 0 ? "" : ` (exit ${run.exit})`}, ${formatCost(run)}, ${run.at}`,
+            ]
+          : []),
+        ...(result?.refused ?? []).map(
+          (r) => `${c.id}: refused ${r.at}: ${r.reason}`,
+        ),
+      ];
+    });
+  if (reviews.length) lines.push(`Reviews:\n  ${reviews.join("\n  ")}`);
   const deferred = state.criteria.filter((c) => c.deferred).map((c) => c.id);
   if (deferred.length)
     lines.push(

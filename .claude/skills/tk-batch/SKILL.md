@@ -54,6 +54,7 @@ Needs you:
 1. <a decision with a recommendation, or an action only a person can take>
 To look at when you like: <operator checks handed over, drafted follow-ups>
 What went wrong: <two lines at most>
+Cost: <calls> calls, <context at close> context, <cache-read> read, <output> out
 ```
 
-Leave out any line that is empty. Never put a command for the operator to run in it. When everything is done and nothing waits: `Done: <ids>. Nothing needs you.`
+Leave out any line that is empty. Never put a command for the operator to run in it. When everything is done and nothing waits: `Done: <ids>. Nothing needs you.` The `Cost` line is read from the harness's session usage tool at close, when the session has one; without it, leave the line out rather than estimate.

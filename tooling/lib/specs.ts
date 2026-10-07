@@ -161,6 +161,21 @@ export type Contract = {
   operator_review?: boolean;
 };
 
+/**
+ * What a reviewer run cost (the audit's O4): the headless result's usage and
+ * the wall-clock seconds review:run measured. This is the one home of the
+ * field names; the review file header and the run record carry the same keys.
+ */
+export const COST_FIELDS = [
+  "tokens_input",
+  "tokens_cache_read",
+  "tokens_cache_write",
+  "tokens_output",
+  "seconds",
+] as const;
+export type CostField = (typeof COST_FIELDS)[number];
+export type Cost = Record<CostField, number>;
+
 export type RunRecord = {
   command: string;
   exit: number;
@@ -174,12 +189,17 @@ export type RunRecord = {
   runner?: string;
   /** A manual criterion only a person can check, handed to the operator: it never holds the ticket (PR-16). */
   deferred?: boolean;
-};
+} & Partial<Cost>;
+
+/** A review:run attempt a guard stopped before the reviewer ran (the audit's Y5). */
+export type Refusal = { at: string; reason: string };
 
 export type CriterionResult = {
   status: "PASS" | "FAIL";
   evidence: EvidenceType;
   run: RunRecord | null;
+  /** Every refused attempt, oldest first; a completed run never clears them. */
+  refused?: Refusal[];
 };
 
 export type Results = {
@@ -771,6 +791,25 @@ export function readResults(item: Item): {
   return { results: problems.length ? null : (data as Results), problems };
 }
 
+/** The cost fields a run record carries, in COST_FIELDS order; none when the run predates cost recording. */
+export function pickCost(run: Partial<Cost>): Partial<Cost> {
+  const cost: Partial<Cost> = {};
+  for (const field of COST_FIELDS)
+    if (typeof run[field] === "number") cost[field] = run[field];
+  return cost;
+}
+
+const COUNT = new Intl.NumberFormat("en-US");
+
+/** One phrase for a status line: `1,200 in, 3,400 read, 500 write, 260 out, 0.1 s`, or that no cost was recorded. */
+export function formatCost(run: Partial<Cost>): string {
+  const cost = pickCost(run);
+  if (Object.keys(cost).length === 0) return "cost not recorded";
+  const n = (v: number | undefined) =>
+    v === undefined ? "?" : COUNT.format(v);
+  return `${n(cost.tokens_input)} in, ${n(cost.tokens_cache_read)} read, ${n(cost.tokens_cache_write)} write, ${n(cost.tokens_output)} out, ${cost.seconds === undefined ? "?" : cost.seconds} s`;
+}
+
 /** Serializes results with a stable key order, so a diff shows only what changed. */
 export function formatResults(results: Results): string {
   const criteria = Object.fromEntries(
@@ -795,7 +834,11 @@ export function formatResults(results: Results): string {
           }),
           ...(result.run.runner && { runner: result.run.runner }),
           ...(result.run.deferred && { deferred: true }),
+          ...pickCost(result.run),
         },
+        ...(result.refused?.length && {
+          refused: result.refused.map((r) => ({ at: r.at, reason: r.reason })),
+        }),
       },
     ]),
   );

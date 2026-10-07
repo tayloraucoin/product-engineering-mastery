@@ -39,11 +39,24 @@
         "run": {
           "description": "The last run that set this status; null until one has.",
           "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/run" }]
+        },
+        "refused": {
+          "description": "Every review:run attempt a guard stopped before the reviewer ran, oldest first: when and why. A completed run never clears them.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["at", "reason"],
+            "additionalProperties": false,
+            "properties": {
+              "at": { "$ref": "#/$defs/timestamp" },
+              "reason": { "type": "string", "minLength": 1 }
+            }
+          }
         }
       }
     },
     "run": {
-      "description": "A9's run record, plus HEAD (A13.2 B2) and, for a review, what it reviewed (B1).",
+      "description": "A9's run record, plus HEAD (A13.2 B2) and, for a review, what it reviewed (B1) and what it cost.",
       "type": "object",
       "required": [
         "command",
@@ -72,6 +85,31 @@
         "deferred": {
           "description": "true when a manual criterion only a person can check was handed to the operator (contract:record --verdict deferred). It never holds the ticket; _status.md lists it under Operator checks.",
           "type": "boolean"
+        },
+        "tokens_input": {
+          "description": "A review's cost, from the headless result's usage: uncached input tokens.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "tokens_cache_read": {
+          "description": "Input tokens read from the prompt cache.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "tokens_cache_write": {
+          "description": "Input tokens written to the prompt cache.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "tokens_output": {
+          "description": "Output tokens.",
+          "type": "integer",
+          "minimum": 0
+        },
+        "seconds": {
+          "description": "Wall-clock seconds of the reviewer process, measured by review:run.",
+          "type": "number",
+          "minimum": 0
         }
       }
     }
