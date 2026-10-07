@@ -44,10 +44,9 @@ import { EMAILS_USED_WORDS } from "../../../../../../lib/sandbox/emails-used";
 import { SANDBOX_TIME_ZONE } from "../../../../../../lib/sandbox/time";
 import { makeCode, replaceCode, revokeCode } from "../actions";
 import {
-  MakeCodeDialog,
-  ReplaceCodeDialog,
+  CodeDialog,
   RevokeCodeDialog,
-  ShownOnceDialog,
+  type CodeRequest,
   type ShownCode,
 } from "./code-dialogs";
 
@@ -97,8 +96,9 @@ function CodesBody({ view }: { view: CodesView }) {
   const online = useOnline();
   const offline = view.offline || !online;
   const fixture = view.fixture;
-  const [making, setMaking] = useState(fixture?.makeError ?? false);
-  const [replacing, setReplacing] = useState<CodeRowView | null>(null);
+  const [request, setRequest] = useState<CodeRequest | null>(
+    fixture?.makeError ? { kind: "make" } : null,
+  );
   const [revoking, setRevoking] = useState<CodeRowView | null>(null);
   const [shown, setShown] = useState<ShownCode | null>(
     fixture?.shownOnce ?? null,
@@ -120,6 +120,7 @@ function CodesBody({ view }: { view: CodesView }) {
     return ref;
   };
   const returnTo = useRef<HTMLElement | null>(null);
+  const pendingOpen = useRef<(() => void) | null>(null);
   useEffect(() => {
     returnTo.current = makeButton.current;
   }, []);
@@ -139,7 +140,9 @@ function CodesBody({ view }: { view: CodesView }) {
         )
       : makeCode(view.slug, null, form);
   const runReplace = (form: FormData) =>
-    fixture ? Promise.resolve(fixtureMade()) : replaceCode(view.slug, null, form);
+    fixture
+      ? Promise.resolve(fixtureMade())
+      : replaceCode(view.slug, null, form);
   const runRevoke = (form: FormData) =>
     fixture
       ? Promise.resolve({ outcome: "revoked" } as const)
@@ -157,15 +160,30 @@ function CodesBody({ view }: { view: CodesView }) {
     returnTo.current = trigger ?? makeButton.current;
   }
 
+  /**
+   * A row menu's choice opens its dialog only after the menu has closed and
+   * given focus back to its trigger. Opened sooner, that focus return lands
+   * inside the open dialog's life and a keyboard choice dismisses it.
+   */
+  function afterMenu(row: CodeRowView, open: () => void) {
+    openFrom(menuTriggers.current.get(row.reviewerId) ?? null);
+    pendingOpen.current = open;
+  }
+  function openAfterMenu() {
+    const open = pendingOpen.current;
+    pendingOpen.current = null;
+    if (open) setTimeout(open, 0);
+  }
+
   function showOnce(next: ShownCode) {
-    setMaking(false);
-    setReplacing(null);
+    setRequest(null);
     setShown(next);
   }
 
   /** Done or Escape: the code leaves the page, then the list is read again. */
   function done() {
     setShown(null);
+    setRequest(null);
     if (!fixture) router.refresh();
   }
 
@@ -180,7 +198,7 @@ function CodesBody({ view }: { view: CodesView }) {
           aria-describedby={view.closed ? CLOSED_REASON_ID : undefined}
           onClick={() => {
             openFrom(makeButton.current);
-            setMaking(true);
+            setRequest({ kind: "make" });
           }}
         >
           {W.make}
@@ -236,7 +254,11 @@ function CodesBody({ view }: { view: CodesView }) {
                     {row.revoked ? W.revoked : W.live}
                   </TableCell>
                   <TableCell className="text-right">
-                    <DropdownMenu>
+                    <DropdownMenu
+                      onOpenChangeComplete={(open) => {
+                        if (!open) openAfterMenu();
+                      }}
+                    >
                       <DropdownMenuTrigger
                         ref={menuRef(row.reviewerId)}
                         render={
@@ -252,12 +274,11 @@ function CodesBody({ view }: { view: CodesView }) {
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem
                           disabled={makeOff}
-                          onClick={() => {
-                            openFrom(
-                              menuTriggers.current.get(row.reviewerId) ?? null,
-                            );
-                            setReplacing(row);
-                          }}
+                          onClick={() =>
+                            afterMenu(row, () =>
+                              setRequest({ kind: "replace", row }),
+                            )
+                          }
                         >
                           <span className="flex flex-col">
                             {W.replace}
@@ -271,13 +292,9 @@ function CodesBody({ view }: { view: CodesView }) {
                         {row.revoked ? null : (
                           <DropdownMenuItem
                             disabled={changesOff}
-                            onClick={() => {
-                              openFrom(
-                                menuTriggers.current.get(row.reviewerId) ??
-                                  null,
-                              );
-                              setRevoking(row);
-                            }}
+                            onClick={() =>
+                              afterMenu(row, () => setRevoking(row))
+                            }
                           >
                             {W.revoke}
                           </DropdownMenuItem>
@@ -291,25 +308,22 @@ function CodesBody({ view }: { view: CodesView }) {
           </Table>
         </div>
       )}
-      <MakeCodeDialog
-        open={making}
+      <CodeDialog
+        request={request}
+        shown={shown}
         collaborate={view.collaborate}
         initialFailure={fixture?.makeError ?? false}
+        initiallyCopied={fixture?.copied ?? false}
         returnTo={returnTo}
-        onClose={() => setMaking(false)}
-        onMade={showOnce}
-        run={runMake}
-      />
-      <ReplaceCodeDialog
-        row={replacing}
-        returnTo={returnTo}
-        onClose={() => setReplacing(null)}
-        onMade={showOnce}
-        onFailed={(message) => {
-          setReplacing(null);
+        onCancel={() => setRequest(null)}
+        onShown={showOnce}
+        onReplaceFailed={(message) => {
+          setRequest(null);
           toasts.add({ type: "error", title: message });
         }}
-        run={runReplace}
+        onDone={done}
+        runMake={runMake}
+        runReplace={runReplace}
       />
       <RevokeCodeDialog
         row={revoking}
@@ -323,12 +337,6 @@ function CodesBody({ view }: { view: CodesView }) {
           } else toasts.add({ type: "error", title: W.revokeFailed });
         }}
         run={runRevoke}
-      />
-      <ShownOnceDialog
-        shown={shown}
-        initiallyCopied={fixture?.copied ?? false}
-        returnTo={returnTo}
-        onDone={done}
       />
     </div>
   );
