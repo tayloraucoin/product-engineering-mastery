@@ -6,7 +6,7 @@ status: draft
 thread: PR-19
 role: Usher
 date: 2026-10-05
-last_reviewed: 2026-10-05
+last_reviewed: 2026-10-06
 supersedes:
 load_when: on request
 ---
@@ -133,7 +133,7 @@ The directory comes from the track file. State whether the main prompt waits for
 | Anything that reads or writes repo files, or runs checks | Claude Code, in the repo |
 | Research with web sources                                | A Claude research thread |
 
-State the model; do not ask. The deepest available for shaping work, for Q3 work and whenever the pace is Careful. For other build threads name the model and the failure mode of choosing a smaller one (missed states, invented tokens, stale APIs). Then write the thread plan: where the work starts, where it splits into further threads, and that each thread will tell the operator when to open the next.
+State the model; do not ask. The deepest available for shaping work, for Q3 work and whenever the pace is Careful. For other build threads name the model and the failure mode of choosing a smaller one (missed states, invented tokens, stale APIs). Then write the thread plan: where the work starts, where it splits into further threads, and that each thread will tell the operator when to open the next. A dry-run or cold-rehearsal thread names its own model, and for that one thread the builder asks the operator which, since a smaller model often serves there.
 
 ## 7. Print three things, save nothing
 

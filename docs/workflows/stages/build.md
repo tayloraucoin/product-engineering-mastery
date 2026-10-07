@@ -6,7 +6,7 @@ status: draft
 thread: PR-19
 role: Usher
 date: 2026-10-05
-last_reviewed: 2026-10-05
+last_reviewed: 2026-10-06
 supersedes:
 load_when: on request
 ---
@@ -30,7 +30,12 @@ A `focus` line in the contract or the prompt raises one named part to a higher l
 
 ## 2. Venue
 
-Claude Code, on the branch the operator has checked out, unless the prompt says "on its own branch" ([`../branches.md`](../branches.md)). Say which tickets to build ("build STK-5 and STK-7"), or paste a prompt for work with no ticket. One thread builds a batch in order; batches with no dependency between them can run in parallel threads.
+Claude Code, on the branch the operator has checked out, unless the prompt says "on its own branch" ([`../branches.md`](../branches.md)). Say which tickets to build ("build STK-5 and STK-7"), or paste a prompt for work with no ticket. One thread builds a batch in order; batches with no dependency between them can run in parallel threads. A thread ends before the batch does when one of these says so:
+
+- Give a ticket with captures a thread of its own.
+- End the thread after a ticket's review PASS: run the batch close, report, and leave the next ticket in the batch to a fresh thread.
+- Close a thread past 200k tokens of context after a break instead of resuming it; the ticket folder is the hand-off.
+- Give a sub-task expected to pass about 50 calls (a dry run, a cold rehearsal, a long review) its own thread from a builder prompt, never a subagent of a Q3 build.
 
 ## 3. Loads
 

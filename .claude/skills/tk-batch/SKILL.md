@@ -4,7 +4,7 @@ description: "Build one or more tickets start to finish in this thread, and keep
 argument-hint: <id> [<id> …]
 ---
 
-Take the named tickets to done. The operator runs many threads and reads only your last message, so the work is yours until it is finished. `docs/workflows/stages/build.md` is the full protocol; this is the short form.
+Take the named tickets to done. The operator runs many threads and reads only your last message, so the work is yours until it is finished or a line under "When the thread ends" ends it first. `docs/workflows/stages/build.md` is the full protocol; this is the short form.
 
 ## Yours, and the operator's
 
@@ -17,6 +17,13 @@ Take the named tickets to done. The operator runs many threads and reads only yo
 ## Where the work goes
 
 The branch that is checked out. Only when the operator or the prompt says "on its own branch": `git worktree add .claude/worktrees/<name> -b agent/<name>` from the current branch, `yarn install` there, do everything there, and report `Branch: agent/<name>, ready for a pull request.` On "merge it back", merge it into the main checkout's branch and remove the folder and the branch. One branch per request, never one per ticket.
+
+## When the thread ends
+
+- Give a ticket with captures a thread of its own.
+- End the thread after a ticket's review PASS: run the batch close, report, and name the next ticket under `Not done` for a fresh thread.
+- Close a thread past 200k tokens of context after a break instead of resuming it; the ticket folder is the hand-off.
+- Give a sub-task expected to pass about 50 calls (a dry run, a cold rehearsal, a long review) its own thread from a builder prompt, never a subagent of a Q3 build.
 
 ## Each ticket, in build order
 

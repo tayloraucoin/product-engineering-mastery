@@ -15,6 +15,10 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-06 — PEM: when a thread ends
+
+The audit's C2 prose half (O1, O5, O2, with Y4 folded in; `specs/_shared/reports/2026-10-06-token-and-speed-audit.md`) becomes rules in `.claude/skills/tk-batch/SKILL.md`, `docs/workflows/stages/build.md` §2, `docs/workflows/branches.md` and `docs/workflows/prompt-builder.md` §6. A ticket with captures gets its own thread; a batch thread ends after a ticket's review PASS and the next ticket starts fresh; a thread past 200k tokens of context is closed, not resumed, after a break, with the ticket folder as the hand-off; a sub-task expected to pass about 50 calls (a dry run, a cold rehearsal, a long review) is its own thread from a builder prompt, never a subagent of a Q3 build; a dry-run or cold-rehearsal thread names its model and the builder asks which. The 200k threshold is O1's (745 calls above it carried 57 percent of the window's cache reads; 15 resumes after a break re-wrote 4.9M weighted tokens) and the 50-call figure is O2's (the STK-20 dry runs as subagents of a Q3 build, 8.4M weighted). The evidence for the batch rule is the three LAB build threads, which ended at 375k, 479k and 650k tokens of context (O5). `branches.md` tells the operator what the Stop hook's size line means and what to do at 200k; the hook itself is prompt 2's. No always-on line changed.
+
 ## 2026-10-06 — LAB-2: the removal runbook keeps every application role
 
 `developer` joined `APP_ROLES` (D-LAB-35). `docs/runbooks/remove/supabase-database.md` still told the operator to inline the old `["user", "admin"]` list when `@pem/db` is removed and auth stays. Followed, that sends every developer back to `user`. The runbook now inlines all three roles and says why: a role leaves the list only when nothing grants it.
