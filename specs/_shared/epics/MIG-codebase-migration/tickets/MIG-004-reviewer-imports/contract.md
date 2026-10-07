@@ -40,7 +40,7 @@ out_of_scope:
   - "The ledger lines recording imports and the zero-match rule: MIG-11."
 criteria:
   - id: C1
-    statement: "A row with imports [\"stripe\"] matches a file importing stripe or stripe/webhooks outside every glob, and does not match a file whose only mention of stripe is in a comment or a string."
+    statement: 'A row with imports ["stripe"] matches a file importing stripe or stripe/webhooks outside every glob, and does not match a file whose only mention of stripe is in a comment or a string.'
     evidence: test
     command: "yarn test:tooling"
   - id: C2
