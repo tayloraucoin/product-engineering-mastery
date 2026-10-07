@@ -72,6 +72,7 @@ import {
   inPlannedPaths,
   isMerged,
   isReview,
+  isWholeChain,
   now,
   openDecisions,
   preflightPath,
@@ -88,6 +89,7 @@ import {
   SLUG,
   splitCommand,
   ticketFolder,
+  wholeChainProblem,
   writeRepoText,
   type Contract,
   type Criterion,
@@ -239,6 +241,16 @@ function setFrontmatter(rel: string, edit: (doc: YAML.Document) => void): void {
   writeRepoText(rel, `---\n${doc.toString({ lineWidth: 0 })}---\n${body}`);
 }
 
+/** A criterion whose command is the whole chain is refused before anything else is judged. */
+function refuseWholeChain(
+  item: Item,
+  criteria: { id: string; command?: string }[] | undefined,
+) {
+  for (const criterion of criteria ?? [])
+    if (isWholeChain(criterion.command))
+      stop(`${item.id} cannot start: ${wholeChainProblem(criterion.id)}`);
+}
+
 function init() {
   const fromFile = option("--from");
   const draftOnly = flag("--draft");
@@ -314,7 +326,9 @@ function init() {
     }
   }
   if (draftOnly) {
-    const problems = checkContract(item, readContract(item), toolkit, {
+    const drafted = readContract(item);
+    refuseWholeChain(item, drafted.contract?.criteria);
+    const problems = checkContract(item, drafted, toolkit, {
       started: false,
     });
     if (problems.length)
@@ -329,6 +343,7 @@ function init() {
 
 function start(item: Item, tree: SpecsTree) {
   const file = readContract(item);
+  refuseWholeChain(item, file.contract?.criteria);
   const draftProblems = checkContract(item, file, toolkit, { started: false });
   if (/\[FILL/.test(file.text))
     stop(
@@ -806,6 +821,7 @@ function add() {
     if (evidencePath) criterion.path = evidencePath;
     if (reason) criterion.reason = reason;
     if (evidence === "test" || evidence === "check") {
+      if (isWholeChain(commandText)) stop(wholeChainProblem(name));
       const problem = checkCommand(commandText ?? "");
       if (problem) stop(problem);
     }

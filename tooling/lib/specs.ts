@@ -593,6 +593,19 @@ export const isCitedFile = (entry: string) => entry.includes("/");
  * (A13.2): `yarn <script> [args]` or `yarn workspace <name> <script> [args]`.
  * Returns the problem, or null.
  */
+/**
+ * The whole chain is never a criterion (specs.md; the contract template): the
+ * batch close runs `yarn verify` once, and a criterion names the specific check
+ * it proves. The exact script only; `yarn verify:fast` is the stop gate's own.
+ */
+export function isWholeChain(command: string | undefined): boolean {
+  const words = splitCommand(command ?? "");
+  return words.length === 2 && words[0] === "yarn" && words[1] === "verify";
+}
+
+export const wholeChainProblem = (criterionId: string) =>
+  `${criterionId} runs yarn verify, which is never a criterion: the batch close proves the whole chain once. Name the specific check this criterion proves (yarn test, yarn check-types, yarn lint:boundaries, ...)`;
+
 export function checkCommand(command: string): string | null {
   const words = splitCommand(command);
   if (words[0] !== "yarn")

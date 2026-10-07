@@ -15,6 +15,14 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-06 — PEM: `yarn verify` as a criterion is a check, not prose
+
+Serves the audit's O3 and C5 (dump 5), decided 2026-10-06. The rule in `.claude/rules/specs.md` and the contract template is unchanged; it is now enforced in `tooling/`.
+
+- `contract:init` (start and `--draft`) and `contract:add` refuse a criterion whose command is `yarn verify`, with the message that the batch close proves the whole chain once and the criterion should name the specific check. `isWholeChain` in `tooling/lib/specs.ts` matches the exact script; `yarn verify:fast` is the stop gate's and is not it.
+- `check-specs` prints one warning, in both modes, naming every frozen criterion that carries it (20 in the live tree, STK-2 to STK-27 and WEB-10 among them); they stay as history and are never rewritten. WEB-8 C3 is manual and already obeyed the rule.
+- `contract:run` is unchanged: a contract that carries it still runs it. Fixtures: `pass-verify-criterion-warns` (case.json gains `warning`), and a contract-init test.
+
 ## 2026-10-06 — PEM: review cost recorded (C4, O4, Y5)
 
 A one-off thread at Q1, from the audit's dump 4. `yarn review:run` keeps the headless result's `usage` and writes `tokens_input`, `tokens_cache_read`, `tokens_cache_write`, `tokens_output` and `seconds` into the review file header, the pre-flight file header and the `review:<role>` run record (`tooling/review-run.ts`; the field names live once, as `COST_FIELDS` in `tooling/lib/specs.ts`; `docs/engineering/schemas/results.schema.json` learned them). A guard that refuses a ticket review records `{ at, reason }` under the criterion's `refused` list in `results.json`; a refused pre-flight records a `- refused:` line in `_preflight.md`'s header, kept across runs (Y5). `yarn status <id>` prints one line per recorded review with its cost and one per refused attempt. The `tk-batch` closing report ends with `Cost: <calls> calls, <context at close> context, <cache-read> read, <output> out`, read from the harness's session usage tool when present, otherwise left out. Fixtures: the contract-loop runner returns usage; `tooling/contract-review.test.ts` checks both places, a refused attempt in `yarn status`, and the pre-flight line. Not changed: what a review reads or how a verdict is judged. The entry in `docs/engineering/tooling.md` describes the fields.

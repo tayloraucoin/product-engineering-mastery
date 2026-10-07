@@ -242,3 +242,55 @@ test("PR-15: check-specs warns on a ticket still closing, and fails it only with
   assert.match(loose.out, /warn .*WEB-1 has an as-built/);
   assert.notEqual(checkSpecs(repo).status, 0);
 });
+
+test("O3: yarn verify is never a criterion; contract:init and contract:add refuse it and name the specific check", () => {
+  const repo = freshRepo();
+  tool(repo, "contract.ts", ["init", "web", "chain"]);
+  const rel = "specs/web/one-offs/WEB-001-chain/contract.md";
+  write(
+    repo,
+    rel,
+    oneOffContract("WEB-1", {
+      criteria: [
+        "  - id: C1",
+        "    statement: The filter keeps matching rows.",
+        "    evidence: test",
+        "    command: yarn test:sample",
+        "  - id: C2",
+        "    statement: The whole chain passes.",
+        "    evidence: check",
+        "    command: yarn verify",
+      ].join("\n"),
+    }),
+  );
+  let r = tool(repo, "contract.ts", ["init", "web", "chain"]);
+  assert.notEqual(r.status, 0);
+  assert.match(
+    r.out,
+    /WEB-1 cannot start: C2 runs yarn verify, which is never a criterion: the batch close proves the whole chain once\. Name the specific check/,
+  );
+  assert.ok(
+    !existsSync(
+      path.join(repo, "specs/web/one-offs/WEB-001-chain/results.json"),
+    ),
+    r.out,
+  );
+
+  write(repo, rel, oneOffContract("WEB-1"));
+  r = tool(repo, "contract.ts", ["init", "web", "chain"]);
+  assert.equal(r.status, 0, r.out);
+  r = tool(repo, "contract.ts", [
+    "add",
+    "WEB-1",
+    "C3",
+    "--evidence",
+    "check",
+    "--statement",
+    "The whole chain passes.",
+    "--command",
+    "yarn verify",
+  ]);
+  assert.notEqual(r.status, 0);
+  assert.match(r.out, /C3 runs yarn verify, which is never a criterion/);
+  assert.doesNotMatch(read(repo, rel), /id: C3/);
+});

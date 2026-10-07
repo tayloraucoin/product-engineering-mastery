@@ -47,6 +47,7 @@ import {
   hashCriteria,
   isEmptySection,
   isReview,
+  isWholeChain,
   parseAsBuilt,
   readContract,
   readItemState,
@@ -80,8 +81,14 @@ const listIfDir = (rel: string) => {
 
 function checkItems(tree: SpecsTree, toolkit: Toolkit, report: Report) {
   const base = getBaseRef();
+  // `yarn verify` as a criterion command (specs.md): contract:init refuses a
+  // new one; a frozen criterion is history and is named here, never rewritten.
+  const wholeChain: string[] = [];
   for (const item of tree.items) {
     const file = readContract(item);
+    for (const criterion of file.contract?.criteria ?? [])
+      if (isWholeChain(criterion.command))
+        wholeChain.push(`${item.id} ${criterion.id}`);
     const { results, problems: resultProblems } = readResults(item);
     const hasAsBuilt = fileExists(asBuiltPath(item));
     const asBuilt = hasAsBuilt
@@ -236,6 +243,10 @@ function checkItems(tree: SpecsTree, toolkit: Toolkit, report: Report) {
         );
     }
   }
+  if (wholeChain.length)
+    report.warnings.push(
+      `${wholeChain.length === 1 ? "one criterion runs" : `${wholeChain.length} criteria run`} yarn verify, which is never a criterion (the batch close proves the whole chain once): ${wholeChain.join(", ")}. Frozen criteria stay as history; a new criterion names the specific check`,
+    );
 }
 
 /** A path in an archived item's folder, at the folder it was filed at. */
@@ -359,7 +370,7 @@ function checkTree(
   return report;
 }
 
-/** Each fixture: tooling/fixtures/specs/<case>/{case.json, specs/}. case.json: { expect, message?, status? }. */
+/** Each fixture: tooling/fixtures/specs/<case>/{case.json, specs/}. case.json: { expect, message?, warning?, status? }. */
 function runFixtures(toolkit: Toolkit): string[] {
   const failures: string[] = [];
   const cases = listIfDir(FIXTURES).filter((name) =>
@@ -371,6 +382,7 @@ function runFixtures(toolkit: Toolkit): string[] {
     ) as {
       expect: "pass" | "fail";
       message?: string;
+      warning?: string;
       status?: boolean;
     };
     const report = checkTree(toolkit, `${FIXTURES}/${name}/specs`, {
@@ -387,6 +399,13 @@ function runFixtures(toolkit: Toolkit): string[] {
     )
       failures.push(
         `${name}: no error mentions "${fixture.message}"; got: ${report.errors.join(" | ")}`,
+      );
+    else if (
+      fixture.warning &&
+      !report.warnings.some((w) => w.includes(fixture.warning!))
+    )
+      failures.push(
+        `${name}: no warning mentions "${fixture.warning}"; got: ${report.warnings.join(" | ") || "none"}`,
       );
   }
   if (cases.length === 0) failures.push(`no fixtures in ${FIXTURES}`);
