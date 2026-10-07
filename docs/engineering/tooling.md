@@ -840,7 +840,7 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
 
 **[changing in the workflow overhaul]**
 
-- **What:** `yarn status` regenerates `specs/_status.md` from the specs tree. `yarn status <id>` prints what is left on one item; `--brief` prints one line for the hooks; `--deviations` and `--epic` print the as-built deviations and an epic's build order.
+- **What:** `yarn status` regenerates `specs/_status.md` from the specs tree. `yarn status <id>` prints what is left on one item, and is, with `check-specs --strict`, the one place a rewritten evidence log or (at Q3) a later commit is shown. `--brief` prints one line for the hooks: the tickets in build (open, proven, closing) and the drafts; it omits closed and migration-pending tickets and never reads staleness, so a rewritten log never moves a closed ticket back into the line (PR-19; the audit's C7). `--deviations` and `--epic` print the as-built deviations and an epic's build order.
 - **Area:** `specs/` (`tooling/status.ts`).
 - **Trigger:** by hand; `--brief` by session-start on every start and by stop-gate on every stop where the tree changed (an unchanged stop reuses the stored line).
 - **Scores:**

@@ -8,9 +8,12 @@
  *   yarn check-specs --skip-fixtures the live tree only (the contract-loop harness)
  *   yarn check-specs --strict        what is left is a failure: the check before a merge
  *
- * Without --strict, work still in flight only warns (PR-15): a stale PASS, a
- * ticket closing with criteria left, _status.md out of date. Tickets share the
- * operator's branch, so one ticket's open close never fails another's verify.
+ * Without --strict, work still in flight only warns (PR-15): a ticket closing
+ * with criteria left, _status.md out of date. Tickets share the operator's
+ * branch, so one ticket's open close never fails another's verify. Only
+ * --strict reads staleness (PR-19, C7): a rewritten evidence log, or at Q3 a
+ * later commit to a planned path, is the pre-merge check's question and is
+ * never a warning below it; so no run invites a thread to re-prove another's.
  *
  * Archived items (specs/<app>/_archive/<YYYY>/<MM>/) are read like any other,
  * so their ids stay taken; their contracts are checked as records, and they
@@ -69,6 +72,8 @@ const FIXTURES = "tooling/fixtures/specs";
 
 type Report = { errors: string[]; warnings: string[] };
 
+/** The brief line's cap, as status.ts prints it (SessionStart). */
+const BRIEF_LIMIT = 600;
 /** Fixtures and the pre-merge check judge the finished state; a build in flight does not. */
 let strict = process.argv.includes("--strict");
 
@@ -153,8 +158,10 @@ function checkItems(tree: SpecsTree, toolkit: Toolkit, report: Report) {
         `${contractPath(item)}: the criteria changed after init (A13.2). Restore them; add one only with yarn contract:add ${item.id}`,
       );
 
-    // Every PASS still holds (A9, B1, B2).
-    // Staleness is the pre-merge check's question, and only of Q3 (PR-19).
+    // Every PASS still holds (A9, B1, B2). Staleness is the pre-merge check's
+    // question (PR-19, C7): only --strict reads a rewritten evidence log, and
+    // at Q3 a later commit; below it, neither is a warning. A results.json
+    // that contradicts itself is a defect at every level.
     const state = readItemState(item, tree.specsRoot, { staleness: strict });
     for (const c of state.criteria) {
       if (c.tampered)
@@ -162,7 +169,8 @@ function checkItems(tree: SpecsTree, toolkit: Toolkit, report: Report) {
           `${rel}: ${c.id} is PASS, but ${c.reason}. Re-record it: ${recordCommand(c.id, c.evidence, item.id)}`,
         );
       else if (c.stale)
-        (hasAsBuilt && strict ? report.errors : report.warnings).push(
+        // Only set under --strict: a failure once the as-built exists, a warning while the ticket is still open.
+        (hasAsBuilt ? report.errors : report.warnings).push(
           `${rel}: ${c.id}'s PASS no longer holds: ${c.reason}. Re-record it: ${recordCommand(c.id, c.evidence, item.id)}`,
         );
     }
@@ -378,7 +386,13 @@ function checkTree(
   return report;
 }
 
-/** Each fixture: tooling/fixtures/specs/<case>/{case.json, specs/}. case.json: { expect, message?, warning?, status? }. */
+/**
+ * Each fixture: tooling/fixtures/specs/<case>/{case.json, specs/}. case.json:
+ * { expect, message?, warning?, status?, lenient? }. `expect`, `message` and
+ * `warning` are judged strictly (the finished state). `lenient` pins what the
+ * same tree says without --strict and in the brief line: { warnings: the
+ * exact list, brief: the exact line }.
+ */
 function runFixtures(toolkit: Toolkit): string[] {
   const failures: string[] = [];
   const cases = listIfDir(FIXTURES).filter((name) =>
@@ -393,8 +407,10 @@ function runFixtures(toolkit: Toolkit): string[] {
       warning?: string;
       status?: boolean;
     };
-    const report = checkTree(toolkit, `${FIXTURES}/${name}/specs`, {
+    const root = `${FIXTURES}/${name}/specs`;
+    const report = checkTree(toolkit, root, {
       status: fixture.status ?? false,
+      lenient?: { warnings?: string[]; brief?: string };
     });
     const failed = report.errors.length > 0;
     if (failed !== (fixture.expect === "fail"))
@@ -418,6 +434,29 @@ function runFixtures(toolkit: Toolkit): string[] {
   }
   if (cases.length === 0) failures.push(`no fixtures in ${FIXTURES}`);
   return failures.length ? failures : [String(cases.length)];
+    if (!fixture.lenient) continue;
+    strict = false;
+    const lenient = checkTree(toolkit, root, {
+      status: fixture.status ?? false,
+    });
+    strict = true;
+    if (lenient.errors.length > 0)
+      failures.push(
+        `${name}: without --strict, expected no errors; got: ${lenient.errors.join(" | ")}`,
+      );
+    const { warnings, brief } = fixture.lenient;
+    if (
+      warnings &&
+      JSON.stringify(lenient.warnings) !== JSON.stringify(warnings)
+    )
+      failures.push(
+        `${name}: without --strict, expected warnings ${JSON.stringify(warnings)}; got ${JSON.stringify(lenient.warnings)}`,
+      );
+    if (brief !== undefined) {
+      const line = renderBrief(readSpecsTree(toolkit, root), BRIEF_LIMIT);
+      if (line !== brief)
+        failures.push(`${name}: expected brief "${brief}"; got "${line}"`);
+    }
 }
 
 const toolkit = loadToolkit();

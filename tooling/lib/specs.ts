@@ -1026,7 +1026,12 @@ function changedAfter(
  * Staleness is asked for, never assumed (PR-19): only a Q3 ticket's proofs go
  * stale, and only the pre-merge check and `yarn status <id>` look. A commit to
  * a shared file reopens nothing while tickets are in build. A test or check
- * log is local (never committed), so a missing one is not a defect.
+ * log is local (never committed), so a missing one is not a defect, and a
+ * rewritten one is read only when staleness is asked for: every contract:run
+ * rewrites its logs, so outside `--strict` and `yarn status <id>` a changed
+ * log is not a defect and never moves a closed ticket back to closing (C7).
+ * A results.json that contradicts itself (a PASS with no run record, a
+ * failing exit, the wrong command, zero tests) is always a defect.
  */
 export function readItemState(
   item: Item,
@@ -1035,13 +1040,14 @@ export function readItemState(
 ): ItemState {
   const { contract } = readContract(item);
   const checkStaleness =
-    options.staleness === true && contract !== null && qaOf(contract) === "Q3";
+    lookAtEvidence && contract !== null && qaOf(contract) === "Q3";
   const { results } = readResults(item);
   const hasAsBuilt = fileExists(asBuiltPath(item));
   const merged = hasAsBuilt && isMerged(item);
   const { head } = gitFacts();
   const criteria: CriterionState[] = [];
   // A closed ticket's proofs are frozen (PR-16): every criterion recorded PASS
+  const lookAtEvidence = options.staleness === true;
   // and the as-built written. A later edit to a file it shares with another
   // ticket no longer reopens it; the batch's yarn verify guards regressions.
   const frozen =
@@ -1097,7 +1103,11 @@ export function readItemState(
       fail(`evidence ${evidence} is missing`, "tampered");
       continue;
     }
-    if (hasEvidence && hashFile(evidence) !== run.evidence_sha256) {
+    if (
+      lookAtEvidence &&
+      hasEvidence &&
+      hashFile(evidence) !== run.evidence_sha256
+    ) {
       // A newer contract:run has written this log and not yet its result
       // (another thread on the shared branch, PR-14, or a run that stopped
       // between the two): work in flight, not an edit. A log whose header is
@@ -1237,6 +1247,48 @@ export function renderStatusFile(tree: SpecsTree): string {
   const ticketsOf = (epic: Epic) =>
     tree.items.filter((item) => item.epic?.prefix === epic.prefix);
   const epicRows = tree.epics
+/** What a criterion still needs, as the brief line and `yarn status <id>` print it. */
+export function leftOf(state: ItemState): string[] {
+  return state.criteria
+    .filter((c) => c.status !== "PASS")
+    .map(
+      (c) =>
+        `${c.id} ${c.evidence}${c.reason && c.reason !== "not proven yet" ? ` (${c.reason})` : ""}`,
+    );
+}
+
+/** The stages a ticket is in build: it orients the thread on its own work. */
+const IN_BUILD = new Set<ItemState["stage"]>(["open", "proven", "closing"]);
+
+/**
+ * The one line the hooks print into every session (C7, O7). It lists the
+ * tickets in build, whatever the branch (tickets share the operator's branch,
+ * PR-14), and omits closed and migration-pending ones. It never asks for
+ * staleness, so a rewritten evidence log or a later commit is not reported
+ * here: the pre-merge `check-specs --strict` and `yarn status <id>` look.
+ */
+export function renderBrief(tree: SpecsTree, limit: number): string {
+  const all = tree.items
+    .map((item) => readItemState(item, tree.specsRoot))
+    .filter((s) => !s.merged);
+  const active = all.filter((s) => IN_BUILD.has(s.stage));
+  const parts: string[] = [];
+  if (active.length) {
+    const items = active.map((s) => {
+      const left = leftOf(s);
+      return `${s.item.id} ${s.item.slug} (${s.stage}; ${left.length ? `left: ${left.join(", ")}` : "nothing left"})`;
+    });
+    parts.push(
+      `Active: ${items.join("; ")}. Next: yarn status ${active.length === 1 ? active[0]!.item.id : "<id>"}.`,
+    );
+  } else parts.push("Active: none.");
+  const drafts = all.filter((s) => s.stage === "draft");
+  if (drafts.length)
+    parts.push(`Drafted: ${drafts.map((s) => s.item.id).join(", ")}.`);
+  const line = parts.join(" ");
+  return line.length > limit ? `${line.slice(0, limit - 1)}…` : line;
+}
+
     .filter((epic) => !epic.archived)
     .map(
       (epic) =>

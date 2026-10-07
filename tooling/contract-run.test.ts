@@ -119,12 +119,20 @@ function runInFlight(repo: string) {
   return JSON.parse(held).criteria.C1.run as { at: string; head: string };
 }
 
-test("C2 a log rewritten by a newer run, not yet recorded, warns as in flight and check-specs exits 0", () => {
+test("C2 a log rewritten by a newer run, not yet recorded, is silent below --strict and warns as in flight under it (C7)", () => {
   const repo = startOneOff();
   const recorded = runInFlight(repo);
   const head = git(repo, "rev-parse", "HEAD");
   assert.notEqual(head, recorded.head);
-  const r = tool(repo, "check-specs.ts", ["--skip-fixtures"]);
+  // Below --strict a rewritten log is not read: nothing to re-prove here.
+  const lenient = tool(repo, "check-specs.ts", ["--skip-fixtures"]);
+  assert.equal(lenient.status, 0, lenient.out);
+  assert.doesNotMatch(lenient.out, /C1/);
+  assert.match(
+    tool(repo, "status.ts", ["--brief"]).out,
+    /WEB-1 filter \(proven; nothing left\)/,
+  );
+  const r = checkSpecs(repo);
   assert.equal(r.status, 0, r.out);
   assert.match(
     r.out,
@@ -135,7 +143,7 @@ test("C2 a log rewritten by a newer run, not yet recorded, warns as in flight an
   assert.doesNotMatch(r.out, /changed after it was recorded/);
 });
 
-test("C3 a log edited after its run fails check-specs as changed after it was recorded, whatever its header claims", () => {
+test("C3 a log edited after its run fails check-specs --strict as changed after it was recorded, whatever its header claims, and is silent below it (C7)", () => {
   const repo = startOneOff();
   const recorded = runInFlight(repo);
   const head = git(repo, "rev-parse", "HEAD");
@@ -153,7 +161,10 @@ test("C3 a log edited after its run fails check-specs as changed after it was re
     withHead(asRecorded, head).replace(/^command: .*$/m, "command: yarn x"),
   ]) {
     write(repo, C1_LOG, edited);
-    const r = tool(repo, "check-specs.ts", ["--skip-fixtures"]);
+    const lenient = tool(repo, "check-specs.ts", ["--skip-fixtures"]);
+    assert.equal(lenient.status, 0, lenient.out);
+    assert.doesNotMatch(lenient.out, /C1/);
+    const r = checkSpecs(repo);
     assert.notEqual(r.status, 0, r.out);
     assert.match(
       r.out,

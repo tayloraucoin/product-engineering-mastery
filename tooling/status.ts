@@ -17,6 +17,7 @@ import {
   fileExists,
   findItem,
   formatCost,
+  leftOf,
   openDecisions,
   parseAsBuilt,
   qaOf,
@@ -24,6 +25,7 @@ import {
   readRepoText,
   readSpecsTree,
   refreshStatusFile,
+  renderBrief,
   type ItemState,
 } from "./lib/specs.ts";
 import { loadToolkit } from "./lib/toolkit.ts";
@@ -37,38 +39,6 @@ const states = () =>
   tree.items.map((item) => readItemState(item, tree.specsRoot));
 const done = (state: ItemState) =>
   state.stage === "closed" || state.stage === "migration pending";
-
-function leftOf(state: ItemState): string[] {
-  return state.criteria
-    .filter((c) => c.status !== "PASS")
-    .map(
-      (c) =>
-        `${c.id} ${c.evidence}${c.reason && c.reason !== "not proven yet" ? ` (${c.reason})` : ""}`,
-    );
-}
-
-/** Every item in build, whatever the branch: tickets share the operator's branch (PR-14). */
-function brief(): string {
-  const all = states().filter((s) => !s.merged);
-  const active = all.filter((s) => !done(s) && s.stage !== "draft");
-  const parts: string[] = [];
-  if (active.length) {
-    const items = active.map((s) => {
-      const left = leftOf(s);
-      return `${s.item.id} ${s.item.slug} (${s.stage}; ${left.length ? `left: ${left.join(", ")}` : "nothing left"})`;
-    });
-    parts.push(
-      `Active: ${items.join("; ")}. Next: yarn status ${active.length === 1 ? active[0]!.item.id : "<id>"}.`,
-    );
-  } else parts.push("Active: none.");
-  const drafts = all.filter((s) => s.stage === "draft");
-  if (drafts.length)
-    parts.push(`Drafted: ${drafts.map((s) => s.item.id).join(", ")}.`);
-  const line = parts.join(" ");
-  return line.length > BRIEF_LIMIT
-    ? `${line.slice(0, BRIEF_LIMIT - 1)}…`
-    : line;
-}
 
 function one(id: string) {
   const item = findItem(tree, id);
@@ -234,7 +204,7 @@ function epicOrder(prefix: string) {
   );
 }
 
-if (args.includes("--brief")) console.log(brief());
+if (args.includes("--brief")) console.log(renderBrief(tree, BRIEF_LIMIT));
 else if (args.includes("--deviations")) deviations();
 else if (args.includes("--epic"))
   epicOrder(args[args.indexOf("--epic") + 1] ?? "");

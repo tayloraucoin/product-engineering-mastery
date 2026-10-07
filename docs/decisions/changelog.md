@@ -15,6 +15,16 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-06 — PEM: the brief line lists only tickets in build (C7)
+
+The audit's O7: `yarn status --brief`, printed into every session start and stop, opened with LAB-5, a closed ticket, listing its criteria as "evidence changed after it was recorded"; `yarn check-specs` warned the same of LAB-8. The logs are git-ignored and had been rewritten by a later run; no code had changed. PR-19 ruled that only `check-specs --strict` and `yarn status <id>` look at staleness; the evidence-hash check looked on every read, and the stage then fell back to closing.
+
+- **The evidence-hash check joins the staleness option** in `tooling/lib/specs.ts`: outside `--strict` and `yarn status <id>`, a changed evidence log is not a defect and never moves a closed ticket back to closing. A `results.json` that contradicts itself (a PASS with no run record, a failing exit, the wrong command, zero tests) is still a defect at every level, and `--strict` at a merge means what it did.
+- **`--brief` lists only tickets in build** (open, proven, closing) and the drafts; closed and migration-pending tickets are omitted, and it never reports staleness. The line is rendered by `renderBrief` in the lib, so the fixtures can pin it.
+- **`check-specs` without `--strict` no longer warns** about a rewritten evidence log. On this tree that removes 21 errors across LAB-5, LAB-6 and LAB-8; `--strict` still lists every one.
+- **Fixtures:** `fail-closed-evidence-rewritten` (a closed ticket, one log rewritten: `--strict` fails it, without `--strict` no warning and the brief line omits it), and the open-ticket case now pins its lenient side too. `case.json` gains `lenient: { warnings, brief }`.
+- `docs/engineering/tooling.md`'s status and check-specs entries follow. LAB-5 and LAB-8 were not re-proven; they are the examples.
+
 ## 2026-10-06 — PEM: Q2 is one reviewer, enforced
 
 Serves the audit's O6 and C6 (dump 6), decided 2026-10-06. `docs/workflows/qa-levels.md` is unchanged: Q2 was already one reviewer in fresh context, and the focus section already said how a second lens is asked for. The reviewer map and every draft's reviewers are untouched; the seats are the operator's.
