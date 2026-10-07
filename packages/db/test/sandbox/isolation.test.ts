@@ -16,6 +16,10 @@ import { and, count, eq, inArray, sql } from "drizzle-orm";
 import * as sandbox from "@pem/db/sandbox";
 
 import {
+  COMMENT_BODY_INVALID,
+  COMMENT_INPUT_INVALID,
+} from "../../src/sandbox/comments.ts";
+import {
   ACTION_INPUT_INVALID,
   ROLE_CHANGE_ACTION,
 } from "../../src/sandbox/actions.ts";
@@ -532,6 +536,189 @@ const recordViewAs = (kind: ViewerKind) => async (w: World) => {
   assert.deepEqual(await experimentSnapshot(w), before);
 };
 
+/** Every comment on both slugs, team notes included, to prove a call changed nothing else. */
+async function commentsSnapshot(w: World) {
+  return db()
+    .select()
+    .from(sandboxComments)
+    .where(inArray(sandboxComments.slug, [w.slugA, w.slugB]))
+    .orderBy(sandboxComments.id);
+}
+
+function newComment(design = "circle") {
+  return {
+    id: randomUUID(),
+    number: 7,
+    design,
+    kind: "problem" as const,
+    body: "Probe comment",
+    anchor: { marked: "plans", x: 0.25, y: 0.75, place: "Plans" },
+    viewportW: 390,
+    viewportH: 844,
+    clientCreatedAt: new Date("2026-10-07T10:00:00Z"),
+  };
+}
+
+/** LAB-12 C7: the team is refused by every comments function, and nothing changes. */
+const commentsRefused =
+  (name: "listMyComments" | "saveComment" | "deleteComment") =>
+  (kind: "developer" | "admin") =>
+  async (w: World) => {
+    const before = await commentsSnapshot(w);
+    const viewer = viewerFor(w, kind);
+    const call =
+      name === "listMyComments"
+        ? sandbox.listMyComments(db(), viewer, {})
+        : name === "saveComment"
+          ? sandbox.saveComment(db(), viewer, newComment())
+          : sandbox.deleteComment(db(), viewer, { id: w.teamNoteId });
+    await assert.rejects(call, refusedWith(NOT_A_REVIEWER_VIEWER));
+    assert.deepEqual(await commentsSnapshot(w), before);
+  };
+
+/** A reviewer reads their own comments on their slug: never another's, never a team note. */
+const listCommentsAs = (kind: ViewerKind) => async (w: World) => {
+  const rows = rowsFor(w, kind);
+  const own = rows.viewer;
+  const read = await sandbox.listMyComments(db(), own, {});
+  assert.equal(read.length, 1);
+  exactKeys(read[0], [
+    "id",
+    "number",
+    "design",
+    "kind",
+    "body",
+    "anchor",
+    "createdAt",
+  ]);
+  assert.equal(read[0]!.id, rows.commentId);
+  assert.equal(read[0]!.body, rows.commentBody);
+  const text = JSON.stringify(read);
+  for (const other of [w.a1, w.a2, w.b, w.signedIn].filter(
+    (r) => r.viewer.reviewerId !== own.reviewerId,
+  ))
+    assert.ok(!text.includes(other.commentBody));
+  assert.ok(!text.includes("Team note"));
+  // A crossed slug or reviewer id reads nothing.
+  const other = own.slug === w.slugA ? w.b.viewer : w.a1.viewer;
+  for (const crossed of [
+    { ...own, slug: other.slug },
+    { ...own, reviewerId: other.reviewerId },
+  ])
+    assert.deepEqual(await sandbox.listMyComments(db(), crossed, {}), []);
+  await assert.rejects(
+    sandbox.listMyComments(db(), own, { slug: w.slugB } as never),
+    refusedWith(COMMENT_INPUT_INVALID),
+  );
+};
+
+/** A reviewer saves under a new id, retries and edits it; another's id and a team note's are never touched. */
+const saveCommentAs = (kind: ViewerKind) => async (w: World) => {
+  const rows = rowsFor(w, kind);
+  const own = rows.viewer;
+  const before = await commentsSnapshot(w);
+  const comment = newComment();
+  try {
+    assert.equal(await sandbox.saveComment(db(), own, comment), "saved");
+    assert.equal(await sandbox.saveComment(db(), own, comment), "saved");
+    const stored = await db()
+      .select()
+      .from(sandboxComments)
+      .where(eq(sandboxComments.id, comment.id));
+    assert.equal(stored.length, 1);
+    assert.equal(stored[0]!.reviewerId, own.reviewerId);
+    assert.equal(stored[0]!.accessId, own.accessId);
+    assert.equal(stored[0]!.slug, own.slug);
+    assert.equal(stored[0]!.teamUserId, null);
+
+    // Another reviewer's id, or a team note's, is taken: nothing changes, nothing is said about it.
+    const others = [w.a1, w.a2, w.b]
+      .filter((r) => r.viewer.reviewerId !== own.reviewerId)
+      .map((r) => r.commentId);
+    for (const id of [...others, w.teamNoteId])
+      assert.equal(
+        await sandbox.saveComment(db(), own, {
+          ...comment,
+          id,
+          body: "Overwritten",
+        }),
+        "taken",
+      );
+
+    // A crossed slug or access writes nothing.
+    const other = own.slug === w.slugA ? w.b.viewer : w.a1.viewer;
+    for (const crossed of [
+      { ...own, slug: other.slug },
+      { ...own, accessId: other.accessId },
+    ])
+      await assert.rejects(
+        sandbox.saveComment(db(), crossed, newComment()),
+        refusedWith(REVIEWER_NOT_FOUND),
+      );
+
+    // Malformed input is refused with a fixed message that echoes nothing.
+    for (const bad of [
+      { ...comment, id: "not-a-uuid" },
+      { ...comment, design: "Not A Design" },
+      { ...comment, kind: "praise" },
+      { ...comment, anchor: { x: 0.5, y: 0.5 } },
+      { ...comment, anchor: { marked: "a", id: "b", x: 0.5, y: 0.5 } },
+      { ...comment, anchor: { marked: "a", x: 1.5, y: 0.5 } },
+      { ...comment, anchor: { path: "x".repeat(3000), x: 0, y: 0 } },
+      { ...comment, anchor: { marked: "a", x: 0, y: 0, email: w.a1.email } },
+      { ...comment, number: 0 },
+      { ...comment, viewportW: -1 },
+      { ...comment, clientCreatedAt: "yesterday" },
+    ])
+      await assert.rejects(
+        sandbox.saveComment(db(), own, bad as never),
+        refusedWith(COMMENT_INPUT_INVALID),
+      );
+    for (const body of ["", "   ", "x".repeat(2001)])
+      await assert.rejects(
+        sandbox.saveComment(db(), own, { ...comment, body }),
+        refusedWith(COMMENT_BODY_INVALID),
+      );
+  } finally {
+    await db().delete(sandboxComments).where(eq(sandboxComments.id, comment.id));
+  }
+  assert.deepEqual(await commentsSnapshot(w), before);
+};
+
+/** A reviewer deletes their own comment; another's id or a team note's deletes nothing. */
+const deleteCommentAs = (kind: ViewerKind) => async (w: World) => {
+  const own = rowsFor(w, kind).viewer;
+  const before = await commentsSnapshot(w);
+  const comment = newComment();
+  try {
+    await sandbox.saveComment(db(), own, comment);
+    const others = [w.a1, w.a2, w.b, w.signedIn]
+      .filter((r) => r.viewer.reviewerId !== own.reviewerId)
+      .map((r) => r.commentId);
+    for (const id of [...others, w.teamNoteId])
+      await sandbox.deleteComment(db(), own, { id });
+    // A crossed slug deletes nothing either.
+    await sandbox.deleteComment(
+      db(),
+      { ...own, slug: own.slug === w.slugA ? w.slugB : w.slugA },
+      { id: comment.id },
+    );
+    const after = await commentsSnapshot(w);
+    assert.deepEqual(
+      after.filter((row) => row.id !== comment.id),
+      before,
+    );
+    await sandbox.deleteComment(db(), own, { id: comment.id });
+    assert.deepEqual(await commentsSnapshot(w), before);
+    await assert.rejects(
+      sandbox.deleteComment(db(), own, { id: "nope" }),
+      refusedWith(COMMENT_INPUT_INVALID),
+    );
+  } finally {
+    await db().delete(sandboxComments).where(eq(sandboxComments.id, comment.id));
+  }
+};
+
 /** Registered cases for every runtime export of @pem/db/sandbox. */
 const REGISTRY: Registry<World> = {
   ...codesCases({ db, viewerFor }),
@@ -1021,6 +1208,42 @@ const REGISTRY: Registry<World> = {
       "reviewer on slug B": statsRefused("reviewer on slug B"),
       developer: statsAsTeam("developer"),
       admin: statsAsTeam("admin"),
+    },
+  },
+
+  listMyComments: {
+    group: "viewer",
+    criteria: ["LAB-12 C7"],
+    byViewer: {
+      "reviewer on slug A": listCommentsAs("reviewer on slug A"),
+      "second reviewer on slug A": listCommentsAs("second reviewer on slug A"),
+      "reviewer on slug B": listCommentsAs("reviewer on slug B"),
+      developer: commentsRefused("listMyComments")("developer"),
+      admin: commentsRefused("listMyComments")("admin"),
+    },
+  },
+
+  saveComment: {
+    group: "viewer",
+    criteria: ["LAB-12 C7"],
+    byViewer: {
+      "reviewer on slug A": saveCommentAs("reviewer on slug A"),
+      "second reviewer on slug A": saveCommentAs("second reviewer on slug A"),
+      "reviewer on slug B": saveCommentAs("reviewer on slug B"),
+      developer: commentsRefused("saveComment")("developer"),
+      admin: commentsRefused("saveComment")("admin"),
+    },
+  },
+
+  deleteComment: {
+    group: "viewer",
+    criteria: ["LAB-12 C7"],
+    byViewer: {
+      "reviewer on slug A": deleteCommentAs("reviewer on slug A"),
+      "second reviewer on slug A": deleteCommentAs("second reviewer on slug A"),
+      "reviewer on slug B": deleteCommentAs("reviewer on slug B"),
+      developer: commentsRefused("deleteComment")("developer"),
+      admin: commentsRefused("deleteComment")("admin"),
     },
   },
 

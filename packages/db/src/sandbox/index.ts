@@ -52,6 +52,15 @@ export {
   type ReviewerEmails,
 } from "./erasure.ts";
 export {
+  deleteComment,
+  listMyComments,
+  saveComment,
+  type CommentAnchor,
+  type MyComment,
+  type SaveCommentInput,
+  type SaveCommentOutcome,
+} from "./comments.ts";
+export {
   claimFirstDesign,
   readReviewerDesigns,
   recordViewEvent,
