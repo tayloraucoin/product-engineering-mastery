@@ -298,7 +298,7 @@ describe("C1: a code exists in clear only in the make or replace response", () =
     });
   });
 
-  test("C1: the route's files never put a code in storage, a log, a URL or the page's cache", () => {
+  test("C1: the route's files and the codes modules never put a code in storage, a log, a URL or the page's cache", () => {
     const dir = fileURLToPath(
       new URL("../../app/admin/experiments/[slug]/codes/", import.meta.url),
     );
@@ -329,6 +329,29 @@ describe("C1: a code exists in clear only in the make or replace response", () =
         assert.ok(
           !pattern.test(source),
           `${path.relative(dir, file)} uses ${pattern}`,
+        );
+    }
+    // The rules and the binding hold the code in clear too: the same bans,
+    // except that the binding logs, and then only an event name and an
+    // error's name, never the code, the result or the form.
+    const lib = fileURLToPath(new URL("./", import.meta.url));
+    for (const name of [
+      "admin-codes.ts",
+      "admin-codes-view.ts",
+      "admin-codes-data.ts",
+      "emails-used.ts",
+    ]) {
+      const source = readFileSync(path.join(lib, name), "utf8");
+      const binding = name === "admin-codes-data.ts";
+      for (const pattern of banned)
+        if (!(binding && pattern.source === "createLogger"))
+          assert.ok(!pattern.test(source), `${name} uses ${pattern}`);
+      for (const call of source.matchAll(/log\.\w+\(([^;]*?)\);/gs))
+        assert.ok(
+          !/\b(code|codeHash|result|formData|input|label|displayName)\b/.test(
+            call[1]!,
+          ),
+          `${name} logs ${call[1]}`,
         );
     }
     // Make and replace answer with the code, so neither revalidates or

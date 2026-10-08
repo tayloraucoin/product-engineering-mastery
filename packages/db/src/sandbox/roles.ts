@@ -9,6 +9,10 @@
  * ends. A session lock would leak on the hosted transaction pooler, where the
  * next statement may run on another connection.
  *
+ * `fn` makes Auth API calls while the lock is held, so the transaction sets
+ * a local idle limit: a hung call ends the transaction and frees the lock and
+ * its pooled connection, instead of blocking every other role change.
+ *
  * Admin only: a reviewer or a developer is refused before any SQL runs.
  */
 
@@ -18,6 +22,9 @@ import { requireAdmin, type SandboxDb, type Viewer } from "./viewer.ts";
 
 /** One key for every role change in the database; `hashtext` turns the name into the lock's int. */
 export const ROLE_CHANGE_LOCK = "pem.sandbox.role-change";
+
+/** How long the locked transaction may sit idle between statements while `fn` waits on Auth. */
+export const ROLE_CHANGE_IDLE_LIMIT = "30s";
 
 /** The transaction `fn` runs in, for the record of the change to land with it. */
 export type RoleChangeTx = Parameters<
@@ -31,6 +38,9 @@ export async function withRoleChangeLock<T>(
 ): Promise<T> {
   requireAdmin(viewer);
   return db.transaction(async (tx) => {
+    await tx.execute(
+      sql`select set_config('idle_in_transaction_session_timeout', ${ROLE_CHANGE_IDLE_LIMIT}, true)`,
+    );
     await tx.execute(
       sql`select pg_advisory_xact_lock(hashtext(${ROLE_CHANGE_LOCK}))`,
     );

@@ -32,17 +32,20 @@
 - The record names who changed and whose role changed, not the new role. `recordAction` accepts only `role-change` with a `targetEmail`, and counts only from a closed list. Drafted as LAB-28.
 - [ASSUMPTION] Inside the lock the order is read, count, record, then write, not the contract's "write, record". A thrown write then rolls the record back (`people.test.ts`), and the remaining window is the commit itself.
 - A change to the role a person already holds returns `changed` and writes nothing.
-- Strings people.md does not give, for `yarn truth:promote LAB` to fold into people.md: the dialog title (it repeats its button), the pager ("Page N of M", "Previous", "Next") and "1 person matches.". Promotion also replaces people.md's timing line and its open assumption with R11's line, which mason confirmed as the named reviewer.
+- Strings people.md does not give, for `yarn truth:promote LAB` to fold into people.md: the dialog title (it repeats its button), the pager ("Page N of M", "Previous", "Next") and "1 person matches.". Promotion also records the table as `@pem/ui/table` with the page's own 50-row pager, not `data-table`, and replaces people.md's timing line and its open assumption with R11's line, as the contract's non-negotiable and R11 give it.
+- `withRoleChangeLock` sets a local `idle_in_transaction_session_timeout` of 30 s, so a hung Auth call inside the lock ends the transaction and frees the lock and its pooled connection (mason, review round 1).
 - Self-demotion: the page goes to `/admin/experiments` after the toast, and the guards give the 404 there when no role is left.
 - On this machine the action returns the fixed failure (no Auth API, no database); the success toast is proven by the tests only.
 
 ## Reviews (Q3)
 
-- Mason: PASS, with two should-fixes, both fixed:
+The two passes below ran in the build thread on 2026-10-06; they are not in `results.json`. The recorded `yarn review:run` rounds follow them.
+
+- Mason (in-thread): two should-fixes, both fixed:
   - The `?state=` fixtures used the real viewer's id and email as "(you)", so confirming a change on that row would have changed the real account. `peopleStateView(state)` now takes no identity and uses `PEOPLE_FIXTURE_VIEWER`, a synthetic id. A test checks every key's "(you)" row.
   - The action name had two homes. `@pem/db/sandbox` now exports `ROLE_CHANGE_ACTION`, with its isolation-registry case, and `people-data.ts` imports it.
   - The skeleton is static (`animate-none`), as people.md says. The primitive's pulse default is for the canon owner.
-- Warden: PASS, six "Consider" items, acted on in the same batch:
+- Warden (in-thread): six "Consider" items, acted on in the same batch:
   - `people.ts` no longer imports `APP_ROLES` at runtime, so the client table keeps `@pem/db/rls` out of the browser. `PEOPLE_ROLES` is an exhaustive `Record<AppRole, …>`, so a new role fails to compile there.
   - `grant-admin.ts` now says why it may write outside the lock (it only grants) and that a script which removes a role must take it.
   - Left as written:

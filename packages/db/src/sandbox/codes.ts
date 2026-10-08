@@ -273,7 +273,12 @@ export async function revokeCode(
     await tx
       .update(sandboxReviewers)
       .set({ revokedAt: new Date() })
-      .where(eq(sandboxReviewers.id, reviewerId));
+      .where(
+        and(
+          eq(sandboxReviewers.id, reviewerId),
+          eq(sandboxReviewers.slug, slug),
+        ),
+      );
     await recordAction(tx, viewer, { action: CODE_ACTIONS.revoked, slug });
     return { revoked: true as const };
   });

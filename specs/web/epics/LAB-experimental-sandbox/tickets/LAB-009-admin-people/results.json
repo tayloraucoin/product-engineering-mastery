@@ -8,11 +8,11 @@
       "run": {
         "command": "yarn workspace web test",
         "exit": 0,
-        "at": "2026-10-06T21:48:53Z",
-        "head": "77bc33426cf803094da2dbbfe17fda13d4ab8996",
+        "at": "2026-10-08T01:42:30Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-009-admin-people/evidence/C1.log",
-        "evidence_sha256": "00b89df189d1642e6f92de4cf9927c0ee59306115fb370b923894d016f97da49",
-        "tests": 255
+        "evidence_sha256": "34493a3ccb6e2af0729f8a2da1cb951bcbd0762a4be16742ebf408799a67189f",
+        "tests": 473
       }
     },
     "C2": {
@@ -21,11 +21,11 @@
       "run": {
         "command": "yarn workspace web test",
         "exit": 0,
-        "at": "2026-10-06T21:48:53Z",
-        "head": "77bc33426cf803094da2dbbfe17fda13d4ab8996",
+        "at": "2026-10-08T01:42:30Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-009-admin-people/evidence/C2.log",
-        "evidence_sha256": "00b89df189d1642e6f92de4cf9927c0ee59306115fb370b923894d016f97da49",
-        "tests": 255
+        "evidence_sha256": "34493a3ccb6e2af0729f8a2da1cb951bcbd0762a4be16742ebf408799a67189f",
+        "tests": 473
       }
     },
     "C3": {
@@ -34,11 +34,11 @@
       "run": {
         "command": "yarn workspace web test",
         "exit": 0,
-        "at": "2026-10-06T21:48:53Z",
-        "head": "77bc33426cf803094da2dbbfe17fda13d4ab8996",
+        "at": "2026-10-08T01:42:30Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-009-admin-people/evidence/C3.log",
-        "evidence_sha256": "00b89df189d1642e6f92de4cf9927c0ee59306115fb370b923894d016f97da49",
-        "tests": 255
+        "evidence_sha256": "34493a3ccb6e2af0729f8a2da1cb951bcbd0762a4be16742ebf408799a67189f",
+        "tests": 473
       }
     },
     "C4": {
@@ -47,11 +47,11 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-06T21:49:10Z",
-        "head": "77bc33426cf803094da2dbbfe17fda13d4ab8996",
+        "at": "2026-10-08T01:42:52Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-009-admin-people/evidence/C4.log",
-        "evidence_sha256": "7fdb0b345ca44091119974fd3920a07052f6d2b3dd8fdc654ec570f488acd2ed",
-        "tests": 104
+        "evidence_sha256": "0a485ebec3e8f48c43a52046e741e3f3589af54fdb36aa9f420ad6a4797ecd80",
+        "tests": 249
       }
     },
     "C5": {
@@ -60,11 +60,11 @@
       "run": {
         "command": "yarn workspace @pem/db test",
         "exit": 0,
-        "at": "2026-10-06T21:49:19Z",
-        "head": "77bc33426cf803094da2dbbfe17fda13d4ab8996",
+        "at": "2026-10-08T01:43:08Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-009-admin-people/evidence/C5.log",
-        "evidence_sha256": "88ed11be0c0ca23351d093d2bbc20082e1b32c09f595881c32c29a88bf237c13",
-        "tests": 79
+        "evidence_sha256": "b34224bb749a732c2d170b404d642b1097fb9ed749e431ffa47aa7a5f6604e8d",
+        "tests": 80
       }
     },
     "C6": {
@@ -73,10 +73,10 @@
       "run": {
         "command": "yarn contract:record LAB-9 C6 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-009-admin-people/evidence/people-confirm.png",
         "exit": 0,
-        "at": "2026-10-06T21:47:50Z",
-        "head": "77bc33426cf803094da2dbbfe17fda13d4ab8996",
+        "at": "2026-10-08T01:51:27Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-009-admin-people/evidence/people-confirm.png",
-        "evidence_sha256": "e4a3f5795a8dabd8cc989e9f31ba889f139deac66e2e90c37499e47bb67308ff"
+        "evidence_sha256": "0464f27997bab38ef38e177910db0d6a87ca5a8c366fcd9c67fc0df474c4ebab"
       }
     },
     "C7": {
@@ -85,10 +85,10 @@
       "run": {
         "command": "yarn contract:record LAB-9 C7 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-009-admin-people/evidence/C7-operator.md --verdict deferred",
         "exit": 0,
-        "at": "2026-10-06T21:21:51Z",
-        "head": "99d0e4c6927e4e84c42bb9702e04886e13f699d0",
+        "at": "2026-10-08T01:51:35Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-009-admin-people/evidence/C7-operator.md",
-        "evidence_sha256": "57201360ec1d1f5722c7a595da737bd844713b8b19e370c6f40003e09318088d",
+        "evidence_sha256": "0f122b436162b7aaba9850e7501e18d62a8af7a44fa979855ce3993d9753f872",
         "deferred": true
       }
     },
@@ -98,22 +98,56 @@
       "run": {
         "command": "yarn contract:record LAB-9 C8 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-009-admin-people/evidence/people-states.png",
         "exit": 0,
-        "at": "2026-10-06T21:47:56Z",
-        "head": "77bc33426cf803094da2dbbfe17fda13d4ab8996",
+        "at": "2026-10-08T01:52:48Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-009-admin-people/evidence/people-states.png",
-        "evidence_sha256": "514c8be839764e38583279896a8e5eedb80577467d9e211d4c8045639124120b"
+        "evidence_sha256": "c62ddf23543c6b85a841b96b944838baa3e761489f6b6ce42bf7e5513d274b47"
       }
     },
     "review:mason": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run mason LAB-9",
+        "exit": 0,
+        "at": "2026-10-08T01:53:13Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-009-admin-people/review-mason.md",
+        "evidence_sha256": "ccefb92147c4c13c6592760cfdc86dd6a646b351503d0664f36f126f97d5a97e",
+        "contract_sha256": "4b6b41c900f3f5b577a9fb724690f6be890c5834dd9ad42f008d7d82df87884e",
+        "criteria_sha256": "154bb6d8338f442fc5da1950bc285b78ce342d72544e5cb3fd05e0b3a26a07c6",
+        "as_built_sha256": "4a7149a8852d9a02b9a398ec1f875456a249efd9be99a1eb60a1bc93e80da04b",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/mason-cto-principal-dev.md; tools Read,Grep,Glob)",
+        "tokens_input": 45,
+        "tokens_cache_read": 5283397,
+        "tokens_cache_write": 267935,
+        "tokens_output": 24833,
+        "seconds": 431.3
+      },
+      "runs": 1
     },
     "review:warden": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run warden LAB-9",
+        "exit": 0,
+        "at": "2026-10-08T02:00:47Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-009-admin-people/review-warden.md",
+        "evidence_sha256": "929d57a9530ab3311efefeafc3fb1296fea979b0cac8c737426e79b3a165befa",
+        "contract_sha256": "4b6b41c900f3f5b577a9fb724690f6be890c5834dd9ad42f008d7d82df87884e",
+        "criteria_sha256": "154bb6d8338f442fc5da1950bc285b78ce342d72544e5cb3fd05e0b3a26a07c6",
+        "as_built_sha256": "4a7149a8852d9a02b9a398ec1f875456a249efd9be99a1eb60a1bc93e80da04b",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)",
+        "tokens_input": 38,
+        "tokens_cache_read": 4732741,
+        "tokens_cache_write": 173580,
+        "tokens_output": 24426,
+        "seconds": 437.6
+      },
+      "runs": 1
     }
   },
-  "updated_at": "2026-10-06T21:49:25Z"
+  "updated_at": "2026-10-08T02:08:06Z"
 }

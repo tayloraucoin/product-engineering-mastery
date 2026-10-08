@@ -10,9 +10,11 @@
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { after, before, test } from "node:test";
+import { sql } from "drizzle-orm";
 
 import * as sandbox from "@pem/db/sandbox";
 
+import { ROLE_CHANGE_IDLE_LIMIT } from "../../src/sandbox/roles.ts";
 import {
   NOT_A_TEAM_VIEWER,
   NOT_AN_ADMIN_VIEWER,
@@ -104,4 +106,16 @@ test("C4: the same race without the lock leaves no admin, so the lock is what ho
   const admins = new Set(["ana", "ben"]);
   await Promise.all([demoteSelf(admins, "ana")(), demoteSelf(admins, "ben")()]);
   assert.equal(admins.size, 0);
+});
+
+test("C4: the locked transaction carries an idle limit, so a hung Auth call cannot hold the lock, and the limit ends with it", async () => {
+  const setting = sql`select current_setting('idle_in_transaction_session_timeout') as v`;
+  const inside = await sandbox.withRoleChangeLock(
+    database.db,
+    team("admin", "ana"),
+    async (tx) => (await tx.execute<{ v: string }>(setting))[0]!.v,
+  );
+  assert.equal(inside, ROLE_CHANGE_IDLE_LIMIT);
+  const outside = (await database.db.execute<{ v: string }>(setting))[0]!.v;
+  assert.notEqual(outside, ROLE_CHANGE_IDLE_LIMIT);
 });

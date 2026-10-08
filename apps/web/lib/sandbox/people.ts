@@ -191,6 +191,9 @@ export async function changeRoleWith<Tx>(
       if (from === "admin" && (await deps.countAdmins()) <= 1)
         return { outcome: "last-admin", message: PEOPLE_WORDS.lastAdmin };
       await deps.recordRoleChange(tx, email);
+      // The whole object read above goes back with the new role. The lock
+      // orders role changes, not GoTrue: a key Auth adds between the read and
+      // this write (an identity link extending providers) is overwritten.
       await deps.writeAppMetadata(person.id, {
         ...person.appMetadata,
         role: change.role,

@@ -1,5 +1,7 @@
 # LAB-15 C9 — keyboard alone and a screen reader (operator check)
 
+Re-walked on 2026-10-07 at eff9425 against `?state=codes-success`, keyboard only: "Make a code" opens with focus in "Label"; Tab through Display name to "Make code", Enter: the shown-once dialog opens with focus on "Copy code"; Escape returns focus to "Make a code"; a row's "Actions for ben@example.com" opens Replace code and Revoke code, and Revoke code opens its confirmation with focus on "Cancel". "Code copied." could not be heard here: the pane refuses the clipboard, so the person checks it.
+
 Walked by the builder on 2026-10-07 in the browser pane at 1440, against
 `/admin/experiments/pricing-2026/codes` on the local database, with a
 synthetic admin (a scratch copy of `team.ts`; this machine has no Supabase

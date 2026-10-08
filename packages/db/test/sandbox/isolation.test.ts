@@ -72,6 +72,7 @@ import {
   type Registry,
   type ViewerKind,
 } from "./registry.ts";
+import { teamCases, teamNoteProbes } from "./team-cases.ts";
 import { threadsCases } from "./threads-cases.ts";
 
 let database: TestDatabase;
@@ -198,7 +199,17 @@ const recordAsTeam = (kind: "developer" | "admin") => async (w: World) => {
   for (const r of [w.a1, w.a2, w.b])
     for (const secret of [r.label, r.email, r.code, r.viewer.reviewerId])
       assert.ok(secret && !text.includes(secret));
-  await roleChangeAs(w, viewer);
+  if (kind === "admin") return roleChangeAs(w, viewer);
+  // A role change names a person: a developer cannot record one.
+  const before = await actionRowCount();
+  await assert.rejects(
+    sandbox.recordAction(db(), viewer, {
+      action: ROLE_CHANGE_ACTION,
+      targetEmail: `promoted-${w.run}@example.test`,
+    }),
+    refusedWith(NOT_AN_ADMIN_VIEWER),
+  );
+  assert.equal(await actionRowCount(), before, "a refused call wrote a row");
 };
 
 /** withRoleChangeLock (LAB-9): only an admin runs `fn`, and runs it holding the lock. */
@@ -969,6 +980,7 @@ const REGISTRY: Registry<World> = {
   ...codesCases({ db, viewerFor }),
   ...erasureCases({ db, viewerFor }),
   ...threadsCases({ db, viewerFor }),
+  ...teamCases({ db, viewerFor }),
   findLiveReviewerByCodeHash: {
     group: "gate",
     criteria: ["C3"],
@@ -1758,5 +1770,76 @@ describe("C1: the reviewer scope", () => {
       assert.throws(() => reviewerScope(team, sandboxComments), {
         message: "This needs a reviewer.",
       });
+  });
+});
+
+describe("LAB-14 C4: no reviewer read and no reviewer count meets a team note", () => {
+  const probes = teamNoteProbes(db);
+
+  test("LAB-14 C4: every viewer function of @pem/db/sandbox has a team-note probe", () => {
+    const missing = Object.entries(REGISTRY)
+      .filter(([name, entry]) => entry.group === "viewer" && !probes[name])
+      .map(([name]) => `${name} has no team-note probe (team-cases.ts)`);
+    const extra = Object.keys(probes)
+      .filter((name) => REGISTRY[name]?.group !== "viewer")
+      .map((name) => `${name} has a probe but is no viewer function`);
+    assert.deepEqual([...missing, ...extra], []);
+  });
+
+  test("LAB-14 C4: with team notes planted on both slugs, every read returns and counts what it did before", async () => {
+    const reads = Object.entries(probes).flatMap(([name, probe]) =>
+      "read" in probe ? [{ name, probe, run: probe.read(world) }] : [],
+    );
+    const project = (p: (typeof reads)[number], value: unknown) =>
+      p.probe.project ? p.probe.project(value) : value;
+    const before = new Map<string, unknown>();
+    for (const r of reads) before.set(r.name, project(r, await r.run.call()));
+
+    const author: TeamViewer = {
+      kind: "team",
+      userId: world.otherUser,
+      email: `other-${world.run}@example.test`,
+      role: "admin",
+    };
+    const planted: string[] = [];
+    try {
+      for (const slug of [world.slugA, world.slugB])
+        for (const design of ["circle", "square"]) {
+          const id = randomUUID();
+          planted.push(id);
+          const saved = await sandbox.saveTeamNote(db(), author, {
+            id,
+            slug,
+            number: 1,
+            design,
+            body: `Planted team note ${id}`,
+            anchor: { marked: "plans", x: 0.5, y: 0.5, place: "Plans" },
+            viewportW: 1440,
+            viewportH: 900,
+            clientCreatedAt: new Date(),
+          });
+          assert.notEqual(saved, "taken");
+        }
+      for (const r of reads) {
+        const result = await r.run.call();
+        if (r.run.as.kind === "reviewer") {
+          const text = JSON.stringify(result);
+          for (const id of [...planted, world.teamNoteId])
+            assert.ok(!text.includes(id), `${r.name} returned a team note`);
+          assert.ok(!text.includes("Planted team note"), r.name);
+          assert.ok(!text.includes(author.email), r.name);
+        }
+        assert.deepEqual(
+          project(r, result),
+          before.get(r.name),
+          `${r.name} changed once team notes were added`,
+        );
+      }
+    } finally {
+      if (planted.length)
+        await db()
+          .delete(sandboxComments)
+          .where(inArray(sandboxComments.id, planted));
+    }
   });
 });

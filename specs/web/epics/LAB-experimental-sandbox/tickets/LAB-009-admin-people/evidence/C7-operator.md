@@ -1,5 +1,7 @@
 # LAB-9 C7 — keyboard and screen reader (operator check)
 
+Re-walked on 2026-10-07 at eff9425 against `?state=people-success`, keyboard only: the filter reads "Find by email" and announces "1 person matches."; Tab reaches "Role for ben@example.com"; Enter, ArrowDown, Enter opens "Make admin" with focus on "Cancel"; Escape restores "Developer" and focus to the select; Tab, Enter on "Make admin" returns focus to the select. Unchanged from the walk below.
+
 Walked by the builder on 2026-10-06 in the browser pane at 1440, against
 `/admin/people?state=people-success` with a synthetic admin (a scratch copy
 of `team.ts`; this machine has no Supabase Auth, so no real sign-in exists):

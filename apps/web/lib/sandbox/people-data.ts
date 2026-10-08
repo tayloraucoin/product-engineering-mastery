@@ -82,10 +82,13 @@ export function changeRoleAs(
         }
         return data.user ? toPerson(data.user) : null;
       },
+      // Only admins with an email count: they are the ones db:grant-admin
+      // can restore, and the ones the page's own count shows.
       async countAdmins() {
         const people = await listAuthPeople();
-        return people.filter((p) => roleFromMetadata(p.appMetadata) === "admin")
-          .length;
+        return people.filter(
+          (p) => p.email && roleFromMetadata(p.appMetadata) === "admin",
+        ).length;
       },
       async writeAppMetadata(userId, appMetadata) {
         const { error } = await admin().auth.admin.updateUserById(userId, {

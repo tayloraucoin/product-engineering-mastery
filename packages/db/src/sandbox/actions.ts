@@ -17,6 +17,7 @@ import {
   SANDBOX_SLUG_PATTERN,
 } from "../schema/sandbox/columns.ts";
 import {
+  requireAdmin,
   requireTeam,
   SandboxAccessError,
   type SandboxDb,
@@ -46,6 +47,9 @@ export async function recordAction(
   input: RecordActionInput,
 ): Promise<void> {
   const team = requireTeam(viewer);
+  // A role change names a person, so only an admin may record one, whatever
+  // the caller (D-LAB-28: a team member, never a reviewer).
+  if (input.action === ROLE_CHANGE_ACTION) requireAdmin(viewer);
   if (typeof input.action !== "string" || !ACTION_NAME.test(input.action))
     throw new SandboxAccessError(ACTION_INPUT_INVALID);
   if (
