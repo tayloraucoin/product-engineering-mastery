@@ -60,10 +60,10 @@
       "run": {
         "command": "yarn contract:record MIG-6 C5 --evidence specs/_shared/epics/MIG-codebase-migration/tickets/MIG-006-assess-signals-and-listings/evidence/capture-three-repos.md",
         "exit": 0,
-        "at": "2026-10-08T01:13:43Z",
-        "head": "56e14ee6e7461efff90c10498481de144d13ce46",
+        "at": "2026-10-08T01:25:06Z",
+        "head": "7acd9d7d1d3198947515a9b4853dc5cdfa35205c",
         "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-006-assess-signals-and-listings/evidence/capture-three-repos.md",
-        "evidence_sha256": "2181d271a7a5fccc3a8715b20f35610c71289e049af4d13f958c56741aeebfae"
+        "evidence_sha256": "0383b2ed0e6c994dda504ed088544827f594dbc2e45305cbe302435e0be0e1a9"
       }
     },
     "C6": {
@@ -79,5 +79,5 @@
       }
     }
   },
-  "updated_at": "2026-10-08T01:13:43Z"
+  "updated_at": "2026-10-08T01:25:06Z"
 }
