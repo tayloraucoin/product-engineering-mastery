@@ -164,6 +164,20 @@ const PAIRS: Pair[] = [
     min: TEXT,
     use: "destructive button label, hovered",
   },
+  // DEMO-2: the solid destructive Button, at rest and on hover (80% fill).
+  {
+    fg: "--destructive-foreground",
+    bg: "--destructive",
+    min: TEXT,
+    use: "solid destructive button label",
+  },
+  {
+    fg: "--destructive-foreground",
+    bg: "--destructive",
+    tint: 0.8,
+    min: TEXT,
+    use: "solid destructive button label, hovered",
+  },
   // CAT-5: a checkbox, radio or switch is found by its `--input` boundary alone (WCAG 1.4.11).
   {
     fg: "--input",

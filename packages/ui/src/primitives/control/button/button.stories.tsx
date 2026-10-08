@@ -41,6 +41,35 @@ export const Destructive: Story = {
   args: { variant: "destructive", children: "Delete record" },
 };
 
+/** A dialog's destructive confirm: solid fill, white-on-red in light and the reverse in dark (DEMO-2). Page triggers keep the tint above. */
+export const DestructiveSolid: Story = {
+  args: { variant: "destructive-solid", children: "Delete record" },
+};
+
+export const DestructiveSolidHover: Story = {
+  args: { variant: "destructive-solid", children: "Delete record" },
+  parameters: { pseudo: { hover: true } },
+};
+
+/** Reached from the keyboard, so the ring shows on the solid fill. */
+export const DestructiveSolidFocus: Story = {
+  args: { variant: "destructive-solid", children: "Delete record" },
+  play: async ({ canvasElement }) => {
+    await userEvent.tab();
+    await expect(within(canvasElement).getByRole("button")).toHaveFocus();
+  },
+};
+
+/** The tint and the solid side by side, the pair DEMO-3 links. */
+export const DestructiveBeside: Story = {
+  render: () => (
+    <div className="flex gap-3">
+      <Button variant="destructive">Delete record</Button>
+      <Button variant="destructive-solid">Delete record</Button>
+    </div>
+  ),
+};
+
 export const Link: Story = { args: { variant: "link", children: "View all" } };
 
 export const ExtraSmall: Story = { args: { size: "xs" } };
