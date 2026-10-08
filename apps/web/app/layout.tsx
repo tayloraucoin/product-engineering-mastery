@@ -7,8 +7,8 @@ import { brandSans } from "@pem/brand/font";
 import { appIcon } from "@pem/brand/icon";
 import { ThemeProvider } from "@pem/ui/theme";
 
+import { FloatingThemeToggle } from "../components/shell/floating-theme-toggle";
 import { env } from "../env";
-import { FloatingThemeToggle } from "./_components/floating-theme-toggle";
 
 import "./globals.css";
 

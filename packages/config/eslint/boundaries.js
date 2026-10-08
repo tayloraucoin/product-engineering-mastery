@@ -241,21 +241,26 @@ function transportFreeOverrides() {
   });
 }
 
-/** Sandbox route files reach data only through lib/sandbox (D-LAB-34): never the client or the schema. */
-const SANDBOX_ROUTE_FILES = [
+/**
+ * Sandbox route files, and the app components a sandbox route may share
+ * (EN-19), reach data only through lib/sandbox (D-LAB-34): never the client
+ * or the schema.
+ */
+const SANDBOX_UI_FILES = [
   `apps/web/app/experimental/${SOURCE_FILES}`,
   `apps/web/app/admin/${SOURCE_FILES}`,
+  `apps/web/components/${SOURCE_FILES}`,
 ];
-function sandboxRouteOverrides() {
+function sandboxUiOverrides() {
   return [
     {
-      files: SANDBOX_ROUTE_FILES,
+      files: SANDBOX_UI_FILES,
       rules: {
         "no-restricted-imports": restrictedImports("app-web", [
           {
             regex: "^@pem/db/(client|schema)(/.*)?$",
             message:
-              "An experimental or admin route reaches sandbox data only through apps/web/lib/sandbox (D-LAB-34), never @pem/db/client or @pem/db/schema.",
+              "An experimental or admin route, or an app component, reaches sandbox data only through apps/web/lib/sandbox (D-LAB-34), never @pem/db/client or @pem/db/schema.",
           },
         ]),
       },
@@ -398,5 +403,5 @@ export const boundariesConfig = [
   },
   ...ownerOverrides(),
   ...transportFreeOverrides(),
-  ...sandboxRouteOverrides(),
+  ...sandboxUiOverrides(),
 ];

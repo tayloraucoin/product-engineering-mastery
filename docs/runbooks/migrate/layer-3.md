@@ -94,7 +94,7 @@ Day one's own gaps are drafted first, from the guide's step 7, then these twelve
 
 - **Layer:** 3, part 8 (signal V4).
 - **What did not cross:** Server Components by default, with a client leaf placed by its importers (codebase-conventions §1). The report gives the share of client files outside one.
-- **Plan:** a check with a baseline first: a script that lists every `"use client"` file outside a `_components/` folder and compares the count to a committed baseline, ratcheting down as 3.2's count does. The moves come late, one route at a time, each its own ticket, and never as a sweep.
+- **Plan:** a check with a baseline first: a script that lists every `"use client"` file outside a `_components/` or `components/` folder and compares the count to a committed baseline, ratcheting down as 3.2's count does. The moves come late, one route at a time, each its own ticket, and never as a sweep.
 - **Conflict risk:** high for the moves (every moved file is one the team edits); low for the check. Trigger: the check any time; the moves after part 9 settles each surface's states.
 - **Estimate:** two hours for the check; a route an hour to move. Estimates.
 

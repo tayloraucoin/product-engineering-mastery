@@ -113,6 +113,15 @@ test('C1 (MIG-6) V4: 60 percent of "use client" files outside _components/ score
     }),
   );
   assert.equal(ten.V4, 0);
+  // EN-19: an app-level components/<domain>/ folder counts as placed too.
+  const shared = scoresOf(
+    scratchTarget({
+      "package.json": pkg({}),
+      ...many(1, (i) => [`app/widgets/w-${i}.tsx`, CLIENT]),
+      ...many(9, (i) => [`components/shell/c-${i}.tsx`, CLIENT]),
+    }),
+  );
+  assert.equal(shared.V4, 0);
   assert.ok(
     startsWithUseClient("// leaf\n/* note */\n'use client'\nexport {};"),
   );

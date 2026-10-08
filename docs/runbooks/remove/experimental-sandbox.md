@@ -69,7 +69,7 @@ Then stop the dev server and delete `apps/web/.next`. The baseline run left rout
 - `packages/db/package.json`: delete the `./sandbox` export.
 - `apps/web/env.ts`: delete the `sandboxSecretProblem` import, the three `SANDBOX_SECRET*` raw reads, the `SANDBOX_SECRET` schema entry with its comment, and its `pickTiered` line.
 - `apps/web/next.config.ts`: delete the `SANDBOX_NOINDEX_HEADERS` import and the `headers()` function with its comment. Keep `headers()` if the product has added its own headers there.
-- `apps/web/app/_components/floating-theme-toggle.tsx`: delete the two `[body:has([data-admin-shell])_&]:hidden` and `[body:has([data-sandbox-design])_&]:hidden` classes, and the comment's sentences on the `/admin` shell and an experiment's design. The component stays: the root layout uses it.
+- `apps/web/components/shell/floating-theme-toggle.tsx`: delete the two `[body:has([data-admin-shell])_&]:hidden` and `[body:has([data-sandbox-design])_&]:hidden` classes, and the comment's sentences on the `/admin` shell and an experiment's design. The component stays: the root layout uses it.
 - `tooling/boundaries.test.ts`: delete LAB-3's block, from the comment `// LAB-3 (its C5)` through the `SANDBOX_ALLOWED` loop.
 - `packages/db/scripts/grant-admin.ts`: in the header comment, drop every sentence that names People, its role-change lock, the last-admin race or this runbook. The script stays (below).
 - `docs/engineering/tech-stack.md`: in the `lucide-react` row, drop `apps/web` when the dependency goes (below).

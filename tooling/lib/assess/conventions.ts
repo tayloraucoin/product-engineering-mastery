@@ -105,10 +105,10 @@ export const V4: Signal = {
   id: "V4",
   group: "conventions",
   layer: 3,
-  title: '"use client" outside _components/',
+  title: '"use client" outside a components folder',
   measure(repo): Measure {
     const client = listClientFiles(repo);
-    const outside = client.filter((rel) => !/(^|\/)_components\//.test(rel));
+    const outside = client.filter((rel) => !/(^|\/)_?components\//.test(rel));
     const share = client.length ? outside.length / client.length : 0;
     const score =
       share <= BANDS.clientOutsideShareFull
@@ -120,7 +120,7 @@ export const V4: Signal = {
       value: { client: client.length, outside: outside.length },
       score,
       evidence: client.length
-        ? `${outside.length} of ${client.length} "use client" files sit outside a _components/ folder (${Math.round(share * 100)}%)`
+        ? `${outside.length} of ${client.length} "use client" files sit outside a _components/ or components/ folder (${Math.round(share * 100)}%)`
         : 'no "use client" files',
     };
   },

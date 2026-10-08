@@ -21,7 +21,7 @@ import type { Score } from "./signal.ts";
 export const BANDS = {
   /** V3: files reading process.env outside an env.ts; 0, 1 to this, over. */
   envReadersPartialUpTo: 25,
-  /** V4: the share of "use client" files outside _components/; at most these. */
+  /** V4: the share of "use client" files outside _components/ or components/; at most these. */
   clientOutsideShareFull: 0.1,
   clientOutsideSharePartial: 0.5,
   /** V5: SDK-importing files no reviewer glob reaches; 0, 1 to this, over. */

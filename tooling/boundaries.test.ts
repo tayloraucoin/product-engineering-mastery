@@ -307,6 +307,12 @@ const SANDBOX_DISALLOWED: [file: string, code: string, message: RegExp][] = [
     'import { sandboxComments } from "@pem/db/schema";',
     /never @pem\/db\/client or @pem\/db\/schema/,
   ],
+  // EN-19: a component in apps/web/components/ is held to the same rule.
+  [
+    "apps/web/components/shell/zz-probe.ts",
+    'import { getDb } from "@pem/db/client";',
+    /never @pem\/db\/client or @pem\/db\/schema/,
+  ],
   [
     "apps/web/app/admin/zz-probe.ts",
     'import { streamText } from "ai";',
