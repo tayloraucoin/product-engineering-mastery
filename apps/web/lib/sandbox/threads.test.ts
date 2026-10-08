@@ -290,6 +290,7 @@ describe("the thread actions' fixed results", () => {
             id: REPLY.parentId,
             design: "circle",
             anchor: { id: "hero", x: 0.5, y: 0.5 },
+            createdAt: at,
             removed: true,
             replies: [reply],
           },
@@ -304,6 +305,7 @@ describe("the thread actions' fixed results", () => {
           id: REPLY.parentId,
           design: "circle",
           anchor: { id: "hero", x: 0.5, y: 0.5 },
+          createdAt: at.toISOString(),
           removed: true,
           replies: [
             {

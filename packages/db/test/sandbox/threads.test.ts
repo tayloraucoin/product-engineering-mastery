@@ -323,6 +323,12 @@ test("C5: erasing Ana's email removes her comments and replies; Ben's reply stay
     removed.replies.map((x) => x.id),
     [benReply.id],
   );
+  // It sorts by its oldest surviving reply, among the live roots.
+  assert.deepEqual(removed.createdAt, removed.replies[0]!.createdAt);
+  assert.deepEqual(
+    read.map((x) => x.createdAt.getTime()),
+    read.map((x) => x.createdAt.getTime()).sort((a, b) => a - b),
+  );
   assert.ok(!("body" in removed) && !("author" in removed));
   const ben = read.find((x) => x.id === r.ben.commentId)!;
   assert.deepEqual(ben.replies, []);

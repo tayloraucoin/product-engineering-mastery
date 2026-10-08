@@ -40,7 +40,6 @@ import {
   inArray,
   isNotNull,
   isNull,
-  or,
   type SQL,
 } from "drizzle-orm";
 
@@ -62,6 +61,7 @@ import {
   requireTeam,
   reviewerScope,
   SandboxAccessError,
+  threadRowsOn,
   type ReviewerViewer,
   type ReviewMode,
   type SandboxDb,
@@ -80,7 +80,7 @@ const SLUG = new RegExp(SANDBOX_SLUG_PATTERN);
 export type ReviewerAuthor = "self" | { reviewer: string | null } | "team";
 /** Who wrote a row, as the team reads it: themself, a reviewer by the code's label, or a team member by email. */
 export type TeamAuthor =
-  "self" | { reviewer: string } | { team: string | null };
+  "self" | { reviewer: string | null } | { team: string | null };
 
 export type ThreadReply<A> = {
   id: string;
@@ -103,11 +103,15 @@ export type ThreadComment<A> = {
   replies: ThreadReply<A>[];
 };
 
-/** A root deleted or erased, rebuilt from the replies that survive it. */
+/**
+ * A root deleted or erased, rebuilt from the replies that survive it. Its
+ * `createdAt` is its oldest surviving reply's, so it sorts among the others.
+ */
 export type RemovedComment<A> = {
   id: string;
   design: string;
   anchor: CommentAnchor;
+  createdAt: Date;
   removed: true;
   replies: ThreadReply<A>[];
 };
@@ -251,13 +255,7 @@ async function rowsForTeam(
       eq(sandboxComments.parentId, rootId),
     )!;
   } else if (mode === "collaborate") {
-    where = and(
-      eq(sandboxComments.slug, slug),
-      or(
-        isNotNull(sandboxComments.reviewerId),
-        isNotNull(sandboxComments.parentId),
-      ),
-    )!;
+    where = threadRowsOn(slug, sandboxComments);
   } else {
     where = and(
       eq(sandboxComments.slug, slug),
@@ -305,7 +303,7 @@ function reviewerAuthor(row: Row, me: ReviewerViewer): ReviewerAuthor {
 
 function teamAuthor(row: Row, me: TeamViewer): TeamAuthor {
   if (row.teamUserId === me.userId) return "self";
-  if (row.reviewerId !== null) return { reviewer: row.reviewerName ?? "" };
+  if (row.reviewerId !== null) return { reviewer: row.reviewerName };
   return { team: row.teamEmail };
 }
 
@@ -359,6 +357,7 @@ async function assemble<A>(
         id: row.parentId,
         design: row.design,
         anchor: row.anchor as CommentAnchor,
+        createdAt: row.createdAt,
         removed: true,
         replies: [],
       };
@@ -366,7 +365,12 @@ async function assemble<A>(
     }
     root.replies.push(replyOf(row, authorOf(row)));
   }
-  return [...roots.values()];
+  // Oldest first, removed roots by their oldest surviving reply.
+  return [...roots.values()].sort(
+    (a, b) =>
+      a.createdAt.getTime() - b.createdAt.getTime() ||
+      (a.id < b.id ? -1 : a.id > b.id ? 1 : 0),
+  );
 }
 
 /**
@@ -473,6 +477,16 @@ type Placement = {
   viewportH: number;
 };
 
+function placement(rootId: string, row: Omit<Placement, "rootId">): Placement {
+  return {
+    rootId,
+    design: row.design,
+    anchor: row.anchor,
+    viewportW: row.viewportW,
+    viewportH: row.viewportH,
+  };
+}
+
 /** The root a reply belongs under, on this slug: a live reviewer comment, or a removed root a reply still places. */
 async function resolveRoot(
   tx: SandboxDb,
@@ -504,7 +518,7 @@ async function resolveRoot(
   if (root) {
     // A team note, or a row that is itself a reply, is no root.
     if (root.reviewerId === null || root.parentId !== null) return null;
-    return { rootId, ...root };
+    return placement(rootId, root);
   }
   // Removed: a surviving reply under it holds the root's place.
   const [survivor] = await tx
@@ -513,7 +527,7 @@ async function resolveRoot(
     .where(onSlug(eq(sandboxComments.parentId, rootId)))
     .orderBy(asc(sandboxComments.createdAt), asc(sandboxComments.id))
     .limit(1);
-  return survivor ? { rootId, ...survivor } : null;
+  return survivor ? placement(rootId, survivor) : null;
 }
 
 /**

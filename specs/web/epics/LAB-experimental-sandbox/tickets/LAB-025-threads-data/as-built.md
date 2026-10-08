@@ -2,11 +2,11 @@
 
 ## Shipped against the contract
 
-- The scope: `reviewerScope(viewer, columns, { mode })` in `packages/db/src/sandbox/viewer.ts`. Private, the default, is the viewer's own rows on their slug. Collaborate is `slug = viewer.slug and (reviewer_id is not null or parent_id is not null)`. It needs a `parentId` column and refuses any other mode (`SCOPE_MODE_INVALID`). Every write still calls it with no mode. `viewer.test.ts` pins both SQL shapes.
+- The scope: `reviewerScope(viewer, columns, { mode })` in `packages/db/src/sandbox/viewer.ts`. Private, the default, is the viewer's own rows on their slug. Collaborate is `slug = viewer.slug and (reviewer_id is not null or parent_id is not null)`. It needs a `parentId` column and refuses any other mode (`SCOPE_MODE_INVALID`). Every write still calls it with no mode. The collaborate predicate is `threadRowsOn(slug, columns)`, its one home, which the team's thread read uses too. The unit test `packages/db/src/sandbox/viewer.test.ts` pins both SQL shapes and both refusals: an unknown mode, and collaborate asked of a table with no `parentId`.
 - C1 to C6, C8: `packages/db/src/sandbox/threads.ts` holds `listThread`, `listReplies`, `saveReply` and `deleteReply`, each `(db, viewer, input)`.
   - A reviewer reads through the scope. The team reads the slug's reviewer comments with every reply, and its input names the slug. A reviewer's input never may.
   - Rows to a reviewer: author is `self`, `{ reviewer: displayName | null }` or `team`, and `number` appears on their own roots only. Rows to the team: author is `self`, `{ reviewer: label }` or `{ team: email }`.
-  - A reply whose root is gone reads under `{ id, design, anchor, removed: true, replies }`, placed by the oldest surviving reply. A reply whose parent still exists outside the read (a team note) is dropped, as defence in depth: saves already refuse one.
+  - A reply whose root is gone reads under `{ id, design, anchor, createdAt, removed: true, replies }`, placed and timed by the oldest surviving reply, so roots sort oldest first, removed ones among them. A reply whose parent still exists outside the read (a team note) is dropped, as defence in depth: saves already refuse one.
   - `saveReply` resolves the root in its transaction. A reply's parent gives its root. An id matching no row is a removed root, placed from a surviving reply. A team note, another slug, an unknown id, private mode or an id equal to the root is `not-saved`, with nothing written. The id is minted in the browser: insert on conflict do nothing, then the author's own reply's body updated. A reviewer's reply counts toward the 500, behind the reviewer-row lock saveComment takes.
   - `deleteReply` hard-deletes the author's own reply only (`parent_id is not null`).
   - Tests: `test/sandbox/threads.test.ts` holds C1 to C6 and C8 on a slug of their own, with Ana R. and Ben O. C5 erases through LAB-16's `eraseEmail`. `test/sandbox/threads-cases.ts` holds the isolation cases, every viewer kind in both modes, spread into the suite's REGISTRY.
@@ -16,9 +16,10 @@
 ## Deviations
 
 - LAB-14 is not built, so the team's thread read is `listThread` with a team viewer, in `threads.ts`. The planned `packages/db/src/sandbox/team.ts` was not created. LAB-14's `listTeamComments` should reuse this read, or gain replies the same way. The team face is in the read already (C8).
-- The isolation cases live in `test/sandbox/threads-cases.ts`, as LAB-15's and LAB-16's do, and the binding lives in `lib/sandbox/threads-data.ts`, as `comments-data.ts` does. The reply schemas went into `lib/sandbox/validators.ts`, the actions' schema file. None of these paths was planned.
+- The isolation cases live in `test/sandbox/threads-cases.ts`, as LAB-15's and LAB-16's do, and the binding lives in `lib/sandbox/threads-data.ts`, as `comments-data.ts` does. The reply schemas went into `lib/sandbox/validators.ts`, the actions' schema file. `packages/db/src/sandbox/review.ts` (LAB-17's triage check) gained `parent_id is null`, and `packages/db/src/sandbox/viewer.test.ts` gained the scope's unit test. None of these paths was planned. `test/sandbox/erasure-fixtures.ts` is reused as LAB-16 left it (its `seedCode` already took a display name); this ticket did not change it.
 - `deleteReply`'s input is `{ id }` for the team too: it is scoped by the author's user id, so it needs no slug.
 - A reply stores `number` 0, `kind` null and its root's viewport. The column is not null; nothing reads a reply's number.
+- A team-facing author is `{ reviewer: label | null }`, as the reviewer face allows a null display name. Labels are required, so null is unreachable today.
 - [ASSUMPTION] Team replies have no cap. The 500 is per reviewer, and the team is signed in and trusted.
 - [ASSUMPTION] A closed experiment returns `closed` to a reviewer's thread calls, as LAB-12's pins do. The team is served open or closed (the contract's assumption on replies after close).
 - [ASSUMPTION] Others' roots go to a reviewer without `viewportW` and `viewportH`. The anchor's fractions place a pin, and LAB-26 can ask for the viewport if it needs it.

@@ -99,8 +99,29 @@ export function reviewerScope(
     )!;
   if (options?.mode !== "collaborate" || !columns.parentId)
     throw new SandboxAccessError(SCOPE_MODE_INVALID);
+  return threadRowsOn(reviewer.slug, {
+    reviewerId: columns.reviewerId,
+    slug: columns.slug,
+    parentId: columns.parentId,
+  });
+}
+
+/**
+ * The one definition of what on a slug belongs to a thread (beat 2): a
+ * reviewer's comment or reply, or a reply from the team. A team row with no
+ * parent is a note and never matches. The collaborate scope above and the
+ * team's thread read (threads.ts) both use it.
+ */
+export function threadRowsOn(
+  slug: string,
+  columns: {
+    reviewerId: AnyPgColumn;
+    slug: AnyPgColumn;
+    parentId: AnyPgColumn;
+  },
+): SQL {
   return and(
-    eq(columns.slug, reviewer.slug),
+    eq(columns.slug, slug),
     or(isNotNull(columns.reviewerId), isNotNull(columns.parentId)),
   )!;
 }

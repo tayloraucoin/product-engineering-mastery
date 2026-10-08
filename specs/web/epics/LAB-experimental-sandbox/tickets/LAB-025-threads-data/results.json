@@ -107,9 +107,26 @@
       }
     },
     "review:mason": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run mason LAB-25",
+        "exit": 0,
+        "at": "2026-10-08T00:26:16Z",
+        "head": "65cc038e31add66a7f4085fab42c8dc6c8d8ae6c",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/review-mason.md",
+        "evidence_sha256": "47b6b645715646265d59d66e305d651eb60bc28e70c804b87655eebfa1d35e4b",
+        "contract_sha256": "19e7342a90ee30621b52ef958498352d75431700222602877f10e76f560551db",
+        "criteria_sha256": "de327f783a2a24a287ec3e99414b7c32e8390f8b92ae3fb4eace38991c2fadb1",
+        "as_built_sha256": "7498cdab23690a42d9b3f1f567b5d9b26cb79059f45256bafb32e0e592b18f33",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/mason-cto-principal-dev.md; tools Read,Grep,Glob)",
+        "tokens_input": 34,
+        "tokens_cache_read": 3966309,
+        "tokens_cache_write": 269208,
+        "tokens_output": 25330,
+        "seconds": 390.5
+      },
+      "runs": 1
     },
     "review:warden": {
       "status": "FAIL",
@@ -117,5 +134,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-08T00:25:26Z"
+  "updated_at": "2026-10-08T00:32:49Z"
 }

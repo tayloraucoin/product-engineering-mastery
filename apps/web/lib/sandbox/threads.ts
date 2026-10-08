@@ -44,7 +44,11 @@ export type ClientThreadRoot<A> =
       createdAt: string;
       replies: ClientReply<A>[];
     })
-  | (Omit<Extract<ThreadRoot<A>, { removed: true }>, "replies"> & {
+  | (Omit<
+      Extract<ThreadRoot<A>, { removed: true }>,
+      "createdAt" | "replies"
+    > & {
+      createdAt: string;
       replies: ClientReply<A>[];
     });
 
@@ -141,8 +145,9 @@ function wireReply<A>(reply: ThreadReply<A>): ClientReply<A> {
 
 function wireRoot<A>(root: ThreadRoot<A>): ClientThreadRoot<A> {
   const replies = root.replies.map(wireReply);
-  if ("removed" in root) return { ...root, replies };
-  return { ...root, createdAt: root.createdAt.toISOString(), replies };
+  const createdAt = root.createdAt.toISOString();
+  if ("removed" in root) return { ...root, createdAt, replies };
+  return { ...root, createdAt, replies };
 }
 
 /** Every thread the viewer may read on this slug, loaded with the page. */
