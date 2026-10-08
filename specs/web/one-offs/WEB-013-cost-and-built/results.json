@@ -3,25 +3,56 @@
   "criteria_sha256": "bccecddbcaad2333799708a2dc5be00ebd68da0fc552842372ea9d9c4351cbbf",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test:tooling --test-name-pattern WEB-13",
+        "exit": 0,
+        "at": "2026-10-08T06:53:40Z",
+        "head": "c9520abefb63a2973203645d4e1c34dedf911faf",
+        "evidence_path": "specs/web/one-offs/WEB-013-cost-and-built/evidence/C1.log",
+        "evidence_sha256": "7ee05c7646cd0beaf7df3e0b9c9460877b44087e44f5185ea3a68d350ea94b04",
+        "tests": 314
+      }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test:tooling --test-name-pattern WEB-13",
+        "exit": 0,
+        "at": "2026-10-08T06:53:40Z",
+        "head": "c9520abefb63a2973203645d4e1c34dedf911faf",
+        "evidence_path": "specs/web/one-offs/WEB-013-cost-and-built/evidence/C2.log",
+        "evidence_sha256": "7ee05c7646cd0beaf7df3e0b9c9460877b44087e44f5185ea3a68d350ea94b04",
+        "tests": 314
+      }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn test:tooling --test-name-pattern WEB-13",
+        "exit": 0,
+        "at": "2026-10-08T06:53:40Z",
+        "head": "c9520abefb63a2973203645d4e1c34dedf911faf",
+        "evidence_path": "specs/web/one-offs/WEB-013-cost-and-built/evidence/C3.log",
+        "evidence_sha256": "7ee05c7646cd0beaf7df3e0b9c9460877b44087e44f5185ea3a68d350ea94b04",
+        "tests": 314
+      }
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
-      "run": null
+      "run": {
+        "command": "yarn check-types:tooling",
+        "exit": 0,
+        "at": "2026-10-08T06:55:11Z",
+        "head": "c9520abefb63a2973203645d4e1c34dedf911faf",
+        "evidence_path": "specs/web/one-offs/WEB-013-cost-and-built/evidence/C4.log",
+        "evidence_sha256": "d46e99181d334844665e686577ad1531a8bdaf1823185b99d96a6347b3774c97"
+      }
     }
   },
-  "updated_at": "2026-10-08T06:41:29Z"
+  "updated_at": "2026-10-08T06:55:13Z"
 }
