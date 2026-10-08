@@ -148,6 +148,11 @@ function wholeNumber(value: unknown, max: number): number {
   return value as number;
 }
 
+/** A comment's fields checked as saveComment checks them; team notes (team.ts) reuse it. */
+export function validCommentInput(input: unknown): SaveCommentInput {
+  return validInput(input);
+}
+
 function validInput(input: unknown): SaveCommentInput {
   if (input === null || typeof input !== "object") invalid();
   const raw = input as Record<string, unknown>;

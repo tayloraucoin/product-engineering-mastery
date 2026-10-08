@@ -77,6 +77,16 @@ export {
   type ThreadRoot,
 } from "./threads.ts";
 export {
+  deleteTeamNote,
+  listTeamComments,
+  saveTeamNote,
+  type SaveTeamNoteInput,
+  type SaveTeamNoteOutcome,
+  type TeamComment,
+  type TeamCommentAuthor,
+  type TeamComments,
+} from "./team.ts";
+export {
   latestSentAt,
   listMyViewedDesigns,
   readMyLatestVersion,
