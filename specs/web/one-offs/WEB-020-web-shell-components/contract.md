@@ -2,11 +2,11 @@
 id: WEB-20
 size: small
 objective: "apps/web follows EN-19: the root layout's theme toggle lives in apps/web/components/shell/, app/_components/ is gone, and the new folder carries the same sandbox import guard and assess credit as a route _components/."
-slice_type: "A file move plus two tooling widenings; the risks are a guard that silently stops covering a folder components can now live in, and a stale path left in a runbook."
+slice_type: "A file move plus two tooling widenings; the risks are a sandbox component landing in the new folder outside the guard routes have, and a stale path left in a runbook."
 non_negotiables:
   - "The component's code is unchanged: path and import only."
   - "apps/web/app/_components/ no longer exists when this lands."
-  - "The D-LAB-34 guard (no @pem/db/client or @pem/db/schema) covers apps/web/components/** as it covers the experimental and admin routes; no other boundaries edge changes."
+  - "The D-LAB-34 guard (no @pem/db/client or @pem/db/schema) covers apps/web/components/** as it covers the experimental and admin routes (operator 2026-10-08); no other boundaries edge changes."
   - 'Assess V4 counts a "use client" file under components/ as placed, as it does one under _components/.'
   - "No boundaries error is suppressed."
 devs_call: "Whether the guard lists apps/web/components/** or only its domain sub-folders; the regex shape in V4."
@@ -24,6 +24,7 @@ planned_paths:
   - "packages/config/eslint/boundaries.js"
   - "tooling/boundaries.test.ts"
   - "tooling/lib/assess/conventions.ts"
+  - "tooling/lib/assess/score.ts"
   - "tooling/migrate-assess-listings.test.ts"
   - "docs/runbooks/remove/experimental-sandbox.md"
   - "docs/runbooks/migrate/layer-3.md"
@@ -41,7 +42,7 @@ criteria:
   - id: C2
     statement: "Assess V4 scores a tree whose client files sit in components/<domain>/ the same as one whose client files sit in _components/."
     evidence: test
-    command: "yarn test:tooling --test-name-pattern V4"
+    command: "yarn test:tooling"
   - id: C3
     statement: "The boundaries lint passes on the tree with the moved file."
     evidence: check
@@ -66,9 +67,9 @@ criteria:
   - `layout.tsx`: the import.
   - `boundaries.js`: the guard's file list.
   - `boundaries.test.ts`: the probe.
-  - `conventions.ts` and its listings test: V4.
+  - `conventions.ts` and its listings test: V4; `score.ts:24`, its doc comment.
   - `remove/experimental-sandbox.md:72`: the new path.
-  - `migrate/layer-3.md:96-97`: "a `_components/` or `components/` folder".
+  - `migrate/layer-3.md:97`: the planned check counts "a `_components/` or `components/` folder" (line 96 was amended with EN-19).
   - `changelog.md`: one line under the 2026-10-08 placement entry, or a new entry.
 - **Gotchas:**
   - Editing `boundaries.js` changes what `apps/web` may import, so plan mode applies (CLAUDE.md).

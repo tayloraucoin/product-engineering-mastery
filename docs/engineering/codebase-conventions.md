@@ -33,10 +33,10 @@ Distilled from the Synapse and Conscious Connections conventions and scaled down
 ## 1. Placement: who imports this?
 
 - **One consumer → co-locate** it next to that consumer. A component used by one route lives in that route's `_components/`; a helper used by one app lives in that app's `lib/`.
-- **Several routes in one app → the lowest tier that holds them all.** A component is placed by its importer set, one rung at a time:
+- **Several consumers → the lowest tier that holds them all.** A component is placed by its importer set, one rung at a time. A section is a first-level folder under `app/` (`admin/`, `experimental/`):
   1. one route segment imports it: that segment's `_components/`;
   2. several segments of one section import it (`admin/experiments/` and `admin/experiments/[slug]/`): the `_components/` of the deepest segment that contains every importer;
-  3. importers in more than one section, or the root layout: `apps/<app>/components/<domain>/` (§3);
+  3. importers in more than one section, or any file of the app's root segment (`layout`, `page`, `not-found`, …): `apps/<app>/components/<domain>/` (§3);
   4. both apps import it: `@pem/ui`, and only if it imports nothing but `@pem/config` and `@pem/ui`. A domain-aware component fails that test: its presentational part goes to `@pem/ui`, taking data as props, and each app keeps a thin wrapper.
 - **Kind never moves a file.** A generic-looking component with one importer stays beside it; a predicted second consumer is not a consumer.
 - **Move in the PR that changes the importer set**, up or down. A file whose importers drop back moves down; a file with none is deleted.
@@ -78,11 +78,11 @@ apps/<app>/
 
 A route's own modules sit beside it in a private `_lib/` folder when nothing else imports them, as its components sit in `_components/`. Every webhook is one folder, `app/api/webhooks/<vendor>/`: `route.ts` reads the request, and `_lib/` holds the verification, dispatch, handlers and ledger binding (`apps/web/app/api/webhooks/stripe/_lib/`), so removing a vendor deletes one folder. A new webhook adds its own reviewer rows in `toolkit.json` for the domain it touches; warden already reaches every one through `**/webhooks/**`. A module other code also imports, such as the Stripe client in `lib/billing/`, stays in `lib/`.
 
-Components climb the §1 ladder: the route's `_components/`, then the section's deepest common `_components/`, then `components/<domain>/`, then `@pem/ui`. There is no `app/_components/` at the app root; what the root layout or several sections import lives in `components/`.
+Components climb the §1 ladder: the route's `_components/`, then the section's deepest common `_components/`, then `components/<domain>/`, then `@pem/ui`. There is no `app/_components/` at the app root; what the root segment or several sections import lives in `components/`. Experiment variants in `apps/web/app/experimental/_experiments/` are placed by the sandbox's registry, not by this ladder.
 
 - **Every file in `components/` sits in a sub-folder** named for a domain noun (`experiments/`, `people/`). App chrome (the shell, providers, the theme toggle) goes in `shell/`.
 - **No type-named folders** (`ui/`, `common/`, `shared/`, `forms/`, `misc/`), in `components/` or under `_components/`: they are the catch-alls §8 bans.
-- **A route `_components/` may take domain sub-folders** once it holds several files on one subject, as `apps/web/app/experimental/[slug]/_components/` does (`gate/`, `pins/`, `pin-list/`).
+- **A route `_components/` may take domain sub-folders**, as `apps/web/app/experimental/[slug]/_components/` does (`gate/`, `pins/`, `pin-list/`).
 
 ## 4. Packages and the import graph
 

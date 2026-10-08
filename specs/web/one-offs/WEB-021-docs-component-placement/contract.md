@@ -61,6 +61,6 @@ criteria:
 - **Gotchas:**
   - `tooling/refs-pending.json` holds the two target paths §1 and §6 name ("lands in WEB-21"). Remove both entries in this ticket.
   - The planned-path globs escape the brackets as `[[]...slug[]]` (WEB-11's `matchesGlob` note).
-  - Check whether `apps/docs/turbo.json`'s build `inputs` name `app/**` only. If they do, add `components/**`, or the cached build will miss edits to the shell.
+  - `apps/docs/turbo.json`'s build inputs are `$TURBO_DEFAULT$`, which already hashes `components/**`; no change. The components import only `@/lib/…` (`@/*` is `./*`), so only `layout.tsx`, `[[...slug]]/page.tsx` and the sidebar's `./` imports change.
   - Tailwind v4 detects sources automatically from the app's root. Confirm that the sidebar's classes survive in the built CSS.
 - **Model:** Sonnet 5.5 is enough: a mechanical move with a build to prove it.
