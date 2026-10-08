@@ -12,6 +12,7 @@ import {
   requireAdmin,
   requireTeam,
   reviewerScope,
+  SCOPE_MODE_INVALID,
   type Viewer,
 } from "./viewer.ts";
 
@@ -70,6 +71,42 @@ test("reviewerScope filters by the viewer's reviewer id and slug, and refuses th
   assert.throws(() => reviewerScope(admin, sandboxComments), {
     message: NOT_A_REVIEWER_VIEWER,
   });
+});
+
+test("reviewerScope in collaborate mode widens to the slug's reviewer rows and replies, never a team note (LAB-25)", () => {
+  const { sql, params } = new PgDialect().sqlToQuery(
+    reviewerScope(reviewer, sandboxComments, { mode: "collaborate" }),
+  );
+  assert.equal(
+    sql,
+    '("sandbox_comments"."slug" = $1 and ("sandbox_comments"."reviewer_id" is not null or "sandbox_comments"."parent_id" is not null))',
+  );
+  assert.deepEqual(params, ["pricing-2026"]);
+  // Private is the default; a write never passes a mode.
+  assert.equal(
+    new PgDialect().sqlToQuery(
+      reviewerScope(reviewer, sandboxComments, { mode: "private" }),
+    ).sql,
+    new PgDialect().sqlToQuery(reviewerScope(reviewer, sandboxComments)).sql,
+  );
+  // A table without parent_id, or any other mode, cannot widen.
+  const noParent = {
+    reviewerId: sandboxComments.reviewerId,
+    slug: sandboxComments.slug,
+  };
+  assert.throws(
+    () => reviewerScope(reviewer, noParent, { mode: "collaborate" }),
+    { message: SCOPE_MODE_INVALID },
+  );
+  for (const mode of ["open", "", undefined])
+    assert.throws(
+      () => reviewerScope(reviewer, sandboxComments, { mode } as never),
+      { message: SCOPE_MODE_INVALID },
+    );
+  assert.throws(
+    () => reviewerScope(admin, sandboxComments, { mode: "collaborate" }),
+    { message: NOT_A_REVIEWER_VIEWER },
+  );
 });
 
 test("isUuid accepts a UUID and nothing else", () => {

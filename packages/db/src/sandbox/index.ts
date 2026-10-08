@@ -61,6 +61,22 @@ export {
   type SaveCommentOutcome,
 } from "./comments.ts";
 export {
+  deleteReply,
+  listReplies,
+  listThread,
+  saveReply,
+  type ListRepliesInput,
+  type ListThreadInput,
+  type RemovedComment,
+  type ReviewerAuthor,
+  type SaveReplyInput,
+  type SaveReplyOutcome,
+  type TeamAuthor,
+  type ThreadComment,
+  type ThreadReply,
+  type ThreadRoot,
+} from "./threads.ts";
+export {
   readMyLatestVersion,
   saveReviewVersion,
   type MyReviewVersion,
@@ -75,6 +91,7 @@ export {
 export {
   SandboxAccessError,
   type ReviewerViewer,
+  type ReviewMode,
   type SandboxDb,
   type TeamViewer,
   type Viewer,

@@ -72,6 +72,7 @@ import {
   type Registry,
   type ViewerKind,
 } from "./registry.ts";
+import { threadsCases } from "./threads-cases.ts";
 
 let database: TestDatabase;
 let world: World;
@@ -864,6 +865,7 @@ const readLatestAs = (kind: ViewerKind) => async (w: World) => {
 const REGISTRY: Registry<World> = {
   ...codesCases({ db, viewerFor }),
   ...erasureCases({ db, viewerFor }),
+  ...threadsCases({ db, viewerFor }),
   findLiveReviewerByCodeHash: {
     group: "gate",
     criteria: ["C3"],

@@ -82,3 +82,21 @@ export const pinInput = z.strictObject({
 });
 
 export const commentIdInput = z.strictObject({ id: z.uuid() });
+
+/**
+ * A reply as the browser sends it (LAB-25, threads.md): its browser-minted id,
+ * the comment or reply it answers, and its text. Never a mode, a slug or a
+ * design: the mode is read from the registry, the rest from the root.
+ */
+export const replyInput = z.strictObject({
+  id: z.uuid(),
+  parentId: z.uuid(),
+  body: z
+    .string()
+    .max(2000)
+    .refine((body) => body.trim().length > 0),
+  clientCreatedAt: z.iso.datetime(),
+});
+
+/** A pin opened: the root whose replies load again. */
+export const replyRootInput = z.strictObject({ rootId: z.uuid() });

@@ -44,6 +44,17 @@ import {
 } from "../../../lib/sandbox/gate";
 import { sendReviewFor } from "../../../lib/sandbox/review-data";
 import { teamMemberOf } from "../../../lib/sandbox/team";
+import type {
+  ListRepliesResult,
+  ListThreadResult,
+  ReplyResult,
+} from "../../../lib/sandbox/threads";
+import {
+  deleteReplyFor,
+  listRepliesFor,
+  listThreadFor,
+  saveReplyFor,
+} from "../../../lib/sandbox/threads-data";
 import {
   bindGateThrottle,
   GATE_COOKIE,
@@ -214,6 +225,43 @@ export async function deleteComment(
   input: { id: string },
 ): Promise<CommentResult> {
   return deleteCommentFor(slug, input);
+}
+
+/**
+ * The threads (LAB-25, threads.md, beat 2): every thread the viewer may read
+ * on the slug, the replies under one root when its pin opens, a reply saved
+ * under its browser-minted id, and one's own reply deleted. The mode comes
+ * from the registry by slug, never from here; each validates, resolves the
+ * viewer, makes one call and returns a fixed result (lib/sandbox/threads.ts).
+ */
+export async function listThread(slug: string): Promise<ListThreadResult> {
+  return listThreadFor(slug);
+}
+
+export async function listReplies(
+  slug: string,
+  input: { rootId: string },
+): Promise<ListRepliesResult> {
+  return listRepliesFor(slug, input);
+}
+
+export async function saveReply(
+  slug: string,
+  input: {
+    id: string;
+    parentId: string;
+    body: string;
+    clientCreatedAt: string;
+  },
+): Promise<ReplyResult> {
+  return saveReplyFor(slug, input);
+}
+
+export async function deleteReply(
+  slug: string,
+  input: { id: string },
+): Promise<ReplyResult> {
+  return deleteReplyFor(slug, input);
 }
 
 /**

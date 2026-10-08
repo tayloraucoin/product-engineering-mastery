@@ -4,7 +4,8 @@
  * viewer's own comments on their slug. Team notes are LAB-14's.
  *
  * - `listMyComments`: the viewer's own comments, in number order; never a
- *   team note, never another reviewer's.
+ *   team note, never another reviewer's, and never a reply (beat 2,
+ *   threads.ts), so triage and the list hold roots only.
  * - `saveComment`: the id is minted in the browser, so a retry lands once:
  *   insert `on conflict (id) do nothing`, then, when the row already exists,
  *   an update scoped by id, reviewer and slug, all in one transaction. An id
@@ -21,7 +22,7 @@
  * input.
  */
 
-import { and, asc, count, eq } from "drizzle-orm";
+import { and, asc, count, eq, isNull } from "drizzle-orm";
 
 import { sandboxComments, sandboxReviewers } from "../schema/index.ts";
 import {
@@ -208,7 +209,12 @@ export async function listMyComments(
       createdAt: sandboxComments.createdAt,
     })
     .from(sandboxComments)
-    .where(reviewerScope(reviewer, sandboxComments))
+    .where(
+      and(
+        reviewerScope(reviewer, sandboxComments),
+        isNull(sandboxComments.parentId),
+      ),
+    )
     .orderBy(asc(sandboxComments.number), asc(sandboxComments.createdAt));
   return rows.map((row) => ({ ...row, anchor: row.anchor as CommentAnchor }));
 }
@@ -268,6 +274,8 @@ export async function saveComment(
           and(
             eq(sandboxComments.id, comment.id),
             reviewerScope(reviewer, sandboxComments),
+            // A reply is edited through saveReply, never given a type here.
+            isNull(sandboxComments.parentId),
           ),
         )
         .returning({ id: sandboxComments.id });

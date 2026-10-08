@@ -7,13 +7,13 @@
  *
  * - A reviewer function scopes by `reviewerScope`: the viewer's reviewer id
  *   and slug, one helper, so collaborate mode (LAB-25) widens reads in one
- *   place.
+ *   place, and only threads.ts asks it to.
  * - A team function calls `requireTeam`; an admin-only one `requireAdmin`.
  *
  * Errors are fixed strings that never echo input.
  */
 
-import { and, eq, type SQL } from "drizzle-orm";
+import { and, eq, isNotNull, or, type SQL } from "drizzle-orm";
 import type { AnyPgColumn } from "drizzle-orm/pg-core";
 
 import type { Db } from "../client.ts";
@@ -70,15 +70,38 @@ export function requireReviewer(viewer: Viewer): ReviewerViewer {
   return viewer;
 }
 
-/** The rows a reviewer may read or write in a table with `reviewer_id` and `slug`: their own, on their slug. */
+/** An experiment's mode, as its config holds it; the app reads it from the registry by slug, never from a request. */
+export type ReviewMode = "private" | "collaborate";
+
+export const SCOPE_MODE_INVALID = "The scope's mode is not valid.";
+
+/**
+ * The rows a reviewer may read or write in a table with `reviewer_id` and
+ * `slug`. Private, the default and the only scope a write uses: their own,
+ * on their slug. Collaborate (beat 2, D-LAB-17), for reads of
+ * `sandbox_comments` only: the slug's reviewer comments and replies, and the
+ * team's replies, never a team note. A team row with no parent is a note.
+ */
 export function reviewerScope(
   viewer: Viewer,
-  columns: { reviewerId: AnyPgColumn; slug: AnyPgColumn },
+  columns: {
+    reviewerId: AnyPgColumn;
+    slug: AnyPgColumn;
+    parentId?: AnyPgColumn;
+  },
+  options: { mode: ReviewMode } = { mode: "private" },
 ): SQL {
   const reviewer = requireReviewer(viewer);
+  if (options?.mode === "private")
+    return and(
+      eq(columns.reviewerId, reviewer.reviewerId),
+      eq(columns.slug, reviewer.slug),
+    )!;
+  if (options?.mode !== "collaborate" || !columns.parentId)
+    throw new SandboxAccessError(SCOPE_MODE_INVALID);
   return and(
-    eq(columns.reviewerId, reviewer.reviewerId),
     eq(columns.slug, reviewer.slug),
+    or(isNotNull(columns.reviewerId), isNotNull(columns.parentId)),
   )!;
 }
 

@@ -17,7 +17,7 @@
  * that never echo input.
  */
 
-import { and, desc, eq, inArray, sql } from "drizzle-orm";
+import { and, desc, eq, inArray, isNull, sql } from "drizzle-orm";
 
 import {
   sandboxComments,
@@ -176,6 +176,8 @@ export async function saveReviewVersion(
               and(
                 inArray(sandboxComments.id, named),
                 reviewerScope(reviewer, sandboxComments),
+                // Triage names the reviewer's own pins, never a reply (threads.md).
+                isNull(sandboxComments.parentId),
               ),
             );
           if (own.length !== named.length)
