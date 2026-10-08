@@ -31,7 +31,7 @@ The manifest is `docs/runbooks/migrate/manifest.json` (toolkit). Each entry is `
 
 ### Settings, derived (Risk 2)
 
-Lorimer was consulted. The assess report lists each policy the toolkit enforces next to any target line that conflicts with it. The interview rules each policy **team** (`.claude/settings.json`, tracked) or **operator** (`.claude/settings.local.json`, gitignored, the overlay-local mechanism). The floor is never offered and is always tracked.
+Lorimer was consulted. The assess report lists each policy the toolkit enforces next to any target line that conflicts with it. The interview rules each policy **team** (`.claude/settings.json`, tracked) or **operator** (`.claude/settings.local.json`, gitignored, the overlay-local mechanism). The floor is never offered and is always tracked, except under `overlay-local`, where it goes to the operator's local file and `yarn doctor` checks it (record 0012, amended 2026-10-08).
 
 | Policy                                                                                                                                                                               | Default ruling                                                                            |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------- |

@@ -15,6 +15,38 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-08 — MIG: the overlay-local floor and the reviewer scanner, ruled
+
+Two operator rulings, decided 2026-10-08, that the Tickets-gate pre-flight (`specs/_shared/epics/MIG-codebase-migration/tickets/_preflight.md`, Blocking 1 and 2, Should-fix 5) was waiting on. Ruling 1 is ledger EN-18 and an amendment block on record 0012. Ruling 2 lives only in MIG-14's contract and here. Warden was consulted on ruling 1.
+
+- **Ruling 1, the overlay-local floor.** Under `overlay-local`, `check-settings` does not require the floor in the tracked `.claude/settings.json`, because the team does not own that file and `verify` would fail forever. `yarn doctor` alone checks the floor (its denies and asks and the two team hooks) and the operator rows in the local file. CI does not enforce the floor at that tier.
+  - **Accepted cost:** the floor is a doctor check on one machine, not a CI gate. Warden's residual risks: a fresh clone, a worktree or a reset local file runs with no floor and nothing notices; a teammate who never runs doctor has no floor, and nobody else can see it.
+  - **Not taken:** Warden's mitigation, having the installed git hook run doctor's floor check, which would widen MIG-2.
+  - **Still MIG-2's to change:** the shipped `check-settings.ts`, which still requires the floor in the tracked file at `overlay-local` (its as-built C1 and the fixture `overlay-c1-pass-floor-only-overlay-local.json`).
+- **Ruling 2, the reviewer scanner.** Type-only imports count toward `@supabase/*` and every other imports entry, because a type import still binds the file to the SDK's shapes; counting is the safe side for a security seat. `node:` builtins do not become valid `reviewers[].imports` entries. The layout file's shape is unchanged, and the door stays closed until a reviewer row needs it.
+- **Files changed, every sentence before and after:**
+  - `docs/decisions/records/0012-adoption-tiers.md`: an `## Amendment` block appended. The body above it is unchanged, and the modes paragraph's "every setting goes in the operator's local file" was already right.
+  - `docs/runbooks/migrate/README.md`, round 13. Was: "every setting goes to the operator's local file, and the record says the floor is unenforced". Now: "every setting goes to the operator's local file, where `yarn doctor` checks the floor; CI does not enforce the floor at this tier".
+  - `docs/runbooks/migrate/README.md`, round 22. Was: "The floor is not offered: it is always tracked." Now: "The floor is not offered: it is always tracked, except under `overlay-local`, where it goes to the operator's local file and `yarn doctor` checks it."
+  - `specs/_shared/epics/MIG-codebase-migration/technical/layer-1.md`, Settings. Was: "The floor is never offered and is always tracked." Now: "The floor is never offered and is always tracked, except under `overlay-local`, where it goes to the operator's local file and `yarn doctor` checks it (record 0012, amended 2026-10-08)."
+  - MIG-2 `contract.md`, non-negotiable 1. Was: "[NEEDS DECISION] overlay-local: whether check-settings requires the floor in the tracked file there too (a file the team does not own, so verify would fail forever) or doctor alone checks it in the local file (the floor unenforced in CI); record 0012 and layer-1.md disagree and the operator rules." Now: "overlay-local (operator's ruling 2026-10-08; record 0012's amendment, EN-18): check-settings requires neither the floor nor the tracked file itself; yarn doctor alone checks the floor and the operator rows in the local file, and CI does not enforce the floor at that tier." The overlay sentence after it is unchanged. The "nor the tracked file itself" clause came from the first pre-flight run's Blocking 1, which failed MIG-2 because at overlay-local there is usually no tracked file and today's check fails on its absence.
+  - MIG-2, non-negotiable 2. Was: "Under the overlay tiers check-settings requires session-start.ts and results-gate.ts registered in the tracked file, …". Now: "Under overlay check-settings requires …"; the rest is unchanged.
+  - MIG-2, new C10 (test): "Under overlay-local, check-settings passes a tracked file without the floor or the team hooks, and exits 0 as a subprocess on the single-app scratch repo with no tracked .claude/settings.json; there, doctor exits 1 naming each floor rule, team hook or operator row missing from the --local-settings file, and 0 when it holds them all."
+  - MIG-2, Build notes (pre-flight Should-fix 2).
+    - Approach. Was: "the floor (required at every tier)". Now: "the floor (tracked, except at overlay-local: EN-18)".
+    - The layer-1.md quote now carries that file's new except-clause.
+    - The Floor check quote is followed by "That is `overlay`; `overlay-local` is EN-18 (non-negotiable 1)."
+  - MIG-14 `contract.md`, slice_type. Was: "…reversible, no layout-file change unless node: builtins are admitted." Now: "…reversible, no layout-file change."
+  - MIG-14, devs_call. Was: "The scanner's internals only. [NEEDS DECISION] Two questions are the operator's, put at the Tickets gate: whether type-only imports keep counting toward @supabase/* (breadth), and whether node: builtins become valid reviewers[].imports entries (the layout-file-shape door, mason's row; if it stays in scope mason joins the review with a focus line)." Now: "The scanner's internals only. Ruled by the operator 2026-10-08: type-only imports count toward @supabase/* and every other imports entry (a type import still binds the file to the SDK's shapes); node: builtins do not become valid reviewers[].imports entries, so the layout file's shape is unchanged."
+  - MIG-14, planned_paths: `tooling/lib/toolkit.ts` removed. The reviewers stay vigil alone.
+  - MIG-14, new criteria. C4 (test): "A type-only import of @supabase/supabase-js matches an @supabase/* row." C5 (test): "An import of node:fs matches no reviewer row, and a reviewers[].imports list holding a node: entry is rejected by check-reviewers, naming the entry."
+  - `docs/decisions/ledger.md`: EN-18.
+- **Still open from the same pre-flight, not this thread's:**
+  - MIG-3's C8 against an unplanned `tooling/check-specs.ts`.
+  - MIG-11's out_of_scope, which does not name the amendment block as the landing place (this entry uses one).
+  - MIG-10's focus line.
+  - The MIG-3, MIG-13 and MIG-17 order on `check-refs.ts` and `check-specs.ts`.
+
 ## 2026-10-08 — LAB: the brief returns to the template's shape; the settled decisions move to `decisions.md`
 
 The fix for the second audit's Y2 (`specs/_shared/reports/2026-10-07-second-token-and-speed-audit.md`), landed in the brief, never the cap. `specs/web/epics/LAB-experimental-sandbox/brief.md` goes from 8,492 to 1,908 tokens against its 2,000.

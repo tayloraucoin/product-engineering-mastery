@@ -42,3 +42,7 @@ Chosen: option 3, because it is the only one that keeps one set of tooling and g
 ## Revisit trigger
 
 A product repo needs a fourth mode, or the first product repo finishes layer 3 and the exit is walked for real: then the exit's steps (which files leave the overlay's scope, which checks join `verify`) are written down here as an amendment record.
+
+## Amendment
+
+**Amended 2026-10-08 (operator's ruling; changelog, EN-18).** The floor under `overlay-local`. `check-settings` does not require the floor in the tracked `.claude/settings.json` at that tier: the team does not own that file, and `verify` would fail there forever. `yarn doctor` alone checks the floor (its denies and asks and the two team hooks) and the operator rows in the operator's local `.claude/settings.local.json`; CI does not enforce the floor at `overlay-local`. The modes paragraph above was already right, and "every setting goes in the operator's local file" stands as written; this block says only what checks it. Accepted cost: at `overlay-local` the floor is a doctor check on one machine, not a CI gate. It lives only in each operator's gitignored file and is checked only when that operator runs `yarn doctor`, so a fresh clone, a worktree or a reset file runs with no floor and nothing in CI says so. MIG-2 builds the change.

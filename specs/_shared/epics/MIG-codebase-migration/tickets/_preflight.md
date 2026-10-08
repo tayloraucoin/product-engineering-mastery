@@ -2,30 +2,32 @@
 
 > Written by `yarn review:run vigil MIG` (the Tickets gate). Never edit it: `contract:init` starts a ticket only on its PASS line, and only while the contract's hash still matches.
 
-- head: 36d0541f64dc33de27004f5ce9fc87ba571b8999
-- runner: claude 2.1.232 (Claude Code) (agent vigil; tools Read,Grep,Glob)
-- model: claude-opus-5[1m]
-- at: 2026-10-08T01:09:23Z
-- tokens_input: 26
-- tokens_cache_read: 857794
-- tokens_cache_write: 88394
-- tokens_output: 16596
-- seconds: 313.4
+- head: 5bad2f35b36ec4764c92c9a4099cf4d0ac208161
+- runner: claude 2.1.294 (Claude Code) (agent vigil; tools Read,Grep,Glob)
+- model: claude-opus-5-5
+- at: 2026-10-08T19:41:01Z
+- tokens_input: 16
+- tokens_cache_read: 344557
+- tokens_cache_write: 66452
+- tokens_output: 6617
+- seconds: 79.2
 
 ## Verdicts
 
-- MIG-2: FAIL (contract 1e4c3973f3bd)
-- MIG-3: PASS (contract 663227b081e3)
+- MIG-2: PASS (contract 758133470a6b)
+- MIG-3: PASS (contract f4c06ed8d707)
 - MIG-8: PASS (contract 7235c8e01272)
 - MIG-9: PASS (contract c141ab9313dc)
 - MIG-10: PASS (contract e7a6f0dcaa18)
 - MIG-11: PASS (contract cce029e6fa74)
 - MIG-12: PASS (contract 3095b2098050)
 - MIG-13: PASS (contract af9c67f18537)
-- MIG-14: FAIL (contract 6e5bb894fdd4)
+- MIG-14: PASS (contract cd20ef671d14)
 - MIG-15: PASS (contract 5de14b85b373)
 - MIG-16: PASS (contract 813e124bd983)
 - MIG-17: PASS (contract f865c59b3ddb)
+- MIG-18: PASS (contract 96236651d965)
+- MIG-19: PASS (contract 22a17a63c8b9)
 
 ## Prompt
 
@@ -46,6 +48,8 @@ Read the brief (specs/_shared/epics/MIG-codebase-migration/brief.md), the approv
 - MIG-15: specs/_shared/epics/MIG-codebase-migration/tickets/MIG-015-stop-gate-names-not-run/contract.md
 - MIG-16: specs/_shared/epics/MIG-codebase-migration/tickets/MIG-016-budget-nested-agents-tracked-only/contract.md
 - MIG-17: specs/_shared/epics/MIG-codebase-migration/tickets/MIG-017-spine-from-probe/contract.md
+- MIG-18: specs/_shared/epics/MIG-codebase-migration/tickets/MIG-018-assess-listings-hardening/contract.md
+- MIG-19: specs/_shared/epics/MIG-codebase-migration/tickets/MIG-019-precondition-messages/contract.md
 
 For each contract, check: every criterion is testable and names the right evidence type; it cites one surface and the criterion IDs it builds; every state and unhappy path of that surface is covered by this or another ticket; planned paths and depends_on are plausible; nothing is out of the epic's appetite.
 
@@ -62,6 +66,8 @@ MIG-14: PASS or FAIL, with the reason
 MIG-15: PASS or FAIL, with the reason
 MIG-16: PASS or FAIL, with the reason
 MIG-17: PASS or FAIL, with the reason
+MIG-18: PASS or FAIL, with the reason
+MIG-19: PASS or FAIL, with the reason
 
 Your last line must be exactly one of:
 VERDICT: PASS
@@ -69,61 +75,55 @@ VERDICT: FAIL
 
 ## Review
 
-## Pre-flight — MIG (Tickets gate)
-
-MIG-2: FAIL, non-negotiable 1 still carries `[NEEDS DECISION]` on the `overlay-local` floor and no criterion is written at that tier, while three shipped artifacts now answer it three incompatible ways.
-MIG-3: PASS, non-negotiable 7 and C7 close the manifest-completeness hole (both MIG-8 corrections carried) and C8 covers `check-specs` under overlay; `tooling/check-specs.ts` is not a planned path, noted below.
-MIG-8: PASS, five criteria over prose with the structural read honestly typed `manual`, and C1's statement now matches `lint:docs` with the table regeneration left to C3.
-MIG-9: PASS, the freeze table, the 50-file rule, the CI rule and the twelve ordered parts all land in C4's read, and nothing in it is a codemod or a day-one rewrite.
-MIG-10: PASS, three readings typed `manual` with the file as evidence and C4 forcing every stop to a fix or a drafted follow-up; Crucible in both seats is the brief's own call, logged.
-MIG-11: PASS, record, two ledger lines and changelog each checkable, plan mode recorded, and non-negotiable 4 now names MIG-12 to MIG-17 as drafted.
-MIG-12: PASS, C3 now tests the absent-manifest fallback that is its own non-negotiable 2 and the live state for most of day one, and out_of_scope routes the stop-gate change to MIG-15.
-MIG-13: PASS, C1 proves the exact Risk 6 path and the devs' call is now fenced to `check-specs`, which is a planned path.
-MIG-14: FAIL, the layout-file-shape one-way door is still contingent on an unanswered operator question while `tooling/lib/toolkit.ts` sits in planned_paths unconditionally and mason's seat stays conditional.
-MIG-15: PASS, C3 now holds the verdict and context clause whole against twenty not-run lines, and `technical/overlay.md` is a planned path.
-MIG-16: PASS, two criteria with the right split between new behaviour (`test`) and the starter regression (`check`), and the ignored-folder case carries the risk.
-MIG-17: PASS, a refactor with its unit case and a byte-for-byte starter guarantee, and warden is the correct seat for the `tooling/hooks/**` door.
+MIG-2: PASS. The last pre-flight's one Blocking finding is fixed. Non-negotiable 1 now says check-settings at overlay-local "requires neither the floor nor the tracked file itself". C10 now runs check-settings as a subprocess on the single-app repo with no tracked `.claude/settings.json` and expects exit 0, and it says what doctor must do there. The three out-of-date Build-notes quotes now include the EN-18 exception.
+MIG-3: PASS. The manifest, check-refs, gen-agents and the contract loop are each tested on the single-app repo. One older Should-fix is still open: `tooling/check-specs.ts` is not a planned path, and nothing sets the order between MIG-3 and MIG-17 for `check-refs.ts`.
+MIG-8: PASS. It cites T2, T4 and T5. Four criteria are checks and the prose structure is honestly typed `manual`, and every hosted step stops for the operator.
+MIG-9: PASS. It cites T7. C4 reads the freeze table, the 50-file rule, the CI rule and the twelve ordered parts, and nothing in it is a codemod.
+MIG-10: PASS. The three readings are typed `manual`, and C4 makes every stop either a runbook fix or a drafted follow-up. Crucible in both seats is the brief's own call.
+MIG-11: PASS. The record, the ledger lines and the changelog are each checkable. Two older wording gaps are still open: the follow-up range still ends at MIG-17, and `out_of_scope` doesn't allow for the amendment block already on record 0012.
+MIG-12: PASS. C3 tests the case with no manifest, and the stop-gate change is routed to MIG-15.
+MIG-13: PASS. C1 tests the exact Risk 6 path (a stray Stripe import), and `check-specs.ts` is a planned path.
+MIG-14: PASS. Both halves of the operator's 2026-10-08 ruling have tests (C4, C5), and the layout file's shape stays unchanged.
+MIG-15: PASS. C3 keeps the verdict and the context clause whole against twenty not-run lines, and `overlay.md` is a planned path. The reviewer seat for the hooks door is a new Should-fix, below.
+MIG-16: PASS. The new behaviour is typed `test` and the starter regression is typed `check`.
+MIG-17: PASS. A refactor with a unit test and a byte-for-byte starter guarantee; it depends on MIG-2, and Warden is seated for the hooks door.
+MIG-18: PASS. Each listing fix has a test and the band edges are named. The `out_of_scope` routing to MIG-14 and the untested HEAD fallback are still open Should-fix items.
+MIG-19: PASS. The diverged-branch and `--end` paths have scratch-repo tests. The `protected-holds-fork` wording has no assertion, and the runbook's step 0 is not a planned path; both still Should-fix.
 
 ## Findings
 
-**Assumptions.** The epic has no `ux/` folder; the brief's Open items resolved "no UX stage", so I read `technical.md` and its four sub-files as the surfaces and the `T<n>` calls as the criterion IDs. MIG-6 is in flight and MIG-7 has left this list; I judged them only as dependencies. I judged contracts only. MIG-1, 2, 4, 5, 6, 8, 9, 10 and 11 have as-built files and record 0012 is already in `docs/decisions/records/`; I treated that work as evidence of buildability, never as proof of a criterion. Ten of twelve prior findings were genuinely closed, and the two FAILs below are the same two unresolved operator rulings, not new defects.
+**Assumptions.** `ux/` holds only `.gitkeep`, and the brief rules "no UX stage" (Open items). So I treated `technical.md` and its sub-files as the surface, and its `T<n>` calls as the criterion IDs. I checked that EN-18 is in the files (ledger line 343, record 0012's amendment, `layer-1.md` line 34) and did not reopen it.
 
 ### Blocking
 
-1. **MIG-2 — the `overlay-local` floor is now contradicted three ways in shipped files, and the contract still declares it undecided.** Non-negotiable 1 reads `[NEEDS DECISION] … record 0012 and layer-1.md disagree and the operator rules`, and every criterion C1 to C9 is written at tier `overlay`. Since the last pre-flight the question did not get answered; it got answered differently in three places. Record 0012 §The modes (line 30, shipped, precedence rung 4): `overlay-local` is "a repo whose `.claude/` the team does not own: every setting goes in the operator's local file". `docs/runbooks/migrate/README.md` round 13 (line 72), the operator-facing interview: "every setting goes to the operator's local file, and the record says the floor is unenforced" — the record says no such thing, so the runbook misquotes the ruling it cites. MIG-2's as-built C1 (line 5), the code that exists: "Under `overlay` and `overlay-local` it requires in the tracked file only the floor", with a fixture `tooling/fixtures/settings/overlay-c1-pass-floor-only-overlay-local.json`. And `technical/layer-1.md` §Settings (line 34) says "The floor is never offered and is always tracked". The two readings remain incompatible in the way that matters: require the floor in a tracked file the team does not own and a client repo fails `check-settings` inside `verify` forever; waive it and the floor — env and secret reads, database drops, `git filter-branch` — is unenforced in CI on exactly the repos where we have least control. This is an agent-permissions ruling, not the builder's call, and the built code has already picked one side of it. Fix: the operator rules (escalation 1), then one non-negotiable and one criterion stating what `check-settings` and `doctor` require at `overlay-local`, the round 13 wording corrected, and record 0012 amended. Owner: operator, then Reeve.
-2. **MIG-14 — the one-way door is still the builder's to trip.** `devs_call` now honestly labels it: "`[NEEDS DECISION]` … whether `node:` builtins become valid `reviewers[].imports` entries (the layout-file-shape door, mason's row; if it stays in scope mason joins the review with a focus line)". Putting it at the gate is the right move, but the gate cannot answer an operator question, and the contract is unbuildable as written: `planned_paths` lists `tooling/lib/toolkit.ts` unconditionally while `slice_type` promises "no layout-file change unless `node:` builtins are admitted", and `reviewers` is vigil alone where `technical.md`'s one-way-door table assigns "Layout file shape (tiers; `reviewers[].imports`) — `toolkit.json`, `tooling/lib/toolkit.ts`, `docs/engineering/templates/toolkit.template.json`" to mason. MIG-4, which created the field, was reviewed by vigil *and* mason. The second question ("whether type-only imports keep counting toward `@supabase/*`") decides reviewer breadth on auth files and is also labelled the operator's. Until both are answered, planned_paths and the reviewer set cannot be judged plausible. Fix: answer escalations 2 and 3; then either cut `toolkit.ts` and keep the ticket to the scanner, or keep the door and add mason with a focus line. Owner: operator, then Reeve.
+None. The last pre-flight's only Blocking finding (MIG-2, overlay-local tested only with a tracked file present) is fixed in non-negotiable 1, C10 and the Build notes.
 
 ### Should-fix
 
-3. **MIG-3 — C8 exercises a script the ticket does not plan.** C8 runs `check-specs` on the single-app repo with a migration epic and a drafted gap ticket, which is exactly `technical/overlay.md`'s requirement, but `tooling/check-specs.ts` is not in `planned_paths`. If the overlay behaviour needs so much as a guard, the builder is editing an unplanned file; if it needs nothing, the criterion is a fixture and that is worth saying. MIG-13 plans the same file with no dependency either way (see 6).
-4. **MIG-11 — the ruling in Blocking 1 has no landing place.** Record 0012 is already written and holds the `overlay-local` sentence the ruling will change, while MIG-11's `out_of_scope` says "Re-numbering or editing any existing record (records are immutable)" and `.claude/rules/docs.md` allows "a new file or an amendment block". Name which one carries the operator's answer, or the ruling lands nowhere and the record stays wrong.
-5. **MIG-8 — round 13's text is a misquote, and it is MIG-8's file.** The runbook's interview tells the operator "the record says the floor is unenforced". Whoever fixes Blocking 1 must correct that row; flagging it against MIG-8 so it is not lost as a MIG-2-only edit.
-6. **MIG-3 and MIG-17 both edit `tooling/check-refs.ts` with no dependency either way.** MIG-3 rewrites `liveFiles()` for the overlay tiers; MIG-17 moves the three-path spine filter out of the same file (its Build notes cite "around line 50"). MIG-17 depends on MIG-1 and MIG-2 only. Naming the batch order retires it.
-7. **MIG-10 — Crucible authors the far walk and reviews the ticket.** The brief does seat Crucible twice ("taylor-aucoin (far, walked by Crucible as the runbook's reviewer)"), so this is logged, not a defect, and the focus line now helpfully fixes the order ("written before reading the other two"). C3's artifact still cannot be independently judged by its own author; say in the focus line that the review covers the fixes and the other two walks, not its own reading.
+1. **MIG-15 seats only Mason on the hooks door.** `technical.md`'s one-way-door table puts `tooling/hooks/**` under Warden. MIG-17, which edits the same folder, seats Warden; MIG-15 edits `tooling/hooks/stop-gate.ts` with only Mason. The operator should confirm whether this is deliberate (it changes a message, not a gate) or add Warden with `yarn contract:qa MIG-15 Q2 --reviewers mason,warden`. Owner: operator.
+2. **MIG-3, MIG-13 and MIG-17: no order for the shared files (carried over).** MIG-3's C8 runs `check-specs`, but `tooling/check-specs.ts` isn't planned there (MIG-13 plans it). MIG-3 and MIG-17 both edit `tooling/check-refs.ts`, and neither depends on the other. Either name the order or say that C8 needs only a fixture. Owner: Reeve.
+3. **MIG-18 routes "one home for the import scanner" to MIG-14 (carried over).** Nothing in MIG-14's objective, criteria or planned paths takes it. Also, non-negotiable 4's HEAD-fallback half ("counts lines as the working-tree read does") still has no criterion. Owner: Reeve.
+4. **MIG-19 (carried over).** C1 doesn't check that the `protected-holds-fork` message reads "moved past the fork point". The Gotchas point at the runbook's step 0, but `docs/runbooks/migrate/README.md` isn't planned. Either add the runbook to `planned_paths` or say that no runbook edit is expected. Owner: Reeve.
+5. **MIG-11 hasn't caught up with the epic (carried over).** Non-negotiable 4 still says "MIG-12 to MIG-17"; MIG-18 and MIG-19 exist. `out_of_scope` still says "Re-numbering or editing any existing record", but record 0012 already carries the 2026-10-08 amendment block. Name the amendment block as the sanctioned form. Owner: Reeve.
 
 ### Consider
 
-8. MIG-13 and MIG-14 both cite a sibling ticket's `as-built.md` as their one surface with no criterion IDs; the finding ids they actually build (Vigil's S1; K2 to K5 and Mason's 6 and 7) live only in Build notes. Defensible for review-derived follow-ups, but it reads differently from every other contract in the epic.
-9. MIG-2's C1, C2 and C8 are typed `test` on `yarn check-settings` while C3 is `check` on the same command, and C5 types new behaviour as `check`. MIG-1 set the precedent; one line of convention somewhere would settle it.
-10. MIG-16's devs' call names "the fallback outside a git checkout" with no criterion. Low stakes, but it is the one branch the git-based rewrite introduces.
+6. **MIG-2 C5 and MIG-15 C1 and C3 are typed `check` but test new behaviour.** This matches how the repo types `test:hooks` fixtures, so it is only worth noting.
+7. **MIG-2 C10, doctor with no local settings file at all.** At overlay-local, doctor's case where `.claude/settings.local.json` is entirely absent (a fresh clone) isn't stated. "Every row missing" probably covers it, but one explicit line would remove the doubt.
+8. **MIG-17:** the objective says `check-refs.ts` reads the spine from the probe, but the devs' call makes that optional. Pick one (carried over).
+9. **MIG-14 C5:** say whether "naming the entry" means the location (`reviewers[n].imports[j]`) or the value (`node:fs`) (carried over).
 
 ### Conversations
 
-- **MIG-3 at Q1, softer than last time.** C7 now ties every derived `package.json` script to a manifest entry mechanically, which is the guard I was asking for by eye, so I am not pressing the level. Flagging once only because the manifest is the single artifact deciding what every future target installs and it still has no second reader.
-- **MIG-14's breadth against the epic's proven ground.** Vue, Svelte, Astro, MDX, Deno and URL specifiers serve none of the three repos this epic is proven on — all three are TypeScript and Next — and the brief puts non-JS stacks past layer 1 out of scope. The work is real and its limits are honestly logged in MIG-4's as-built; the question is whether it belongs in a two-day appetite now or after the synapse dry run, alongside the threshold recalibration T1 already defers there. Deferring also makes the one-way-door question go away for now.
+- **MIG-14 and the appetite.** Nothing in the files answers whether the Vue, Svelte, Astro, MDX and Deno hardening stays in this epic or waits for the synapse dry run. None of the three repos the epic is proven on needs it. Is keeping it in deliberate?
+- **The overlay-local floor after a fresh clone.** Under EN-18 the floor lives in one machine's disposable file. One runbook line ("run `yarn doctor` after every fresh clone or worktree") would cover most of Warden's remaining risk at no cost to MIG-2. Worth adding in MIG-8 or MIG-10?
 
-### Escalations (the gate's own batch, per `stages/tickets.md` §4)
+### Runtime checklist
 
-1. At `overlay-local`, where does the settings floor live, and is an unenforced floor acceptable on a repo whose `.claude/` the team does not own? (Blocks MIG-2. Record 0012, the runbook's round 13 and MIG-2's shipped code now disagree; the code assumes tracked-at-both-tiers, so a ruling the other way changes `check-settings.ts` and its fixtures.)
-2. Do `node:` builtins become valid `reviewers[].imports` entries, and do type-only imports keep counting toward `@supabase/*`? (Blocks MIG-14. The first is the layout-file-shape door, mason's row.)
-3. Does MIG-14 stay in this epic or wait for the synapse dry run? (Appetite.)
+1. Confirm or change MIG-15's reviewer seat for the hooks door.
+2. Set the order for `check-refs.ts` and `check-specs.ts` across MIG-3, MIG-13 and MIG-17.
+3. Make the carried-over wording fixes in MIG-11, MIG-18 and MIG-19 before those tickets start.
 
-### Runtime checklist for whoever fixes these
+The claude.ai Linear and Tally connectors need authorizing in claude.ai's connector settings before they can be used; nothing in this review needed them.
 
-1. Get ruling 1 from the operator, then amend MIG-2 with one non-negotiable and one `overlay-local` criterion, correct round 13's misquote in `docs/runbooks/migrate/README.md`, and name the record-amendment path in MIG-11.
-2. Get rulings 2 and 3, then either cut `tooling/lib/toolkit.ts` from MIG-14 or add mason with a focus line; reconcile `slice_type` with `planned_paths` either way.
-3. Add `tooling/check-specs.ts` to MIG-3's planned paths or state that C8 is fixture-only, and name the MIG-3 / MIG-13 / MIG-17 order for `check-refs.ts` and `check-specs.ts`.
-4. The Should-fix wording changes on MIG-8, MIG-10 and MIG-11 can ride in the same pass.
-5. Re-run `yarn review:run vigil MIG`; MIG-2 and MIG-14 are the only lines that need to move.
-
-VERDICT: FAIL
+VERDICT: PASS

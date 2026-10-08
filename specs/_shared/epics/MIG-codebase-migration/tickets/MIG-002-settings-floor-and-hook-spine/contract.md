@@ -4,8 +4,8 @@ size: small
 objective: "A migrated team gets only the settings floor and the status hooks on merge; the operator's rows live in the local file and are checked by doctor; the session hook prints a spine of whatever files exist."
 slice_type: "Agent permissions and a hook (one-way doors: tooling/check-settings.ts, tooling/hooks/**); the risk is a merge that hands a team the toolkit's whole policy (Risk 2), or a floor rule lost without a check failing."
 non_negotiables:
-  - "[NEEDS DECISION] overlay-local: whether check-settings requires the floor in the tracked file there too (a file the team does not own, so verify would fail forever) or doctor alone checks it in the local file (the floor unenforced in CI); record 0012 and layer-1.md disagree and the operator rules. Under the overlay tier check-settings requires in the tracked file exactly the floor: the env, secrets and key read denies, the database reset and drop denies, the git reset --hard, clean, branch -D and filter-branch denies, the publish and login denies, and the database asks; the git push deny is not required there."
-  - "Under the overlay tiers check-settings requires session-start.ts and results-gate.ts registered in the tracked file, accepts bash-guard.ts and stop-gate.ts from either settings file, and fails as before on a tracked settings.local.json, a machine path or a disabled sandbox."
+  - "overlay-local (operator's ruling 2026-10-08; record 0012's amendment, EN-18): check-settings requires neither the floor nor the tracked file itself; yarn doctor alone checks the floor and the operator rows in the local file, and CI does not enforce the floor at that tier. Under the overlay tier check-settings requires in the tracked file exactly the floor: the env, secrets and key read denies, the database reset and drop denies, the git reset --hard, clean, branch -D and filter-branch denies, the publish and login denies, and the database asks; the git push deny is not required there."
+  - "Under overlay check-settings requires session-start.ts and results-gate.ts registered in the tracked file, accepts bash-guard.ts and stop-gate.ts from either settings file, and fails as before on a tracked settings.local.json, a machine path or a disabled sandbox."
   - "At the starter tier check-settings is unchanged; every existing fixture passes as it did."
   - "yarn doctor fails under the overlay tiers when the local settings file lacks an operator row: the git push deny, bash-guard.ts or stop-gate.ts; at starter it only scans the file as today."
   - "session-start.ts's spine is the subset of AGENTS.md, CLAUDE.md and docs/index.md that exists, read through the probe, and its line stays under 600 characters."
@@ -77,17 +77,21 @@ criteria:
     statement: "doctor reports a busy or unbindable port 3000 or 3001 as a warning and still exits 0 on the single-app repo."
     evidence: test
     command: "yarn test:tooling"
+  - id: C10
+    statement: "Under overlay-local, check-settings passes a tracked file without the floor or the team hooks, and exits 0 as a subprocess on the single-app scratch repo with no tracked .claude/settings.json; there, doctor exits 1 naming each floor rule, team hook or operator row missing from the --local-settings file, and 0 when it holds them all."
+    evidence: test
+    command: "yarn test:tooling"
 ---
 
 # Contract — MIG-0 settings-floor-and-hook-spine
 
 ## Build notes
 
-- **Approach:** `check-settings.ts` reads the tier through `loadToolkit()` and keeps two lists: the floor (required at every tier) and the starter-only extras (today's `REQUIRED_DENIES` minus the floor is only the two `git push` rules; `REQUIRED_HOOKS` splits into team hooks and operator hooks). The fixture runner gains overlay fixtures: each fixture says which tier it is judged at. `doctor.ts` adds, under the overlay tiers, a check that the local file (or `--local-settings <file>`) holds each operator row, reusing `bashRuleMatches` for the push deny and the hook-script scan it already does for the tracked file. `session-start.ts` replaces its `SPINE` constant with the files that exist. The fixture session (C6) is the one manual-shaped step: build a scratch repo with the two hooks split across the files, each hook a one-line script that appends its name to a marker file, run `claude -p "say ok"` in it, and read the marker.
+- **Approach:** `check-settings.ts` reads the tier through `loadToolkit()` and keeps two lists: the floor (tracked, except at overlay-local: EN-18) and the starter-only extras (today's `REQUIRED_DENIES` minus the floor is only the two `git push` rules; `REQUIRED_HOOKS` splits into team hooks and operator hooks). The fixture runner gains overlay fixtures: each fixture says which tier it is judged at. `doctor.ts` adds, under the overlay tiers, a check that the local file (or `--local-settings <file>`) holds each operator row, reusing `bashRuleMatches` for the push deny and the hook-script scan it already does for the tracked file. `session-start.ts` replaces its `SPINE` constant with the files that exist. The fixture session (C6) is the one manual-shaped step: build a scratch repo with the two hooks split across the files, each hook a one-line script that appends its name to a marker file, run `claude -p "say ok"` in it, and read the marker.
 - **Decisions that apply:**
   - T2: "The floor is tracked; everything else is ruled team or operator (local)."
-  - layer-1.md, Settings: "The interview rules each policy team (`.claude/settings.json`, tracked) or operator (`.claude/settings.local.json`, gitignored). The floor is never offered and is always tracked." Default rulings: deny `git push`, `bash-guard.ts`, `stop-gate.ts`, sandbox and allow list are operator; the database asks, `session-start.ts` and `results-gate.ts` are team.
-  - layer-1.md, Floor check: "`check-settings` under overlay checks the floor in the tracked file. `yarn doctor` checks the operator's local file holds the operator rows."
+  - layer-1.md, Settings: "The interview rules each policy team (`.claude/settings.json`, tracked) or operator (`.claude/settings.local.json`, gitignored). The floor is never offered and is always tracked, except under `overlay-local`, where it goes to the operator's local file and `yarn doctor` checks it …" Default rulings: deny `git push`, `bash-guard.ts`, `stop-gate.ts`, sandbox and allow list are operator; the database asks, `session-start.ts` and `results-gate.ts` are team.
+  - layer-1.md, Floor check: "`check-settings` under overlay checks the floor in the tracked file. `yarn doctor` checks the operator's local file holds the operator rows." That is `overlay`; `overlay-local` is EN-18 (non-negotiable 1).
   - technical.md, Rabbit holes: "[ASSUMPTION: both run; proven with a fixture session at the overlay ticket]."
   - overlay.md, `session-start.ts` row: "The spine is the three files that exist. Layer 1 writes all three; the probe covers a run stopped part-way."
 - **Interfaces:** `checkSettings(settings, tier)` or an equivalent second argument; a documented fixture naming rule; `yarn doctor --local-settings <file>` gains the overlay rows check. No new package.json script.

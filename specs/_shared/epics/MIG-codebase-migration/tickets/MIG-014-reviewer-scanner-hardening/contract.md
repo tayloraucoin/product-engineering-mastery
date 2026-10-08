@@ -2,13 +2,13 @@
 id: MIG-14
 size: small
 objective: "The reviewer import scanner reads the specifiers a real overlay repo uses: Deno and URL specifiers, Vue, Svelte, Astro and MDX sources, and JSX text without hiding later imports."
-slice_type: "Tooling only: the scanner in tooling/lib/specs.ts; reversible, no layout-file change unless node: builtins are admitted."
+slice_type: "Tooling only: the scanner in tooling/lib/specs.ts; reversible, no layout-file change."
 non_negotiables:
   - "A name in a comment or a string still never matches (MIG-4 C1 stays green)."
   - "npm:stripe@14, https://esm.sh/stripe@14 and jsr:@supabase/supabase-js@2 match stripe and @supabase/*."
   - "The script blocks of .vue, .svelte and .astro files, and the import lines of .mdx files, are scanned."
   - "`/*` inside JSX text does not hide a later import() or require()."
-devs_call: "The scanner's internals only. [NEEDS DECISION] Two questions are the operator's, put at the Tickets gate: whether type-only imports keep counting toward @supabase/* (breadth), and whether node: builtins become valid reviewers[].imports entries (the layout-file-shape door, mason's row; if it stays in scope mason joins the review with a focus line)."
+devs_call: "The scanner's internals only. Ruled by the operator 2026-10-08: type-only imports count toward @supabase/* and every other imports entry (a type import still binds the file to the SDK's shapes); node: builtins do not become valid reviewers[].imports entries, so the layout file's shape is unchanged."
 cites:
   - "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-004-reviewer-imports/as-built.md"
 truth_files: "none: repo tooling; no living UX file changes"
@@ -19,7 +19,6 @@ focus: []
 operator_review: false
 planned_paths:
   - "tooling/lib/specs.ts"
-  - "tooling/lib/toolkit.ts"
   - "tooling/check-reviewers.test.ts"
   - "docs/engineering/tooling.md"
 depends_on:
@@ -37,6 +36,14 @@ criteria:
     command: "yarn check-types:tooling"
   - id: C3
     statement: "MIG-4 C1 stays green: a module named only in a comment or a string still never matches, in every source kind the scanner now reads."
+    evidence: test
+    command: "yarn test:tooling"
+  - id: C4
+    statement: "A type-only import of @supabase/supabase-js matches an @supabase/* row."
+    evidence: test
+    command: "yarn test:tooling"
+  - id: C5
+    statement: "An import of node:fs matches no reviewer row, and a reviewers[].imports list holding a node: entry is rejected by check-reviewers, naming the entry."
     evidence: test
     command: "yarn test:tooling"
 ---

@@ -340,6 +340,7 @@ load_when:
 | EN-05 | "Start with two packages — `@pem/config` and `@pem/ui` — and the boundaries lint wired from day one"             | REC 0005 | Mason | superseded by EN-06 (REC 0010), 2026-10-03. Was: ruled | the full Synapse layer set                | —   |
 | EN-16 | A reviewer row in `toolkit.json` takes an optional `imports` list and may omit `glob`; a file matches the row when it imports one of the listed modules, so a Stripe or auth SDK call outside every billing or auth folder still reaches its reviewers | REC 0012; MIG-4 | Mason | ruled (owner ratified 2026-10-07, T6) | reviewer rows that match paths only | — |
 | EN-17 | `yarn check-reviewers` fails, under `overlay` and `overlay-local`, a reviewer row that matches no tracked file, by glob or by import; it is skipped at `starter`, where a row is a seat for a module not built yet | REC 0012; MIG-4 | Mason | ruled (owner ratified 2026-10-07, T6) | reviewer rows nothing checks | — |
+| EN-18 | Under `overlay-local`, `check-settings` does not require the floor in the tracked `.claude/settings.json`; `yarn doctor` alone checks the floor and the operator rows in the operator's local settings file, and CI does not enforce the floor at that tier | REC 0012 (amended 2026-10-08); MIG-2 | Mason | ruled (operator 2026-10-08) | the floor required in a tracked file the team does not own | — |
 
 ## 10. Engineering (default stack)
 
