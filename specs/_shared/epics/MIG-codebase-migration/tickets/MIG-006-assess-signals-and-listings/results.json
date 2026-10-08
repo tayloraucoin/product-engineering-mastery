@@ -1,0 +1,83 @@
+{
+  "id": "MIG-6",
+  "criteria_sha256": "49c6b37db81dd700e787bafddbe44edd3976ed460f87296b4a4e6c0ad9f25d7a",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-08T00:51:32Z",
+        "head": "55533e6dd4f7e09403bca4b01a90b748fd3226d2",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-006-assess-signals-and-listings/evidence/C1.log",
+        "evidence_sha256": "01a6f953f810a4bb3b30d209a1c623597d12f6e035c060799d23afc786f83784",
+        "tests": 292
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-08T00:51:32Z",
+        "head": "55533e6dd4f7e09403bca4b01a90b748fd3226d2",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-006-assess-signals-and-listings/evidence/C2.log",
+        "evidence_sha256": "01a6f953f810a4bb3b30d209a1c623597d12f6e035c060799d23afc786f83784",
+        "tests": 292
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-08T00:51:32Z",
+        "head": "55533e6dd4f7e09403bca4b01a90b748fd3226d2",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-006-assess-signals-and-listings/evidence/C3.log",
+        "evidence_sha256": "01a6f953f810a4bb3b30d209a1c623597d12f6e035c060799d23afc786f83784",
+        "tests": 292
+      }
+    },
+    "C4": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-08T00:51:32Z",
+        "head": "55533e6dd4f7e09403bca4b01a90b748fd3226d2",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-006-assess-signals-and-listings/evidence/C4.log",
+        "evidence_sha256": "01a6f953f810a4bb3b30d209a1c623597d12f6e035c060799d23afc786f83784",
+        "tests": 292
+      }
+    },
+    "C5": {
+      "status": "PASS",
+      "evidence": "capture",
+      "run": {
+        "command": "yarn contract:record MIG-6 C5 --evidence specs/_shared/epics/MIG-codebase-migration/tickets/MIG-006-assess-signals-and-listings/evidence/capture-three-repos.md",
+        "exit": 0,
+        "at": "2026-10-08T00:54:08Z",
+        "head": "55533e6dd4f7e09403bca4b01a90b748fd3226d2",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-006-assess-signals-and-listings/evidence/capture-three-repos.md",
+        "evidence_sha256": "cebbfc2e888c51fa1fc6757f44059c8fd0cf6758ff5887dafe73cb5d5f343d36"
+      }
+    },
+    "C6": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn check-types:tooling",
+        "exit": 0,
+        "at": "2026-10-08T00:53:09Z",
+        "head": "55533e6dd4f7e09403bca4b01a90b748fd3226d2",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-006-assess-signals-and-listings/evidence/C6.log",
+        "evidence_sha256": "be6a3dc23e68b9fe2208832be2ccd83ddbae9d48f26fe2172070822f5215b80d"
+      }
+    }
+  },
+  "updated_at": "2026-10-08T00:54:08Z"
+}
