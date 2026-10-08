@@ -232,7 +232,7 @@ export function renderListings(data: AssessData): string[] {
             : `; ${h.remote.state === "equal" ? "equals" : h.remote.state} \`${h.remote.ref}\`${h.remote.ahead || h.remote.behind ? ` (ahead ${h.remote.ahead}, behind ${h.remote.behind})` : ""}`
           : ""
       }`,
-      `- Working tree: ${h.dirty ? `${h.dirty} changed or untracked entries` : "clean"}`,
+      `- Working tree: ${h.dirty ? `${h.dirty} changed or untracked ${h.dirty === 1 ? "entry" : "entries"}` : "clean"}`,
       `- Worktrees: ${h.worktrees?.length ? h.worktrees.join(", ") : "none"}`,
       `- Tracked files over 10 MB: ${h.largeFiles?.length ? h.largeFiles.map((f) => `${f.path} (${Math.round(f.bytes / 1024 / 1024)} MB)`).join(", ") : "none"}`,
     );

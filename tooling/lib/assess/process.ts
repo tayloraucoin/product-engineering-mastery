@@ -14,6 +14,7 @@
 import path from "node:path";
 
 import type { Repo } from "./repo.ts";
+import { BANDS } from "./score.ts";
 import type { Measure, Signal } from "./signal.ts";
 
 export type ConflictRow = {
@@ -53,7 +54,11 @@ export const POLICIES: { id: string; toolkit: string; pattern: RegExp }[] = [
 ];
 
 const INSTRUCTION_FILE =
-  /(?:^|\/)(?:AGENTS\.md|CLAUDE\.md|\.cursorrules|\.windsurfrules)$|^\.cursor\/rules\/[^/]+$|^\.github\/copilot-instructions\.md$/;
+  /(?:^|\/)(?:AGENTS\.md|CLAUDE\.md|\.cursorrules|\.windsurfrules)$|^\.claude\/rules\/[^/]+\.md$|^\.cursor\/rules\/[^/]+$|^\.github\/copilot-instructions\.md$/;
+
+/** A line that forbids the thing a policy pattern looks for is on the toolkit's side, not against it. */
+const NEGATED_PUSH =
+  /\b(?:never|do not|don't|must not|no)\s+(?:\w+\s+)?push\b/i;
 
 export const listInstructionFiles = (repo: Repo) =>
   repo.files.filter((rel) => INSTRUCTION_FILE.test(rel));
@@ -65,7 +70,10 @@ export function listConflicts(repo: Repo): ConflictRow[] {
     const lines = (repo.read(file) ?? "").split("\n");
     lines.forEach((text, i) => {
       for (const policy of POLICIES)
-        if (policy.pattern.test(text))
+        if (
+          policy.pattern.test(text) &&
+          !(policy.id === "push" && NEGATED_PUSH.test(text))
+        )
           rows.push({
             policy: policy.id,
             file,
@@ -85,7 +93,12 @@ export const P1: Signal = {
   measure(repo): Measure {
     const rows = listConflicts(repo);
     const policies = [...new Set(rows.map((r) => r.policy))];
-    const score = policies.length === 0 ? 0 : policies.length <= 2 ? 1 : 2;
+    const score =
+      policies.length === 0
+        ? 0
+        : policies.length <= BANDS.conflictPoliciesPartialUpTo
+          ? 1
+          : 2;
     return {
       value: { policies, lines: rows.length },
       score,
@@ -117,7 +130,13 @@ export const P2: Signal = {
     const withIt = docs.filter((rel) => hasFrontmatter(repo.read(rel) ?? ""));
     const share = docs.length ? withIt.length / docs.length : 0;
     const score =
-      docs.length === 0 ? 2 : share >= 0.9 ? 0 : share >= 0.1 ? 1 : 2;
+      docs.length === 0
+        ? 2
+        : share >= BANDS.frontmatterShareFull
+          ? 0
+          : share >= BANDS.frontmatterSharePartial
+            ? 1
+            : 2;
     return {
       value: { docs: docs.length, withFrontmatter: withIt.length },
       score,
@@ -138,8 +157,9 @@ const RECORD_KINDS: { kind: string; test: (rel: string) => boolean }[] = [
 ];
 
 const ARCHIVE = /(?:^|\/)_?archive\//i;
+/** A `ux/` folder anywhere in the path, or a basename holding ux-spec, ux-design or ux-architecture as its own word (never "linux-design"). */
 const UX_SPEC =
-  /(?:^|\/)ux\/[^/]+\.mdx?$|(?:^|\/)[^/]*ux[-_ ]?(?:spec|design|architecture)[^/]*\.mdx?$/i;
+  /(?:^|\/)ux\/.+\.mdx?$|(?:^|\/)(?:[^/]*[^a-z0-9/])?ux[-_ ]?(?:spec|design|architecture)[^/]*\.mdx?$/i;
 const PRACTICE_UX = /^specs\/[^/]+\/ux\/.+\.mdx?$/;
 
 /** UX specs outside the practice's living truth, archives excluded. */
@@ -159,25 +179,54 @@ const PRACTICE_DECISIONS =
 const practiceRole = (text: string) =>
   hasFrontmatter(text) && /^role:\s*\S/m.test(text.split(/^---\s*$/m)[1] ?? "");
 
-const countLines = (text: string | null) =>
-  text === null ? 0 : text.split("\n").length;
+/** Lines as an editor counts them: a trailing newline closes the last line rather than opening another. */
+const countLines = (text: string) => text.replace(/\n$/, "").split("\n").length;
 
-/** Every record in a format of its own: logs by kind, UX specs, host decisions and host role prompts (T5). */
+/** A tracked file's text from the working tree, else from HEAD (a tracked file deleted but not yet committed). */
+const readTracked = (repo: Repo, rel: string): string =>
+  repo.read(rel) ?? repo.git("show", `HEAD:${rel}`) ?? "";
+
+/** The kinds P3 scores: a log, or a host decisions folder, in a format of its own (assess.md's table). */
+export const SCORED_RECORD_KINDS = [
+  "decision log",
+  "deviation log",
+  "host decisions",
+];
+
+/**
+ * Every record in a format of its own (T5): logs by kind, each closed spec
+ * folder (one row per folder holding a log, its lines the folder's tracked
+ * file count), UX specs, host decisions and host role prompts.
+ */
 export function listRecords(repo: Repo): RecordRow[] {
   const rows: RecordRow[] = [];
+  const uxSpecs = new Set(listUxSpecs(repo));
+  const specFolders = new Map<string, number>();
   for (const rel of repo.files) {
     if (!MARKDOWN.test(rel)) continue;
+    const log = RECORD_KINDS.find((k) => k.test(rel))?.kind;
     const kind =
-      RECORD_KINDS.find((k) => k.test(rel))?.kind ??
+      log ??
       (rel.startsWith("docs/decisions/") && !PRACTICE_DECISIONS.test(rel)
         ? "host decisions"
-        : rel.startsWith("docs/roles/") && !practiceRole(repo.read(rel) ?? "")
+        : rel.startsWith("docs/roles/") && !practiceRole(readTracked(repo, rel))
           ? "host role prompt"
-          : listUxSpecs(repo).includes(rel)
+          : uxSpecs.has(rel)
             ? "ux spec"
             : null);
-    if (kind) rows.push({ kind, path: rel, lines: countLines(repo.read(rel)) });
+    if (kind)
+      rows.push({ kind, path: rel, lines: countLines(readTracked(repo, rel)) });
+    if (log) {
+      const folder = `${path.posix.dirname(rel)}/`;
+      if (!specFolders.has(folder))
+        specFolders.set(
+          folder,
+          repo.files.filter((f) => f.startsWith(folder)).length,
+        );
+    }
   }
+  for (const [folder, files] of specFolders)
+    rows.push({ kind: "closed spec folder", path: folder, lines: files });
   return rows;
 }
 
@@ -188,12 +237,7 @@ export const P3: Signal = {
   title: "Record kinds in a foreign format",
   measure(repo): Measure {
     const rows = listRecords(repo).filter((r) =>
-      [
-        "decision log",
-        "deviation log",
-        "progress log",
-        "host decisions",
-      ].includes(r.kind),
+      SCORED_RECORD_KINDS.includes(r.kind),
     );
     const kinds = [...new Set(rows.map((r) => r.kind))];
     const score = kinds.length === 0 ? 0 : kinds.length === 1 ? 1 : 2;
@@ -207,7 +251,7 @@ export const P3: Signal = {
               return `${n} ${k}${n === 1 || k.endsWith("s") ? "" : "s"}`;
             })
             .join(", ")
-        : "no decision, deviation or progress log in a format of its own",
+        : "no decision or deviation log, and no host decisions folder, in a format of its own",
     };
   },
 };
@@ -252,7 +296,7 @@ export const P5: Signal = {
       (rel) => MARKDOWN.test(rel) && hasOddCharacters(rel),
     );
     const n = odd.length;
-    const score = n === 0 ? 0 : n <= 50 ? 1 : 2;
+    const score = n === 0 ? 0 : n <= BANDS.oddPathsPartialUpTo ? 1 : 2;
     return {
       value: n,
       score,

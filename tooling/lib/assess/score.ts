@@ -14,6 +14,27 @@
 
 import type { Score } from "./signal.ts";
 
+/**
+ * The per-signal band cut-offs (assess.md's 0 / 1 / 2 column), named so the
+ * synapse dry run can move them in one place.
+ */
+export const BANDS = {
+  /** V3: files reading process.env outside an env.ts; 0, 1 to this, over. */
+  envReadersPartialUpTo: 25,
+  /** V4: the share of "use client" files outside _components/; at most these. */
+  clientOutsideShareFull: 0.1,
+  clientOutsideSharePartial: 0.5,
+  /** V5: SDK-importing files no reviewer glob reaches; 0, 1 to this, over. */
+  sdkUnmatchedPartialUpTo: 10,
+  /** P1: distinct toolkit policies the instruction lines contradict; 0, 1 to this, over. */
+  conflictPoliciesPartialUpTo: 2,
+  /** P2: the share of docs markdown with frontmatter; at least these. */
+  frontmatterShareFull: 0.9,
+  frontmatterSharePartial: 0.1,
+  /** P5: tracked markdown paths with a space or non-ASCII byte; 0, 1 to this, over. */
+  oddPathsPartialUpTo: 50,
+} as const;
+
 export const FAR_FROM = 22;
 export const MIDDLE_FROM = 16;
 /** Derived, so moving MIDDLE_FROM moves the near band with it. */

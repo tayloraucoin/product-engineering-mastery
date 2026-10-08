@@ -6,7 +6,7 @@
  */
 
 import assert from "node:assert/strict";
-import { mkdirSync, realpathSync, writeFileSync } from "node:fs";
+import { mkdirSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { after, test } from "node:test";
 import { fileURLToPath } from "node:url";
@@ -20,7 +20,7 @@ import { readHygiene } from "./lib/assess/hygiene.ts";
 import { listImportedModules } from "./lib/assess/imports.ts";
 import { listConflicts, listRecords } from "./lib/assess/process.ts";
 import { openRepo } from "./lib/assess/repo.ts";
-import { assessRepo } from "./lib/assess/report.ts";
+import { assessRepo, renderMarkdown } from "./lib/assess/report.ts";
 import {
   commitAll,
   git,
@@ -289,6 +289,14 @@ test("C2 (MIG-6) P4: a UX spec outside specs/<app>/ux/ scores 1, one inside scor
     }),
   );
   assert.equal(living.P4, 0);
+  const notUx = scoresOf(
+    scratchTarget({
+      "package.json": pkg({}),
+      "docs/linux-design.md": "# Linux\n",
+      "docs/flux-spec.md": "# Flux\n",
+    }),
+  );
+  assert.equal(notUx.P4, 2, "ux must be its own word");
   const archived = scoresOf(
     scratchTarget({
       "package.json": pkg({}),
@@ -370,16 +378,17 @@ test("C3 (MIG-6) the listings name each conflict with file and line, each SDK im
   assert.deepEqual(
     records.map((r) => [r.kind, r.path, r.lines]).sort(),
     [
-      ["decision log", "docs/specs/epic-1/TECHNICAL-DECISIONS.md", 5],
-      ["deviation log", "docs/specs/epic-1/DEVIATIONS.md", 2],
-      ["host decisions", "docs/decisions/mlp-report.md", 2],
+      ["closed spec folder", "docs/specs/epic-1/", 3],
+      ["decision log", "docs/specs/epic-1/TECHNICAL-DECISIONS.md", 4],
+      ["deviation log", "docs/specs/epic-1/DEVIATIONS.md", 1],
+      ["host decisions", "docs/decisions/mlp-report.md", 1],
       [
         "host role prompt",
         "docs/roles/engineering/Forge—staff-engineer-role-prompt.md",
-        2,
+        1,
       ],
-      ["progress log", "docs/specs/epic-1/PROGRESS.md", 2],
-      ["ux spec", "docs/ux/epic1-ux-architecture.md", 2],
+      ["progress log", "docs/specs/epic-1/PROGRESS.md", 1],
+      ["ux spec", "docs/ux/epic1-ux-architecture.md", 1],
     ].sort(),
   );
   assert.ok(data.collisions.includes("docs/roles/"), data.collisions.join());
@@ -387,7 +396,105 @@ test("C3 (MIG-6) the listings name each conflict with file and line, each SDK im
     data.collisions.includes("docs/workflows/"),
     data.collisions.join(),
   );
+  assert.ok(
+    data.collisions.includes("docs/decisions/"),
+    "a host decisions folder collides with the practice's",
+  );
   assert.ok(!data.collisions.includes("docs/decisions/ledger.md"));
+  assert.ok(!data.collisions.includes("package.json"), "every JS repo has one");
+});
+
+test("C3 (MIG-6) a tracked file deleted from the working tree is listed with its HEAD line count, and a negated push line is no conflict", () => {
+  const dir = scratchTarget({
+    "package.json": pkg({ scripts: {} }),
+    "CLAUDE.md":
+      "# Rules\n\nNever push your changes; the operator pushes.\nAlways push when a slice is done.\n",
+    "docs/roles/role-authoring-guide.md": "# Guide\n\nline\nline\n",
+  });
+  rmSync(path.join(dir, "docs/roles/role-authoring-guide.md"));
+  const repo = openRepo(dir);
+  const guide = listRecords(repo).find(
+    (r) => r.path === "docs/roles/role-authoring-guide.md",
+  );
+  assert.deepEqual(guide, {
+    kind: "host role prompt",
+    path: "docs/roles/role-authoring-guide.md",
+    lines: 4,
+  });
+  assert.deepEqual(
+    listConflicts(repo).map((c) => [c.policy, c.line]),
+    [["push", 4]],
+  );
+});
+
+test("C3 (MIG-6) the markdown prints every listing, with none as the fallback, pipes escaped and the hygiene lines read out", () => {
+  const empty = assessRepo(
+    openRepo(scratchTarget({ "package.json": pkg({ scripts: {} }) })),
+    REPO,
+  );
+  const md = renderMarkdown(empty);
+  for (const section of [
+    "## Conflicts",
+    "## SDK importers",
+    "## Records by kind",
+    "## Collisions",
+    "## Hygiene",
+  ])
+    assert.ok(md.includes(section), section);
+  assert.equal(
+    (md.match(/^none$/gm) ?? []).length,
+    4,
+    "four empty listings read none",
+  );
+  assert.match(md, /^- Branch: `main`; no `refs\/remotes\/origin\/main`$/m);
+  assert.match(md, /^- Working tree: clean$/m);
+  assert.match(md, /^- Worktrees: none$/m);
+  assert.match(md, /^- Tracked files over 10 MB: none$/m);
+  const piped = assessRepo(
+    openRepo(
+      scratchTarget({
+        "package.json": pkg({ scripts: {} }),
+        "AGENTS.md": "- No tests | ever.\n",
+      }),
+    ),
+    REPO,
+  );
+  assert.match(
+    renderMarkdown(piped),
+    /\| tests \| AGENTS\.md \| 1 \| - No tests \\\| ever\. \|/,
+  );
+});
+
+test("C1 and C2 (MIG-6) the band edges: 25 and 26 env readers, 10 and 11 unmatched importers, 50 and 51 odd paths, 2 and 3 policies, 90 and 89 percent frontmatter", () => {
+  const reader = (i: number): [string, string] => [
+    `src/r-${i}.ts`,
+    "export const u = process.env.U;\n",
+  ];
+  const at = (files: Record<string, string>) =>
+    scoresOf(scratchTarget({ "package.json": pkg({}), ...files }));
+  assert.equal(at(many(25, reader)).V3, 1);
+  assert.equal(at(many(26, reader)).V3, 2);
+  const stripe = (i: number): [string, string] => [
+    `app/w/p-${i}.ts`,
+    'import Stripe from "stripe";\nexport {};\n',
+  ];
+  assert.equal(at(many(10, stripe)).V5, 1);
+  assert.equal(at(many(11, stripe)).V5, 2);
+  const odd = (i: number): [string, string] => [`docs/n ${i}.md`, "# n\n"];
+  assert.equal(at(many(50, odd)).P5, 1);
+  assert.equal(at(many(51, odd)).P5, 2);
+  assert.equal(at({ "CLAUDE.md": "No tests.\nNo branches.\n" }).P1, 1);
+  assert.equal(
+    at({ "CLAUDE.md": "No tests.\nNo branches.\nAlways push.\n" }).P1,
+    2,
+  );
+  const fm = (i: number): [string, string] => [
+    `docs/f-${i}.md`,
+    "---\ntitle: x\n---\n",
+  ];
+  const plain = (i: number): [string, string] => [`docs/p-${i}.md`, "# p\n"];
+  assert.equal(at({ ...many(9, fm), ...many(1, plain) }).P2, 0);
+  assert.equal(at({ ...many(89, fm), ...many(11, plain) }).P2, 1);
 });
 
 test("C3 (MIG-6) hygiene names a dirty tree, an unpushed branch, a worktree and a tracked file over 10 MB, and scores none of them", () => {

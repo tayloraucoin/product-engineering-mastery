@@ -14,6 +14,7 @@ import path, { matchesGlob } from "node:path";
 
 import { importsModule, listImportedModules, SOURCE_FILE } from "./imports.ts";
 import type { Repo } from "./repo.ts";
+import { BANDS } from "./score.ts";
 import type { Measure, Signal } from "./signal.ts";
 
 const BOUNDARIES = /^packages\/config\/eslint\/boundaries\.[cm]?js$/;
@@ -72,7 +73,7 @@ export const V3: Signal = {
   measure(repo): Measure {
     const readers = listEnvReaders(repo);
     const n = readers.length;
-    const score = n === 0 ? 0 : n <= 25 ? 1 : 2;
+    const score = n === 0 ? 0 : n <= BANDS.envReadersPartialUpTo ? 1 : 2;
     return {
       value: n,
       score,
@@ -93,7 +94,10 @@ export function startsWithUseClient(source: string): boolean {
 
 export function listClientFiles(repo: Repo): string[] {
   return repo.files.filter(
-    (rel) => CLIENT_FILE.test(rel) && startsWithUseClient(repo.read(rel) ?? ""),
+    (rel) =>
+      CLIENT_FILE.test(rel) &&
+      !VENDORED.test(rel) &&
+      startsWithUseClient(repo.read(rel) ?? ""),
   );
 }
 
@@ -106,7 +110,12 @@ export const V4: Signal = {
     const client = listClientFiles(repo);
     const outside = client.filter((rel) => !/(^|\/)_components\//.test(rel));
     const share = client.length ? outside.length / client.length : 0;
-    const score = share <= 0.1 ? 0 : share <= 0.5 ? 1 : 2;
+    const score =
+      share <= BANDS.clientOutsideShareFull
+        ? 0
+        : share <= BANDS.clientOutsideSharePartial
+          ? 1
+          : 2;
     return {
       value: { client: client.length, outside: outside.length },
       score,
@@ -117,7 +126,11 @@ export const V4: Signal = {
   },
 };
 
-/** The SDKs the reviewer map must reach (T6): money, auth, email and AI. */
+/**
+ * The SDKs the reviewer map must reach (T6): money, auth, email and AI.
+ * `@stripe/*` joins `stripe`, as MIG-4's seeded rows do: a client-side
+ * `@stripe/stripe-js` call is a money path too.
+ */
 export const SDK_MODULES: { module: string; kind: string }[] = [
   { module: "stripe", kind: "money" },
   { module: "@stripe/*", kind: "money" },
@@ -180,7 +193,7 @@ export function makeV5(globs: string[]): Signal {
         rows.filter((r) => r.matchedBy === "none").map((r) => r.file),
       );
       const n = unmatched.size;
-      const score = n === 0 ? 0 : n <= 10 ? 1 : 2;
+      const score = n === 0 ? 0 : n <= BANDS.sdkUnmatchedPartialUpTo ? 1 : 2;
       return {
         value: { importers: files.size, unmatched: n },
         score,

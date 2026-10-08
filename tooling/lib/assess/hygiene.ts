@@ -25,7 +25,15 @@ export type HygieneReport = {
   largeFiles: { path: string; bytes: number }[];
 };
 
-/** The manifest's paths with no placeholder, folders kept with their trailing slash. */
+/** Every JavaScript repo has one; its presence is no collision. */
+const EVERY_REPO = new Set(["package.json"]);
+
+/**
+ * The manifest's paths with no placeholder, folders kept with their trailing
+ * slash, plus the practice folder each file entry under docs/ or .claude/
+ * sits in (docs/decisions/ for its ledger), so a host folder of the same name
+ * is a collision even when none of its files is.
+ */
 export function readManifestPaths(toolkitRoot: string): string[] {
   try {
     const text = readFileSync(
@@ -33,9 +41,16 @@ export function readManifestPaths(toolkitRoot: string): string[] {
       "utf8",
     );
     const data = JSON.parse(text) as { entries?: { path?: unknown }[] };
-    return (data.entries ?? [])
+    const paths = (data.entries ?? [])
       .map((e) => e.path)
-      .filter((p): p is string => typeof p === "string" && !/[{}]/.test(p));
+      .filter(
+        (p): p is string =>
+          typeof p === "string" && !/[{}]/.test(p) && !EVERY_REPO.has(p),
+      );
+    const folders = paths
+      .filter((p) => !p.endsWith("/") && /^(?:docs|\.claude)\/[^/]+\//.test(p))
+      .map((p) => `${p.split("/").slice(0, 2).join("/")}/`);
+    return [...new Set([...paths, ...folders])];
   } catch {
     return [];
   }
