@@ -179,7 +179,7 @@ Reported, never scored.
 - Worktrees: /Users/taylor/lighthouse/synapse/.claude/worktrees/beautiful-bhabha-f7c668
 - Tracked files over 10 MB: none
 
-**Differences from assess.md's table:** total 15 against 14. P5 scores 1 (6 role-prompt paths carry an em-dash) where the table scored 0, since the table counted spaces only. Counts that differ with the same score: P4 lists 14 files under `docs/ux/` where the table said 5 versions (the table counted the spec's versions, this lists every markdown file in the folder); worktrees 1 against 2 (the main checkout is not listed here). V5 3 of 12, V3 19, P1 two policies: as the table. Still near.
+**Differences from assess.md's table:** total 15 against 14. P5 scores 1 (6 role-prompt paths carry an em-dash) where the table scored 0, since the table counted spaces only. Counts that differ with the same score: P4 lists 14 files under `docs/ux/` where the table said 5 versions (the table counted the spec's versions, this lists every markdown file in the folder); worktrees 1 against 2 (the main checkout is not listed here). V5 3 of 12 and V3 19 as the table. P1 lists five lines (11, 35, 36, 145, 146) against two policies where the table's prose named lines 36 and 145: the scan reads every line, the table named one per policy; same score. Still near.
 
 ## conscious-connections
 
@@ -392,7 +392,7 @@ Reported, never scored.
 - Worktrees: /Users/taylor/lighthouse/conscious-connections/conscious-connections/.claude/worktrees/funny-northcutt-ee67e2, /Users/taylor/lighthouse/conscious-connections/conscious-connections/.claude/worktrees/gracious-torvalds-845114, /Users/taylor/lighthouse/conscious-connections/conscious-connections/.claude/worktrees/great-ritchie-7d55b2, /Users/taylor/lighthouse/conscious-connections/conscious-connections/.claude/worktrees/heuristic-euclid-5da7e7, /Users/taylor/lighthouse/conscious-connections/conscious-connections/.claude/worktrees/pensive-archimedes-d7e471, /Users/taylor/lighthouse/conscious-connections/conscious-connections/.claude/worktrees/practical-diffie-9b5d2b, /Users/taylor/lighthouse/conscious-connections/conscious-connections/.claude/worktrees/vibrant-chandrasekhar-dc9835
 - Tracked files over 10 MB: none
 
-**Differences from assess.md's table:** total 17 against 18. P4 scores 1 (12 UX files under `docs/ux/`, archives excluded) where the table's name-only scan scored 2. Counts that differ with the same score: V5 20 unmatched files against the table's 26 (this scan matches by the toolkit's glob rows read today, after MIG-4 seeded rows; the table's scan predates them); P5 170 (spaces and em-dashes together) against 57 with spaces; worktrees 7 against 8 (the main checkout). V3 48 as the table. Still middle.
+**Differences from assess.md's table:** total 17 against 18. P4 scores 1 (12 UX files under `docs/ux/`, archives excluded) where the table's name-only scan scored 2. Counts that differ with the same score: V5 20 unmatched files against the table's 26 (this scan matches by the toolkit's glob rows read today, after MIG-4 seeded rows; the table's scan predates them); P5 170 (spaces and em-dashes together) against 57 with spaces; worktrees 7 against 8 (the main checkout). V3 48 as the table. P1 lists three lines (11, 33, 34) against two policies where the table's prose named lines 33 and 34; same score. The working tree line reads "1 entries" in this capture (fixed in the report since). Still middle.
 
 ## taylor-aucoin
 
