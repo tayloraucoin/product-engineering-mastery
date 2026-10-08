@@ -6,14 +6,15 @@
  * on the path, so the 404 a visitor gets under /admin looks like any other.
  * It hides on an experiment's design too (LAB-11): the design fills the page
  * in its own styling, and a corner control would cover a header it pins to
- * the top.
+ * the top. It hides on the records demo (DEMO-4): the demo shell carries its
+ * own in the top bar, and onboarding has none.
  */
 
 import { ThemeToggle } from "@pem/ui/theme-toggle";
 
 export function FloatingThemeToggle() {
   return (
-    <header className="fixed top-4 right-4 [body:has([data-admin-shell])_&]:hidden [body:has([data-sandbox-design])_&]:hidden">
+    <header className="fixed top-4 right-4 [body:has([data-admin-shell])_&]:hidden [body:has([data-sandbox-design])_&]:hidden [body:has([data-demo])_&]:hidden">
       <ThemeToggle />
     </header>
   );

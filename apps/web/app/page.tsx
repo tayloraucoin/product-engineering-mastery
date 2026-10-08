@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { buttonVariants } from "@pem/ui/button";
 
 import { env, productionRuntime } from "../env";
@@ -30,7 +32,10 @@ export default async function HomePage({
         The product surface. Start in <code>apps/web/app/page.tsx</code>; read
         the conventions first in the docs app (<code>yarn docs:dev</code>).
       </p>
-      <div>
+      <div className="flex flex-wrap items-center gap-4">
+        <Link href="/demo" className="text-sm underline underline-offset-4">
+          Records demo
+        </Link>
         <a
           href="https://nextjs.org/docs"
           className={buttonVariants({ variant: "outline" })}
