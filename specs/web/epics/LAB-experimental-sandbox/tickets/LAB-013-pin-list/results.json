@@ -3,50 +3,118 @@
   "criteria_sha256": "562c1a213926b4727b89c3ce57f7840165994d52e5ba8bed1d63d8bbe2da7673",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "capture",
-      "run": null
+      "run": {
+        "command": "yarn contract:record LAB-13 C1 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-013-pin-list/evidence/list-grouped.png",
+        "exit": 0,
+        "at": "2026-10-08T02:03:07Z",
+        "head": "400006e9c8c6862f7aedb77aeda360d39c1457f5",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-013-pin-list/evidence/list-grouped.png",
+        "evidence_sha256": "07e1be8ebdb4f2634dbae8b0972073d88a4af7dc5e4f19e0611bc0d64ff52aa1"
+      }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-08T01:58:27Z",
+        "head": "400006e9c8c6862f7aedb77aeda360d39c1457f5",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-013-pin-list/evidence/C2.log",
+        "evidence_sha256": "02b46ebe22c57ce22da9f532c3a4d953208c6903e938054a08776341f94487b5",
+        "tests": 518
+      }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-08T01:58:27Z",
+        "head": "400006e9c8c6862f7aedb77aeda360d39c1457f5",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-013-pin-list/evidence/C3.log",
+        "evidence_sha256": "02b46ebe22c57ce22da9f532c3a4d953208c6903e938054a08776341f94487b5",
+        "tests": 518
+      }
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-08T01:58:27Z",
+        "head": "400006e9c8c6862f7aedb77aeda360d39c1457f5",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-013-pin-list/evidence/C4.log",
+        "evidence_sha256": "02b46ebe22c57ce22da9f532c3a4d953208c6903e938054a08776341f94487b5",
+        "tests": 518
+      }
     },
     "C5": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-08T01:58:27Z",
+        "head": "400006e9c8c6862f7aedb77aeda360d39c1457f5",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-013-pin-list/evidence/C5.log",
+        "evidence_sha256": "02b46ebe22c57ce22da9f532c3a4d953208c6903e938054a08776341f94487b5",
+        "tests": 518
+      }
     },
     "C6": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "capture",
-      "run": null
+      "run": {
+        "command": "yarn contract:record LAB-13 C6 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-013-pin-list/evidence/list-empty.png",
+        "exit": 0,
+        "at": "2026-10-08T02:03:14Z",
+        "head": "400006e9c8c6862f7aedb77aeda360d39c1457f5",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-013-pin-list/evidence/list-empty.png",
+        "evidence_sha256": "937c2e4fca120cf62bbd35697374cabc74ab6faf88b624ac8bc7b70f5315bab4"
+      }
     },
     "C7": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "capture",
-      "run": null
+      "run": {
+        "command": "yarn contract:record LAB-13 C7 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-013-pin-list/evidence/list-detached.png",
+        "exit": 0,
+        "at": "2026-10-08T02:03:22Z",
+        "head": "400006e9c8c6862f7aedb77aeda360d39c1457f5",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-013-pin-list/evidence/list-detached.png",
+        "evidence_sha256": "d078808d3790fa088b00ecf5c8c46f9815fe54257fef0d582e14203cde52e1fb"
+      }
     },
     "C8": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn contract:record LAB-13 C8 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-013-pin-list/evidence/C8-operator.md --verdict deferred",
+        "exit": 0,
+        "at": "2026-10-08T02:03:52Z",
+        "head": "400006e9c8c6862f7aedb77aeda360d39c1457f5",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-013-pin-list/evidence/C8-operator.md",
+        "evidence_sha256": "7d04d319888d57db54146c61a4ba3b9468372f064c0ec9fe182f1a4319c1818b",
+        "deferred": true
+      }
     },
     "C9": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "capture",
-      "run": null
+      "run": {
+        "command": "yarn contract:record LAB-13 C9 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-013-pin-list/evidence/list-states.png",
+        "exit": 0,
+        "at": "2026-10-08T02:03:30Z",
+        "head": "400006e9c8c6862f7aedb77aeda360d39c1457f5",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-013-pin-list/evidence/list-states.png",
+        "evidence_sha256": "8a860085222b1e8d1f694d4a966cf733e230e081613e78a4a9de4a22086bae14"
+      }
     }
   },
-  "updated_at": "2026-10-08T01:39:18Z"
+  "updated_at": "2026-10-08T02:03:52Z"
 }
