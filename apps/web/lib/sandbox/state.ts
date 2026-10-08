@@ -108,6 +108,12 @@ export const SANDBOX_STATE_KEYS: Readonly<
   "review-closed": "team",
   "review-edit": "team",
   "review-success": "team",
+  // Review has ended (LAB-21, ended.md).
+  "ended-success": "team",
+  "ended-empty": "team",
+  "ended-partial": "team",
+  "ended-draft": "team",
+  "ended-draft-partial": "team",
   // Data (LAB-16, data.md).
   "data-tab-empty": "team",
   "data-tab-loading": "team",

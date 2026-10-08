@@ -4,8 +4,9 @@
  * place, with status 200, the same for every slug. The team on an unknown
  * slug gets the app's 404. The title is fixed for every slug.
  *
- * The experiment is LAB-11's (`_components/experiment/`); the ended page is
- * LAB-21's, a placeholder until that ticket lands.
+ * The experiment is LAB-11's (`_components/experiment/`). A live access on a
+ * closed experiment gets the ended page (LAB-21, `_components/ended/`), and
+ * the team reaches it only through its `?state=` fixtures.
  */
 
 import type { Metadata } from "next";
@@ -16,6 +17,7 @@ import {
   resolveViewer,
   sandboxDb,
 } from "../../../lib/sandbox/access";
+import { endedPageFor } from "../../../lib/sandbox/ended-data";
 import {
   GATE_WORDS,
   gatePath,
@@ -28,6 +30,7 @@ import {
 } from "../../../lib/sandbox/state";
 import { teamMemberOf } from "../../../lib/sandbox/team";
 import { getAuthContext } from "../../../lib/supabase/context";
+import { Ended } from "./_components/ended/ended";
 import { Experiment } from "./_components/experiment/experiment-page";
 import { Gate } from "./_components/gate/gate";
 
@@ -82,8 +85,9 @@ export default async function ExperimentPage({
     case "gate":
       return <Gate {...view.props} />;
     case "ended":
-      return <Placeholder ticket="LAB-21" />;
-    case "experiment":
+    case "experiment": {
+      const ended = await endedPageFor(result, stateKey);
+      if (ended) return <Ended {...ended} />;
       if (result.kind !== "team" && result.kind !== "reviewer")
         return notFound();
       return (
@@ -98,16 +102,6 @@ export default async function ExperimentPage({
           state={stateKey}
         />
       );
+    }
   }
-}
-
-function Placeholder({ ticket }: { ticket: string }) {
-  return (
-    <main className="mx-auto flex min-h-dvh max-w-xl flex-col gap-4 px-6 pt-24">
-      <h1 className="text-2xl font-semibold tracking-tight">
-        {GATE_WORDS.heading}
-      </h1>
-      <p className="text-muted-foreground">This page arrives with {ticket}.</p>
-    </main>
-  );
 }
