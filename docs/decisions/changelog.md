@@ -15,6 +15,14 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-07 — WEB-13: yarn cost and the word "built"
+
+The instrument and the status word the second audit's R4 and R9 asked for (`specs/_shared/reports/2026-10-07-second-token-and-speed-audit.md`; yellow Y3).
+
+- **`yarn cost <id>` and `yarn cost --epic <EPIC>`** (`tooling/cost.ts`) read Claude Code's transcript folders for this repo and its worktrees and print one line per ticket: calls, weighted tokens by category, cache read and output, context at the last call, threads, and headless review runs on record. The audits' counting rule: one call per message id across files, the first report's weights (input 1, cache write 1.25, cache read 0.1, output 5) [estimate], attribution to the ticket last named in a work command in the thread [estimate], category by first tool. Only usage, ids, timestamps, tool names and matched work-ids are kept; no transcript text is printed or stored. `--record` writes a `cost` block into `results.json`; `yarn status <id>` prints it; `tk-batch`'s Cost line reads it.
+- **`yarn contract:built <id>`** records `built_at`; `yarn status`, `_status.md` and the brief line show the ticket as "built" (code in, criteria unrecorded, awaiting harden) until a criterion is recorded after it. `contract:run` proceeds as before.
+- `results.schema.json` learns `built_at` and `cost`; every writer of `results.json` keeps both. Entries in `docs/engineering/tooling.md`, one line in `.claude/rules/specs.md`.
+
 ## 2026-10-07 — MIG: an existing repo joins the practice by migration, as an overlay
 
 Serves the migration brief (`specs/_shared/epics/MIG-codebase-migration/brief.md`), ratified by the operator 2026-10-07 (T1 to T11). The tiers `starter`, `overlay` and `overlay-local` are now on the record ([0012](records/0012-adoption-tiers.md)); the ledger gains EN-16 and EN-17. Each line names the ticket that built it; the state is as of this entry.

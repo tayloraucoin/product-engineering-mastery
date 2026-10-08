@@ -25,6 +25,10 @@
  *       Sets a started ticket's QA level and reviewers, as the operator asked
  *       (PR-19). At Q3 each reviewer gets a review:<role> criterion; below Q3
  *       the review criteria are dropped and the review happens in the thread.
+ *   yarn contract:built <id>
+ *       Records built_at: the code is in and committed, the criteria are not
+ *       yet recorded (audit R9). Status reads "built" until a criterion is
+ *       recorded after it; contract:run proceeds as on an open ticket.
  *
  * The level is the operator's choice, never computed. contract:init reads
  * `qa:` from the contract (Q1 when absent) and flags once any planned path
@@ -930,6 +934,26 @@ function setQa() {
   printLeft(item);
 }
 
+// ---------------------------------------------------------------- built
+
+function built() {
+  const tree = readSpecsTree(toolkit);
+  const item = requireItem(tree, argv[0]);
+  const results = requireResults(item);
+  const contract = readContract(item).contract;
+  if (!contract) stop(`${contractPath(item)} is not a valid contract`);
+  requireFrozen(item, contract, results);
+  requireProvable(item, contract);
+  results.built_at = now();
+  writeResults(item, results);
+  const stage = readItemState(item, toolkit.specsRoot).stage;
+  console.log(
+    stage === "built"
+      ? `contract:built — ${item.id} is built at ${results.built_at}: code in, criteria unrecorded, awaiting harden. Harden with yarn contract:run ${item.id}.`
+      : `contract:built — ${item.id} built_at ${results.built_at} recorded; it reads ${stage}, since its criteria already hold.`,
+  );
+}
+
 // ---------------------------------------------------------------- main
 
 if (command === "init") init();
@@ -937,4 +961,8 @@ else if (command === "run") run();
 else if (command === "record") record();
 else if (command === "add") add();
 else if (command === "qa") setQa();
-else stop("usage: node tooling/contract.ts <init | run | record | add | qa> …");
+else if (command === "built") built();
+else
+  stop(
+    "usage: node tooling/contract.ts <init | run | record | add | qa | built> …",
+  );

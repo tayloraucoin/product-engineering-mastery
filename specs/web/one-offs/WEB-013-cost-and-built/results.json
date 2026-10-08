@@ -1,0 +1,27 @@
+{
+  "id": "WEB-13",
+  "criteria_sha256": "bccecddbcaad2333799708a2dc5be00ebd68da0fc552842372ea9d9c4351cbbf",
+  "criteria": {
+    "C1": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C2": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C3": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C4": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    }
+  },
+  "updated_at": "2026-10-08T06:41:29Z"
+}

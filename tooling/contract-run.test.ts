@@ -281,3 +281,43 @@ test("PR-16: operator_review adds a manual criterion; deferring it lists an oper
   assert.match(status.out, /Operator checks \(not holding the ticket\): C3/);
   assert.equal(checkSpecs(repo).status, 0);
 });
+
+test("WEB-13 built_at survives contract:qa and contract:record, and a record after it ends the built stage", () => {
+  const repo = startOneOff({
+    criteria: [
+      "  - id: C1",
+      "    statement: The filter keeps matching rows.",
+      "    evidence: test",
+      "    command: yarn test:sample",
+      "  - id: C3",
+      "    statement: The filter reads well.",
+      "    evidence: manual",
+      "    reason: a judgment of wording",
+    ].join("\n"),
+  });
+  write(repo, "src/filter.ts", "export const keep = (n: number) => n > 1;\n");
+  commit(repo, "WEB-1: filter");
+  let r = tool(repo, "contract.ts", ["built", "WEB-1"]);
+  assert.equal(r.status, 0, r.out);
+  const builtAt = JSON.parse(read(repo, RESULTS)).built_at;
+  r = tool(repo, "contract.ts", ["qa", "WEB-1", "Q2", "--reviewers", "vigil"]);
+  assert.equal(r.status, 0, r.out);
+  assert.equal(JSON.parse(read(repo, RESULTS)).built_at, builtAt);
+  assert.match(tool(repo, "status.ts", ["WEB-1"]).out, /, built\)/);
+  write(
+    repo,
+    "specs/web/one-offs/WEB-001-filter/evidence/C3.md",
+    "Read well (synthetic).\n",
+  );
+  commit(repo, "WEB-1: evidence");
+  r = tool(repo, "contract.ts", [
+    "record",
+    "WEB-1",
+    "C3",
+    "--evidence",
+    "specs/web/one-offs/WEB-001-filter/evidence/C3.md",
+  ]);
+  assert.equal(r.status, 0, r.out);
+  assert.equal(JSON.parse(read(repo, RESULTS)).built_at, builtAt);
+  assert.match(tool(repo, "status.ts", ["WEB-1"]).out, /, open\)/);
+});

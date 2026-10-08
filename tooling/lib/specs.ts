@@ -206,10 +206,47 @@ export type CriterionResult = {
   runs?: number;
 };
 
+/**
+ * What a ticket's threads cost, by `yarn cost <id> --record` (audit R4): one
+ * API call per message id, weighted at the first report's weights, attributed
+ * by the second audit's rule. The one home of the category names.
+ */
+export const COST_CATEGORIES = [
+  "build",
+  "proofs",
+  "captures",
+  "reviews",
+  "status",
+  "git",
+  "re-reading",
+  "other",
+] as const;
+export type CostCategory = (typeof COST_CATEGORIES)[number];
+export type TicketCost = {
+  at: string;
+  calls: number;
+  /** Weighted tokens: input 1, cache write 1.25, cache read 0.1, output 5 (an estimate of cost, not the meter). */
+  weighted: number;
+  tokens_input: number;
+  tokens_cache_read: number;
+  tokens_cache_write: number;
+  tokens_output: number;
+  by_category: Record<CostCategory, { calls: number; weighted: number }>;
+  /** Input, cache read and cache write of the last main-thread call; null when every call was a subagent's. */
+  context_last_call: number | null;
+  threads: number;
+  /** review:run runs on record in results.json that carry cost fields (the last run per review). */
+  headless_runs: number;
+  headless_weighted: number;
+};
+
 export type Results = {
   id: string;
   criteria_sha256: string;
   criteria: Record<string, CriterionResult>;
+  /** When yarn contract:built said the code is in (audit R9); the ticket reads "built" until a criterion is recorded after it. */
+  built_at?: string;
+  cost?: TicketCost;
   updated_at: string;
 };
 
@@ -1068,6 +1105,57 @@ export function formatCost(run: Partial<Cost>): string {
   return `${n(cost.tokens_input)} in, ${n(cost.tokens_cache_read)} read, ${n(cost.tokens_cache_write)} write, ${n(cost.tokens_output)} out, ${cost.seconds === undefined ? "?" : cost.seconds} s`;
 }
 
+/** A cost block with a stable key order. */
+function orderCost(cost: TicketCost): TicketCost {
+  return {
+    at: cost.at,
+    calls: cost.calls,
+    weighted: cost.weighted,
+    tokens_input: cost.tokens_input,
+    tokens_cache_read: cost.tokens_cache_read,
+    tokens_cache_write: cost.tokens_cache_write,
+    tokens_output: cost.tokens_output,
+    by_category: Object.fromEntries(
+      COST_CATEGORIES.map((c) => [
+        c,
+        {
+          calls: cost.by_category[c]?.calls ?? 0,
+          weighted: cost.by_category[c]?.weighted ?? 0,
+        },
+      ]),
+    ) as TicketCost["by_category"],
+    context_last_call: cost.context_last_call,
+    threads: cost.threads,
+    headless_runs: cost.headless_runs,
+    headless_weighted: cost.headless_weighted,
+  };
+}
+
+/** As the audits print weighted tokens: `18.4M` from 0.1M, `16k` from 1k, the integer below. */
+export const formatMillions = (n: number) =>
+  n >= 100_000
+    ? `${(n / 1e6).toFixed(1)}M`
+    : n >= 1000
+      ? `${Math.round(n / 1000)}k`
+      : String(Math.round(n));
+
+/** A recorded cost block as one phrase: calls, weighted, the categories that cost anything, context, threads, headless runs. */
+export function formatTicketCost(cost: TicketCost): string {
+  const parts = COST_CATEGORIES.filter(
+    (c) => cost.by_category[c].calls > 0,
+  ).map((c) => `${c} ${formatMillions(cost.by_category[c].weighted)}`);
+  const context =
+    cost.context_last_call === null
+      ? "no main-thread call"
+      : `${Math.round(cost.context_last_call / 1000)}k`;
+  return (
+    `${COUNT.format(cost.calls)} calls, ${formatMillions(cost.weighted)} weighted` +
+    `${parts.length ? ` (${parts.join(", ")})` : ""}, context at last call ${context}, ` +
+    `${cost.threads} thread(s), ${formatMillions(cost.tokens_cache_read)} read, ${formatMillions(cost.tokens_output)} out; ` +
+    `headless ${cost.headless_runs} run(s) ${formatMillions(cost.headless_weighted)}`
+  );
+}
+
 /** Serializes results with a stable key order, so a diff shows only what changed. */
 export function formatResults(results: Results): string {
   const criteria = Object.fromEntries(
@@ -1109,6 +1197,8 @@ export function formatResults(results: Results): string {
       id: results.id,
       criteria_sha256: results.criteria_sha256,
       criteria,
+      ...(results.built_at && { built_at: results.built_at }),
+      ...(results.cost && { cost: orderCost(results.cost) }),
       updated_at: results.updated_at,
     },
     null,
@@ -1177,7 +1267,13 @@ export type ItemState = {
   hasAsBuilt: boolean;
   merged: boolean;
   stage:
-    "draft" | "open" | "proven" | "closing" | "closed" | "migration pending";
+    | "draft"
+    | "open"
+    | "built"
+    | "proven"
+    | "closing"
+    | "closed"
+    | "migration pending";
 };
 
 type Git = {
@@ -1438,8 +1534,22 @@ export function readItemState(
       const applied = parseAsBuilt(readRepoText(asBuiltPath(item))).applied;
       stage = applied === "pending" ? "migration pending" : "closed";
     }
-  } else stage = nonReviewLeft.length === 0 ? "proven" : "open";
+  } else if (nonReviewLeft.length === 0) stage = "proven";
+  else stage = isBuilt(results) ? "built" : "open";
   return { item, contract, results, criteria, hasAsBuilt, merged, stage };
+}
+
+/**
+ * Built (audit R9): yarn contract:built said the code is in, and no criterion
+ * has been recorded since. A run at or after built_at ends it; contract:run
+ * on a built ticket proceeds as on an open one.
+ */
+export function isBuilt(results: Results): boolean {
+  const builtAt = results.built_at;
+  if (!builtAt) return false;
+  return Object.values(results.criteria).every(
+    (r) => !r.run || r.run.at < builtAt,
+  );
 }
 
 /** Recorded state only, no git: what the generated _status.md shows, so it never drifts with HEAD. */
@@ -1460,7 +1570,8 @@ function recordedStage(state: ItemState): string {
       ? "code complete, migration pending"
       : "closed";
   }
-  return left.length === 0 ? "proven" : "open";
+  if (left.length === 0) return "proven";
+  return isBuilt(state.results) ? "built" : "open";
 }
 
 /** What a criterion still needs, as the brief line and `yarn status <id>` print it. */
@@ -1474,7 +1585,12 @@ export function leftOf(state: ItemState): string[] {
 }
 
 /** The stages a ticket is in build: it orients the thread on its own work. */
-const IN_BUILD = new Set<ItemState["stage"]>(["open", "proven", "closing"]);
+const IN_BUILD = new Set<ItemState["stage"]>([
+  "open",
+  "built",
+  "proven",
+  "closing",
+]);
 
 /**
  * The one line the hooks print into every session (C7, O7). It lists the

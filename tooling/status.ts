@@ -3,7 +3,8 @@
  *
  *   yarn status                  regenerate specs/_status.md and summarize it
  *   yarn status <id>             "Left to go" for one item, live: staleness,
- *                                pending migration, not verified, open decisions
+ *                                pending migration, not verified, open decisions,
+ *                                and the cost block yarn cost <id> --record wrote
  *   yarn status --brief          one line of at most 600 characters (SessionStart)
  *   yarn status --deviations     every as-built's Deviations, oldest first
  *   yarn status --epic <EPIC>    an epic's tickets in build order, from depends_on,
@@ -17,6 +18,7 @@ import {
   fileExists,
   findItem,
   formatCost,
+  formatTicketCost,
   leftOf,
   openDecisions,
   parseAsBuilt,
@@ -82,6 +84,16 @@ function one(id: string) {
       ];
     });
   if (reviews.length) lines.push(`Reviews:\n  ${reviews.join("\n  ")}`);
+  if (state.stage === "built")
+    lines.push(
+      `Built ${state.results!.built_at}: code in, criteria unrecorded, awaiting harden.`,
+    );
+  // R4: what the ticket's threads cost, as yarn cost <id> --record wrote it.
+  const cost = state.results?.cost;
+  if (cost)
+    lines.push(
+      `Cost (recorded ${cost.at}; one call per message id, weighted 1, 1.25, 0.1, 5 [estimate]): ${formatTicketCost(cost)}.`,
+    );
   const deferred = state.criteria.filter((c) => c.deferred).map((c) => c.id);
   if (deferred.length)
     lines.push(
