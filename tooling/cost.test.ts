@@ -83,39 +83,45 @@ test("WEB-13 C1 yarn cost counts once per message id, weights, attributes by the
   const r = cost(repo, config, ["WEB-1"]);
   assert.equal(r.status, 0, r.out);
   // 13 calls: m2 to m10 in s1, the reviewer's r1 and r2, n1 and n2 in s2.
-  // m2 and m3 are two records each and s2 copies m1 to m3: counted once.
-  // m1 precedes any work command; n3 names OB2-1; the other project is not read.
-  assert.match(r.out, /^WEB-1: 13 calls \[one per message id\], /m);
+  // m2 and m3 are two records each and s2 copies m1 to m3: counted once. n1
+  // names nothing; s2's copy of m2 named WEB-1, so n1 is WEB-1's. The two
+  // synthetic records in s2 are not calls. m1 precedes any work command; n3
+  // names OB2-1; the other project is not read.
+  const tag = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  assert.match(
+    r.out,
+    new RegExp(
+      `^${tag("WEB-1 [attributed to the last ticket a work command named in its thread; estimate]: 13 calls [one per message id], ")}`,
+      "m",
+    ),
+  );
   // input 20, write 5,640, read 48,000, output 870: 20 + 7,050 + 4,800 + 4,350.
-  assert.match(
-    r.out,
-    /16k weighted \[in 1, write 1\.25, read 0\.1, out 5; estimate\]/,
-  );
-  assert.match(
-    r.out,
-    /\(build 3 3k, proofs 2 1k, captures 1 451, reviews 3 10k, status 1 551, git 1 601, re-reading 1 451, other 1 551\) \[by first tool\]/,
-  );
-  // n2, the last main-thread call: 2 + 6,000 + 300.
-  assert.match(
-    r.out,
-    /context at last call 6k \[in \+ read \+ write, main thread\]/,
-  );
-  assert.match(
-    r.out,
-    /2 thread\(s\) \[attributed to the last ticket a work command named; estimate\]/,
-  );
-  assert.match(
-    r.out,
-    /headless 0 run\(s\) 0 \[results\.json, last run per review\]/,
-  );
+  for (const part of [
+    "16k weighted [in 1, write 1.25, read 0.1, out 5; model-blind estimate, not the meter]",
+    "(build 4 3k, proofs 1 351, captures 1 451, reviews 3 10k, status 1 551, git 1 601, re-reading 1 451, other 1 551) [by first tool]",
+    "raw 48k read and 870 out [summed once per message id]",
+    // n2, the last main-thread call: 2 + 6,000 + 300; the synthetic records after it are skipped.
+    "thread context at its last main-thread call 6k [in + read + write]",
+    "2 thread(s) naming it",
+    "headless at least 0 run(s) 0 [results.json keeps the last run per review; not in the weighted total]",
+  ])
+    assert.ok(r.out.includes(part), `missing "${part}" in ${r.out}`);
   assert.ok(!r.out.includes(SECRET), "no transcript text in the output");
 
   const epic = cost(repo, config, ["--epic", "OB2"]);
   assert.equal(epic.status, 0, epic.out);
   // n3 (named as OB2-001), n4, and s3's w2 from the worktree folder.
-  assert.match(epic.out, /^OB2: 3 calls \[one per message id\], 2k weighted/m);
-  assert.match(epic.out, /^ {2}OB2-1: 3 calls/m);
-  assert.match(epic.out, /2 thread\(s\)/);
+  assert.match(
+    epic.out,
+    /^OB2 \[attributed[^\]]*\]: 3 calls \[one per message id\], 2k weighted/m,
+  );
+  assert.match(epic.out, /^ {2}OB2-1 \[attributed[^\]]*\]: 3 calls/m);
+  assert.match(epic.out, /2 thread\(s\) naming it/);
+  // m1 in s1 and w1 in s3 come before any work command.
+  assert.match(
+    epic.out,
+    /; 2 call\(s\) in these transcripts belong to no ticket \[before any work command\]$/m,
+  );
   assert.ok(!epic.out.includes(SECRET), "no transcript text in the output");
 });
 
@@ -146,7 +152,7 @@ test("WEB-13 C2 yarn cost --record writes a cost block the schema accepts, later
   r = cost(repo, config, ["WEB-1", "--record"]);
   assert.equal(r.status, 0, r.out);
   // The synthetic review run: 1,200 + 500 × 1.25 + 3,400 × 0.1 + 260 × 5.
-  assert.match(r.out, /headless 1 run\(s\) 3k/);
+  assert.match(r.out, /headless at least 1 run\(s\) 3k/);
   let block = JSON.parse(read(repo, RESULTS)).cost;
   assert.equal(block.calls, 13);
   assert.equal(block.weighted, 16220);
@@ -170,7 +176,7 @@ test("WEB-13 C2 yarn cost --record writes a cost block the schema accepts, later
   const status = tool(repo, "status.ts", ["WEB-1"]);
   assert.match(
     status.out,
-    /^Cost \(recorded [0-9TZ:-]+; one call per message id, weighted 1, 1\.25, 0\.1, 5 \[estimate\]\): 13 calls, 16k weighted/m,
+    /^Cost, recorded [0-9TZ:-]+: WEB-1 \[attributed to the last ticket a work command named in its thread; estimate\]: 13 calls \[one per message id\], 16k weighted \[in 1, write 1\.25, read 0\.1, out 5; model-blind estimate, not the meter\].*\[by first tool\].*\[results\.json keeps the last run per review; not in the weighted total\]\.$/m,
   );
 });
 

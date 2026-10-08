@@ -92,7 +92,7 @@ function one(id: string) {
   const cost = state.results?.cost;
   if (cost)
     lines.push(
-      `Cost (recorded ${cost.at}; one call per message id, weighted 1, 1.25, 0.1, 5 [estimate]): ${formatTicketCost(cost)}.`,
+      `Cost, recorded ${cost.at}: ${formatTicketCost(item.id, cost)}.`,
     );
   const deferred = state.criteria.filter((c) => c.deferred).map((c) => c.id);
   if (deferred.length)

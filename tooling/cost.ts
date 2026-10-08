@@ -23,14 +23,17 @@
  * - One API call per message id: Claude Code writes one record per content
  *   block, and a resumed session copies earlier records, so records sharing an
  *   id count once (each usage field at its largest), in the thread of the
- *   file that ended first.
+ *   file that ended first. A record with no usage, or a `<synthetic>` one for
+ *   an API error, is not a call.
  * - Weights, the first report's: input 1, cache write 1.25, cache read 0.1,
  *   output 5 [an estimate of cost, not the meter's formula].
  * - Attribution, the second audit's [estimate]: a call belongs to the ticket
  *   most recently named, in its thread, by a work command (contract:init, run,
  *   record, qa, built, add, review:run, a commit message) or a spec-file edit;
  *   the naming call is its ticket's. A subagent's calls are in its parent's
- *   thread.
+ *   thread, so two subagents working different tickets at once can take
+ *   each other's calls. A resumed session's dropped copies still set its
+ *   ticket. Calls before any naming belong to none; the epic line counts them.
  * - Category, by the call's first tool (COST_CATEGORIES): a reviewer
  *   subagent's calls are reviews.
  * - Headless runs: the review runs results.json holds with cost fields, the
@@ -45,8 +48,8 @@ import { REPO_ROOT } from "./lib/docs.ts";
 import {
   COST_CATEGORIES,
   findItem,
-  formatMillions,
   formatResults,
+  formatTicketCost,
   now,
   pickCost,
   readResults,
@@ -104,7 +107,9 @@ const WORK_COMMANDS = [
   new RegExp(`\\breview(?::run|-run\\.ts)\\s+[a-z-]+\\s+${ID}\\b`, "g"),
 ];
 const INIT = /\bcontract(?::|\.ts\s+)init\s+([A-Za-z0-9]+)\s+([a-z0-9-]+)/g;
-const COMMIT_ID = new RegExp(`\\bgit\\s+commit\\b[\\s\\S]*?${ID}:`);
+const COMMIT_ID = new RegExp(
+  `\\bgit\\b(?:\\s+-C\\s+\\S+)?\\s+commit\\b[\\s\\S]*?${ID}:`,
+);
 const TICKET_FOLDER =
   /(?:^|\/)([A-Z][A-Z0-9]{1,4})-0*([1-9][0-9]*)-[a-z0-9-]+\//g;
 const EDIT_TOOLS = /^(Edit|Write|MultiEdit|NotebookEdit)$/;
@@ -277,6 +282,7 @@ function readFile(
       uuid?: string;
       message?: {
         id?: string;
+        model?: string;
         usage?: Record<string, unknown>;
         content?: unknown;
       };
@@ -286,12 +292,19 @@ function readFile(
     } catch {
       continue; // A partial line.
     }
-    if (record.type !== "assistant" || !record.message) continue;
-    const id = record.message.id ?? record.uuid;
+    // A record with no usage, or Claude Code's synthetic one for an API
+    // error, is not an API call (as stop-gate's contextTokens reads it).
+    if (
+      record.type !== "assistant" ||
+      !record.message?.usage ||
+      record.message.model === "<synthetic>"
+    )
+      continue;
+    const id = record.message.id;
     if (!id) continue;
     const at = record.timestamp ?? "";
     if (at > lastAt) lastAt = at;
-    const usage = record.message.usage ?? {};
+    const usage = record.message.usage;
     const field = (key: string) =>
       typeof usage[key] === "number" ? (usage[key] as number) : 0;
     let call = byId.get(id);
@@ -354,6 +367,9 @@ function readCalls(tree: SpecsTree): Call[] {
         a.lastAt.localeCompare(b.lastAt) || a.file.localeCompare(b.file),
     );
   const calls = new Map<string, Call>();
+  // A dropped copy still tells its own thread which ticket the copied
+  // history named: it sets the walk's ticket but is never counted.
+  const markers: Pick<Call, "session" | "at" | "named">[] = [];
   for (const { calls: fileCalls } of files)
     for (const call of fileCalls) {
       const seen = calls.get(call.id);
@@ -361,6 +377,12 @@ function readCalls(tree: SpecsTree): Call[] {
         calls.set(call.id, call);
         continue;
       }
+      if (call.session !== seen.session && call.named.length)
+        markers.push({
+          session: call.session,
+          at: call.at,
+          named: call.named,
+        });
       // A copy: same response, so the same usage; keep the largest of each.
       seen.usage.input = Math.max(seen.usage.input, call.usage.input);
       seen.usage.cacheRead = Math.max(
@@ -373,18 +395,23 @@ function readCalls(tree: SpecsTree): Call[] {
       );
       seen.usage.output = Math.max(seen.usage.output, call.usage.output);
     }
-  const threads = new Map<string, Call[]>();
-  for (const call of calls.values()) {
-    const list = threads.get(call.session) ?? [];
-    list.push(call);
-    threads.set(call.session, list);
-  }
+  type Step = { call: Call | null; at: string; named: string[] };
+  const threads = new Map<string, Step[]>();
+  const add = (session: string, step: Step) => {
+    const list = threads.get(session) ?? [];
+    list.push(step);
+    threads.set(session, list);
+  };
+  for (const call of calls.values())
+    add(call.session, { call, at: call.at, named: call.named });
+  for (const m of markers)
+    add(m.session, { call: null, at: m.at, named: m.named });
   for (const list of threads.values()) {
     list.sort((a, b) => a.at.localeCompare(b.at));
     let current: string | null = null;
-    for (const call of list) {
-      if (call.named.length) current = call.named[call.named.length - 1]!;
-      call.ticket = current;
+    for (const step of list) {
+      if (step.named.length) current = step.named[step.named.length - 1]!;
+      if (step.call) step.call.ticket = current;
     }
   }
   return [...calls.values()];
@@ -453,29 +480,6 @@ function summarize(calls: Call[], items: Item[]): TicketCost {
   };
 }
 
-/** The one line, each count with its rule. */
-function formatLine(label: string, cost: TicketCost): string {
-  const categories = COST_CATEGORIES.filter(
-    (c) => cost.by_category[c].calls > 0,
-  ).map(
-    (c) =>
-      `${c} ${cost.by_category[c].calls} ${formatMillions(cost.by_category[c].weighted)}`,
-  );
-  const context =
-    cost.context_last_call === null
-      ? "none"
-      : `${Math.round(cost.context_last_call / 1000)}k`;
-  return (
-    `${label}: ${cost.calls} calls [one per message id], ` +
-    `${formatMillions(cost.weighted)} weighted [in 1, write 1.25, read 0.1, out 5; estimate]` +
-    `${categories.length ? ` (${categories.join(", ")}) [by first tool]` : ""}, ` +
-    `${formatMillions(cost.tokens_cache_read)} read, ${formatMillions(cost.tokens_output)} out, ` +
-    `context at last call ${context} [in + read + write, main thread], ` +
-    `${cost.threads} thread(s) [attributed to the last ticket a work command named; estimate], ` +
-    `headless ${cost.headless_runs} run(s) ${formatMillions(cost.headless_weighted)} [results.json, last run per review]`
-  );
-}
-
 function stop(message: string): never {
   console.error(`cost — ${message}`);
   process.exit(1);
@@ -491,9 +495,12 @@ function main() {
     if (!epic) stop(`no epic ${prefix || "(none named)"}`);
     const items = tree.items.filter((i) => i.epic?.prefix === prefix);
     const calls = readCalls(tree);
-    console.log(formatLine(prefix, summarize(calls, items)));
+    const unattributed = calls.filter((c) => c.ticket === null).length;
+    console.log(
+      `${formatTicketCost(prefix, summarize(calls, items))}; ${unattributed.toLocaleString("en-US")} call(s) in these transcripts belong to no ticket [before any work command]`,
+    );
     for (const item of items)
-      console.log(`  ${formatLine(item.id, summarize(calls, [item]))}`);
+      console.log(`  ${formatTicketCost(item.id, summarize(calls, [item]))}`);
     return;
   }
   const id = args.find((a) => !a.startsWith("--"));
@@ -501,7 +508,7 @@ function main() {
   const item = findItem(tree, id);
   if (!item) stop(`no ticket ${id} under ${toolkit.specsRoot}/`);
   const cost = summarize(readCalls(tree), [item]);
-  console.log(formatLine(item.id, cost));
+  console.log(formatTicketCost(item.id, cost));
   if (!args.includes("--record")) return;
   const { results, problems } = readResults(item);
   if (problems.length) stop(problems.join("\n  "));

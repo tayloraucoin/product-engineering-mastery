@@ -1139,20 +1139,31 @@ export const formatMillions = (n: number) =>
       ? `${Math.round(n / 1000)}k`
       : String(Math.round(n));
 
-/** A recorded cost block as one phrase: calls, weighted, the categories that cost anything, context, threads, headless runs. */
-export function formatTicketCost(cost: TicketCost): string {
-  const parts = COST_CATEGORIES.filter(
+/**
+ * A cost block as one line, each count with its rule (WEB-13): what `yarn cost`
+ * prints and `yarn status <id>` shows. Attribution decides every count, so its
+ * label leads; the weights are model-blind and are not the meter.
+ */
+export function formatTicketCost(label: string, cost: TicketCost): string {
+  const categories = COST_CATEGORIES.filter(
     (c) => cost.by_category[c].calls > 0,
-  ).map((c) => `${c} ${formatMillions(cost.by_category[c].weighted)}`);
+  ).map(
+    (c) =>
+      `${c} ${cost.by_category[c].calls} ${formatMillions(cost.by_category[c].weighted)}`,
+  );
   const context =
     cost.context_last_call === null
-      ? "no main-thread call"
+      ? "none"
       : `${Math.round(cost.context_last_call / 1000)}k`;
   return (
-    `${COUNT.format(cost.calls)} calls, ${formatMillions(cost.weighted)} weighted` +
-    `${parts.length ? ` (${parts.join(", ")})` : ""}, context at last call ${context}, ` +
-    `${cost.threads} thread(s), ${formatMillions(cost.tokens_cache_read)} read, ${formatMillions(cost.tokens_output)} out; ` +
-    `headless ${cost.headless_runs} run(s) ${formatMillions(cost.headless_weighted)}`
+    `${label} [attributed to the last ticket a work command named in its thread; estimate]: ` +
+    `${COUNT.format(cost.calls)} calls [one per message id], ` +
+    `${formatMillions(cost.weighted)} weighted [in 1, write 1.25, read 0.1, out 5; model-blind estimate, not the meter]` +
+    `${categories.length ? ` (${categories.join(", ")}) [by first tool]` : ""}, ` +
+    `raw ${formatMillions(cost.tokens_cache_read)} read and ${formatMillions(cost.tokens_output)} out [summed once per message id], ` +
+    `thread context at its last main-thread call ${context} [in + read + write], ` +
+    `${cost.threads} thread(s) naming it, ` +
+    `headless at least ${cost.headless_runs} run(s) ${formatMillions(cost.headless_weighted)} [results.json keeps the last run per review; not in the weighted total]`
   );
 }
 
