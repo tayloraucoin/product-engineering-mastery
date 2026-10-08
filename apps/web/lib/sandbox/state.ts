@@ -96,6 +96,15 @@ export const SANDBOX_STATE_KEYS: Readonly<
   "pins-offline": "team",
   "pins-success": "team",
   "too-long": "team",
+  // The pin list (LAB-13, pin-list.md).
+  "list-empty": "team",
+  "list-loading": "team",
+  "list-error": "team",
+  "list-partial": "team",
+  "list-offline": "team",
+  "list-success": "team",
+  "list-detached": "team",
+  "list-retried": "team",
   // The closing review (LAB-17, review.md).
   "review-empty": "team",
   "review-no-comments": "team",

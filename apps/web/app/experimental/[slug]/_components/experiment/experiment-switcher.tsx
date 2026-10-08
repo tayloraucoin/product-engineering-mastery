@@ -32,14 +32,10 @@ import {
   type SwitchLog,
 } from "../../../../../lib/sandbox/client/switcher";
 import { recordView } from "../../actions";
+import { PinList } from "../pin-list/pin-list";
 import { PinsLayer } from "../pins/pins-layer";
 import { PinsProvider, usePins, type PinsSource } from "../pins/pins-provider";
-import {
-  CommentsButton,
-  CommentToggle,
-  SaveStatusText,
-  useStatusLine,
-} from "./bar-slots";
+import { CommentToggle, SaveStatusText, useStatusLine } from "./bar-slots";
 import { ReviewBar } from "./review-bar";
 
 export type ExperimentSwitcherProps = {
@@ -193,7 +189,18 @@ function SwitcherBody({
         onSwitch={onSwitch}
         primary={primary}
         commentToggle={<CommentToggle />}
-        commentsButton={<CommentsButton />}
+        commentsButton={
+          <PinList
+            designs={designs}
+            shown={current.id}
+            onSwitch={onSwitch}
+            fixture={
+              pins.listFixture
+                ? { announcement: pins.listFixture.announcement }
+                : null
+            }
+          />
+        }
         saveStatus={<SaveStatusText />}
         statusLine={statusLine}
         onHeight={setBarHeight}

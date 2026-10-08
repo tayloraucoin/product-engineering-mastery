@@ -2,10 +2,10 @@
 
 /**
  * The review bar's slots, wired to the pins (LAB-12): the Comment toggle,
- * the Comments button (LAB-13 opens its list), the save status with Retry,
+ * the save status with Retry,
  * and the line above the bar, each drawn from the pins provider's
  * `BarData`. Placing is disabled once the review has closed or access has
- * ended.
+ * ended. The Comments button and its list are LAB-13's (`../pin-list/`).
  */
 import { CheckIcon } from "lucide-react";
 
@@ -13,7 +13,6 @@ import { Button } from "@pem/ui/button";
 import { Toggle } from "@pem/ui/toggle";
 
 import {
-  commentsButtonView,
   placingDisabled,
   EXPERIMENT_WORDS as W,
   type BarData,
@@ -41,16 +40,6 @@ export function CommentToggle() {
       ) : null}
       {W.comment}
     </Toggle>
-  );
-}
-
-export function CommentsButton() {
-  const { bar } = usePins();
-  const view = commentsButtonView(bar);
-  return (
-    <Button variant="outline" disabled={view.disabled} className="h-11 px-4">
-      {view.label}
-    </Button>
   );
 }
 

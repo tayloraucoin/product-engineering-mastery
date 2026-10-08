@@ -5,7 +5,8 @@
  * with nothing pre-selected, "Your comment" with its hint and, from 1,800
  * characters, a counter that turns to error past 2,000 and disables Save.
  * Ctrl or Cmd+Enter saves. Rendered inside the draft pin's popover, for a
- * new pin and for an edit alike.
+ * new pin and for an edit alike, and in LAB-13's list item for an edit
+ * opened there (`inList`), where there is no popover to title.
  */
 import { useId } from "react";
 import { CheckIcon } from "lucide-react";
@@ -34,8 +35,10 @@ export function Composer({
   onChange,
   onSave,
   onCancel,
+  inList = false,
 }: {
   draft: Draft;
+  inList?: boolean;
   onChange(change: Partial<Pick<Draft, "pinKind" | "body">>): void;
   onSave(): void;
   onCancel(): void;
@@ -69,7 +72,11 @@ export function Composer({
         }
       }}
     >
-      <PopoverTitle>{W.on(placeOf(draft.anchor))}</PopoverTitle>
+      {inList ? (
+        <p className="font-medium">{W.on(placeOf(draft.anchor))}</p>
+      ) : (
+        <PopoverTitle>{W.on(placeOf(draft.anchor))}</PopoverTitle>
+      )}
       <ToggleGroup
         aria-label={W.typeGroup}
         variant="outline"

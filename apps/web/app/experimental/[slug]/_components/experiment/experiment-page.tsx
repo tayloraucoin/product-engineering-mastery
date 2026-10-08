@@ -20,6 +20,10 @@ import {
   isExperimentStateKey,
 } from "../../../../../lib/sandbox/client/experiment-view";
 import {
+  isListStateKey,
+  listFixture,
+} from "../../../../../lib/sandbox/client/pin-list";
+import {
   heldPinsFixture,
   isPinsStateKey,
   pinsFixture,
@@ -56,19 +60,25 @@ export async function Experiment({
       ? experimentFixture(state)
       : null;
 
-  // The team previews pins on a pins.md fixture, or LAB-11's bar fixture;
-  // a reviewer's pins load in the browser after mount.
+  // The team previews pins on a pins.md fixture, a pin-list.md one (the
+  // list open on arrival), or LAB-11's bar fixture; a reviewer's pins load
+  // in the browser after mount.
+  const list =
+    who.kind === "team" && isListStateKey(state) ? listFixture(state) : null;
   const pins: PinsSource =
     who.kind === "reviewer"
       ? { kind: "reviewer", reviewerId: who.viewer.reviewerId }
       : {
           kind: "preview",
-          fixture: isPinsStateKey(state)
-            ? pinsFixture(state)
-            : state === "exp-closed" || state === "exp-revoked"
-              ? heldPinsFixture()
-              : null,
+          fixture: list
+            ? list.pins
+            : isPinsStateKey(state)
+              ? pinsFixture(state)
+              : state === "exp-closed" || state === "exp-revoked"
+                ? heldPinsFixture()
+                : null,
           bar: fixture?.bar ?? null,
+          list,
         };
 
   const opening = await openingFor(experiment, who, request);

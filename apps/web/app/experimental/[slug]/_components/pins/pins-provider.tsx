@@ -16,6 +16,9 @@
  * - The team previews (`source.kind === "preview"`): pins come from a
  *   `?state=` fixture, stay in memory and are never sent. Team notes are
  *   LAB-14's.
+ * - LAB-13's list reads the same pins and queue: every pin, the load, which
+ *   pins were not found on their design, Retry, an edit in the list, and
+ *   Show on page (`reveal`).
  */
 import {
   createContext,
@@ -46,6 +49,11 @@ import {
 } from "../../../../../lib/sandbox/client/comment-mode";
 import type { BarData } from "../../../../../lib/sandbox/client/experiment-view";
 import {
+  runRetry,
+  type ListFixture,
+  type RetryOutcome,
+} from "../../../../../lib/sandbox/client/pin-list";
+import {
   mergeLoaded,
   nextPinNumber,
   pinsBar,
@@ -70,8 +78,16 @@ import { PinsToaster } from "./pins-toaster";
 
 export type PinsSource =
   | { kind: "reviewer"; reviewerId: string }
-  /** The team: a `?state=` fixture's pins, or LAB-11's bar fixture, never sent. */
-  | { kind: "preview"; fixture: PinsFixture | null; bar: BarData | null };
+  /**
+   * The team: a `?state=` fixture's pins, or LAB-11's bar fixture, never
+   * sent; with LAB-13's list fixture, the load it shows and the list open.
+   */
+  | {
+      kind: "preview";
+      fixture: PinsFixture | null;
+      bar: BarData | null;
+      list?: ListFixture | null;
+    };
 
 /** The composer's work: a new pin, or an edit of one. */
 export type Draft = {
@@ -85,6 +101,16 @@ export type Draft = {
   saving: boolean;
   /** Focus goes back here when the composer closes with no pin to return to. */
   returnTo: HTMLElement | null;
+  /** "list": an edit opened from LAB-13's list, its composer in the list item. */
+  in?: "pin" | "list";
+  /** Where focus goes once a list edit closes; looked up then, since the item re-renders. */
+  refocus?: () => HTMLElement | null;
+};
+
+/** How a list action hands focus back once the pin has gone or the composer closed. */
+export type ListFocus = {
+  returnTo?: HTMLElement | null;
+  refocus(): HTMLElement | null;
 };
 
 type Held = "closed" | "revoked" | null;
@@ -103,6 +129,22 @@ type PinsContextValue = {
   /** The draft pin's state: a new one is unsent; an edit keeps its pin's. */
   draftSync: Pin["sync"];
   openPin: string | null;
+  /** Every pin across designs, in number order (LAB-13). */
+  pins: readonly Pin[];
+  load: "loading" | "ok" | "error";
+  online: boolean;
+  /** Pins whose anchor was not found on their design when it was last shown. */
+  detached: ReadonlySet<string>;
+  /** The edit open in LAB-13's list, or null. */
+  listDraft: Draft | null;
+  /** A list `?state=` fixture the team previews, or null. */
+  listFixture: ListFixture | null;
+  /** The list's Retry: a failed load reloads (null); otherwise the queue is resent. */
+  retryFromList(): Promise<RetryOutcome | null>;
+  /** Show on page: once the pin's design is shown and laid out, scroll to it and open it. */
+  reveal(id: string): void;
+  /** The open list's popup, where the toasts are portalled while it is open; null after. */
+  setToastHost(element: HTMLElement | null): void;
   toggleMode(): void;
   retry(): void;
   setRoot(element: HTMLElement | null): void;
@@ -111,8 +153,8 @@ type PinsContextValue = {
   saveDraft(): void;
   /** The composer was dismissed: Escape, Cancel, or a press outside it. */
   dismissDraft(how: "escape" | "cancel" | "outside"): void;
-  startEdit(pin: Pin): void;
-  deletePin(pin: Pin): void;
+  startEdit(pin: Pin, list?: ListFocus): void;
+  deletePin(pin: Pin, list?: ListFocus): void;
   registerPin(id: string, element: HTMLButtonElement | null): void;
   announcement: string;
   regionRef: React.RefObject<HTMLDivElement | null>;
@@ -190,7 +232,7 @@ export function PinsProvider({
 
   const [pins, setPins] = useState<Pin[]>(fixture?.pins ?? []);
   const [load, setLoad] = useState<"loading" | "ok" | "error">(
-    preview ? "ok" : "loading",
+    preview ? (preview.list?.load ?? "ok") : "loading",
   );
   const [held, setHeld] = useState<Held>(() => {
     const kind = preview?.bar?.status.kind;
@@ -211,6 +253,9 @@ export function PinsProvider({
     Map<string, { left: number; top: number } | null>
   >(new Map());
   const [reloads, setReloads] = useState(0);
+  const [detached, setDetached] = useState<ReadonlySet<string>>(new Set());
+  const [revealing, setRevealing] = useState<string | null>(null);
+  const [toastHost, setToastHost] = useState<HTMLElement | null>(null);
 
   const sender = useRef<PinSender | null>(null);
   const queue = useRef<QueueStore | null>(null);
@@ -250,6 +295,9 @@ export function PinsProvider({
   // reviewer's is made after mount, where storage may be read.
   if (preview && !sender.current) {
     queue.current = createQueueStore(null, "preview");
+    // The fixture's unsent pins are queued, so Retry shows what it does.
+    for (const pin of fixture?.pins ?? [])
+      if (pin.sync === "unsent") queue.current.put(entryOf(pin));
     sender.current = createPinSender({
       queue: queue.current,
       online: () => onlineRef.current,
@@ -384,6 +432,30 @@ export function PinsProvider({
     else void flush();
   }, [load, flush]);
 
+  // The list's Retry announces in the list's own live region (the page
+  // behind a modal list is hidden from a screen reader), so it reads the
+  // outcome itself rather than through `flush`'s announcement.
+  const retryFromList = useCallback(async () => {
+    const s = sender.current;
+    const q = queue.current;
+    if (load === "error") {
+      setReloads((n) => n + 1);
+      return null;
+    }
+    if (!s || !q || s.held()) return null;
+    const outcome = await runRetry({
+      queued: () => q.all().map((e) => e.id),
+      flush: async () => {
+        const result = await s.flush();
+        syncFromQueue();
+        noteHeld(result.last);
+        if (result.sent.length) setSaved(true);
+        return result;
+      },
+    });
+    return outcome;
+  }, [load, noteHeld, syncFromQueue]);
+
   /** What a send came to, for a new pin, an edit, or an Undo. */
   const settle = useCallback(
     (entry: QueueEntry, outcome: SendOutcome) => {
@@ -453,7 +525,9 @@ export function PinsProvider({
     void send(entry).then(() => {
       setDraft(null);
       if (d.kind === "new") step({ type: "saved" });
-      focusLater(() => pinButtons.current.get(d.id) ?? d.returnTo);
+      focusLater(
+        () => d.refocus?.() ?? pinButtons.current.get(d.id) ?? d.returnTo,
+      );
     });
   }, [draft, send, step, focusLater]);
 
@@ -480,15 +554,33 @@ export function PinsProvider({
           },
         });
       }
-      focusLater(() => pinButtons.current.get(d.id) ?? d.returnTo);
+      focusLater(
+        () => d.refocus?.() ?? pinButtons.current.get(d.id) ?? d.returnTo,
+      );
     },
     [draft, step, toasts, focusLater],
   );
 
   const startEdit = useCallback(
-    (pin: Pin) => {
+    (pin: Pin, list?: ListFocus) => {
       if (held) return;
       setOpenPin(null);
+      if (list) {
+        setDraft({
+          kind: "edit",
+          id: pin.id,
+          number: pin.number,
+          design: pin.design,
+          anchor: pin.anchor,
+          pinKind: pin.kind,
+          body: pin.body,
+          saving: false,
+          returnTo: list.returnTo ?? null,
+          in: "list",
+          refocus: list.refocus,
+        });
+        return;
+      }
       setDraft({
         kind: "edit",
         id: pin.id,
@@ -505,7 +597,7 @@ export function PinsProvider({
   );
 
   const deletePin = useCallback(
-    (pin: Pin) => {
+    (pin: Pin, list?: ListFocus) => {
       const s = sender.current;
       if (held || !s) return;
       setOpenPin(null);
@@ -535,11 +627,12 @@ export function PinsProvider({
           },
         },
       });
-      focusLater(
-        () =>
-          (neighbour && pinButtons.current.get(neighbour.id)) ||
-          toggleRef.current ||
-          regionRef.current,
+      focusLater(() =>
+        list
+          ? list.refocus()
+          : (neighbour && pinButtons.current.get(neighbour.id)) ||
+            toggleRef.current ||
+            regionRef.current,
       );
       void s.remove(pin.id).then((outcome) => {
         noteHeld(outcome);
@@ -559,7 +652,9 @@ export function PinsProvider({
   // repeats one the server holds.
   const toggleMode = useCallback(() => {
     if (held || load !== "ok") return;
-    if (draft?.kind === "new" && !draft.saving) setDraft(null);
+    // A new pin's draft, or an edit left open in LAB-13's list, gives way.
+    if (draft && !draft.saving && (draft.kind === "new" || draft.in === "list"))
+      setDraft(null);
     step({ type: "toggle" });
   }, [held, load, draft, step]);
 
@@ -690,7 +785,8 @@ export function PinsProvider({
   // on resize, after each switch, and whenever the pins change.
   const shownPins = useMemo(() => pinsOnDesign(pins, shown), [pins, shown]);
   const relay = useCallback(() => {
-    if (!root) return;
+    // Mid-switch the root is still the old design's: wait for the new one.
+    if (!root?.isConnected || root.dataset.sandboxDesign !== shown) return;
     const box = root.getBoundingClientRect();
     const origin = {
       left: box.left + window.scrollX,
@@ -706,7 +802,19 @@ export function PinsProvider({
     for (const pin of shownPins) next.set(pin.id, at(pin.anchor));
     if (draft) next.set(`draft:${draft.id}`, at(draft.anchor));
     setPositions(next);
-  }, [root, shownPins, draft]);
+    // What the shown design's lookup found, kept for the list once another
+    // design is shown; a pin on a design not yet shown counts as found.
+    setDetached((current) => {
+      const updated = new Set(current);
+      for (const pin of shownPins)
+        if (next.get(pin.id)) updated.delete(pin.id);
+        else updated.add(pin.id);
+      const same =
+        updated.size === current.size &&
+        [...updated].every((id) => current.has(id));
+      return same ? current : updated;
+    });
+  }, [root, shown, shownPins, draft]);
 
   useLayoutEffect(() => relay(), [relay]);
   useEffect(() => {
@@ -719,6 +827,29 @@ export function PinsProvider({
       window.removeEventListener("resize", relay);
     };
   }, [root, relay]);
+
+  // Show on page (LAB-13): waits until the pin's design is shown and its
+  // pins re-laid (R9 mounts only the shown one), then scrolls the pin into
+  // view and opens its popover, which takes focus. One not found after all
+  // is marked so and focus goes to the pins region.
+  useEffect(() => {
+    if (!revealing || !positions.has(revealing)) return;
+    const id = revealing;
+    setRevealing(null);
+    const at = positions.get(id);
+    if (!at) {
+      announce(W.notFound);
+      focusLater(() => regionRef.current);
+      return;
+    }
+    const button = pinButtons.current.get(id);
+    const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    button?.scrollIntoView({
+      block: "center",
+      behavior: still ? "instant" : "smooth",
+    });
+    setOpenPin(id);
+  }, [revealing, positions, announce, focusLater]);
 
   const bar = useMemo<BarData>(
     () =>
@@ -747,15 +878,32 @@ export function PinsProvider({
       mode,
       shown,
       drawn: shownPins
-        .filter((pin) => !(draft?.kind === "edit" && draft.id === pin.id))
+        .filter(
+          (pin) =>
+            !(
+              draft?.kind === "edit" &&
+              draft.in !== "list" &&
+              draft.id === pin.id
+            ),
+        )
         .map((pin) => ({ pin, at: positions.get(pin.id) ?? null })),
-      draft: draft && draft.design === shown ? draft : null,
+      draft:
+        draft && draft.in !== "list" && draft.design === shown ? draft : null,
       draftAt: draft ? (positions.get(`draft:${draft.id}`) ?? null) : null,
       draftSync:
         draft?.kind === "edit"
           ? (pins.find((p) => p.id === draft.id)?.sync ?? "unsent")
           : "unsent",
       openPin,
+      pins,
+      load,
+      online,
+      detached,
+      listDraft: draft?.in === "list" ? draft : null,
+      listFixture: preview?.list ?? null,
+      retryFromList,
+      reveal: setRevealing,
+      setToastHost,
       toggleMode,
       retry,
       setRoot,
@@ -785,6 +933,11 @@ export function PinsProvider({
       positions,
       draft,
       openPin,
+      preview,
+      load,
+      online,
+      detached,
+      retryFromList,
       toggleMode,
       retry,
       saveDraft,
@@ -797,7 +950,11 @@ export function PinsProvider({
 
   return (
     <PinsContext.Provider value={value}>
-      <PinsToaster toastManager={toasts} barHeight={barHeight}>
+      <PinsToaster
+        toastManager={toasts}
+        barHeight={barHeight}
+        container={toastHost}
+      >
         {children}
       </PinsToaster>
     </PinsContext.Provider>

@@ -5,7 +5,9 @@
  * in this browser only." Built from @pem/ui's toast parts so the viewport
  * sits above the review bar, never under it. An Undo toast stays until
  * dismissed or 8 seconds pass, pauses while hovered or focused (Base UI's
- * viewport), and is reachable by keyboard (F6).
+ * viewport), and is reachable by keyboard (F6). While LAB-13's list is open
+ * the viewport is portalled into it (`container`), so a modal list neither
+ * covers an Undo nor traps focus away from it.
  */
 import type { CSSProperties, ReactNode } from "react";
 
@@ -42,16 +44,18 @@ function PinsToastList() {
 export function PinsToaster({
   toastManager,
   barHeight,
+  container,
   children,
 }: {
   toastManager: ReturnType<typeof createToastManager>;
   barHeight: number;
+  container: HTMLElement | null;
   children: ReactNode;
 }) {
   return (
     <ToastProvider toastManager={toastManager}>
       {children}
-      <ToastPortal>
+      <ToastPortal container={container ?? undefined}>
         <ToastViewport
           style={{ "--review-bar-height": `${barHeight}px` } as CSSProperties}
           className="bottom-[calc(var(--review-bar-height)+--spacing(4))]"
