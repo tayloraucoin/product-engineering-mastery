@@ -117,6 +117,14 @@ export const SANDBOX_STATE_KEYS: Readonly<
   "review-closed": "team",
   "review-edit": "team",
   "review-success": "team",
+  // The designs section and the choice (LAB-18, review-variants.md).
+  "variants-empty": "team",
+  "variants-unviewed": "team",
+  "variants-partial": "team",
+  "variants-unlocked": "team",
+  "variants-chosen": "team",
+  "variants-combine": "team",
+  "variants-none": "team",
   // Review has ended (LAB-21, ended.md).
   "ended-success": "team",
   "ended-empty": "team",

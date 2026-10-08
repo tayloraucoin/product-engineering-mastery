@@ -12,10 +12,15 @@
  * data, a full quota): every read and write is wrapped, and the form then
  * lives in memory for the page.
  *
+ * With two to four designs (LAB-18, review-variants.md), "Each design"
+ * replaces Overall and "Your choice" is asked: the form holds them under
+ * `variants`, and `client/review-variants-form.ts` holds their rules.
+ *
  * Pure and client-safe: no @pem/db, next or env.ts.
  */
 
 import type { ConfigQuestion } from "../../../app/experimental/_experiments/registry.ts";
+import { designOption, type DesignShapeKey } from "./experiment-view.ts";
 import type { StorageLike } from "./queue.ts";
 import {
   CANT_JUDGE,
@@ -26,6 +31,22 @@ import {
   TRIAGE_OPTIONS,
   type TriageId,
 } from "./review-core.ts";
+import {
+  blockersQuestion,
+  choiceLock,
+  emptyVariants,
+  followUps,
+  hasVariants,
+  isStrength,
+  VARIANTS_WORDS,
+  variantsFromDraft,
+  variantsFromVersion,
+  variantsPayload,
+  type StoredChoice,
+  type StoredDesignAnswer,
+  type VariantDesign,
+  type VariantsAnswers,
+} from "./review-variants-form.ts";
 
 /** What the reviewer has typed and chosen, as the form holds it. */
 export type FormAnswers = {
@@ -38,6 +59,8 @@ export type FormAnswers = {
   /** The config's extra questions, by id. */
   questions: Record<string, string>;
   nextStep: string | null;
+  /** Each design and the choice, with two to four designs (LAB-18). */
+  variants: VariantsAnswers;
 };
 
 /** The triage as sent and stored: a choice per comment id, and the one that matters most. */
@@ -59,6 +82,10 @@ export type ReviewAnswers = {
   targeted?: string;
   questions?: Record<string, string>;
   nextStep?: string;
+  /** With several designs: per design its rating, weakness and flag (LAB-18). */
+  designs?: Record<string, StoredDesignAnswer>;
+  /** With several designs: the choice, how it was reached, and the order shown. */
+  choice?: StoredChoice;
 };
 
 export type ReviewPayload = { answers: ReviewAnswers; triage: ReviewTriage };
@@ -68,7 +95,22 @@ export type ReviewConfig = {
   goals: readonly string[];
   targetedQuestion?: { text: string; labels: readonly string[] };
   questions: readonly ConfigQuestion[];
+  /** The designs, in page order; two or more ask "Each design" and "Your choice". */
+  designs?: readonly ReviewDesign[];
 };
+
+/** One design as the form's rules need it: its id and shape (its label derives from the shape). */
+export type ReviewDesign = { id: string; shape: DesignShapeKey };
+
+/** The designs as the variants rules take them: id plus "◆ Diamond". */
+export function variantDesigns(
+  designs: readonly ReviewDesign[] | undefined,
+): VariantDesign[] {
+  return (designs ?? []).map((d) => ({
+    id: d.id,
+    label: designOption(d).label,
+  }));
+}
 
 /** One comment as the form plays it back. */
 export type ReviewComment = { id: string; number: number };
@@ -82,6 +124,7 @@ export function emptyForm(): ReviewForm {
     targeted: null,
     questions: {},
     nextStep: null,
+    variants: emptyVariants(),
     triage: {},
     mattersMost: null,
   };
@@ -132,6 +175,7 @@ export function formFromVersion(
           )
         : {},
     nextStep: typeof a.nextStep === "string" ? a.nextStep : null,
+    variants: variantsFromVersion(a),
     triage,
     mattersMost:
       typeof t.mattersMost === "string" && t.mattersMost in triage
@@ -170,23 +214,34 @@ export function mattersMostView(
 
 /**
  * Goal fit comes first (research §3): on a first send no comment text
- * renders until goal fit has an answer ("Can't judge yet" counts). In edit
- * mode the comments are open.
+ * renders until goal fit has an answer ("Can't judge yet" counts). With
+ * several designs, until every design has one (LAB-18). In edit mode the
+ * comments are open.
  */
 export function commentsOpen(
-  form: Pick<ReviewForm, "overall">,
+  form: Pick<ReviewForm, "overall"> & { variants?: VariantsAnswers },
   editing: boolean,
+  designs: readonly ReviewDesign[] = [],
 ): boolean {
-  return editing || form.overall !== null;
+  if (editing) return true;
+  if (!hasVariants(designs)) return form.overall !== null;
+  return !choiceLock(variantDesigns(designs), form.variants?.ratings ?? {})
+    .locked;
 }
 
-/** What one send carries: option ids, text only where written, the triage of comments still here. */
+/**
+ * What one send carries: option ids, text only where written, the triage of
+ * comments still here. With several designs, each design and the choice
+ * replace Overall.
+ */
 export function toPayload(
   form: ReviewForm,
   comments: readonly ReviewComment[],
+  designs: readonly ReviewDesign[] = [],
 ): ReviewPayload {
   const answers: ReviewAnswers = {};
-  if (form.overall) answers.overall = form.overall;
+  const several = hasVariants(designs);
+  if (form.overall && !several) answers.overall = form.overall;
   if (form.blockersNone) answers.blockers = { none: true };
   else if (form.blockersText.trim())
     answers.blockers = { text: form.blockersText };
@@ -197,6 +252,11 @@ export function toPayload(
   );
   if (Object.keys(questions).length) answers.questions = questions;
   if (form.nextStep) answers.nextStep = form.nextStep;
+  if (several) {
+    const part = variantsPayload(form.variants, variantDesigns(designs));
+    answers.designs = part.designs;
+    if (part.choice) answers.choice = part.choice;
+  }
   const triage = triageOf(form.triage, comments);
   return {
     answers,
@@ -225,22 +285,38 @@ export const GAP_IDS = {
   blockers: "blockers",
   question: (questionId: string) => `question-${questionId}`,
   nextStep: "next-step",
+  rating: (designId: string) => `rating-${designId}`,
+  choice: "choice",
+  strength: "strength",
 } as const;
 
 /**
  * Every required answer still missing, in page order: goal fit ("Can't
  * judge yet" counts), the triage of every comment, "matters most" when two
  * or more are Must or Should, blockers (text or the box), each question the
- * config marks required, and the next step.
+ * config marks required, and the next step. With several designs, goal fit
+ * is each design's rating, and the choice follows the comments, with its
+ * strength once a design is chosen.
+ * [ASSUMPTION: the choice is required, since S20 calls it forced.]
  */
 export function requiredGaps(
   payload: ReviewPayload,
   comments: readonly ReviewComment[],
-  config: Pick<ReviewConfig, "questions">,
+  config: Pick<ReviewConfig, "questions" | "designs">,
 ): Gap[] {
   const gaps: Gap[] = [];
   const { answers, triage } = payload;
-  if (!answers.overall)
+  const designs = variantDesigns(config.designs);
+  const several = hasVariants(designs);
+  if (several) {
+    for (const d of designs)
+      if (!answers.designs?.[d.id]?.rating)
+        gaps.push({
+          id: GAP_IDS.rating(d.id),
+          label: VARIANTS_WORDS.rating(d.label),
+          message: REVIEW_ERRORS.overall,
+        });
+  } else if (!answers.overall)
     gaps.push({
       id: GAP_IDS.overall,
       label: REVIEW_CORE.overall.question,
@@ -264,10 +340,29 @@ export function requiredGaps(
       label: REVIEW_CORE.comments.mattersMost,
       message: REVIEW_ERRORS.mattersMost,
     });
+  const choice = answers.choice?.option ?? null;
+  if (several && choice === null)
+    gaps.push({
+      id: GAP_IDS.choice,
+      label: VARIANTS_WORDS.choiceQuestion,
+      message: REVIEW_ERRORS.choice,
+    });
+  if (
+    several &&
+    followUps(choice, designs).includes("strength") &&
+    !isStrength(answers.choice?.strength)
+  )
+    gaps.push({
+      id: GAP_IDS.strength,
+      label: VARIANTS_WORDS.strength,
+      message: REVIEW_ERRORS.strength,
+    });
   if (!answers.blockers)
     gaps.push({
       id: GAP_IDS.blockers,
-      label: REVIEW_CORE.blockers.question,
+      label: several
+        ? blockersQuestion(choice, designs)
+        : REVIEW_CORE.blockers.question,
       message: REVIEW_ERRORS.blockers,
     });
   for (const q of config.questions)
@@ -355,6 +450,7 @@ export function readDraft(
           )
         : {},
     nextStep: strOrNull(a.nextStep),
+    variants: variantsFromDraft(a.variants),
     triage,
     mattersMost:
       typeof d.triage?.mattersMost === "string" &&

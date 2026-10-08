@@ -14,6 +14,9 @@
  *   pin and its edit never race.
  * - A `?state=` fixture (the team) reads and writes nothing: its send only
  *   shows the browser's check.
+ * - With two to four designs (LAB-18), "Each design" replaces Overall by its
+ *   section and "Your choice" follows the comments; the choice's order comes
+ *   from the server, and its unlocking is announced politely.
  */
 import {
   useCallback,
@@ -70,6 +73,7 @@ import {
   readDraft,
   requiredGaps,
   toPayload,
+  variantDesigns,
   withoutComment,
   writeDraft,
   type ReviewForm as Form,
@@ -79,6 +83,16 @@ import {
   nextVersionId,
   sendReviewFlow,
 } from "../../../../../lib/sandbox/client/review-send";
+import {
+  blockersQuestion,
+  choiceLock,
+  chooseOption,
+  hasVariants,
+  rateDesign,
+  unlockAnnouncement,
+  VARIANTS_WORDS as V,
+  type VariantsContext,
+} from "../../../../../lib/sandbox/client/review-variants-form";
 import {
   editedPin,
   SENT_WORDS,
@@ -94,6 +108,7 @@ import {
 } from "../../actions";
 import { ChoiceGroup } from "./choice-group";
 import { ReviewComments } from "./review-comments";
+import { EachDesign, YourChoice } from "./review-variants";
 
 /** What the form asks beyond the core, and where its links go. */
 export type ReviewPageConfig = {
@@ -103,8 +118,10 @@ export type ReviewPageConfig = {
   questions: readonly ConfigQuestion[];
   designs: readonly DesignOption[];
   backHref: string;
-  /** "Look at the design again": one design only (LAB-18 adds one per design). */
+  /** "Look at the design again": one design only. */
   lookAgainHref: string | null;
+  /** Each design's "Look at … again" address, with several designs (LAB-18). */
+  designHrefs: Readonly<Record<string, string>>;
   endedHref: string;
 };
 
@@ -112,6 +129,8 @@ export type ReviewSource =
   | {
       kind: "reviewer";
       reviewerId: string;
+      /** With several designs: the order shown, the designs viewed, the last one. */
+      variants: VariantsContext | null;
       comments: (QueueEntry & { createdAt?: string })[];
       latest: { createdAt: string; answers: unknown; triage: unknown } | null;
     }
@@ -168,6 +187,15 @@ export function ReviewFormView({
 }) {
   const fixture = source.kind === "fixture" ? source.fixture : null;
   const reviewer = source.kind === "reviewer" ? source : null;
+  const several = hasVariants(config.designs);
+  const designIds = config.designs.map((d) => d.id);
+  const context: VariantsContext = (fixture
+    ? fixture.variants
+    : reviewer!.variants) ?? {
+    order: designIds,
+    viewed: designIds,
+    lastDesign: null,
+  };
 
   const [pins, setPins] = useState<Pin[]>(() =>
     fixture
@@ -274,7 +302,10 @@ export function ReviewFormView({
     [key, status],
   );
 
-  const payload = useMemo(() => toPayload(form, pins), [form, pins]);
+  const payload = useMemo(
+    () => toPayload(form, pins, config.designs),
+    [form, pins, config.designs],
+  );
   const gaps = useMemo(
     () => requiredGaps(payload, pins, config),
     [payload, pins, config],
@@ -291,6 +322,17 @@ export function ReviewFormView({
     setAnnouncement("");
     setTimeout(() => setAnnouncement(text), 50);
   };
+
+  // The choice unlocks once every design has a rating: said once, politely.
+  const choiceLocked = several
+    ? choiceLock(config.designs, form.variants.ratings).locked
+    : false;
+  const wasLocked = useRef(choiceLocked);
+  useEffect(() => {
+    const line = unlockAnnouncement(wasLocked.current, choiceLocked);
+    wasLocked.current = choiceLocked;
+    if (line) announce(line);
+  }, [choiceLocked]);
 
   const onEdit = (pin: Pin, body: string) => {
     const entry = editedPin(pin, body);
@@ -387,7 +429,10 @@ export function ReviewFormView({
           setPins(shown);
           change(() => next);
         }
-        if (requiredGaps(toPayload(next, shown), shown, config).length === 0) {
+        if (
+          requiredGaps(toPayload(next, shown, config.designs), shown, config)
+            .length === 0
+        ) {
           setStatus("send-failed");
           return;
         }
@@ -453,42 +498,72 @@ export function ReviewFormView({
         <Summary gaps={gaps} summaryRef={summaryRef} />
       ) : null}
 
-      <Section heading={W.overall.heading}>
-        <ChoiceGroup
-          id={GAP_IDS.overall}
-          legend={W.overall.question}
-          options={OVERALL_SCALE}
-          apart={[CANT_JUDGE]}
-          value={form.overall}
-          onChange={(value) => change((f) => ({ ...f, overall: value }))}
-          error={errors[GAP_IDS.overall]}
-          disabled={locked}
-        >
-          <ul className="mb-4 list-disc pl-5 text-muted-foreground">
-            {config.goals.map((goal) => (
-              <li key={goal}>{goal}</li>
-            ))}
-          </ul>
-        </ChoiceGroup>
-        {config.lookAgainHref ? (
-          <p>
-            <Link
-              href={config.lookAgainHref}
-              className="-my-3 inline-block py-3 underline underline-offset-4"
-              onClick={() => rememberReturn(config.slug, GAP_IDS.overall)}
-            >
-              {W.overall.lookAgain}
-            </Link>
-          </p>
-        ) : null}
-      </Section>
+      {several ? (
+        <Section heading={V.eachHeading}>
+          <EachDesign
+            designs={config.designs}
+            goals={config.goals}
+            variants={form.variants}
+            context={context}
+            hrefs={config.designHrefs}
+            errors={errors}
+            disabled={locked}
+            onRate={(id, rating) =>
+              change((f) => ({
+                ...f,
+                variants: rateDesign(f.variants, id, rating),
+              }))
+            }
+            onWeakness={(id, text) =>
+              change((f) => ({
+                ...f,
+                variants: {
+                  ...f.variants,
+                  weaknesses: { ...f.variants.weaknesses, [id]: text },
+                },
+              }))
+            }
+            onLeave={(fieldId) => rememberReturn(config.slug, fieldId)}
+          />
+        </Section>
+      ) : (
+        <Section heading={W.overall.heading}>
+          <ChoiceGroup
+            id={GAP_IDS.overall}
+            legend={W.overall.question}
+            options={OVERALL_SCALE}
+            apart={[CANT_JUDGE]}
+            value={form.overall}
+            onChange={(value) => change((f) => ({ ...f, overall: value }))}
+            error={errors[GAP_IDS.overall]}
+            disabled={locked}
+          >
+            <ul className="mb-4 list-disc pl-5 text-muted-foreground">
+              {config.goals.map((goal) => (
+                <li key={goal}>{goal}</li>
+              ))}
+            </ul>
+          </ChoiceGroup>
+          {config.lookAgainHref ? (
+            <p>
+              <Link
+                href={config.lookAgainHref}
+                className="-my-3 inline-block py-3 underline underline-offset-4"
+                onClick={() => rememberReturn(config.slug, GAP_IDS.overall)}
+              >
+                {W.overall.lookAgain}
+              </Link>
+            </p>
+          ) : null}
+        </Section>
+      )}
 
       <Section heading={W.comments.heading} id={COMMENTS_SECTION}>
         <ReviewComments
           comments={pins}
           designs={config.designs}
           form={form}
-          open={commentsOpen(form, editing)}
+          open={commentsOpen(form, editing, config.designs)}
           errors={errors}
           backHref={config.backHref}
           onLeave={() => rememberReturn(config.slug, COMMENTS_SECTION)}
@@ -502,13 +577,47 @@ export function ReviewFormView({
         />
       </Section>
 
+      {several ? (
+        <Section heading={V.choiceHeading}>
+          <YourChoice
+            designs={config.designs}
+            variants={form.variants}
+            context={context}
+            errors={errors}
+            disabled={locked}
+            onChoose={(choice) =>
+              change((f) => ({
+                ...f,
+                variants: chooseOption(f.variants, choice, context.lastDesign),
+              }))
+            }
+            onStrength={(strength) =>
+              change((f) => ({ ...f, variants: { ...f.variants, strength } }))
+            }
+            onText={(key, text) =>
+              change((f) => ({
+                ...f,
+                variants: { ...f.variants, [key]: text },
+              }))
+            }
+          />
+        </Section>
+      ) : null}
+
       <Section heading={W.blockers.heading}>
         <FieldSet
           id={GAP_IDS.blockers}
           tabIndex={-1}
           data-invalid={errors[GAP_IDS.blockers] ? true : undefined}
         >
-          <FieldLegend id="blockers-legend">{W.blockers.question}</FieldLegend>
+          <FieldLegend id="blockers-legend">
+            {several
+              ? blockersQuestion(
+                  form.variants.choice,
+                  variantDesigns(config.designs),
+                )
+              : W.blockers.question}
+          </FieldLegend>
           <Field>
             <Textarea
               id="blockers-text"

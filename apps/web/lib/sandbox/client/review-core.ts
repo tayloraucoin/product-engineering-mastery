@@ -123,6 +123,9 @@ export const REVIEW_ERRORS = {
   blockers: "Write what would stop you, or tick Nothing, I'd approve it.",
   question: "Answer this question.",
   nextStep: "Choose what should happen next.",
+  /** [ASSUMPTION] LAB-18: review-variants.md gives no error words either. */
+  choice: "Choose a design, or one of the three options below them.",
+  strength: "Choose how strong your preference is.",
 } as const;
 
 export function overallLabel(id: string): string | null {

@@ -31,6 +31,7 @@ export function ChoiceGroup({
   error,
   disabled = false,
   inline = false,
+  describedBy,
   children,
 }: {
   /** The field's id: the summary links to it, the server names it. */
@@ -46,6 +47,8 @@ export function ChoiceGroup({
   disabled?: boolean;
   /** Options side by side where there is room (the triage). */
   inline?: boolean;
+  /** A line that says why the group is disabled (LAB-18's locked choice). */
+  describedBy?: string;
   /** Shown between the legend and the options (the goals). */
   children?: ReactNode;
 }) {
@@ -88,7 +91,10 @@ export function ChoiceGroup({
       {children}
       <RadioGroup
         aria-labelledby={legendId}
-        aria-describedby={error ? errorId : undefined}
+        aria-describedby={
+          [describedBy, error ? errorId : null].filter(Boolean).join(" ") ||
+          undefined
+        }
         value={value}
         onValueChange={(next: unknown) => {
           if (typeof next === "string") onChange(next);

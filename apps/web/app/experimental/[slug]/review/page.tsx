@@ -8,6 +8,11 @@
  *
  * The reviewer's comments and latest send load behind a static skeleton
  * (review-loading). The title is the gate's, fixed for every slug.
+ *
+ * With two to four designs (LAB-18, review-variants.md), the designs come
+ * in the reviewer's switcher order, and the choice's order is derived on
+ * the server (`designOrder`): the form leaf gets the order, never the means
+ * to make one.
  */
 
 import { Suspense } from "react";
@@ -71,11 +76,15 @@ export default async function ReviewPage({
     case "redirect":
       return redirect(view.to);
     case "fixture": {
-      const fixture = reviewFixture(view.key, view.experiment.designs[0]!.id);
+      const fixture = reviewFixture(
+        view.key,
+        view.experiment.designs[0]!.id,
+        view.experiment.designs,
+      );
       return (
         <ReviewShell experiment={view.experiment}>
           {fixture.loading ? (
-            <ReviewSkeleton />
+            <ReviewSkeleton several={view.experiment.designs.length > 1} />
           ) : (
             <ReviewFormView
               key={view.key}
@@ -89,7 +98,11 @@ export default async function ReviewPage({
     case "reviewer":
       return (
         <ReviewShell experiment={view.experiment}>
-          <Suspense fallback={<ReviewSkeleton />}>
+          <Suspense
+            fallback={
+              <ReviewSkeleton several={view.experiment.designs.length > 1} />
+            }
+          >
             <ReviewerForm viewer={view.viewer} experiment={view.experiment} />
           </Suspense>
         </ReviewShell>
@@ -105,13 +118,17 @@ async function ReviewerForm({
   viewer: Extract<ReviewPageView, { kind: "reviewer" }>["viewer"];
   experiment: ExperimentConfig;
 }) {
-  const { comments, latest } = await loadReviewFor(viewer);
+  const { comments, latest, designs, variants } = await loadReviewFor(
+    viewer,
+    experiment,
+  );
   return (
     <ReviewFormView
-      config={pageConfig(experiment)}
+      config={pageConfig(experiment, designs)}
       source={{
         kind: "reviewer",
         reviewerId: viewer.reviewerId,
+        variants,
         comments: comments.map((c) => ({
           id: c.id,
           number: c.number,
@@ -136,10 +153,19 @@ async function ReviewerForm({
   );
 }
 
-/** What the form needs from the config, as plain data: no design loaders cross to the browser. */
-function pageConfig(experiment: ExperimentConfig): ReviewPageConfig {
-  const designs = experiment.designs.map(designOption);
+/**
+ * What the form needs from the config, as plain data: no design loaders
+ * cross to the browser. `ordered` is the designs in page order (the
+ * reviewer's switcher order); the team's fixtures use the config's.
+ */
+function pageConfig(
+  experiment: ExperimentConfig,
+  ordered: ExperimentConfig["designs"] = experiment.designs,
+): ReviewPageConfig {
+  const designs = ordered.map(designOption);
   const back = experimentPath(experiment.slug);
+  const designHref = (id: string) =>
+    `${back}?design=${encodeURIComponent(id)}&from=review`;
   return {
     slug: experiment.slug,
     goals: experiment.goals,
@@ -147,10 +173,10 @@ function pageConfig(experiment: ExperimentConfig): ReviewPageConfig {
     questions: experiment.questions,
     designs,
     backHref: `${back}?from=review`,
-    lookAgainHref:
-      designs.length === 1
-        ? `${back}?design=${encodeURIComponent(designs[0]!.id)}&from=review`
-        : null,
+    lookAgainHref: designs.length === 1 ? designHref(designs[0]!.id) : null,
+    designHrefs: Object.fromEntries(
+      designs.map((d) => [d.id, designHref(d.id)]),
+    ),
     endedHref: back,
   };
 }

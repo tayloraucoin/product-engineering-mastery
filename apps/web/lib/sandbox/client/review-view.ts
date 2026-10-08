@@ -10,7 +10,16 @@ import type { DesignOption } from "./experiment-view.ts";
 import { COMMENT_BODY_MAX, PIN_WORDS, placeOf } from "./pins-view.ts";
 import type { QueueEntry } from "./queue.ts";
 import { REVIEW_CORE } from "./review-core.ts";
-import { emptyForm, type ReviewForm } from "./review-form.ts";
+import {
+  emptyForm,
+  type ReviewDesign,
+  type ReviewForm,
+} from "./review-form.ts";
+import {
+  emptyVariants,
+  type VariantsAnswers,
+  type VariantsContext,
+} from "./review-variants-form.ts";
 
 export const REVIEW_STATE_KEYS = [
   "review-empty",
@@ -26,10 +35,28 @@ export const REVIEW_STATE_KEYS = [
   "review-success",
 ] as const;
 
-export type ReviewStateKey = (typeof REVIEW_STATE_KEYS)[number];
+/** review-variants.md's keys (LAB-18): the designs section and the choice. */
+export const VARIANTS_STATE_KEYS = [
+  "variants-empty",
+  "variants-unviewed",
+  "variants-partial",
+  "variants-unlocked",
+  "variants-chosen",
+  "variants-combine",
+  "variants-none",
+] as const;
+
+export type VariantsStateKey = (typeof VARIANTS_STATE_KEYS)[number];
+
+/** Every key the review page renders a fixture for. */
+export type ReviewStateKey =
+  (typeof REVIEW_STATE_KEYS)[number] | VariantsStateKey;
 
 export function isReviewStateKey(value: unknown): value is ReviewStateKey {
-  return (REVIEW_STATE_KEYS as readonly unknown[]).includes(value);
+  return (
+    (REVIEW_STATE_KEYS as readonly unknown[]).includes(value) ||
+    (VARIANTS_STATE_KEYS as readonly unknown[]).includes(value)
+  );
 }
 
 /** Where the form is: answering, sending, or one of the lines above the button. */
@@ -49,6 +76,8 @@ export type ReviewFixture = {
   loading: boolean;
   /** The sent slot (LAB-19 fills it): first send or a later one. */
   sent: "first" | "later" | null;
+  /** With several designs: the order shown, the designs viewed, the last one (LAB-18). */
+  variants: VariantsContext | null;
 };
 
 const viewport = { viewportW: 390, viewportH: 844 };
@@ -100,11 +129,29 @@ const [C1, C2, C3] = [
   "00000000-0000-4000-8000-000000000103",
 ];
 
+/** Every design rated, the first chosen with a clear preference: a filled form's variants. */
+function filledVariants(ids: readonly string[]): VariantsAnswers {
+  if (ids.length < 2) return emptyVariants();
+  const ratings = ["very", "moderately", "slightly", "cant-judge"];
+  return {
+    ...emptyVariants(),
+    ratings: Object.fromEntries(ids.map((id, i) => [id, ratings[i]!])),
+    weaknesses: {
+      [ids[1]!]: "The plan names are easy to mix up at a glance.",
+    },
+    choice: ids[0]!,
+    strength: "clear",
+    reasons: "The prices sit next to what each plan includes.",
+    lastViewed: ids.at(-1)!,
+  };
+}
+
 /** A filled form: every required answer given. */
-function filledForm(): ReviewForm {
+function filledForm(ids: readonly string[] = []): ReviewForm {
   return {
     ...emptyForm(),
-    overall: "moderately",
+    variants: filledVariants(ids),
+    overall: ids.length < 2 ? "moderately" : null,
     triage: { [C1]: "must", [C2]: "should", [C3]: "fine" },
     mattersMost: C1,
     blockersText: "The annual price needs to be visible next to each plan.",
@@ -113,20 +160,77 @@ function filledForm(): ReviewForm {
   };
 }
 
+/**
+ * The fixture for a key. `designs` are the experiment's, in page order: with
+ * two or more, filled forms rate each design and choose one, and the
+ * variants keys render; the order shown is the page order reversed, so a
+ * capture shows it is not the switcher's.
+ */
 export function reviewFixture(
   key: ReviewStateKey,
   design: string,
+  designs: readonly ReviewDesign[] = [],
 ): ReviewFixture {
+  const ids = designs.map((d) => d.id);
+  const several = ids.length >= 2;
   const base: ReviewFixture = {
-    comments: fixtureComments(design),
+    comments: several
+      ? fixtureComments(design).map((c, i) => ({
+          ...c,
+          design: ids[i % ids.length]!,
+        }))
+      : fixtureComments(design),
     form: emptyForm(),
     latestAt: null,
     status: "idle",
     showErrors: false,
     loading: false,
     sent: null,
+    variants: several
+      ? { order: [...ids].reverse(), viewed: ids, lastDesign: ids.at(-1)! }
+      : null,
   };
+  const filled = () => filledForm(ids);
+  const rated = (count: number): VariantsAnswers => ({
+    ...emptyVariants(),
+    ratings: Object.fromEntries(
+      ids.slice(0, count).map((id, i) => [id, i === 0 ? "very" : "cant-judge"]),
+    ),
+  });
+  const variantsForm = (v: VariantsAnswers): ReviewForm => ({
+    ...emptyForm(),
+    variants: v,
+  });
   switch (key) {
+    case "variants-empty":
+      return base;
+    case "variants-unviewed":
+      return {
+        ...base,
+        variants: base.variants && {
+          ...base.variants,
+          viewed: ids.slice(0, -1),
+        },
+      };
+    case "variants-partial":
+      return { ...base, form: variantsForm(rated(1)) };
+    case "variants-unlocked":
+      return { ...base, form: variantsForm(rated(ids.length)) };
+    case "variants-chosen":
+      return {
+        ...base,
+        form: variantsForm({ ...rated(ids.length), choice: ids[0] ?? null }),
+      };
+    case "variants-combine":
+      return {
+        ...base,
+        form: variantsForm({ ...rated(ids.length), choice: "combine" }),
+      };
+    case "variants-none":
+      return {
+        ...base,
+        form: variantsForm({ ...rated(ids.length), choice: "none" }),
+      };
     case "review-empty":
       return base;
     case "review-no-comments":
@@ -139,7 +243,8 @@ export function reviewFixture(
         ...base,
         form: {
           ...emptyForm(),
-          overall: "very",
+          variants: filledVariants(ids),
+          overall: several ? null : "very",
           triage: { [C1]: "must", [C2]: "fine" },
         },
         showErrors: true,
@@ -149,26 +254,27 @@ export function reviewFixture(
         ...base,
         form: {
           ...emptyForm(),
-          overall: "moderately",
+          variants: several ? rated(ids.length) : emptyVariants(),
+          overall: several ? null : "moderately",
           triage: { [C1]: "must", [C2]: "should" },
         },
       };
     case "review-offline":
-      return { ...base, form: filledForm(), status: "offline" };
+      return { ...base, form: filled(), status: "offline" };
     case "review-sending":
-      return { ...base, form: filledForm(), status: "sending" };
+      return { ...base, form: filled(), status: "sending" };
     case "review-send-failed":
-      return { ...base, form: filledForm(), status: "send-failed" };
+      return { ...base, form: filled(), status: "send-failed" };
     case "review-closed":
-      return { ...base, form: filledForm(), status: "closed" };
+      return { ...base, form: filled(), status: "closed" };
     case "review-edit":
       return {
         ...base,
-        form: filledForm(),
+        form: filled(),
         latestAt: "2026-10-05T14:32:00.000Z",
       };
     case "review-success":
-      return { ...base, form: filledForm(), sent: "first" };
+      return { ...base, form: filled(), sent: "first" };
   }
 }
 

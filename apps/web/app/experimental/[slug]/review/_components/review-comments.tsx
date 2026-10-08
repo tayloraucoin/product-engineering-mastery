@@ -6,7 +6,8 @@
  * edits the pin itself), Delete, and a three-way triage; then "Which
  * matters most?" among the Must and Should ones, hidden when exactly one is
  * so marked. Until goal fit is answered on a first send, no comment text is
- * in the page.
+ * in the page. With several designs the comments are grouped by design, in
+ * page order (LAB-18, review-variants.md).
  */
 import { useState } from "react";
 import Link from "next/link";
@@ -87,24 +88,56 @@ export function ReviewComments({
 
   const rows = commentPlayback(comments, designs);
   const most = mattersMostView(form, comments);
+  const list = (shown: readonly CommentPlayback[]) => (
+    <ol className="flex flex-col gap-8">
+      {shown.map((row) => (
+        <CommentRow
+          key={row.id}
+          row={row}
+          pin={comments.find((p) => p.id === row.id)!}
+          choice={form.triage[row.id] ?? null}
+          error={errors[GAP_IDS.triage(row.id)] ?? null}
+          disabled={disabled}
+          onTriage={onTriage}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
+      ))}
+    </ol>
+  );
+  const designOf = (row: CommentPlayback) =>
+    comments.find((p) => p.id === row.id)?.design;
+  const groups =
+    designs.length > 1
+      ? [
+          ...designs.map((d) => ({
+            id: d.id,
+            heading: `${d.label} design` as string | null,
+            rows: rows.filter((r) => designOf(r) === d.id),
+          })),
+          // A pin on a design since dropped from the config: last, unheaded.
+          {
+            id: "",
+            heading: null,
+            rows: rows.filter(
+              (r) => !designs.some((d) => d.id === designOf(r)),
+            ),
+          },
+        ].filter((g) => g.rows.length)
+      : null;
   return (
     <div className="flex flex-col gap-8">
       <p>{W.comments.lead}</p>
-      <ol className="flex flex-col gap-8">
-        {rows.map((row) => (
-          <CommentRow
-            key={row.id}
-            row={row}
-            pin={comments.find((p) => p.id === row.id)!}
-            choice={form.triage[row.id] ?? null}
-            error={errors[GAP_IDS.triage(row.id)] ?? null}
-            disabled={disabled}
-            onTriage={onTriage}
-            onEdit={onEdit}
-            onDelete={onDelete}
-          />
-        ))}
-      </ol>
+      {groups
+        ? groups.map((g) => (
+            <div key={g.id} className="flex flex-col gap-6">
+              {g.heading ? (
+                <h3 className="text-lg font-semibold">{g.heading}</h3>
+              ) : null}
+              {list(g.rows)}
+            </div>
+          ))
+        : list(rows)}
       {most.shown ? (
         <ChoiceGroup
           id={GAP_IDS.mattersMost}

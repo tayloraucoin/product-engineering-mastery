@@ -12,6 +12,10 @@
  *   (`requiredGaps`, the browser's own check). Results are fixed and never
  *   echo input; a missing answer is named by its field id only.
  * - A closed experiment stores nothing and returns `closed`.
+ * - With several designs (LAB-18), each design's rating and the choice
+ *   replace Overall; every design id is checked against the config, and the
+ *   stored choice records the order this reviewer was shown, derived here
+ *   (`designOrder`), never the browser's.
  */
 
 import { z } from "zod";
@@ -31,6 +35,12 @@ import {
 } from "./client/review-form.ts";
 import type { SendReviewResult } from "./client/review-send.ts";
 import { isReviewStateKey, type ReviewStateKey } from "./client/review-view.ts";
+import {
+  designOrder,
+  variantsFitConfig,
+  variantsInput,
+  withShownOrder,
+} from "./review-variants.ts";
 
 /** The answers' JSON, in bytes (data-contract.md). */
 export const REVIEW_ANSWERS_BYTES_MAX = 64 * 1024;
@@ -101,6 +111,7 @@ const sendInput = z.strictObject({
     targeted: z.string().max(200).optional(),
     questions: z.record(z.string().regex(SLUG).max(48), text).optional(),
     nextStep: z.enum(ANSWER_OPTIONS.nextStep).optional(),
+    ...variantsInput(text),
   }),
   triage: z.strictObject({
     comments: z.record(
@@ -137,6 +148,14 @@ function bytes(value: unknown): number {
 
 /** Every answer is one the config asks, holding one of its options. */
 function fitsConfig(answers: ReviewAnswers, config: ExperimentConfig): boolean {
+  if (
+    !variantsFitConfig(
+      answers,
+      config.designs.map((d) => d.id),
+      ANSWER_OPTIONS.overall,
+    )
+  )
+    return false;
   if (answers.targeted !== undefined) {
     const labels = config.targetedQuestion?.labels ?? [];
     if (!labels.includes(answers.targeted)) return false;
@@ -212,7 +231,14 @@ export async function sendReviewWith(
     const saved = await deps.saveReviewVersion(result.viewer, {
       id: versionId.toLowerCase(),
       coreVersion: CORE_VERSION,
-      answers,
+      answers: withShownOrder(
+        answers,
+        designOrder(
+          result.experiment.slug,
+          result.viewer.reviewerId,
+          result.experiment.designs.map((d) => d.id),
+        ),
+      ),
       triage: stored,
     });
     return {
