@@ -548,6 +548,9 @@ test("C4 contract:init for an epic ticket, then status, on the single-app repo w
     read(repo, "specs/_status.md"),
     /\| ACME-1 \| epic ticket \| draft \|.*first-slice/,
   );
+  // MIG-3 C8: the target's first verify runs check-specs over exactly this tree.
+  r = tool(repo, "check-specs.ts", ["--skip-fixtures"]);
+  assert.equal(r.status, 0, r.out);
 });
 
 // MIG-2: the settings floor, the operator's local rows and the spine on the same repo.

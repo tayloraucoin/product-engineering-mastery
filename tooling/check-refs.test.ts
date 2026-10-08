@@ -5,7 +5,7 @@
  */
 
 import assert from "node:assert/strict";
-import { existsSync, rmSync } from "node:fs";
+import { existsSync, readFileSync, rmSync } from "node:fs";
 import path from "node:path";
 import { test } from "node:test";
 
@@ -129,4 +129,46 @@ test("C2 under overlay a broken link in a manifest path fails, naming the file",
   assert.equal(r.status, 1, r.out);
   assert.match(r.out, /docs\/workflows\/guide\.md/);
   assert.doesNotMatch(r.out, /docs\/host\/notes\.md/);
+});
+
+/** MIG-3 C7: what the derived package.json names, the manifest installs. */
+const STARTER_ONLY = new Set([
+  "tooling/check-stack.ts",
+  "tooling/check-catalog.ts",
+  "tooling/check-ui-layout.ts",
+  "tooling/contrast-audit.ts",
+  "tooling/check-client-bundle.ts",
+  // The starter's dev-server helper (web:dev:local) and the toolkit-only assess.
+  "tooling/print-local-urls.ts",
+  "tooling/migrate-assess.ts",
+]);
+
+test("C7 every package.json script that runs a tooling file names a manifest entry, bar the starter-only checks; the two corrected copy entries and the tsconfig derive entry are there", () => {
+  const root = path.resolve(import.meta.dirname, "..");
+  const scripts = (
+    JSON.parse(readFileSync(path.join(root, "package.json"), "utf8")) as {
+      scripts: Record<string, string>;
+    }
+  ).scripts;
+  const manifest = JSON.parse(
+    readFileSync(
+      path.join(root, "docs/runbooks/migrate/manifest.json"),
+      "utf8",
+    ),
+  ) as { entries: { path: string; mode: string }[] };
+  const installed = (file: string) =>
+    manifest.entries.some((e) =>
+      e.path.endsWith("/") ? file.startsWith(e.path) : e.path === file,
+    );
+  const missing: string[] = [];
+  for (const [name, command] of Object.entries(scripts)) {
+    const file = command.match(/\bnode (tooling\/[^\s"]+)/)?.[1];
+    if (!file || STARTER_ONLY.has(file) || installed(file)) continue;
+    missing.push(`${name} runs ${file}`);
+  }
+  assert.deepEqual(missing, []);
+  const byPath = new Map(manifest.entries.map((e) => [e.path, e.mode]));
+  assert.equal(byPath.get("tooling/check-reviewers.ts"), "copy");
+  assert.equal(byPath.get("tooling/check-test-weakening.ts"), "copy");
+  assert.equal(byPath.get("tooling/tsconfig.json"), "derive");
 });

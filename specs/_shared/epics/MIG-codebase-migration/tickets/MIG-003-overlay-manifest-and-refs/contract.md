@@ -60,7 +60,7 @@ criteria:
     evidence: check
     command: "yarn check-types:tooling"
   - id: C7
-    statement: "Every package.json script that runs a tooling file names a manifest tooling entry, except check-stack, check-catalog, check-ui-layout, contrast-audit, check-client-bundle and migrate:assess; check-reviewers.ts and check-test-weakening.ts are copy entries and tooling/tsconfig.json is a derive entry."
+    statement: "Every package.json script that runs a tooling file names a manifest tooling entry, except the starter-only checks (check-stack, check-catalog, check-ui-layout, contrast-audit, check-client-bundle), the starter's dev-server helper (print-local-urls) and the toolkit-only migrate:assess; check-reviewers.ts and check-test-weakening.ts are copy entries and tooling/tsconfig.json is a derive entry."
     evidence: test
     command: "yarn test:tooling"
   - id: C8

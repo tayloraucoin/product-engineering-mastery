@@ -343,6 +343,18 @@
     },
     {
       "group": "tooling",
+      "path": "tooling/check-reviewers.ts",
+      "mode": "copy",
+      "when": "always"
+    },
+    {
+      "group": "tooling",
+      "path": "tooling/check-test-weakening.ts",
+      "mode": "copy",
+      "when": "always"
+    },
+    {
+      "group": "tooling",
       "path": "tooling/gen-agents.ts",
       "mode": "copy",
       "when": "always"
@@ -386,7 +398,7 @@
     {
       "group": "tooling",
       "path": "tooling/tsconfig.json",
-      "mode": "copy",
+      "mode": "derive",
       "when": "always"
     },
     {
