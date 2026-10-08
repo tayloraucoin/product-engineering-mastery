@@ -12,6 +12,11 @@ import {
   readManifestPaths,
   type HygieneReport,
 } from "./hygiene.ts";
+import {
+  checkPreconditions,
+  type Precondition,
+  type PreconditionOptions,
+} from "./preconditions.ts";
 import { listConflicts, listRecords } from "./process.ts";
 import { runGit, type Repo } from "./repo.ts";
 import {
@@ -24,7 +29,7 @@ import {
 import type { SignalResult } from "./signal.ts";
 import { buildSignals, measureSignals, SIGNALS } from "./signals.ts";
 
-export type Precondition = { id: string; ok: boolean; fix: string };
+export type { Precondition };
 export type Conflict = {
   policy: string;
   file: string;
@@ -55,7 +60,11 @@ export type AssessData = {
 export const readToolkitCommit = (toolkitRoot: string) =>
   runGit(toolkitRoot, ["rev-parse", "HEAD"]);
 
-export function assessRepo(repo: Repo, toolkitRoot: string): AssessData {
+export function assessRepo(
+  repo: Repo,
+  toolkitRoot: string,
+  check: PreconditionOptions | null = null,
+): AssessData {
   const signals = measureSignals(repo, buildSignals(toolkitRoot));
   const javascript = repo.tracked.has("package.json");
   const verdict = scoreSignals(signals, { javascript });
@@ -67,7 +76,7 @@ export function assessRepo(repo: Repo, toolkitRoot: string): AssessData {
     total: verdict.total,
     path: verdict.path,
     gate: verdict.gate,
-    preconditions: [],
+    preconditions: check ? checkPreconditions(repo, check) : [],
     conflicts: listConflicts(repo),
     sdkImports: listSdkImports(repo, readToolkitGlobs(toolkitRoot)),
     records: listRecords(repo),
@@ -130,6 +139,20 @@ export function renderMarkdown(data: AssessData): string {
   }
   out.push(...renderListings(data));
   return `${out.join("\n")}\n`;
+}
+
+/** The --check output: one line per rule, then the count. */
+export function renderPreconditions(rows: Precondition[]): string {
+  const failed = rows.filter((r) => !r.ok);
+  const lines = rows.map((r) =>
+    r.ok ? `ok    ${r.id}` : `FAIL  ${r.id}: ${r.fix}`,
+  );
+  lines.push(
+    failed.length
+      ? `migrate:assess --check: ${failed.length} of ${rows.length} preconditions failed; each fix is the operator's`
+      : `migrate:assess --check: every precondition holds (${rows.length})`,
+  );
+  return `${lines.join("\n")}\n`;
 }
 
 const table = (header: string[], rows: string[][]): string[] =>
