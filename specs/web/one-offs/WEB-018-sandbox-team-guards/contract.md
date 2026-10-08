@@ -20,10 +20,10 @@ operator_review: false
 planned_paths:
   - "packages/db/src/sandbox/viewer.ts"
   - "packages/db/src/sandbox/index.ts"
-  - "apps/web/lib/sandbox/admin-data.ts"
-  - "apps/web/lib/sandbox/admin-codes.ts"
-  - "apps/web/lib/sandbox/people.ts"
-  - "apps/web/lib/sandbox/admin-gate.ts"
+  - "apps/web/lib/sandbox/admin/admin-data.ts"
+  - "apps/web/lib/sandbox/admin/admin-codes.ts"
+  - "apps/web/lib/sandbox/admin/people.ts"
+  - "apps/web/lib/sandbox/admin/admin-gate.ts"
 depends_on: []
 out_of_scope:
   - "Adding a role."

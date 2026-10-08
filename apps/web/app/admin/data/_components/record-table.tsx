@@ -25,8 +25,8 @@ import {
 import {
   DATA_WORDS,
   type RecordView,
-} from "../../../../lib/sandbox/admin-data-view";
-import { SANDBOX_TIME_ZONE } from "../../../../lib/sandbox/time";
+} from "../../../../lib/sandbox/admin/admin-data-view";
+import { SANDBOX_TIME_ZONE } from "../../../../lib/sandbox/shared/time";
 
 const W = DATA_WORDS;
 

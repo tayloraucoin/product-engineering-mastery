@@ -10,7 +10,7 @@ status: approved
 ## Request path (door 3, D-LAB-30)
 
 1. `next.config.ts` `headers()` stamps `X-Robots-Tag: noindex, nofollow` on `/experimental/:path*` and `/admin/:path*`; both layouts also set `robots: { index: false }` metadata. `proxy.ts` is not touched.
-2. The experiment page, the review page and every sandbox action call `resolveViewer(slug)` in `apps/web/lib/sandbox/access.ts` first. In order:
+2. The experiment page, the review page and every sandbox action call `resolveViewer(slug)` in `apps/web/lib/sandbox/shared/access.ts` first. In order:
    - a team role (`getAuthContext()`, role `developer` or `admin`) returns a team viewer;
    - otherwise the `sandbox_access` cookie is verified with no database read (signature, slug equal to the path's, issued under 30 days ago); a missing or bad cookie returns "no access";
    - only then the database: the access row exists, its reviewer's slug matches, the code is not revoked, the access's `code_version` equals the reviewer's, and, for a signed-in reviewer (S8), the access's `user_id` equals the current user.

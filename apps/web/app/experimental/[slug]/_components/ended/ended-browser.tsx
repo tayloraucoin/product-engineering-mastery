@@ -23,7 +23,7 @@ import {
   NOTHING_IN_BROWSER,
   type EndedBrowserSource,
   type EndedBrowserState,
-} from "../../../../../lib/sandbox/ended";
+} from "../../../../../lib/sandbox/review/ended";
 
 function localStorageOrNull(): Storage | null {
   try {

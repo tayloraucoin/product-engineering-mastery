@@ -2,7 +2,7 @@
  * The experiment page (experiment.md; S15, R9). Renders every design on the
  * server and hands them to the switcher, which mounts only the shown one.
  * Which design opens, the order and the primary come from
- * lib/sandbox/experiment.ts; the team is never counted (D-LAB-14).
+ * lib/sandbox/experiment/experiment.ts; the team is never counted (D-LAB-14).
  *
  * A team `?state=exp-*` key renders its fixture: the bar's data, the
  * primary, and for `exp-single` one design. A team pins.md key renders its
@@ -13,7 +13,6 @@ import { randomInt } from "node:crypto";
 import { createLogger } from "@pem/observability/logger";
 
 import type { ExperimentConfig } from "../../../_experiments/registry";
-import { sandboxDb } from "../../../../../lib/sandbox/access";
 import {
   designOption,
   experimentFixture,
@@ -35,7 +34,8 @@ import {
   type Opening,
   type OpeningRequest,
   type OpeningViewer,
-} from "../../../../../lib/sandbox/experiment";
+} from "../../../../../lib/sandbox/experiment/experiment";
+import { sandboxDb } from "../../../../../lib/sandbox/shared/access";
 import type { PinsSource } from "../pins/pins-provider";
 import { ExperimentSwitcher } from "./experiment-switcher";
 

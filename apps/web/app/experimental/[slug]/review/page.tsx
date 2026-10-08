@@ -1,7 +1,7 @@
 /**
  * The closing review (LAB-17, review.md, D-LAB-2): its own page under the
  * experiment's address. `resolveViewer` decides who is asking first
- * (lib/sandbox/review.ts): a reviewer answers; the team is sent to the
+ * (lib/sandbox/review/review.ts): a reviewer answers; the team is sent to the
  * experiment page (S18) unless a review `?state=` key renders its fixture;
  * anyone without live access, or on a closed experiment, is sent to the
  * experiment's address, which shows the gate or the ended page.
@@ -24,22 +24,22 @@ import { notFound, redirect } from "next/navigation";
 import { appIcon } from "@pem/brand/icon";
 
 import type { ExperimentConfig } from "../../_experiments/registry";
-import { resolveViewer } from "../../../../lib/sandbox/access";
 import { designOption } from "../../../../lib/sandbox/client/experiment-view";
 import type { QueueEntry } from "../../../../lib/sandbox/client/queue";
 import { REVIEW_CORE as W } from "../../../../lib/sandbox/client/review-core";
 import { reviewFixture } from "../../../../lib/sandbox/client/review-view";
-import { GATE_WORDS } from "../../../../lib/sandbox/gate";
+import { GATE_WORDS } from "../../../../lib/sandbox/gate/gate";
 import {
   experimentPath,
   reviewPageView,
   type ReviewPageView,
-} from "../../../../lib/sandbox/review";
-import { loadReviewFor } from "../../../../lib/sandbox/review-data";
+} from "../../../../lib/sandbox/review/review";
+import { loadReviewFor } from "../../../../lib/sandbox/review/review-data";
+import { resolveViewer } from "../../../../lib/sandbox/shared/access";
 import {
   readSandboxState,
   type SandboxViewerKind,
-} from "../../../../lib/sandbox/state";
+} from "../../../../lib/sandbox/shared/state";
 import {
   ReviewFormView,
   type ReviewPageConfig,

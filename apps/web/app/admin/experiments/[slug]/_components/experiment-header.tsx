@@ -12,9 +12,9 @@ import {
   experimentHeaderStateView,
   EXPERIMENTS_WORDS,
   type ExperimentHeader as Header,
-} from "../../../../../lib/sandbox/admin-experiments";
-import { readSandboxState } from "../../../../../lib/sandbox/state";
-import type { TeamRole } from "../../../../../lib/sandbox/team-check";
+} from "../../../../../lib/sandbox/admin/admin-experiments";
+import { readSandboxState } from "../../../../../lib/sandbox/shared/state";
+import type { TeamRole } from "../../../../../lib/sandbox/shared/team-check";
 import { ExperimentTabs } from "./experiment-tabs";
 
 export function ExperimentHeader({

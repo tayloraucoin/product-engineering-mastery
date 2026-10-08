@@ -31,11 +31,11 @@ planned_paths:
   - "apps/web/app/experimental/[slug]/_components/pins/**"
   - "apps/web/app/experimental/[slug]/_components/pin-list/**"
   - "apps/web/app/experimental/[slug]/_components/team/**"
-  - "apps/web/lib/sandbox/notice.ts"
-  - "apps/web/lib/sandbox/notice.test.ts"
+  - "apps/web/lib/sandbox/experiment/notice.ts"
+  - "apps/web/lib/sandbox/experiment/notice.test.ts"
   - "apps/web/lib/sandbox/client/threads.ts"
   - "apps/web/lib/sandbox/client/threads.test.ts"
-  - "apps/web/lib/sandbox/state.ts"
+  - "apps/web/lib/sandbox/shared/state.ts"
 depends_on:
   - LAB-25
 out_of_scope:
@@ -85,7 +85,7 @@ criteria:
 ## Build notes
 
 - **Approach:**
-  - `lib/sandbox/notice.ts`: `noticeDue({ viewerKind, mode, lastDesign })`, true only for a reviewer on a collaborate experiment with `lastDesign` null. `page.tsx`'s experiment branch wraps the server-rendered page in `_components/threads/notice.tsx`, a `"use client"` leaf in LAB-7's gate column that renders its children only after Continue. LAB-11 logs the load on mount, so the next visit skips the step.
+  - `lib/sandbox/experiment/notice.ts`: `noticeDue({ viewerKind, mode, lastDesign })`, true only for a reviewer on a collaborate experiment with `lastDesign` null. `page.tsx`'s experiment branch wraps the server-rendered page in `_components/threads/notice.tsx`, a `"use client"` leaf in LAB-7's gate column that renders its children only after Continue. LAB-11 logs the load on mount, so the next visit skips the step.
   - Pure parts in `lib/sandbox/client/threads.ts`: `pinView(row, viewer)` (filled and numbered, or outlined), `pinName`, `threadOf(root, replies)`, `groupWithYoursFirst(rows, designOrder)`, `replyCountLabel(n)`. No `@pem/db`, `next/headers` or `env.ts`.
   - LAB-12's popover gains the thread and a `Textarea` "Reply" (2,000 characters, "Send reply"); LAB-13's list and LAB-14's team popover gain their beat 2 parts. In private mode none of it renders.
   - Prior art: LAB-12's queue and popover, LAB-13's `pin-list.ts`, LAB-7's `_components/gate/` column.

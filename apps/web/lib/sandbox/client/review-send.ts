@@ -13,7 +13,7 @@
 import type { QueueEntry, SendOutcome } from "./queue.ts";
 import type { ReviewPayload } from "./review-form.ts";
 
-/** The send action's fixed results (`lib/sandbox/review.ts`). */
+/** The send action's fixed results (`lib/sandbox/review/review.ts`). */
 export type SendReviewResult =
   | { kind: "ok"; number: number; createdAt: string }
   | { kind: "invalid"; missing: string[] }

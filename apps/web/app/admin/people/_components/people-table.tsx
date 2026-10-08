@@ -58,8 +58,8 @@ import {
   roleSelectLabel,
   type PeopleView,
   type PersonRow,
-} from "../../../../lib/sandbox/people";
-import { SANDBOX_TIME_ZONE } from "../../../../lib/sandbox/time";
+} from "../../../../lib/sandbox/admin/people";
+import { SANDBOX_TIME_ZONE } from "../../../../lib/sandbox/shared/time";
 import { changeRole } from "../actions";
 
 const W = PEOPLE_WORDS;

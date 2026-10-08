@@ -1,7 +1,7 @@
 ---
 id: WEB-17
 size: small
-objective: "The sandbox's date, time and count formatters live in lib/sandbox/time.ts beside its one time zone, so a new admin table or reviewer screen imports a named formatter instead of writing an Intl call."
+objective: "The sandbox's date, time and count formatters live in lib/sandbox/shared/time.ts beside its one time zone, so a new admin table or reviewer screen imports a named formatter instead of writing an Intl call."
 slice_type: "Refactor of display formatting, server and client; the risk is a hydration mismatch where a server-rendered date differs from the client's."
 non_negotiables:
   - "Every rendered string is byte for byte what it is today, in each table and on the gate and ended pages."
@@ -16,10 +16,10 @@ reviewers: []
 focus: []
 operator_review: false
 planned_paths:
-  - "apps/web/lib/sandbox/time.ts"
-  - "apps/web/lib/sandbox/time.test.ts"
-  - "apps/web/lib/sandbox/ended.ts"
-  - "apps/web/lib/sandbox/admin-experiments.ts"
+  - "apps/web/lib/sandbox/shared/time.ts"
+  - "apps/web/lib/sandbox/shared/time.test.ts"
+  - "apps/web/lib/sandbox/review/ended.ts"
+  - "apps/web/lib/sandbox/admin/admin-experiments.ts"
   - "apps/web/lib/sandbox/client/pin-list.ts"
   - "apps/web/lib/sandbox/client/pins-view.ts"
   - "apps/web/lib/sandbox/client/review-view.ts"
@@ -47,9 +47,9 @@ criteria:
 
 ## Build notes
 
-- **Approach:** (audit: `specs/web/audits/2026-10-08-duplicated-logic.md`) add the formatters the audit lists (D3) to `lib/sandbox/time.ts`, de-duplicating the two identical `WHEN`s; each site imports its named one; a lint guard stops a new inline formatter.
+- **Approach:** (audit: `specs/web/audits/2026-10-08-duplicated-logic.md`) add the formatters the audit lists (D3) to `lib/sandbox/shared/time.ts`, de-duplicating the two identical `WHEN`s; each site imports its named one; a lint guard stops a new inline formatter.
 - **Decisions that apply:** D-LAB-41 (the sandbox's one time zone is Europe/London; the gate's lock time and the ended date use the reader's locale and zone).
-- **Interfaces:** named formatter functions exported from `lib/sandbox/time.ts`.
+- **Interfaces:** named formatter functions exported from `lib/sandbox/shared/time.ts`.
 - **Per path:** time.ts gains them, its test pins the strings; every other path drops its inline formatter.
 - **Gotchas:** module-level `Intl` instances are deliberate (built once); keep them module-level in time.ts.
 - **Model:** Sonnet 5.5 is enough: a mechanical move pinned by string tests.

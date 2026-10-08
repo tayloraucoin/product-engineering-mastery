@@ -51,7 +51,7 @@ From the module's `files` list in `toolkit.json`:
 
 - `apps/web/app/experimental/` (the one dynamic route, its review page, actions, components, and `_experiments/` with `pricing-2026` and the registry)
 - `apps/web/app/admin/` (the shell, People, experiments and their reviewers, codes, results and data pages)
-- `apps/web/lib/sandbox/` (`access.ts`, the cookie, codes, throttle, link token, team check, validators, `robots.ts`, `secret-check.ts`, and their tests)
+- `apps/web/lib/sandbox/` (grouped by subject, each module beside its test: `gate/` the gate and the wrong-code throttle; `admin/` the /admin guard and nav, People, experiments, codes, data and the emails-used check; `experiment/` the experiment page, pins and threads; `review/` the closing review and the ended page; `shared/` `access.ts`, the cookie, codes, link token, team check, `state.ts`, validators, `robots.ts` and `secret-check.ts`; `client/` the client-safe pure parts)
 - `packages/db/src/schema/sandbox/` (the seven tables)
 - `packages/db/src/sandbox/` (the viewer-scoped queries behind `@pem/db/sandbox`)
 - `packages/db/test/sandbox/` (the real-Postgres isolation tests)

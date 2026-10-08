@@ -7,7 +7,7 @@
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 
-import { pinInput } from "../validators.ts";
+import { pinInput } from "../shared/validators.ts";
 import {
   ANCHOR_BYTES_MAX,
   buildAnchor,

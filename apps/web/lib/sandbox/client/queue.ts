@@ -43,7 +43,7 @@ export type QueueEntry = {
   clientCreatedAt: string;
 };
 
-/** The comments actions' fixed results (`lib/sandbox/comments.ts`). */
+/** The comments actions' fixed results (`lib/sandbox/experiment/comments.ts`). */
 export type SendResult = "ok" | "closed" | "revoked" | "limit" | "not-saved";
 
 export type StorageLike = Pick<Storage, "getItem" | "setItem" | "removeItem">;

@@ -9,16 +9,16 @@
  */
 import { revalidatePath } from "next/cache";
 
-import type { CodeActionResult } from "../../../../../lib/sandbox/admin-codes";
+import type { CodeActionResult } from "../../../../../lib/sandbox/admin/admin-codes";
 import {
   makeCodeAs,
   replaceCodeAs,
   revokeCodeAs,
-} from "../../../../../lib/sandbox/admin-codes-data";
+} from "../../../../../lib/sandbox/admin/admin-codes-data";
 import {
   isTeamActionRefusal,
   requireTeamAction,
-} from "../../../../../lib/sandbox/admin-guard";
+} from "../../../../../lib/sandbox/admin/admin-guard";
 
 export async function makeCode(
   slug: string,

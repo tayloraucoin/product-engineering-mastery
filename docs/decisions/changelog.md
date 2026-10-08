@@ -15,6 +15,24 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-08 — `lib/` folders group by subject past 30 files; `apps/web/lib/sandbox/` split
+
+Operator ruling, 2026-10-08 (Mason's one-off): a `lib/` folder that passes 30 files groups by subject, and its one `shared/` holds only what two or more sibling folders, or the app's root config files, import. `apps/web/lib/sandbox/` held 64 files in one folder. They moved by `git mv` into `gate/`, `admin/`, `experiment/`, `review/` and `shared/`, beside the existing `client/`. Each module kept its test and its file name, and behaviour did not change. Mason's review moved `code.ts`, `cookie.ts` and `link.ts` from `gate/` to `shared/` (operator, same day): only `shared/access*` and `admin/` import them, and no subject folder imports a sibling one.
+
+- `docs/engineering/codebase-conventions.md` §3: the rule, beside the `_components/` sub-folder rule, and why its `shared/` is not the banned catch-all.
+- Imports and paths:
+  - Every import of a moved module, and every comment that named one, now uses the new path.
+  - The tests that read route files reach the app root one level further up.
+  - The "no server action in lib/sandbox" scan now reads the whole tree, not only its own folder.
+  - `admin-gate.test.ts`'s cookie guard matches an import of `cookie` from any folder, not only `./cookie`.
+- `tooling/boundaries.test.ts`: a probe in `lib/sandbox/gate/` proves the `web-sandbox` element (`apps/web/lib/sandbox/**`) covers the sub-folders.
+- `docs/runbooks/remove/experimental-sandbox.md` and `docs/runbooks/experimental-sandbox.md`: the folder's contents and the `state.ts` path. `toolkit.json`'s `stack.experimental-sandbox.files` names only the folder, so it is unchanged.
+- The LAB epic's `technical/` files.
+- Drafted contracts:
+  - Updated planned_paths and Build notes: LAB-19, 20, 22, 23, 26, 28 to 30, and WEB-16 to 18.
+  - New files go to their subject folder: `confirmation.ts` to `review/`, `results*.ts` and `admin-reviewers*.ts` to `admin/`, and `notice.ts` to `experiment/`.
+  - Started and closed tickets keep their old paths as records. Open tickets are therefore stale against the move: WEB-15, LAB-14 and LAB-18.
+
 ## 2026-10-08 — Webhooks: each one is a folder under `app/api/webhooks/`
 
 Operator ruling, 2026-10-08: a webhook's logic lives beside its route, so every webhook is one obvious folder. The Stripe webhook's dispatcher, handler, handlers and ledger binding moved by `git mv` from `apps/web/lib/billing/webhook/` to `apps/web/app/api/webhooks/stripe/_lib/`, with no change in behaviour. The Stripe client stays in `apps/web/lib/billing/stripe.ts`, because code outside the webhook will import it.

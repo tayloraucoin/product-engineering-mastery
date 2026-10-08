@@ -3,7 +3,7 @@
  * (columns.ts), so a function never accepts a slug the table refuses. Each
  * caller keeps its own refusal. A function cannot leave @pem/db/sandbox (the
  * isolation suite files every exported function as gate or viewer), so the
- * package exports the constants and apps/web/lib/sandbox/slug.ts binds its own
+ * package exports the constants and apps/web/lib/sandbox/shared/slug.ts binds its own
  * check to them.
  */
 

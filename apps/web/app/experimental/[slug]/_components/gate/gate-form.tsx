@@ -26,7 +26,7 @@ import {
   GATE_WORDS,
   type GateActionState,
   type GateFormView,
-} from "../../../../../lib/sandbox/gate";
+} from "../../../../../lib/sandbox/gate/gate";
 
 type GateFormProps = {
   action: (

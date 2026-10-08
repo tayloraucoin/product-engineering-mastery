@@ -14,7 +14,7 @@ import {
   gateFormView,
   slugOfGatePath,
   type GateProps,
-} from "../../../../../lib/sandbox/gate";
+} from "../../../../../lib/sandbox/gate/gate";
 import {
   enterGate,
   holdGateFixture,

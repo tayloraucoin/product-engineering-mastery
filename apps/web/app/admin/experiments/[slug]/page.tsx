@@ -1,4 +1,4 @@
-import { requireTeamPage } from "../../../../lib/sandbox/admin-guard";
+import { requireTeamPage } from "../../../../lib/sandbox/admin/admin-guard";
 
 /** Results (R6): a placeholder until LAB-23 builds the tab. */
 export default async function ExperimentResultsPage({

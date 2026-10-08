@@ -31,11 +31,11 @@ planned_paths:
   - "apps/web/next.config.ts"
   - "apps/web/package.json"
   - "packages/db/package.json"
-  - "apps/web/lib/sandbox/admin-data.ts"
-  - "apps/web/lib/sandbox/admin-data-data.ts"
-  - "apps/web/lib/sandbox/people.ts"
-  - "apps/web/lib/sandbox/access-check.ts"
-  - "apps/web/lib/sandbox/emails-used.ts"
+  - "apps/web/lib/sandbox/admin/admin-data.ts"
+  - "apps/web/lib/sandbox/admin/admin-data-data.ts"
+  - "apps/web/lib/sandbox/admin/people.ts"
+  - "apps/web/lib/sandbox/shared/access-check.ts"
+  - "apps/web/lib/sandbox/admin/emails-used.ts"
   - "apps/web/app/admin/data/_components/erase-section.tsx"
   - "packages/db/src/sandbox/gate.ts"
   - "packages/db/src/sandbox/actions.ts"
@@ -44,7 +44,7 @@ planned_paths:
   - "yarn.lock"
 depends_on: []
 out_of_scope:
-  - "Email format validation (zod stays in @pem/validators and lib/sandbox/validators.ts)."
+  - "Email format validation (zod stays in @pem/validators and lib/sandbox/shared/validators.ts)."
   - "Any other module for @pem/utils."
 criteria:
   - id: C1

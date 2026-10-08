@@ -177,7 +177,7 @@ yarn web:dev
 
 **What it does not give you: team sign-in.** `/admin` and every team-only `?state=` key need a signed-in developer or admin, and sign-in needs Supabase Auth. That is either a hosted project (Mode A) or Docker's full stack (Mode B, `yarn db:local:full`, see `docs/runbooks/add/docker-local-database.md`). This machine has neither. The builders captured the team screens against an uncommitted scratch copy whose team check returned a made-up admin. With Mode B, `yarn db:seed-users` creates two synthetic accounts (`alice@example.test` and `bob@example.test`; their local-only passwords are in `packages/db/scripts/local-users.ts`), and you then make one an admin with `db:grant-admin` (§3).
 
-**`?state=` keys.** Append `?state=<key>` to a page to see a designed state on made-up data. The one list is `apps/web/lib/sandbox/state.ts`. A key a viewer may not use, or one that does not exist, reads as absent and the page renders normally. A fixture never spends a gate try, sends a pin or ends a session.
+**`?state=` keys.** Append `?state=<key>` to a page to see a designed state on made-up data. The one list is `apps/web/lib/sandbox/shared/state.ts`. A key a viewer may not use, or one that does not exist, reads as absent and the page renders normally. A fixture never spends a gate try, sends a pin or ends a session.
 
 | Prefix                                                            | Page                                               | Who       |
 | ----------------------------------------------------------------- | -------------------------------------------------- | --------- |

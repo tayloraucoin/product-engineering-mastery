@@ -32,16 +32,16 @@ import {
 } from "@pem/ui/table";
 import { createToastManager, Toaster } from "@pem/ui/toast";
 
-import type { CodeActionResult } from "../../../../../../lib/sandbox/admin-codes";
+import type { CodeActionResult } from "../../../../../../lib/sandbox/admin/admin-codes";
 import {
   CODES_WORDS,
   FIXTURE_CODE,
   rowMenuLabel,
   type CodeRowView,
   type CodesView,
-} from "../../../../../../lib/sandbox/admin-codes-view";
-import { EMAILS_USED_WORDS } from "../../../../../../lib/sandbox/emails-used";
-import { SANDBOX_TIME_ZONE } from "../../../../../../lib/sandbox/time";
+} from "../../../../../../lib/sandbox/admin/admin-codes-view";
+import { EMAILS_USED_WORDS } from "../../../../../../lib/sandbox/admin/emails-used";
+import { SANDBOX_TIME_ZONE } from "../../../../../../lib/sandbox/shared/time";
 import { makeCode, replaceCode, revokeCode } from "../actions";
 import {
   CodeDialog,

@@ -2,7 +2,7 @@
 
 /**
  * The experiment's actions. The gate's (LAB-7): `enterGate` binds the request to
- * `enterGateWith` (lib/sandbox/gate.ts): env's secret, the throttle's
+ * `enterGateWith` (lib/sandbox/gate/gate.ts): env's secret, the throttle's
  * cookie and address, the signed-in account, and the database. Neither the
  * code nor the email is logged or put in a URL; the form learns only which
  * state to show.
@@ -14,47 +14,38 @@ import { signOut } from "@pem/auth/session";
 import { createLogger } from "@pem/observability/logger";
 
 import { deployed, productionRuntime } from "../../../env";
-import {
-  grantAccess,
-  resolveViewer,
-  sandboxDb,
-  sandboxSecret,
-  setAccessCookie,
-} from "../../../lib/sandbox/access";
 import type { QueueEntry } from "../../../lib/sandbox/client/queue";
 import type { SendReviewResult } from "../../../lib/sandbox/client/review-send";
 import type {
   CommentResult,
   ListCommentsResult,
-} from "../../../lib/sandbox/comments";
+} from "../../../lib/sandbox/experiment/comments";
 import {
   deleteCommentFor,
   listCommentsFor,
   saveCommentFor,
-} from "../../../lib/sandbox/comments-data";
+} from "../../../lib/sandbox/experiment/comments-data";
 import {
   recordViewWith,
   viewDepsFor,
   type RecordViewResult,
-} from "../../../lib/sandbox/experiment";
-import {
-  enterGateWith,
-  gatePath,
-  type GateActionState,
-} from "../../../lib/sandbox/gate";
-import { sendReviewFor } from "../../../lib/sandbox/review-data";
-import { teamMemberOf } from "../../../lib/sandbox/team";
+} from "../../../lib/sandbox/experiment/experiment";
 import type {
   ListRepliesResult,
   ListThreadResult,
   ReplyResult,
-} from "../../../lib/sandbox/threads";
+} from "../../../lib/sandbox/experiment/threads";
 import {
   deleteReplyFor,
   listRepliesFor,
   listThreadFor,
   saveReplyFor,
-} from "../../../lib/sandbox/threads-data";
+} from "../../../lib/sandbox/experiment/threads-data";
+import {
+  enterGateWith,
+  gatePath,
+  type GateActionState,
+} from "../../../lib/sandbox/gate/gate";
 import {
   bindGateThrottle,
   GATE_COOKIE,
@@ -64,7 +55,16 @@ import {
   readBrowserId,
   throttleKeys,
   withGateThrottle,
-} from "../../../lib/sandbox/throttle";
+} from "../../../lib/sandbox/gate/throttle";
+import { sendReviewFor } from "../../../lib/sandbox/review/review-data";
+import {
+  grantAccess,
+  resolveViewer,
+  sandboxDb,
+  sandboxSecret,
+  setAccessCookie,
+} from "../../../lib/sandbox/shared/access";
+import { teamMemberOf } from "../../../lib/sandbox/shared/team";
 import { supabaseConfig } from "../../../lib/supabase/config";
 import { getAuthContext } from "../../../lib/supabase/context";
 
@@ -205,7 +205,7 @@ export async function recordView(
 /**
  * The pins (LAB-12, pins.md): load the reviewer's own, save one under its
  * browser-minted id, delete one. Each validates, resolves the viewer, makes
- * one call and returns a fixed result (lib/sandbox/comments.ts).
+ * one call and returns a fixed result (lib/sandbox/experiment/comments.ts).
  */
 export async function listMyComments(
   slug: string,
@@ -232,7 +232,7 @@ export async function deleteComment(
  * on the slug, the replies under one root when its pin opens, a reply saved
  * under its browser-minted id, and one's own reply deleted. The mode comes
  * from the registry by slug, never from here; each validates, resolves the
- * viewer, makes one call and returns a fixed result (lib/sandbox/threads.ts).
+ * viewer, makes one call and returns a fixed result (lib/sandbox/experiment/threads.ts).
  */
 export async function listThread(slug: string): Promise<ListThreadResult> {
   return listThreadFor(slug);
@@ -267,7 +267,7 @@ export async function deleteReply(
 /**
  * The closing review's send (LAB-17, review.md): the browser has flushed its
  * queued pins first; this judges and stores one numbered version and returns
- * a fixed result (lib/sandbox/review.ts). The team stores nothing (S18).
+ * a fixed result (lib/sandbox/review/review.ts). The team stores nothing (S18).
  */
 export async function sendReview(
   slug: string,

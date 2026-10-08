@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 
-import { parsePage } from "../../../lib/sandbox/admin-data";
-import { loadDataPage } from "../../../lib/sandbox/admin-data-data";
+import { parsePage } from "../../../lib/sandbox/admin/admin-data";
+import { loadDataPage } from "../../../lib/sandbox/admin/admin-data-data";
 import {
   DATA_WORDS,
   dataPageStateView,
-} from "../../../lib/sandbox/admin-data-view";
-import { requireTeamPage } from "../../../lib/sandbox/admin-guard";
-import { readSandboxState } from "../../../lib/sandbox/state";
+} from "../../../lib/sandbox/admin/admin-data-view";
+import { requireTeamPage } from "../../../lib/sandbox/admin/admin-guard";
+import { readSandboxState } from "../../../lib/sandbox/shared/state";
 import { EraseSection } from "./_components/erase-section";
 import { DataPageSkeleton, RecordTable } from "./_components/record-table";
 

@@ -10,7 +10,10 @@ import Image from "next/image";
 
 import { appIcon } from "@pem/brand/icon";
 
-import { ENDED_WORDS, type EndedProps } from "../../../../../lib/sandbox/ended";
+import {
+  ENDED_WORDS,
+  type EndedProps,
+} from "../../../../../lib/sandbox/review/ended";
 import { EndedBrowser } from "./ended-browser";
 import { EndedSentLine } from "./ended-sent-line";
 

@@ -5,7 +5,7 @@
  * designs, goals, mode and close date from here and nowhere else.
  *
  * This file and every `config.ts` hold no JSX, no static `.tsx` import and no
- * `@/` alias, so `node --test` loads them (lib/sandbox/registry.test.ts). A
+ * `@/` alias, so `node --test` loads them (lib/sandbox/shared/registry.test.ts). A
  * design's component is reached lazily, through its `component` loader.
  *
  * The list is validated once, at module load, so a bad config fails
@@ -14,8 +14,14 @@
 import type { ComponentType } from "react";
 import { z } from "zod";
 
-import { SANDBOX_SLUG, SANDBOX_SLUG_MAX } from "../../../lib/sandbox/slug.ts";
-import { SANDBOX_TIME_ZONE, todayIn } from "../../../lib/sandbox/time.ts";
+import {
+  SANDBOX_SLUG,
+  SANDBOX_SLUG_MAX,
+} from "../../../lib/sandbox/shared/slug.ts";
+import {
+  SANDBOX_TIME_ZONE,
+  todayIn,
+} from "../../../lib/sandbox/shared/time.ts";
 import { pricing2026 } from "./pricing-2026/config.ts";
 
 /** Neutral labels, fixed per experiment, at most four (D-LAB-10, S15). */

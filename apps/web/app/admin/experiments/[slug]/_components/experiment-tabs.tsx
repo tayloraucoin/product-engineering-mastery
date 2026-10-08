@@ -10,7 +10,7 @@ import { usePathname } from "next/navigation";
 
 import { cn } from "@pem/ui/cn";
 
-import type { ExperimentTab } from "../../../../../lib/sandbox/admin-experiments";
+import type { ExperimentTab } from "../../../../../lib/sandbox/admin/admin-experiments";
 
 export function ExperimentTabs({ tabs }: { tabs: ExperimentTab[] }) {
   const pathname = usePathname();

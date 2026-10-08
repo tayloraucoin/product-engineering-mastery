@@ -30,9 +30,9 @@ focus: []
 operator_review: false
 planned_paths:
   - "apps/web/app/admin/experiments/[slug]/reviewers/**"
-  - "apps/web/lib/sandbox/admin-reviewers*.ts"
+  - "apps/web/lib/sandbox/admin/admin-reviewers*.ts"
   - "apps/web/lib/sandbox/client/team-layer*.ts"
-  - "apps/web/lib/sandbox/state.ts"
+  - "apps/web/lib/sandbox/shared/state.ts"
   - "packages/db/src/sandbox/reviewers.ts"
   - "packages/db/src/sandbox/index.ts"
   - "packages/db/test/sandbox/**"
@@ -82,7 +82,7 @@ criteria:
 
 - **Approach:**
   - `packages/db/src/sandbox/reviewers.ts`, team-only: `listReviewers(db, team, { slug })` and `readReviewer(db, team, { slug, reviewerId })`. Register both in LAB-3's isolation registry.
-  - `lib/sandbox/admin-reviewers.ts` (pure): `reviewerRows(rows)` and `reviewerView(record, config)` give status words, flags (LAB-15's `emailsUsedFlags`), latest and earlier versions with "changed" markers, comments grouped by design, the order log and the erase href. `admin-reviewers-data.ts` (`server-only`) binds the db, LAB-8's `requireTeamPage` and `createSupabaseAdminClient()` for a signed-in reviewer's account email. Model the seam on `apps/web/lib/billing/webhook/handle.ts`.
+  - `lib/sandbox/admin/admin-reviewers.ts` (pure): `reviewerRows(rows)` and `reviewerView(record, config)` give status words, flags (LAB-15's `emailsUsedFlags`), latest and earlier versions with "changed" markers, comments grouped by design, the order log and the erase href. `admin-reviewers-data.ts` (`server-only`) binds the db, LAB-8's `requireTeamPage` and `createSupabaseAdminClient()` for a signed-in reviewer's account email. Model the seam on `apps/web/lib/billing/webhook/handle.ts`.
   - `reviewers/page.tsx` (the list) and `reviewers/[reviewerId]/page.tsx` (one reviewer) under LAB-10's layout. Earlier versions use `@pem/ui`'s `Collapsible`. Answers render from LAB-17's `client/review-core.ts`, never a copy of its wording.
 - **Decisions that apply:**
   - D-LAB-6 (experimental/overview.md): "The reviewer is the code: one code is one person on any device; each typed email is recorded."

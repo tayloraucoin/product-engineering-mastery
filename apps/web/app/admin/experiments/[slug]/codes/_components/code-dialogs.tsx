@@ -43,7 +43,7 @@ import { Input } from "@pem/ui/input";
 import type {
   CodeActionResult,
   CodeField,
-} from "../../../../../../lib/sandbox/admin-codes";
+} from "../../../../../../lib/sandbox/admin/admin-codes";
 import {
   CODE_DISPLAY_NAME_MAX,
   CODE_LABEL_MAX,
@@ -53,7 +53,7 @@ import {
   revokeConfirmation,
   shownOnceTitle,
   type CodeRowView,
-} from "../../../../../../lib/sandbox/admin-codes-view";
+} from "../../../../../../lib/sandbox/admin/admin-codes-view";
 
 const W = CODES_WORDS;
 const COPIED_MS = 2000;

@@ -9,15 +9,15 @@
 import type {
   EraseReviewerResult,
   FindReviewerResult,
-} from "../../../lib/sandbox/admin-data";
+} from "../../../lib/sandbox/admin/admin-data";
 import {
   eraseReviewerAs,
   findReviewerAs,
-} from "../../../lib/sandbox/admin-data-data";
+} from "../../../lib/sandbox/admin/admin-data-data";
 import {
   isTeamActionRefusal,
   requireTeamAction,
-} from "../../../lib/sandbox/admin-guard";
+} from "../../../lib/sandbox/admin/admin-guard";
 
 export async function findReviewer(
   _previous: FindReviewerResult | null,

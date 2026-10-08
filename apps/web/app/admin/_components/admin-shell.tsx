@@ -42,9 +42,9 @@ import {
   adminShellView,
   type AdminNavEntry,
   type AdminNavIcon,
-} from "../../../lib/sandbox/admin-nav";
-import { readSandboxState } from "../../../lib/sandbox/state";
-import type { TeamRole } from "../../../lib/sandbox/team-check";
+} from "../../../lib/sandbox/admin/admin-nav";
+import { readSandboxState } from "../../../lib/sandbox/shared/state";
+import type { TeamRole } from "../../../lib/sandbox/shared/team-check";
 
 const ICONS: Record<AdminNavIcon, LucideIcon> = {
   experiments: FlaskConicalIcon,

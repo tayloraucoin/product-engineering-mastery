@@ -2,15 +2,15 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import type { DataExperiment } from "../../../../../lib/sandbox/admin-data";
+import type { DataExperiment } from "../../../../../lib/sandbox/admin/admin-data";
 import {
   findDataExperiment,
   loadDataTab,
-} from "../../../../../lib/sandbox/admin-data-data";
-import { dataTabStateView } from "../../../../../lib/sandbox/admin-data-view";
-import { requireTeamPage } from "../../../../../lib/sandbox/admin-guard";
-import { readSandboxState } from "../../../../../lib/sandbox/state";
-import type { TeamMember } from "../../../../../lib/sandbox/team-check";
+} from "../../../../../lib/sandbox/admin/admin-data-data";
+import { dataTabStateView } from "../../../../../lib/sandbox/admin/admin-data-view";
+import { requireTeamPage } from "../../../../../lib/sandbox/admin/admin-guard";
+import { readSandboxState } from "../../../../../lib/sandbox/shared/state";
+import type { TeamMember } from "../../../../../lib/sandbox/shared/team-check";
 import { DataTab, DataTabSkeleton } from "./_components/data-tab";
 
 export const metadata: Metadata = { title: "Data" };

@@ -28,11 +28,11 @@ operator_review: false
 planned_paths:
   - "apps/web/app/experimental/[slug]/review/actions.ts"
   - "apps/web/app/experimental/[slug]/review/_components/**"
-  - "apps/web/lib/sandbox/review.ts"
-  - "apps/web/lib/sandbox/review.test.ts"
+  - "apps/web/lib/sandbox/review/review.ts"
+  - "apps/web/lib/sandbox/review/review.test.ts"
   - "apps/web/lib/sandbox/client/sent.ts"
   - "apps/web/lib/sandbox/client/sent.test.ts"
-  - "apps/web/lib/sandbox/state.ts"
+  - "apps/web/lib/sandbox/shared/state.ts"
 depends_on:
   - LAB-17
 out_of_scope:
@@ -67,9 +67,9 @@ criteria:
 
 - **Approach:**
   - `client/sent.ts` is pure: `sentView({ number, recipient, email })` returns `{ key, heading, body }`, with key `sent-success`, `sent-changes` or `sent-partial`; `sent-signed-in` is the success or changes view with the account email.
-  - `lib/sandbox/review.ts`: `sendReviewWith`'s deps gain `recordedEmail(viewer)` and `confirm({ viewer, versionNumber, createdAt })`. After the store commits, the action resolves the recipient, awaits `confirm`, maps a throw to `failed`, and returns both on `ok`.
+  - `lib/sandbox/review/review.ts`: `sendReviewWith`'s deps gain `recordedEmail(viewer)` and `confirm({ viewer, versionNumber, createdAt })`. After the store commits, the action resolves the recipient, awaits `confirm`, maps a throw to `failed`, and returns both on `ok`.
   - The form leaf swaps itself for the Sent view on `ok`, moves focus to the `h1`, and keeps the column and brand mark.
-  - Prior art: LAB-11's deps seam in `lib/sandbox/experiment.ts`; `apps/web/lib/billing/webhook/handle.ts`.
+  - Prior art: LAB-11's deps seam in `lib/sandbox/experiment/experiment.ts`; `apps/web/lib/billing/webhook/handle.ts`.
 - **Decisions that apply:**
   - D-LAB-7: "Reviewers call a variant a 'design'; 'version' means only a review send", because "One word, one meaning".
   - D-LAB-19: "The confirmation email carries no answers", because "The address is unverified (Warden)". The sent view repeats none either.

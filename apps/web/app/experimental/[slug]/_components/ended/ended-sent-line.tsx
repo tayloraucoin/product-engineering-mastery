@@ -7,7 +7,10 @@
  */
 import { useSyncExternalStore } from "react";
 
-import { ENDED_WORDS, endedDate } from "../../../../../lib/sandbox/ended";
+import {
+  ENDED_WORDS,
+  endedDate,
+} from "../../../../../lib/sandbox/review/ended";
 
 const noSubscription = () => () => {};
 

@@ -45,7 +45,7 @@ import { createToastManager, Toaster } from "@pem/ui/toast";
 import type {
   EraseReviewerResult,
   FindReviewerResult,
-} from "../../../../lib/sandbox/admin-data";
+} from "../../../../lib/sandbox/admin/admin-data";
 import {
   DATA_WORDS,
   eraseConfirmation,
@@ -57,7 +57,7 @@ import {
   type DataPageView,
   type ErasureFoundView,
   type ReviewerView,
-} from "../../../../lib/sandbox/admin-data-view";
+} from "../../../../lib/sandbox/admin/admin-data-view";
 import { eraseReviewer, findReviewer } from "../actions";
 
 const W = DATA_WORDS;

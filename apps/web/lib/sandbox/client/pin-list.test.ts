@@ -8,7 +8,7 @@
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 
-import { SANDBOX_STATE_KEYS } from "../state.ts";
+import { SANDBOX_STATE_KEYS } from "../shared/state.ts";
 import { designOption } from "./experiment-view.ts";
 import {
   actionName,

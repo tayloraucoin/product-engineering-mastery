@@ -3,7 +3,7 @@ import { tokensConfig } from "@pem/config/eslint/tokens";
 
 /** WEB-15: the sandbox slug check exists once; a copy drifts from the column. */
 const SLUG_COPY =
-  "The sandbox slug check lives in lib/sandbox/slug.ts: call isSandboxSlug or use SANDBOX_SLUG.";
+  "The sandbox slug check lives in lib/sandbox/shared/slug.ts: call isSandboxSlug or use SANDBOX_SLUG.";
 
 /** @type {import("eslint").Linter.Config[]} */
 export default [

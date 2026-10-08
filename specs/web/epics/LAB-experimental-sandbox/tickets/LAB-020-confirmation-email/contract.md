@@ -9,7 +9,7 @@ non_negotiables:
   - "The link is LAB-5's linkUrl(slug, accessId): its origin is env.ts's site URL, never the request host, and its only query is ?r=."
   - "The recipient is the access's recorded email, or the account email for a signed-in reviewer (S8); never form input, never logged."
   - "Version 1 gets the first-send subject and line; every later version gets the changes ones."
-  - "The time is the version's created_at in the Europe/London constant from apps/web/lib/sandbox/time.ts (LAB-4), with the zone named (R10)."
+  - "The time is the version's created_at in the Europe/London constant from apps/web/lib/sandbox/shared/time.ts (LAB-4), with the zone named (R10)."
   - "A thrown or withheld send never undoes the saved version: the action returns LAB-19's failed email result, so sent.md shows sent-partial."
 devs_call: "The pure builder's name and signature, the test fakes, and where in the review action the send is awaited, as long as it runs after the version commits."
 cites:
@@ -31,8 +31,8 @@ operator_review: false
 planned_paths:
   - "apps/web/app/experimental/[slug]/review/send-confirmation.ts"
   - "apps/web/app/experimental/[slug]/review/actions.ts"
-  - "apps/web/lib/sandbox/confirmation.ts"
-  - "apps/web/lib/sandbox/confirmation.test.ts"
+  - "apps/web/lib/sandbox/review/confirmation.ts"
+  - "apps/web/lib/sandbox/review/confirmation.test.ts"
 depends_on:
   - LAB-5
   - LAB-19
@@ -77,7 +77,7 @@ criteria:
 ## Build notes
 
 - **Approach:**
-  - `lib/sandbox/confirmation.ts` is pure.
+  - `lib/sandbox/review/confirmation.ts` is pure.
     - `confirmationEmail({ kind, receivedAt, link })` returns `@pem/email`'s `DefaultEmail`.
     - `formatReceivedAt(instant)` formats the time.
     - `confirmationRecipientWith(deps, viewer)` returns LAB-3's `findAccessEmail`, or the account email when that is null.

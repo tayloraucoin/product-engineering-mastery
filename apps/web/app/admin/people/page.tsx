@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 
-import { requireTeamPage } from "../../../lib/sandbox/admin-guard";
+import { requireTeamPage } from "../../../lib/sandbox/admin/admin-guard";
 import {
   PEOPLE_WORDS,
   peopleRows,
   peopleStateView,
   type PeopleView,
-} from "../../../lib/sandbox/people";
-import { listAuthPeople } from "../../../lib/sandbox/people-data";
-import { readSandboxState } from "../../../lib/sandbox/state";
+} from "../../../lib/sandbox/admin/people";
+import { listAuthPeople } from "../../../lib/sandbox/admin/people-data";
+import { readSandboxState } from "../../../lib/sandbox/shared/state";
 import { PeopleTable } from "./_components/people-table";
 
 export const metadata: Metadata = { title: "People" };

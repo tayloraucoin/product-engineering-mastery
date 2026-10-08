@@ -13,22 +13,22 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import {
-  readLinkEmail,
-  resolveViewer,
-  sandboxDb,
-} from "../../../lib/sandbox/access";
-import { endedPageFor } from "../../../lib/sandbox/ended-data";
-import {
   GATE_WORDS,
   gatePath,
   gateView,
   isGateStateKey,
-} from "../../../lib/sandbox/gate";
+} from "../../../lib/sandbox/gate/gate";
+import { endedPageFor } from "../../../lib/sandbox/review/ended-data";
+import {
+  readLinkEmail,
+  resolveViewer,
+  sandboxDb,
+} from "../../../lib/sandbox/shared/access";
 import {
   readSandboxState,
   type SandboxViewerKind,
-} from "../../../lib/sandbox/state";
-import { teamMemberOf } from "../../../lib/sandbox/team";
+} from "../../../lib/sandbox/shared/state";
+import { teamMemberOf } from "../../../lib/sandbox/shared/team";
 import { getAuthContext } from "../../../lib/supabase/context";
 import { Ended } from "./_components/ended/ended";
 import { Experiment } from "./_components/experiment/experiment-page";

@@ -83,6 +83,7 @@ Components climb the §1 ladder: the route's `_components/`, then the section's 
 - **Every file in `components/` sits in a sub-folder** named for a domain noun (`experiments/`, `people/`). App chrome (the shell, providers, the theme toggle) goes in `shell/`.
 - **No type-named folders** (`ui/`, `common/`, `shared/`, `forms/`, `misc/`), in `components/` or under `_components/`: they are the catch-alls §8 bans.
 - **A route `_components/` may take domain sub-folders**, as `apps/web/app/experimental/[slug]/_components/` does (`gate/`, `pins/`, `pin-list/`).
+- **A `lib/` folder groups by subject once it passes 30 files**, tests included: the `lib/` form of the rule above. Each sub-folder is named for the subject that owns its modules, and each module keeps its test beside it. One `shared/` is allowed here, unlike the type-named folders above, because §1's question decides what goes in it: only what two or more sibling folders, or the app's root config files (`env.ts`, `next.config.ts`), import. A runtime split such as `client/` sits beside the subject folders. The split moves files with `git mv`, updates every import and changes no behaviour, and a sub-folder that passes 30 files splits again. Example: `apps/web/lib/sandbox/` (64 files) became `gate/`, `admin/`, `experiment/`, `review/`, `shared/` and `client/`.
 
 ## 4. Packages and the import graph
 

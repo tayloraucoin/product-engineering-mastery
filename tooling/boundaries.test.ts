@@ -343,13 +343,15 @@ const SANDBOX_ALLOWED: [file: string, code: string][] = [
     "apps/web/lib/sandbox/zz-probe.ts",
     'import "@pem/db/sandbox"; import "@pem/db/client"; import "@/lib/supabase/context";',
   ],
+  // web-sandbox's glob covers the subject folders, not only the root.
+  ["apps/web/lib/sandbox/gate/zz-probe.ts", 'import "@pem/db/sandbox";'],
   [
     "apps/web/app/experimental/[slug]/zz-probe.ts",
-    'import "@/lib/sandbox/team";',
+    'import "@/lib/sandbox/shared/team";',
   ],
   [
     "apps/web/app/admin/zz-probe.ts",
-    'import "@/lib/sandbox/team"; import "@pem/ui/button";',
+    'import "@/lib/sandbox/shared/team"; import "@pem/ui/button";',
   ],
   [
     "packages/db/src/sandbox/zz-probe.ts",
