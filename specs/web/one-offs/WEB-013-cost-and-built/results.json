@@ -8,10 +8,10 @@
       "run": {
         "command": "yarn test:tooling --test-name-pattern WEB-13",
         "exit": 0,
-        "at": "2026-10-08T06:53:40Z",
-        "head": "c9520abefb63a2973203645d4e1c34dedf911faf",
+        "at": "2026-10-08T07:00:53Z",
+        "head": "3525c0c458970e0452e894ef6512a100932fa1c5",
         "evidence_path": "specs/web/one-offs/WEB-013-cost-and-built/evidence/C1.log",
-        "evidence_sha256": "7ee05c7646cd0beaf7df3e0b9c9460877b44087e44f5185ea3a68d350ea94b04",
+        "evidence_sha256": "68fe1060bcb0a27793f326c1cff3396fbcdb5cbddc2cc9caa107ee77df227f4a",
         "tests": 314
       }
     },
@@ -21,10 +21,10 @@
       "run": {
         "command": "yarn test:tooling --test-name-pattern WEB-13",
         "exit": 0,
-        "at": "2026-10-08T06:53:40Z",
-        "head": "c9520abefb63a2973203645d4e1c34dedf911faf",
+        "at": "2026-10-08T07:00:53Z",
+        "head": "3525c0c458970e0452e894ef6512a100932fa1c5",
         "evidence_path": "specs/web/one-offs/WEB-013-cost-and-built/evidence/C2.log",
-        "evidence_sha256": "7ee05c7646cd0beaf7df3e0b9c9460877b44087e44f5185ea3a68d350ea94b04",
+        "evidence_sha256": "68fe1060bcb0a27793f326c1cff3396fbcdb5cbddc2cc9caa107ee77df227f4a",
         "tests": 314
       }
     },
@@ -34,10 +34,10 @@
       "run": {
         "command": "yarn test:tooling --test-name-pattern WEB-13",
         "exit": 0,
-        "at": "2026-10-08T06:53:40Z",
-        "head": "c9520abefb63a2973203645d4e1c34dedf911faf",
+        "at": "2026-10-08T07:00:53Z",
+        "head": "3525c0c458970e0452e894ef6512a100932fa1c5",
         "evidence_path": "specs/web/one-offs/WEB-013-cost-and-built/evidence/C3.log",
-        "evidence_sha256": "7ee05c7646cd0beaf7df3e0b9c9460877b44087e44f5185ea3a68d350ea94b04",
+        "evidence_sha256": "68fe1060bcb0a27793f326c1cff3396fbcdb5cbddc2cc9caa107ee77df227f4a",
         "tests": 314
       }
     },
@@ -47,12 +47,12 @@
       "run": {
         "command": "yarn check-types:tooling",
         "exit": 0,
-        "at": "2026-10-08T06:55:11Z",
-        "head": "c9520abefb63a2973203645d4e1c34dedf911faf",
+        "at": "2026-10-08T07:02:28Z",
+        "head": "3525c0c458970e0452e894ef6512a100932fa1c5",
         "evidence_path": "specs/web/one-offs/WEB-013-cost-and-built/evidence/C4.log",
-        "evidence_sha256": "d46e99181d334844665e686577ad1531a8bdaf1823185b99d96a6347b3774c97"
+        "evidence_sha256": "2a44c47ed1cc9f3e86489e912b8404f7b75ce222f6b8831f9139d74039c58513"
       }
     }
   },
-  "updated_at": "2026-10-08T06:55:13Z"
+  "updated_at": "2026-10-08T07:02:30Z"
 }
