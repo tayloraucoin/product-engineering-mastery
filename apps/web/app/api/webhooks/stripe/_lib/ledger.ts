@@ -16,7 +16,7 @@ import {
 } from "@pem/db/stripe-event-ledger";
 import { createLogger } from "@pem/observability/logger";
 
-import { env } from "../../../env";
+import { env } from "../../../../../env";
 import type { WebhookLedger } from "./handle.ts";
 
 /** The singleton for this tier; the ledger and the entitlement handlers share it. */

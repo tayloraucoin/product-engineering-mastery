@@ -65,6 +65,12 @@
       "status": "draft"
     },
     {
+      "glob": "**/webhooks/stripe/**",
+      "role": "mason",
+      "why": "One-way door: billing, in the Stripe webhook's own folder.",
+      "status": "draft"
+    },
+    {
       "glob": "**/auth/**",
       "role": "mason",
       "why": "One-way door: authorization topology.",
@@ -188,6 +194,12 @@
       "glob": "**/billing/**",
       "role": "chancery",
       "why": "Billing copy and what it promises.",
+      "status": "draft"
+    },
+    {
+      "glob": "**/webhooks/stripe/**",
+      "role": "chancery",
+      "why": "Billing copy and what it promises, in the Stripe webhook's own folder.",
       "status": "draft"
     },
     {

@@ -21,8 +21,8 @@ load_when:
 
 From the module's `files` list in `toolkit.json`:
 
-- `apps/web/app/api/webhooks/stripe/` (the route)
-- `apps/web/lib/billing/` (the client, the dispatcher, the handler map and its three handlers, the ledger binding and their tests)
+- `apps/web/app/api/webhooks/stripe/` (the route, and in its `_lib/` the dispatcher, the handler map and its three handlers, the ledger binding and their tests)
+- `apps/web/lib/billing/` (the Stripe client)
 - `packages/db/src/schema/billing/` (the `stripe_events` and `billing_entitlements` tables)
 - `packages/db/src/billing/` (the ledger's writes and its prune)
 - `packages/db/test/stripe-event-ledger.test.ts`

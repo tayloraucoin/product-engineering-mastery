@@ -243,6 +243,10 @@ const ALLOWED: [file: string, code: string][] = [
     'import Stripe from "stripe"; import "@pem/db/stripe-event-ledger";',
   ],
   [
+    "apps/web/app/api/webhooks/stripe/_lib/zz-probe.ts",
+    'import Stripe from "stripe"; import "@pem/db/stripe-event-ledger";',
+  ],
+  [
     "packages/api/src/zz-probe.ts",
     'import "@trpc/server"; import "@trpc/client"; import "@pem/services/notes"; import "@pem/auth/context"; import "@pem/validators/notes"; import "@pem/observability/logger";',
   ],
