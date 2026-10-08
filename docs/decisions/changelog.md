@@ -15,15 +15,26 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
-## 2026-10-08 — Webhooks: each one is a folder under `app/api/webhooks/`
+## 2026-10-08 — Component placement: the importer ladder, `components/<domain>/`, no `app/_components/`
 
-Operator ruling, 2026-10-08: a webhook's logic lives beside its route, so every webhook is one obvious folder. The Stripe webhook's dispatcher, handler, handlers and ledger binding moved by `git mv` from `apps/web/lib/billing/webhook/` to `apps/web/app/api/webhooks/stripe/_lib/`, with no change in behaviour. The Stripe client stays in `apps/web/lib/billing/stripe.ts`, because code outside the webhook will import it.
+Four operator rulings, decided 2026-10-08 in Mason's placement thread, from the research note `docs/research/engineering/component-placement.md`. Ledger EN-19. The note's own recommendation (no `components/` folder; the app root's `_components/` as the top in-app tier) was weighed against the operator's rule (app-shared components in `components/`, under sub-folders); the ruling keeps the note's deepest-common-segment step for one section and the operator's folder above it.
 
-- `docs/engineering/codebase-conventions.md` §3: a route's own modules go in a private `_lib/` folder; each webhook is `app/api/webhooks/<vendor>/`.
-- `docs/runbooks/remove/billing.md`: the route folder now lists its `_lib/`, and `apps/web/lib/billing/` holds only the client. `toolkit.json`'s `stack.billing.files` already named both folders, so it is unchanged.
-- `toolkit.json` reviewers: `**/webhooks/stripe/**` rows for mason and chancery. Seven of the moved files do not import `stripe` and left the `**/billing/**` glob, and these rows keep billing review on them. Warden already reaches them through `**/webhooks/**`.
-- `apps/web/package.json`: `test` also runs `app/**/*.test.ts`. Its glob was `lib/**` only, so the two moved test files would have stopped running (429 tests before, 449 after).
-- `tooling/boundaries.test.ts`: a second `stripe` and ledger probe, from the webhook's `_lib/`. `docs/engineering/tech-stack.md`: the `stripe` row names the webhook folder.
+- **Placement is a ladder by importer set:** the route's `_components/`; several segments of one section, the deepest common segment's `_components/`; importers across sections or the root layout, `apps/<app>/components/<domain>/`; both apps, `@pem/ui`, import-gated, with a domain-aware component split into a presentational part and per-app wrappers.
+- **`apps/<app>/app/_components/` is retired.** Route `_components/` stay.
+- **Sub-folders:** every file in `components/` sits in a domain-noun sub-folder; chrome goes in `shell/`; no type-named folders anywhere. A route `_components/` may take domain sub-folders.
+- **Promotion:** a file moves in the PR that changes its importers, down as well as up, and is deleted at zero. Kind never moves a file.
+- **Case study:** `apps/web/app/experimental/[slug]/review/_components/choice-group.tsx` stays: its three importers all sit in `review/_components/`.
+- **Not yet moved:** the files sit at their old paths until WEB-20 (`apps/web/app/_components/floating-theme-toggle.tsx` to `apps/web/components/shell/`, with the D-LAB-34 guard and assess V4 widened to the new folder) and WEB-21 (the docs app's `sidebar`, `docs-nav` and `search` to `apps/docs/components/shell/`; `markdown` and `frontmatter-panel` down to `apps/docs/app/[[...slug]]/_components/`) land. §1 and §6 name the target paths.
+- **Files changed, every sentence before and after:**
+  - `docs/engineering/codebase-conventions.md` §1. Added: the four-rung ladder, "Kind never moves a file", "Move in the PR that changes the importer set". Worked example was: "The markdown renderer is used only by `apps/docs`, so it lives in `apps/docs/app/_components/markdown.tsx`." Now: it "belongs in `apps/docs/app/[[...slug]]/_components/markdown.tsx`", plus the `ChoiceGroup` example.
+  - Same file, §3. The tree's `_components/` line was "components used by this app's routes"; now `<segment>/_components/` (only that subtree imports them) and `components/<domain>/` beside `lib/`. Was: "Route-level components that grow beyond one route move up to `app/_components/`; components needed by both apps move to `@pem/ui` (§1)." Now: the ladder, no `app/_components/`, and the three sub-folder rules.
+  - Same file, §6. Was: "Example: `apps/docs/app/_components/docs-nav.tsx`". Now: a leaf is "placed by its importers like any component (§1). Example: `apps/docs/components/shell/docs-nav.tsx`".
+  - `.claude/rules/next.md`: one placement line added, the rule an agent reads when it places a file under `apps/`: "Place a component by its importers (conventions §1): route, then section `_components/`, then `components/<domain>/`, then `@pem/ui`; never `app/_components/`." The path-rule share is 1,496 of 1,500 tokens.
+  - `AGENTS.md`. Was: a client leaf "in the route's `_components/`". Now: "on line 1, placed by its importers".
+  - `.claude/rules/ts.md`. Was: "a leaf in `_components/`". Now: "a leaf, placed by its importers".
+  - `apps/web/AGENTS.md`. Was: "a second consumer moves it to `@pem/ui`". Now: it "is placed by its importers (engineering conventions §1)".
+  - `packages/ui/AGENTS.md`. Was: "stays in its `_components/` until a second consumer". Now: "stays in that app until both apps import it".
+- **Left alone:** records 0004 and 0007 (immutable; they name `app/_components/markdown` as history).
 
 ## 2026-10-08 — MIG: the overlay-local floor and the reviewer scanner, ruled
 
