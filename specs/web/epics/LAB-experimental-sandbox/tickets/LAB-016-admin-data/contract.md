@@ -37,7 +37,7 @@ focus:
 operator_review: false
 planned_paths:
   - "apps/web/app/admin/data/**"
-  - "apps/web/app/admin/experiments/[slug]/data/**"
+  - "apps/web/app/admin/experiments/*/data/**"
   - "apps/web/lib/sandbox/admin-data*.ts"
   - "apps/web/lib/sandbox/admin-nav.ts"
   - "apps/web/lib/sandbox/state.ts"

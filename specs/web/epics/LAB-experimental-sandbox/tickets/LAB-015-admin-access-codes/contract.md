@@ -33,7 +33,7 @@ focus:
   - "the code exists in clear only in the shown-once response (warden)"
 operator_review: false
 planned_paths:
-  - "apps/web/app/admin/experiments/[slug]/codes/**"
+  - "apps/web/app/admin/experiments/*/codes/**"
   - "apps/web/lib/sandbox/admin-codes*.ts"
   - "apps/web/lib/sandbox/emails-used*.ts"
   - "apps/web/lib/sandbox/state.ts"
