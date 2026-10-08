@@ -16,14 +16,14 @@ load_when:
 > **Open from:** step 7 of [the guide](README.md) to draft the tickets, and step 9 to print the prompts.
 > **In one line:** layer 3 is never run on day one. Each part is a drafted ticket under the target's migration epic, in this order, started only when the operator says. Dependencies come first and the parts that rewrite many files come last. None is a codemod: a part's plan is steps a later ticket builds, with the live team in mind.
 
-The example repo is `acme-shop`, prefix `ACM`, epic `ACM-migration`.
+The example repo is `acme-shop`, prefix `ACM`, epic `MIG-migration`.
 
 ## How a part becomes a ticket
 
 For each part below, in order:
 
 ```sh
-yarn contract:init ACM <slug> --draft
+yarn contract:init MIG <slug> --draft
 ```
 
 Then fill the drafted `contract.md`'s Build notes with the five items from the part's block: **Layer**, **What did not cross**, **Plan**, **Conflict risk** (the flag and the trigger that starts the part), **Estimate** (labelled as an estimate). Its objective is the part's first line; its `qa` is `Q1` unless the block says otherwise (parts 2 and 6 say Q3: schema, money, auth and personal data are Q3 by `AGENTS.md`); its `planned_paths` are the plan's paths. A part the target already satisfies (the report scored it 0) is skipped and the skip is one line in record 0001.
@@ -152,9 +152,9 @@ Venue: Claude Code, in <target>, on a branch the operator creates from <protecte
 Model: the deepest available (Fable 5.1 today). A part's plan is a judgment about a live team; a smaller model turns it into a sweep.
 Toolkit checkout: <toolkit path>. The recipes and checks a part cites (remove recipes, the boundaries config, the preset, the migration check) live there, not in this repo.
 
-Build <ACM-NNN> (layer 3, part <n>: <part title>).
+Build <MIG-NNN> (layer 3, part <n>: <part title>).
 
-It is a drafted ticket under specs/_shared/epics/ACM-migration/. Its Build notes hold the layer, what did not cross, the plan, the conflict-risk flag with its trigger, and an estimate. Read them, then the assess report (assess.md) and the rulings (rulings.md) beside it, and record 0001.
+It is a drafted ticket under specs/_shared/epics/MIG-migration/. Its Build notes hold the layer, what did not cross, the plan, the conflict-risk flag with its trigger, and an estimate. Read them, then the assess report (assess.md) and the rulings (rulings.md) beside it, and record 0001.
 The trigger in the Build notes has been met: <how>. The window, if the risk is high: <the window the team named>.
 Never a codemod or a bulk rewrite; the plan's steps, one commit each, yarn verify after each. A baseline or suppressions file only falls.
 Stop for the operator at every hosted step the ticket names, and before any commit that touches more than about 50 files.
@@ -173,6 +173,6 @@ Build the prompt for: promoting the imported UX spec of <app> to living truth, b
 Track: product spec. Lead: Vesper. Support: Compass for what the product is for today, Gloss for the words.
 What exists: the imported spec at specs/<app>/_imported/ux/ (<n> files, <versions or areas>, moved byte for byte on <date>), the deviation logs beside their old spec folders (indexed in docs/index.md), and the code as it is now, which has moved since the spec was written.
 The work: read the imported spec against the code, surface by surface; write specs/<app>/ux/ from docs/design/templates/ux-overview.template.md and ux-surface.template.md, one overview per area and one file per surface, every reachable state named; where the code and the spec disagree, the code's behaviour is written as the truth and the disagreement is listed for the operator, never silently resolved.
-The imported files are not edited or deleted; the promotion gap ticket (<ACM-NNN>) is closed by this thread's as-built.
+The imported files are not edited or deleted; the promotion gap ticket (<MIG-NNN>) is closed by this thread's as-built.
 Done when: a build thread could build any surface from its file without asking a question, and the design-layer thread (layer 3, part 9) can list every token and component the product needs from it.
 ```
