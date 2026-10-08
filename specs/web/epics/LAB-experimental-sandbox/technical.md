@@ -47,7 +47,7 @@ Verified 2026-10-05: no `toolkit.json` reviewer row matches `rls.ts`, `policies.
 
 ## Brief amendments
 
-Approved at the UX gate; applied to `brief.md` on 2026-10-05:
+Approved at the UX gate; applied to `brief.md` on 2026-10-05, and since 2026-10-08 in `decisions.md`:
 
 1. S3: only an admin deletes an experiment's data; developers can still erase a reviewer (D-LAB-26).
 2. Pinned "scheduled purge": comes back when any closed experiment still holds guest data 90 days after close (D-LAB-24).

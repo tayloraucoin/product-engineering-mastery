@@ -15,6 +15,14 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-08 — LAB: the brief returns to the template's shape; the settled decisions move to `decisions.md`
+
+The fix for the second audit's Y2 (`specs/_shared/reports/2026-10-07-second-token-and-speed-audit.md`), landed in the brief, never the cap. `specs/web/epics/LAB-experimental-sandbox/brief.md` goes from 8,492 to 1,908 tokens against its 2,000.
+
+- **Moved byte for byte** to the new `decisions.md` beside it: "What is settled" (S1 to S31, with 12a to 12c), "Pinned for later", the full prior-art table with "Extended in this repo", "One-way doors" (1 to 8) and "QA, carried to the Tickets stage", plus the header paragraph that explained why they sat in the brief. 197 non-blank lines moved and 54 kept, each identical and in order; no id renumbered, nothing reworded.
+- **Left in the brief:** the template's sections, the Out line, Knowledge gaps, a one-line pointer to `decisions.md`, and prior art as one table (piece, repo, verdict). The citing lines in `ux/experimental/overview.md`, `ux/admin/overview.md` and `technical.md` name the new file.
+- **Still open:** `yarn budget` stays red. The MIG brief (5,718 tokens) is now the heaviest example, so "brief and package" and the UI build row still fail, and MIG-1's C7 cannot pass until the MIG brief is cut. That work needs its own thread with Compass, because its Evidence section alone is 1,708 tokens.
+
 ## 2026-10-08 — PEM: the model calibration, measured; a ticket build's minimum is Opus 5.5
 
 The calibration protocol of `docs/research/engineering/model-selection-claude-code.md` run as an audit (Vigil lead; Tally and Assay consulted): three tickets built twice from 115df1e (LAB-19 UI, LAB-27 schema, LAB-30 backend), each sibling hardened blind by Opus 5.5 reviewers, the mapping revealed after. Results in the new `docs/research/engineering/model-selection-calibration.md` (`status: archived`, `load_when: never`); ledger PR-22.
