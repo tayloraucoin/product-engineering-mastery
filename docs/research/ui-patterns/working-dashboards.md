@@ -1,3 +1,15 @@
+---
+title: "Dense Dashboards in Working Tools: Research Notes Q1-Q8, Rule Appendix and dashboard-01 Critique"
+description: Read only to trace a dashboard or working-tool home ruling, or to re-score shadcn's dashboard-01 against the DASH rules.
+layer: research
+status: archived
+thread: dense-dashboards
+role: Envoy
+date: 2026-10-06
+last_reviewed: 2026-10-07
+supersedes:
+load_when:
+---
 # Dense Dashboards in Working Tools: Research Notes Q1-Q8, Rule Appendix and dashboard-01 Critique
 
 The home screen of a working tool should be a queue or table of the items waiting on the user, with one row per item and a way to act on each row. A grid of KPI cards does not do this job. shadcn's dashboard-01 puts four KPI cards and a chart above its table, so for a working tool it opens on the wrong job.\[1\] Its table is the strongest part of the block and should be promoted to the home's primary region.\[2\]

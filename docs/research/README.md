@@ -30,3 +30,4 @@ load_when:
 | [`engineering/`](engineering/README.md) | Open to trace an engineering-layer ruling, a PJ methodology verdict, an amendment's exact text, or why Mason's role changed. |
 | [`process/`](process/README.md) | Open to trace the Shape Up adoption and the staging-branch, customer-testing and honest-A/B findings behind the runbooks and metrics templates. |
 | [`toolkit/`](toolkit/README.md) | Open to trace how the toolkit was planned, consolidated and filed: the plan, the map, the phase checklists, the candidates and the conflicts. |
+| [`ui-patterns/`](ui-patterns/README.md) | Open to trace a ruling on a recurring interface pattern, such as the home of a working tool or a dense dashboard. |

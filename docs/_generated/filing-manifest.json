@@ -329,6 +329,13 @@
       "body_sha256": "8f38f5e65680870e52e7a7ca3022af07ea3905d7037050c0493b96a72183d0b8",
       "frontmatter": "kept",
       "source_commit": "3e58eae"
+    },
+    {
+      "from": "docs/research/ui-patterns/working-dashboards.md",
+      "to": "docs/research/ui-patterns/working-dashboards.md",
+      "body_sha256": "013e793a9efbd34454557a1f463fa25fe27e65d5e95dd739040c14e11d25ce91",
+      "frontmatter": "added",
+      "source_commit": "110cd6e"
     }
   ]
 }
