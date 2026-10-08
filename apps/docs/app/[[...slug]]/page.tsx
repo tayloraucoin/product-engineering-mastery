@@ -3,8 +3,8 @@ import { notFound } from "next/navigation";
 
 import { getAllDocs, getDocBySlug } from "@/lib/docs";
 
-import { FrontmatterPanel } from "../_components/frontmatter-panel";
-import { Markdown } from "../_components/markdown";
+import { FrontmatterPanel } from "./_components/frontmatter-panel";
+import { Markdown } from "./_components/markdown";
 
 // Every doc is known at build time; anything else is a 404.
 export const dynamicParams = false;

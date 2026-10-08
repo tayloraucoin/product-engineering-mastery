@@ -1,7 +1,5 @@
 {
   "yarn pr:body": "lands in J8",
-  "apps/docs/app/[[...slug]]/_components/markdown.tsx": "lands in WEB-21",
-  "apps/docs/components/shell/docs-nav.tsx": "lands in WEB-21",
   "docs/engineering/test-strategy.md": "lands in J11",
   "docs/runbooks/port.md": "superseded by docs/runbooks/new-project/README.md (STK-3)",
   "apps/web/docs/": "lands in P-C",

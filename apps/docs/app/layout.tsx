@@ -6,7 +6,7 @@ import { brandSans } from "@pem/brand/font";
 import { appIcon } from "@pem/brand/icon";
 import { ThemeProvider } from "@pem/ui/theme";
 
-import { Sidebar } from "./_components/sidebar";
+import { Sidebar } from "../components/shell/sidebar";
 
 import "./globals.css";
 

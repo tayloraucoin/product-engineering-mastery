@@ -69,6 +69,7 @@ Four operator rulings, decided 2026-10-08 in Mason's placement thread, from the 
   - `packages/ui/AGENTS.md`. Was: "stays in its `_components/` until a second consumer". Now: "stays in that app until both apps import it".
 - **Left alone:** records 0004 and 0007 (immutable; they name `app/_components/markdown` as history).
 - **WEB-20 landed:** `floating-theme-toggle.tsx` is in `apps/web/components/shell/`, and `apps/web/app/_components/` is gone. The D-LAB-34 guard (`SANDBOX_UI_FILES` in `boundaries.js`, with a probe) covers `apps/web/components/**`. Assess V4 counts `components/` as placed.
+- **WEB-21 landed:** the docs app's `sidebar`, `docs-nav` and `search` are in `apps/docs/components/shell/`, and `markdown` and `frontmatter-panel` are in `apps/docs/app/[[...slug]]/_components/`. `apps/docs/app/_components/` is gone, and the two pending refs are resolved.
 
 ## 2026-10-08 — MIG: the overlay-local floor and the reviewer scanner, ruled
 
