@@ -54,5 +54,52 @@
       }
     }
   },
-  "updated_at": "2026-10-08T07:02:30Z"
+  "cost": {
+    "at": "2026-10-08T07:02:45Z",
+    "calls": 79,
+    "weighted": 1729126,
+    "tokens_input": 160,
+    "tokens_cache_read": 10427899,
+    "tokens_cache_write": 279169,
+    "tokens_output": 67443,
+    "by_category": {
+      "build": {
+        "calls": 36,
+        "weighted": 819858
+      },
+      "proofs": {
+        "calls": 2,
+        "weighted": 51291
+      },
+      "captures": {
+        "calls": 0,
+        "weighted": 0
+      },
+      "reviews": {
+        "calls": 26,
+        "weighted": 452202
+      },
+      "status": {
+        "calls": 11,
+        "weighted": 312812
+      },
+      "git": {
+        "calls": 2,
+        "weighted": 58173
+      },
+      "re-reading": {
+        "calls": 0,
+        "weighted": 0
+      },
+      "other": {
+        "calls": 2,
+        "weighted": 34790
+      }
+    },
+    "context_last_call": 257155,
+    "threads": 1,
+    "headless_runs": 0,
+    "headless_weighted": 0
+  },
+  "updated_at": "2026-10-08T07:02:45Z"
 }
