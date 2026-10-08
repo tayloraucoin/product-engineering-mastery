@@ -1,0 +1,15 @@
+{
+  "onArrival": {
+    "queue": true,
+    "draft": false,
+    "otherQueue": true
+  },
+  "textClosed": "This review has ended\n\nThe team has your review, sent on October 3. Nothing more can be added now.\n\nAnswers you hadn't sent couldn't be added, and have been cleared from this browser.\n\n2 comments in this browser weren't sent before it closed.\n\nShow them\n\nQuestions? Email hello@example.com",
+  "text": "This review has ended\n\nThe team has your review, sent on October 3. Nothing more can be added now.\n\nAnswers you hadn't sent couldn't be added, and have been cleared from this browser.\n\n2 comments in this browser weren't sent before it closed.\n\nHide them\n\nThe price under Pro wraps onto two lines at this width.\n\nIs the yearly toggle meant to keep my place in the table?\n\nQuestions? Email hello@example.com",
+  "afterLeaving": {
+    "queue": false,
+    "draft": false,
+    "otherQueue": true
+  },
+  "textAfter": "This review has ended\n\nThe team has your review, sent on October 3. Nothing more can be added now.\n\nQuestions? Email hello@example.com"
+}
