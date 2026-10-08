@@ -6,7 +6,7 @@ status: draft
 thread: PR-19
 role: Usher
 date: 2026-10-05
-last_reviewed: 2026-10-05
+last_reviewed: 2026-10-07
 supersedes:
 load_when: on request
 ---
@@ -20,9 +20,22 @@ load_when: on request
 | Level  | For                                                                  | Proof                                                         | Review                                                                                     | Written down                                              |
 | ------ | -------------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | --------------------------------------------------------- |
 | **Q0** | Questions, reports, docs, trivial fixes                              | The stop check on the files the thread edited                 | None                                                                                       | Nothing                                                   |
-| **Q1** | Ordinary code                                                        | The builder runs the criteria; one `yarn verify` at the end   | None                                                                                       | A ticket if chosen; an as-built only if something changed |
+| **Q1** | Ordinary code                                                        | The builder runs the criteria; `yarn verify` at the close     | None                                                                                       | A ticket if chosen; an as-built only if something changed |
 | **Q2** | Code worth a second look                                             | Same as Q1                                                    | One reviewer in fresh context; findings come back in the thread, not as a file             | A ticket and a short as-built                             |
 | **Q3** | Money, auth, schema and migrations, personal data, agent permissions | Recorded proofs (the ledger: `results.json`), frozen at close | The specialists the operator confirmed, each in fresh context; their review files are kept | The full contract, the as-built, the review files         |
+
+## Which phase runs what
+
+A ticket is built, seen by the operator, then hardened on the operator's word ([`stages/harden.md`](stages/harden.md)). The level splits across the two passes:
+
+| Level | Build pass: proves and reviews                                                          | Hardening pass: proves and reviews                                                                                        |
+| ----- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Q0    | The stop check                                                                          | None                                                                                                                      |
+| Q1    | The ticket's own tests, the affected workspace's suite, `check-types`; no review        | `contract:run` once; `yarn verify` when it closes the work                                                                |
+| Q2    | As Q1, plus Assay in thread on a UI ticket, from the thread's own screenshots, advisory | As Q1, plus captures once, a short as-built, and one subagent review                                                      |
+| Q3    | As Q2; Warden only the first time a door path in `technical.md` is built                | Recorded proofs and captures once, the as-built, one `review:run` per confirmed seat; Warden and Mason on door paths only |
+
+**At Q2 the reviewer runs once per ticket,** a FAIL included: its findings are fixed and re-proven, and a second subagent run needs the operator's word, as a third run does at Q3.
 
 What each level costs, as a rough guide (estimates): Q0 and Q1 add almost nothing to the build. Q2 adds one reviewer session and usually one round of fixes. Q3 adds a reviewer session per specialist, a fix round per review, and the recorded proofs; expect it to cost as much again as the build itself.
 
@@ -69,7 +82,7 @@ Reviewers and audits use one scale, so a finding means the same thing everywhere
 
 The builder fixes black and red findings and any orange one that is cheap, then re-proves. The rest are listed in the closing report as drafted follow-ups.
 
-**A review PASS is final for its round.** After a PASS, black and red cannot exist by definition: a Blocking finding means FAIL. Orange findings are fixed when cheap and re-proven with `yarn contract:run`, never re-reviewed; yellow and grey become drafted follow-ups. A FAIL earns one re-review. A third run of the same reviewer on one ticket needs the operator's word, `yarn review:run <role> <id> --operator "<reason>"`, and the reason is written into the review file. A Should-fix count that does not fall across rounds is the signal to stop, not to continue: a fresh reviewer finds different orange items each time. The operator's word for one ticket is recorded as a `focus` line in the contract and handed to the tooling as `--operator "<that line>"`; the tooling reads only the flag. At Q3 the tooling holds this: a recorded PASS is reset only by a change to the contract's criteria, never by the as-built or a planned-path commit, and `review:run` refuses the run the rule forbids.
+**A review PASS is final for its round.** After a PASS, black and red cannot exist by definition: a Blocking finding means FAIL. Orange findings are fixed when cheap and re-proven with `yarn contract:run`, never re-reviewed; yellow and grey become drafted follow-ups. At Q3 a FAIL earns one re-review. A third run of the same reviewer on one ticket needs the operator's word, `yarn review:run <role> <id> --operator "<reason>"`, and the reason is written into the review file. A Should-fix count that does not fall across rounds is the signal to stop, not to continue: a fresh reviewer finds different orange items each time. The operator's word for one ticket is recorded as a `focus` line in the contract and handed to the tooling as `--operator "<that line>"`; the tooling reads only the flag. The rule binds a Q2 subagent run as it binds a Q3 run; at Q3 the tooling holds it: a recorded PASS is reset only by a change to the contract's criteria, never by the as-built or a planned-path commit, and `review:run` refuses the run the rule forbids.
 
 ## What is never written down
 

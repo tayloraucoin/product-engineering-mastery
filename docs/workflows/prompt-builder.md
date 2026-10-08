@@ -6,7 +6,7 @@ status: draft
 thread: PR-19
 role: Usher
 date: 2026-10-05
-last_reviewed: 2026-10-06
+last_reviewed: 2026-10-07
 supersedes:
 load_when: on request
 ---
@@ -133,7 +133,7 @@ The directory comes from the track file. State whether the main prompt waits for
 | Anything that reads or writes repo files, or runs checks | Claude Code, in the repo |
 | Research with web sources                                | A Claude research thread |
 
-State the model; do not ask. The deepest available for shaping work, for Q3 work and whenever the pace is Careful. For other build threads name the model and the failure mode of choosing a smaller one (missed states, invented tokens, stale APIs). Then write the thread plan: where the work starts, where it splits into further threads, and that each thread will tell the operator when to open the next. A dry-run or cold-rehearsal thread names its own model, and for that one thread the builder asks the operator which, since a smaller model often serves there.
+State the model; do not ask. Name a minimum and a recommended model with the failure mode of choosing down, from the Answer table in `docs/research/engineering/model-selection-claude-code.md`: a ticket build, minimum Sonnet 5.5 at medium, recommended Opus 5.5 at medium until its calibration moves it; shaping, review, research, audits and hardening, Opus 5.5 at the floor. Fable 5.1 is never a default; name it only when the operator does. Pin the effort at thread start; never switch model or effort mid-thread. Then write the thread plan: where the work starts, where it splits into further threads, and that each thread will tell the operator when to open the next. A dry-run or cold-rehearsal thread names its own model, and for that one thread the builder asks the operator which, since a smaller model often serves there.
 
 ## 7. Print three things, save nothing
 

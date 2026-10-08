@@ -6,7 +6,7 @@ status: draft
 thread: PR-19
 role: Usher
 date: 2026-10-05
-last_reviewed: 2026-10-05
+last_reviewed: 2026-10-07
 supersedes:
 load_when: on request
 ---
@@ -28,7 +28,7 @@ Example: "The records table needs a filter by status."
 
 ## Stages
 
-One: [Build](../stages/build.md).
+[Build](../stages/build.md), then [Harden](../stages/harden.md) when you say so; optional at Q1 with no ticket.
 
 ## Cast and QA
 
@@ -42,13 +42,13 @@ No lead role: the thread is the builder. Default Q1. The builder recommends Q2 o
 
 ## The moves
 
-| Move              | You                                         | The thread                                                                                                           |
-| ----------------- | ------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| **1. Brain dump** | Describe the work to the builder; answer it | Prints the prompt and what to expect                                                                                 |
-| **2. Build**      | Open a new thread, paste the prompt         | With a ticket: drafts the contract and starts it. Without: works from the prompt. Builds; updates the UX truth file. |
-| **3. Prove**      | Nothing, unless you chose to be involved    | Runs the criteria, one `yarn verify`, and the review your level calls for; fixes what fails and proves it again      |
-| **4. Report**     | Read six lines at most                      | Says what is done, what needs you, and what went wrong                                                               |
-| **5. Ship**       | Push and merge when you are ready           | Nothing: agents never push                                                                                           |
+| Move              | You                                         | The thread                                                                                                                                                                                      |
+| ----------------- | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1. Brain dump** | Describe the work to the builder; answer it | Prints the prompt and what to expect                                                                                                                                                            |
+| **2. Build**      | Open a new thread, paste the prompt         | With a ticket: drafts the contract and starts it. Without: works from the prompt. Builds; runs its tests and its workspace's suite; updates the UX truth file; ends on five lines and the links |
+| **3. Seen**       | Walk what it built; say "fix", or "harden"  | Fixes what you ask for in the same thread                                                                                                                                                       |
+| **4. Harden**     | Say "harden <id>" when you are happy        | A new thread runs the criteria, the review your level calls for, and `yarn verify`, once; reports in six lines at most. Optional at Q1 with no ticket                                           |
+| **5. Ship**       | Push and merge when you are ready           | Nothing: agents never push                                                                                                                                                                      |
 
 ## What gets written
 
@@ -68,4 +68,4 @@ No lead role: the thread is the builder. Default Q1. The builder recommends Q2 o
 
 ## Explain it back
 
-> "I describe the change, answer the builder's questions once, and paste its prompt into a new thread. That thread builds it on my branch, proves it as carefully as I asked, updates the UX file if behaviour changed, and tells me in a few lines what is done and what needs me."
+> "I describe the change, answer the builder's questions once, and paste its prompt into a new thread. That thread builds it on my branch, updates the UX file if behaviour changed, and gives me links to look at. When I like what I see I say harden, and a new thread proves it as carefully as I asked and tells me in a few lines what is done and what needs me."

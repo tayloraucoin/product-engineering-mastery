@@ -36,7 +36,7 @@ load_when:
 
 | File | What it is for |
 | --- | --- |
-| [`onboard-agent.md`](onboard-agent.md) | Follow when the team adopts a new model or a new agent tool, or after a harness change, to prove the always-on files, path rules, skills and subagents load exactly as docs/index.md says; not when a new developer joins. |
+| [`onboard-agent.md`](onboard-agent.md) | Follow when the team adopts a new model or a new agent tool, or after a harness change, to prove the always-on files, path rules, skills and subagents load exactly as docs/index.md says; also the one table of what a checkout gives a teammate on any agent tool. Not a checklist for a new developer. |
 | [`release.template.md`](release.template.md) | Fill for every release behind a flag, from the deploy through the 48-hour replay review to the flag's removal; the checklist for Recipe A's ship step. |
 | [`variant-testing.md`](variant-testing.md) | Follow when a variant needs to reach named customers, or before claiming a change "worked": mechanism, data source, exposure, pre-registered rule, guardrails, qualitative pairing, and when a real experiment becomes possible. |
 | [`add/`](add/README.md) | Open when a product repo needs a module it removed, never had, or left switched off; an add recipe brings it in, wires it and ends on yarn check-stack and yarn verify. The first is the local Docker database. |

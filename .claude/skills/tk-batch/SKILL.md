@@ -1,14 +1,23 @@
 ---
 name: tk-batch
 description: "Build one or more tickets start to finish in this thread, and keep going until each is done at its QA level: start, build, prove, fix what fails, prove again, review, report. Use whenever the operator names tickets to build, run, continue, finish or close, as in 'build STK-5 and STK-7' or 'finish STK-6'. No slash command is needed."
-argument-hint: <id> [<id> …]
+argument-hint: <id>
 ---
 
-Take the named tickets to done. The operator runs many threads and reads only your last message, so the work is yours until it is finished or a line under "When the thread ends" ends it first. `docs/workflows/stages/build.md` is the full protocol; this is the short form.
+Take the named ticket through the pass the operator asked for; the work is yours until it is finished. `docs/workflows/stages/build.md` and `harden.md` beside it are the full protocol.
+
+## One ticket per thread
+
+Never a batch: named several, take the first and list the rest under `Not done`. The operator says one of two things:
+
+- **"build <id>"**: the build pass. Code and its own proof, ending on five lines and the links.
+- **"harden <id>"**: the hardening pass, after the operator has walked the build. Every proof and review the level asks for, once.
+
+"fix" in a build thread: change it, end on five lines again.
 
 ## Yours, and the operator's
 
-**Yours.** Every command. A command the sandbox blocks is run again unsandboxed. Every reversible choice: decide, note it as `[ASSUMPTION]`, go on. A dependency that is not built is built first, unless another thread has started it. A follow-up you discover is drafted as its own ticket (`yarn contract:init <EPIC | app> <slug> --from <draft> --draft`) and named in the report.
+**Yours.** Every command. A command the sandbox blocks is run again unsandboxed. Every reversible choice: decide, note it as `[ASSUMPTION]`, go on. A follow-up you discover is drafted as its own ticket (`yarn contract:init <EPIC | app> <slug> --from <draft> --draft`) and named in the report.
 
 **The operator's, only these.** A choice that cannot be undone; spending money; scope that outgrows the ticket; a file agents cannot write (`.claude/settings.json`); a credential or an account; the merge. Ask everything in one message, each with a recommendation, and keep building whatever does not wait on the answer. If the prompt or contract names an involvement other than autonomous, also stop where it says.
 
@@ -16,34 +25,32 @@ Take the named tickets to done. The operator runs many threads and reads only yo
 
 ## Where the work goes
 
-The branch that is checked out. Only when the operator or the prompt says "on its own branch": `git worktree add .claude/worktrees/<name> -b agent/<name>` from the current branch, `yarn install` there, do everything there, and report `Branch: agent/<name>, ready for a pull request.` On "merge it back", merge it into the main checkout's branch and remove the folder and the branch. One branch per request, never one per ticket.
+The branch that is checked out. Only when the operator or the prompt says "on its own branch": `git worktree add .claude/worktrees/<name> -b agent/<name>` from the current branch, `yarn install` there, do everything there, and report `Branch: agent/<name>, ready for a pull request.` On "merge it back", merge it into the main checkout's branch and remove the folder and the branch.
 
-## When the thread ends
+## Both passes
 
-- Give a ticket with captures a thread of its own.
-- End the thread after a ticket's review PASS: run the batch close, report, and name the next ticket under `Not done` for a fresh thread.
-- Close a thread past 200k tokens of context after a break instead of resuming it; the ticket folder is the hand-off.
-- Give a sub-task expected to pass about 50 calls (a dry run, a cold rehearsal, a long review) its own thread from a builder prompt, never a subagent of a Q3 build.
+`yarn status` once at the start and once at the close; never `check-specs` mid-ticket. One commit per outcome, `<id>: <outcome>`, staging only this ticket's paths; never `git add -A`. Give up on one failure only after three different fixes, and say what you tried. Close a thread past 200k tokens after a break instead of resuming it.
 
-## Each ticket, in build order
+## Build
 
-1. **Start.** `yarn contract:init <EPIC | app> <slug>`, unless it has started. Read the contract: its Build notes, its QA level, reviewers and `focus` lines, and the one file it cites.
-2. **Build** in small commits, `<id>: <outcome>`, staging only this ticket's paths; never `git add -A`.
-3. **Prove at the level.**
-   - `yarn contract:run <id>` (it runs each distinct command once), and `yarn contract:record <id> <criterion> --evidence <path>` for capture and manual criteria. Do those checks yourself wherever a tool can; one that truly needs a person is recorded `--verdict deferred` with the steps to take.
-   - Below Q3 nothing recorded goes stale: never re-run a proof because a shared file changed.
-   - To change the level or reviewers when the operator asks: `yarn contract:qa <id> <Q0 | Q1 | Q2 | Q3> [--reviewers <role,role>]`.
-   - Anything that fails: fix, commit, prove again. Give up on one failure only after three different fixes, and say what you tried.
-4. **Write down what the level asks for.** An as-built at Q2 and Q3, or at Q1 when something deviated. Nothing else.
-5. **Review at the level.** Q2: one subagent given the contract, the changed files and the reviewer's role, never your summary; its findings stay in the thread. Q3: `yarn review:run <role> <id>` for each confirmed reviewer, unsandboxed. A `focus` line is reviewed at the level it names. Fix black and red findings and cheap orange ones, prove again; draft the rest as follow-ups. A PASS is final for its round: never run that reviewer again on the ticket; fix cheap orange findings and `yarn contract:run` again, draft yellow and grey as follow-ups. A FAIL earns one re-review. A third run needs the operator's word (`--operator "<reason>"`, recorded as a `focus` line in the contract): ask for it in the report, never run it. A Should-fix count that does not fall across rounds is the signal to stop.
+1. **Start.** `yarn contract:init <EPIC | app> <slug>`, unless it has started. Read the contract: its Build notes, its model, QA level, reviewers and `focus` lines, and the one file it cites.
+2. **Build**, updating the living UX file when behaviour changes.
+3. **Prove in scope.** The ticket's own tests, then the affected workspace's suite and `check-types` at the close. Never `yarn verify` or the whole `yarn test`.
+4. **On a UI ticket,** Assay in thread from your own screenshots, advisory. Warden only the first time a door path in `technical.md` is built.
+5. **No** ledger, captures, as-built or headless review.
 
-## Batch close
+End on five lines: built, assumed, to look at, dev-server links per surface and `?state=`, left for hardening.
 
-`yarn verify`, once. Fix a failure in this batch's files. A failure in a file another thread is editing is named in the report and left alone. Then `yarn truth:promote <EPIC>` when the epic has `ux/` proposals, and commit.
+## Harden
+
+1. **Prove once.** `yarn contract:run <id>`, and `yarn contract:record <id> <criterion> --evidence <path>` for capture and manual criteria; take the captures once. A check that truly needs a person is recorded `--verdict deferred` with the steps to take. To change the level when the operator asks: `yarn contract:qa <id> <Q0 | Q1 | Q2 | Q3> [--reviewers <role,role>]`.
+2. **Write down what the level asks for.** An as-built at Q2 and Q3, or at Q1 when something deviated.
+3. **Review once per seat.** Q2: one subagent given the contract, the changed files and the reviewer's role, never your summary; one run per ticket, a FAIL included. Q3: `yarn review:run <role> <id>` per confirmed seat, unsandboxed, one at a time; Warden and Mason only on door paths `technical.md` names. Fix black, red and cheap orange findings, then `yarn contract:run` once; draft the rest as follow-ups. A PASS is final; at Q3 a FAIL earns one re-review; any further run needs the operator's word (`--operator "<reason>"`, recorded as a `focus` line): ask for it in the report, never run it.
+4. **Close the epic** when this is its last hardening thread, or a one-off: `yarn verify` once, `yarn check-specs --strict`, `yarn truth:promote <EPIC>` when it has `ux/` proposals, and commit. Another thread's failing file is named, left alone.
 
 Never push or merge, and never edit `results.json` or a review file by hand.
 
-## The closing report
+## The closing report, after hardening
 
 Six lines at most, in this shape, and nothing else:
 

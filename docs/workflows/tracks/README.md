@@ -6,14 +6,14 @@ status: draft
 thread: PR-19
 role: Usher
 date: 2026-10-05
-last_reviewed: 2026-10-05
+last_reviewed: 2026-10-07
 supersedes:
 load_when:
 ---
 
 # Tracks
 
-**What this is.** A track is a kind of work with its own path from brain dump to finish. The tracks are distinct on purpose: what happens after the first prompt, who is cast, what gets written and how it is checked all differ. Where two tracks run a stage that is truly the same (Frame, Research, UX, Technical, Tickets, Build), they share the file in [`../stages/`](../stages/README.md) and state only their differences.
+**What this is.** A track is a kind of work with its own path from brain dump to finish. The tracks are distinct on purpose: what happens after the first prompt, who is cast, what gets written and how it is checked all differ. Where two tracks run a stage that is truly the same (Frame, Research, UX, Technical, Tickets, Build, Harden), they share the file in [`../stages/`](../stages/README.md) and state only their differences.
 
 **Come here when.** The prompt builder is choosing a track, or you want to know what a piece of work will involve before you start it.
 
@@ -21,8 +21,8 @@ load_when:
 
 | Track                                          | It is this when                                                                                   | Stages                                                        | Ticket               | Default QA                                   |
 | ---------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- | -------------------- | -------------------------------------------- |
-| [Epic](epic.md)                                | It needs several tickets, or a new surface, or the problem is not settled, and we mean to ship it | Frame, Research (optional), UX, Technical, Tickets, Build     | Always, per ticket   | Set per ticket at the Tickets stage          |
-| [One-off](one-off.md)                          | One piece of buildable work with a known outcome                                                  | Build                                                         | Asked                | Q1; Q2 or Q3 by what it touches              |
+| [Epic](epic.md)                                | It needs several tickets, or a new surface, or the problem is not settled, and we mean to ship it | Frame, Research (optional), UX, Technical, Tickets, Build, Seen, Harden | Always, per ticket   | Set per ticket at the Tickets stage          |
+| [One-off](one-off.md)                          | One piece of buildable work with a known outcome                                                  | Build, Seen, Harden (optional at Q1 with no ticket)           | Asked                | Q1; Q2 or Q3 by what it touches              |
 | [Feature exploration](feature-exploration.md)  | Early product thinking: we want to try directions and learn, not ship                             | Frame-lite, Research (optional), Explore, Review              | No                   | Q1; the operator's own look is the check     |
 | [Product spec only](product-spec.md)           | A product lead is preparing work to hand to developers                                            | Context, Frame, Research (optional), UX, Prototype (optional), Handoff | A draft for the developer | Operator approval; Q1 on any prototype |
 | [Bug or issue](bug.md)                         | Something that worked, or should work, does not                                                   | Reproduce, Diagnose, Fix, Prove, Trace                        | Asked                | By where the bug lives                       |

@@ -6,7 +6,7 @@ status: draft
 thread: PR-19
 role: Usher
 date: 2026-10-05
-last_reviewed: 2026-10-06
+last_reviewed: 2026-10-07
 supersedes:
 load_when: on request
 ---
@@ -46,7 +46,7 @@ If you do not use GitHub yourself, ask whoever owns the repository to push and m
 
 Threads on the current branch share one working copy. Each one commits only its own files and checks only its own files when it stops. When two threads need to change the same file, the second one waits or says so in its report. If that happens often for a piece of work, give that work its own branch.
 
-**When a thread ends.** A thread remembers everything said in it, and every step it takes re-reads that whole memory, so a long thread costs more for each step than a short one. The agent therefore ends threads sooner than you might expect: a ticket with screenshots gets a thread of its own; after a ticket's review passes, the thread finishes its report and the next ticket starts in a new thread; and side work with many steps (a dry run of a guide, a cold rehearsal, a long review) gets its own thread rather than running inside a build. Nothing is lost between threads: the ticket's folder holds the contract, the proofs and the notes, and a new thread picks up from there when you name the ticket.
+**When a thread ends.** A thread remembers everything said in it, and every step it takes re-reads that whole memory, so a long thread costs more for each step than a short one. So every ticket gets a thread of its own, and so does its hardening: you say "build <id>" in one thread and, after you have looked at it, "harden <id>" in another; and side work with many steps (a dry run of a guide, a cold rehearsal, a long review) gets its own thread rather than running inside a build. Nothing is lost between threads: the ticket's folder holds the contract, the proofs and the notes, and a new thread picks up from there when you name the ticket.
 
 **The size line.** When a thread stops, the message it ends with says how big it has grown, as `context about N k tokens`. Under 200k, carry on in it as usual. Over 200k, treat its report as its last word: do not come back to it after a break, and start a fresh thread for the next piece of work, naming the ticket to continue. Reopening a thread that size after a pause costs as much as several steps of real work before anything happens.
 
