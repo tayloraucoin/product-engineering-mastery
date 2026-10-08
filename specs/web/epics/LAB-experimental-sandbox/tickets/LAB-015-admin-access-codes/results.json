@@ -1,0 +1,185 @@
+{
+  "id": "LAB-15",
+  "criteria_sha256": "4057d645cf8be1994997c61086765730faebcec90d0bd29571b06f726059f80a",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-08T01:43:28Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-015-admin-access-codes/evidence/C1.log",
+        "evidence_sha256": "f3670c44cf6dbf8cf974aa891c72e61e5a914e6b89ca140305b6c7a4d442a4d8",
+        "tests": 473
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-08T01:43:37Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-015-admin-access-codes/evidence/C2.log",
+        "evidence_sha256": "b3d52ff0e5c377fb3b3dd34a6cff71562a2b8e5572bb69ddf41aec61000960c5",
+        "tests": 249
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-08T01:43:37Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-015-admin-access-codes/evidence/C3.log",
+        "evidence_sha256": "b3d52ff0e5c377fb3b3dd34a6cff71562a2b8e5572bb69ddf41aec61000960c5",
+        "tests": 249
+      }
+    },
+    "C4": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-08T01:43:28Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-015-admin-access-codes/evidence/C4.log",
+        "evidence_sha256": "f3670c44cf6dbf8cf974aa891c72e61e5a914e6b89ca140305b6c7a4d442a4d8",
+        "tests": 473
+      }
+    },
+    "C5": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-08T01:43:28Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-015-admin-access-codes/evidence/C5.log",
+        "evidence_sha256": "f3670c44cf6dbf8cf974aa891c72e61e5a914e6b89ca140305b6c7a4d442a4d8",
+        "tests": 473
+      }
+    },
+    "C6": {
+      "status": "PASS",
+      "evidence": "capture",
+      "run": {
+        "command": "yarn contract:record LAB-15 C6 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-015-admin-access-codes/evidence/codes-closed.png",
+        "exit": 0,
+        "at": "2026-10-08T01:53:27Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-015-admin-access-codes/evidence/codes-closed.png",
+        "evidence_sha256": "44e3f055bab4a6447f00b949d5493a9740341d3d1a68b9fde3a77a9692df1304"
+      }
+    },
+    "C7": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-08T01:43:28Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-015-admin-access-codes/evidence/C7.log",
+        "evidence_sha256": "f3670c44cf6dbf8cf974aa891c72e61e5a914e6b89ca140305b6c7a4d442a4d8",
+        "tests": 473
+      }
+    },
+    "C8": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-08T01:43:37Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-015-admin-access-codes/evidence/C8.log",
+        "evidence_sha256": "b3d52ff0e5c377fb3b3dd34a6cff71562a2b8e5572bb69ddf41aec61000960c5",
+        "tests": 249
+      }
+    },
+    "C9": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn contract:record LAB-15 C9 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-015-admin-access-codes/evidence/C9-operator.md --verdict deferred",
+        "exit": 0,
+        "at": "2026-10-08T01:51:44Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-015-admin-access-codes/evidence/C9-operator.md",
+        "evidence_sha256": "ce34dd847c0379dba1f10039486d818bc3abcba1f2a5c5badab11499da3215cb",
+        "deferred": true
+      }
+    },
+    "C10": {
+      "status": "PASS",
+      "evidence": "capture",
+      "run": {
+        "command": "yarn contract:record LAB-15 C10 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-015-admin-access-codes/evidence/codes-states.png",
+        "exit": 0,
+        "at": "2026-10-08T01:56:42Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-015-admin-access-codes/evidence/codes-states.png",
+        "evidence_sha256": "eab2f4a2faa9be1f61dc70f349d90d5fac07284f5d1f1c2d946426f1327f0355"
+      }
+    },
+    "review:assay": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn review:run assay LAB-15",
+        "exit": 0,
+        "at": "2026-10-08T01:56:57Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-015-admin-access-codes/review-assay.md",
+        "evidence_sha256": "ad2f62085909f8f76b4e973fcfce350047f646a3e35ba87c935289b2cbb902fa",
+        "contract_sha256": "7a255dd0bfb069434cdb17807d22026cf9a7665c1eac5f406fa32d9cda824683",
+        "criteria_sha256": "4057d645cf8be1994997c61086765730faebcec90d0bd29571b06f726059f80a",
+        "as_built_sha256": "891a1b17edd958f7490b294523f413ba9849e7b2082d95c0aeae91f8b8e2c9e4",
+        "runner": "claude 2.1.232 (Claude Code) (agent assay; tools Read,Grep,Glob)",
+        "tokens_input": 31,
+        "tokens_cache_read": 1213807,
+        "tokens_cache_write": 120772,
+        "tokens_output": 17222,
+        "seconds": 293.8
+      },
+      "runs": 1
+    },
+    "review:warden": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn review:run warden LAB-15",
+        "exit": 0,
+        "at": "2026-10-08T02:03:54Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-015-admin-access-codes/review-warden.md",
+        "evidence_sha256": "17f77f8b2e4184d8166f6249fbda77594134ea641333f5e16e51fc1220492d3b",
+        "contract_sha256": "d02e7956794c6e474115abfac2022a9a98c1003f27822a81121a61e101c2b5d5",
+        "criteria_sha256": "4057d645cf8be1994997c61086765730faebcec90d0bd29571b06f726059f80a",
+        "as_built_sha256": "891a1b17edd958f7490b294523f413ba9849e7b2082d95c0aeae91f8b8e2c9e4",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)",
+        "tokens_input": 35,
+        "tokens_cache_read": 4105054,
+        "tokens_cache_write": 164744,
+        "tokens_output": 19838,
+        "seconds": 318.5
+      },
+      "refused": [
+        {
+          "at": "2026-10-07T07:19:09Z",
+          "reason": "prove the other criteria first: C1 (last run exited 1); C4 (last run exited 1); C5 (last run exited 1); C7 (last run exited 1)"
+        }
+      ],
+      "runs": 1
+    }
+  },
+  "updated_at": "2026-10-08T02:09:13Z"
+}

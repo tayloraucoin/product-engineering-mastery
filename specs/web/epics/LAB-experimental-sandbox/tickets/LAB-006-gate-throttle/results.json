@@ -1,0 +1,113 @@
+{
+  "id": "LAB-6",
+  "criteria_sha256": "d2cd47cdf7148953f2e2ee278bd5fe341325c2d1566bcabb13d6491b13451cf6",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-06T21:09:22Z",
+        "head": "69dca23fc69128157837a7895ca693c373db20a8",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-006-gate-throttle/evidence/C1.log",
+        "evidence_sha256": "c74d521824639514bab5e193b16b8c1a7e9ed0a46be0e14cb75667d39ed1f824",
+        "tests": 230
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-06T21:09:22Z",
+        "head": "69dca23fc69128157837a7895ca693c373db20a8",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-006-gate-throttle/evidence/C2.log",
+        "evidence_sha256": "c74d521824639514bab5e193b16b8c1a7e9ed0a46be0e14cb75667d39ed1f824",
+        "tests": 230
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-06T21:09:33Z",
+        "head": "69dca23fc69128157837a7895ca693c373db20a8",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-006-gate-throttle/evidence/C3.log",
+        "evidence_sha256": "75bd96a6df28e480046188c440f6b2cf2f4ac7e38291a07e84be78d1c9a81382",
+        "tests": 98
+      }
+    },
+    "C4": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-06T21:09:33Z",
+        "head": "69dca23fc69128157837a7895ca693c373db20a8",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-006-gate-throttle/evidence/C4.log",
+        "evidence_sha256": "75bd96a6df28e480046188c440f6b2cf2f4ac7e38291a07e84be78d1c9a81382",
+        "tests": 98
+      }
+    },
+    "C5": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-06T21:09:33Z",
+        "head": "69dca23fc69128157837a7895ca693c373db20a8",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-006-gate-throttle/evidence/C5.log",
+        "evidence_sha256": "75bd96a6df28e480046188c440f6b2cf2f4ac7e38291a07e84be78d1c9a81382",
+        "tests": 98
+      }
+    },
+    "C6": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-06T21:09:33Z",
+        "head": "69dca23fc69128157837a7895ca693c373db20a8",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-006-gate-throttle/evidence/C6.log",
+        "evidence_sha256": "75bd96a6df28e480046188c440f6b2cf2f4ac7e38291a07e84be78d1c9a81382",
+        "tests": 98
+      }
+    },
+    "C7": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn contract:record LAB-6 C7 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-006-gate-throttle/evidence/C7-steps.md --verdict deferred",
+        "exit": 0,
+        "at": "2026-10-06T20:48:47Z",
+        "head": "d99923572232a6cdb6c0ec237f645c0712071102",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-006-gate-throttle/evidence/C7-steps.md",
+        "evidence_sha256": "d6aa29157cbd9649850bdcabb536cd2b6cd7ef300930d2d341058e5655debf4e",
+        "deferred": true
+      }
+    },
+    "review:warden": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn review:run warden LAB-6",
+        "exit": 0,
+        "at": "2026-10-06T21:11:38Z",
+        "head": "0026476d95103d8260efd115fd305d694c8d4d17",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-006-gate-throttle/review-warden.md",
+        "evidence_sha256": "7cdbbe3baea1b07de225cc960605bb0858f70bc092eca092995dbccad47a8a83",
+        "contract_sha256": "314f5b48d3b5f37154f54a4d12571f1cb2159afe59fdbd06132716cbf02d8ed0",
+        "as_built_sha256": "9bb6f33df6d8a0e57a8219eeb328ea62f02d7ffbc36e791d73ec8a64f88ee051",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
+      }
+    }
+  },
+  "updated_at": "2026-10-06T21:18:56Z"
+}

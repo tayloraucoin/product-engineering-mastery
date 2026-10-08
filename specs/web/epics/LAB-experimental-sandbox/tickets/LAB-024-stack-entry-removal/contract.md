@@ -42,17 +42,7 @@ depends_on:
   - LAB-10
   - LAB-11
   - LAB-12
-  - LAB-13
-  - LAB-14
-  - LAB-15
-  - LAB-16
   - LAB-17
-  - LAB-18
-  - LAB-19
-  - LAB-20
-  - LAB-21
-  - LAB-22
-  - LAB-23
 out_of_scope:
   - "Removing the sandbox from this repo: the runbook is proven in a throwaway duplicate only."
   - "Applying any migration to a hosted project, or deleting a host's variables: the operator's steps, written into the runbook."
@@ -88,7 +78,8 @@ criteria:
 - **Approach:**
   - Add the entry to `toolkit.json` beside `billing` and `ai`.
   - Write the runbook on `docs/runbooks/remove/billing.md`'s sections (Files to delete, Files to edit, Variables, Dependencies, Boundaries entries, Vendor-side steps, Retention and erasure, Verify) and `ai.md`'s detail for a boundaries element. Order them as SITE-9's four phases: tag, remove, verify, operator.
-  - Build the edit list from the code as it stands once LAB-1 to LAB-23 have landed: grep each shared file for what LAB added. Never copy it from contracts.
+  - Build the edit list from the code as it stands: grep each shared file for what LAB added. Never copy it from contracts.
+  - `depends_on` narrowed to the built tickets (operator, 2026-10-07): LAB-13, 14 and 18 to 23 were drafts and LAB-15 and 16 red on another ticket's test, and every one of their planned paths sits inside the entry's six folders, so none adds a shared edit. A later ticket that does adds its own row to this runbook.
   - Prove it in a detached worktree of the branch (`git worktree add --detach`), then delete that worktree. Run `yarn directory-map` for the listing.
 - **Decisions that apply:**
   - D-LAB-39 and D-LAB-43 (R7): "`apps/web` plus `@pem/db`; no new package; server actions only, with no route handler or tRPC. Stack entry `experimental-sandbox`. Removal undoes every shared edit except applied migrations (dropped by a new migration) and `developer` while another feature reads it."

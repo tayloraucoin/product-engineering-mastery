@@ -1,0 +1,202 @@
+{
+  "id": "LAB-7",
+  "criteria_sha256": "280ad13fe4f8f615bd20ab33ff14645bbf0863936d3d05acc882350a2c592d24",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-06T21:48:51Z",
+        "head": "45b96535ffc7ece6f4c7036cda4e9677ee49fda9",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C1.log",
+        "evidence_sha256": "014c848382b1a6b150d5b3033f1da9550436feb1536b6d6bd3910b5fe5f0e359",
+        "tests": 255
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-06T21:48:51Z",
+        "head": "45b96535ffc7ece6f4c7036cda4e9677ee49fda9",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C2.log",
+        "evidence_sha256": "014c848382b1a6b150d5b3033f1da9550436feb1536b6d6bd3910b5fe5f0e359",
+        "tests": 255
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-06T21:48:51Z",
+        "head": "45b96535ffc7ece6f4c7036cda4e9677ee49fda9",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C3.log",
+        "evidence_sha256": "014c848382b1a6b150d5b3033f1da9550436feb1536b6d6bd3910b5fe5f0e359",
+        "tests": 255
+      }
+    },
+    "C4": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-06T21:48:51Z",
+        "head": "45b96535ffc7ece6f4c7036cda4e9677ee49fda9",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C4.log",
+        "evidence_sha256": "014c848382b1a6b150d5b3033f1da9550436feb1536b6d6bd3910b5fe5f0e359",
+        "tests": 255
+      }
+    },
+    "C5": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-06T21:48:51Z",
+        "head": "45b96535ffc7ece6f4c7036cda4e9677ee49fda9",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C5.log",
+        "evidence_sha256": "014c848382b1a6b150d5b3033f1da9550436feb1536b6d6bd3910b5fe5f0e359",
+        "tests": 255
+      }
+    },
+    "C6": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-06T21:48:51Z",
+        "head": "45b96535ffc7ece6f4c7036cda4e9677ee49fda9",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C6.log",
+        "evidence_sha256": "014c848382b1a6b150d5b3033f1da9550436feb1536b6d6bd3910b5fe5f0e359",
+        "tests": 255
+      }
+    },
+    "C7": {
+      "status": "PASS",
+      "evidence": "capture",
+      "run": {
+        "command": "yarn contract:record LAB-7 C7 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/gate-notice.png",
+        "exit": 0,
+        "at": "2026-10-06T21:49:28Z",
+        "head": "45b96535ffc7ece6f4c7036cda4e9677ee49fda9",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/gate-notice.png",
+        "evidence_sha256": "988dec6ee5aca4854c9305e42abe0a6c4050432456d87c0b950734872c32155b"
+      }
+    },
+    "C8": {
+      "status": "PASS",
+      "evidence": "capture",
+      "run": {
+        "command": "yarn contract:record LAB-7 C8 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/gate-throttled.png",
+        "exit": 0,
+        "at": "2026-10-06T21:49:34Z",
+        "head": "45b96535ffc7ece6f4c7036cda4e9677ee49fda9",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/gate-throttled.png",
+        "evidence_sha256": "d97d050fac6f649435bf7ee499569e325ef30119532c92a6a976bcbac3a14122"
+      }
+    },
+    "C9": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn contract:record LAB-7 C9 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C9-steps.md --verdict deferred",
+        "exit": 0,
+        "at": "2026-10-06T21:49:52Z",
+        "head": "45b96535ffc7ece6f4c7036cda4e9677ee49fda9",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C9-steps.md",
+        "evidence_sha256": "61c01a98ea320deebf28eef2017bb8823c15e1e3b9b0d24cbdb158f03b9da219",
+        "deferred": true
+      }
+    },
+    "C10": {
+      "status": "PASS",
+      "evidence": "capture",
+      "run": {
+        "command": "yarn contract:record LAB-7 C10 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/gate-states.png",
+        "exit": 0,
+        "at": "2026-10-06T21:49:40Z",
+        "head": "45b96535ffc7ece6f4c7036cda4e9677ee49fda9",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/gate-states.png",
+        "evidence_sha256": "5564d7515dd419cdfc5bc3ff5207eb6ab5cc5f51a2eb9995bd0672d99a094d54"
+      }
+    },
+    "C11": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-06T21:48:51Z",
+        "head": "45b96535ffc7ece6f4c7036cda4e9677ee49fda9",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C11.log",
+        "evidence_sha256": "014c848382b1a6b150d5b3033f1da9550436feb1536b6d6bd3910b5fe5f0e359",
+        "tests": 255
+      }
+    },
+    "C12": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn contract:record LAB-7 C12 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C12-served-diff.md",
+        "exit": 0,
+        "at": "2026-10-06T21:49:46Z",
+        "head": "45b96535ffc7ece6f4c7036cda4e9677ee49fda9",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C12-served-diff.md",
+        "evidence_sha256": "812debc4bcaac5ca227c1f3d1f5ee2a58f5be3708d5140f8c964f4767ad84852"
+      }
+    },
+    "C13": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn contract:record LAB-7 C13 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C13-look-over.md --verdict deferred",
+        "exit": 0,
+        "at": "2026-10-06T21:49:58Z",
+        "head": "45b96535ffc7ece6f4c7036cda4e9677ee49fda9",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/evidence/C13-look-over.md",
+        "evidence_sha256": "eb55c514bdc6581d6db5bb7a1241f83d963f26bc29aa4946f839163d50f501c6",
+        "deferred": true
+      }
+    },
+    "review:assay": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn review:run assay LAB-7",
+        "exit": 0,
+        "at": "2026-10-06T21:11:38Z",
+        "head": "0026476d95103d8260efd115fd305d694c8d4d17",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/review-assay.md",
+        "evidence_sha256": "01553bd37d3ebca6c8c13e5d34777242eb965a2983d882af49e00c763349871b",
+        "contract_sha256": "0f69c949b10bb9a0019f1af7b0a2a6cac0efe67ae5a8db3db5be47c6f831efa2",
+        "as_built_sha256": "d607d446bcfad5fb68f538c9850cdd90d5398d405e11dc28e158f080d7ba9737",
+        "runner": "claude 2.1.232 (Claude Code) (agent assay; tools Read,Grep,Glob)"
+      }
+    },
+    "review:warden": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn review:run warden LAB-7",
+        "exit": 0,
+        "at": "2026-10-06T21:17:55Z",
+        "head": "0026476d95103d8260efd115fd305d694c8d4d17",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-007-gate-page/review-warden.md",
+        "evidence_sha256": "27df42ae9de769c0c746331ab68aad295376df3004a405ba126f380e48810a00",
+        "contract_sha256": "0f69c949b10bb9a0019f1af7b0a2a6cac0efe67ae5a8db3db5be47c6f831efa2",
+        "as_built_sha256": "d607d446bcfad5fb68f538c9850cdd90d5398d405e11dc28e158f080d7ba9737",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
+      }
+    }
+  },
+  "updated_at": "2026-10-06T21:49:58Z"
+}

@@ -6,14 +6,14 @@ status: draft
 thread: PR-19
 role: Usher
 date: 2026-10-05
-last_reviewed: 2026-10-05
+last_reviewed: 2026-10-07
 supersedes:
 load_when:
 ---
 
 # Tracks
 
-**What this is.** A track is a kind of work with its own path from brain dump to finish. The tracks are distinct on purpose: what happens after the first prompt, who is cast, what gets written and how it is checked all differ. Where two tracks run a stage that is truly the same (Frame, Research, UX, Technical, Tickets, Build), they share the file in [`../stages/`](../stages/README.md) and state only their differences.
+**What this is.** A track is a kind of work with its own path from brain dump to finish. The tracks are distinct on purpose: what happens after the first prompt, who is cast, what gets written and how it is checked all differ. Where two tracks run a stage that is truly the same (Frame, Research, UX, Technical, Tickets, Build, Harden), they share the file in [`../stages/`](../stages/README.md) and state only their differences.
 
 **Come here when.** The prompt builder is choosing a track, or you want to know what a piece of work will involve before you start it.
 
@@ -21,14 +21,15 @@ load_when:
 
 | Track                                          | It is this when                                                                                   | Stages                                                        | Ticket               | Default QA                                   |
 | ---------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- | -------------------- | -------------------------------------------- |
-| [Epic](epic.md)                                | It needs several tickets, or a new surface, or the problem is not settled, and we mean to ship it | Frame, Research (optional), UX, Technical, Tickets, Build     | Always, per ticket   | Set per ticket at the Tickets stage          |
-| [One-off](one-off.md)                          | One piece of buildable work with a known outcome                                                  | Build                                                         | Asked                | Q1; Q2 or Q3 by what it touches              |
+| [Epic](epic.md)                                | It needs several tickets, or a new surface, or the problem is not settled, and we mean to ship it | Frame, Research (optional), UX, Technical, Tickets, Build, Seen, Harden | Always, per ticket   | Set per ticket at the Tickets stage          |
+| [One-off](one-off.md)                          | One piece of buildable work with a known outcome                                                  | Build, Seen, Harden (optional at Q1 with no ticket)           | Asked                | Q1; Q2 or Q3 by what it touches              |
 | [Feature exploration](feature-exploration.md)  | Early product thinking: we want to try directions and learn, not ship                             | Frame-lite, Research (optional), Explore, Review              | No                   | Q1; the operator's own look is the check     |
 | [Product spec only](product-spec.md)           | A product lead is preparing work to hand to developers                                            | Context, Frame, Research (optional), UX, Prototype (optional), Handoff | A draft for the developer | Operator approval; Q1 on any prototype |
 | [Bug or issue](bug.md)                         | Something that worked, or should work, does not                                                   | Reproduce, Diagnose, Fix, Prove, Trace                        | Asked                | By where the bug lives                       |
 | [Question or report](question-report.md)       | The output is an answer or a document, not a change                                               | Answer, or Scope then Report                                  | No                   | Q0                                           |
 | [Audit](audit.md)                              | We want existing code or user journeys examined for problems                                      | Scope, Sweep, Findings                                        | No                   | Q0; the findings are the product             |
 | [New project](new-project.md)                  | The boilerplate is being duplicated for a new product                                             | Interview, then the new-project runbook                       | No                   | Q1, with `yarn verify` after every step      |
+| [Migrate](migrate.md)                          | A repo that already exists, with its history and team, is brought under the practice in place     | Open, then the migrate runbook: assess, interview, layer 1, layer 2, hand over | No, in the toolkit; the target's migration epic holds the run | Q1 in the target, with `yarn verify:fast` after each step and `yarn verify` at the end |
 
 **When two fit.** A bug whose fix needs a new surface is an epic that starts from a bug report. An exploration that has picked a direction becomes a product spec or an epic. An audit never fixes what it finds: each finding worth fixing becomes a bug, a one-off or an epic. The builder says which hand-off applies.
 
@@ -42,6 +43,7 @@ load_when:
 | [`bug.md`](bug.md) | Read when something that worked, or should work, does not: reproduce it, find the cause, fix it, prove the fix, and trace how it got in. |
 | [`epic.md`](epic.md) | Read when work needs several tickets, a new surface or an unsettled problem, or when teaching someone how a feature goes from idea to shipped: the levels, who plays each, what each writes, and the gates between them. |
 | [`feature-exploration.md`](feature-exploration.md) | Read when the work is early product thinking: trying directions, showing them to clients or teammates and collecting what they say, before anything is committed to the product. |
+| [`migrate.md`](migrate.md) | Read when an existing repo with history is being brought under the practice in place: the builder asks the three questions the assessment needs, then hands the work to the migrate runbook, which interviews from the assess report and walks layer 1. |
 | [`new-project.md`](new-project.md) | Read when the boilerplate is being duplicated for a new product: the builder runs the expanded set-up interview and hands the work to the new-project runbook. |
 | [`one-off.md`](one-off.md) | Read when a piece of work is one buildable change with a known outcome, or when teaching someone the day-to-day loop: brain dump, one build thread, a short report. |
 | [`product-spec.md`](product-spec.md) | Read when a product lead is preparing work to hand to developers: the UX spec alone, or the spec plus UI and basic function, ending in a ticket the developer can start from. |

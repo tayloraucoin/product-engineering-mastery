@@ -28,8 +28,8 @@ cites:
 truth_files: "none: the approved proposal ux/experimental/gate.md reaches specs/web/ux/experimental/gate.md through yarn truth:promote LAB once its citing tickets close"
 qa: Q3
 reviewers:
-  - warden
   - assay
+  - warden
 focus:
   - "one face for real, unknown, revoked and closed (warden)"
   - "the notice's four points (warden)"
@@ -100,6 +100,18 @@ criteria:
     statement: "The HTML yarn web:dev serves without access for a real and an unknown slug is identical once per-request tokens are stripped."
     evidence: manual
     reason: "No test runner serves the app; the builder diffs two served responses and records the diff in the as-built."
+  - id: C13
+    statement: Taylor has looked this ticket over and approved it.
+    evidence: manual
+    reason: "operator_review: true; the builder defers it with what to look at"
+  - id: review:assay
+    statement: Assay reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run assay <id>
+  - id: review:warden
+    statement: Warden reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
 ---
 
 # Contract — LAB-7 gate-page
@@ -123,19 +135,9 @@ criteria:
 - **Interfaces:**
   - `gateView`, `enterGateWith` and `GATE_WORDS` (gate.ts).
   - The gate keys in LAB-4's `SANDBOX_STATE_KEYS`, marked `anyone`; read through LAB-4's `readSandboxState`.
-  - `enterGate(slug, prev, formData)` and `signOutHere(slug)` (actions.ts).
-  - `Gate` and `GateForm` (`_components/gate/`).
-- **Per path:**
-  - `experimental/layout.tsx`: `robots: { index: false, follow: false }` metadata only, no chrome.
-  - `page.tsx`: the switch, with a fixed title "Design review" for every slug.
-  - `actions.ts`: the two actions.
-  - `_components/gate/`: the Gate, the notice and the form leaf.
-  - `gate.ts` and its test: C1 to C6, named by criterion id. `state.ts`: the gate keys only.
-  - `validators.ts`: the gate form's zod schema.
 - **Gotchas:**
   - React 19 resets an uncontrolled form after an action. Keep the fields controlled so they stay filled, and never return the code in the action's state.
   - Validate before the throttle. A code that is not 16 symbols after normalising is a wrong code and counts as a try (D-LAB-31). Empty fields do not count.
   - After the sync, reuse STK-24's `app/auth/sign-out/route.ts` (local scope, back to this path); never a second sign-out.
   - Format `lockedUntil` in the client leaf after mount, in the browser's locale and zone. A single `setTimeout` re-enables the button.
-  - Use synthetic fixtures only: `ana@example.com` and a fixed `lockedUntil`.
 - **Model:** Opus 5.5 (`claude-opus-5-5`). A smaller model adds a per-slug title or a "no such review" branch, and that breaks the one face.

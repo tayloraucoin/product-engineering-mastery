@@ -34,7 +34,7 @@ import {
   runGit,
 } from "./git.ts";
 import { validateJson } from "./json-schema.ts";
-import type { Toolkit } from "./toolkit.ts";
+import type { Toolkit, ToolkitReviewer } from "./toolkit.ts";
 
 // ---------------------------------------------------------------- constants
 
@@ -161,6 +161,21 @@ export type Contract = {
   operator_review?: boolean;
 };
 
+/**
+ * What a reviewer run cost (the audit's O4): the headless result's usage and
+ * the wall-clock seconds review:run measured. This is the one home of the
+ * field names; the review file header and the run record carry the same keys.
+ */
+export const COST_FIELDS = [
+  "tokens_input",
+  "tokens_cache_read",
+  "tokens_cache_write",
+  "tokens_output",
+  "seconds",
+] as const;
+export type CostField = (typeof COST_FIELDS)[number];
+export type Cost = Record<CostField, number>;
+
 export type RunRecord = {
   command: string;
   exit: number;
@@ -170,22 +185,68 @@ export type RunRecord = {
   evidence_sha256: string;
   tests?: number;
   contract_sha256?: string;
+  /** For a review: the criteria set it judged; a criterion added later makes its PASS stale (WEB-12). */
+  criteria_sha256?: string;
   as_built_sha256?: string;
   runner?: string;
   /** A manual criterion only a person can check, handed to the operator: it never holds the ticket (PR-16). */
   deferred?: boolean;
-};
+} & Partial<Cost>;
+
+/** A review:run attempt a guard stopped before the reviewer ran (the audit's Y5). */
+export type Refusal = { at: string; reason: string };
 
 export type CriterionResult = {
   status: "PASS" | "FAIL";
   evidence: EvidenceType;
   run: RunRecord | null;
+  /** Every refused attempt, oldest first; a completed run never clears them. */
+  refused?: Refusal[];
+  /** For a review: completed runs that gave a verdict. The cap reads it (WEB-12): a second run only after a FAIL, a third only with --operator. */
+  runs?: number;
+};
+
+/**
+ * What a ticket's threads cost, by `yarn cost <id> --record` (audit R4): one
+ * API call per message id, weighted at the first report's weights, attributed
+ * by the second audit's rule. The one home of the category names.
+ */
+export const COST_CATEGORIES = [
+  "build",
+  "proofs",
+  "captures",
+  "reviews",
+  "status",
+  "git",
+  "re-reading",
+  "other",
+] as const;
+export type CostCategory = (typeof COST_CATEGORIES)[number];
+export type TicketCost = {
+  at: string;
+  calls: number;
+  /** Weighted tokens: input 1, cache write 1.25, cache read 0.1, output 5 (an estimate of cost, not the meter). */
+  weighted: number;
+  tokens_input: number;
+  tokens_cache_read: number;
+  tokens_cache_write: number;
+  tokens_output: number;
+  by_category: Record<CostCategory, { calls: number; weighted: number }>;
+  /** Input, cache read and cache write of the last main-thread call; null when every call was a subagent's. */
+  context_last_call: number | null;
+  threads: number;
+  /** review:run runs on record in results.json that carry cost fields (the last run per review). */
+  headless_runs: number;
+  headless_weighted: number;
 };
 
 export type Results = {
   id: string;
   criteria_sha256: string;
   criteria: Record<string, CriterionResult>;
+  /** When yarn contract:built said the code is in (audit R9); the ticket reads "built" until a criterion is recorded after it. */
+  built_at?: string;
+  cost?: TicketCost;
   updated_at: string;
 };
 
@@ -573,6 +634,19 @@ export const isCitedFile = (entry: string) => entry.includes("/");
  * (A13.2): `yarn <script> [args]` or `yarn workspace <name> <script> [args]`.
  * Returns the problem, or null.
  */
+/**
+ * The whole chain is never a criterion (specs.md; the contract template): the
+ * batch close runs `yarn verify` once, and a criterion names the specific check
+ * it proves. The exact script only; `yarn verify:fast` is the stop gate's own.
+ */
+export function isWholeChain(command: string | undefined): boolean {
+  const words = splitCommand(command ?? "");
+  return words.length === 2 && words[0] === "yarn" && words[1] === "verify";
+}
+
+export const wholeChainProblem = (criterionId: string) =>
+  `${criterionId} runs yarn verify, which is never a criterion: the batch close proves the whole chain once. Name the specific check this criterion proves (yarn test, yarn check-types, yarn lint:boundaries, ...)`;
+
 export function checkCommand(command: string): string | null {
   const words = splitCommand(command);
   if (words[0] !== "yarn")
@@ -647,6 +721,7 @@ function samplePaths(
   if (!/[*?[{]/.test(planned)) return [planned];
   const basenames = new Set(["x", "x.ts", "x.tsx", "x.md", "x.json", "x.sql"]);
   for (const row of toolkit.reviewers) {
+    if (!row.glob) continue;
     const last = row.glob.split("/").at(-1)!;
     if (!/[*?[{]/.test(last)) basenames.add(last);
     else if (/^\*\.[a-z]+$/.test(last)) basenames.add(`x${last.slice(1)}`);
@@ -670,30 +745,245 @@ function samplePaths(
   return [...samples, ...tracked.filter((file) => matchesGlob(file, planned))];
 }
 
+type SourceToken = {
+  kind: "word" | "punct" | "string" | "other";
+  text: string;
+};
+
+/** Words after which a slash opens a regular expression, not a division. */
+const REGEX_AFTER = new Set([
+  "return",
+  "typeof",
+  "instanceof",
+  "case",
+  "do",
+  "else",
+  "in",
+  "of",
+  "new",
+  "delete",
+  "void",
+  "throw",
+  "yield",
+  "await",
+]);
+
+/**
+ * A JS or TS source as the tokens an import can be read from: words,
+ * punctuation and quoted strings with their contents. Comments are dropped,
+ * and template and regular-expression literals become opaque tokens, so a
+ * module named inside a comment, a template or another string is never read
+ * as an import. A quote left open at the end of a line (an apostrophe in JSX
+ * text) is dropped with the rest of that line.
+ */
+function tokenizeSource(source: string): SourceToken[] {
+  const tokens: SourceToken[] = [];
+  const braces: ("code" | "template")[] = [];
+  const n = source.length;
+  let i = 0;
+
+  const regexMayStart = () => {
+    const last = tokens.at(-1);
+    if (!last) return true;
+    if (last.kind === "word") return REGEX_AFTER.has(last.text);
+    if (last.kind === "punct") return !/^[)\]}]$/.test(last.text);
+    return false;
+  };
+  /** From just inside a template (or after its `}`), to its end or its next `${`. */
+  const scanTemplate = () => {
+    while (i < n) {
+      const c = source[i]!;
+      if (c === "\\") i += 2;
+      else if (c === "`") {
+        i++;
+        tokens.push({ kind: "other", text: "`" });
+        return;
+      } else if (c === "$" && source[i + 1] === "{") {
+        i += 2;
+        braces.push("template");
+        return;
+      } else i++;
+    }
+  };
+
+  while (i < n) {
+    const c = source[i]!;
+    const next = source[i + 1];
+    if (/\s/.test(c)) i++;
+    else if (c === "/" && next === "/") {
+      while (i < n && source[i] !== "\n") i++;
+    } else if (c === "/" && next === "*") {
+      const end = source.indexOf("*/", i + 2);
+      i = end === -1 ? n : end + 2;
+    } else if (c === '"' || c === "'") {
+      let text = "";
+      let j = i + 1;
+      while (j < n && source[j] !== c && source[j] !== "\n") {
+        if (source[j] === "\\") j++;
+        text += source[j] ?? "";
+        j++;
+      }
+      if (source[j] === c) tokens.push({ kind: "string", text });
+      i = j + 1;
+    } else if (c === "`") {
+      i++;
+      scanTemplate();
+    } else if (c === "/" && regexMayStart()) {
+      let j = i + 1;
+      let inClass = false;
+      while (j < n && source[j] !== "\n") {
+        const r = source[j]!;
+        if (r === "\\") j++;
+        else if (r === "[") inClass = true;
+        else if (r === "]") inClass = false;
+        else if (r === "/" && !inClass) break;
+        j++;
+      }
+      i = j + 1;
+      while (i < n && /[a-z]/i.test(source[i]!)) i++;
+      tokens.push({ kind: "other", text: "/regex/" });
+    } else if (/[\w$#]/.test(c)) {
+      let j = i + 1;
+      while (j < n && /[\w$]/.test(source[j]!)) j++;
+      tokens.push({ kind: "word", text: source.slice(i, j) });
+      i = j;
+    } else {
+      if (c === "{") braces.push("code");
+      if (c === "}" && braces.pop() === "template") {
+        i++;
+        scanTemplate();
+        continue;
+      }
+      tokens.push({ kind: "punct", text: c });
+      i++;
+    }
+  }
+  return tokens;
+}
+
+/**
+ * The module specifiers a JS or TS source names in a static import or
+ * export-from (`import x from "m"`, `import "m"`, `export * from "m"`), a
+ * `require("m")` or an `import("m")`. Never a name in a comment or a string.
+ */
+export function listImportedModules(source: string): string[] {
+  const tokens = tokenizeSource(source);
+  const found = new Set<string>();
+  tokens.forEach((token, k) => {
+    if (token.kind !== "word" || tokens[k - 1]?.text === ".") return;
+    const at = (offset: number) => tokens[k + offset];
+    const called = at(1)?.text === "(" && at(2)?.kind === "string";
+    if (token.text === "from" && at(1)?.kind === "string")
+      found.add(at(1)!.text);
+    else if (token.text === "import" && at(1)?.kind === "string")
+      found.add(at(1)!.text);
+    else if ((token.text === "import" || token.text === "require") && called)
+      found.add(at(2)!.text);
+  });
+  return [...found];
+}
+
+/** Whether a specifier names a module of an imports row: the module, a subpath of it, or a package in its `@scope/*`. */
+export function importsModule(specifier: string, module: string): boolean {
+  if (module.endsWith("/*"))
+    return (
+      specifier.startsWith(module.slice(0, -1)) &&
+      specifier.length > module.length - 1
+    );
+  return specifier === module || specifier.startsWith(`${module}/`);
+}
+
+/** Source files the import scan reads; anything else (env files among them) is never opened. */
+const SOURCE_FILE = /\.(?:[cm]?[jt]sx?)$/;
+const importsCache = new Map<string, string[]>();
+
+/** The modules a tracked source file imports; empty for a file that is not source, or cannot be read. */
+export function readImportedModules(
+  file: string,
+  root: string = REPO_ROOT,
+): string[] {
+  if (!SOURCE_FILE.test(file) || path.basename(file).startsWith(".env"))
+    return [];
+  const key = path.join(root, file);
+  let modules = importsCache.get(key);
+  if (!modules) {
+    try {
+      modules = listImportedModules(readFileSync(key, "utf8"));
+    } catch {
+      modules = [];
+    }
+    importsCache.set(key, modules);
+  }
+  return modules;
+}
+
+/** The first imported specifier that reaches a row's imports list, or null. */
+export function findImportMatch(
+  row: Pick<ToolkitReviewer, "imports">,
+  modules: readonly string[],
+): string | null {
+  for (const specifier of modules)
+    if (row.imports?.some((module) => importsModule(specifier, module)))
+      return specifier;
+  return null;
+}
+
+/**
+ * Why an existing file reaches a reviewer row, or null: by the row's glob,
+ * else by a module it imports (T6). The one matcher for a file that exists;
+ * suggestReviewers' import pass and check-reviewers both go through
+ * findImportMatch, so the two never disagree.
+ */
+export function findRowReach(
+  row: ToolkitReviewer,
+  file: string,
+  modules: readonly string[],
+): string | null {
+  if (row.glob && matchesGlob(file, row.glob))
+    return `${file} reaches ${row.glob}`;
+  const specifier = findImportMatch(row, modules);
+  return specifier ? `${file} imports ${specifier}` : null;
+}
+
 export type RequiredReviewers = Map<string, string[]>;
 let trackedCache: string[] | null = null;
 
 /**
  * The reviewers a contract's planned paths suggest (PR-19): every toolkit.json
- * row whose glob they reach. Evidence for the builder's recommendation and
- * for a warning, never an assignment: the operator confirms who reviews.
- * Globs are compared by sampling.
+ * row whose glob they reach, and every imports row a tracked file they hold
+ * imports (T6). The tracked files a ticket's planned paths hold include every
+ * committed file of its diff; a planned file that does not exist yet matches
+ * by glob only. Evidence for the builder's recommendation and for a warning,
+ * never an assignment: the operator confirms who reviews. Globs are compared
+ * by sampling.
  */
 export function suggestReviewers(
   contract: Pick<Contract, "planned_paths">,
   toolkit: Toolkit,
 ): RequiredReviewers {
   const suggested: RequiredReviewers = new Map();
-  const add = (role: string, why: string) =>
-    suggested.set(role, [...(suggested.get(role) ?? []), why]);
+  const add = (role: string, why: string) => {
+    const reasons = suggested.get(role) ?? [];
+    if (!reasons.includes(why)) suggested.set(role, [...reasons, why]);
+  };
   trackedCache ??= (runGit(["ls-files"]) ?? "").split("\n").filter(Boolean);
   const tracked = trackedCache;
+  const importRows = toolkit.reviewers.filter((row) => row.imports);
 
   for (const planned of contract.planned_paths) {
     const samples = samplePaths(planned, toolkit, tracked);
     for (const row of toolkit.reviewers)
-      if (samples.some((sample) => matchesGlob(sample, row.glob)))
+      if (row.glob && samples.some((sample) => matchesGlob(sample, row.glob!)))
         add(row.role, `${planned} reaches ${row.glob}`);
+    if (importRows.length === 0) continue;
+    for (const file of tracked) {
+      if (!inPlannedPaths(file, [planned])) continue;
+      const modules = readImportedModules(file);
+      for (const row of importRows) {
+        const specifier = findImportMatch(row, modules);
+        if (specifier) add(row.role, `${file} imports ${specifier}`);
+      }
+    }
   }
   return suggested;
 }
@@ -702,6 +992,31 @@ export function suggestReviewers(
 export function qaOf(contract: Pick<Contract, "qa" | "tier">): Qa {
   if (contract.qa) return contract.qa;
   return contract.tier === 2 ? "Q3" : "Q1";
+}
+
+/**
+ * Q2 is one reviewer (docs/workflows/qa-levels.md; the audit's C6). A further
+ * seat is allowed only where a focus line names what that reviewer examines,
+ * as the template's "the webhook handler: every event type handled (warden)".
+ * Returns the problem, or null. contract:init and contract:qa refuse on it;
+ * check-specs warns on a draft, whose seats the operator settles at the
+ * Tickets gate. Q3 is untouched: its reviewers are the operator's list.
+ */
+export function q2ReviewerProblem(
+  contract: Pick<Contract, "qa" | "tier" | "reviewers" | "focus">,
+): string | null {
+  if (qaOf(contract) !== "Q2" || contract.reviewers.length <= 1) return null;
+  const focus = (Array.isArray(contract.focus) ? contract.focus : []).map(
+    (line) => String(line).toLowerCase(),
+  );
+  const unfocused = contract.reviewers.filter(
+    (role) =>
+      !focus.some((line) =>
+        new RegExp(`\\b${role.toLowerCase()}\\b`).test(line),
+      ),
+  );
+  if (unfocused.length <= 1) return null;
+  return `names ${contract.reviewers.length} reviewers at Q2 (${contract.reviewers.join(", ")}); Q2 is one reviewer unless a focus line names what each other seat examines, as in "the webhook handler: every event type handled (${unfocused[1]})" (docs/workflows/qa-levels.md)`;
 }
 
 /**
@@ -771,6 +1086,87 @@ export function readResults(item: Item): {
   return { results: problems.length ? null : (data as Results), problems };
 }
 
+/** The cost fields a run record carries, in COST_FIELDS order; none when the run predates cost recording. */
+export function pickCost(run: Partial<Cost>): Partial<Cost> {
+  const cost: Partial<Cost> = {};
+  for (const field of COST_FIELDS)
+    if (typeof run[field] === "number") cost[field] = run[field];
+  return cost;
+}
+
+const COUNT = new Intl.NumberFormat("en-US");
+
+/** One phrase for a status line: `1,200 in, 3,400 read, 500 write, 260 out, 0.1 s`, or that no cost was recorded. */
+export function formatCost(run: Partial<Cost>): string {
+  const cost = pickCost(run);
+  if (Object.keys(cost).length === 0) return "cost not recorded";
+  const n = (v: number | undefined) =>
+    v === undefined ? "?" : COUNT.format(v);
+  return `${n(cost.tokens_input)} in, ${n(cost.tokens_cache_read)} read, ${n(cost.tokens_cache_write)} write, ${n(cost.tokens_output)} out, ${cost.seconds === undefined ? "?" : cost.seconds} s`;
+}
+
+/** A cost block with a stable key order. */
+function orderCost(cost: TicketCost): TicketCost {
+  return {
+    at: cost.at,
+    calls: cost.calls,
+    weighted: cost.weighted,
+    tokens_input: cost.tokens_input,
+    tokens_cache_read: cost.tokens_cache_read,
+    tokens_cache_write: cost.tokens_cache_write,
+    tokens_output: cost.tokens_output,
+    by_category: Object.fromEntries(
+      COST_CATEGORIES.map((c) => [
+        c,
+        {
+          calls: cost.by_category[c]?.calls ?? 0,
+          weighted: cost.by_category[c]?.weighted ?? 0,
+        },
+      ]),
+    ) as TicketCost["by_category"],
+    context_last_call: cost.context_last_call,
+    threads: cost.threads,
+    headless_runs: cost.headless_runs,
+    headless_weighted: cost.headless_weighted,
+  };
+}
+
+/** As the audits print weighted tokens: `18.4M` from 0.1M, `16k` from 1k, the integer below. */
+export const formatMillions = (n: number) =>
+  n >= 100_000
+    ? `${(n / 1e6).toFixed(1)}M`
+    : n >= 1000
+      ? `${Math.round(n / 1000)}k`
+      : String(Math.round(n));
+
+/**
+ * A cost block as one line, each count with its rule (WEB-13): what `yarn cost`
+ * prints and `yarn status <id>` shows. Attribution decides every count, so its
+ * label leads; the weights are model-blind and are not the meter.
+ */
+export function formatTicketCost(label: string, cost: TicketCost): string {
+  const categories = COST_CATEGORIES.filter(
+    (c) => cost.by_category[c].calls > 0,
+  ).map(
+    (c) =>
+      `${c} ${cost.by_category[c].calls} ${formatMillions(cost.by_category[c].weighted)}`,
+  );
+  const context =
+    cost.context_last_call === null
+      ? "none"
+      : `${Math.round(cost.context_last_call / 1000)}k`;
+  return (
+    `${label} [attributed to the last ticket a work command named in its thread; estimate]: ` +
+    `${COUNT.format(cost.calls)} calls [one per message id], ` +
+    `${formatMillions(cost.weighted)} weighted [in 1, write 1.25, read 0.1, out 5; model-blind estimate, not the meter]` +
+    `${categories.length ? ` (${categories.join(", ")}) [by first tool]` : ""}, ` +
+    `raw ${formatMillions(cost.tokens_cache_read)} read and ${formatMillions(cost.tokens_output)} out [summed once per message id], ` +
+    `thread context at its last main-thread call ${context} [in + read + write], ` +
+    `${cost.threads} thread(s) naming it, ` +
+    `headless at least ${cost.headless_runs} run(s) ${formatMillions(cost.headless_weighted)} [results.json keeps the last run per review; not in the weighted total]`
+  );
+}
+
 /** Serializes results with a stable key order, so a diff shows only what changed. */
 export function formatResults(results: Results): string {
   const criteria = Object.fromEntries(
@@ -790,12 +1186,20 @@ export function formatResults(results: Results): string {
           ...(result.run.contract_sha256 && {
             contract_sha256: result.run.contract_sha256,
           }),
+          ...(result.run.criteria_sha256 && {
+            criteria_sha256: result.run.criteria_sha256,
+          }),
           ...(result.run.as_built_sha256 && {
             as_built_sha256: result.run.as_built_sha256,
           }),
           ...(result.run.runner && { runner: result.run.runner }),
           ...(result.run.deferred && { deferred: true }),
+          ...pickCost(result.run),
         },
+        ...(result.refused?.length && {
+          refused: result.refused.map((r) => ({ at: r.at, reason: r.reason })),
+        }),
+        ...(result.runs && { runs: result.runs }),
       },
     ]),
   );
@@ -804,6 +1208,8 @@ export function formatResults(results: Results): string {
       id: results.id,
       criteria_sha256: results.criteria_sha256,
       criteria,
+      ...(results.built_at && { built_at: results.built_at }),
+      ...(results.cost && { cost: orderCost(results.cost) }),
       updated_at: results.updated_at,
     },
     null,
@@ -872,7 +1278,13 @@ export type ItemState = {
   hasAsBuilt: boolean;
   merged: boolean;
   stage:
-    "draft" | "open" | "proven" | "closing" | "closed" | "migration pending";
+    | "draft"
+    | "open"
+    | "built"
+    | "proven"
+    | "closing"
+    | "closed"
+    | "migration pending";
 };
 
 type Git = {
@@ -945,7 +1357,12 @@ function changedAfter(
  * Staleness is asked for, never assumed (PR-19): only a Q3 ticket's proofs go
  * stale, and only the pre-merge check and `yarn status <id>` look. A commit to
  * a shared file reopens nothing while tickets are in build. A test or check
- * log is local (never committed), so a missing one is not a defect.
+ * log is local (never committed), so a missing one is not a defect, and a
+ * rewritten one is read only when staleness is asked for: every contract:run
+ * rewrites its logs, so outside `--strict` and `yarn status <id>` a changed
+ * log is not a defect and never moves a closed ticket back to closing (C7).
+ * A results.json that contradicts itself (a PASS with no run record, a
+ * failing exit, the wrong command, zero tests) is always a defect.
  */
 export function readItemState(
   item: Item,
@@ -953,8 +1370,9 @@ export function readItemState(
   options: { staleness?: boolean } = {},
 ): ItemState {
   const { contract } = readContract(item);
+  const lookAtEvidence = options.staleness === true;
   const checkStaleness =
-    options.staleness === true && contract !== null && qaOf(contract) === "Q3";
+    lookAtEvidence && contract !== null && qaOf(contract) === "Q3";
   const { results } = readResults(item);
   const hasAsBuilt = fileExists(asBuiltPath(item));
   const merged = hasAsBuilt && isMerged(item);
@@ -1016,7 +1434,11 @@ export function readItemState(
       fail(`evidence ${evidence} is missing`, "tampered");
       continue;
     }
-    if (hasEvidence && hashFile(evidence) !== run.evidence_sha256) {
+    if (
+      lookAtEvidence &&
+      hasEvidence &&
+      hashFile(evidence) !== run.evidence_sha256
+    ) {
       // A newer contract:run has written this log and not yet its result
       // (another thread on the shared branch, PR-14, or a run that stopped
       // between the two): work in flight, not an edit. A log whose header is
@@ -1071,9 +1493,24 @@ export function readItemState(
         );
         continue;
       }
-      // A review binds the code it read (the planned-paths rule below) and
-      // the frozen criteria, never the prose around them: a build note or an
-      // as-built wording fix does not cost a second review (PR-15).
+      // A review PASS is final for its round (WEB-12, the audit's C1). It
+      // judged the frozen criteria, so only a change to them resets it: never
+      // the as-built, never a later planned-path commit (those reset proofs
+      // of code, below). The run record carries the criteria hash it judged.
+      if (
+        checkStaleness &&
+        !merged &&
+        !frozen &&
+        run.criteria_sha256 &&
+        results &&
+        run.criteria_sha256 !== results.criteria_sha256
+      ) {
+        fail(
+          "the criteria changed after this review; it judged the earlier set",
+          "stale",
+        );
+        continue;
+      }
     }
     state.deferred = run.deferred === true;
     if (checkStaleness && !merged && !frozen && head) {
@@ -1084,11 +1521,9 @@ export function readItemState(
         );
         continue;
       }
-      const changed = changedAfter(
-        run.head,
-        contract?.planned_paths ?? [],
-        specsRoot,
-      );
+      const changed = isReview(criterion)
+        ? []
+        : changedAfter(run.head, contract?.planned_paths ?? [], specsRoot);
       if (changed.length > 0) {
         fail(
           `${changed.slice(0, 3).join(", ")}${changed.length > 3 ? ` and ${changed.length - 3} more` : ""} changed after it was recorded`,
@@ -1110,8 +1545,22 @@ export function readItemState(
       const applied = parseAsBuilt(readRepoText(asBuiltPath(item))).applied;
       stage = applied === "pending" ? "migration pending" : "closed";
     }
-  } else stage = nonReviewLeft.length === 0 ? "proven" : "open";
+  } else if (nonReviewLeft.length === 0) stage = "proven";
+  else stage = isBuilt(results) ? "built" : "open";
   return { item, contract, results, criteria, hasAsBuilt, merged, stage };
+}
+
+/**
+ * Built (audit R9): yarn contract:built said the code is in, and no criterion
+ * has been recorded since. A run at or after built_at ends it; contract:run
+ * on a built ticket proceeds as on an open one.
+ */
+export function isBuilt(results: Results): boolean {
+  const builtAt = results.built_at;
+  if (!builtAt) return false;
+  return Object.values(results.criteria).every(
+    (r) => !r.run || r.run.at < builtAt,
+  );
 }
 
 /** Recorded state only, no git: what the generated _status.md shows, so it never drifts with HEAD. */
@@ -1132,7 +1581,55 @@ function recordedStage(state: ItemState): string {
       ? "code complete, migration pending"
       : "closed";
   }
-  return left.length === 0 ? "proven" : "open";
+  if (left.length === 0) return "proven";
+  return isBuilt(state.results) ? "built" : "open";
+}
+
+/** What a criterion still needs, as the brief line and `yarn status <id>` print it. */
+export function leftOf(state: ItemState): string[] {
+  return state.criteria
+    .filter((c) => c.status !== "PASS")
+    .map(
+      (c) =>
+        `${c.id} ${c.evidence}${c.reason && c.reason !== "not proven yet" ? ` (${c.reason})` : ""}`,
+    );
+}
+
+/** The stages a ticket is in build: it orients the thread on its own work. */
+const IN_BUILD = new Set<ItemState["stage"]>([
+  "open",
+  "built",
+  "proven",
+  "closing",
+]);
+
+/**
+ * The one line the hooks print into every session (C7, O7). It lists the
+ * tickets in build, whatever the branch (tickets share the operator's branch,
+ * PR-14), and omits closed and migration-pending ones. It never asks for
+ * staleness, so a rewritten evidence log or a later commit is not reported
+ * here: the pre-merge `check-specs --strict` and `yarn status <id>` look.
+ */
+export function renderBrief(tree: SpecsTree, limit: number): string {
+  const all = tree.items
+    .map((item) => readItemState(item, tree.specsRoot))
+    .filter((s) => !s.merged);
+  const active = all.filter((s) => IN_BUILD.has(s.stage));
+  const parts: string[] = [];
+  if (active.length) {
+    const items = active.map((s) => {
+      const left = leftOf(s);
+      return `${s.item.id} ${s.item.slug} (${s.stage}; ${left.length ? `left: ${left.join(", ")}` : "nothing left"})`;
+    });
+    parts.push(
+      `Active: ${items.join("; ")}. Next: yarn status ${active.length === 1 ? active[0]!.item.id : "<id>"}.`,
+    );
+  } else parts.push("Active: none.");
+  const drafts = all.filter((s) => s.stage === "draft");
+  if (drafts.length)
+    parts.push(`Drafted: ${drafts.map((s) => s.item.id).join(", ")}.`);
+  const line = parts.join(" ");
+  return line.length > limit ? `${line.slice(0, limit - 1)}…` : line;
 }
 
 /** The generated view of every item (E-26). Deterministic: it reads files, never git or the clock. */

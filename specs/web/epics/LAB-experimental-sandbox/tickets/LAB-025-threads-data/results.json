@@ -1,0 +1,155 @@
+{
+  "id": "LAB-25",
+  "criteria_sha256": "de327f783a2a24a287ec3e99414b7c32e8390f8b92ae3fb4eace38991c2fadb1",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-08T00:44:01Z",
+        "head": "f4fc2bad5870102ba8b50f90d5cfeeba2e571d1e",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/evidence/C1.log",
+        "evidence_sha256": "4cb67d6236fe69f6126ab8b9ac41e91afa13f9105bfee5c5f99f5d19afc87ecc",
+        "tests": 249
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-08T00:44:01Z",
+        "head": "f4fc2bad5870102ba8b50f90d5cfeeba2e571d1e",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/evidence/C2.log",
+        "evidence_sha256": "4cb67d6236fe69f6126ab8b9ac41e91afa13f9105bfee5c5f99f5d19afc87ecc",
+        "tests": 249
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-08T00:44:01Z",
+        "head": "f4fc2bad5870102ba8b50f90d5cfeeba2e571d1e",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/evidence/C3.log",
+        "evidence_sha256": "4cb67d6236fe69f6126ab8b9ac41e91afa13f9105bfee5c5f99f5d19afc87ecc",
+        "tests": 249
+      }
+    },
+    "C4": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-08T00:44:01Z",
+        "head": "f4fc2bad5870102ba8b50f90d5cfeeba2e571d1e",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/evidence/C4.log",
+        "evidence_sha256": "4cb67d6236fe69f6126ab8b9ac41e91afa13f9105bfee5c5f99f5d19afc87ecc",
+        "tests": 249
+      }
+    },
+    "C5": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-08T00:44:01Z",
+        "head": "f4fc2bad5870102ba8b50f90d5cfeeba2e571d1e",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/evidence/C5.log",
+        "evidence_sha256": "4cb67d6236fe69f6126ab8b9ac41e91afa13f9105bfee5c5f99f5d19afc87ecc",
+        "tests": 249
+      }
+    },
+    "C6": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-08T00:44:01Z",
+        "head": "f4fc2bad5870102ba8b50f90d5cfeeba2e571d1e",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/evidence/C6.log",
+        "evidence_sha256": "4cb67d6236fe69f6126ab8b9ac41e91afa13f9105bfee5c5f99f5d19afc87ecc",
+        "tests": 249
+      }
+    },
+    "C7": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-08T00:44:49Z",
+        "head": "f4fc2bad5870102ba8b50f90d5cfeeba2e571d1e",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/evidence/C7.log",
+        "evidence_sha256": "3eff527a727d7952604bb1a013ef74d6738402fe1297eee49cc0b795e57f1273",
+        "tests": 473
+      }
+    },
+    "C8": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-08T00:44:01Z",
+        "head": "f4fc2bad5870102ba8b50f90d5cfeeba2e571d1e",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/evidence/C8.log",
+        "evidence_sha256": "4cb67d6236fe69f6126ab8b9ac41e91afa13f9105bfee5c5f99f5d19afc87ecc",
+        "tests": 249
+      }
+    },
+    "review:mason": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn review:run mason LAB-25",
+        "exit": 0,
+        "at": "2026-10-08T00:26:16Z",
+        "head": "65cc038e31add66a7f4085fab42c8dc6c8d8ae6c",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/review-mason.md",
+        "evidence_sha256": "47b6b645715646265d59d66e305d651eb60bc28e70c804b87655eebfa1d35e4b",
+        "contract_sha256": "19e7342a90ee30621b52ef958498352d75431700222602877f10e76f560551db",
+        "criteria_sha256": "de327f783a2a24a287ec3e99414b7c32e8390f8b92ae3fb4eace38991c2fadb1",
+        "as_built_sha256": "7498cdab23690a42d9b3f1f567b5d9b26cb79059f45256bafb32e0e592b18f33",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/mason-cto-principal-dev.md; tools Read,Grep,Glob)",
+        "tokens_input": 34,
+        "tokens_cache_read": 3966309,
+        "tokens_cache_write": 269208,
+        "tokens_output": 25330,
+        "seconds": 390.5
+      },
+      "runs": 1
+    },
+    "review:warden": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn review:run warden LAB-25",
+        "exit": 0,
+        "at": "2026-10-08T00:35:27Z",
+        "head": "09ae658234e258512682dd87e59a12936786184b",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/review-warden.md",
+        "evidence_sha256": "8f7468a1f9ec44c500400d9a11b12111dcd09d927357dc213303a6fea2dd878e",
+        "contract_sha256": "19e7342a90ee30621b52ef958498352d75431700222602877f10e76f560551db",
+        "criteria_sha256": "de327f783a2a24a287ec3e99414b7c32e8390f8b92ae3fb4eace38991c2fadb1",
+        "as_built_sha256": "7e56a9e9843aebe0a4c0c97446db43c19d19cdc28c2ecb3bb0bf417a6cb286c0",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)",
+        "tokens_input": 18,
+        "tokens_cache_read": 2320165,
+        "tokens_cache_write": 176233,
+        "tokens_output": 22871,
+        "seconds": 369.7
+      },
+      "runs": 1
+    }
+  },
+  "updated_at": "2026-10-08T00:44:57Z"
+}

@@ -20,6 +20,7 @@ import {
   REPO_ROOT,
   splitFrontmatter,
 } from "./lib/docs.ts";
+import { probeLayout } from "./lib/layout.ts";
 import { loadToolkit } from "./lib/toolkit.ts";
 
 const INDEX = "docs/index.md";
@@ -32,6 +33,10 @@ const LINE_CAPS: Record<string, number> = {
 // Where the apps, their design layers and the specs live (toolkit.json).
 const toolkit = loadToolkit();
 const apps = Object.values(toolkit.apps);
+// What is on disk (MIG T3): a repo with one app at its root has no apps/ or packages/.
+const layout = probeLayout(REPO_ROOT);
+/** Files and probe paths this repo lacks, named in the report rather than failed or silently dropped. */
+const skipped: string[] = [];
 
 const exists = (rel: string) => existsSync(path.join(REPO_ROOT, rel));
 const estimate = estimateTokens;
@@ -109,6 +114,10 @@ function listingTokens(): {
 
 /** What a forked critic loads from the canon: canon-rubric.md plus canon §2, the tells C-R14 checks (record 0009). */
 function criticCanon(): number {
+  if (!exists("docs/design/canon.md")) {
+    skipped.push("docs/design/canon.md");
+    return tokensOf("docs/design/canon-rubric.md");
+  }
   const { body } = splitFrontmatter(readText("docs/design/canon.md"));
   const start = body.indexOf("\n## 2.");
   const end = body.indexOf("\n## Changelog");
@@ -144,8 +153,12 @@ function briefAndPackagePairs(): string[][] {
 const errors: string[] = [];
 const report: string[] = [];
 
-// Line caps.
+// Line caps. The index holds the caps, so it alone is required.
 for (const [rel, cap] of Object.entries(LINE_CAPS)) {
+  if (rel !== INDEX && !exists(rel)) {
+    skipped.push(rel);
+    continue;
+  }
   const lines = readText(rel).trimEnd().split("\n").length;
   if (lines > cap)
     errors.push(`${rel}: ${lines} lines over the ${cap}-line cap`);
@@ -194,17 +207,30 @@ const skillBody = largest(skillBodies);
 /**
  * Path rules load per file, so the cost is the heaviest set one file can fire,
  * not the sum of every rule. One probe path per glob family; add one when a
- * new rule's globs match none of these.
+ * new rule's globs match none of these. The app probes sit in each app's
+ * folder. A probe under a top folder this repo lacks (a single app has no
+ * packages/) is skipped and named.
  */
-const PROBES = [
-  "apps/web/lib/records.test.ts",
-  "apps/web/app/page.tsx",
-  "apps/web/package.json",
+const APP_PROBES = ["lib/records.test.ts", "app/page.tsx", "package.json"];
+const SHARED_PROBES = [
   "turbo.json",
   ".yarnrc.yml",
   "docs/design/canon.md",
   `${toolkit.specsRoot}/web/one-offs/WEB-1-filter/contract.md`,
   "packages/ui/src/primitives/control/button/button.tsx",
+].filter((probe) => {
+  const top = probe.split("/")[0]!;
+  const present = top === probe || exists(top);
+  if (!present) skipped.push(probe);
+  return present;
+});
+const PROBES = [
+  ...apps.flatMap((app) =>
+    APP_PROBES.map((rel) =>
+      app.path === "." ? rel : path.posix.join(app.path, rel),
+    ),
+  ),
+  ...SHARED_PROBES,
 ];
 const rules = listIn(
   ".claude/rules",
@@ -224,11 +250,27 @@ const pathRules = Math.max(
       .reduce((s, rel) => s + tokensOf(rel), 0),
   ),
 );
-/** Nested AGENTS.md load by path in apps/ and packages/ (docs/index.md). */
-const nestedAgents = largest([
-  ...apps.map((app) => `${app.path}/AGENTS.md`),
-  ...listIn("packages", () => true).map((dir) => `${dir}/AGENTS.md`),
-]);
+/** Folders never searched for a nested AGENTS.md: installs and builds at any depth, and the toolkit's own at the root. */
+const NOT_CODE_NAMES = new Set(["node_modules", "dist", "build", "coverage"]);
+const TOOLKIT_FOLDERS = new Set(["tooling", "docs", toolkit.specsRoot]);
+/** Every AGENTS.md below a code root, the root's own spine file excluded. */
+function nestedAgentsFiles(dir: string): string[] {
+  if (!exists(dir)) return [];
+  return readdirSync(path.join(REPO_ROOT, dir), { withFileTypes: true })
+    .flatMap((entry) => {
+      const rel = dir === "." ? entry.name : `${dir}/${entry.name}`;
+      if (entry.isDirectory())
+        return entry.name.startsWith(".") ||
+          NOT_CODE_NAMES.has(entry.name) ||
+          TOOLKIT_FOLDERS.has(rel)
+          ? []
+          : nestedAgentsFiles(rel);
+      return entry.name === "AGENTS.md" && rel !== "AGENTS.md" ? [rel] : [];
+    })
+    .sort();
+}
+/** Nested AGENTS.md load by path under each code root (docs/index.md). */
+const nestedAgents = largest(layout.codeRoots.flatMap(nestedAgentsFiles));
 const nonUiRules = pathRules + nestedAgents;
 
 /** The largest contract under the specs root, with the one surface file it cites. */
@@ -374,6 +416,12 @@ const BUDGET_FIXTURES: [string, string[]][] = [
   ["tooling/fixtures/budget/renamed-part-index.md", ['no "always" part']],
 ];
 for (const [fixture, expected] of BUDGET_FIXTURES) {
+  // A repo that copied the toolkit without its budget fixtures names the
+  // self-check as skipped; at starter they are the toolkit's own and required.
+  if (toolkit.tier !== "starter" && !exists(fixture)) {
+    skipped.push(fixture);
+    continue;
+  }
   const result = checkAgainst(readText(fixture), fixture);
   for (const text of expected)
     if (!result.errors.some((error) => error.includes(text))) {
@@ -401,6 +449,8 @@ if (headroom < PRODUCT_SHARE) {
   );
 }
 
+if (skipped.length)
+  report.push(`SKIP not in this repo, so not counted: ${skipped.join(", ")}`);
 console.log(report.join("\n"));
 if (errors.length > 0) {
   console.error(`\nbudget — ${errors.length} over:\n${errors.join("\n")}`);

@@ -47,7 +47,7 @@ Verified 2026-10-05: no `toolkit.json` reviewer row matches `rls.ts`, `policies.
 
 ## Brief amendments
 
-Approved at the UX gate; applied to `brief.md` on 2026-10-05:
+Approved at the UX gate; applied to `brief.md` on 2026-10-05, and since 2026-10-08 in `decisions.md`:
 
 1. S3: only an admin deletes an experiment's data; developers can still erase a reviewer (D-LAB-26).
 2. Pinned "scheduled purge": comes back when any closed experiment still holds guest data 90 days after close (D-LAB-24).
@@ -61,4 +61,5 @@ One row per risk, in `technical/tests.md`.
 ## Rabbit holes
 
 - **Patched:** a rewrite would fight the gate's action, so the gate renders in place; mounted designs would collide on ids, so the hidden one unmounts; pins are capped at 500 per reviewer `[PROPOSED]`; the last-admin race is accepted and recoverable; the client address is an `[ASSUMPTION]` the gate ticket verifies.
+- **Accepted, with an owner here:** an enter on a real slug makes one indexed code lookup that an unknown slug skips. The responses are identical, but their timing is not (LAB-7's Warden review, 2026-10-06). That follows from "an unknown slug never reaches the database". It is revisited with gap 3 if slugs ever need to be secret.
 - **Out of bounds:** beat 2's build, a robots file, analytics, email verification, a scheduled purge, code expiry.

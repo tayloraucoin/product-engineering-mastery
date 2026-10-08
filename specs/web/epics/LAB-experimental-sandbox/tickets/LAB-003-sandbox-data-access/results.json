@@ -73,12 +73,12 @@
       "run": {
         "command": "yarn review:run mason LAB-3",
         "exit": 0,
-        "at": "2026-10-06T19:25:59Z",
-        "head": "cbe33b58a2e5290342efccbf8dff03f4045e72a8",
+        "at": "2026-10-06T19:38:39Z",
+        "head": "0688ea0e0044a4ef31106c09d2ce3dfbd9e86829",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-003-sandbox-data-access/review-mason.md",
-        "evidence_sha256": "a301752788b40c51424b747b219bdd5aa24f9c58d8f6e542b120aabaf7b36855",
+        "evidence_sha256": "ee85a15152f8f21b4362575019b376beab43463ac104ceb5e7ecd758ba1d1790",
         "contract_sha256": "d2e24e81b694f829d2a4cbfac9a66c874b0ef5633412b7c73e0ddc881d682eec",
-        "as_built_sha256": "edd18c91d00a0947bf8cf03e5b7dd81368aab865425a5c71e5644368fa993502",
+        "as_built_sha256": "1e088088b0f1f6bed52293e0ae5a29e11c1268bade6eb378de985d8211c25178",
         "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/mason-cto-principal-dev.md; tools Read,Grep,Glob)"
       }
     },
@@ -88,15 +88,15 @@
       "run": {
         "command": "yarn review:run warden LAB-3",
         "exit": 0,
-        "at": "2026-10-06T19:31:04Z",
-        "head": "1da0d7dc0a32fd7ee48d0b14b1293d506934b238",
+        "at": "2026-10-06T19:44:30Z",
+        "head": "95699c84f5aa85c743faab7857ef67b15de6fd47",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-003-sandbox-data-access/review-warden.md",
-        "evidence_sha256": "683fd5c8a57cd0118c2ba272fb4e7711c52117216d3f3aee6e3a4aa9821be979",
+        "evidence_sha256": "03ae3f3f1373d941d0f09d00ba33ad16bd91f20ea2ec527e1d976bfe81d1de9d",
         "contract_sha256": "d2e24e81b694f829d2a4cbfac9a66c874b0ef5633412b7c73e0ddc881d682eec",
-        "as_built_sha256": "edd18c91d00a0947bf8cf03e5b7dd81368aab865425a5c71e5644368fa993502",
+        "as_built_sha256": "1e088088b0f1f6bed52293e0ae5a29e11c1268bade6eb378de985d8211c25178",
         "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)"
       }
     }
   },
-  "updated_at": "2026-10-06T19:38:23Z"
+  "updated_at": "2026-10-06T19:52:05Z"
 }

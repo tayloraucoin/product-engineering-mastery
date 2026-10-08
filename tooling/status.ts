@@ -3,7 +3,8 @@
  *
  *   yarn status                  regenerate specs/_status.md and summarize it
  *   yarn status <id>             "Left to go" for one item, live: staleness,
- *                                pending migration, not verified, open decisions
+ *                                pending migration, not verified, open decisions,
+ *                                and the cost block yarn cost <id> --record wrote
  *   yarn status --brief          one line of at most 600 characters (SessionStart)
  *   yarn status --deviations     every as-built's Deviations, oldest first
  *   yarn status --epic <EPIC>    an epic's tickets in build order, from depends_on,
@@ -16,6 +17,9 @@ import {
   compareIds,
   fileExists,
   findItem,
+  formatCost,
+  formatTicketCost,
+  leftOf,
   openDecisions,
   parseAsBuilt,
   qaOf,
@@ -23,6 +27,7 @@ import {
   readRepoText,
   readSpecsTree,
   refreshStatusFile,
+  renderBrief,
   type ItemState,
 } from "./lib/specs.ts";
 import { loadToolkit } from "./lib/toolkit.ts";
@@ -37,46 +42,15 @@ const states = () =>
 const done = (state: ItemState) =>
   state.stage === "closed" || state.stage === "migration pending";
 
-function leftOf(state: ItemState): string[] {
-  return state.criteria
-    .filter((c) => c.status !== "PASS")
-    .map(
-      (c) =>
-        `${c.id} ${c.evidence}${c.reason && c.reason !== "not proven yet" ? ` (${c.reason})` : ""}`,
-    );
-}
-
-/** Every item in build, whatever the branch: tickets share the operator's branch (PR-14). */
-function brief(): string {
-  const all = states().filter((s) => !s.merged);
-  const active = all.filter((s) => !done(s) && s.stage !== "draft");
-  const parts: string[] = [];
-  if (active.length) {
-    const items = active.map((s) => {
-      const left = leftOf(s);
-      return `${s.item.id} ${s.item.slug} (${s.stage}; ${left.length ? `left: ${left.join(", ")}` : "nothing left"})`;
-    });
-    parts.push(
-      `Active: ${items.join("; ")}. Next: yarn status ${active.length === 1 ? active[0]!.item.id : "<id>"}.`,
-    );
-  } else parts.push("Active: none.");
-  const drafts = all.filter((s) => s.stage === "draft");
-  if (drafts.length)
-    parts.push(`Drafted: ${drafts.map((s) => s.item.id).join(", ")}.`);
-  const line = parts.join(" ");
-  return line.length > BRIEF_LIMIT
-    ? `${line.slice(0, BRIEF_LIMIT - 1)}…`
-    : line;
-}
-
 function one(id: string) {
   const item = findItem(tree, id);
   if (!item) {
     console.error(`status — no item ${id} under ${toolkit.specsRoot}/`);
     process.exit(1);
   }
-  // One ticket, asked for by name: the one place staleness is shown while a
-  // ticket is in build, and only a Q3 ticket's proofs can be stale (PR-19).
+  // One ticket, asked for by name: with --strict, the one place a rewritten
+  // evidence log or (at Q3 only) a later commit is shown (PR-19, C7). A
+  // review PASS goes stale only when the criteria changed after it (WEB-12).
   const state = readItemState(item, tree.specsRoot, { staleness: true });
   const qa = state.contract ? qaOf(state.contract) : null;
   const lines = [
@@ -92,6 +66,34 @@ function one(id: string) {
   lines.push(
     left.length ? `Left to go:\n  ${left.join("\n  ")}` : "Left to go: none.",
   );
+  // Each recorded review's cost (O4) and every attempt a guard refused (Y5).
+  const reviews = (state.contract?.criteria ?? [])
+    .filter((c) => c.id.startsWith("review:"))
+    .flatMap((c) => {
+      const result = state.results?.criteria[c.id];
+      const run = result?.run;
+      return [
+        ...(run
+          ? [
+              `${c.id}: ${result.status}${run.exit === 0 ? "" : ` (exit ${run.exit})`}, ${formatCost(run)}, ${run.at}`,
+            ]
+          : []),
+        ...(result?.refused ?? []).map(
+          (r) => `${c.id}: refused ${r.at}: ${r.reason}`,
+        ),
+      ];
+    });
+  if (reviews.length) lines.push(`Reviews:\n  ${reviews.join("\n  ")}`);
+  if (state.stage === "built")
+    lines.push(
+      `Built ${state.results!.built_at}: code in, criteria unrecorded, awaiting harden.`,
+    );
+  // R4: what the ticket's threads cost, as yarn cost <id> --record wrote it.
+  const cost = state.results?.cost;
+  if (cost)
+    lines.push(
+      `Cost, recorded ${cost.at}: ${formatTicketCost(item.id, cost)}.`,
+    );
   const deferred = state.criteria.filter((c) => c.deferred).map((c) => c.id);
   if (deferred.length)
     lines.push(
@@ -215,7 +217,7 @@ function epicOrder(prefix: string) {
   );
 }
 
-if (args.includes("--brief")) console.log(brief());
+if (args.includes("--brief")) console.log(renderBrief(tree, BRIEF_LIMIT));
 else if (args.includes("--deviations")) deviations();
 else if (args.includes("--epic"))
   epicOrder(args[args.indexOf("--epic") + 1] ?? "");

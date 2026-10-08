@@ -1,0 +1,84 @@
+{
+  "id": "MIG-5",
+  "criteria_sha256": "bfb73d97a3561175e8df5bc975312ffd40a1f32977aa840161483082b54486d0",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-07T19:48:44Z",
+        "head": "df453479372bc493cbe077d9667ce9124ecc129f",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-005-assess-scorer-and-report/evidence/C1.log",
+        "evidence_sha256": "818730a3145683c84ce9bb98e08fa914f294d276e4b8e8c2c9ba7a75a89cfc4b",
+        "tests": 265
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-07T19:48:44Z",
+        "head": "df453479372bc493cbe077d9667ce9124ecc129f",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-005-assess-scorer-and-report/evidence/C2.log",
+        "evidence_sha256": "818730a3145683c84ce9bb98e08fa914f294d276e4b8e8c2c9ba7a75a89cfc4b",
+        "tests": 265
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-07T19:48:44Z",
+        "head": "df453479372bc493cbe077d9667ce9124ecc129f",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-005-assess-scorer-and-report/evidence/C3.log",
+        "evidence_sha256": "818730a3145683c84ce9bb98e08fa914f294d276e4b8e8c2c9ba7a75a89cfc4b",
+        "tests": 265
+      }
+    },
+    "C4": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-07T19:48:44Z",
+        "head": "df453479372bc493cbe077d9667ce9124ecc129f",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-005-assess-scorer-and-report/evidence/C4.log",
+        "evidence_sha256": "818730a3145683c84ce9bb98e08fa914f294d276e4b8e8c2c9ba7a75a89cfc4b",
+        "tests": 265
+      }
+    },
+    "C5": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-07T19:48:44Z",
+        "head": "df453479372bc493cbe077d9667ce9124ecc129f",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-005-assess-scorer-and-report/evidence/C5.log",
+        "evidence_sha256": "818730a3145683c84ce9bb98e08fa914f294d276e4b8e8c2c9ba7a75a89cfc4b",
+        "tests": 265
+      }
+    },
+    "C6": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn check-types:tooling",
+        "exit": 0,
+        "at": "2026-10-07T19:50:40Z",
+        "head": "df453479372bc493cbe077d9667ce9124ecc129f",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-005-assess-scorer-and-report/evidence/C6.log",
+        "evidence_sha256": "745dff9a6be0ecf30ab491d0eac2894edc104ac3902db0bc4849a49e5f69eb60"
+      }
+    }
+  },
+  "updated_at": "2026-10-07T19:50:41Z"
+}

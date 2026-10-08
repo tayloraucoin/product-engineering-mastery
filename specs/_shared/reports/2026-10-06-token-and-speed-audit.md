@@ -6,6 +6,8 @@ Track: audit, lens cost and speed, Q0. Lead Lorimer; Tally consulted on counting
 
 The machinery is sound but one loop in it is not: at Q3 every fix after a review PASS makes the review stale, a fresh reviewer then finds new orange items, and the builder goes round again, so two tickets took 17 headless reviews and about a quarter of the day's tokens to close from a state where both reviewers had already said PASS. Fix that loop and the habit of working in threads past 200k tokens, and the day's spend falls by roughly 40 percent without touching what Q3 proves; the hooks, the verify output and the builder interview are not where the money went.
 
+**Extended on the evening of 2026-10-06** after the LAB build day: [Part 2](#part-2-the-lab-build-day-2026-10-06-0740-to-1756-pdt) answers whether the system became two to three times slower and heavier. Short form: per clock hour yes, because three build threads ran at once and each grew past 375k tokens; per unit of agent work no; per ticket about 2.5 times, two thirds of it from heavier tickets and two reviewers times two or three rounds on every Q3 ticket, one third from the context size. The review loop from R1 ran again: 26 headless reviews, every one PASS.
+
 ## Counts by flag
 
 | Flag   | Count |
@@ -211,3 +213,136 @@ One per recommended change, ready to paste into the prompt builder.
 **Dump 4, for C4.** One-off track, Q1. "Record the cost of a review and of a thread. In `tooling/review-run.ts`, keep the `usage` and `modelUsage` fields of the headless JSON result and write `tokens_input`, `tokens_cache_read`, `tokens_cache_write`, `tokens_output` and `seconds` into the review file header and into the `review:<role>` run record in `results.json`; `tooling/lib/specs.ts` and the contract-loop fixtures learn the new fields; `yarn status <id>` prints them. In `.claude/skills/tk-batch/SKILL.md`, the closing report gains one last line, `Cost: <calls> calls, <context at close> context, <cache-read> read, <output> out`, read from the harness's session usage tool when present, otherwise left out. Evidence: the audit's O4 (no cost is recorded anywhere; the audit's first count was 2.4 times too high). Changelog entry."
 
 **Dump 5, for C5.** One-off track, Q1. "`yarn verify` is not a criterion command. In `tooling/contract.ts`, `contract:init` refuses a criterion whose command is `yarn verify` with the message that the batch close proves the chain once and the criterion should name the specific check; `tooling/check-specs.ts` warns on existing contracts that carry it (STK-18 C4, STK-21 C3, STK-26 C2, WEB-8 C3 stay as history; frozen criteria are not rewritten). The rule already stands in `.claude/rules/specs.md` and `docs/engineering/templates/contract.template.md`; change no prose, add the check that makes it law, and a fixture in the contract-init tests. Evidence: the audit's O3 (92 runs of the 101-second chain in one day, 2.1 hours of waiting). Changelog entry."
+
+## Part 2: the LAB build day (2026-10-06 07:40 to 17:56 PDT)
+
+The operator's question: since the LAB code landed, work feels two to three times slower and more token-hungry, the reviews feel heavy, and extra reviewers seem to be getting added. Measured the same way as Part 1 over the 10.3 hours since Part 1's window closed: 18 session files and 12 subagent transcripts, 1,244 API calls counted once per message id, the LAB contracts, review files and their git history, and the plan meter read from the app at 17:56 PDT (weekly 79 percent, Fable 39 percent).
+
+### Verdict for Part 2
+
+Per clock hour, yes: the weekly meter rose 25 points in 10 hours today against 28 in the previous 24, and 56 percent of today's tokens fell in the two hours when three build threads ran at once, each past 375k tokens of context. Per unit of agent work, no: tokens per active thread-hour rose 15 percent and tokens per criterion proven fell. Per ticket, about 2.5 times: LAB tickets carry 5 to 13 criteria against 2 to 6 for the STK tickets of Part 1, and every Q3 LAB ticket got two reviewers and two or three rounds, 26 headless reviews in all, every one PASS. No reviewer was added by the tooling; the Tickets gate named them by hand, beyond the toolkit map on 10 of 28 contracts, and the operator confirmed the table in three question rounds.
+
+### Counts by flag, Part 2
+
+| Flag   | Count |
+| ------ | ----: |
+| Black  |     0 |
+| Red    |     1 |
+| Orange |     3 |
+| Yellow |     2 |
+| Grey   |     2 |
+
+### The two windows side by side
+
+| Measure                                     | Part 1 (10-05 00:00 to 10-06 07:40 PDT) |                                  Part 2 (10-06 07:40 to 17:56 PDT) |
+| ------------------------------------------- | --------------------------------------: | -----------------------------------------------------------------: |
+| API calls (one per message id)              |                                   2,088 |                                                              1,244 |
+| Cache-read tokens                           |                                  394.6M |                                                             326.8M |
+| Cache-write tokens                          |                                   10.7M |                                                               6.0M |
+| Output tokens                               |                                   1.86M |                                                              0.87M |
+| Weighted, measured                          |                             62.5M equiv |                                                        45.3M equiv |
+| Headless reviewers, outside transcripts     |               ~9.5M (21 runs, estimate) | ~13M (27 to 29 runs plus one pre-flight of 26 contracts, estimate) |
+| Active thread-hours                         |                                  15.1 h |                                                              9.5 h |
+| Weighted per active hour                    |                                    4.1M |                                                               4.7M |
+| Meter points consumed                       |                                      28 |                                                                 25 |
+| Weighted per meter point, headless included |                             ~2.6M equiv |                                                        ~2.3M equiv |
+| Calls over 200k context                     |                               745 (36%) |                                                          712 (57%) |
+| Cache reads carried by calls over 200k      |                                     57% |                                                                81% |
+| Context above 200k, summed                  |                      8.0M equiv (12.8%) |                                                  12.6M equiv (28%) |
+| Tickets closed                              |                         8 (STK and WEB) |                                              9 of 10 (LAB-1 to 10) |
+| Criteria proven                             |                                     ~26 |                                                                ~75 |
+
+The meter and the weighted count agree to within 15 percent across the two windows at about 2.5M weighted tokens per point. That is the first independent check on the weights, and it holds.
+
+### Burn by hour
+
+| Hour (PDT) | Calls | Weighted | Threads active | What ran                                                    |
+| ---------- | ----: | -------: | -------------: | ----------------------------------------------------------- |
+| 07         |   103 |     4.3M |              6 | this audit, STK-20 dry runs 2 and 3, the LAB Tickets gate   |
+| 08         |    85 |     2.4M |              3 |                                                             |
+| 09         |    34 |     1.0M |              1 |                                                             |
+| 10         |    46 |     2.4M |              4 | LAB Tickets gate, pre-flight                                |
+| 11         |   207 |     5.1M |              4 | LAB-1 to 4 start                                            |
+| 12         |    85 |     2.8M |              3 | LAB-1 to 3 review rounds                                    |
+| 13         |   403 |    11.8M |             10 | LAB-5 to 10 in three threads, MIG frame, builder interviews |
+| 14         |   255 |    13.6M |              5 | LAB-7 to 10 review rounds and captures                      |
+| 17 to 18   |    40 |     1.9M |              3 | a builder interview, this audit                             |
+
+The 13:00 and 14:00 hours are 25.4M, 56 percent of the window, at 5 to 6 meter points an hour. Part 1's whole day averaged 1.2 points an hour. That is the two to three times the operator felt, and it is parallelism times context size, not a slower machine.
+
+### Where the tokens went
+
+| Activity                                                              | M equiv | Share | Note                                                                                         |
+| --------------------------------------------------------------------- | ------: | ----: | -------------------------------------------------------------------------------------------- |
+| LAB-8, 9, 10 build thread (`83617170`) and its two reviewer subagents |    15.1 |   33% | 299 calls, context 219k at the first review and 650k at the end; 24 capture images read back |
+| LAB-5, 6, 7 build thread (`b5c6706f`)                                 |     8.1 |   18% | 209 calls, 479k at the end                                                                   |
+| LAB-1, 2, 3 build thread (`89734604`)                                 |     5.0 |   11% | 163 calls, 375k at the end                                                                   |
+| LAB-4 thread and its in-thread reviewer                               |     1.6 |    4% | 66 calls, 179k; closed in 8 minutes                                                          |
+| STK-20 cold dry runs 2 and 3, as subagents of the Part 1 build thread |     7.1 |   16% | the parent resumed at 556k; the cold agent ran 149 calls                                     |
+| LAB shaping and Tickets gate (`c05d770f`)                             |     2.7 |    6% | 55 calls at 400k, 19 human turns                                                             |
+| MIG epic frame and its five subagents                                 |     2.1 |    5% |                                                                                              |
+| This audit                                                            |     1.3 |    3% |                                                                                              |
+| Three builder interviews                                              |     1.1 |    2% |                                                                                              |
+| Other small threads                                                   |     0.7 |    2% |                                                                                              |
+| Headless reviewers, outside the transcripts                           |     ~13 |   n/a | estimate, see below                                                                          |
+
+### Findings, Part 2
+
+**R2 (Red). The review loop from R1 ran on every Q3 LAB ticket, and the first thread made three rounds its standard.** Where: the same mechanism as R1; the review files' git history shows every round. Rounds, headless runs and verdicts, with Should-fix counts per round:
+
+| Ticket      | Reviewers     |                                                                            Rounds |                       Headless runs | Verdicts  | Should-fix per round (mason / warden) |
+| ----------- | ------------- | --------------------------------------------------------------------------------: | ----------------------------------: | --------- | ------------------------------------- |
+| LAB-1       | mason, warden |                                                                                 3 |                                   6 | all PASS  | 1, 2, 2 / 1, 1, 0                     |
+| LAB-2       | mason, warden |                                                                                 3 |                                   6 | all PASS  | 2, 2, 1 / 1, 2, 0                     |
+| LAB-3       | mason, warden |                                                                                 3 |                                   6 | all PASS  | 1, 1, 2 / 2, 1, 1                     |
+| LAB-5       | mason, warden |                                                                                 2 |                                   4 | all PASS  | 1, 0 / 2, 0                           |
+| LAB-6       | warden        |                                                                                 2 |                                   2 | all PASS  | 2, 0                                  |
+| LAB-7       | assay, warden |               1 recorded, 1 to 2 more attempted (one ran 601 s in the foreground) |                          2 recorded | PASS      | assay 0 / warden 1                    |
+| LAB-9       | mason, warden | 0 recorded; two attempts stopped early (criteria unproven, then the thread ended) |                                   0 | none      | ticket left "closing"                 |
+| LAB-4 (Q2)  | mason         |                                                                                 1 |                  in-thread subagent | PASS      |                                       |
+| LAB-8 (Q2)  | assay, warden |                                                                                 2 | two in-thread subagents, two rounds | both PASS |                                       |
+| LAB-10 (Q2) | assay         |                                                                                 1 |                  in-thread subagent | PASS      |                                       |
+
+26 recorded headless runs, 0 FAIL, 0 Blocking. The Should-fix counts do not fall with rounds (LAB-1 mason 1, 2, 2; LAB-3 mason 1, 1, 2): a fresh reviewer finds different orange items each time, as in Part 1. In the LAB-1 to 3 thread the rounds are named first, second and final in the commit messages: the loop has become a protocol. Builder-side cost of the loops, from the segments between review invocations: the LAB-1 to 3 thread spent 36 minutes and 1.0M before its first review and 70 minutes and 4.0M in rounds (80 percent of the thread); the LAB-8 to 10 thread spent 17 minutes and 2.6M building LAB-8 and then 37 minutes and 6.5M on LAB-8's Q2 review-and-fix cycle alone, at 433k of context. One round of two reviewers in the 650k thread cost 2.1M builder-side plus about 0.9M headless, about 1.2 meter points. Smallest fix: C1 from Part 1, now worth more: at two reviewers and two to three rounds per Q3 ticket, holding LAB-1 to 7 to one PASS each would have saved 19 headless runs (about 8.6M) and roughly 10M builder-side, about 7 of today's 25 points [estimate]. Measured from review-file history and transcript segments; confidence high.
+
+**O5 (Orange). Three tickets per thread, with captures, grows a thread to 650k before the third ticket starts.** Where: the three build threads ended at 375k, 479k and 650k; 712 of the window's 1,244 calls ran above 200k and carried 81 percent of its cache reads; the excess above 200k is 12.6M equiv, 28 percent of the window (Part 1: 13 percent). Each later ticket in a batch pays for the earlier ones' transcript on every call: LAB-9 and LAB-10 cost 7.3M and 3.6M by ticket id against 1.4M for LAB-1, and LAB-9 is still open. The parent of the STK-20 dry runs resumed at 556k. Smallest fix: C2 from Part 1, sharpened: one ticket per thread for UI tickets with captures, and a thread is closed after a ticket's review PASS rather than carried into the next ticket. Measured from per-call usage; confidence high.
+
+**O6 (Orange). Q2 tickets carry two reviewers, against the level's definition.** Where: `docs/workflows/qa-levels.md` defines Q2 as one reviewer in fresh context; six LAB contracts at Q2 name two (LAB-8, 11, 12, 14, 17, 23), and LAB-8 ran both, twice, inside a 433k thread. Against the toolkit map, 10 of 28 LAB contracts name a reviewer the map does not suggest for their planned paths (LAB-3, 5, 6, 9 add a second; LAB-15, 16 and 25 name two or three where the map suggests none; LAB-4, 17, 24 add Mason; LAB-20 Warden), and the map's Threshold suggestion on eight UI tickets is never taken. `technical.md` line 46 says the Tickets stage names these reviewers by hand because no map row covers `apps/web/lib/sandbox/`; the Tickets thread put the table to the operator in three question rounds, so the choice is the operator's, informed by the gate's recommendation. `contract:init` adds nothing beyond the contract's list (Vigil only when a Q3 contract names nobody; never triggered here). Smallest fix: `contract:init` and `contract:qa` refuse a second reviewer at Q2 unless a `focus` line names what the second one looks at, and the gate's table shows the map's suggestion beside its own so the operator sees each hand-added seat. Measured from the contracts and the toolkit map; confidence high on the counts, medium on how the table was presented.
+
+**O7 (Orange). The staleness nag reaches every thread, and it names closed tickets.** Where: `yarn status --brief`, printed by the SessionStart and Stop hooks into every session (13 starts and 42 stops in this window), currently opens with LAB-5, a closed ticket, listing C1 to C4 as "evidence changed after it was recorded"; `yarn check-specs --strict` lists LAB-8's C1 to C6 and C9 the same way, LAB-9 C7 stale, and LAB-7's contract over the 2,500-token cap. The evidence logs are git-ignored and were rewritten by a later run; no code changed. PR-19 ruled that below a merge nothing goes stale and that only `check-specs --strict` looks; the brief line looks anyway, and it is what invites a thread to re-prove another thread's closed work (Part 1's R1 mechanism, and `tooling.md`'s own warning about check-specs). Smallest fix: the brief line lists only tickets in build and never evidence-log staleness; strict staleness is read once, before a merge, by the operator. Measured by running both commands now; confidence high.
+
+**Y4 (Yellow). The STK-20 dry run ran twice more as subagents of a 556k thread.** 7.1M, 16 percent of the window; runs 2 and 3 found 11 and 8 stops. The same shape as Part 1's O2; the fix is the same (its own thread, a smaller model where the operator agrees).
+
+**Y5 (Yellow). The Vigil pre-flight of 26 contracts.** One run of about 8 minutes at 10:22 PDT after two attempts that stopped at once; it reads the brief, 22 UX proposals, the technical notes and 26 contracts. Estimated 1 to 1.5M equiv. It is one run per epic and found real problems, so it earns its cost; noted because two failed attempts preceded it and nothing recorded why.
+
+**G4 (Grey). Capture images.** 34 screenshots were read back into the build threads (24 in the LAB-8 to 10 thread), about 1,500 tokens each, 51k tokens in all. Small on their own; each then rides in a 400k to 650k context. The 49 capture commands took 35 minutes of wall.
+
+**G5 (Grey). LAB contracts already obey the verify rule.** No LAB criterion names `yarn verify`; 113 name `yarn workspace web test`. `contract:run` therefore took a median 35 s in this window against 124 s in Part 1. The 18 direct `yarn verify` runs (33 minutes, median 101 s, one at 717 s) were batch closes and the stop gate.
+
+### The operator's three perceptions, tested
+
+| Perception                                      | Verdict                                                                   | Number                                                                                                                                                                                |
+| ----------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Two to three times slower and more token-hungry | True per clock hour at peak; false per unit of work; 2.5 times per ticket | 5 to 6 points an hour at 13:00 to 15:00 against 1.2 average yesterday; 4.7M against 4.1M per active hour; median LAB ticket 2.5M against 1.0M for STK, with 2 to 3 times the criteria |
+| The review process is heavy                     | True                                                                      | 26 headless runs plus ~13M estimated, plus ~16M builder-side in the loops: about half of today's spend went to reviews that all returned PASS                                         |
+| Extra reviewers are being added                 | True by hand at the Tickets gate, not by tooling                          | 10 of 28 contracts name a reviewer beyond the map; 6 Q2 tickets name two reviewers against the level's definition; the operator confirmed the table                                   |
+
+### What Part 2 changes in the cuts
+
+- **C1 stands and is now the largest saving.** Today's 26 PASS runs would have been 7 under it. Add to Dump 1: the first review of LAB-1 to LAB-7 as the test corpus, and the rule that a Should-fix count that does not fall across rounds is the signal to stop, not to continue.
+- **C2 stands, sharpened:** one ticket per thread when the ticket has captures; a batch thread closes after each PASS. Add to Dump 2: the three LAB threads' end contexts as the evidence.
+- **C6, new: Q2 is one reviewer, enforced.** Change in a check (`contract.ts` init and qa) and one line in the Tickets stage. Saving per Q2 ticket: one reviewer run, 0.2 to 0.5M in-thread, plus its fix cycle. Loses: a second lens on a Q2 ticket, which is what a `focus` line or Q3 is for. Crucible: steelman, a UI ticket on an auth gate wants both Assay and Warden; attack, that ticket is Q3 or carries a focus line, and LAB-8's second reviewer found no Blocking in two rounds; falsifier, a Q2 ticket whose second reviewer finds a Blocking the first missed. Survives.
+- **C7, new: the brief line stops nagging about closed tickets and evidence logs.** Change in a check (`status.ts` brief, and `check-specs` warnings outside `--strict`). Saving: none directly in tokens; it removes the prompt that starts R1's loop in other threads. Crucible: steelman, a stale proof on a closed ticket is a real merge risk; attack, the merge is where `--strict` runs and the operator reads it, and today's stale lines came from rewritten logs, not from code; falsifier, a merged ticket whose stale proof hid a regression, none in two days. Survives.
+
+### Not examined in Part 2
+
+- The headless reviewers' own transcripts, as before.
+- Whether the operator's confirmation of the LAB reviewer table was given row by row or as a whole; only that three question rounds mentioned reviewers or QA.
+- What rewrote LAB-5's and LAB-8's evidence logs after their records; the logs are git-ignored and carry no author.
+- Anything after 17:56 PDT on 2026-10-06.
+
+### Builder dumps added
+
+**Dump 6, for C6.** One-off track, Q1. "Q2 means one reviewer. In `tooling/contract.ts`, `contract:init` and `contract:qa` refuse a contract at Q2 with more than one reviewer unless a `focus` line names what the second reviewer examines, with a message that points at `docs/workflows/qa-levels.md`; `check-specs` warns on the six LAB drafts that carry two (LAB-11, 12, 14, 17, 23 and the closed LAB-8 stays as history). In `docs/workflows/stages/tickets.md` (or wherever the Tickets gate's QA table is specified), the table shows the toolkit map's suggestion beside the proposed reviewers so the operator sees every seat added by hand. Fixture in the contract-init tests. Evidence: the audit's O6. Changelog entry."
+
+**Dump 7, for C7.** One-off track, Q1. "The brief status line orients a thread on its own work and never re-opens another's. In `tooling/status.ts`, `--brief` lists tickets in build (open, closing) and omits closed and migration-pending tickets; it never reports evidence-log staleness, and it reports code staleness only for Q3 tickets with `--strict`. `tooling/check-specs.ts` without `--strict` stops warning about evidence logs that changed after their record (they are git-ignored and rewritten by every run). Fixtures in `tooling/fixtures/specs/`. Amend `docs/engineering/tooling.md`'s status and check-specs entries. Evidence: the audit's O7 (the line currently opens with a closed ticket's rewritten logs and is printed into every session start and stop). Changelog entry."

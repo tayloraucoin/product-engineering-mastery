@@ -25,10 +25,15 @@
  *       Sets a started ticket's QA level and reviewers, as the operator asked
  *       (PR-19). At Q3 each reviewer gets a review:<role> criterion; below Q3
  *       the review criteria are dropped and the review happens in the thread.
+ *   yarn contract:built <id>
+ *       Records built_at: the code is in and committed, the criteria are not
+ *       yet recorded (audit R9). Status reads "built" until a criterion is
+ *       recorded after it; contract:run proceeds as on an open ticket.
  *
  * The level is the operator's choice, never computed. contract:init reads
  * `qa:` from the contract (Q1 when absent) and flags once any planned path
- * that reaches a critical path below Q3.
+ * that reaches a critical path below Q3. Q2 is one reviewer: init and qa
+ * refuse a further seat unless a `focus` line names what it examines (C6).
  */
 
 import { spawnSync } from "node:child_process";
@@ -72,9 +77,11 @@ import {
   inPlannedPaths,
   isMerged,
   isReview,
+  isWholeChain,
   now,
   openDecisions,
   preflightPath,
+  q2ReviewerProblem,
   QA_LEVELS,
   qaOf,
   readContract,
@@ -88,6 +95,7 @@ import {
   SLUG,
   splitCommand,
   ticketFolder,
+  wholeChainProblem,
   writeRepoText,
   type Contract,
   type Criterion,
@@ -239,6 +247,16 @@ function setFrontmatter(rel: string, edit: (doc: YAML.Document) => void): void {
   writeRepoText(rel, `---\n${doc.toString({ lineWidth: 0 })}---\n${body}`);
 }
 
+/** A criterion whose command is the whole chain is refused before anything else is judged. */
+function refuseWholeChain(
+  item: Item,
+  criteria: { id: string; command?: string }[] | undefined,
+) {
+  for (const criterion of criteria ?? [])
+    if (isWholeChain(criterion.command))
+      stop(`${item.id} cannot start: ${wholeChainProblem(criterion.id)}`);
+}
+
 function init() {
   const fromFile = option("--from");
   const draftOnly = flag("--draft");
@@ -314,11 +332,16 @@ function init() {
     }
   }
   if (draftOnly) {
-    const problems = checkContract(item, readContract(item), toolkit, {
+    const drafted = readContract(item);
+    refuseWholeChain(item, drafted.contract?.criteria);
+    const problems = checkContract(item, drafted, toolkit, {
       started: false,
     });
     if (problems.length)
       stop(`${item.id} is drafted, with problems:\n  ${problems.join("\n  ")}`);
+    // A draft's seats are the operator's to settle at the Tickets gate: said, not refused.
+    const q2 = drafted.contract ? q2ReviewerProblem(drafted.contract) : null;
+    if (q2) console.log(`contract:init — note: ${item.id} ${q2}`);
     console.log(
       `contract:init — ${item.id} drafted at ${item.dir}/; nothing started (--draft).`,
     );
@@ -329,6 +352,7 @@ function init() {
 
 function start(item: Item, tree: SpecsTree) {
   const file = readContract(item);
+  refuseWholeChain(item, file.contract?.criteria);
   const draftProblems = checkContract(item, file, toolkit, { started: false });
   if (/\[FILL/.test(file.text))
     stop(
@@ -426,6 +450,9 @@ function start(item: Item, tree: SpecsTree) {
     refusals.push(
       `this is ${branch}, where agents do not commit; the operator picks a work branch (git switch -c <name>), then run this again`,
     );
+  // Q2 is one reviewer; a second seat needs a focus line that names it (C6).
+  const q2 = q2ReviewerProblem(contract);
+  if (q2) refusals.push(q2);
   if (refusals.length)
     stop(`${item.id} cannot start:\n  ${refusals.join("\n  ")}`);
 
@@ -806,6 +833,7 @@ function add() {
     if (evidencePath) criterion.path = evidencePath;
     if (reason) criterion.reason = reason;
     if (evidence === "test" || evidence === "check") {
+      if (isWholeChain(commandText)) stop(wholeChainProblem(name));
       const problem = checkCommand(commandText ?? "");
       if (problem) stop(problem);
     }
@@ -864,6 +892,9 @@ function setQa() {
   const roles = [
     ...new Set(qa === "Q3" && given.length === 0 ? ["vigil"] : given),
   ].sort();
+  // Q2 is one reviewer; a second seat needs a focus line that names it (C6).
+  const q2 = q2ReviewerProblem({ qa, reviewers: roles, focus: contract.focus });
+  if (q2) stop(`${item.id} ${q2}`);
   // Only Q3 reviewers are criteria; below Q3 the review happens in the thread.
   const wanted = new Set(
     qa === "Q3" ? roles.map((role) => `review:${role}`) : [],
@@ -903,6 +934,26 @@ function setQa() {
   printLeft(item);
 }
 
+// ---------------------------------------------------------------- built
+
+function built() {
+  const tree = readSpecsTree(toolkit);
+  const item = requireItem(tree, argv[0]);
+  const results = requireResults(item);
+  const contract = readContract(item).contract;
+  if (!contract) stop(`${contractPath(item)} is not a valid contract`);
+  requireFrozen(item, contract, results);
+  requireProvable(item, contract);
+  results.built_at = now();
+  writeResults(item, results);
+  const stage = readItemState(item, toolkit.specsRoot).stage;
+  console.log(
+    stage === "built"
+      ? `contract:built — ${item.id} is built at ${results.built_at}: code in, criteria unrecorded, awaiting harden. Harden with yarn contract:run ${item.id}.`
+      : `contract:built — ${item.id} built_at ${results.built_at} recorded; it reads ${stage}, since its criteria already hold.`,
+  );
+}
+
 // ---------------------------------------------------------------- main
 
 if (command === "init") init();
@@ -910,4 +961,8 @@ else if (command === "run") run();
 else if (command === "record") record();
 else if (command === "add") add();
 else if (command === "qa") setQa();
-else stop("usage: node tooling/contract.ts <init | run | record | add | qa> …");
+else if (command === "built") built();
+else
+  stop(
+    "usage: node tooling/contract.ts <init | run | record | add | qa | built> …",
+  );

@@ -1,0 +1,96 @@
+{
+  "id": "MIG-4",
+  "criteria_sha256": "3d26868df1763518a5924ddf262ab540d73e6f0e330784d4e133ef641d363091",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-07T19:51:09Z",
+        "head": "ce09fd0cae37bf74e80293e264b9a0303788ad9e",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-004-reviewer-imports/evidence/C1.log",
+        "evidence_sha256": "0d788025456a7c6de83257aed9831a14b8fb0132065b43c13d972f4412705941",
+        "tests": 268
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-07T19:51:09Z",
+        "head": "ce09fd0cae37bf74e80293e264b9a0303788ad9e",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-004-reviewer-imports/evidence/C2.log",
+        "evidence_sha256": "0d788025456a7c6de83257aed9831a14b8fb0132065b43c13d972f4412705941",
+        "tests": 268
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-07T19:51:09Z",
+        "head": "ce09fd0cae37bf74e80293e264b9a0303788ad9e",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-004-reviewer-imports/evidence/C3.log",
+        "evidence_sha256": "0d788025456a7c6de83257aed9831a14b8fb0132065b43c13d972f4412705941",
+        "tests": 268
+      }
+    },
+    "C4": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-07T19:51:09Z",
+        "head": "ce09fd0cae37bf74e80293e264b9a0303788ad9e",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-004-reviewer-imports/evidence/C4.log",
+        "evidence_sha256": "0d788025456a7c6de83257aed9831a14b8fb0132065b43c13d972f4412705941",
+        "tests": 268
+      }
+    },
+    "C5": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-07T19:51:09Z",
+        "head": "ce09fd0cae37bf74e80293e264b9a0303788ad9e",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-004-reviewer-imports/evidence/C5.log",
+        "evidence_sha256": "0d788025456a7c6de83257aed9831a14b8fb0132065b43c13d972f4412705941",
+        "tests": 268
+      }
+    },
+    "C6": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn check-types:tooling",
+        "exit": 0,
+        "at": "2026-10-07T19:52:45Z",
+        "head": "ce09fd0cae37bf74e80293e264b9a0303788ad9e",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-004-reviewer-imports/evidence/C6.log",
+        "evidence_sha256": "884a89e05ffe5899f34ca4d13f2ab2c1cc4146a4e0e10b7193042f3ef7313723"
+      }
+    },
+    "C7": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn check-stack",
+        "exit": 0,
+        "at": "2026-10-07T19:52:53Z",
+        "head": "ce09fd0cae37bf74e80293e264b9a0303788ad9e",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-004-reviewer-imports/evidence/C7.log",
+        "evidence_sha256": "72032cbcc58fc1d84a2d9ac5d9f9302c9266c5faa3b62fcc5c5091dadd8e586f"
+      }
+    }
+  },
+  "updated_at": "2026-10-07T19:52:53Z"
+}

@@ -11,12 +11,99 @@ export {
   createAccess,
   checkAccess,
   findAccessEmail,
+  readGateLock,
+  recordGateFailure,
+  clearGateKey,
   type CreateAccessInput,
 } from "./gate.ts";
-export { recordAction, type RecordActionInput } from "./actions.ts";
+export {
+  recordAction,
+  ROLE_CHANGE_ACTION,
+  type RecordActionInput,
+} from "./actions.ts";
+export { withRoleChangeLock, type RoleChangeTx } from "./roles.ts";
+export { listExperimentStats, type ExperimentStats } from "./experiments.ts";
+export {
+  CODE_ACTIONS,
+  listCodes,
+  makeCode,
+  replaceCode,
+  revokeCode,
+  type CodeRow,
+} from "./codes.ts";
+export {
+  ACTIONS_PAGE_SIZE,
+  countExperimentData,
+  deleteExperimentData,
+  ERASED_LABEL,
+  ERASURE_ACTIONS,
+  eraseEmail,
+  findErasure,
+  findReviewerEmails,
+  listActions,
+  type ActionRow,
+  type ActionsPage,
+  type ErasureCounts,
+  type ErasureFound,
+  type ExperimentDataCounts,
+  type ExperimentDataCountsRead,
+  type HeldCounts,
+  type NameLabel,
+  type ReviewerEmails,
+} from "./erasure.ts";
+export {
+  deleteComment,
+  listMyComments,
+  saveComment,
+  type CommentAnchor,
+  type MyComment,
+  type SaveCommentInput,
+  type SaveCommentOutcome,
+} from "./comments.ts";
+export {
+  deleteReply,
+  listReplies,
+  listThread,
+  saveReply,
+  type ListRepliesInput,
+  type ListThreadInput,
+  type RemovedComment,
+  type ReviewerAuthor,
+  type SaveReplyInput,
+  type SaveReplyOutcome,
+  type TeamAuthor,
+  type ThreadComment,
+  type ThreadReply,
+  type ThreadRoot,
+} from "./threads.ts";
+export {
+  deleteTeamNote,
+  listTeamComments,
+  saveTeamNote,
+  type SaveTeamNoteInput,
+  type SaveTeamNoteOutcome,
+  type TeamComment,
+  type TeamCommentAuthor,
+  type TeamComments,
+} from "./team.ts";
+export {
+  latestSentAt,
+  listMyViewedDesigns,
+  readMyLatestVersion,
+  saveReviewVersion,
+  type MyReviewVersion,
+  type SaveReviewVersionInput,
+} from "./review.ts";
+export {
+  claimFirstDesign,
+  readReviewerDesigns,
+  recordViewEvent,
+  type ReviewerDesigns,
+} from "./experiment.ts";
 export {
   SandboxAccessError,
   type ReviewerViewer,
+  type ReviewMode,
   type SandboxDb,
   type TeamViewer,
   type Viewer,

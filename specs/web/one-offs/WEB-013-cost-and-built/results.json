@@ -1,0 +1,105 @@
+{
+  "id": "WEB-13",
+  "criteria_sha256": "bccecddbcaad2333799708a2dc5be00ebd68da0fc552842372ea9d9c4351cbbf",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling --test-name-pattern WEB-13",
+        "exit": 0,
+        "at": "2026-10-08T07:00:53Z",
+        "head": "3525c0c458970e0452e894ef6512a100932fa1c5",
+        "evidence_path": "specs/web/one-offs/WEB-013-cost-and-built/evidence/C1.log",
+        "evidence_sha256": "68fe1060bcb0a27793f326c1cff3396fbcdb5cbddc2cc9caa107ee77df227f4a",
+        "tests": 314
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling --test-name-pattern WEB-13",
+        "exit": 0,
+        "at": "2026-10-08T07:00:53Z",
+        "head": "3525c0c458970e0452e894ef6512a100932fa1c5",
+        "evidence_path": "specs/web/one-offs/WEB-013-cost-and-built/evidence/C2.log",
+        "evidence_sha256": "68fe1060bcb0a27793f326c1cff3396fbcdb5cbddc2cc9caa107ee77df227f4a",
+        "tests": 314
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling --test-name-pattern WEB-13",
+        "exit": 0,
+        "at": "2026-10-08T07:00:53Z",
+        "head": "3525c0c458970e0452e894ef6512a100932fa1c5",
+        "evidence_path": "specs/web/one-offs/WEB-013-cost-and-built/evidence/C3.log",
+        "evidence_sha256": "68fe1060bcb0a27793f326c1cff3396fbcdb5cbddc2cc9caa107ee77df227f4a",
+        "tests": 314
+      }
+    },
+    "C4": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn check-types:tooling",
+        "exit": 0,
+        "at": "2026-10-08T07:02:28Z",
+        "head": "3525c0c458970e0452e894ef6512a100932fa1c5",
+        "evidence_path": "specs/web/one-offs/WEB-013-cost-and-built/evidence/C4.log",
+        "evidence_sha256": "2a44c47ed1cc9f3e86489e912b8404f7b75ce222f6b8831f9139d74039c58513"
+      }
+    }
+  },
+  "cost": {
+    "at": "2026-10-08T07:02:45Z",
+    "calls": 79,
+    "weighted": 1729126,
+    "tokens_input": 160,
+    "tokens_cache_read": 10427899,
+    "tokens_cache_write": 279169,
+    "tokens_output": 67443,
+    "by_category": {
+      "build": {
+        "calls": 36,
+        "weighted": 819858
+      },
+      "proofs": {
+        "calls": 2,
+        "weighted": 51291
+      },
+      "captures": {
+        "calls": 0,
+        "weighted": 0
+      },
+      "reviews": {
+        "calls": 26,
+        "weighted": 452202
+      },
+      "status": {
+        "calls": 11,
+        "weighted": 312812
+      },
+      "git": {
+        "calls": 2,
+        "weighted": 58173
+      },
+      "re-reading": {
+        "calls": 0,
+        "weighted": 0
+      },
+      "other": {
+        "calls": 2,
+        "weighted": 34790
+      }
+    },
+    "context_last_call": 257155,
+    "threads": 1,
+    "headless_runs": 0,
+    "headless_weighted": 0
+  },
+  "updated_at": "2026-10-08T07:02:45Z"
+}

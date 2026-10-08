@@ -1,7 +1,7 @@
 ---
 target: specs/web/ux/experimental/gate.md
 status: approved
-promoted:
+promoted: 2026-10-07
 ---
 
 # Gate — experimental

@@ -6,14 +6,14 @@ status: draft
 thread: PR-19
 role: Usher
 date: 2026-10-05
-last_reviewed: 2026-10-05
+last_reviewed: 2026-10-07
 supersedes:
 load_when: on request
 ---
 
 # The epic: a campaign
 
-> **In one line:** an epic is a folder of tickets sharing one problem, one UX proposal and one set of technical notes. It is played in levels, each in its own thread, each ending at a gate you pass. Then the tickets are built in batches, and shipping updates the living UX truth.
+> **In one line:** an epic is a folder of tickets sharing one problem, one UX proposal and one set of technical notes. It is played in levels, each in its own thread, each ending at a gate you pass. Then each ticket is built in its own thread, seen by you, and hardened on your word, and shipping updates the living UX truth.
 
 New to the terms? See [`../glossary.md`](../glossary.md). The big picture and the map are in [`../README.md`](../README.md).
 
@@ -27,15 +27,15 @@ Any one of these, for work we mean to ship:
 
 ## The levels at a glance
 
-| Level                  | Lead           | You do                     | It writes               | Gate                                            |
-| ---------------------- | -------------- | -------------------------- | ----------------------- | ----------------------------------------------- |
-| 0. Entry               | Prompt builder | Brain dump, answer it      | Prints the Frame prompt | none                                            |
-| 1. Frame               | Compass        | Answer questions           | `brief.md`              | You say go                                      |
-| 2. Research (optional) | Fits the gap   | Run the research threads   | `research/<topic>.md`   | Each question answered, or marked not found     |
-| 3. UX spec             | Vesper         | Answer rounds of questions | `ux/` proposals         | You approve; files marked `approved`            |
-| 4. Technical           | Mason          | Ratify routed calls        | `technical.md`          | You ratify                                      |
-| 5. Tickets             | Reeve + Mason  | Confirm the ticket table   | One contract per ticket | You confirm levels and reviewers; `check-specs` |
-| 6. Build               | No role        | Name the tickets to build  | Code, as-builts         | The level each ticket carries; then you merge   |
+| Level                  | Lead           | You do                     | It writes                             | Gate                                                            |
+| ---------------------- | -------------- | -------------------------- | ------------------------------------- | --------------------------------------------------------------- |
+| 0. Entry               | Prompt builder | Brain dump, answer it      | Prints the Frame prompt               | none                                                            |
+| 1. Frame               | Compass        | Answer questions           | `brief.md`                            | You say go                                                      |
+| 2. Research (optional) | Fits the gap   | Run the research threads   | `research/<topic>.md`                 | Each question answered, or marked not found                     |
+| 3. UX spec             | Vesper         | Answer rounds of questions | `ux/` proposals                       | You approve; files marked `approved`                            |
+| 4. Technical           | Mason          | Ratify routed calls        | `technical.md`                        | You ratify                                                      |
+| 5. Tickets             | Reeve + Mason  | Confirm the ticket table   | One contract per ticket               | You confirm levels and reviewers; `check-specs`                 |
+| 6. Build, Seen, Harden | No role        | Build, walk, say "harden"  | Code; at harden, proofs and as-builts | You walk it; then the level each ticket carries; then you merge |
 
 ## Every level plays the same five beats
 
@@ -53,7 +53,7 @@ Any one of these, for work we mean to ship:
 2. The appetite: roughly how much time is this worth?
 3. The default QA level, and any parts you already know are critical (each ticket gets its own level later).
 4. Does a UX spec, a design or an exploration already exist to start from?
-5. Should the tickets build as you approve them, or all be cut first?
+5. Should the tickets build as you approve them, or all be cut first? (Either way, one ticket per thread.)
 
 ## The level cards
 
@@ -89,16 +89,19 @@ Run this only for a real knowledge gap. The builder's rule decides whether a gap
 
 - **Lead:** Reeve, with Mason.
 - **Writes:** one contract per ticket. Each ticket is buildable from itself plus `technical.md`: its Build notes carry the approach, the decisions it builds on, the interfaces and the gotchas.
-- **Batches and waves:** Reeve groups tickets that share context into a batch (one thread builds it in order) and batches with no dependency between them into a wave (threads that can run at the same time).
-- **Gate:** one table, a row per ticket: QA level, reviewers, focus, batch. You confirm it once, changing any row. `check-specs` validates every contract.
-- **Hands off:** the build order as batches and waves, printed.
+- **Waves:** Reeve puts tickets with no dependency between them in the same wave (threads that can run at the same time).
+- **Gate:** one table, a row per ticket: QA level, reviewers, focus, wave, model, hardens later. You confirm it once, changing any row. `check-specs` validates every contract.
+- **Hands off:** the execution table, printed: order, wave, depends on, model.
 
-### Level 6: Build ([stage file](../stages/build.md))
+### Level 6: Build, Seen, Harden ([build](../stages/build.md), [harden](../stages/harden.md))
 
-You name the tickets ("build OB2-3 and OB2-4") and one thread takes the batch from start to its closing report.
+Three beats per ticket, in the execution table's order:
 
-- Each ticket is proven and reviewed at its own level; `yarn verify` runs once for the batch.
-- A ticket that depends on another starts once that one's criteria pass. Nobody waits on a merge or a review to start the next ticket.
+1. **Build.** You say "build OB2-3" in a new thread, one ticket per thread, on the model its row names. The thread builds, runs the ticket's tests and its workspace's suite, and ends on five lines and the links.
+2. **Seen.** You walk the running surface and each `?state=`, get whoever must approve to approve, and ask for changes by "fix" or a follow-up ticket.
+3. **Harden.** You say "harden OB2-3". A new thread runs every proof, capture and review the ticket's level asks for, once. The epic's last hardening thread runs `yarn verify` and closes the epic.
+
+- A ticket that depends on another starts once that one is built. Nobody waits on a review to start the next build.
 - **Promotion:** when every ticket citing a surface file has shipped, `truth:promote` copies the proposal into `specs/<app>/ux/`, reconciled with what was actually built.
 
 ## Gates: law or judgment
@@ -117,4 +120,4 @@ You name the tickets ("build OB2-3 and OB2-4") and one thread takes the batch fr
 
 ## Explain it back
 
-> "An epic is a campaign in levels. The builder opens it. Compass frames the problem, optional research fills real gaps, Vesper interviews me into a UX proposal, Mason works out the shared technical calls, and Reeve cuts it into tickets grouped into batches and waves, each with its own QA level that I confirm in one table. Each level prints the next prompt. Then I name tickets to build, each is checked as carefully as its row says, I merge, and the UX proposal becomes the living truth."
+> "An epic is a campaign in levels. The builder opens it. Compass frames the problem, optional research fills real gaps, Vesper interviews me into a UX proposal, Mason works out the shared technical calls, and Reeve cuts it into tickets grouped into waves, each with its own QA level and model that I confirm in one table. Each level prints the next prompt. Then I build each ticket in its own thread, walk what it built, and say harden when I am happy; hardening checks it as carefully as its row says, I merge, and the UX proposal becomes the living truth."

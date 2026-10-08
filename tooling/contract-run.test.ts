@@ -119,12 +119,20 @@ function runInFlight(repo: string) {
   return JSON.parse(held).criteria.C1.run as { at: string; head: string };
 }
 
-test("C2 a log rewritten by a newer run, not yet recorded, warns as in flight and check-specs exits 0", () => {
+test("C2 a log rewritten by a newer run, not yet recorded, is silent below --strict and warns as in flight under it (C7)", () => {
   const repo = startOneOff();
   const recorded = runInFlight(repo);
   const head = git(repo, "rev-parse", "HEAD");
   assert.notEqual(head, recorded.head);
-  const r = tool(repo, "check-specs.ts", ["--skip-fixtures"]);
+  // Below --strict a rewritten log is not read: nothing to re-prove here.
+  const lenient = tool(repo, "check-specs.ts", ["--skip-fixtures"]);
+  assert.equal(lenient.status, 0, lenient.out);
+  assert.doesNotMatch(lenient.out, /C1/);
+  assert.match(
+    tool(repo, "status.ts", ["--brief"]).out,
+    /WEB-1 filter \(proven; nothing left\)/,
+  );
+  const r = checkSpecs(repo);
   assert.equal(r.status, 0, r.out);
   assert.match(
     r.out,
@@ -135,7 +143,7 @@ test("C2 a log rewritten by a newer run, not yet recorded, warns as in flight an
   assert.doesNotMatch(r.out, /changed after it was recorded/);
 });
 
-test("C3 a log edited after its run fails check-specs as changed after it was recorded, whatever its header claims", () => {
+test("C3 a log edited after its run fails check-specs --strict as changed after it was recorded, whatever its header claims, and is silent below it (C7)", () => {
   const repo = startOneOff();
   const recorded = runInFlight(repo);
   const head = git(repo, "rev-parse", "HEAD");
@@ -153,7 +161,10 @@ test("C3 a log edited after its run fails check-specs as changed after it was re
     withHead(asRecorded, head).replace(/^command: .*$/m, "command: yarn x"),
   ]) {
     write(repo, C1_LOG, edited);
-    const r = tool(repo, "check-specs.ts", ["--skip-fixtures"]);
+    const lenient = tool(repo, "check-specs.ts", ["--skip-fixtures"]);
+    assert.equal(lenient.status, 0, lenient.out);
+    assert.doesNotMatch(lenient.out, /C1/);
+    const r = checkSpecs(repo);
     assert.notEqual(r.status, 0, r.out);
     assert.match(
       r.out,
@@ -269,4 +280,44 @@ test("PR-16: operator_review adds a manual criterion; deferring it lists an oper
   assert.match(status.out, /Left to go: none/);
   assert.match(status.out, /Operator checks \(not holding the ticket\): C3/);
   assert.equal(checkSpecs(repo).status, 0);
+});
+
+test("WEB-13 built_at survives contract:qa and contract:record, and a record after it ends the built stage", () => {
+  const repo = startOneOff({
+    criteria: [
+      "  - id: C1",
+      "    statement: The filter keeps matching rows.",
+      "    evidence: test",
+      "    command: yarn test:sample",
+      "  - id: C3",
+      "    statement: The filter reads well.",
+      "    evidence: manual",
+      "    reason: a judgment of wording",
+    ].join("\n"),
+  });
+  write(repo, "src/filter.ts", "export const keep = (n: number) => n > 1;\n");
+  commit(repo, "WEB-1: filter");
+  let r = tool(repo, "contract.ts", ["built", "WEB-1"]);
+  assert.equal(r.status, 0, r.out);
+  const builtAt = JSON.parse(read(repo, RESULTS)).built_at;
+  r = tool(repo, "contract.ts", ["qa", "WEB-1", "Q2", "--reviewers", "vigil"]);
+  assert.equal(r.status, 0, r.out);
+  assert.equal(JSON.parse(read(repo, RESULTS)).built_at, builtAt);
+  assert.match(tool(repo, "status.ts", ["WEB-1"]).out, /, built\)/);
+  write(
+    repo,
+    "specs/web/one-offs/WEB-001-filter/evidence/C3.md",
+    "Read well (synthetic).\n",
+  );
+  commit(repo, "WEB-1: evidence");
+  r = tool(repo, "contract.ts", [
+    "record",
+    "WEB-1",
+    "C3",
+    "--evidence",
+    "specs/web/one-offs/WEB-001-filter/evidence/C3.md",
+  ]);
+  assert.equal(r.status, 0, r.out);
+  assert.equal(JSON.parse(read(repo, RESULTS)).built_at, builtAt);
+  assert.match(tool(repo, "status.ts", ["WEB-1"]).out, /, open\)/);
 });

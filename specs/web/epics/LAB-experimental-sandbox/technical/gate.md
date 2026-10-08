@@ -29,12 +29,13 @@ Verified 2026-10-05 against the docs bundled with the installed Next.js 16.3.8 (
 
 ## Cookies (D-LAB-32)
 
-| Cookie           | Value                                                                                                  | Scope                                                                                                                      |
-| ---------------- | ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
-| `sandbox_access` | `v1.<accessId>.<slug>.<issuedAt>.<mac>`, `mac` = HMAC-SHA256 under `SANDBOX_SECRET`, label `access-v1` | `Path=/experimental/<slug>`, `HttpOnly`, `SameSite=Lax`, `Secure` when deployed, `Max-Age` 30 days, fixed from issue (S10) |
-| `sandbox_gate`   | a random 128-bit id, the throttle's browser key                                                        | `Path=/experimental`, same flags, 1 day; set on any failed try, any slug                                                   |
+| Cookie           | Value                                                                                                  | Scope                                                                                                                                  |
+| ---------------- | ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `sandbox_access` | `v1.<accessId>.<slug>.<issuedAt>.<mac>`, `mac` = HMAC-SHA256 under `SANDBOX_SECRET`, label `access-v1` | `Path=/experimental/<slug>`, `HttpOnly`, `SameSite=Lax`, `Secure` on any production runtime, `Max-Age` 30 days, fixed from issue (S10) |
+| `sandbox_gate`   | a random 128-bit id, the throttle's browser key                                                        | `Path=/experimental`, same flags, 1 day; set on any failed try, any slug                                                               |
 
 - `Lax`, not `Strict`: the email link is a cross-site top-level visit and must carry live access.
+- `Secure` reads env.ts's `productionRuntime` (a Vercel deployment or any production build), not `deployed`, so a production build served off Vercel never sends a cookie over plain HTTP (LAB-5's Mason review, 2026-10-06). The network key's trust stays on `deployed`: only Vercel sets the first `x-forwarded-for` hop.
 - No `__Host-` prefix: it requires `Path=/`, and per-slug scope matters more.
 - `SANDBOX_SECRET` (tiered, ≥32 bytes, `apps/web/env.ts`, server-only) keys the cookie, the email-link token and the throttle keys, each under its own label. Rotating it sends every device back to the gate and voids link prefills; codes are untouched.
 

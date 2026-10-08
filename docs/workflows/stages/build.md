@@ -1,36 +1,39 @@
 ---
 title: "Stage: Build"
-description: "Open for a build thread, one ticket or a batch, with or without a formal ticket: the QA level sets the proof, the review and the paperwork, and the thread ends on a short report."
+description: "Open for a build thread, one ticket per thread, with or without a formal ticket: the build pass proves the ticket in its own workspace and ends on five lines and the links; proofs, captures and reviews wait for the hardening pass."
 layer: workflows
 status: draft
 thread: PR-19
 role: Usher
 date: 2026-10-05
-last_reviewed: 2026-10-05
+last_reviewed: 2026-10-07
 supersedes:
 load_when: on request
 ---
 
-# Stage: Build (a ticket, a batch, or work with no ticket)
+# Stage: Build (a ticket, or work with no ticket)
 
-Shared by the epic, one-off, bug and product-spec tracks.
+Shared by the epic, one-off, bug and product-spec tracks. For an epic ticket and a one-off with a contract this is the first of three beats, Build, Seen, Harden ([`harden.md`](harden.md)).
 
 ## 1. Lead and support
 
 No lead role: the thread is the builder, and the work loop in `AGENTS.md` governs it. The QA level the operator confirmed sets everything else ([`../qa-levels.md`](../qa-levels.md)):
 
-| Level | Proof                                                       | Review                                                              | Written down                                 |
-| ----- | ----------------------------------------------------------- | ------------------------------------------------------------------- | -------------------------------------------- |
-| Q0    | The stop check                                              | None                                                                | Nothing                                      |
-| Q1    | The builder runs the criteria; one `yarn verify` at the end | None                                                                | An as-built only when something deviated     |
-| Q2    | Same as Q1                                                  | One reviewer in fresh context; findings return in the thread        | A short as-built                             |
-| Q3    | Recorded proofs, frozen at close                            | The confirmed specialists, each in fresh context; review files kept | The contract, the as-built, the review files |
+| Level | Proof                                                     | Review                                                              | Written down                                 |
+| ----- | --------------------------------------------------------- | ------------------------------------------------------------------- | -------------------------------------------- |
+| Q0    | The stop check                                            | None                                                                | Nothing                                      |
+| Q1    | The builder runs the criteria; `yarn verify` at the close | None                                                                | An as-built only when something deviated     |
+| Q2    | Same as Q1                                                | One reviewer in fresh context; findings return in the thread        | A short as-built                             |
+| Q3    | Recorded proofs, frozen at close                          | The confirmed specialists, each in fresh context; review files kept | The contract, the as-built, the review files |
 
-A `focus` line in the contract or the prompt raises one named part to a higher level without raising the rest. The operator can raise or lower a level at any time by saying so.
+Which of it runs in the build pass and which in hardening is the phase table in `qa-levels.md`. A `focus` line in the contract or the prompt raises one named part to a higher level without raising the rest. The operator can raise or lower a level at any time by saying so.
 
 ## 2. Venue
 
-Claude Code, on the branch the operator has checked out, unless the prompt says "on its own branch" ([`../branches.md`](../branches.md)). Say which tickets to build ("build STK-5 and STK-7"), or paste a prompt for work with no ticket. One thread builds a batch in order; batches with no dependency between them can run in parallel threads.
+Claude Code, on the branch the operator has checked out, unless the prompt says "on its own branch" ([`../branches.md`](../branches.md)), on the model the ticket row or the prompt names, with the effort pinned at thread start. **One ticket per thread, never a batch.** Say "build STK-5", or paste a prompt for work with no ticket; tickets in the same wave run in parallel threads. Also:
+
+- Close a thread past 200k tokens of context after a break instead of resuming it; the ticket folder is the hand-off.
+- Give a sub-task expected to pass about 50 calls (a dry run, a cold rehearsal, a long review) its own thread from a builder prompt, never a subagent of a build.
 
 ## 3. Loads
 
@@ -46,16 +49,15 @@ How often the thread stops follows the involvement the operator chose. **Autonom
 
 ## 4. The loop
 
-Per ticket, in build order:
+The build pass, for the one ticket:
 
-1. **Start.** With a ticket: `yarn contract:init <APP | EPIC> <slug>`. Without one: restate the criteria from the prompt in the thread.
-2. **Build** in small commits labelled with the work id. Work that changes behaviour updates the living UX file in the same change, or writes it when none exists.
-3. **Prove at the level.** With a ticket: `yarn contract:run <id>` runs each distinct command once (criteria that share a command share the run) and notes pass or fail in `results.json`; a check that needs a person is handed over as an operator check. Below Q3 that file is a status note and nothing in it goes stale; at Q3 it is the ledger. Without a ticket: run the commands and say what passed.
-4. **Fix and prove again** until the criteria pass. Give up on one failure only after three different fixes, and say what was tried.
-5. **Write down what the level asks for,** and nothing more.
-6. **Review at the level.** Q2: one subagent given the brief, the changed files and the reviewer's role, never the builder's summary. Q3: `yarn review:run <role> <id>` per confirmed specialist. Black and red findings are fixed and re-proven; cheap orange ones too; the rest become drafted follow-ups.
+1. **Start.** `yarn status` once. With a ticket: `yarn contract:init <APP | EPIC> <slug>`. Without one: restate the criteria from the prompt in the thread.
+2. **Build,** one commit per outcome, labelled with the work id. Work that changes behaviour updates the living UX file in the same change, or writes it when none exists.
+3. **Prove in scope.** The ticket's own tests, the affected workspace's suite and `check-types`. Never `yarn verify`, the whole `yarn test`, or `check-specs` mid-ticket; the stop check covers the rest. Give up on one failure only after three different fixes, and say what was tried.
+4. **Look, on a UI ticket.** Assay in thread, from the thread's own screenshots, advisory. Warden only the first time a door path in `technical.md` is built.
+5. **Close.** `yarn status` once, then five lines: what was built, what was assumed, what to look at, the dev-server links for each surface and `?state=`, what is left for hardening.
 
-Once per batch: `yarn verify`, then the report.
+No ledger, no captures, no as-built, no headless review: those run once, in the hardening pass, when the operator says "harden" ([`harden.md`](harden.md)). A one-off at Q1 with no contract ends here; at Q2 or Q3 it hardens like a ticket.
 
 ## 5. What does not happen
 
@@ -65,8 +67,8 @@ Once per batch: `yarn verify`, then the report.
 
 ## 6. Gate
 
-`yarn verify` green for the batch. For Q3 tickets, `yarn check-specs --strict` before a merge: every criterion recorded as passing, every confirmed review recorded, the as-built complete. Then the operator merges.
+The ticket's tests, the affected workspace's suite and `check-types` green. The operator walks what was built; merge readiness is the hardening pass's gate ([`harden.md`](harden.md)).
 
 ## 7. Handoff
 
-The closing report, six lines at most: `Done`, `Not done`, `Needs you` (a decision with a recommendation, or an action only a person can take; never a command to run), `To look at when you like` (operator checks and drafted follow-ups), `What went wrong`. When everything closed it is one line.
+The build pass ends on its five lines and links (§4). A thread with no hardening to follow ends on the closing report, six lines at most: `Done`, `Not done`, `Needs you` (a decision with a recommendation, or an action only a person can take; never a command to run), `To look at when you like` (operator checks and drafted follow-ups), `What went wrong`. When everything closed it is one line.

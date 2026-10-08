@@ -27,13 +27,13 @@ cites:
 truth_files: "none: the approved proposal ux/admin/access-codes.md reaches specs/web/ux/admin/access-codes.md through yarn truth:promote LAB once its citing tickets close"
 qa: Q3
 reviewers:
-  - warden
   - assay
+  - warden
 focus:
   - "the code exists in clear only in the shown-once response (warden)"
 operator_review: false
 planned_paths:
-  - "apps/web/app/admin/experiments/[slug]/codes/**"
+  - "apps/web/app/admin/experiments/*/codes/**"
   - "apps/web/lib/sandbox/admin-codes*.ts"
   - "apps/web/lib/sandbox/emails-used*.ts"
   - "apps/web/lib/sandbox/state.ts"
@@ -88,6 +88,14 @@ criteria:
     statement: "Every access-codes.md ?state= key renders at 390, 834 and 1440, light and dark."
     evidence: capture
     path: "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-015-admin-access-codes/evidence/codes-states.png"
+  - id: review:assay
+    statement: Assay reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run assay <id>
+  - id: review:warden
+    statement: Warden reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
 ---
 
 # Contract — LAB-15 admin-access-codes
@@ -112,11 +120,6 @@ criteria:
   - Actions `makeCode`, `replaceCode`, `revokeCode(slug, prev, formData)` return `made` (`code`, `link`), `revoked`, `closed`, `invalid` (field) or `failed`.
   - `emailsUsedFlags(label, emails)` in `emails-used.ts` returns `{ several, differsFromLabel }`; LAB-22 reuses it.
   - Record actions `code_made`, `code_replaced`, `code_revoked`, each with the slug; LAB-16 renders their words.
-- **Per path:**
-  - `codes/page.tsx`, `codes/actions.ts`, `codes/_components/`: table, row menu, make, replace and revoke dialogs, copy buttons.
-  - `admin-codes*.ts`, `emails-used*.ts`: cores, binding, C1, C4, C5, C7.
-  - `state.ts`: the eleven `codes-*` keys as `team`, on synthetic fixtures; `codes-shown-once` shows a made-up code such as `7KQM-29XH-PATR-4WDN`.
-  - `packages/db`: the four functions, their export, isolation cases, C2, C3, C8.
 - **Gotchas:**
   - Never `console.log` form data or an action result. Never `revalidatePath` with the code in scope of a render, and never put it in `searchParams`, a toast or `localStorage`.
   - The link is env's site URL plus `/experimental/<slug>`, with no `?r=` (that token needs an access), never the request host.

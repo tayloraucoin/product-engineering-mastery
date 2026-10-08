@@ -1,0 +1,83 @@
+{
+  "id": "MIG-7",
+  "criteria_sha256": "5bd0c49e05d69c62fea9a2ff9c12601e3b822629e59190cd0b829e6b5edbd33f",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-08T01:23:26Z",
+        "head": "7acd9d7d1d3198947515a9b4853dc5cdfa35205c",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-007-assess-check-preconditions/evidence/C1.log",
+        "evidence_sha256": "1ee4342343a350589e000a4363b468540f2a371f9779e28426c45a6109078fa1",
+        "tests": 310
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-08T01:23:26Z",
+        "head": "7acd9d7d1d3198947515a9b4853dc5cdfa35205c",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-007-assess-check-preconditions/evidence/C2.log",
+        "evidence_sha256": "1ee4342343a350589e000a4363b468540f2a371f9779e28426c45a6109078fa1",
+        "tests": 310
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-08T01:23:26Z",
+        "head": "7acd9d7d1d3198947515a9b4853dc5cdfa35205c",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-007-assess-check-preconditions/evidence/C3.log",
+        "evidence_sha256": "1ee4342343a350589e000a4363b468540f2a371f9779e28426c45a6109078fa1",
+        "tests": 310
+      }
+    },
+    "C4": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-08T01:23:26Z",
+        "head": "7acd9d7d1d3198947515a9b4853dc5cdfa35205c",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-007-assess-check-preconditions/evidence/C4.log",
+        "evidence_sha256": "1ee4342343a350589e000a4363b468540f2a371f9779e28426c45a6109078fa1",
+        "tests": 310
+      }
+    },
+    "C5": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn contract:record MIG-7 C5 --evidence specs/_shared/epics/MIG-codebase-migration/tickets/MIG-007-assess-check-preconditions/evidence/C5-node-floor.md",
+        "exit": 0,
+        "at": "2026-10-08T01:05:23Z",
+        "head": "36d0541f64dc33de27004f5ce9fc87ba571b8999",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-007-assess-check-preconditions/evidence/C5-node-floor.md",
+        "evidence_sha256": "fcc00f96a87499eb46f90bfca41ee1d22314ca318b5f9cc3a857eebd0def6851"
+      }
+    },
+    "C6": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn check-types:tooling",
+        "exit": 0,
+        "at": "2026-10-08T01:24:58Z",
+        "head": "7acd9d7d1d3198947515a9b4853dc5cdfa35205c",
+        "evidence_path": "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-007-assess-check-preconditions/evidence/C6.log",
+        "evidence_sha256": "6ae0e85c1905198f044e6c8405eeea023dc009eacc0034c7879a9233e5c4ece7"
+      }
+    }
+  },
+  "updated_at": "2026-10-08T01:24:59Z"
+}

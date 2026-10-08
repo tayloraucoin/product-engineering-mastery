@@ -1,7 +1,7 @@
 ---
 target: specs/web/ux/experimental/review.md
 status: approved
-promoted:
+promoted: 2026-10-07
 ---
 
 # Closing review — experimental

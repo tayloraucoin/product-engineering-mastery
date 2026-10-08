@@ -81,6 +81,23 @@
         "brief": "Active: none."
       },
       "message": "Active: none."
+    },
+    {
+      "rule": "spine",
+      "expect": "allow",
+      "name": "docs/index.md is absent: only the spine files that exist are named",
+      "input": {
+        "hook_event_name": "SessionStart",
+        "source": "startup",
+        "session_id": "fixture-session",
+        "cwd": "$ROOT"
+      },
+      "context": {
+        "root": "apps/web",
+        "spine": "2acf373 2026-10-02",
+        "brief": "Active: none."
+      },
+      "message": "Spine (AGENTS.md, CLAUDE.md) as of 2acf373"
     }
   ]
 }

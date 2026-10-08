@@ -6,7 +6,7 @@ promoted:
 
 # Experimental — overview
 
-> Vesper, with Envoy, Gloss, Threshold and Warden consulted, from Taylor's rounds 1–7 (2026-10-05). Brief items in "What is settled" are cited as S<n> (S12b is item 12b); the brief's own (B1)–(B10) builder tags are not used here. No `apps/web` design layer exists (verified 2026-10-05), so the canon is the floor alone. No reference file exists yet (router, verified 2026-10-05). Prior art K and T was read, never copied.
+> Vesper, with Envoy, Gloss, Threshold and Warden consulted, from Taylor's rounds 1–7 (2026-10-05). Items in "What is settled" (`specs/web/epics/LAB-experimental-sandbox/decisions.md`, moved from the brief on 2026-10-08) are cited as S<n> (S12b is item 12b); the brief's own (B1)–(B10) builder tags are not used here. No `apps/web` design layer exists (verified 2026-10-05), so the canon is the floor alone. No reference file exists yet (router, verified 2026-10-05). Prior art K and T was read, never copied.
 
 ## Frame
 

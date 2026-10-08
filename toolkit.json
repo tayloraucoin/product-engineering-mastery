@@ -189,6 +189,42 @@
       "role": "chancery",
       "why": "Billing copy and what it promises.",
       "status": "draft"
+    },
+    {
+      "imports": ["stripe", "@stripe/*"],
+      "role": "mason",
+      "why": "One-way door: billing, wherever the Stripe SDK is called.",
+      "status": "draft"
+    },
+    {
+      "imports": ["stripe", "@stripe/*"],
+      "role": "warden",
+      "why": "Payment credentials stay with the processor, wherever the Stripe SDK is called.",
+      "status": "draft"
+    },
+    {
+      "imports": ["stripe", "@stripe/*"],
+      "role": "chancery",
+      "why": "Billing copy and what it promises, wherever the Stripe SDK is called.",
+      "status": "draft"
+    },
+    {
+      "imports": ["@supabase/*", "next-auth", "@clerk/*", "better-auth"],
+      "role": "mason",
+      "why": "One-way door: authorization topology, wherever an auth SDK is called.",
+      "status": "draft"
+    },
+    {
+      "imports": ["@supabase/*", "next-auth", "@clerk/*", "better-auth"],
+      "role": "warden",
+      "why": "Sessions, identity and access, wherever an auth SDK is called.",
+      "status": "draft"
+    },
+    {
+      "imports": ["resend"],
+      "role": "warden",
+      "why": "Personal data: who is emailed and what the message holds.",
+      "status": "draft"
     }
   ],
   "stack": {
@@ -400,6 +436,21 @@
       "boundaries": ["stripe"],
       "locked": false,
       "runbook": "docs/runbooks/remove/billing.md"
+    },
+    "experimental-sandbox": {
+      "files": [
+        "apps/web/app/experimental",
+        "apps/web/app/admin",
+        "apps/web/lib/sandbox",
+        "packages/db/src/schema/sandbox",
+        "packages/db/src/sandbox",
+        "packages/db/test/sandbox"
+      ],
+      "env": ["SANDBOX_SECRET"],
+      "dependencies": [],
+      "boundaries": ["web-sandbox"],
+      "locked": false,
+      "runbook": "docs/runbooks/remove/experimental-sandbox.md"
     }
   }
 }

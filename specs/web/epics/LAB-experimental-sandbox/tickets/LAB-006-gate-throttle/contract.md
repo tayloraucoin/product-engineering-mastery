@@ -63,6 +63,10 @@ criteria:
     statement: "On a Vercel deployment, the first x-forwarded-for hop is the client's own address, and a client-sent spoofed hop is not the one used."
     evidence: manual
     reason: "Needs a hosted deployment; none exists yet (no staging project). Handed to the operator with --verdict deferred; on localhost only the browser counter runs. Taylor, 2026-10-06: confirmed on the first deploy, before any real code is issued."
+  - id: review:warden
+    statement: Warden reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
 ---
 
 # Contract — LAB-6 gate-throttle

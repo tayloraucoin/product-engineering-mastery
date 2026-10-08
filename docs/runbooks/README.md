@@ -22,6 +22,7 @@ load_when:
 | Use case | Go to |
 | --- | --- |
 | A product repo starts from this one | [`new-project/`](new-project/README.md): the interview, then the steps, which run the removal recipes |
+| A repo that already exists is brought under the practice in place | [`migrate/`](migrate/README.md): the assessment, the interview from its report, then layer 1 over the manifest; `verify.md` for layer 2 and `layer-3.md` for the gap tickets |
 | Drop a module of the default stack | [`remove/`](remove/README.md), one recipe per module |
 | Bring a module into a product repo, or switch on one that is off by default | [`add/`](add/README.md): the local Docker database |
 | Something went wrong: an incident, a bad merge, an agent, an AI answer | [`postmortem/`](postmortem/README.md) |
@@ -35,10 +36,11 @@ load_when:
 
 | File | What it is for |
 | --- | --- |
-| [`onboard-agent.md`](onboard-agent.md) | Follow when the team adopts a new model or a new agent tool, or after a harness change, to prove the always-on files, path rules, skills and subagents load exactly as docs/index.md says; not when a new developer joins. |
+| [`onboard-agent.md`](onboard-agent.md) | Follow when the team adopts a new model or a new agent tool, or after a harness change, to prove the always-on files, path rules, skills and subagents load exactly as docs/index.md says; also the one table of what a checkout gives a teammate on any agent tool. Not a checklist for a new developer. |
 | [`release.template.md`](release.template.md) | Fill for every release behind a flag, from the deploy through the 48-hour replay review to the flag's removal; the checklist for Recipe A's ship step. |
 | [`variant-testing.md`](variant-testing.md) | Follow when a variant needs to reach named customers, or before claiming a change "worked": mechanism, data source, exposure, pre-registered rule, guardrails, qualitative pairing, and when a real experiment becomes possible. |
 | [`add/`](add/README.md) | Open when a product repo needs a module it removed, never had, or left switched off; an add recipe brings it in, wires it and ends on yarn check-stack and yarn verify. The first is the local Docker database. |
+| [`migrate/`](migrate/README.md) | Follow when a repo that already exists, with its history and team, is brought under the practice in place. A cold session runs the preconditions and the read-only assessment, interviews the operator from the report (prefixes, conflicts, human lines, records, verify inputs), then walks the manifest on one branch, one commit per step, to the gap tickets, record 0001 and the printed branch name. |
 | [`new-project/`](new-project/README.md) | Follow when a product repo starts from this one. The agent interviews the operator with option questions (names, apps, each part of the stack, the local database, the owner, brand, UX spec), then duplicates, strips, renames, brands, removes, sets the environment and verifies, and prints the prompts for the threads that follow. |
 | [`postmortem/`](postmortem/README.md) | Open when something went wrong: a production incident, a bad merge caught before release, an agent that went wrong, or a wrong AI output shown to a user; says which parts of the template to fill and where a convention finding goes. |
 | [`remove/`](remove/README.md) | Open when a product repo drops a module of the default stack; pick the module's recipe, which deletes, edits and unlists what the module added and ends on yarn check-stack. |

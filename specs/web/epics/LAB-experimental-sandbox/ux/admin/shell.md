@@ -1,7 +1,7 @@
 ---
 target: specs/web/ux/admin/shell.md
 status: approved
-promoted:
+promoted: 2026-10-07
 ---
 
 # Shell — admin

@@ -79,6 +79,14 @@ criteria:
     statement: "In collaborate mode the team's read returns each reply with the reviewer's label or the team member's email, and a reviewer's own comment list still holds only their roots."
     evidence: test
     command: "yarn workspace @pem/db test:db"
+  - id: review:mason
+    statement: Mason reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run mason <id>
+  - id: review:warden
+    statement: Warden reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
 ---
 
 # Contract — LAB-25 threads-data

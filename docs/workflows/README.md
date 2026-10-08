@@ -6,7 +6,7 @@ status: draft
 thread: PR-19
 role: Usher
 date: 2026-10-05
-last_reviewed: 2026-10-05
+last_reviewed: 2026-10-07
 supersedes:
 load_when: on request
 ---
@@ -66,8 +66,8 @@ flowchart TD
   end
   ux -.->|"product spec stops here"| handoff["Handoff ticket<br/>for the developer"]
   tix --> build
-  subgraph BUILD["Build thread: a ticket, a batch, or work with no ticket"]
-    build["Build"] --> prove["Prove and review<br/>at the QA level"] --> report["Closing report"]
+  subgraph BUILD["One ticket per thread"]
+    build["Build<br/>five lines and links"] --> seen["Seen<br/>you walk it"] --> prove["Harden, on your word<br/>prove and review once"] --> report["Closing report"]
   end
   report --> merge(["You merge"])
   merge --> truth[("Living UX truth")]
@@ -81,7 +81,7 @@ Four levels set proof, review and paperwork together; full detail in [`qa-levels
 | Level | For                                             | In short                                                        |
 | ----- | ----------------------------------------------- | --------------------------------------------------------------- |
 | Q0    | Questions, reports, docs, trivial fixes         | Nothing extra                                                   |
-| Q1    | Ordinary code                                   | The builder proves it; one `yarn verify`                        |
+| Q1    | Ordinary code                                   | The builder proves it; `yarn verify` once, at the close         |
 | Q2    | Code worth a second look                        | Plus one fresh reviewer, findings in the thread                 |
 | Q3    | Money, auth, schema, personal data, permissions | Recorded proofs, confirmed specialists, review files kept       |
 

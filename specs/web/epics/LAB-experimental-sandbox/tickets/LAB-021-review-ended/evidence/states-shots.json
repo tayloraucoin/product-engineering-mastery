@@ -1,0 +1,296 @@
+[
+  {
+    "row": "ended-success",
+    "width": 390,
+    "theme": "light",
+    "ariaExpanded": null,
+    "text": "This review has ended\n\nThe team has your review, sent on October 3. Nothing more can be added now.\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-success",
+    "width": 390,
+    "theme": "dark",
+    "ariaExpanded": null,
+    "text": "This review has ended\n\nThe team has your review, sent on October 3. Nothing more can be added now.\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-success",
+    "width": 834,
+    "theme": "light",
+    "ariaExpanded": null,
+    "text": "This review has ended\n\nThe team has your review, sent on October 3. Nothing more can be added now.\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-success",
+    "width": 834,
+    "theme": "dark",
+    "ariaExpanded": null,
+    "text": "This review has ended\n\nThe team has your review, sent on October 3. Nothing more can be added now.\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-success",
+    "width": 1440,
+    "theme": "light",
+    "ariaExpanded": null,
+    "text": "This review has ended\n\nThe team has your review, sent on October 3. Nothing more can be added now.\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-success",
+    "width": 1440,
+    "theme": "dark",
+    "ariaExpanded": null,
+    "text": "This review has ended\n\nThe team has your review, sent on October 3. Nothing more can be added now.\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-empty",
+    "width": 390,
+    "theme": "light",
+    "ariaExpanded": null,
+    "text": "This review has ended\n\nThe team is no longer taking feedback on this one. Any comments you left before it closed have been kept.\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-empty",
+    "width": 390,
+    "theme": "dark",
+    "ariaExpanded": null,
+    "text": "This review has ended\n\nThe team is no longer taking feedback on this one. Any comments you left before it closed have been kept.\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-empty",
+    "width": 834,
+    "theme": "light",
+    "ariaExpanded": null,
+    "text": "This review has ended\n\nThe team is no longer taking feedback on this one. Any comments you left before it closed have been kept.\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-empty",
+    "width": 834,
+    "theme": "dark",
+    "ariaExpanded": null,
+    "text": "This review has ended\n\nThe team is no longer taking feedback on this one. Any comments you left before it closed have been kept.\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-empty",
+    "width": 1440,
+    "theme": "light",
+    "ariaExpanded": null,
+    "text": "This review has ended\n\nThe team is no longer taking feedback on this one. Any comments you left before it closed have been kept.\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-empty",
+    "width": 1440,
+    "theme": "dark",
+    "ariaExpanded": null,
+    "text": "This review has ended\n\nThe team is no longer taking feedback on this one. Any comments you left before it closed have been kept.\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-partial (closed)",
+    "width": 390,
+    "theme": "light",
+    "ariaExpanded": "false",
+    "text": "This review has ended\n\nThe team has your review, sent on October 3. Nothing more can be added now.\n\n2 comments in this browser weren't sent before it closed.\n\nShow them\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-partial (closed)",
+    "width": 390,
+    "theme": "dark",
+    "ariaExpanded": "false",
+    "text": "This review has ended\n\nThe team has your review, sent on October 3. Nothing more can be added now.\n\n2 comments in this browser weren't sent before it closed.\n\nShow them\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-partial (closed)",
+    "width": 834,
+    "theme": "light",
+    "ariaExpanded": "false",
+    "text": "This review has ended\n\nThe team has your review, sent on October 3. Nothing more can be added now.\n\n2 comments in this browser weren't sent before it closed.\n\nShow them\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-partial (closed)",
+    "width": 834,
+    "theme": "dark",
+    "ariaExpanded": "false",
+    "text": "This review has ended\n\nThe team has your review, sent on October 3. Nothing more can be added now.\n\n2 comments in this browser weren't sent before it closed.\n\nShow them\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-partial (closed)",
+    "width": 1440,
+    "theme": "light",
+    "ariaExpanded": "false",
+    "text": "This review has ended\n\nThe team has your review, sent on October 3. Nothing more can be added now.\n\n2 comments in this browser weren't sent before it closed.\n\nShow them\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-partial (closed)",
+    "width": 1440,
+    "theme": "dark",
+    "ariaExpanded": "false",
+    "text": "This review has ended\n\nThe team has your review, sent on October 3. Nothing more can be added now.\n\n2 comments in this browser weren't sent before it closed.\n\nShow them\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-partial (opened)",
+    "width": 390,
+    "theme": "light",
+    "ariaExpanded": "true",
+    "text": "This review has ended\n\nThe team has your review, sent on October 3. Nothing more can be added now.\n\n2 comments in this browser weren't sent before it closed.\n\nHide them\n\nThe price under Pro wraps onto two lines at this width.\n\nIs the yearly toggle meant to keep my place in the table?\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-partial (opened)",
+    "width": 390,
+    "theme": "dark",
+    "ariaExpanded": "true",
+    "text": "This review has ended\n\nThe team has your review, sent on October 3. Nothing more can be added now.\n\n2 comments in this browser weren't sent before it closed.\n\nHide them\n\nThe price under Pro wraps onto two lines at this width.\n\nIs the yearly toggle meant to keep my place in the table?\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-partial (opened)",
+    "width": 834,
+    "theme": "light",
+    "ariaExpanded": "true",
+    "text": "This review has ended\n\nThe team has your review, sent on October 3. Nothing more can be added now.\n\n2 comments in this browser weren't sent before it closed.\n\nHide them\n\nThe price under Pro wraps onto two lines at this width.\n\nIs the yearly toggle meant to keep my place in the table?\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-partial (opened)",
+    "width": 834,
+    "theme": "dark",
+    "ariaExpanded": "true",
+    "text": "This review has ended\n\nThe team has your review, sent on October 3. Nothing more can be added now.\n\n2 comments in this browser weren't sent before it closed.\n\nHide them\n\nThe price under Pro wraps onto two lines at this width.\n\nIs the yearly toggle meant to keep my place in the table?\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-partial (opened)",
+    "width": 1440,
+    "theme": "light",
+    "ariaExpanded": "true",
+    "text": "This review has ended\n\nThe team has your review, sent on October 3. Nothing more can be added now.\n\n2 comments in this browser weren't sent before it closed.\n\nHide them\n\nThe price under Pro wraps onto two lines at this width.\n\nIs the yearly toggle meant to keep my place in the table?\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-partial (opened)",
+    "width": 1440,
+    "theme": "dark",
+    "ariaExpanded": "true",
+    "text": "This review has ended\n\nThe team has your review, sent on October 3. Nothing more can be added now.\n\n2 comments in this browser weren't sent before it closed.\n\nHide them\n\nThe price under Pro wraps onto two lines at this width.\n\nIs the yearly toggle meant to keep my place in the table?\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-draft",
+    "width": 390,
+    "theme": "light",
+    "ariaExpanded": null,
+    "text": "This review has ended\n\nThe team is no longer taking feedback on this one. Any comments you left before it closed have been kept.\n\nAnswers you hadn't sent couldn't be added, and have been cleared from this browser.\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-draft",
+    "width": 390,
+    "theme": "dark",
+    "ariaExpanded": null,
+    "text": "This review has ended\n\nThe team is no longer taking feedback on this one. Any comments you left before it closed have been kept.\n\nAnswers you hadn't sent couldn't be added, and have been cleared from this browser.\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-draft",
+    "width": 834,
+    "theme": "light",
+    "ariaExpanded": null,
+    "text": "This review has ended\n\nThe team is no longer taking feedback on this one. Any comments you left before it closed have been kept.\n\nAnswers you hadn't sent couldn't be added, and have been cleared from this browser.\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-draft",
+    "width": 834,
+    "theme": "dark",
+    "ariaExpanded": null,
+    "text": "This review has ended\n\nThe team is no longer taking feedback on this one. Any comments you left before it closed have been kept.\n\nAnswers you hadn't sent couldn't be added, and have been cleared from this browser.\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-draft",
+    "width": 1440,
+    "theme": "light",
+    "ariaExpanded": null,
+    "text": "This review has ended\n\nThe team is no longer taking feedback on this one. Any comments you left before it closed have been kept.\n\nAnswers you hadn't sent couldn't be added, and have been cleared from this browser.\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-draft",
+    "width": 1440,
+    "theme": "dark",
+    "ariaExpanded": null,
+    "text": "This review has ended\n\nThe team is no longer taking feedback on this one. Any comments you left before it closed have been kept.\n\nAnswers you hadn't sent couldn't be added, and have been cleared from this browser.\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-draft-partial (closed)",
+    "width": 390,
+    "theme": "light",
+    "ariaExpanded": "false",
+    "text": "This review has ended\n\nThe team is no longer taking feedback on this one. Any comments you left before it closed have been kept.\n\nAnswers you hadn't sent couldn't be added, and have been cleared from this browser.\n\n2 comments in this browser weren't sent before it closed.\n\nShow them\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-draft-partial (closed)",
+    "width": 390,
+    "theme": "dark",
+    "ariaExpanded": "false",
+    "text": "This review has ended\n\nThe team is no longer taking feedback on this one. Any comments you left before it closed have been kept.\n\nAnswers you hadn't sent couldn't be added, and have been cleared from this browser.\n\n2 comments in this browser weren't sent before it closed.\n\nShow them\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-draft-partial (closed)",
+    "width": 834,
+    "theme": "light",
+    "ariaExpanded": "false",
+    "text": "This review has ended\n\nThe team is no longer taking feedback on this one. Any comments you left before it closed have been kept.\n\nAnswers you hadn't sent couldn't be added, and have been cleared from this browser.\n\n2 comments in this browser weren't sent before it closed.\n\nShow them\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-draft-partial (closed)",
+    "width": 834,
+    "theme": "dark",
+    "ariaExpanded": "false",
+    "text": "This review has ended\n\nThe team is no longer taking feedback on this one. Any comments you left before it closed have been kept.\n\nAnswers you hadn't sent couldn't be added, and have been cleared from this browser.\n\n2 comments in this browser weren't sent before it closed.\n\nShow them\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-draft-partial (closed)",
+    "width": 1440,
+    "theme": "light",
+    "ariaExpanded": "false",
+    "text": "This review has ended\n\nThe team is no longer taking feedback on this one. Any comments you left before it closed have been kept.\n\nAnswers you hadn't sent couldn't be added, and have been cleared from this browser.\n\n2 comments in this browser weren't sent before it closed.\n\nShow them\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-draft-partial (closed)",
+    "width": 1440,
+    "theme": "dark",
+    "ariaExpanded": "false",
+    "text": "This review has ended\n\nThe team is no longer taking feedback on this one. Any comments you left before it closed have been kept.\n\nAnswers you hadn't sent couldn't be added, and have been cleared from this browser.\n\n2 comments in this browser weren't sent before it closed.\n\nShow them\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-draft-partial (opened)",
+    "width": 390,
+    "theme": "light",
+    "ariaExpanded": "true",
+    "text": "This review has ended\n\nThe team is no longer taking feedback on this one. Any comments you left before it closed have been kept.\n\nAnswers you hadn't sent couldn't be added, and have been cleared from this browser.\n\n2 comments in this browser weren't sent before it closed.\n\nHide them\n\nThe price under Pro wraps onto two lines at this width.\n\nIs the yearly toggle meant to keep my place in the table?\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-draft-partial (opened)",
+    "width": 390,
+    "theme": "dark",
+    "ariaExpanded": "true",
+    "text": "This review has ended\n\nThe team is no longer taking feedback on this one. Any comments you left before it closed have been kept.\n\nAnswers you hadn't sent couldn't be added, and have been cleared from this browser.\n\n2 comments in this browser weren't sent before it closed.\n\nHide them\n\nThe price under Pro wraps onto two lines at this width.\n\nIs the yearly toggle meant to keep my place in the table?\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-draft-partial (opened)",
+    "width": 834,
+    "theme": "light",
+    "ariaExpanded": "true",
+    "text": "This review has ended\n\nThe team is no longer taking feedback on this one. Any comments you left before it closed have been kept.\n\nAnswers you hadn't sent couldn't be added, and have been cleared from this browser.\n\n2 comments in this browser weren't sent before it closed.\n\nHide them\n\nThe price under Pro wraps onto two lines at this width.\n\nIs the yearly toggle meant to keep my place in the table?\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-draft-partial (opened)",
+    "width": 834,
+    "theme": "dark",
+    "ariaExpanded": "true",
+    "text": "This review has ended\n\nThe team is no longer taking feedback on this one. Any comments you left before it closed have been kept.\n\nAnswers you hadn't sent couldn't be added, and have been cleared from this browser.\n\n2 comments in this browser weren't sent before it closed.\n\nHide them\n\nThe price under Pro wraps onto two lines at this width.\n\nIs the yearly toggle meant to keep my place in the table?\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-draft-partial (opened)",
+    "width": 1440,
+    "theme": "light",
+    "ariaExpanded": "true",
+    "text": "This review has ended\n\nThe team is no longer taking feedback on this one. Any comments you left before it closed have been kept.\n\nAnswers you hadn't sent couldn't be added, and have been cleared from this browser.\n\n2 comments in this browser weren't sent before it closed.\n\nHide them\n\nThe price under Pro wraps onto two lines at this width.\n\nIs the yearly toggle meant to keep my place in the table?\n\nQuestions? Email hello@example.com"
+  },
+  {
+    "row": "ended-draft-partial (opened)",
+    "width": 1440,
+    "theme": "dark",
+    "ariaExpanded": "true",
+    "text": "This review has ended\n\nThe team is no longer taking feedback on this one. Any comments you left before it closed have been kept.\n\nAnswers you hadn't sent couldn't be added, and have been cleared from this browser.\n\n2 comments in this browser weren't sent before it closed.\n\nHide them\n\nThe price under Pro wraps onto two lines at this width.\n\nIs the yearly toggle meant to keep my place in the table?\n\nQuestions? Email hello@example.com"
+  }
+]

@@ -6,7 +6,7 @@ promoted:
 
 # Admin — overview
 
-> Vesper, with Envoy (how results read), Gloss, Threshold and Warden (gap 4, erasure) consulted, from Taylor's rounds 1–7 (2026-10-05). Brief items in "What is settled" are cited as S<n> (S12b is item 12b); the brief's own (B1)–(B10) builder tags are not used here. Canon only: no `apps/web` design layer exists. The shell adapts T's admin shell (`app/admin/_components/admin-shell.tsx`, `admin-nav.ts`; T `ADMIN-UX-SPEC.md` §2–5), rebuilt on `@pem/ui`'s sidebar and never copied.
+> Vesper, with Envoy (how results read), Gloss, Threshold and Warden (gap 4, erasure) consulted, from Taylor's rounds 1–7 (2026-10-05). Items in "What is settled" (`specs/web/epics/LAB-experimental-sandbox/decisions.md`, moved from the brief on 2026-10-08) are cited as S<n> (S12b is item 12b); the brief's own (B1)–(B10) builder tags are not used here. Canon only: no `apps/web` design layer exists. The shell adapts T's admin shell (`app/admin/_components/admin-shell.tsx`, `admin-nav.ts`; T `ADMIN-UX-SPEC.md` §2–5), rebuilt on `@pem/ui`'s sidebar and never copied.
 
 ## Frame
 

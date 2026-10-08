@@ -6,6 +6,11 @@
  *
  * Prints one line per check and the fix for each failure. Exits non-zero only
  * when something is broken; a warning never fails it.
+ *
+ * Under the overlay tiers (MIG T2) it also fails when an operator row is in
+ * neither settings file: the git push deny, bash-guard.ts or stop-gate.ts.
+ * check-settings cannot require them (the local file is gitignored and absent
+ * in CI), and the local file is disposable, so this is their guard.
  */
 
 import { execFileSync } from "node:child_process";
@@ -13,12 +18,21 @@ import { existsSync, readFileSync } from "node:fs";
 import net from "node:net";
 import path from "node:path";
 
+import {
+  bashRuleMatches,
+  hookRegistered,
+  OPERATOR_HOOKS,
+  PUSH_DENIES,
+} from "./check-settings.ts";
 import { REPO_ROOT } from "./lib/docs.ts";
 import { NATIVE_HOOKS_PATH } from "./lib/git.ts";
 import { loadToolkit } from "./lib/toolkit.ts";
 
 const LOCAL = ".claude/settings.local.json";
 const SETTINGS = ".claude/settings.json";
+const SETTINGS_TEMPLATE = "docs/engineering/templates/settings.template.json";
+/** Commands the operator's push deny must stop: the bare push and a push with arguments. */
+const PUSHES = ["git push", "git push origin HEAD"];
 /** More local rules than this means approvals are accumulating, not configured. */
 const LOCAL_RULE_LIMIT = 40;
 const PORTS = [3000, 3001];
@@ -178,6 +192,49 @@ if (existsSync(path.join(REPO_ROOT, localFile))) {
     );
 } else {
   ok(`${localFile}: absent`);
+}
+
+// Operator rows (MIG T2). A row the team ruled into the tracked file counts.
+if (toolkit.tier !== "starter") {
+  const parse = (rel: string): Record<string, unknown> => {
+    try {
+      const value: unknown = JSON.parse(
+        readFileSync(path.join(REPO_ROOT, rel), "utf8"),
+      );
+      return typeof value === "object" && value !== null
+        ? (value as Record<string, unknown>)
+        : {};
+    } catch {
+      return {};
+    }
+  };
+  const files = [parse(localFile), parse(SETTINGS)];
+  const pushDenied = (settings: Record<string, unknown>) => {
+    const deny = (settings.permissions as { deny?: unknown } | undefined)?.deny;
+    const rules = Array.isArray(deny)
+      ? deny.filter((rule): rule is string => typeof rule === "string")
+      : [];
+    return PUSHES.every((command) =>
+      rules.some((rule) => bashRuleMatches(rule, command)),
+    );
+  };
+  const missing: string[] = [];
+  if (!files.some(pushDenied))
+    missing.push(`the git push deny (${PUSH_DENIES.join(", ")})`);
+  for (const hook of OPERATOR_HOOKS)
+    if (!files.some((settings) => hookRegistered(settings, hook)))
+      missing.push(
+        `${hook.script} on ${hook.event}${hook.matcher ? ` "${hook.matcher}"` : ""}`,
+      );
+  for (const row of missing)
+    fail(
+      `${localFile} lacks the operator row ${row} (tier ${toolkit.tier})`,
+      `copy it from ${SETTINGS_TEMPLATE} into ${localFile}; the file is disposable, so restore it after every reset`,
+    );
+  if (missing.length === 0)
+    ok(
+      `${localFile}: operator rows present (git push deny, ${OPERATOR_HOOKS.map((hook) => path.basename(hook.script)).join(", ")})`,
+    );
 }
 
 // Ports the dev servers use. Busy is a warning: a dev server may be running.

@@ -1,0 +1,146 @@
+{
+  "id": "LAB-11",
+  "criteria_sha256": "5e3112aa05066999e2854343ffff1908a502add6e2cd983e517a76606368be20",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-07T19:07:07Z",
+        "head": "a1dc53c6a3f53f142362345c65ed8dab086426d0",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-011-experiment-page/evidence/C1.log",
+        "evidence_sha256": "5d63aa44dbce6c757633aeaee7cad1e5e2dc12f6b7ccada24d4c55587dfadb3f",
+        "tests": 336
+      }
+    },
+    "C2": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-07T19:07:15Z",
+        "head": "a1dc53c6a3f53f142362345c65ed8dab086426d0",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-011-experiment-page/evidence/C2.log",
+        "evidence_sha256": "9eceef93aca56511273807cf088337e41859c1048cec50bb88c674d983275256",
+        "tests": 189
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-07T19:07:07Z",
+        "head": "a1dc53c6a3f53f142362345c65ed8dab086426d0",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-011-experiment-page/evidence/C3.log",
+        "evidence_sha256": "5d63aa44dbce6c757633aeaee7cad1e5e2dc12f6b7ccada24d4c55587dfadb3f",
+        "tests": 336
+      }
+    },
+    "C4": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-07T19:07:07Z",
+        "head": "a1dc53c6a3f53f142362345c65ed8dab086426d0",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-011-experiment-page/evidence/C4.log",
+        "evidence_sha256": "5d63aa44dbce6c757633aeaee7cad1e5e2dc12f6b7ccada24d4c55587dfadb3f",
+        "tests": 336
+      }
+    },
+    "C5": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-07T19:07:07Z",
+        "head": "a1dc53c6a3f53f142362345c65ed8dab086426d0",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-011-experiment-page/evidence/C5.log",
+        "evidence_sha256": "5d63aa44dbce6c757633aeaee7cad1e5e2dc12f6b7ccada24d4c55587dfadb3f",
+        "tests": 336
+      }
+    },
+    "C6": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-07T19:07:15Z",
+        "head": "a1dc53c6a3f53f142362345c65ed8dab086426d0",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-011-experiment-page/evidence/C6.log",
+        "evidence_sha256": "9eceef93aca56511273807cf088337e41859c1048cec50bb88c674d983275256",
+        "tests": 189
+      }
+    },
+    "C7": {
+      "status": "PASS",
+      "evidence": "capture",
+      "run": {
+        "command": "yarn contract:record LAB-11 C7 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-011-experiment-page/evidence/exp-labels.png",
+        "exit": 0,
+        "at": "2026-10-07T19:08:01Z",
+        "head": "a1dc53c6a3f53f142362345c65ed8dab086426d0",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-011-experiment-page/evidence/exp-labels.png",
+        "evidence_sha256": "9f329103202c83a26ea57c8c13247380dc8c604530626fd1e51087e9cccf65c0"
+      }
+    },
+    "C8": {
+      "status": "PASS",
+      "evidence": "capture",
+      "run": {
+        "command": "yarn contract:record LAB-11 C8 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-011-experiment-page/evidence/exp-single.png",
+        "exit": 0,
+        "at": "2026-10-07T19:08:08Z",
+        "head": "a1dc53c6a3f53f142362345c65ed8dab086426d0",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-011-experiment-page/evidence/exp-single.png",
+        "evidence_sha256": "14033ff9e27dc983d04b06e206bfa1d353330dcfac05676b983a66e9dba89385"
+      }
+    },
+    "C9": {
+      "status": "PASS",
+      "evidence": "capture",
+      "run": {
+        "command": "yarn contract:record LAB-11 C9 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-011-experiment-page/evidence/exp-bar-clearance.png",
+        "exit": 0,
+        "at": "2026-10-07T19:08:14Z",
+        "head": "a1dc53c6a3f53f142362345c65ed8dab086426d0",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-011-experiment-page/evidence/exp-bar-clearance.png",
+        "evidence_sha256": "6bac3d2dff3171c248198220c7f8b0354f4a7142610baa5f3c80291fb1fdce70"
+      }
+    },
+    "C10": {
+      "status": "PASS",
+      "evidence": "manual",
+      "run": {
+        "command": "yarn contract:record LAB-11 C10 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-011-experiment-page/evidence/C10-operator.md --verdict deferred",
+        "exit": 0,
+        "at": "2026-10-07T18:58:42Z",
+        "head": "ab2d3b43dad10ea523e69422f2f2358702398587",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-011-experiment-page/evidence/C10-operator.md",
+        "evidence_sha256": "284beb3a87238a4e292a0be7aed77addb14d4883e7185d72a5818efdc977a1bb",
+        "deferred": true
+      }
+    },
+    "C11": {
+      "status": "PASS",
+      "evidence": "capture",
+      "run": {
+        "command": "yarn contract:record LAB-11 C11 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-011-experiment-page/evidence/exp-states.png",
+        "exit": 0,
+        "at": "2026-10-07T19:08:21Z",
+        "head": "a1dc53c6a3f53f142362345c65ed8dab086426d0",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-011-experiment-page/evidence/exp-states.png",
+        "evidence_sha256": "03d53b109df0fa56e8f1e99f29a209e1d37b0bae0ea9fa1e7bfdfbced4105690"
+      }
+    }
+  },
+  "updated_at": "2026-10-07T19:08:21Z"
+}

@@ -21,18 +21,18 @@ The scores come from the Scribe seat, and the cost to an agent from Lorimer's (c
 
 ## 1. What runs when
 
-| Moment                                  | What runs                                                                                                                                                                                                                                                                               | Measured cost                                                                       |
-| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| Every Bash call by an agent             | The `permissions` deny, ask and allow lists in `.claude/settings.json`, then the sandbox, then the PreToolUse hook `tooling/hooks/bash-guard.ts`                                                                                                                                        | bash-guard: 65 ms per call; silent on allow                                         |
-| Every Edit, Write or NotebookEdit       | PreToolUse hook `tooling/hooks/results-gate.ts`; it exits at once outside `specs/`                                                                                                                                                                                                      | 64 ms per call                                                                      |
-| Session start                           | SessionStart hook `tooling/hooks/session-start.ts`: the spine's commit plus `yarn status --brief`, and a fingerprint of the tree                                                                                                                                                        | 5.4 s; 603 characters, about 150 tokens, into context                               |
-| Session stop (every turn end)           | Stop hook `tooling/hooks/stop-gate.ts`. It does nothing if the tree is unchanged or the session edited no files. Otherwise it runs `yarn verify:fast` scoped to the files the session edited, and blocks the stop once on failure. It always calls `yarn status --brief` for the person | at least 5.8 s for the status call alone; plus the scoped steps (_estimate_ 3–10 s) |
-| `yarn verify:fast`                      | Up to 9 steps, each run only if the changed files reach it (`tooling/verify-fast.ts`)                                                                                                                                                                                                   | unscoped on this branch: 31.1 s, 1,507 changed files                                |
-| `yarn verify`                           | 23 steps in a fixed order; it stops at the first failure ([table below](#verify-step-by-step))                                                                                                                                                                                          | 101 s with a warm Turbo cache; about 121 KB of output                               |
-| CI (push to `main`, every pull request) | `yarn verify`, the same command (`.github/workflows/ci.yml`)                                                                                                                                                                                                                            | as `yarn verify`, plus install                                                      |
-| At commit, agent in Claude Code         | bash-guard's commit rules: none on the protected branch, and the message opens with a work-id                                                                                                                                                                                           | inside the 65 ms                                                                    |
-| At commit, native git hooks             | `tooling/git-hooks/commit-msg` and `tooling/git-hooks/pre-commit`, **only after `yarn hooks:install`**. Not installed in this checkout: `core.hooksPath` is unset, and `yarn doctor` warns about it                                                                                     | nothing today                                                                       |
-| On demand                               | The contract loop, status, generators, doctor, dev servers, database scripts                                                                                                                                                                                                            | per entry                                                                           |
+| Moment                                  | What runs                                                                                                                                                                                                                                                                                                                                                                                     | Measured cost                                                                                                                                                                    |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Every Bash call by an agent             | The `permissions` deny, ask and allow lists in `.claude/settings.json`, then the sandbox, then the PreToolUse hook `tooling/hooks/bash-guard.ts`                                                                                                                                                                                                                                              | bash-guard: 65 ms per call; silent on allow                                                                                                                                      |
+| Every Edit, Write or NotebookEdit       | PreToolUse hook `tooling/hooks/results-gate.ts`; it exits at once outside `specs/`                                                                                                                                                                                                                                                                                                            | 64 ms per call                                                                                                                                                                   |
+| Session start                           | SessionStart hook `tooling/hooks/session-start.ts`: the spine's commit plus `yarn status --brief`, and a fingerprint of the tree                                                                                                                                                                                                                                                              | 5.4 s; 603 characters, about 150 tokens, into context                                                                                                                            |
+| Session stop (every turn end)           | Stop hook `tooling/hooks/stop-gate.ts`. If the tree is unchanged it reuses the status line stored at the last stop and runs nothing else. Otherwise it calls `yarn status --brief` for the person and, when the session edited files, runs `yarn verify:fast` scoped to them, blocking the stop once on failure. Every stop's message ends with the thread's context size from the transcript | unchanged tree: 0.3 s (measured 2026-10-06; the status call is skipped); changed tree: 5.7 s for the status call (measured 2026-10-06) plus the scoped steps (_estimate_ 3–10 s) |
+| `yarn verify:fast`                      | Up to 9 steps, each run only if the changed files reach it (`tooling/verify-fast.ts`)                                                                                                                                                                                                                                                                                                         | unscoped on this branch: 31.1 s, 1,507 changed files                                                                                                                             |
+| `yarn verify`                           | 23 steps in a fixed order; it stops at the first failure ([table below](#verify-step-by-step))                                                                                                                                                                                                                                                                                                | 101 s with a warm Turbo cache; about 121 KB of output                                                                                                                            |
+| CI (push to `main`, every pull request) | `yarn verify`, the same command (`.github/workflows/ci.yml`)                                                                                                                                                                                                                                                                                                                                  | as `yarn verify`, plus install                                                                                                                                                   |
+| At commit, agent in Claude Code         | bash-guard's commit rules: none on the protected branch, and the message opens with a work-id                                                                                                                                                                                                                                                                                                 | inside the 65 ms                                                                                                                                                                 |
+| At commit, native git hooks             | `tooling/git-hooks/commit-msg` and `tooling/git-hooks/pre-commit`, **only after `yarn hooks:install`**. Not installed in this checkout: `core.hooksPath` is unset, and `yarn doctor` warns about it                                                                                                                                                                                           | nothing today                                                                                                                                                                    |
+| On demand                               | The contract loop, status, generators, doctor, dev servers, database scripts                                                                                                                                                                                                                                                                                                                  | per entry                                                                                                                                                                        |
 
 ### Verify, step by step
 
@@ -148,34 +148,34 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
 
 #### stop-gate
 
-- **What:** a Stop hook that, whenever the tree changed since the last green check, runs `yarn verify:fast` over the files this session edited (read from its transcript). On failure it blocks the stop once with up to 1,000 characters of output, so the agent fixes its own files before it reports done, and it never blocks twice in a row or judges another thread's files.
+- **What:** a Stop hook that, whenever the tree changed since the last green check, runs `yarn verify:fast` over the files this session edited (read from its transcript). On failure it blocks the stop once with up to 1,000 characters of output, so the agent fixes its own files before it reports done, and it never blocks twice in a row or judges another thread's files. Every stop's message to the person ends with the thread's context size, read from the usage fields of the transcript's last assistant record; above 200k it says to start a fresh thread for the next ticket (audit O1; it informs, never blocks). On an unchanged tree it reuses the status line stored beside the fingerprint at the last stop instead of calling `yarn status --brief` (audit Y2).
 - **Area:** whatever the session edited (`tooling/hooks/stop-gate.ts`, `tooling/hooks/session-state.ts`).
 - **Trigger:** every turn end in Claude Code.
 - **Scores:**
   - Importance **5.0**: the only check between an agent's edit and its "done" inside the session; CI catches it later, after the thread has moved on.
   - Token cost **3.0**: about 250 tokens on a failure, and one forced fix loop (bounded by the once-only rule).
-  - Wall time **4.0**: every stop pays 5.8 s for `yarn status --brief` (the message to the person), even when nothing changed; the scoped checks add 3–10 s (_estimate_), and 8.9 s more when hook files were touched.
+  - Wall time **4.0**: an unchanged tree costs 0.3 s, the fingerprint and the stored status line (measured 2026-10-06); a changed tree pays 5.7 s for `yarn status --brief` (measured 2026-10-06), the scoped checks add 3–10 s (_estimate_), and 8.9 s more when hook files were touched.
   - Standard **3.0**: verify-before-stop is a known harness pattern; the scoping by transcript is house.
 - **Pros:**
   - Catches formatting, lint and type breaks while the agent still holds the context.
   - It is safe in a shared checkout.
 - **Cons:**
-  - The status call doubles its cost for a message only the person sees.
+  - On a changed tree the status call is most of its cost, for a message only the person sees; on a shared tree another thread's edit counts as a change.
   - It reads the transcript format, which can change under it.
-- **Verdict:** **keep but simplify.** Drop the status call, or run it only when the gate actually ran checks.
+- **Verdict:** **keep but simplify.** The status call now runs only on a changed tree (2026-10-06); what is left is making `--brief` itself fast (see status).
 
 #### session-state
 
-- **What:** the helper behind the two hooks above. It hashes HEAD, `git status` and `git diff HEAD` into one fingerprint per session, and stores it in the OS temp folder, never in the repo.
+- **What:** the helper behind the two hooks above. It hashes HEAD, `git status` and `git diff HEAD` into one fingerprint per session, and stores it in the OS temp folder, never in the repo, with the status line stop-gate last printed for that tree beside it, so an unchanged stop reuses the line (audit Y2).
 - **Area:** the hooks (`tooling/hooks/session-state.ts`).
 - **Trigger:** imported by session-start and stop-gate.
 - **Scores:**
   - Importance **3.0**: without it stop-gate cannot tell "nothing changed", and would run checks on every stop.
   - Token cost **0.0**: no output.
-  - Wall time **0.5**: one `git diff HEAD` per start and stop; it grows with the size of the uncommitted diff.
+  - Wall time **0.5**: one `git diff HEAD` per start and stop, 0.2 s on this branch (measured 2026-10-06); it grows with the size of the uncommitted diff.
   - Standard **1.0**: house.
 - **Pros:**
-  - 53 lines, Node built-ins only.
+  - 69 lines, Node built-ins only.
 - **Cons:**
   - On a shared tree another thread's edit changes the fingerprint, so "changed" often means "someone changed something".
 - **Verdict:** **keep.**
@@ -325,6 +325,23 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Its required list is a second copy of the deny list, kept in step by hand.
 - **Verdict:** **keep.**
 
+#### check-reviewers
+
+- **What:** `yarn check-reviewers` fails, under the overlay tiers, when a reviewer row in `toolkit.json` matches no tracked file by its glob or by its `imports` list, naming the row. A row that reaches nothing seats nobody, so the change it was written for ships at a lower QA level unnoticed (MIG T6). At `starter` it prints that it is skipped and exits 0: a starter's rows are seats for modules not built yet. Import rows are matched by the same scanner `suggestReviewers` uses (`tooling/lib/specs.ts`), which reads static imports, re-exports, `require` and `import()` and never a name in a comment or a string.
+- **Area:** the reviewer map (`tooling/check-reviewers.ts`, `toolkit.json`, `docs/engineering/templates/toolkit.template.json`).
+- **Trigger:** verify, right after check-settings.
+- **Scores:**
+  - Importance **3.5**: in a migrated repo it is the only guard on a glob that stopped matching; in this repo, at `starter`, it does nothing yet.
+  - Token cost **0.5**: one line, or one line per dead row.
+  - Wall time **1.0**: 0.5 s at `starter`; the overlay pass over this repo's 1,786 tracked files took 0.2 s more (measured 2026-10-07).
+  - Standard **0.5**: house.
+- **Pros:**
+  - Names the row to correct or delete.
+  - Reads tracked source files only; an env file is never opened.
+- **Cons:**
+  - Skipped in this repo, so its overlay path is proven only by its tests.
+- **Verdict:** **keep.**
+
 #### test:hooks
 
 - **What:** `yarn test:hooks` runs each of the four agent hooks against its fixture file: 147 synthetic inputs, each with the answer it must produce. It also fails a hook whose median run exceeds 200 ms, or whose denial exceeds about 60 tokens.
@@ -394,7 +411,7 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
 
 **[changing in the workflow overhaul]**
 
-- **What:** `yarn check-specs` checks the specs tree: layout and ids, each contract against its schema, results against frozen criteria, every PASS against its run record and evidence hash, closure, immutability against `main`, spec-file caps and drift in `_status.md`. It runs its 26 fixtures first, and `--strict` turns the in-flight warnings into failures.
+- **What:** `yarn check-specs` checks the specs tree: layout and ids, each contract against its schema, results against frozen criteria, every PASS against its run record (a review PASS goes stale only when the criteria change, WEB-12), closure, immutability against `main`, spec-file caps and drift in `_status.md`. It runs its fixtures first, and `--strict` turns the in-flight warnings into failures. Staleness is `--strict`'s question alone (PR-19; the audit's C7): only `--strict` reads a rewritten evidence log, or at Q3 a later commit to a planned path; without it neither is a warning, since `contract:run` rewrites its git-ignored logs on every run and a warning there invited a thread to re-prove another thread's closed work. A `results.json` that contradicts itself (a PASS with no run record, a failing exit, the wrong command, zero tests) fails at every level. A fixture's `case.json` may carry `lenient` to pin what the tree says without `--strict` and in the brief line.
 - **Area:** `specs/` (`tooling/check-specs.ts`, `tooling/lib/specs.ts`, `tooling/fixtures/specs/`).
 - **Trigger:** verify step 8; verify:fast unscoped; the pre-commit hook if installed.
 - **Scores:**
@@ -708,6 +725,23 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - Its git-hook warning shows on every run in this checkout.
 - **Verdict:** **keep.**
 
+#### migrate:assess
+
+- **What:** `yarn migrate:assess <target> [--json]` prints how far a repo is from the practice, the report a migration's interview opens with: seventeen signals in four groups (shape, checks, conventions, process), each scored 0, 1 or 2 with its evidence, a total, the gate and the path (near, middle or far). It reads the target's tracked files through `git ls-files` and writes nothing there. Node built-ins only, so it runs from a toolkit checkout before the target installs anything. A signal whose detector has not landed is reported as not yet measured and left out of the total.
+- **Area:** a target repo, read only (`tooling/migrate-assess.ts`, `tooling/lib/assess/`).
+- **Trigger:** by hand, at the start of a migration (MIG epic).
+- **Scores:**
+  - Importance **3.0**: without it the interview starts from impressions, and a far repo can be walked down the near path.
+  - Token cost **1.0**: about 45 lines, read once per migration.
+  - Wall time **0.0**: run on purpose; 0.2 s on a 2,315-file repo.
+  - Standard **1.0**: distance reports are common; the signals and thresholds are house.
+- **Pros:**
+  - Every score carries its evidence, and the thresholds are named constants.
+  - Never walks a worktree or opens an env file.
+- **Cons:**
+  - The thresholds are calibrated on three repos.
+- **Verdict:** **keep.**
+
 ### 3.6 The contract loop
 
 #### contract:init
@@ -800,6 +834,39 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
   - All 24 reviewer globs in `toolkit.json` are still marked draft.
 - **Verdict:** **keep until the overhaul lands.**
 
+#### contract:built
+
+- **What:** `yarn contract:built <id>` records `built_at` in `results.json` once the ticket's code is committed: the ticket reads "built" in `yarn status`, `_status.md` and the brief line until any criterion is recorded at or after that time, so a build pass awaiting harden is not mistaken for open work (audit R9). `contract:run` on a built ticket proceeds as on an open one, and every writer of `results.json` keeps the field.
+- **Area:** `specs/` (`tooling/contract.ts`, `tooling/lib/specs.ts`).
+- **Trigger:** by an agent at the end of a build pass.
+- **Scores:**
+  - Importance **2.0**: a status word; nothing is guarded by it.
+  - Token cost **0.5**: one line.
+  - Wall time **0.5**: _estimate_ under 1 s.
+  - Standard **0.0**: house.
+- **Pros:**
+  - The hardening stage has its word without a new file.
+- **Cons:**
+  - A ticket marked built and then edited still reads built until a proof is recorded.
+- **Verdict:** **keep while the hardening stage runs.**
+
+#### cost
+
+- **What:** `yarn cost <id>` and `yarn cost --epic <EPIC>` read the transcript folders Claude Code keeps for this repo and its worktrees (`~/.claude/projects/<slug>*`, or under `CLAUDE_CONFIG_DIR`) and print one line: calls, weighted tokens by category, cache read and output, context at the last main-thread call, threads touched, and the headless review runs on record with their cost. Rules, each named in the line: one call per message id across files (a resumed session's copies count once; a record with no usage or a `<synthetic>` error record is not a call); weights input 1, cache write 1.25, cache read 0.1, output 5 [model-blind estimate, not the meter]; a call belongs to the ticket last named in its thread by a work command or a spec-file edit, a resumed thread inheriting the ticket its copied history named [estimate]; category by the call's first tool, a reviewer subagent's calls as reviews; headless runs are a floor, the last run per review in `results.json`, outside the weighted total. The epic line adds how many calls belong to no ticket. Not a cost in money, and not a fair comparison across tickets built on different models. It keeps only usage, ids, timestamps, tool names and matched work-ids, never transcript text. `--record` writes the result as a `cost` block in `results.json` at close; `tk-batch`'s Cost line reads it (audit R4).
+- **Area:** `specs/` and the transcript folders outside the repo (`tooling/cost.ts`; fixture `tooling/fixtures/specs/cost-transcripts/`).
+- **Trigger:** by an agent at a ticket's close, unsandboxed (the folder is outside the repo).
+- **Scores:**
+  - Importance **2.5**: the only per-ticket cost on record; nothing breaks without it.
+  - Token cost **1.0**: one line.
+  - Wall time **1.0**: 1.9 s over this repo's transcripts (measured 2026-10-07).
+  - Standard **0.0**: house.
+- **Pros:**
+  - Every ticket's cost sits in its folder, by the audits' own counting rule.
+- **Cons:**
+  - Attribution and the category of a call are heuristics; headless runs before the last per review are not on record.
+  - Depends on Claude Code's transcript format, which is not a published interface.
+- **Verdict:** **keep until the harness exposes per-session usage in the transcript's own folder** (R4's removal condition).
+
 #### spec:init
 
 - **What:** `yarn spec:init` starts an epic: `specs/<app>/epics/<EPIC>-<slug>/` with `brief.md` from the brief template and empty `prompts/`, `ux/` and `tickets/` folders. It refuses the protected branch and a prefix already in use.
@@ -820,12 +887,13 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
 
 **[changing in the workflow overhaul]**
 
-- **What:** `yarn review:run` starts a reviewer as `claude -p` with Read, Grep and Glob only, prompted from the contract, results and evidence index rather than the builder's words, and records its verdict as `review-<role>.md` and `review:<role>`. Its `vigil <EPIC>` form pre-flights an epic's drafted tickets.
+- **What:** `yarn review:run` starts a reviewer as `claude -p` with Read, Grep and Glob only, prompted from the contract, results and evidence index rather than the builder's words, and records its verdict as `review-<role>.md` and `review:<role>`. Its `vigil <EPIC>` form pre-flights an epic's drafted tickets. Since 2026-10-07 (the audit's C3) the ticket prompt is single-pass and scoped: it tells the reviewer this is the only pass unless it FAILs, so every finding is listed now; it judges the planned-path changes against the criteria and non-negotiables; it follows an import one hop out of a changed file only to confirm a Blocking; Should-fix and Consider findings become follow-ups and never reopen the review; the as-built is a claim to check inside the changed files. Calibrated once against the open-ended prompt, both run as Warden on STK-21 at `6960357`: `specs/_shared/reports/2026-10-07-reviewer-prompt-calibration.md`.
+- **What it records of the cost (2026-10-06, the audit's O4 and Y5):** the headless result's `usage` is kept, and `tokens_input`, `tokens_cache_read`, `tokens_cache_write`, `tokens_output` and `seconds` (the process's wall clock, measured by the script) are written into the review file's header and the `review:<role>` run record; the pre-flight file's header carries the same five. A guard that stops a ticket review before the reviewer runs appends `{ at, reason }` to the criterion's `refused` list in `results.json`; one that stops the pre-flight adds a `- refused: <at>: <reason>` line to `_preflight.md`'s header, kept across later runs. `yarn status <id>` prints one line per recorded review with its cost, and one per refused attempt. The field names have one home, `COST_FIELDS` in `tooling/lib/specs.ts`, and the schema is `docs/engineering/schemas/results.schema.json`.
 - **Area:** `specs/`, the generated subagents (`tooling/review-run.ts`).
 - **Trigger:** by an agent for each reviewer the operator confirmed on a Q3 ticket (PR-19); below Q3 a review happens in the thread, without this command.
 - **Scores:**
   - Importance **5.0**: the builder never grades its own work, and the reviewer's tools are read-only by construction.
-  - Token cost **6.0**: each review is a full model session (_estimate_ tens of thousands of tokens per role per ticket, billed). It needs the network, so it runs outside the sandbox, and it reruns whenever a planned path changes.
+  - Token cost **6.0**: each review is a full model session (_estimate_ tens of thousands of tokens per role per ticket, billed). It needs the network, so it runs outside the sandbox. A PASS is final for its round (WEB-12): a planned-path or as-built change no longer reruns it, only a criteria change does; a second run is allowed only after a FAIL and a third needs `--operator "<reason>"`.
   - Wall time **7.0**: _estimate_ minutes per review.
   - Standard **1.0**: model-as-reviewer is emerging practice; this wiring is house.
 - **Pros:**
@@ -839,13 +907,13 @@ Each entry gives what the tool is, its area of the codebase, its trigger, four s
 
 **[changing in the workflow overhaul]**
 
-- **What:** `yarn status` regenerates `specs/_status.md` from the specs tree. `yarn status <id>` prints what is left on one item; `--brief` prints one line for the hooks; `--deviations` and `--epic` print the as-built deviations and an epic's build order.
+- **What:** `yarn status` regenerates `specs/_status.md` from the specs tree. `yarn status <id>` prints what is left on one item, and is, with `check-specs --strict`, the one place a rewritten evidence log or (at Q3) a later commit is shown. `--brief` prints one line for the hooks: the tickets in build (open, built, proven, closing) and the drafts; it omits closed and migration-pending tickets and never reads staleness, so a rewritten log never moves a closed ticket back into the line (PR-19; the audit's C7). `--deviations` and `--epic` print the as-built deviations and an epic's build order. A ticket `yarn contract:built` marked reads "built" (code in, criteria unrecorded, awaiting harden) until a criterion is recorded after it (audit R9), and `yarn status <id>` prints the cost block `yarn cost <id> --record` wrote (R4).
 - **Area:** `specs/` (`tooling/status.ts`).
-- **Trigger:** by hand; `--brief` by session-start on every start and by stop-gate on every stop.
+- **Trigger:** by hand; `--brief` by session-start on every start and by stop-gate on every stop where the tree changed (an unchanged stop reuses the stored line).
 - **Scores:**
   - Importance **4.0**: the generated answer to "what is in flight", read by both hooks.
   - Token cost **2.0**: its brief line goes into every session's context.
-  - Wall time **3.0**: 5.8 s for `--brief`, paid at every session start and every stop.
+  - Wall time **3.0**: 5.2 s for `--brief` alone (measured 2026-10-06), paid at every session start and every stop on a changed tree.
   - Standard **0.0**: house.
 - **Pros:**
   - Never hand-kept.
@@ -1288,59 +1356,63 @@ Net = importance − (token cost + wall time) ÷ 2, lowest first. A low net with
 |  19 | stop-gate                 |        5.0 |   3.0 |  4.0 |  1.5 | keep but simplify                                            |
 |  20 | check-specs †             |        6.0 |   5.0 |  4.0 |  1.5 | keep the run-record integrity; let the overhaul cut the rest |
 |  21 | test                      |        6.5 |   6.0 |  4.0 |  1.5 | keep but simplify                                            |
-|  22 | db:local:reset            |        2.0 |   0.5 |  0.0 |  1.8 | keep                                                         |
-|  23 | db:seed-users             |        2.0 |   0.5 |  0.0 |  1.8 | keep                                                         |
-|  24 | tooling/refs-pending.json |        2.0 |   0.5 |  0.0 |  1.8 | keep                                                         |
-|  25 | check-ui-layout           |        2.5 |   0.5 |  1.0 |  1.8 | keep                                                         |
-|  26 | docs:dev                  |        2.0 |   0.0 |  0.0 |  2.0 | keep                                                         |
-|  27 | local-dev-origins         |        2.0 |   0.0 |  0.0 |  2.0 | keep                                                         |
-|  28 | stripe:listen             |        2.0 |   0.0 |  0.0 |  2.0 | keep                                                         |
-|  29 | contract:add †            |        2.5 |   0.5 |  0.5 |  2.0 | keep until the overhaul lands                                |
-|  30 | db:local:full             |        2.5 |   1.0 |  0.0 |  2.0 | keep                                                         |
-|  31 | contrast-audit            |        4.0 |   3.0 |  1.0 |  2.0 | keep but simplify                                            |
-|  32 | doctor                    |        2.5 |   0.5 |  0.0 |  2.3 | keep                                                         |
-|  33 | shadcn                    |        2.5 |   0.5 |  0.0 |  2.3 | keep                                                         |
-|  34 | spec:init                 |        2.5 |   0.5 |  0.0 |  2.3 | keep                                                         |
-|  35 | check-catalog             |        3.0 |   0.5 |  1.0 |  2.3 | keep                                                         |
-|  36 | format:check              |        4.0 |   0.5 |  3.0 |  2.3 | keep                                                         |
-|  37 | db:stop                   |        2.5 |   0.0 |  0.0 |  2.5 | keep                                                         |
-|  38 | lib/json-schema.ts        |        2.5 |   0.0 |  0.0 |  2.5 | keep while lib/specs.ts uses it                              |
-|  39 | contract:qa †             |        3.0 |   0.5 |  0.5 |  2.5 | keep until the overhaul lands                                |
-|  40 | results-gate †            |        3.5 |   1.0 |  1.0 |  2.5 | keep until the overhaul lands                                |
-|  41 | check-refs                |        4.0 |   1.0 |  2.0 |  2.5 | keep                                                         |
-|  42 | db:setup                  |        3.0 |   0.5 |  0.0 |  2.8 | keep                                                         |
-|  43 | format                    |        3.0 |   0.5 |  0.0 |  2.8 | keep                                                         |
-|  44 | session-state             |        3.0 |   0.0 |  0.5 |  2.8 | keep                                                         |
-|  45 | check-stack               |        3.5 |   0.5 |  1.0 |  2.8 | keep                                                         |
-|  46 | test:hooks                |        5.0 |   0.5 |  4.0 |  2.8 | keep but simplify                                            |
-|  47 | dev                       |        3.0 |   0.0 |  0.0 |  3.0 | keep                                                         |
-|  48 | lib/work-ids.ts           |        3.0 |   0.0 |  0.0 |  3.0 | keep                                                         |
-|  49 | tooling/package.json      |        3.0 |   0.0 |  0.0 |  3.0 | keep                                                         |
-|  50 | tooling/tsconfig.json     |        3.0 |   0.0 |  0.0 |  3.0 | keep                                                         |
-|  51 | ui:storybook              |        3.0 |   0.0 |  0.0 |  3.0 | keep                                                         |
-|  52 | web:dev                   |        3.0 |   0.0 |  0.0 |  3.0 | keep                                                         |
-|  53 | db:local                  |        3.5 |   1.0 |  0.0 |  3.0 | keep                                                         |
-|  54 | contract:init †           |        5.0 |   3.0 |  1.0 |  3.0 | keep until the overhaul lands                                |
-|  55 | check-migrations          |        4.0 |   0.5 |  1.0 |  3.3 | keep                                                         |
-|  56 | contract:record †         |        4.0 |   1.0 |  0.5 |  3.3 | keep until the overhaul lands                                |
-|  57 | gen:agents                |        4.0 |   0.5 |  1.0 |  3.3 | keep                                                         |
-|  58 | lint:docs                 |        4.0 |   0.5 |  1.0 |  3.3 | keep                                                         |
-|  59 | test:db                   |        4.0 |   1.5 |  0.0 |  3.3 | keep                                                         |
-|  60 | check-test-weakening      |        4.5 |   1.0 |  1.0 |  3.5 | keep                                                         |
-|  61 | check-types:tooling       |        4.5 |   0.0 |  2.0 |  3.5 | keep                                                         |
-|  62 | lint                      |        5.5 |   1.0 |  3.0 |  3.5 | keep                                                         |
-|  63 | db:generate               |        4.0 |   0.5 |  0.0 |  3.8 | keep                                                         |
-|  64 | db:migrate                |        4.0 |   0.5 |  0.0 |  3.8 | keep                                                         |
-|  65 | check-client-bundle       |        6.0 |   0.5 |  4.0 |  3.8 | keep                                                         |
-|  66 | build                     |        6.5 |   1.5 |  4.0 |  3.8 | keep                                                         |
-|  67 | lib/docs.ts               |        4.0 |   0.0 |  0.0 |  4.0 | keep                                                         |
-|  68 | lib/git.ts                |        4.0 |   0.0 |  0.0 |  4.0 | keep                                                         |
-|  69 | budget                    |        5.0 |   1.0 |  1.0 |  4.0 | keep                                                         |
-|  70 | lint:boundaries           |        6.0 |   0.0 |  3.0 |  4.5 | keep                                                         |
-|  71 | check-types               |        6.5 |   1.0 |  3.0 |  4.5 | keep                                                         |
-|  72 | check-settings            |        5.5 |   0.5 |  1.0 |  4.8 | keep                                                         |
-|  73 | bash-guard                |        6.0 |   1.5 |  1.0 |  4.8 | keep but simplify                                            |
-|  74 | lib/specs.ts †            |        5.0 |   0.0 |  0.0 |  5.0 | rewritten by the overhaul                                    |
-|  75 | lib/toolkit.ts            |        5.0 |   0.0 |  0.0 |  5.0 | keep                                                         |
+|  22 | contract:built            |        2.0 |   0.5 |  0.5 |  1.5 | keep while the hardening stage runs                          |
+|  23 | cost                      |        2.5 |   1.0 |  1.0 |  1.5 | keep until the harness exposes per-session usage             |
+|  24 | db:local:reset            |        2.0 |   0.5 |  0.0 |  1.8 | keep                                                         |
+|  25 | db:seed-users             |        2.0 |   0.5 |  0.0 |  1.8 | keep                                                         |
+|  26 | tooling/refs-pending.json |        2.0 |   0.5 |  0.0 |  1.8 | keep                                                         |
+|  27 | check-ui-layout           |        2.5 |   0.5 |  1.0 |  1.8 | keep                                                         |
+|  28 | docs:dev                  |        2.0 |   0.0 |  0.0 |  2.0 | keep                                                         |
+|  29 | local-dev-origins         |        2.0 |   0.0 |  0.0 |  2.0 | keep                                                         |
+|  30 | stripe:listen             |        2.0 |   0.0 |  0.0 |  2.0 | keep                                                         |
+|  31 | contract:add †            |        2.5 |   0.5 |  0.5 |  2.0 | keep until the overhaul lands                                |
+|  32 | db:local:full             |        2.5 |   1.0 |  0.0 |  2.0 | keep                                                         |
+|  33 | contrast-audit            |        4.0 |   3.0 |  1.0 |  2.0 | keep but simplify                                            |
+|  34 | doctor                    |        2.5 |   0.5 |  0.0 |  2.3 | keep                                                         |
+|  35 | shadcn                    |        2.5 |   0.5 |  0.0 |  2.3 | keep                                                         |
+|  36 | spec:init                 |        2.5 |   0.5 |  0.0 |  2.3 | keep                                                         |
+|  37 | check-catalog             |        3.0 |   0.5 |  1.0 |  2.3 | keep                                                         |
+|  38 | format:check              |        4.0 |   0.5 |  3.0 |  2.3 | keep                                                         |
+|  39 | db:stop                   |        2.5 |   0.0 |  0.0 |  2.5 | keep                                                         |
+|  40 | lib/json-schema.ts        |        2.5 |   0.0 |  0.0 |  2.5 | keep while lib/specs.ts uses it                              |
+|  41 | contract:qa †             |        3.0 |   0.5 |  0.5 |  2.5 | keep until the overhaul lands                                |
+|  42 | migrate:assess            |        3.0 |   1.0 |  0.0 |  2.5 | keep                                                         |
+|  43 | results-gate †            |        3.5 |   1.0 |  1.0 |  2.5 | keep until the overhaul lands                                |
+|  44 | check-refs                |        4.0 |   1.0 |  2.0 |  2.5 | keep                                                         |
+|  45 | db:setup                  |        3.0 |   0.5 |  0.0 |  2.8 | keep                                                         |
+|  46 | format                    |        3.0 |   0.5 |  0.0 |  2.8 | keep                                                         |
+|  47 | session-state             |        3.0 |   0.0 |  0.5 |  2.8 | keep                                                         |
+|  48 | check-reviewers           |        3.5 |   0.5 |  1.0 |  2.8 | keep                                                         |
+|  49 | check-stack               |        3.5 |   0.5 |  1.0 |  2.8 | keep                                                         |
+|  50 | test:hooks                |        5.0 |   0.5 |  4.0 |  2.8 | keep but simplify                                            |
+|  51 | dev                       |        3.0 |   0.0 |  0.0 |  3.0 | keep                                                         |
+|  52 | lib/work-ids.ts           |        3.0 |   0.0 |  0.0 |  3.0 | keep                                                         |
+|  53 | tooling/package.json      |        3.0 |   0.0 |  0.0 |  3.0 | keep                                                         |
+|  54 | tooling/tsconfig.json     |        3.0 |   0.0 |  0.0 |  3.0 | keep                                                         |
+|  55 | ui:storybook              |        3.0 |   0.0 |  0.0 |  3.0 | keep                                                         |
+|  56 | web:dev                   |        3.0 |   0.0 |  0.0 |  3.0 | keep                                                         |
+|  57 | db:local                  |        3.5 |   1.0 |  0.0 |  3.0 | keep                                                         |
+|  58 | contract:init †           |        5.0 |   3.0 |  1.0 |  3.0 | keep until the overhaul lands                                |
+|  59 | check-migrations          |        4.0 |   0.5 |  1.0 |  3.3 | keep                                                         |
+|  60 | contract:record †         |        4.0 |   1.0 |  0.5 |  3.3 | keep until the overhaul lands                                |
+|  61 | gen:agents                |        4.0 |   0.5 |  1.0 |  3.3 | keep                                                         |
+|  62 | lint:docs                 |        4.0 |   0.5 |  1.0 |  3.3 | keep                                                         |
+|  63 | test:db                   |        4.0 |   1.5 |  0.0 |  3.3 | keep                                                         |
+|  64 | check-test-weakening      |        4.5 |   1.0 |  1.0 |  3.5 | keep                                                         |
+|  65 | check-types:tooling       |        4.5 |   0.0 |  2.0 |  3.5 | keep                                                         |
+|  66 | lint                      |        5.5 |   1.0 |  3.0 |  3.5 | keep                                                         |
+|  67 | db:generate               |        4.0 |   0.5 |  0.0 |  3.8 | keep                                                         |
+|  68 | db:migrate                |        4.0 |   0.5 |  0.0 |  3.8 | keep                                                         |
+|  69 | check-client-bundle       |        6.0 |   0.5 |  4.0 |  3.8 | keep                                                         |
+|  70 | build                     |        6.5 |   1.5 |  4.0 |  3.8 | keep                                                         |
+|  71 | lib/docs.ts               |        4.0 |   0.0 |  0.0 |  4.0 | keep                                                         |
+|  72 | lib/git.ts                |        4.0 |   0.0 |  0.0 |  4.0 | keep                                                         |
+|  73 | budget                    |        5.0 |   1.0 |  1.0 |  4.0 | keep                                                         |
+|  74 | lint:boundaries           |        6.0 |   0.0 |  3.0 |  4.5 | keep                                                         |
+|  75 | check-types               |        6.5 |   1.0 |  3.0 |  4.5 | keep                                                         |
+|  76 | check-settings            |        5.5 |   0.5 |  1.0 |  4.8 | keep                                                         |
+|  77 | bash-guard                |        6.0 |   1.5 |  1.0 |  4.8 | keep but simplify                                            |
+|  78 | lib/specs.ts †            |        5.0 |   0.0 |  0.0 |  5.0 | rewritten by the overhaul                                    |
+|  79 | lib/toolkit.ts            |        5.0 |   0.0 |  0.0 |  5.0 | keep                                                         |
 
 † Changing in the workflow overhaul.

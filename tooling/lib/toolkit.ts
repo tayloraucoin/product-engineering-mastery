@@ -20,6 +20,14 @@ const REVIEWER_STATUSES = ["draft", "ruled"] as const;
 const PREFIX = /^[A-Z][A-Z0-9]{1,4}$/;
 const APP_NAME = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const ROLE = /^[a-z]+$/;
+/**
+ * A module a reviewer row's imports list names: a package (`stripe`,
+ * `@clerk/nextjs`), one of its subpaths (`stripe/webhooks`), or every package
+ * in a scope (`@supabase/*`).
+ */
+const MODULE =
+  /^(?:@[a-z0-9][a-z0-9._-]*\/(?:\*|[a-z0-9][a-z0-9._-]*(?:\/[A-Za-z0-9._-]+)*)|[a-z0-9][a-z0-9._-]*(?:\/[A-Za-z0-9._-]+)*)$/;
+const REVIEWER_FIELDS = ["glob", "imports", "role", "why", "status"] as const;
 
 export type ToolkitApp = {
   /** Repo-relative folder of the app. */
@@ -30,9 +38,20 @@ export type ToolkitApp = {
   designLayer: string | null;
 };
 
+/**
+ * One seat in the reviewer map. A row carries a glob, an imports list, or
+ * both; a file reaches the row when either matches (T6).
+ */
 export type ToolkitReviewer = {
   /** Repo-relative glob matched against a ticket's planned paths and its diff. */
-  glob: string;
+  glob?: string;
+  /**
+   * Modules whose importers reach the row wherever they sit: a package, a
+   * subpath of one, or a whole scope as `@scope/*`. A file reaches the row
+   * when a static import, export-from, require or import() names one of
+   * them or a subpath of it.
+   */
+  imports?: string[];
   /** Lower-case role name, as in the role's file name. */
   role: string;
   why: string;
@@ -210,16 +229,44 @@ export function validateToolkit(
 
   if ("reviewers" in data) {
     if (!Array.isArray(data.reviewers)) {
-      bad("reviewers", "must be a list of { glob, role, why }");
+      bad("reviewers", "must be a list of { glob or imports, role, why }");
     } else {
       data.reviewers.forEach((row, i) => {
         const at = `reviewers[${i}]`;
         if (!isObject(row)) {
-          bad(at, "must be { glob, role, why }");
+          bad(at, "must be { glob or imports, role, why }");
           return;
         }
-        if (!isText(row.glob) || !isRelative(row.glob))
+        for (const key of Object.keys(row))
+          if (!(REVIEWER_FIELDS as readonly string[]).includes(key))
+            bad(
+              `${at}.${key}`,
+              `is not a reviewer field; the fields are ${REVIEWER_FIELDS.join(", ")}`,
+            );
+        if (!("glob" in row) && !("imports" in row))
+          bad(
+            at,
+            'needs a glob, an imports list, or both, as in "glob": "**/billing/**" or "imports": ["stripe"]',
+          );
+        if ("glob" in row && (!isText(row.glob) || !isRelative(row.glob)))
           bad(`${at}.glob`, "must be a repo-relative glob");
+        if ("imports" in row) {
+          if (!Array.isArray(row.imports) || row.imports.length === 0)
+            bad(
+              `${at}.imports`,
+              'must list at least one module, as in ["stripe"]; to match by glob alone, leave the key out',
+            );
+          else
+            row.imports.forEach((module, j) => {
+              if (typeof module !== "string" || !MODULE.test(module))
+                bad(
+                  `${at}.imports[${j}]`,
+                  'must be a module name ("stripe"), a subpath ("stripe/webhooks") or a scope ("@supabase/*")',
+                );
+              else if ((row.imports as unknown[]).indexOf(module) !== j)
+                bad(`${at}.imports[${j}]`, `repeats ${module}; list it once`);
+            });
+        }
         if (typeof row.role !== "string" || !ROLE.test(row.role))
           bad(`${at}.role`, 'must be a lower-case role name, such as "warden"');
         if (!isText(row.why))

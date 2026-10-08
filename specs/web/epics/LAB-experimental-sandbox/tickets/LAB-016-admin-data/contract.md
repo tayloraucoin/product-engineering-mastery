@@ -28,16 +28,16 @@ cites:
 truth_files: "none: the approved proposal ux/admin/data.md reaches specs/web/ux/admin/data.md through yarn truth:promote LAB once its citing tickets close"
 qa: Q3
 reviewers:
-  - warden
-  - mason
   - assay
+  - mason
+  - warden
 focus:
   - "erasure: one code, two emails, two slugs (warden)"
   - "the admin-only delete is refused inside the function (mason)"
 operator_review: false
 planned_paths:
   - "apps/web/app/admin/data/**"
-  - "apps/web/app/admin/experiments/[slug]/data/**"
+  - "apps/web/app/admin/experiments/*/data/**"
   - "apps/web/lib/sandbox/admin-data*.ts"
   - "apps/web/lib/sandbox/admin-nav.ts"
   - "apps/web/lib/sandbox/state.ts"
@@ -96,6 +96,18 @@ criteria:
     statement: "Every data.md ?state= key renders at 390, 834 and 1440, light and dark."
     evidence: capture
     path: "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-016-admin-data/evidence/data-states.png"
+  - id: review:assay
+    statement: Assay reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run assay <id>
+  - id: review:mason
+    statement: Mason reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run mason <id>
+  - id: review:warden
+    statement: Warden reviews this ticket in fresh context against its contract and evidence.
+    evidence: manual
+    reason: a reviewer's judgment, recorded only by yarn review:run warden <id>
 ---
 
 # Contract — LAB-16 admin-data
@@ -118,13 +130,7 @@ criteria:
   - `countExperimentData(db, team, { slug })` and `deleteExperimentData(db, admin, { slug })` return `{ reviewers, codes, views, comments, reviews, versions, teamNotes }`.
   - `findErasure(db, team, { email, userIds })` returns `{ experiments, comments, versions, views, nameLabels: { reviewerId, slug, label }[] }` or null; `findReviewerEmails(db, team, { reviewerId })` returns each email with its counts, plus user-id accesses.
   - `eraseEmail(db, team, { email, userIds, clearLabels })` returns the counts. `listActions(db, team, { page })`.
-  - Actions `deleteExperimentData(slug, prev, formData)`, `findReviewer(prev, formData)`, `eraseReviewer(prev, formData)`.
   - Record names `data_deleted`, `reviewer_erased`; words for LAB-9's role names and LAB-15's `code_made`, `code_replaced`, `code_revoked`.
-- **Per path:**
-  - `admin/data/**`, `experiments/[slug]/data/**`: pages, `actions.ts`, `_components/` (field, `AlertDialog`, checkbox list, record table).
-  - `admin-data*.ts`: cores, binding, C3, C6, C8, C9. `admin-nav.ts`: Data ready.
-  - `state.ts`: every `data-tab-*` and `data-page-*` key as `team`, on synthetic fixtures.
-  - `packages/db`: the functions, their export, isolation cases, C1, C2, C4, C5, C7.
 - **Gotchas:**
   - Look up the account by email before the transaction (it is a network call) and pass `userIds` in. `[ASSUMPTION: the installed auth-js has no lookup by email; page through listUsers and match the trimmed, lower-cased email. Verify against the installed version.]`
   - The email comes from the form, never the query string; `findReviewer` keeps it in the action's state.

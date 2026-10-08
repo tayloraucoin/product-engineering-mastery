@@ -6,7 +6,7 @@ status: draft
 thread: PR-19
 role: Usher
 date: 2026-10-05
-last_reviewed: 2026-10-05
+last_reviewed: 2026-10-07
 supersedes:
 load_when: on request
 ---
@@ -21,7 +21,7 @@ A prompt passes when every row holds. The builder and every stage check before p
 
 | #   | Item              | What passes                                                                                                                                                                                            |
 | --- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 1   | Venue and model   | The first line is `Venue: Claude Code, in <repo>` or `Venue: Claude research thread`, then the model. A build prompt adds the failure mode of choosing a smaller model. Nothing precedes it.           |
+| 1   | Venue and model   | The first line is `Venue: Claude Code, in <repo>` or `Venue: Claude research thread`, then the minimum and recommended model, the effort, and the failure mode of choosing down. Nothing precedes it.  |
 | 2   | Track and stage   | Names the track and the stage this thread runs, by file path.                                                                                                                                          |
 | 3   | Role              | Names one lead role by file path and says to read it first. Build threads name no lead role.                                                                                                           |
 | 4   | Support           | Names each supporting role and the one function it is consulted for. "Consult, never co-pilot."                                                                                                        |
