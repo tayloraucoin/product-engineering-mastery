@@ -15,15 +15,15 @@
       }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "check",
       "run": {
         "command": "yarn lint:docs",
-        "exit": 1,
-        "at": "2026-10-07T22:49:41Z",
-        "head": "e4243fee0f740f1a6bcaea8b04c9373bba892814",
+        "exit": 0,
+        "at": "2026-10-08T00:14:42Z",
+        "head": "f0fb82d694b31658d1269560d63cf6651a77ecca",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-024-stack-entry-removal/evidence/C2.log",
-        "evidence_sha256": "02e2e80c6ab70f0d5bbe490bbfafebc06d2bbe623bbab2ae606bc417ad140194"
+        "evidence_sha256": "a0410b5aa62c3e7fc7c139afd9afa26fc13f0dbf238c3654cc57b68e265a73f8"
       }
     },
     "C3": {
@@ -63,5 +63,5 @@
       }
     }
   },
-  "updated_at": "2026-10-07T22:49:50Z"
+  "updated_at": "2026-10-08T00:14:43Z"
 }
