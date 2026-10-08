@@ -8,10 +8,10 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-08T00:24:28Z",
-        "head": "fb4c620dfa6c5f15f05e107c191f5c48647dc876",
+        "at": "2026-10-08T00:34:18Z",
+        "head": "fea6bab82ea00b0bb75066f30698cc73f41b9329",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/evidence/C1.log",
-        "evidence_sha256": "37c378339f914bdb21a992d817b58f23cecc0498a6df0a45045ffd03aef382de",
+        "evidence_sha256": "8493c6bd4a675b4b09b845d88f9d115c16e8bbf8e3de1013d4d1681a824cec21",
         "tests": 249
       }
     },
@@ -21,10 +21,10 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-08T00:24:28Z",
-        "head": "fb4c620dfa6c5f15f05e107c191f5c48647dc876",
+        "at": "2026-10-08T00:34:18Z",
+        "head": "fea6bab82ea00b0bb75066f30698cc73f41b9329",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/evidence/C2.log",
-        "evidence_sha256": "37c378339f914bdb21a992d817b58f23cecc0498a6df0a45045ffd03aef382de",
+        "evidence_sha256": "8493c6bd4a675b4b09b845d88f9d115c16e8bbf8e3de1013d4d1681a824cec21",
         "tests": 249
       }
     },
@@ -34,10 +34,10 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-08T00:24:28Z",
-        "head": "fb4c620dfa6c5f15f05e107c191f5c48647dc876",
+        "at": "2026-10-08T00:34:18Z",
+        "head": "fea6bab82ea00b0bb75066f30698cc73f41b9329",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/evidence/C3.log",
-        "evidence_sha256": "37c378339f914bdb21a992d817b58f23cecc0498a6df0a45045ffd03aef382de",
+        "evidence_sha256": "8493c6bd4a675b4b09b845d88f9d115c16e8bbf8e3de1013d4d1681a824cec21",
         "tests": 249
       }
     },
@@ -47,10 +47,10 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-08T00:24:28Z",
-        "head": "fb4c620dfa6c5f15f05e107c191f5c48647dc876",
+        "at": "2026-10-08T00:34:18Z",
+        "head": "fea6bab82ea00b0bb75066f30698cc73f41b9329",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/evidence/C4.log",
-        "evidence_sha256": "37c378339f914bdb21a992d817b58f23cecc0498a6df0a45045ffd03aef382de",
+        "evidence_sha256": "8493c6bd4a675b4b09b845d88f9d115c16e8bbf8e3de1013d4d1681a824cec21",
         "tests": 249
       }
     },
@@ -60,10 +60,10 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-08T00:24:28Z",
-        "head": "fb4c620dfa6c5f15f05e107c191f5c48647dc876",
+        "at": "2026-10-08T00:34:18Z",
+        "head": "fea6bab82ea00b0bb75066f30698cc73f41b9329",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/evidence/C5.log",
-        "evidence_sha256": "37c378339f914bdb21a992d817b58f23cecc0498a6df0a45045ffd03aef382de",
+        "evidence_sha256": "8493c6bd4a675b4b09b845d88f9d115c16e8bbf8e3de1013d4d1681a824cec21",
         "tests": 249
       }
     },
@@ -73,10 +73,10 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-08T00:24:28Z",
-        "head": "fb4c620dfa6c5f15f05e107c191f5c48647dc876",
+        "at": "2026-10-08T00:34:18Z",
+        "head": "fea6bab82ea00b0bb75066f30698cc73f41b9329",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/evidence/C6.log",
-        "evidence_sha256": "37c378339f914bdb21a992d817b58f23cecc0498a6df0a45045ffd03aef382de",
+        "evidence_sha256": "8493c6bd4a675b4b09b845d88f9d115c16e8bbf8e3de1013d4d1681a824cec21",
         "tests": 249
       }
     },
@@ -86,10 +86,10 @@
       "run": {
         "command": "yarn workspace web test",
         "exit": 0,
-        "at": "2026-10-08T00:25:18Z",
-        "head": "fb4c620dfa6c5f15f05e107c191f5c48647dc876",
+        "at": "2026-10-08T00:35:06Z",
+        "head": "fea6bab82ea00b0bb75066f30698cc73f41b9329",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/evidence/C7.log",
-        "evidence_sha256": "addfeb893864ceed06d3baff593a40d0a65fb4002466b11a1446b81a0e968db3",
+        "evidence_sha256": "d6ef52aa8f5817b224611daae074e67fd0df5c91ccd38714c636fdd6a39c79aa",
         "tests": 473
       }
     },
@@ -99,10 +99,10 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-08T00:24:28Z",
-        "head": "fb4c620dfa6c5f15f05e107c191f5c48647dc876",
+        "at": "2026-10-08T00:34:18Z",
+        "head": "fea6bab82ea00b0bb75066f30698cc73f41b9329",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/evidence/C8.log",
-        "evidence_sha256": "37c378339f914bdb21a992d817b58f23cecc0498a6df0a45045ffd03aef382de",
+        "evidence_sha256": "8493c6bd4a675b4b09b845d88f9d115c16e8bbf8e3de1013d4d1681a824cec21",
         "tests": 249
       }
     },
@@ -134,5 +134,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-08T00:32:49Z"
+  "updated_at": "2026-10-08T00:35:14Z"
 }
