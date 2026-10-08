@@ -12,6 +12,7 @@
  *   triage key must be one of the viewer's own comments on this slug. Old
  *   versions are never updated.
  * - `readMyLatestVersion`: the viewer's highest-numbered version, or null.
+ * - `latestSentAt`: that version's instant alone, or null (LAB-21).
  *
  * Limits (data-contract.md): answers at most 64 KB. Errors are fixed strings
  * that never echo input.
@@ -245,6 +246,27 @@ export async function readMyLatestVersion(
     .orderBy(desc(sandboxReviewVersions.number))
     .limit(1);
   return row ?? null;
+}
+
+/**
+ * When the viewer last sent, or null when they never have (LAB-21, ended.md's
+ * sent line). Only the instant: the ended page reads no answers. Takes an
+ * empty input.
+ */
+export async function latestSentAt(
+  db: SandboxDb,
+  viewer: Viewer,
+  input: Record<string, never>,
+): Promise<Date | null> {
+  const reviewer = requireReviewer(viewer);
+  if (!plainObject(input) || Object.keys(input).length) invalid();
+  const [row] = await db
+    .select({ createdAt: sandboxReviewVersions.createdAt })
+    .from(sandboxReviewVersions)
+    .where(reviewerScope(reviewer, sandboxReviewVersions))
+    .orderBy(desc(sandboxReviewVersions.number))
+    .limit(1);
+  return row?.createdAt ?? null;
 }
 
 function pgCode(error: unknown): unknown {

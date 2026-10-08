@@ -861,6 +861,45 @@ const readLatestAs = (kind: ViewerKind) => async (w: World) => {
   );
 };
 
+/**
+ * LAB-21 C5: the latest send's instant is the viewer's own version's, and
+ * nothing else crosses; a crossed slug or reviewer reads null; input is
+ * refused; nothing is written.
+ */
+const latestSentAs = (kind: ViewerKind) => async (w: World) => {
+  const rows = rowsFor(w, kind);
+  const own = rows.viewer;
+  const before = await versionsSnapshot(w);
+  const sentAt = await sandbox.latestSentAt(db(), own, {});
+  assert.ok(sentAt instanceof Date);
+  const [stored] = await db()
+    .select({ createdAt: sandboxReviewVersions.createdAt })
+    .from(sandboxReviewVersions)
+    .where(eq(sandboxReviewVersions.id, rows.versionId));
+  assert.equal(sentAt.getTime(), stored!.createdAt.getTime());
+  const other = own.slug === w.slugA ? w.b.viewer : w.a1.viewer;
+  for (const crossed of [
+    { ...own, slug: other.slug },
+    { ...own, reviewerId: other.reviewerId },
+  ])
+    assert.equal(await sandbox.latestSentAt(db(), crossed, {}), null);
+  await assert.rejects(
+    sandbox.latestSentAt(db(), own, { slug: w.slugB } as never),
+    refusedWith(REVIEW_INPUT_INVALID),
+  );
+  assert.deepEqual(await versionsSnapshot(w), before);
+};
+
+/** LAB-21 C5: the team is refused the latest send, and nothing is stored. */
+const latestSentRefused = (kind: "developer" | "admin") => async (w: World) => {
+  const before = await versionsSnapshot(w);
+  await assert.rejects(
+    sandbox.latestSentAt(db(), viewerFor(w, kind), {}),
+    refusedWith(NOT_A_REVIEWER_VIEWER),
+  );
+  assert.deepEqual(await versionsSnapshot(w), before);
+};
+
 /** Registered cases for every runtime export of @pem/db/sandbox. */
 const REGISTRY: Registry<World> = {
   ...codesCases({ db, viewerFor }),
@@ -1375,6 +1414,18 @@ const REGISTRY: Registry<World> = {
       "reviewer on slug B": readLatestAs("reviewer on slug B"),
       developer: reviewRefused("readMyLatestVersion")("developer"),
       admin: reviewRefused("readMyLatestVersion")("admin"),
+    },
+  },
+
+  latestSentAt: {
+    group: "viewer",
+    criteria: ["LAB-21 C5"],
+    byViewer: {
+      "reviewer on slug A": latestSentAs("reviewer on slug A"),
+      "second reviewer on slug A": latestSentAs("second reviewer on slug A"),
+      "reviewer on slug B": latestSentAs("reviewer on slug B"),
+      developer: latestSentRefused("developer"),
+      admin: latestSentRefused("admin"),
     },
   },
 

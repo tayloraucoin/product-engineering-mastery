@@ -77,6 +77,7 @@ export {
   type ThreadRoot,
 } from "./threads.ts";
 export {
+  latestSentAt,
   readMyLatestVersion,
   saveReviewVersion,
   type MyReviewVersion,
