@@ -40,3 +40,7 @@ Q2, Vigil in fresh context, findings in the thread. First pass FAIL: one Blockin
 
 - C4 (`yarn check-specs`), C6 (`yarn lint:docs`) and C7 (`yarn budget`) fail on this tree for reasons outside this ticket, each present before it: LAB-7's contract over the 2,500-token cap and its as-built's Not verified missing C12 and C13; `docs/research/ui-patterns/working-dashboards.md` (no frontmatter) and `specs/_shared/epics/MIG-codebase-migration/technical.md` (over its cap), both untracked intake files; the budget's two standing overages (brief and package, UI build). Those files are other threads' and the operator's; left alone and named in the report.
 - The no-verdict `--operator` run after a PASS (above).
+
+## Next
+
+Re-run C4, C6 and C7 once the tree's standing reds are cleared, then close; the open decision on whether `--operator` lifts the first refusal is Taylor's.
