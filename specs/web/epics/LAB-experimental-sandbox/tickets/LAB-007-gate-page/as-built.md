@@ -46,6 +46,8 @@
 ## Not verified
 
 - C9's screen-reader pass: the operator's, with the steps in `evidence/C9-steps.md`.
+- C12, the served-HTML diff: checked by the builder (`evidence/C12-served-diff.md`); a manual criterion, so named here.
+- C13, Taylor's own look in the browser: handed over (`evidence/C13-look-over.md`).
 - The ended and experiment branches are placeholders naming LAB-21 and LAB-11.
 - `contact.email` in `@pem/brand` is still `hello@example.com`. A real, monitored address is the operator's before any real code is issued (out of scope).
 
