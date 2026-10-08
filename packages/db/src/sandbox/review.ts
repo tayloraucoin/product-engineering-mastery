@@ -13,6 +13,8 @@
  *   versions are never updated.
  * - `readMyLatestVersion`: the viewer's highest-numbered version, or null.
  * - `latestSentAt`: that version's instant alone, or null (LAB-21).
+ * - `listMyViewedDesigns`: the designs the viewer has a view event on, on
+ *   their slug (LAB-18: a design never viewed cannot be rated yet).
  *
  * Limits (data-contract.md): answers at most 64 KB. Errors are fixed strings
  * that never echo input.
@@ -24,6 +26,7 @@ import {
   sandboxComments,
   sandboxReviewers,
   sandboxReviewVersions,
+  sandboxViewEvents,
 } from "../schema/index.ts";
 import type {
   SandboxAnswers,
@@ -224,6 +227,27 @@ export async function saveReviewVersion(
       throw error;
     }
   }
+}
+
+/**
+ * The distinct designs in the viewer's own view events on their slug, in id
+ * order (LAB-18, review-variants.md): a design with none has its questions
+ * disabled. Only design ids cross, never a time or a count. Takes an empty
+ * input.
+ */
+export async function listMyViewedDesigns(
+  db: SandboxDb,
+  viewer: Viewer,
+  input: Record<string, never>,
+): Promise<string[]> {
+  const reviewer = requireReviewer(viewer);
+  if (!plainObject(input) || Object.keys(input).length) invalid();
+  const rows = await db
+    .selectDistinct({ design: sandboxViewEvents.design })
+    .from(sandboxViewEvents)
+    .where(reviewerScope(reviewer, sandboxViewEvents))
+    .orderBy(sandboxViewEvents.design);
+  return rows.map((r) => r.design);
 }
 
 /** The viewer's own latest version on their slug, or null. Takes an empty input. */

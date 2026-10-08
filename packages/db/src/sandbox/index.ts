@@ -78,6 +78,7 @@ export {
 } from "./threads.ts";
 export {
   latestSentAt,
+  listMyViewedDesigns,
   readMyLatestVersion,
   saveReviewVersion,
   type MyReviewVersion,

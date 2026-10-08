@@ -900,6 +900,70 @@ const latestSentRefused = (kind: "developer" | "admin") => async (w: World) => {
   assert.deepEqual(await versionsSnapshot(w), before);
 };
 
+/** LAB-18 C11: the team is refused the viewed-designs read, and nothing changes. */
+const viewedRefused = (kind: "developer" | "admin") => async (w: World) => {
+  const before = await experimentSnapshot(w);
+  await assert.rejects(
+    sandbox.listMyViewedDesigns(db(), viewerFor(w, kind), {}),
+    refusedWith(NOT_A_REVIEWER_VIEWER),
+  );
+  assert.deepEqual(await experimentSnapshot(w), before);
+};
+
+/**
+ * LAB-18 C11: a reviewer reads the distinct designs of their own view
+ * events on their slug: never another reviewer's, never across slugs.
+ * Every other reviewer gets a design of their own first, so a leak shows.
+ */
+const viewedAs = (kind: ViewerKind) => async (w: World) => {
+  const own = rowsFor(w, kind).viewer;
+  const added: string[] = [];
+  const view = async (viewer: typeof own, design: string) => {
+    const [row] = await db()
+      .insert(sandboxViewEvents)
+      .values({
+        reviewerId: viewer.reviewerId,
+        accessId: viewer.accessId,
+        slug: viewer.slug,
+        kind: "switch",
+        design,
+      })
+      .returning({ id: sandboxViewEvents.id });
+    added.push(row!.id);
+  };
+  try {
+    await view(own, "square");
+    await view(own, "square");
+    for (const r of [w.a1, w.a2, w.b, w.signedIn])
+      if (r.viewer.reviewerId !== own.reviewerId)
+        await view(r.viewer, "diamond");
+    const before = await experimentSnapshot(w);
+    assert.deepEqual(await sandbox.listMyViewedDesigns(db(), own, {}), [
+      "circle",
+      "square",
+    ]);
+    const other = own.slug === w.slugA ? w.b.viewer : w.a1.viewer;
+    for (const crossed of [
+      { ...own, slug: other.slug },
+      { ...own, reviewerId: other.reviewerId },
+    ])
+      assert.deepEqual(
+        await sandbox.listMyViewedDesigns(db(), crossed, {}),
+        [],
+      );
+    await assert.rejects(
+      sandbox.listMyViewedDesigns(db(), own, { slug: w.slugB } as never),
+      refusedWith(REVIEW_INPUT_INVALID),
+    );
+    assert.deepEqual(await experimentSnapshot(w), before);
+  } finally {
+    if (added.length)
+      await db()
+        .delete(sandboxViewEvents)
+        .where(inArray(sandboxViewEvents.id, added));
+  }
+};
+
 /** Registered cases for every runtime export of @pem/db/sandbox. */
 const REGISTRY: Registry<World> = {
   ...codesCases({ db, viewerFor }),
@@ -1426,6 +1490,18 @@ const REGISTRY: Registry<World> = {
       "reviewer on slug B": latestSentAs("reviewer on slug B"),
       developer: latestSentRefused("developer"),
       admin: latestSentRefused("admin"),
+    },
+  },
+
+  listMyViewedDesigns: {
+    group: "viewer",
+    criteria: ["LAB-18 C11"],
+    byViewer: {
+      "reviewer on slug A": viewedAs("reviewer on slug A"),
+      "second reviewer on slug A": viewedAs("second reviewer on slug A"),
+      "reviewer on slug B": viewedAs("reviewer on slug B"),
+      developer: viewedRefused("developer"),
+      admin: viewedRefused("admin"),
     },
   },
 
