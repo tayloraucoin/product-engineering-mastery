@@ -15,6 +15,16 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-08 — Webhooks: each one is a folder under `app/api/webhooks/`
+
+Operator ruling, 2026-10-08: a webhook's logic lives beside its route, so every webhook is one obvious folder. The Stripe webhook's dispatcher, handler, handlers and ledger binding moved by `git mv` from `apps/web/lib/billing/webhook/` to `apps/web/app/api/webhooks/stripe/_lib/`, with no change in behaviour. The Stripe client stays in `apps/web/lib/billing/stripe.ts`, because code outside the webhook will import it.
+
+- `docs/engineering/codebase-conventions.md` §3: a route's own modules go in a private `_lib/` folder; each webhook is `app/api/webhooks/<vendor>/`.
+- `docs/runbooks/remove/billing.md`: the route folder now lists its `_lib/`, and `apps/web/lib/billing/` holds only the client. `toolkit.json`'s `stack.billing.files` already named both folders, so it is unchanged.
+- `toolkit.json` reviewers: `**/webhooks/stripe/**` rows for mason and chancery. Seven of the moved files do not import `stripe` and left the `**/billing/**` glob, and these rows keep billing review on them. Warden already reaches them through `**/webhooks/**`.
+- `apps/web/package.json`: `test` also runs `app/**/*.test.ts`. Its glob was `lib/**` only, so the two moved test files would have stopped running (429 tests before, 449 after).
+- `tooling/boundaries.test.ts`: a second `stripe` and ledger probe, from the webhook's `_lib/`. `docs/engineering/tech-stack.md`: the `stripe` row names the webhook folder.
+
 ## 2026-10-08 — Component placement: the importer ladder, `components/<domain>/`, no `app/_components/`
 
 Four operator rulings, decided 2026-10-08 in Mason's placement thread, from the research note `docs/research/engineering/component-placement.md`. Ledger EN-19. The note's own recommendation (no `components/` folder; the app root's `_components/` as the top in-app tier) was weighed against the operator's rule (app-shared components in `components/`, under sub-folders); the ruling keeps the note's deepest-common-segment step for one section and the operator's folder above it.

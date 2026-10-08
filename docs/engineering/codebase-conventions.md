@@ -64,8 +64,9 @@ Both apps use the App Router and share one internal layout:
 
 ```
 apps/<app>/
-  app/                 routes only — page.tsx, layout.tsx, not-found.tsx, …
+  app/                 routes — page.tsx, layout.tsx, route.ts, … — and their private _components/ and _lib/
     <segment>/_components/   components only that segment's subtree imports (private folder, not a route)
+    <segment>/_lib/          non-component modules only that segment imports (private folder)
   components/<domain>/ components imported across sections of this app; chrome in shell/
   lib/                 non-component modules used only by this app
   next.config.ts       agentRules: false · transpilePackages · turbopack root
@@ -74,6 +75,8 @@ apps/<app>/
 - **`apps/web`** — the demo app that proves the toolkit (`apps/web/AGENTS.md`); in a product cloned from here, the product.
 - **`apps/docs`** — a reader for `AGENTS.md`, `docs/**/*.md` and the demo's filled examples. Every page is statically generated from those files at build time; the sidebar groups by the `layer` frontmatter field, `docs/research/` is searchable but not in the sidebar, and frontmatter renders above each page (record 0007). Relative `.md` links are rewritten to routes; links to other repo files render inert with the path in their title. Its `turbo.json` lists the content roots as build inputs, so editing a doc invalidates the cached build.
 - **`tooling/`** — not a workspace. Scripts run directly on Node 22 (`node tooling/<script>.ts`), type-checked by `yarn check-types:tooling`. Its consumer is the root scripts, so its shared module stays in `tooling/lib/`. One exception: `apps/web/next.config.ts` imports `tooling/local-dev-origins.ts` (STK-19), a dev-server helper with no runtime reach. The boundaries lint does not cover `tooling/`, so no other app or package file imports from it.
+
+A route's own modules sit beside it in a private `_lib/` folder when nothing else imports them, as its components sit in `_components/`. Every webhook is one folder, `app/api/webhooks/<vendor>/`: `route.ts` reads the request, and `_lib/` holds the verification, dispatch, handlers and ledger binding (`apps/web/app/api/webhooks/stripe/_lib/`), so removing a vendor deletes one folder. A new webhook adds its own reviewer rows in `toolkit.json` for the domain it touches; warden already reaches every one through `**/webhooks/**`. A module other code also imports, such as the Stripe client in `lib/billing/`, stays in `lib/`.
 
 Components climb the §1 ladder: the route's `_components/`, then the section's deepest common `_components/`, then `components/<domain>/`, then `@pem/ui`. There is no `app/_components/` at the app root; what the root layout or several sections import lives in `components/`.
 
