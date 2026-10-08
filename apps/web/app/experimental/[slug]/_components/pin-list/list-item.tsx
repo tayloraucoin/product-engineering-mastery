@@ -71,7 +71,7 @@ export function ListItem({
     return () => observer.disconnect();
   }, [item.body, expanded, editing]);
 
-  const unsent = item.sync !== "sent";
+  const unsent = item.sync === "unsent";
 
   return (
     <Item

@@ -61,7 +61,8 @@ export function ListBody({
 }) {
   const id = useId();
   const items = list.groups.flatMap((g) => g.items);
-  const unsent = items.filter((i) => i.sync !== "sent").length;
+  // Only what is still queued: an edit being saved is "sending", not unsent.
+  const unsent = items.filter((i) => i.sync === "unsent").length;
   const retryHeld = !!reason || !online;
   const showUnsent = unsent > 0 && load !== "error";
 

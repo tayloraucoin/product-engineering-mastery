@@ -72,6 +72,9 @@ export function PinList({ designs, shown, onSwitch, fixture }: PinListProps) {
   const items = useRef(new Map<string, HTMLElement>());
   // Run once the list has closed; focus then goes there, not to the button.
   const afterClose = useRef<(() => void) | null>(null);
+  // Read when the dialog restores focus, after `afterClose` has run: false
+  // once a close hands focus elsewhere (Show on page, Start commenting).
+  const returnToButton = useRef(true);
   const reasonId = useId();
 
   const list = groupComments(pins.pins, designs, pins.detached);
@@ -90,6 +93,7 @@ export function PinList({ designs, shown, onSwitch, fixture }: PinListProps) {
       window.matchMedia("(min-width: 768px)").matches ? "sheet" : "drawer",
     );
     setInstant(keyboard);
+    returnToButton.current = true;
     setOpen(true);
   }, []);
 
@@ -104,6 +108,7 @@ export function PinList({ designs, shown, onSwitch, fixture }: PinListProps) {
 
   const closeThen = (then: () => void) => {
     afterClose.current = then;
+    returnToButton.current = false;
     setOpen(false);
   };
 
@@ -165,6 +170,11 @@ export function PinList({ designs, shown, onSwitch, fixture }: PinListProps) {
   const onRetry = async () => {
     const outcome = await pins.retryFromList();
     say(outcome?.announcement ?? null);
+    // Retry's own button goes once the line clears, or the error row once
+    // the load restarts: focus goes to the title, as after the last delete.
+    // After the re-render that removes it, past the dialog's own restore.
+    if (!outcome || outcome.unsentLine === null)
+      setTimeout(() => titleRef.current?.focus(), 50);
   };
 
   const onStart = () =>
@@ -195,12 +205,16 @@ export function PinList({ designs, shown, onSwitch, fixture }: PinListProps) {
     />
   );
 
-  const countLine = pins.load === "ok" ? W.count(pins.pins.length) : null;
+  // No count beside the empty line (pin-list.md, empty: one line, one button).
+  const countLine =
+    pins.load === "ok" && pins.pins.length > 0
+      ? W.count(pins.pins.length)
+      : null;
   // A static entrance under keyboard modality (A-15).
   const motion = instant ? "transition-none" : undefined;
   const focus = {
     initialFocus: titleRef,
-    finalFocus: () => (afterClose.current ? false : buttonRef.current),
+    finalFocus: () => (returnToButton.current ? buttonRef.current : false),
   };
 
   return (

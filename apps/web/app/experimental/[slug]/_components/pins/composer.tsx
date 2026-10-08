@@ -72,9 +72,8 @@ export function Composer({
         }
       }}
     >
-      {inList ? (
-        <p className="font-medium">{W.on(placeOf(draft.anchor))}</p>
-      ) : (
+      {/* In the list the item already names the place above the composer. */}
+      {inList ? null : (
         <PopoverTitle>{W.on(placeOf(draft.anchor))}</PopoverTitle>
       )}
       <ToggleGroup

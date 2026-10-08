@@ -432,9 +432,9 @@ export function PinsProvider({
     else void flush();
   }, [load, flush]);
 
-  // The list's Retry announces in the list's own live region (the page
-  // behind a modal list is hidden from a screen reader), so it reads the
-  // outcome itself rather than through `flush`'s announcement.
+  // The list's Retry reads its outcome in the list's own live region, so it
+  // is not announced twice. (The page's live regions stay readable behind
+  // the modal list: Base UI leaves `aria-live` elements unhidden.)
   const retryFromList = useCallback(async () => {
     const s = sender.current;
     const q = queue.current;
