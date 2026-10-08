@@ -3,44 +3,108 @@
   "criteria_sha256": "de327f783a2a24a287ec3e99414b7c32e8390f8b92ae3fb4eace38991c2fadb1",
   "criteria": {
     "C1": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-08T00:24:28Z",
+        "head": "fb4c620dfa6c5f15f05e107c191f5c48647dc876",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/evidence/C1.log",
+        "evidence_sha256": "37c378339f914bdb21a992d817b58f23cecc0498a6df0a45045ffd03aef382de",
+        "tests": 249
+      }
     },
     "C2": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-08T00:24:28Z",
+        "head": "fb4c620dfa6c5f15f05e107c191f5c48647dc876",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/evidence/C2.log",
+        "evidence_sha256": "37c378339f914bdb21a992d817b58f23cecc0498a6df0a45045ffd03aef382de",
+        "tests": 249
+      }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-08T00:24:28Z",
+        "head": "fb4c620dfa6c5f15f05e107c191f5c48647dc876",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/evidence/C3.log",
+        "evidence_sha256": "37c378339f914bdb21a992d817b58f23cecc0498a6df0a45045ffd03aef382de",
+        "tests": 249
+      }
     },
     "C4": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-08T00:24:28Z",
+        "head": "fb4c620dfa6c5f15f05e107c191f5c48647dc876",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/evidence/C4.log",
+        "evidence_sha256": "37c378339f914bdb21a992d817b58f23cecc0498a6df0a45045ffd03aef382de",
+        "tests": 249
+      }
     },
     "C5": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-08T00:24:28Z",
+        "head": "fb4c620dfa6c5f15f05e107c191f5c48647dc876",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/evidence/C5.log",
+        "evidence_sha256": "37c378339f914bdb21a992d817b58f23cecc0498a6df0a45045ffd03aef382de",
+        "tests": 249
+      }
     },
     "C6": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-08T00:24:28Z",
+        "head": "fb4c620dfa6c5f15f05e107c191f5c48647dc876",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/evidence/C6.log",
+        "evidence_sha256": "37c378339f914bdb21a992d817b58f23cecc0498a6df0a45045ffd03aef382de",
+        "tests": 249
+      }
     },
     "C7": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace web test",
+        "exit": 0,
+        "at": "2026-10-08T00:25:18Z",
+        "head": "fb4c620dfa6c5f15f05e107c191f5c48647dc876",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/evidence/C7.log",
+        "evidence_sha256": "addfeb893864ceed06d3baff593a40d0a65fb4002466b11a1446b81a0e968db3",
+        "tests": 473
+      }
     },
     "C8": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
-      "run": null
+      "run": {
+        "command": "yarn workspace @pem/db test:db",
+        "exit": 0,
+        "at": "2026-10-08T00:24:28Z",
+        "head": "fb4c620dfa6c5f15f05e107c191f5c48647dc876",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/evidence/C8.log",
+        "evidence_sha256": "37c378339f914bdb21a992d817b58f23cecc0498a6df0a45045ffd03aef382de",
+        "tests": 249
+      }
     },
     "review:mason": {
       "status": "FAIL",
@@ -53,5 +117,5 @@
       "run": null
     }
   },
-  "updated_at": "2026-10-08T00:14:50Z"
+  "updated_at": "2026-10-08T00:25:26Z"
 }
