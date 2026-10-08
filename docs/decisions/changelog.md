@@ -60,7 +60,13 @@ Four operator rulings, decided 2026-10-08 in Mason's placement thread, from the 
   - `.claude/rules/next.md`: one placement line added, the rule an agent reads when it places a file under `apps/`: "Place a component by its importers (conventions §1); never `app/_components/`." Kept to a pointer: the path-rule share is at its cap, and WEB-19 adds a `ts.md` line inside it.
   - `docs/runbooks/migrate/layer-3.md`. Was: "with a client leaf in the route's `_components/` folder". Now: "with a client leaf placed by its importers (codebase-conventions §1)".
   - `tooling/refs-pending.json`: the two target paths §1 and §6 name, pending until WEB-21.
-  - §3 also says experiment variants in `app/experimental/_experiments/` are placed by the sandbox's registry, not the ladder (Mason's review, judgment).
+  - §3 also says experiment designs in `app/experimental/_experiments/<slug>/` are placed by LAB's `technical/placement.md`, not the ladder.
+  - `toolkit.json` and `docs/engineering/templates/toolkit.template.json`: assay's rendered-UI row was `apps/*/app/**/*.tsx`; now `apps/*/{app,components}/**/*.tsx`, so a component in `components/` keeps its reviewer.
+  - Checked against the tree on 2026-10-08 by resolving every import in both apps: every route `_components/` file sits where the ladder puts it; the six files in the two `app/_components/` folders are the only misplaced ones (WEB-20, WEB-21). The token lint (`**/*.tsx`), the boundaries lint (`apps/**`), the `ui.md` and `next.md` path rules, `tsconfig` and Tailwind's source detection already reach `components/`.
+  - `AGENTS.md`. Was: a client leaf "in the route's `_components/`". Now: "on line 1, placed by its importers".
+  - `.claude/rules/ts.md`. Was: "a leaf in `_components/`". Now: "a leaf, placed by its importers".
+  - `apps/web/AGENTS.md`. Was: "a second consumer moves it to `@pem/ui`". Now: it "is placed by its importers (engineering conventions §1)".
+  - `packages/ui/AGENTS.md`. Was: "stays in its `_components/` until a second consumer". Now: "stays in that app until both apps import it".
   - `AGENTS.md`. Was: a client leaf "in the route's `_components/`". Now: "on line 1, placed by its importers".
   - `.claude/rules/ts.md`. Was: "a leaf in `_components/`". Now: "a leaf, placed by its importers".
   - `apps/web/AGENTS.md`. Was: "a second consumer moves it to `@pem/ui`". Now: it "is placed by its importers (engineering conventions §1)".
