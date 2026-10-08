@@ -1,40 +1,48 @@
 /**
  * The seventeen signals in table order (assess.md): S1, S2, C1 to C5, V1 to V5,
- * P1 to P5. The V and P detectors land with MIG-6; until then they report
- * "not yet measured" and score nothing.
+ * P1 to P5. V5 reads the toolkit checkout's reviewer globs, so the list is
+ * built per toolkit root; SIGNALS is the list for the checkout this file sits in.
  */
 
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 import { C1, C2, C3, C4, C5 } from "./checks.ts";
+import { makeV5, readToolkitGlobs, V1, V2, V3, V4 } from "./conventions.ts";
+import { P1, P2, P3, P4, P5 } from "./process.ts";
 import type { Repo } from "./repo.ts";
 import { S1, S2 } from "./shape.ts";
-import { notYetMeasured, type Signal, type SignalResult } from "./signal.ts";
+import type { Signal, SignalResult } from "./signal.ts";
 
-const pending = (
-  id: string,
-  group: Signal["group"],
-  layer: Signal["layer"],
-  title: string,
-): Signal => ({ id, group, layer, title, measure: notYetMeasured });
+/** The toolkit checkout this file sits in. */
+export const OWN_TOOLKIT = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "../../..",
+);
 
-export const SIGNALS: Signal[] = [
-  S1,
-  S2,
-  C1,
-  C2,
-  C3,
-  C4,
-  C5,
-  pending("V1", "conventions", 3, "Boundaries lint"),
-  pending("V2", "conventions", 3, "Token preset"),
-  pending("V3", "conventions", 3, "process.env outside env.ts"),
-  pending("V4", "conventions", 3, '"use client" outside _components/'),
-  pending("V5", "conventions", 3, "SDK importers no reviewer glob matches"),
-  pending("P1", "process", 1, "Instruction lines that conflict"),
-  pending("P2", "process", 1, "Docs with frontmatter"),
-  pending("P3", "process", 1, "Record kinds in a foreign format"),
-  pending("P4", "process", 1, "Living truth"),
-  pending("P5", "process", 1, "Doc paths with spaces or non-ASCII"),
-];
+export function buildSignals(toolkitRoot: string = OWN_TOOLKIT): Signal[] {
+  return [
+    S1,
+    S2,
+    C1,
+    C2,
+    C3,
+    C4,
+    C5,
+    V1,
+    V2,
+    V3,
+    V4,
+    makeV5(readToolkitGlobs(toolkitRoot)),
+    P1,
+    P2,
+    P3,
+    P4,
+    P5,
+  ];
+}
+
+export const SIGNALS: Signal[] = buildSignals();
 
 export function measureSignals(
   repo: Repo,

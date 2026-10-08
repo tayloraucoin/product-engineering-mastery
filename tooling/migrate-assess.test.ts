@@ -156,7 +156,13 @@ test("C2 a workspaces repo with turbo.json, a CI chain, no tests, both scripts a
     [s.S1, s.S2, s.C1, s.C2, s.C3, s.C4, s.C5],
     [0, 0, 1, 0, 2, 0, 1],
   );
-  for (const id of IDS.slice(7)) assert.equal(s[id], null, id);
+  // MIG-6: the conventions and process rows are measured too (no boundaries
+  // file or preset, no env reader, no client file, no SDK, no instruction
+  // file, no docs, no record log, no UX spec, plain paths).
+  assert.deepEqual(
+    IDS.slice(7).map((id) => s[id]),
+    [2, 2, 0, 0, 0, 0, 2, 0, 2, 0],
+  );
 });
 
 test("C2 a single-app repo without turbo.json scores S1 2, and Next 15 alone puts S2 at 1", () => {
@@ -365,13 +371,14 @@ test("C4 the markdown names each signal with its score and evidence, the total, 
   const r = runAssess([dir]);
   assert.equal(r.status, 0, r.err);
   const md = r.out;
-  assert.match(md, /^- Total: \*\*4\*\* of 14 measured \(7 of 17 signals\)$/m);
-  assert.match(md, /^- Gate: passed$/m);
-  assert.match(md, /^- Path: \*\*not decided\*\*/m);
+  // MIG-6 measures every row: 4 from shape and checks, 8 from conventions and process.
   assert.match(
     md,
-    /^- Not yet measured: V1, V2, V3, V4, V5, P1, P2, P3, P4, P5 /m,
+    /^- Total: \*\*12\*\* of 34 measured \(17 of 17 signals\)$/m,
   );
+  assert.match(md, /^- Gate: passed$/m);
+  assert.match(md, /^- Path: \*\*near\*\*/m);
+  assert.doesNotMatch(md, /^- Not yet measured:/m);
   assert.match(
     md,
     /^\| S1 \| Workspaces and turbo\.json \| 3 \| 0 \| workspaces .* turbo\.json at the root \|$/m,
@@ -385,7 +392,11 @@ test("C4 the markdown names each signal with its score and evidence, the total, 
     /^\| C5 \| .* \| 1 \| write-only: format: prettier --write/m,
   );
   for (const id of IDS) assert.match(md, new RegExp(`^\\| ${id} \\|`, "m"), id);
-  assert.match(md, /^\| V1 \| .* \| not yet measured \| not yet measured \|$/m);
+  assert.match(
+    md,
+    /^\| V1 \| Boundaries lint \| 3 \| 2 \| no packages\/config\/eslint\/boundaries\.js \|$/m,
+  );
+  assert.doesNotMatch(md, /not yet measured/);
 });
 
 test("C4 a single-app target reports the gate and the far path", () => {
