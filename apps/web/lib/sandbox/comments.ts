@@ -22,6 +22,7 @@ import type {
 
 import type { ViewerResult } from "./access-check.ts";
 import type { QueueEntry, SendResult } from "./client/queue.ts";
+import { isSandboxSlug } from "./slug.ts";
 import { commentIdInput, pinInput } from "./validators.ts";
 
 export type CommentResult = { kind: SendResult };
@@ -41,12 +42,6 @@ export type CommentsDeps = {
   ): Promise<SaveCommentOutcome>;
   deleteComment(viewer: ReviewerViewer, input: { id: string }): Promise<void>;
 };
-
-const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
-
-function validSlug(slug: unknown): slug is string {
-  return typeof slug === "string" && slug.length <= 48 && SLUG.test(slug);
-}
 
 type Served =
   | { kind: "reviewer"; result: Extract<ViewerResult, { kind: "reviewer" }> }
@@ -73,7 +68,7 @@ export async function listMyCommentsWith(
   deps: CommentsDeps,
   slug: unknown,
 ): Promise<ListCommentsResult> {
-  if (!validSlug(slug)) return { kind: "failed" };
+  if (!isSandboxSlug(slug)) return { kind: "failed" };
   try {
     const served = await serve(deps, slug);
     if (served.kind === "closed" || served.kind === "revoked")
@@ -107,7 +102,7 @@ export async function saveCommentWith(
   input: unknown,
 ): Promise<CommentResult> {
   const parsed = pinInput.safeParse(input);
-  if (!validSlug(slug) || !parsed.success) return { kind: "not-saved" };
+  if (!isSandboxSlug(slug) || !parsed.success) return { kind: "not-saved" };
   try {
     const served = await serve(deps, slug);
     if (served.kind !== "reviewer") return { kind: served.kind };
@@ -139,7 +134,7 @@ export async function deleteCommentWith(
   input: unknown,
 ): Promise<CommentResult> {
   const parsed = commentIdInput.safeParse(input);
-  if (!validSlug(slug) || !parsed.success) return { kind: "not-saved" };
+  if (!isSandboxSlug(slug) || !parsed.success) return { kind: "not-saved" };
   try {
     const served = await serve(deps, slug);
     if (served.kind !== "reviewer") return { kind: served.kind };

@@ -18,6 +18,7 @@ import {
   SANDBOX_MAC_LABELS,
   sandboxMac,
 } from "./secret.ts";
+import { SANDBOX_SLUG } from "./slug.ts";
 
 export const ACCESS_COOKIE = "sandbox_access";
 export const ACCESS_COOKIE_VERSION = "v1";
@@ -25,7 +26,6 @@ export const ACCESS_COOKIE_MAX_AGE_SECONDS = 30 * 24 * 60 * 60;
 
 /** Longer than any cookie this file signs, so a giant value is refused before it is split. */
 const MAX_COOKIE_LENGTH = 256;
-const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const SECONDS = /^(0|[1-9][0-9]{0,11})$/;
 
 export type AccessCookie = { accessId: string; slug: string; issuedAt: Date };
@@ -37,7 +37,7 @@ function macOf(secret: string, payload: string): string {
 /** The cookie's value for one access on one slug, issued at `issuedAt`. */
 export function signAccessCookie(secret: string, cookie: AccessCookie): string {
   if (!isUsableSecret(secret)) throw new Error("SANDBOX_SECRET is not usable.");
-  if (!isAccessId(cookie.accessId) || !SLUG.test(cookie.slug))
+  if (!isAccessId(cookie.accessId) || !SANDBOX_SLUG.test(cookie.slug))
     throw new Error("The access cookie's fields are not valid.");
   const payload = [
     ACCESS_COOKIE_VERSION,

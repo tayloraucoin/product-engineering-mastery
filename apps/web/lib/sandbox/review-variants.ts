@@ -23,6 +23,7 @@ import {
   STRENGTH_OPTIONS,
   type StoredChoice,
 } from "./client/review-variants-form.ts";
+import { SANDBOX_SLUG } from "./slug.ts";
 
 /** The choice's design ids in this reviewer's order. */
 export function designOrder(
@@ -49,7 +50,8 @@ export function switcherOrder<T extends { id: string }>(
   return first ? [first, ...designs.filter((d) => d !== first)] : [...designs];
 }
 
-const DESIGN_ID = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+/** A design id has a slug's shape, with its own cap. */
+const DESIGN_ID = SANDBOX_SLUG;
 
 /** The send's designs and choice, as the browser may send them: never an order. */
 export function variantsInput(text: z.ZodString) {

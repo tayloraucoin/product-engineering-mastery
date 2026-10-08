@@ -11,6 +11,7 @@
 import { z } from "zod";
 
 import { ANCHOR_REF_MAX, PLACE_MAX } from "./client/anchor.ts";
+import { SANDBOX_SLUG } from "./slug.ts";
 
 const EMAIL_EMPTY = "Enter your email.";
 const EMAIL_MALFORMED = "Enter an email address, like name@example.com.";
@@ -46,10 +47,7 @@ const anchorRef = z.string().min(1).max(ANCHOR_REF_MAX);
 export const pinInput = z.strictObject({
   id: z.uuid(),
   number: z.number().int().min(1).max(100_000),
-  design: z
-    .string()
-    .max(24)
-    .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/),
+  design: z.string().max(24).regex(SANDBOX_SLUG),
   kind: z.enum(["problem", "question", "suggestion", "keep"]).nullable(),
   // Stored as typed: refused when blank, never trimmed.
   body: z

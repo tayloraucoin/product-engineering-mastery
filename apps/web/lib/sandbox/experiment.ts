@@ -26,6 +26,7 @@ import {
 import type { ExperimentConfig } from "../../app/experimental/_experiments/registry.ts";
 import type { ViewerResult } from "./access-check.ts";
 import type { PrimaryKind } from "./client/experiment-view.ts";
+import { isSandboxSlug } from "./slug.ts";
 
 /** A uniform integer in [0, max): `crypto.randomInt` in the app, a seeded generator in tests. */
 export type RandomInt = (max: number) => number;
@@ -154,8 +155,6 @@ export type RecordViewDeps = {
   ): Promise<void>;
 };
 
-const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
-
 /**
  * One load or switch, called from a client effect after mount, never during
  * render. Malformed input is invalid before anything is read. Only a
@@ -171,9 +170,7 @@ export async function recordViewWith(
   const kind = (input as { kind?: unknown } | null)?.kind;
   const design = (input as { design?: unknown } | null)?.design;
   if (
-    typeof slug !== "string" ||
-    slug.length > 48 ||
-    !SLUG.test(slug) ||
+    !isSandboxSlug(slug) ||
     (kind !== "load" && kind !== "switch") ||
     typeof design !== "string"
   )

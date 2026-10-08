@@ -25,6 +25,7 @@ import {
   SANDBOX_VIEW_KINDS,
   type SandboxViewKind,
 } from "../schema/sandbox/view-events.ts";
+import { SANDBOX_SLUG } from "./slug.ts";
 import {
   requireReviewer,
   reviewerScope,
@@ -36,8 +37,8 @@ import {
 export const DESIGN_INPUT_INVALID = "The design input is not valid.";
 export const REVIEWER_NOT_FOUND = "The reviewer was not found.";
 
-/** A config design id: lower-case words joined by hyphens, at most 24 characters. */
-const DESIGN_ID = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+/** A config design id: a slug's shape, at most 24 characters. */
+const DESIGN_ID = SANDBOX_SLUG;
 const DESIGN_ID_MAX = 24;
 
 function validDesign(design: unknown): string {

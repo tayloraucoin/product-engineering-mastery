@@ -1,0 +1,22 @@
+{
+  "id": "WEB-15",
+  "criteria_sha256": "4cd3e22a403d5de2f7e51c501019c76f89509e63159d1099f568504736b8956c",
+  "criteria": {
+    "C1": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C2": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C3": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    }
+  },
+  "updated_at": "2026-10-08T20:20:07Z"
+}

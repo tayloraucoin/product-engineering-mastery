@@ -35,15 +35,12 @@ import {
 
 import { sandboxAccesses } from "../schema/sandbox/accesses.ts";
 import { sandboxActions } from "../schema/sandbox/actions.ts";
-import {
-  SANDBOX_SLUG_MAX,
-  SANDBOX_SLUG_PATTERN,
-} from "../schema/sandbox/columns.ts";
 import { sandboxComments } from "../schema/sandbox/comments.ts";
 import { sandboxReviewVersions } from "../schema/sandbox/review-versions.ts";
 import { sandboxReviewers } from "../schema/sandbox/reviewers.ts";
 import { sandboxViewEvents } from "../schema/sandbox/view-events.ts";
 import { recordAction } from "./actions.ts";
+import { isSandboxSlug } from "./slug.ts";
 import {
   isUuid,
   requireAdmin,
@@ -67,7 +64,6 @@ export const ACTIONS_PAGE_SIZE = 50;
 
 export const ERASURE_INPUT_INVALID = "The erasure input is not valid.";
 
-const SLUG = new RegExp(SANDBOX_SLUG_PATTERN);
 /** The longest address the form takes; the gate stores nothing longer. */
 const EMAIL_MAX = 254;
 /** More accounts than one address can hold; a longer list is refused. */
@@ -151,12 +147,7 @@ export type ActionsPage = {
 };
 
 function validSlug(slug: unknown): string {
-  if (
-    typeof slug !== "string" ||
-    slug.length > SANDBOX_SLUG_MAX ||
-    !SLUG.test(slug)
-  )
-    throw new SandboxAccessError(ERASURE_INPUT_INVALID);
+  if (!isSandboxSlug(slug)) throw new SandboxAccessError(ERASURE_INPUT_INVALID);
   return slug;
 }
 

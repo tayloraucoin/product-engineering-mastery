@@ -41,6 +41,7 @@ import {
   variantsInput,
   withShownOrder,
 } from "./review-variants.ts";
+import { isSandboxSlug, SANDBOX_SLUG, SANDBOX_SLUG_MAX } from "./slug.ts";
 
 /** The answers' JSON, in bytes (data-contract.md). */
 export const REVIEW_ANSWERS_BYTES_MAX = 64 * 1024;
@@ -48,12 +49,6 @@ export const REVIEW_ANSWERS_BYTES_MAX = 64 * 1024;
 const REVIEW_INPUT_BYTES_MAX = 128 * 1024;
 /** One written answer, in characters; far below the 64 KB of all of them. */
 export const REVIEW_TEXT_MAX = 5000;
-
-const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
-
-function validSlug(slug: unknown): slug is string {
-  return typeof slug === "string" && slug.length <= 48 && SLUG.test(slug);
-}
 
 export function experimentPath(slug: string): string {
   return `/experimental/${encodeURIComponent(slug)}`;
@@ -109,7 +104,9 @@ const sendInput = z.strictObject({
       .optional(),
     gaps: text.optional(),
     targeted: z.string().max(200).optional(),
-    questions: z.record(z.string().regex(SLUG).max(48), text).optional(),
+    questions: z
+      .record(z.string().regex(SANDBOX_SLUG).max(SANDBOX_SLUG_MAX), text)
+      .optional(),
     nextStep: z.enum(ANSWER_OPTIONS.nextStep).optional(),
     ...variantsInput(text),
   }),
@@ -181,7 +178,7 @@ export async function sendReviewWith(
   slug: unknown,
   input: unknown,
 ): Promise<SendReviewResult> {
-  if (!validSlug(slug)) return { kind: "not-saved" };
+  if (!isSandboxSlug(slug)) return { kind: "not-saved" };
   if (
     bytes(input) > REVIEW_INPUT_BYTES_MAX ||
     bytes((input as { answers?: unknown } | null)?.answers) >

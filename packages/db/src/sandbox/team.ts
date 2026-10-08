@@ -27,16 +27,13 @@ import { and, asc, eq, isNotNull, isNull, max, sql } from "drizzle-orm";
 
 import { users } from "../schema/account/users.ts";
 import { sandboxComments, sandboxReviewers } from "../schema/index.ts";
-import {
-  SANDBOX_SLUG_MAX,
-  SANDBOX_SLUG_PATTERN,
-} from "../schema/sandbox/columns.ts";
 import type { SandboxCommentKind } from "../schema/sandbox/comments.ts";
 import {
   COMMENT_INPUT_INVALID,
   validCommentInput,
   type CommentAnchor,
 } from "./comments.ts";
+import { isSandboxSlug } from "./slug.ts";
 import {
   isUuid,
   requireTeam,
@@ -44,8 +41,6 @@ import {
   type SandboxDb,
   type Viewer,
 } from "./viewer.ts";
-
-const SLUG = new RegExp(SANDBOX_SLUG_PATTERN);
 
 /** Who wrote a root, as the team reads it: a reviewer by code, or a team member by email. */
 export type TeamCommentAuthor =
@@ -93,12 +88,7 @@ function invalid(): never {
 }
 
 function validSlug(value: unknown): string {
-  if (
-    typeof value !== "string" ||
-    value.length > SANDBOX_SLUG_MAX ||
-    !SLUG.test(value)
-  )
-    invalid();
+  if (!isSandboxSlug(value)) invalid();
   return value;
 }
 

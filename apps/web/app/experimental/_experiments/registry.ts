@@ -14,12 +14,9 @@
 import type { ComponentType } from "react";
 import { z } from "zod";
 
+import { SANDBOX_SLUG, SANDBOX_SLUG_MAX } from "../../../lib/sandbox/slug.ts";
 import { SANDBOX_TIME_ZONE, todayIn } from "../../../lib/sandbox/time.ts";
 import { pricing2026 } from "./pricing-2026/config.ts";
-
-/** A slug never changes once rows hold it, and is named as if it will leak. */
-export const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
-export const SLUG_MAX_LENGTH = 48;
 
 /** Neutral labels, fixed per experiment, at most four (D-LAB-10, S15). */
 export const DESIGN_SHAPES = [
@@ -41,7 +38,7 @@ export const REGISTRY_ERRORS = {
   unknownField: "config: a field the schema does not know",
   slugPattern:
     "slug: lower-case letters and digits in words joined by single hyphens",
-  slugLength: `slug: at most ${SLUG_MAX_LENGTH} characters`,
+  slugLength: `slug: at most ${SANDBOX_SLUG_MAX} characters`,
   slugDuplicate: "slug: already used by another experiment",
   title: "title: required",
   designsCount: "designs: 1 to 4 designs",
@@ -92,7 +89,7 @@ const designSchema = z.strictObject(
   {
     id: z
       .string({ error: E.designId })
-      .regex(SLUG_PATTERN, { error: E.designId })
+      .regex(SANDBOX_SLUG, { error: E.designId })
       .max(24, { error: E.designId }),
     shape: z.enum(DESIGN_SHAPES, { error: E.designShape }),
     component: z.custom<DesignLoader>((value) => typeof value === "function", {
@@ -106,8 +103,8 @@ export const experimentConfigSchema = z.strictObject(
   {
     slug: z
       .string({ error: E.slugPattern })
-      .max(SLUG_MAX_LENGTH, { error: E.slugLength })
-      .regex(SLUG_PATTERN, { error: E.slugPattern }),
+      .max(SANDBOX_SLUG_MAX, { error: E.slugLength })
+      .regex(SANDBOX_SLUG, { error: E.slugPattern }),
     title: nonEmpty(E.title),
     designs: z
       .array(designSchema, { error: E.designsCount })
@@ -153,7 +150,7 @@ export const experimentConfigSchema = z.strictObject(
             {
               id: z
                 .string({ error: E.questions })
-                .regex(SLUG_PATTERN, { error: E.questions }),
+                .regex(SANDBOX_SLUG, { error: E.questions }),
               text: nonEmpty(E.questions),
               kind: z
                 .enum(QUESTION_KINDS, { error: E.questionKind })

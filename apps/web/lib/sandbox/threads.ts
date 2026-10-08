@@ -31,6 +31,7 @@ import type {
 import type { ExperimentConfig } from "../../app/experimental/_experiments/registry.ts";
 import type { ViewerResult } from "./access-check.ts";
 import type { SendResult } from "./client/queue.ts";
+import { isSandboxSlug } from "./slug.ts";
 import { commentIdInput, replyInput, replyRootInput } from "./validators.ts";
 
 /** A reply as the browser reads it: its time as an ISO string. */
@@ -103,12 +104,6 @@ export type ThreadsDeps = {
   ): Promise<void>;
 };
 
-const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
-
-function validSlug(slug: unknown): slug is string {
-  return typeof slug === "string" && slug.length <= 48 && SLUG.test(slug);
-}
-
 type Served =
   | { kind: "reviewer"; viewer: ReviewerViewer; input: ThreadInput }
   | { kind: "team"; viewer: TeamViewer; input: ThreadInput }
@@ -155,7 +150,7 @@ export async function listThreadWith(
   deps: ThreadsDeps,
   slug: unknown,
 ): Promise<ListThreadResult> {
-  if (!validSlug(slug)) return { kind: "failed" };
+  if (!isSandboxSlug(slug)) return { kind: "failed" };
   try {
     const served = await serve(deps, slug);
     if (served.kind === "closed" || served.kind === "revoked")
@@ -181,7 +176,7 @@ export async function listRepliesWith(
   input: unknown,
 ): Promise<ListRepliesResult> {
   const parsed = replyRootInput.safeParse(input);
-  if (!validSlug(slug) || !parsed.success) return { kind: "failed" };
+  if (!isSandboxSlug(slug) || !parsed.success) return { kind: "failed" };
   try {
     const served = await serve(deps, slug);
     if (served.kind === "closed" || served.kind === "revoked")
@@ -214,7 +209,7 @@ export async function saveReplyWith(
   input: unknown,
 ): Promise<ReplyResult> {
   const parsed = replyInput.safeParse(input);
-  if (!validSlug(slug) || !parsed.success) return { kind: "not-saved" };
+  if (!isSandboxSlug(slug) || !parsed.success) return { kind: "not-saved" };
   try {
     const served = await serve(deps, slug);
     if (served.kind !== "reviewer" && served.kind !== "team")
@@ -237,7 +232,7 @@ export async function deleteReplyWith(
   input: unknown,
 ): Promise<ReplyResult> {
   const parsed = commentIdInput.safeParse(input);
-  if (!validSlug(slug) || !parsed.success) return { kind: "not-saved" };
+  if (!isSandboxSlug(slug) || !parsed.success) return { kind: "not-saved" };
   try {
     const served = await serve(deps, slug);
     if (served.kind !== "reviewer" && served.kind !== "team")

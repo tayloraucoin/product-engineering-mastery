@@ -32,6 +32,7 @@ import {
   type SandboxCommentKind,
 } from "../schema/sandbox/comments.ts";
 import { REVIEWER_NOT_FOUND } from "./experiment.ts";
+import { SANDBOX_SLUG } from "./slug.ts";
 import {
   isUuid,
   requireReviewer,
@@ -50,7 +51,8 @@ export const COMMENTS_PER_REVIEWER_MAX = 500;
 /** An anchor's JSON, in bytes. */
 export const ANCHOR_BYTES_MAX = 2048;
 
-const DESIGN_ID = /^[a-z0-9]+(-[a-z0-9]+)*$/;
+/** A design id has a slug's shape, with its own cap. */
+const DESIGN_ID = SANDBOX_SLUG;
 const DESIGN_ID_MAX = 24;
 /** A pin's number; far above the cap, so a real number always fits. */
 const NUMBER_MAX = 100_000;
