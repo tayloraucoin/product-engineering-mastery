@@ -129,10 +129,27 @@
       "runs": 1
     },
     "review:warden": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run warden LAB-25",
+        "exit": 0,
+        "at": "2026-10-08T00:35:27Z",
+        "head": "09ae658234e258512682dd87e59a12936786184b",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-025-threads-data/review-warden.md",
+        "evidence_sha256": "8f7468a1f9ec44c500400d9a11b12111dcd09d927357dc213303a6fea2dd878e",
+        "contract_sha256": "19e7342a90ee30621b52ef958498352d75431700222602877f10e76f560551db",
+        "criteria_sha256": "de327f783a2a24a287ec3e99414b7c32e8390f8b92ae3fb4eace38991c2fadb1",
+        "as_built_sha256": "7e56a9e9843aebe0a4c0c97446db43c19d19cdc28c2ecb3bb0bf417a6cb286c0",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)",
+        "tokens_input": 18,
+        "tokens_cache_read": 2320165,
+        "tokens_cache_write": 176233,
+        "tokens_output": 22871,
+        "seconds": 369.7
+      },
+      "runs": 1
     }
   },
-  "updated_at": "2026-10-08T00:35:14Z"
+  "updated_at": "2026-10-08T00:41:37Z"
 }

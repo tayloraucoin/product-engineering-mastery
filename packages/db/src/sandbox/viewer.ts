@@ -13,7 +13,7 @@
  * Errors are fixed strings that never echo input.
  */
 
-import { and, eq, isNotNull, or, type SQL } from "drizzle-orm";
+import { and, eq, isNotNull, or, sql, type SQL } from "drizzle-orm";
 import type { AnyPgColumn } from "drizzle-orm/pg-core";
 
 import type { Db } from "../client.ts";
@@ -81,6 +81,9 @@ export const SCOPE_MODE_INVALID = "The scope's mode is not valid.";
  * on their slug. Collaborate (beat 2, D-LAB-17), for reads of
  * `sandbox_comments` only: the slug's reviewer comments and replies, and the
  * team's replies, never a team note. A team row with no parent is a note.
+ * Its predicate no longer names the viewer, so it also proves the viewer's
+ * access belongs to their reviewer on that slug, as a write's lock does: a
+ * crossed viewer reads nothing.
  */
 export function reviewerScope(
   viewer: Viewer,
@@ -99,11 +102,14 @@ export function reviewerScope(
     )!;
   if (options?.mode !== "collaborate" || !columns.parentId)
     throw new SandboxAccessError(SCOPE_MODE_INVALID);
-  return threadRowsOn(reviewer.slug, {
-    reviewerId: columns.reviewerId,
-    slug: columns.slug,
-    parentId: columns.parentId,
-  });
+  return and(
+    threadRowsOn(reviewer.slug, {
+      reviewerId: columns.reviewerId,
+      slug: columns.slug,
+      parentId: columns.parentId,
+    }),
+    sql`exists (select 1 from public.sandbox_accesses as scope_access join public.sandbox_reviewers as scope_reviewer on scope_reviewer.id = scope_access.reviewer_id where scope_access.id = ${reviewer.accessId} and scope_reviewer.id = ${reviewer.reviewerId} and scope_reviewer.slug = ${reviewer.slug})`,
+  )!;
 }
 
 /**

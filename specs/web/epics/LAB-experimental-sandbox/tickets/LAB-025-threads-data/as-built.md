@@ -2,7 +2,7 @@
 
 ## Shipped against the contract
 
-- The scope: `reviewerScope(viewer, columns, { mode })` in `packages/db/src/sandbox/viewer.ts`. Private, the default, is the viewer's own rows on their slug. Collaborate is `slug = viewer.slug and (reviewer_id is not null or parent_id is not null)`. It needs a `parentId` column and refuses any other mode (`SCOPE_MODE_INVALID`). Every write still calls it with no mode. The collaborate predicate is `threadRowsOn(slug, columns)`, its one home, which the team's thread read uses too. The unit test `packages/db/src/sandbox/viewer.test.ts` pins both SQL shapes and both refusals: an unknown mode, and collaborate asked of a table with no `parentId`.
+- The scope: `reviewerScope(viewer, columns, { mode })` in `packages/db/src/sandbox/viewer.ts`. Private, the default, is the viewer's own rows on their slug. Collaborate is `slug = viewer.slug and (reviewer_id is not null or parent_id is not null)`. It needs a `parentId` column and refuses any other mode (`SCOPE_MODE_INVALID`). Every write still calls it with no mode. The collaborate predicate is `threadRowsOn(slug, columns)`, its one home, which the team's thread read uses too. Because that predicate no longer names the viewer, the collaborate scope also requires the viewer's access to belong to their reviewer on that slug (an `exists` over `sandbox_accesses` and `sandbox_reviewers`), as a write's lock does. A crossed slug, reviewer or access reads nothing (Warden, round 1). The unit test `packages/db/src/sandbox/viewer.test.ts` pins both SQL shapes and both refusals: an unknown mode, and collaborate asked of a table with no `parentId`.
 - C1 to C6, C8: `packages/db/src/sandbox/threads.ts` holds `listThread`, `listReplies`, `saveReply` and `deleteReply`, each `(db, viewer, input)`.
   - A reviewer reads through the scope. The team reads the slug's reviewer comments with every reply, and its input names the slug. A reviewer's input never may.
   - Rows to a reviewer: author is `self`, `{ reviewer: displayName | null }` or `team`, and `number` appears on their own roots only. Rows to the team: author is `self`, `{ reviewer: label }` or `{ team: email }`.
@@ -26,9 +26,11 @@
 - Contract assumptions kept as written: replies count toward the 500; a mode never changes once a slug holds data; the team may reply after close.
 - To start, LAB-24's C2 (`yarn lint:docs`) had to pass. It was red only on `docs/research/ui-patterns/working-dashboards.md`, which had been dropped in 110cd6e without frontmatter. That file was filed by record 0006 (`f0fb82d`: frontmatter prepended, body byte-identical, a manifest line, a landing page), and LAB-24's C2 was run again, as the start gate directs.
 
+- Follow-up LAB-32 (`threads-hardening`, drafted) takes Warden's Consider findings: the two races, a ceiling on the thread read, and a team-note delete that takes its replies, so no team reply can ever rebuild as "Comment removed" for a reviewer. It depends on LAB-14. The admin counts that now count replies as comments (LAB-16, LAB-10) are named there for their own tickets.
+
 ## Not verified
 
-- No manual criterion. Concurrency is not proven: two saves of one reply id at once, and an erasure racing a reply. The insert conflicts, and the access foreign key refuses a reply from an access erased since the request began (`REVIEWER_NOT_FOUND`). No test drives either race.
+- No manual criterion. Concurrency is not proven (LAB-32): two saves of one reply id at once, and an erasure racing a reply. The insert conflicts, and the access foreign key refuses a reply from an access erased since the request began (`REVIEWER_NOT_FOUND`). No test drives either race.
 
 ## Next
 

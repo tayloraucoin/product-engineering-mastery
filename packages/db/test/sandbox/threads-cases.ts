@@ -188,15 +188,43 @@ export function threadsCases({ db, viewerFor }: Deps): Registry<World> {
         }),
         refusedWith(THREAD_INPUT_INVALID),
       );
-      const other = me.slug === w.slugA ? w.slugB : w.slugA;
-      assert.deepEqual(
-        await sandbox.listThread(
-          db(),
-          { ...me, slug: other },
-          { mode: "private" },
+      // A crossed slug or reviewer reads nothing in either mode; a crossed
+      // access, nothing in collaborate mode, where the predicate no longer
+      // names the reviewer (private reads stay the reviewer's own rows).
+      const far = (me.slug === w.slugA ? w.b : w.a1).viewer;
+      const peerAccess = peer
+        ? [{ ...me, accessId: peer.viewer.accessId }]
+        : [];
+      const crossings: [
+        ReviewerViewer,
+        readonly ("private" | "collaborate")[],
+      ][] = [
+        [{ ...me, slug: far.slug }, MODES],
+        [{ ...me, reviewerId: far.reviewerId }, MODES],
+        [{ ...me, accessId: far.accessId }, ["collaborate"]],
+        ...peerAccess.map(
+          (v) =>
+            [v, ["collaborate"]] as [
+              ReviewerViewer,
+              readonly ("private" | "collaborate")[],
+            ],
         ),
-        [],
-      );
+      ];
+      for (const [crossed, modes] of crossings)
+        for (const mode of modes) {
+          assert.deepEqual(
+            await sandbox.listThread(db(), crossed, { mode }),
+            [],
+            `${mode}: a crossed viewer read rows`,
+          );
+          assert.deepEqual(
+            await sandbox.listReplies(db(), crossed, {
+              rootId: (peer ?? rows).commentId,
+              mode,
+            }),
+            [],
+          );
+        }
       for (const bad of [{}, { mode: "open" }, null])
         await assert.rejects(
           sandbox.listThread(db(), me, bad as never),

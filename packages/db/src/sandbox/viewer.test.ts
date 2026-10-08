@@ -79,9 +79,14 @@ test("reviewerScope in collaborate mode widens to the slug's reviewer rows and r
   );
   assert.equal(
     sql,
-    '("sandbox_comments"."slug" = $1 and ("sandbox_comments"."reviewer_id" is not null or "sandbox_comments"."parent_id" is not null))',
+    '(("sandbox_comments"."slug" = $1 and ("sandbox_comments"."reviewer_id" is not null or "sandbox_comments"."parent_id" is not null)) and exists (select 1 from public.sandbox_accesses as scope_access join public.sandbox_reviewers as scope_reviewer on scope_reviewer.id = scope_access.reviewer_id where scope_access.id = $2 and scope_reviewer.id = $3 and scope_reviewer.slug = $4))',
   );
-  assert.deepEqual(params, ["pricing-2026"]);
+  assert.deepEqual(params, [
+    "pricing-2026",
+    "00000000-0000-4000-8000-000000000002",
+    "00000000-0000-4000-8000-000000000001",
+    "pricing-2026",
+  ]);
   // Private is the default; a write never passes a mode.
   assert.equal(
     new PgDialect().sqlToQuery(
