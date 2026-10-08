@@ -15,6 +15,20 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-07 — MIG: an existing repo joins the practice by migration, as an overlay
+
+Serves the migration brief (`specs/_shared/epics/MIG-codebase-migration/brief.md`), ratified by the operator 2026-10-07 (T1 to T11). The tiers `starter`, `overlay` and `overlay-local` are now on the record ([0012](records/0012-adoption-tiers.md)); the ledger gains EN-16 and EN-17. Each line names the ticket that built it; the state is as of this entry.
+
+- **The probe and the overlay edits (MIG-1).** `tooling/lib/layout.ts` answers the layout questions; `verify:fast`, the stop gate and the other scripts and hooks that assumed the starter's layout read it. Starter behaviour is unchanged; `tooling/overlay.test.ts` runs every installed script and hook on a single-app scratch repo.
+- **The settings floor and the local layer (MIG-2).** `check-settings` judges only the floor and the two team hooks in the tracked file under the overlay tiers; `yarn doctor` fails an operator row (the push deny, the bash guard, the stop gate) that sits in neither settings file; `session-start.ts` names only the spine files that exist.
+- **The manifest and the refs check (MIG-3).** `docs/runbooks/migrate/manifest.json` lists day one's files, copied or derived; under overlay `check-refs` reads the manifest's paths and the spine only.
+- **Reviewer imports and `check-reviewers` (MIG-4).** A reviewer row may match by what a file imports; `check-reviewers` fails a row that matches nothing under overlay (EN-16, EN-17).
+- **`yarn migrate:assess` (MIG-5).** The seventeen-signal report, its score, gate and path, read-only and node built-ins only. **Not yet built:** the listings (policy conflicts, SDK importers, records, collisions, hygiene) and the five measured convention and process signals (MIG-6), and the `--check`, `--end` and `--protected` preconditions (MIG-7). The runbook's steps 0 and 8 need MIG-7.
+- **The track and the runbook (MIG-8, MIG-9, MIG-10).** `docs/workflows/tracks/migrate.md` and `docs/runbooks/migrate/` (the interview in six rounds, layer 1 in ten steps, layer 2's `verify.md`, layer 3's twelve gap tickets), and three desk walks of it against the near, middle and far repos with every stop they found fixed.
+- **Record 0012 (MIG-11).** The adoption tiers: the modes, host docs left alone, the tracked floor and the local layer, the one probe, and the exit.
+
+`docs/index.md`, `docs/design/canon.md` and every workspace-package boundary are unchanged.
+
 ## 2026-10-07 — PEM: the headless reviewer prompt is single-pass and scoped (C3)
 
 The ticket prompt `tooling/review-run.ts` generates now tells the reviewer this is the only pass unless it FAILs, so every finding is listed now, graded with a file and line; judges the planned-path changes against the criteria and non-negotiables; follows an import one hop out of a changed file only to confirm a Blocking; reads the as-built as a claim to check inside the changed files; and reads only the parts of the cited surface the contract names. Should-fix and Consider findings become follow-ups and never reopen the review; the VERDICT contract is unchanged, and `tooling/contract-review.test.ts` pins the text. Kept after one calibration (`specs/_shared/reports/2026-10-07-reviewer-prompt-calibration.md`): the old and the new prompt ran once each as Warden on STK-21 at `6960357`; both returned PASS with no Blocking, so the new prompt missed none; the pair was 0.04M weighted tokens and 7 seconds apart, inside between-run variance, so the saving per run stays the audit's estimate.
