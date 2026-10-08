@@ -8,11 +8,11 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-07T18:43:27Z",
-        "head": "b78b30d213059222715fc3663ca477604012a953",
+        "at": "2026-10-08T01:44:30Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-016-admin-data/evidence/C1.log",
-        "evidence_sha256": "e8ef9739f0fb03160d7e64a148cfff4c3a0a1e6689fd4e2800303800b9033999",
-        "tests": 189
+        "evidence_sha256": "9b1a4eaf163a06c4cecda36a8cecb9b85761fafbf1a98911a8fea1b11546c0b2",
+        "tests": 249
       }
     },
     "C2": {
@@ -21,24 +21,24 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-07T18:43:27Z",
-        "head": "b78b30d213059222715fc3663ca477604012a953",
+        "at": "2026-10-08T01:44:30Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-016-admin-data/evidence/C2.log",
-        "evidence_sha256": "e8ef9739f0fb03160d7e64a148cfff4c3a0a1e6689fd4e2800303800b9033999",
-        "tests": 189
+        "evidence_sha256": "9b1a4eaf163a06c4cecda36a8cecb9b85761fafbf1a98911a8fea1b11546c0b2",
+        "tests": 249
       }
     },
     "C3": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
       "run": {
         "command": "yarn workspace web test",
-        "exit": 1,
-        "at": "2026-10-07T18:43:45Z",
-        "head": "b78b30d213059222715fc3663ca477604012a953",
+        "exit": 0,
+        "at": "2026-10-08T01:44:53Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-016-admin-data/evidence/C3.log",
-        "evidence_sha256": "ad3de5b0ab0547e97591d5e6c7d9065c2aab05cdeef67d60a47285398b848cc3",
-        "tests": 330
+        "evidence_sha256": "3b64d7114e7996686330f97e218e0bd740d80f4a37cb3b461ac8aec6d66e6a24",
+        "tests": 473
       }
     },
     "C4": {
@@ -47,11 +47,11 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-07T18:43:27Z",
-        "head": "b78b30d213059222715fc3663ca477604012a953",
+        "at": "2026-10-08T01:44:30Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-016-admin-data/evidence/C4.log",
-        "evidence_sha256": "e8ef9739f0fb03160d7e64a148cfff4c3a0a1e6689fd4e2800303800b9033999",
-        "tests": 189
+        "evidence_sha256": "9b1a4eaf163a06c4cecda36a8cecb9b85761fafbf1a98911a8fea1b11546c0b2",
+        "tests": 249
       }
     },
     "C5": {
@@ -60,24 +60,24 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-07T18:43:27Z",
-        "head": "b78b30d213059222715fc3663ca477604012a953",
+        "at": "2026-10-08T01:44:30Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-016-admin-data/evidence/C5.log",
-        "evidence_sha256": "e8ef9739f0fb03160d7e64a148cfff4c3a0a1e6689fd4e2800303800b9033999",
-        "tests": 189
+        "evidence_sha256": "9b1a4eaf163a06c4cecda36a8cecb9b85761fafbf1a98911a8fea1b11546c0b2",
+        "tests": 249
       }
     },
     "C6": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
       "run": {
         "command": "yarn workspace web test",
-        "exit": 1,
-        "at": "2026-10-07T18:43:45Z",
-        "head": "b78b30d213059222715fc3663ca477604012a953",
+        "exit": 0,
+        "at": "2026-10-08T01:44:53Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-016-admin-data/evidence/C6.log",
-        "evidence_sha256": "ad3de5b0ab0547e97591d5e6c7d9065c2aab05cdeef67d60a47285398b848cc3",
-        "tests": 330
+        "evidence_sha256": "3b64d7114e7996686330f97e218e0bd740d80f4a37cb3b461ac8aec6d66e6a24",
+        "tests": 473
       }
     },
     "C7": {
@@ -86,37 +86,37 @@
       "run": {
         "command": "yarn workspace @pem/db test:db",
         "exit": 0,
-        "at": "2026-10-07T18:43:27Z",
-        "head": "b78b30d213059222715fc3663ca477604012a953",
+        "at": "2026-10-08T01:44:30Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-016-admin-data/evidence/C7.log",
-        "evidence_sha256": "e8ef9739f0fb03160d7e64a148cfff4c3a0a1e6689fd4e2800303800b9033999",
-        "tests": 189
+        "evidence_sha256": "9b1a4eaf163a06c4cecda36a8cecb9b85761fafbf1a98911a8fea1b11546c0b2",
+        "tests": 249
       }
     },
     "C8": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
       "run": {
         "command": "yarn workspace web test",
-        "exit": 1,
-        "at": "2026-10-07T18:43:45Z",
-        "head": "b78b30d213059222715fc3663ca477604012a953",
+        "exit": 0,
+        "at": "2026-10-08T01:44:53Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-016-admin-data/evidence/C8.log",
-        "evidence_sha256": "ad3de5b0ab0547e97591d5e6c7d9065c2aab05cdeef67d60a47285398b848cc3",
-        "tests": 330
+        "evidence_sha256": "3b64d7114e7996686330f97e218e0bd740d80f4a37cb3b461ac8aec6d66e6a24",
+        "tests": 473
       }
     },
     "C9": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "test",
       "run": {
         "command": "yarn workspace web test",
-        "exit": 1,
-        "at": "2026-10-07T18:43:45Z",
-        "head": "b78b30d213059222715fc3663ca477604012a953",
+        "exit": 0,
+        "at": "2026-10-08T01:44:53Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-016-admin-data/evidence/C9.log",
-        "evidence_sha256": "ad3de5b0ab0547e97591d5e6c7d9065c2aab05cdeef67d60a47285398b848cc3",
-        "tests": 330
+        "evidence_sha256": "3b64d7114e7996686330f97e218e0bd740d80f4a37cb3b461ac8aec6d66e6a24",
+        "tests": 473
       }
     },
     "C10": {
@@ -125,10 +125,10 @@
       "run": {
         "command": "yarn contract:record LAB-16 C10 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-016-admin-data/evidence/C10-operator.md --verdict deferred",
         "exit": 0,
-        "at": "2026-10-07T18:43:21Z",
-        "head": "b78b30d213059222715fc3663ca477604012a953",
+        "at": "2026-10-08T01:51:54Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-016-admin-data/evidence/C10-operator.md",
-        "evidence_sha256": "d815ad950bc48e7b15e1ed6b90f2e85f199b3dd99d98f8c3445e7adf51f38080",
+        "evidence_sha256": "7e50d3c9545e785c2b2603a35d2aa585ea66c472bc918f749d3f5dab9ae668e4",
         "deferred": true
       }
     },
@@ -138,26 +138,76 @@
       "run": {
         "command": "yarn contract:record LAB-16 C11 --evidence specs/web/epics/LAB-experimental-sandbox/tickets/LAB-016-admin-data/evidence/data-states.png",
         "exit": 0,
-        "at": "2026-10-07T18:43:09Z",
-        "head": "b78b30d213059222715fc3663ca477604012a953",
+        "at": "2026-10-08T02:03:38Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
         "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-016-admin-data/evidence/data-states.png",
-        "evidence_sha256": "9b3b70c0b950aeeddfd4524b51145e034dc12d5b8db1eb5f511228033aa6554d"
+        "evidence_sha256": "8095d33f3370fce13ec74c7011f196ba43b69f5257b856ee11abdaa952aa2f35"
       }
     },
     "review:assay": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run assay LAB-16",
+        "exit": 0,
+        "at": "2026-10-08T02:04:15Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-016-admin-data/review-assay.md",
+        "evidence_sha256": "47472d7447def4a22f291330c072a1cbdf2bdaeea2344bb646b05634a6072ead",
+        "contract_sha256": "8c1b1605ef1938ac7b89fd2cda1d2c04bde3779008ffee28b115f8092d73367e",
+        "criteria_sha256": "770c82a6452886aacf1fc872b14a362dd0334df30599a7c283d894af20a2f357",
+        "as_built_sha256": "6ee5aec2e8bb7f0215bdebf91cdda875ad90ae82cd3cffb3f176231e6dc016c1",
+        "runner": "claude 2.1.232 (Claude Code) (agent assay; tools Read,Grep,Glob)",
+        "tokens_input": 30,
+        "tokens_cache_read": 1699515,
+        "tokens_cache_write": 166994,
+        "tokens_output": 21462,
+        "seconds": 339.2
+      },
+      "runs": 1
     },
     "review:mason": {
-      "status": "FAIL",
+      "status": "PASS",
       "evidence": "manual",
-      "run": null
+      "run": {
+        "command": "yarn review:run mason LAB-16",
+        "exit": 0,
+        "at": "2026-10-08T02:10:12Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-016-admin-data/review-mason.md",
+        "evidence_sha256": "7fb8726750162efcc8edee5e613e3136564f78d642e41e8f6151b15d27541191",
+        "contract_sha256": "8c1b1605ef1938ac7b89fd2cda1d2c04bde3779008ffee28b115f8092d73367e",
+        "criteria_sha256": "770c82a6452886aacf1fc872b14a362dd0334df30599a7c283d894af20a2f357",
+        "as_built_sha256": "6ee5aec2e8bb7f0215bdebf91cdda875ad90ae82cd3cffb3f176231e6dc016c1",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/mason-cto-principal-dev.md; tools Read,Grep,Glob)",
+        "tokens_input": 35,
+        "tokens_cache_read": 4930538,
+        "tokens_cache_write": 228613,
+        "tokens_output": 24122,
+        "seconds": 375.6
+      },
+      "runs": 1
     },
     "review:warden": {
       "status": "FAIL",
       "evidence": "manual",
-      "run": null,
+      "run": {
+        "command": "yarn review:run warden LAB-16",
+        "exit": 1,
+        "at": "2026-10-08T02:16:47Z",
+        "head": "eff9425ea2ce895189537dccb1cc15d59d7a94c8",
+        "evidence_path": "specs/web/epics/LAB-experimental-sandbox/tickets/LAB-016-admin-data/review-warden.md",
+        "evidence_sha256": "db265c72c82ca8814783ff081f647549647672ed3622f2ab97c0ffc0bf769a07",
+        "contract_sha256": "8c1b1605ef1938ac7b89fd2cda1d2c04bde3779008ffee28b115f8092d73367e",
+        "criteria_sha256": "770c82a6452886aacf1fc872b14a362dd0334df30599a7c283d894af20a2f357",
+        "as_built_sha256": "6ee5aec2e8bb7f0215bdebf91cdda875ad90ae82cd3cffb3f176231e6dc016c1",
+        "runner": "claude 2.1.232 (Claude Code) (role docs/roles/engineering/warden-security-privacy-engineer.md; tools Read,Grep,Glob)",
+        "tokens_input": 0,
+        "tokens_cache_read": 0,
+        "tokens_cache_write": 0,
+        "tokens_output": 0,
+        "seconds": 9.1
+      },
       "refused": [
         {
           "at": "2026-10-07T18:44:38Z",
@@ -166,5 +216,5 @@
       ]
     }
   },
-  "updated_at": "2026-10-07T18:44:38Z"
+  "updated_at": "2026-10-08T02:16:57Z"
 }

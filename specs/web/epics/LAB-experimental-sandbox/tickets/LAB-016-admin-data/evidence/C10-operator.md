@@ -1,5 +1,7 @@
 # LAB-16 C10 — keyboard alone and a screen reader (operator check)
 
+Re-walked on 2026-10-07 at eff9425 against `?state=data-page-success` and `data-tab-*`, keyboard only: "Reviewer's email", Enter on Find keeps the email out of the URL and moves focus to the result heading; Tab reaches the label checkbox (named by aria-labelledby "Also clear the label 'Ana Ruiz' on Pricing 2026"), Space ticks it, Tab, Enter opens the erase confirmation with focus on "Cancel". Unchanged from the walk below.
+
 Walked by the builder on 2026-10-07 in the browser pane at 1440, on the local
 database, with a synthetic team member (a scratch copy of `team.ts`; this
 machine has no Supabase Auth) and synthetic rows on a scratch-only slug, so
