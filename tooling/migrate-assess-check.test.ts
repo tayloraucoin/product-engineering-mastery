@@ -25,6 +25,7 @@ import {
   removeScratch,
   scratchOrigin,
   scratchTarget,
+  snapshotTree,
   writeFiles,
 } from "./lib/assess/scratch-target.ts";
 
@@ -37,7 +38,8 @@ function readyRepo(): string {
   const dir = scratchTarget({ "package.json": pkg({ scripts: {} }) });
   const origin = scratchOrigin();
   git(dir, "remote", "add", "origin", origin);
-  git(dir, "push", "-q", "-u", "origin", "main");
+  // Pushed with no upstream configured, as two of the three real repos are: the check reads refs/remotes/origin/, never @{upstream}.
+  git(dir, "push", "-q", "origin", "main");
   git(dir, "switch", "-q", "-c", "migrate");
   return dir;
 }
@@ -67,10 +69,75 @@ const failedIds = (
 };
 
 test("C1 (MIG-7) a clean repo on a fresh branch off a pushed protected branch passes every precondition", () => {
-  const r = failedIds(readyRepo());
+  const dir = readyRepo();
+  assert.equal(
+    git(dir, "for-each-ref", "--format=%(upstream)", "refs/heads/main"),
+    "",
+    "no upstream is configured",
+  );
+  const before = snapshotTree(dir);
+  const r = failedIds(dir);
   assert.equal(r.status, 0, r.out + r.err);
   assert.deepEqual(r.failed, []);
   assert.match(r.out, /every precondition holds \(\d+\)/);
+  assert.deepEqual(
+    snapshotTree(dir),
+    before,
+    "the check writes nothing, .git included",
+  );
+});
+
+test("C1 (MIG-7) a migration branch behind the protected tip fails protected-holds-fork with the reset fix, not the rename fix", () => {
+  const dir = readyRepo();
+  git(dir, "switch", "-q", "main");
+  writeFiles(dir, { "README.md": "# Pulled\n" });
+  commitAll(dir, "team");
+  git(dir, "push", "-q", "origin", "main");
+  git(dir, "switch", "-q", "migrate");
+  const r = failedIds(dir);
+  assert.equal(r.status, 1, r.out);
+  assert.deepEqual(
+    r.failed.map(([id]) => id),
+    ["protected-holds-fork"],
+  );
+  assert.match(
+    r.failed[0]![1],
+    /behind main by 1 commits.*git reset --hard main/,
+  );
+});
+
+test("C1 (MIG-7) --protected origin/main names no local branch; a migration branch cut from origin/main while local main is stale fails protected-pushed alone; a pushed migration branch still owns its commits", () => {
+  const typo = failedIds(readyRepo(), [], {}, "origin/main");
+  assert.equal(typo.status, 1);
+  assert.deepEqual(
+    typo.failed.map(([id]) => id),
+    ["protected-exists"],
+  );
+  assert.match(typo.failed[0]![1], /without a remote prefix/);
+  const dir = readyRepo();
+  // The remote moves on; the operator fetches and cuts the migration branch from origin/main, leaving local main stale.
+  git(dir, "switch", "-q", "main");
+  writeFiles(dir, { "README.md": "# Remote\n" });
+  commitAll(dir, "remote");
+  git(dir, "push", "-q", "origin", "main");
+  git(dir, "reset", "-q", "--hard", "HEAD~1");
+  git(dir, "switch", "-q", "migrate");
+  git(dir, "reset", "-q", "--hard", "origin/main");
+  const r = failedIds(dir);
+  assert.deepEqual(
+    r.failed.map(([id]) => id),
+    ["protected-pushed"],
+  );
+  assert.match(r.failed[0]![1], /differs from refs\/remotes\/origin\/main/);
+  const retry = readyRepo();
+  writeFiles(retry, { "AGENTS.md": "# Agents\n" });
+  commitAll(retry, "attempt one");
+  git(retry, "push", "-q", "origin", "migrate");
+  const again = failedIds(retry);
+  assert.deepEqual(
+    again.failed.map(([id]) => id),
+    ["fork-point-clean"],
+  );
 });
 
 test("C1 (MIG-7) a dirty tree, untracked file included, fails clean-tree alone", () => {
@@ -197,7 +264,7 @@ test("C2 (MIG-7) a stale protected branch (the migration branch forks from a new
   const dir = scratchTarget({ "package.json": pkg({ scripts: {} }) });
   const origin = scratchOrigin();
   git(dir, "remote", "add", "origin", origin);
-  git(dir, "push", "-q", "-u", "origin", "main");
+  git(dir, "push", "-q", "origin", "main");
   // The real work lives on a pushed branch main never caught up with.
   git(dir, "switch", "-q", "-c", "feature/workflow");
   writeFiles(dir, {
@@ -205,7 +272,7 @@ test("C2 (MIG-7) a stale protected branch (the migration branch forks from a new
     "apps/web/page.tsx": "export {};\n",
   });
   commitAll(dir, "work");
-  git(dir, "push", "-q", "-u", "origin", "feature/workflow");
+  git(dir, "push", "-q", "origin", "feature/workflow");
   git(dir, "switch", "-q", "-c", "migrate");
   let r = failedIds(dir);
   assert.equal(r.status, 1);

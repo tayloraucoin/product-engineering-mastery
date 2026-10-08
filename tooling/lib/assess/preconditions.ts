@@ -110,11 +110,12 @@ export function checkPreconditions(
     return out;
   }
 
-  const protectedTip = rev(protectedBranch);
+  // A local branch by name, never a tag or a remote-tracking ref: `origin/main` is a typo here.
+  const protectedTip = rev(`refs/heads/${protectedBranch}`);
   rule(
     "protected-exists",
     Boolean(protectedTip),
-    `no local branch ${protectedBranch}; the operator fetches or names the right branch`,
+    `no local branch ${protectedBranch}; name the branch work merges into, without a remote prefix, or fetch it first`,
   );
 
   if (branch) {
@@ -140,14 +141,19 @@ export function checkPreconditions(
     if (head) {
       if (!end) {
         const protectedIsAncestor = isAncestor(protectedTip, head);
-        const headIsAncestor = isAncestor(head, protectedTip);
-        const pushedElsewhere = Boolean(
-          (repo.git("branch", "-r", "--contains", head) ?? "").trim(),
-        );
+        // Remote branches holding HEAD, the migration branch's own copy aside
+        // (a retry after an aborted day pushed it; those commits are still its own).
+        const pushedElsewhere = (
+          repo.git("branch", "-r", "--contains", head) ?? ""
+        )
+          .split("\n")
+          .map((line) => line.trim())
+          .filter(Boolean)
+          .some((name) => name !== `origin/${branch}`);
         const ahead = Number(
           repo.git("rev-list", "--count", `${protectedBranch}..HEAD`) ?? "0",
         );
-        // Commits past the protected tip that no remote branch holds are the migration branch's own.
+        // Commits past the protected tip that no other remote branch holds are the migration branch's own.
         const ownCommits =
           head !== protectedTip && protectedIsAncestor && !pushedElsewhere;
         rule(
@@ -155,10 +161,21 @@ export function checkPreconditions(
           !ownCommits,
           `the migration branch already has ${ahead} commits beyond its fork point from ${protectedBranch}; the operator starts from a fresh branch off ${protectedBranch}`,
         );
+        // Behind the protected tip: the merge base is HEAD, not the tip, as after the operator pulls the protected branch and keeps the old migration branch.
+        const behind = head !== protectedTip && isAncestor(head, protectedTip);
+        // HEAD held by the protected branch's remote copy: the local protected branch is stale behind its own remote, and protected-pushed carries the fix.
+        const remoteHoldsHead = Boolean(
+          remoteTip && isAncestor(head, remoteTip),
+        );
+        const holds = behind
+          ? false
+          : ownCommits || head === protectedTip || remoteHoldsHead;
         rule(
           "protected-holds-fork",
-          ownCommits || headIsAncestor,
-          `${protectedBranch} does not hold the fork point (${head.slice(0, 7)} is not on it); set the protected branch to the branch work merges into`,
+          holds,
+          behind
+            ? `the migration branch is behind ${protectedBranch} by ${repo.git("rev-list", "--count", `HEAD..${protectedBranch}`) ?? "?"} commits; the operator resets it to ${protectedBranch}'s tip (git reset --hard ${protectedBranch}) before the run`
+            : `${protectedBranch} does not hold the fork point (${head.slice(0, 7)} is not on it); set the protected branch to the branch work merges into`,
         );
       } else {
         rule(
