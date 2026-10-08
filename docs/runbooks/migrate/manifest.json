@@ -289,6 +289,12 @@
     },
     {
       "group": "tooling",
+      "path": "tooling/cost.ts",
+      "mode": "copy",
+      "when": "always"
+    },
+    {
+      "group": "tooling",
       "path": "tooling/spec-init.ts",
       "mode": "copy",
       "when": "always"

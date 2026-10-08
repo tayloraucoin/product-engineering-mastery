@@ -36,6 +36,7 @@ planned_paths:
   - ".claude/rules/specs.md"
   - ".claude/skills/tk-batch/SKILL.md"
   - "docs/decisions/changelog.md"
+  - "docs/runbooks/migrate/manifest.json"
   - "specs/web/one-offs/WEB-013-cost-and-built/"
 depends_on: []
 out_of_scope:
