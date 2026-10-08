@@ -22,7 +22,7 @@ depends_on:
   - MIG-1
   - MIG-3
 out_of_scope:
-  - "The stop gate showing not-run lines on a pass (a hook change, raised with MIG-2)."
+  - "The stop gate showing not-run lines on a pass: MIG-15."
 criteria:
   - id: C1
     statement: "On the single-app repo, a type error in a host file docs/site/page.ts fails verify:fast naming the type-check step; an edit under tooling/ that the manifest installs runs only the tooling step."
@@ -32,6 +32,10 @@ criteria:
     statement: "Tooling types pass."
     evidence: check
     command: "yarn check-types:tooling"
+  - id: C3
+    statement: "On the single-app repo with no manifest installed, a changed host file under tooling/ or docs/ that is not toolkit-owned is named as not run in verify:fast's output and never dropped from the changed set."
+    evidence: test
+    command: "yarn test:tooling"
 ---
 
 # Contract — MIG-12 host-code-in-toolkit-folders

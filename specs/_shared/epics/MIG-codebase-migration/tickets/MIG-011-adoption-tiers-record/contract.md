@@ -7,7 +7,7 @@ non_negotiables:
   - "docs/decisions/records/0012-adoption-tiers.md follows decision.template.md and records: starter, overlay and overlay-local as the only adoption modes; overlay leaves host docs alone; the tracked floor and the operator's local layer; the probe as the one home for layout facts beyond toolkit.json; the exit, a repo leaves overlay for starter only when layer 3 is done."
   - "The record is written in plan mode, by this ticket, as CLAUDE.md requires for docs/decisions/records/."
   - "Two ledger lines, in the ledger's house format: reviewer rows take imports; check-reviewers fails a zero-match row under overlay; each cites REC 0012 or the MIG ticket that built it."
-  - "One changelog entry, newest first, naming what the epic changed: the probe and overlay edits, the settings floor and local layer, the manifest, reviewer imports and check-reviewers, migrate:assess with --check, the track and runbook, the desk walks, and this record."
+  - "One changelog entry, newest first, naming what the epic changed: the probe and overlay edits, the settings floor and local layer, the manifest, reviewer imports and check-reviewers, migrate:assess with --check, the track and runbook, the desk walks, and this record; the follow-up tickets drafted in the epic (MIG-12 to MIG-17) are named as drafted, never as shipped."
   - "docs/index.md, docs/design/canon.md and every workspace-package boundary are untouched (T9)."
   - "Nothing lives in two places: the record rules, the changelog lists, the ledger lines point."
 devs_call: "The record's considered options and consequences wording, the ledger section the two lines join, and the changelog entry's length."

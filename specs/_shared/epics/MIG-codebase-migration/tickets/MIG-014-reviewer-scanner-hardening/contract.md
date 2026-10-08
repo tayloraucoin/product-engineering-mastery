@@ -8,7 +8,7 @@ non_negotiables:
   - "npm:stripe@14, https://esm.sh/stripe@14 and jsr:@supabase/supabase-js@2 match stripe and @supabase/*."
   - "The script blocks of .vue, .svelte and .astro files, and the import lines of .mdx files, are scanned."
   - "`/*` inside JSX text does not hide a later import() or require()."
-devs_call: "Whether type-only imports keep counting (operator ruling on @supabase/* breadth), and whether node: builtins become valid module entries."
+devs_call: "The scanner's internals only. [NEEDS DECISION] Two questions are the operator's, put at the Tickets gate: whether type-only imports keep counting toward @supabase/* (breadth), and whether node: builtins become valid reviewers[].imports entries (the layout-file-shape door, mason's row; if it stays in scope mason joins the review with a focus line)."
 cites:
   - "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-004-reviewer-imports/as-built.md"
 truth_files: "none: repo tooling; no living UX file changes"
@@ -35,6 +35,10 @@ criteria:
     statement: "Tooling types pass."
     evidence: check
     command: "yarn check-types:tooling"
+  - id: C3
+    statement: "MIG-4 C1 stays green: a module named only in a comment or a string still never matches, in every source kind the scanner now reads."
+    evidence: test
+    command: "yarn test:tooling"
 ---
 
 # Contract — scanner-hardening

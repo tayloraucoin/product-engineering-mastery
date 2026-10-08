@@ -7,7 +7,7 @@ non_negotiables:
   - "One matcher: the diff pass calls findRowReach / findImportMatch from tooling/lib/specs.ts, never a second scanner."
   - "The pass reads tracked source files only, as MIG-4's scanner does."
   - "A seat the diff suggests is a warning naming the file and the import, never an assignment: the operator confirms reviewers."
-devs_call: "Where the warning surfaces (check-specs, review:run's refusal, contract:run's summary), and whether the base is getBaseRef or the ticket's first commit."
+devs_call: "How the warning reads in check-specs (the one planned surface; review:run and contract:run are not planned paths), and whether the base is getBaseRef or the ticket's first commit."
 cites:
   - "specs/_shared/epics/MIG-codebase-migration/tickets/MIG-004-reviewer-imports/as-built.md"
 truth_files: "none: repo tooling; no living UX file changes"

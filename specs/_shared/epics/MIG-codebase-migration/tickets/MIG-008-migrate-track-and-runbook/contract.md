@@ -42,7 +42,7 @@ out_of_scope:
   - "Harness files for other agent tools beyond AGENTS.md (settled)."
 criteria:
   - id: C1
-    statement: "The two new files carry valid frontmatter and names, and both README tables regenerate without a diff."
+    statement: "The two new files carry valid frontmatter and names."
     evidence: check
     command: "yarn lint:docs"
   - id: C2

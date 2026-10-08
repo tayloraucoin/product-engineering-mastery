@@ -19,6 +19,7 @@ planned_paths:
   - "tooling/hooks/stop-gate.ts"
   - "tooling/hooks/fixtures/stop-gate.json"
   - "tooling/overlay.test.ts"
+  - "specs/_shared/epics/MIG-codebase-migration/technical/overlay.md"
 depends_on:
   - MIG-1
 out_of_scope:
@@ -32,6 +33,10 @@ criteria:
     statement: "On the single-app repo, the stop gate's own reply after a clean edit names the steps verify:fast did not run."
     evidence: test
     command: "yarn test:tooling"
+  - id: C3
+    statement: "A fixture case whose verifyOutput holds twenty not-run lines keeps the verdict and the context clause whole within MESSAGE_LIMIT; the not-run lines are what gets cut."
+    evidence: check
+    command: "yarn test:hooks"
 ---
 
 # Contract — MIG-15 stop-gate-names-not-run
