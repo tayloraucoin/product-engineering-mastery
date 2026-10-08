@@ -67,10 +67,6 @@ Four operator rulings, decided 2026-10-08 in Mason's placement thread, from the 
   - `.claude/rules/ts.md`. Was: "a leaf in `_components/`". Now: "a leaf, placed by its importers".
   - `apps/web/AGENTS.md`. Was: "a second consumer moves it to `@pem/ui`". Now: it "is placed by its importers (engineering conventions §1)".
   - `packages/ui/AGENTS.md`. Was: "stays in its `_components/` until a second consumer". Now: "stays in that app until both apps import it".
-  - `AGENTS.md`. Was: a client leaf "in the route's `_components/`". Now: "on line 1, placed by its importers".
-  - `.claude/rules/ts.md`. Was: "a leaf in `_components/`". Now: "a leaf, placed by its importers".
-  - `apps/web/AGENTS.md`. Was: "a second consumer moves it to `@pem/ui`". Now: it "is placed by its importers (engineering conventions §1)".
-  - `packages/ui/AGENTS.md`. Was: "stays in its `_components/` until a second consumer". Now: "stays in that app until both apps import it".
 - **Left alone:** records 0004 and 0007 (immutable; they name `app/_components/markdown` as history).
 
 ## 2026-10-08 — MIG: the overlay-local floor and the reviewer scanner, ruled
