@@ -1,0 +1,8 @@
+[WebServer] <claude-code-hint v="1" type="plugin" value="stripe@claude-plugins-official" />
+[WebServer] <claude-code-hint v="1" type="plugin" value="stripe@claude-plugins-official" />
+
+Running 1 test using 1 worker
+
+  ✓  1 [e2e] › e2e/smoke.spec.ts:3:1 › home renders on the production build (232ms)
+
+  1 passed (32.3s)
