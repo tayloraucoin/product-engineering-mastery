@@ -41,7 +41,7 @@ test("C3: each surface lists only the universal keys its States table has", () =
       "dirty",
     ],
     settings: UNIVERSAL,
-    "delete-dialog": ["error", "partial", "offline"],
+    "delete-dialog": ["deleting", "error", "partial", "offline"],
   };
   assert.deepEqual(
     Object.keys(DEMO_SURFACES).sort(),
