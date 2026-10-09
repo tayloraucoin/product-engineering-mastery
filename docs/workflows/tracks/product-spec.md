@@ -6,7 +6,7 @@ status: draft
 thread: PR-19
 role: Usher
 date: 2026-10-05
-last_reviewed: 2026-10-05
+last_reviewed: 2026-10-08
 supersedes:
 load_when: on request
 ---
@@ -21,14 +21,15 @@ The person starting the work is not the person who will finish it. The line betw
 
 ## Stages
 
-| Stage                   | What happens                                                                | Shared with                        |
-| ----------------------- | --------------------------------------------------------------------------- | ---------------------------------- |
-| 1. Context              | The product lead's dump, plus attachments                                   | The builder                        |
-| 2. Frame                | Questions until the mental model is complete; a brief                       | [Frame](../stages/frame.md)        |
-| 3. Research (optional)  | Gaps go to research threads                                                 | [Research](../stages/research.md)  |
-| 4. UX spec              | Surface files with every state, as for an epic                              | [UX](../stages/ux.md)              |
-| 5. Prototype (optional) | UI and basic function, up to the handoff line                               | [Build](../stages/build.md), at Q1 |
-| 6. Handoff              | The developer's ticket, the open questions for them, and their starter dump | This file                          |
+| Stage                   | What happens                                                                               | Shared with                        |
+| ----------------------- | ------------------------------------------------------------------------------------------ | ---------------------------------- |
+| 1. Context              | The product lead's dump, plus attachments                                                  | The builder                        |
+| 2. Frame                | Questions until the mental model is complete; a brief                                      | [Frame](../stages/frame.md)        |
+| 3. Research (optional)  | Gaps go to research threads                                                                | [Research](../stages/research.md)  |
+| 4. UX spec              | Surface files with every state, as for an epic                                             | [UX](../stages/ux.md)              |
+| 4b. Design (optional)   | The surfaces settled in Paper, you present, until you say "lock"; captures beside the spec | [Design](../stages/design.md)      |
+| 5. Prototype (optional) | UI and basic function, up to the handoff line                                              | [Build](../stages/build.md), at Q1 |
+| 6. Handoff              | The developer's ticket, the open questions for them, and their starter dump                | This file                          |
 
 The work is filed as an epic (`specs/<app>/epics/<EPIC>-<slug>/`) that stops after its UX level. The developer continues the same epic at Technical, so nothing is rewritten.
 
@@ -38,7 +39,7 @@ Lead: Compass through Frame, then Vesper. Support: Gloss for words, Threshold fo
 
 ## The builder's own questions for this track
 
-1. What are you handing over? **The UX spec only**; **the spec and the UI**; **the spec, the UI and basic function**. Then the exact line: what must the developer not have to redo, and what must you not touch (data, auth, payments, integrations)?
+1. What are you handing over? **The UX spec only**; **the spec and the UI**; **the spec, the UI and basic function**. Then the exact line: what must the developer not have to redo, and what must you not touch (data, auth, payments, integrations)? And: settle the UI in Paper first (recommended when the look is not settled; the stage asks which file), or straight to the spec?
 2. Does this continue an exploration? If yes, which one, which direction was chosen, and should its experimental code be moved into the product as part of this work?
 3. Who is the developer, and how do they receive work: a Linear ticket (recommended when Linear is connected), or a printed ticket to send another way?
 4. What do you already know the developer will ask? (The thread adds its own.)
@@ -54,4 +55,4 @@ When the spec is approved, the thread works with the operator to produce three t
 
 ## What gets written
 
-`brief.md` and the `ux/` proposals in the epic folder; research notes; prototype code when agreed; the ticket (in Linear or printed). No contracts: the developer's Tickets level writes those.
+`brief.md` and the `ux/` proposals in the epic folder; the locked `captures/` when the Design stage ran; research notes; prototype code when agreed; the ticket (in Linear or printed). No contracts: the developer's Tickets level writes those.

@@ -39,6 +39,8 @@ Read this to see, on any agent tool, what you got from `git clone`, what you set
 
 `yarn doctor` warns when the native git hooks are not installed and fails on a credential-shaped string in `settings.local.json`; it does not yet name a missing `launch.json`.
 
+**Paper, for the Design stage** ([`../workflows/stages/design.md`](../workflows/stages/design.md)): the Paper MCP is a connector on the machine (Claude Code desktop, with Paper Desktop running), not in the repo. Each teammate who runs or comments on a Design stage connects it themselves; the Paper file itself is shared from Paper, never checked in. The locked captures under `specs/` are the part a clone gets.
+
 ## 1. The mechanical checks
 
 ```sh

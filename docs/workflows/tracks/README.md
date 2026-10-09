@@ -6,7 +6,7 @@ status: draft
 thread: PR-19
 role: Usher
 date: 2026-10-05
-last_reviewed: 2026-10-07
+last_reviewed: 2026-10-08
 supersedes:
 load_when:
 ---
@@ -21,10 +21,10 @@ load_when:
 
 | Track                                          | It is this when                                                                                   | Stages                                                        | Ticket               | Default QA                                   |
 | ---------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- | -------------------- | -------------------------------------------- |
-| [Epic](epic.md)                                | It needs several tickets, or a new surface, or the problem is not settled, and we mean to ship it | Frame, Research (optional), UX, Technical, Tickets, Build, Seen, Harden | Always, per ticket   | Set per ticket at the Tickets stage          |
+| [Epic](epic.md)                                | It needs several tickets, or a new surface, or the problem is not settled, and we mean to ship it | Frame, Research (optional), UX, Design (optional), Technical, Tickets, Build, Seen, Harden | Always, per ticket   | Set per ticket at the Tickets stage          |
 | [One-off](one-off.md)                          | One piece of buildable work with a known outcome                                                  | Build, Seen, Harden (optional at Q1 with no ticket)           | Asked                | Q1; Q2 or Q3 by what it touches              |
 | [Feature exploration](feature-exploration.md)  | Early product thinking: we want to try directions and learn, not ship                             | Frame-lite, Research (optional), Explore, Review              | No                   | Q1; the operator's own look is the check     |
-| [Product spec only](product-spec.md)           | A product lead is preparing work to hand to developers                                            | Context, Frame, Research (optional), UX, Prototype (optional), Handoff | A draft for the developer | Operator approval; Q1 on any prototype |
+| [Product spec only](product-spec.md)           | A product lead is preparing work to hand to developers                                            | Context, Frame, Research (optional), UX, Design (optional), Prototype (optional), Handoff | A draft for the developer | Operator approval; Q1 on any prototype |
 | [Bug or issue](bug.md)                         | Something that worked, or should work, does not                                                   | Reproduce, Diagnose, Fix, Prove, Trace                        | Asked                | By where the bug lives                       |
 | [Question or report](question-report.md)       | The output is an answer or a document, not a change                                               | Answer, or Scope then Report                                  | No                   | Q0                                           |
 | [Audit](audit.md)                              | We want existing code or user journeys examined for problems                                      | Scope, Sweep, Findings                                        | No                   | Q0; the findings are the product             |

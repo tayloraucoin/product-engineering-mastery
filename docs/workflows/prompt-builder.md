@@ -6,7 +6,7 @@ status: draft
 thread: PR-19
 role: Usher
 date: 2026-10-05
-last_reviewed: 2026-10-07
+last_reviewed: 2026-10-08
 supersedes:
 load_when: on request
 ---
@@ -103,6 +103,7 @@ Take the track's and the stage's "Loads" lists as the ceiling; attach only what 
 - A `docs/research/` file only in a Frame, Research or UX prompt, labelled `[research: <why>]`, and only when nothing distilled covers the topic. Never in a build prompt.
 - The living UX truth for the area when it exists. When it does not, say so: the track decides whether the work writes it.
 - List the outside attachments from C3 by name, each with what the thread should take from it.
+- When the Design stage was chosen, the Paper file and page the operator named, or "the stage asks" when they did not.
 
 ## 5. Research: here, or in its own thread
 
@@ -128,10 +129,11 @@ The directory comes from the track file. State whether the main prompt waits for
 
 ## 6. Venue, model and thread plan
 
-| Thread                                                   | Venue                    |
-| -------------------------------------------------------- | ------------------------ |
-| Anything that reads or writes repo files, or runs checks | Claude Code, in the repo |
-| Research with web sources                                | A Claude research thread |
+| Thread                                                   | Venue                                                                               |
+| -------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Anything that reads or writes repo files, or runs checks | Claude Code, in the repo                                                            |
+| Research with web sources                                | A Claude research thread                                                            |
+| The Design stage                                         | Claude Code with Paper Desktop open on the operator's machine, the operator present |
 
 State the model; do not ask. Name a minimum and a recommended model with the failure mode of choosing down, from the Answer table in `docs/research/engineering/model-selection-claude-code.md`: a ticket build, minimum Sonnet 5.5 at medium, recommended Opus 5.5 at medium until its calibration moves it; shaping, review, research, audits and hardening, Opus 5.5 at the floor. Fable 5.1 is never a default; name it only when the operator does. Pin the effort at thread start; never switch model or effort mid-thread. Then write the thread plan: where the work starts, where it splits into further threads, and that each thread will tell the operator when to open the next. A dry-run or cold-rehearsal thread names its own model, and for that one thread the builder asks the operator which, since a smaller model often serves there.
 

@@ -6,7 +6,7 @@ status: draft
 thread: PR-19
 role: Usher
 date: 2026-10-05
-last_reviewed: 2026-10-07
+last_reviewed: 2026-10-08
 supersedes:
 load_when: on request
 ---
@@ -62,6 +62,7 @@ flowchart TD
   explore -.->|"direction chosen"| pb
   subgraph SHAPE["Shaping: one thread per level, you pass each gate"]
     frame["Frame"] --> research["Research<br/>optional"] --> ux["UX spec"]
+    ux -.->|"optional"| design["Design in Paper<br/>you say lock"] -.-> ux
     ux --> tech["Technical"] --> tix["Tickets<br/>QA level per ticket"]
   end
   ux -.->|"product spec stops here"| handoff["Handoff ticket<br/>for the developer"]
@@ -151,6 +152,6 @@ HUD is "heads-up display", from games: what the system shows you without being a
 | [`prompt-builder.md`](prompt-builder.md) | Attach, or run as /tk-prompt, whenever work is about to start: it interviews the operator, settles the track, the cast, the QA level, the pace, the involvement and the branch, then prints the prompt, what to expect, and any research prompts. It saves nothing. |
 | [`prompt-standard.md`](prompt-standard.md) | Read before writing or checking any prompt that opens a thread, by the prompt builder, a stage file or a person: the checklist a prompt must pass, the forecast printed with it, and the kickoff block for build threads. |
 | [`qa-levels.md`](qa-levels.md) | Read when choosing or changing how carefully a ticket, a stage or one named part of the work is checked: the four levels, what each costs, who picks the reviewers, and how an operator asks for more on demand. |
-| [`stages/`](stages/README.md) | Open to see the six stage files an epic's levels run on, and the one a one-off runs on: each names its cast, venue, loads, interview rounds, writes, gate and handoff. |
+| [`stages/`](stages/README.md) | Open to see the seven stage files an epic's levels run on, and the one a one-off runs on: each names its cast, venue, loads, interview rounds, writes, gate and handoff. |
 | [`templates/`](templates/README.md) | Open when a Research thread needs the note template; the UX and technical templates live with their layers (docs/design/templates/, docs/engineering/templates/). |
 | [`tracks/`](tracks/README.md) | Open to see the kinds of work the prompt builder routes to and how to tell them apart: each track file names when it applies, its stages, cast, default QA level, what it writes, its interview questions and how it ends. |

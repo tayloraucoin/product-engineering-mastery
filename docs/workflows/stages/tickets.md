@@ -6,7 +6,7 @@ status: draft
 thread: PR-19
 role: Usher
 date: 2026-10-05
-last_reviewed: 2026-10-07
+last_reviewed: 2026-10-08
 supersedes:
 load_when: on request
 ---
@@ -34,7 +34,7 @@ Claude Code, on the operator's branch.
 ## 4. Authoring rules
 
 - **The ticket is the whole brief.** Its Build notes hold the approach, the text of each decision it builds on, the interfaces, a line per planned path, the gotchas and the model. A builder needs the ticket and `technical.md`, nothing else. Detail that only this ticket needs lives here, never in `technical.md`.
-- One ticket cites one surface file and the criterion IDs it builds; citing more needs a `waiver:` with the reason.
+- One ticket cites one surface file and the criterion IDs it builds; citing more needs a `waiver:` with the reason. When the surface file carries a `design:` block, the Build notes link its captures and name the Paper file and page.
 - State the slice type (what kind of work, what class of failure it risks), the non-negotiables, what is the builder's call, and what is out of scope with where it lives instead.
 - Every criterion is observable and names its evidence type (`test`, `check`, `capture`, `manual`); UI criteria default to `capture`. The edge case that makes the ticket risky has its own criterion. `yarn verify` is never a criterion.
 - A ticket is under half a day by default; a bigger one is split, never padded.

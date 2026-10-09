@@ -6,7 +6,7 @@ status: draft
 thread: P-J
 role: Vesper
 date: 2026-10-02
-last_reviewed: 2026-10-02
+last_reviewed: 2026-10-08
 supersedes:
 load_when: spec, ui-build
 ---
@@ -23,7 +23,14 @@ load_when: spec, ui-build
 target: specs/<app>/ux/<area>/<surface>.md
 status: draft
 promoted:
+design: # set at the Design stage's lock (docs/workflows/stages/design.md); absent when no canvas was used
+  file: # the Paper file, by name
+  page:
+  artboards: [] # "<surface> / <state> / <width> / <scheme>", one per captured artboard
+  locked: # date
 ```
+
+> **Two passes when the Design stage is chosen:** the intent pass fills Job, the States rows (key and what shows) and Decisions before the canvas; the handoff pass fills the rest from the locked captures, and the Artboard column names each state's capture.
 
 ## Job
 
@@ -31,15 +38,15 @@ What the person is doing here and what done looks like for them. [FILL]
 
 ## Layout and components
 
-The primitives from `components.md` this surface composes, and the one thing on it that gets the primary action (canon: one primary action). No new primitive without a proposal to Plumb. [FILL]
+The primitives from `components.md` this surface composes, and the one thing on it that gets the primary action (canon: one primary action). No new primitive without a proposal to Plumb; one drawn on the canvas is named here with its proposal, never as a lookalike. [FILL]
 
 ## States
 
 Every row is reachable by `?state=` and captured. Base set: empty, loading, error, partial, offline, success; add the surface's own, never drop a base one (mark N/A with the reason).
 
-| State | Key     | What shows | What the person can do | Copy |
-| ----- | ------- | ---------- | ---------------------- | ---- |
-| empty | `empty` | [FILL]     |                        |      |
+| State | Key     | What shows | What the person can do | Copy | Artboard                                   |
+| ----- | ------- | ---------- | ---------------------- | ---- | ------------------------------------------ |
+| empty | `empty` | [FILL]     |                        |      | `captures/<surface>/empty-390.png`, or `—` |
 
 ## Words
 

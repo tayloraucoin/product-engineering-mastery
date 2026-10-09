@@ -6,7 +6,7 @@ status: draft
 thread: P-J
 role: Vesper
 date: 2026-10-02
-last_reviewed: 2026-10-02
+last_reviewed: 2026-10-08
 supersedes:
 load_when: spec
 ---
@@ -38,6 +38,10 @@ Who uses this area, for what job, and in what state they arrive. One paragraph. 
 ## Navigation and shell
 
 What the shell shows here and what is hidden; where this area sits in the product's navigation (`_global/navigation.md`). [FILL]
+
+## Design
+
+Only when the Design stage was chosen: the Paper file and page the operator named, and the lock date. [FILL, or delete]
 
 ## Decision log
 

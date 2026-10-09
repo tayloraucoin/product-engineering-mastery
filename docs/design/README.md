@@ -6,7 +6,7 @@ status: ruling
 thread: P-B
 role: Plumb
 date: 2026-10-01
-last_reviewed: 2026-10-01
+last_reviewed: 2026-10-08
 supersedes:
 load_when: ui-build, spec, critique
 ---
@@ -27,7 +27,7 @@ A product's own design layer (its filled templates) inherits the canon by ID and
 
 The source of truth is code (tokens, components, stories). Every canvas is a view (`workflow.md`, ruling 01).
 
-1. **Divergent loop: many directions.** The default is three directions as Storybook stories or isolated routes in code, with fixture data at real density, differing on one named axis (`tk-ui-diverge`). Paper is the one sanctioned tactile canvas, used as a disposable view.
+1. **Divergent loop: many directions.** The default is three directions as Storybook stories or isolated routes in code, with fixture data at real density, differing on one named axis (`tk-ui-diverge`). Paper is the one sanctioned tactile canvas, used as a disposable view, and the canvas of the optional Design stage, where divergence and convergence both happen on artboards before any code (`docs/workflows/stages/design.md`).
 2. **Convergent loop: one direction made real.** In code, with Claude Code, against tokens and `@pem/ui` only. No new primitive without a justification in the package.
 3. **Polish loop: the last ten percent.** By hand in code, with values measured in browser DevTools and written back to tokens or component props. No sanctioned tool is both tactile and lands in code; that gap is named, not papered over.
 
@@ -41,6 +41,7 @@ Prompting is strong at the convergent loop, adequate at the divergent loop, and 
 | 2 Shape              | `specs/<feature>/package.md`: breadboard, expected action, states, job lines, instrumentation. Passes "Bet".                                     | [`package.template.md`](../product/package.template.md)                | the shaper, a builder (Tally, Plumb)                    |
 | 3 References         | 3 to 6 annotated screenshots in `refs/`, each with the one thing to take and the one to ignore                                                   | [`templates/refs/README.md`](templates/refs/README.md)                   | Plumb                                                   |
 | 4 Diverge            | Three directions on one axis, as stories or routes. Layout-level divergence belongs here, in shaping.                                            | `tk-ui-diverge`; `workflow.md`                                         | Vesper (Plumb if a direction needs a new primitive)     |
+| 4b Settle (optional) | The chosen direction pushed on the canvas, operator present, to one artboard per state and breakpoint from the product's Paper kit; design critic advisory; teammates comment; lock exports the captures beside the surface file | [`stages/design.md`](../workflows/stages/design.md); `workflow.md` | Vesper (Assay as design critic; Plumb for a new primitive) |
 | 5 Capture (optional) | Preview-deploy URLs of the stories; Figma Code to Canvas into drafts only if a named reviewer works in Figma                                     | `workflow.md`                                                          | —                                                       |
 | 6 Converge           | The chosen direction, built from tokens and components only. Detail-level divergence happens inside scopes.                                      | `canon.md`; the product layer; `shadcn` skill                          | Vesper's spec; the builder builds (Gloss for strings)   |
 | 7 Verify             | The critic, forked, screenshots 390/834/1440 in light and dark, reduced motion, every `?state=`, and scores `canon-rubric.md`. At most 3 rounds. | `tk-ui-critic`; `canon-rubric.md`                                      | Assay (Threshold for access depth)                      |

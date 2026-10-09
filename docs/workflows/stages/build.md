@@ -6,7 +6,7 @@ status: draft
 thread: PR-19
 role: Usher
 date: 2026-10-05
-last_reviewed: 2026-10-07
+last_reviewed: 2026-10-08
 supersedes:
 load_when: on request
 ---
@@ -37,13 +37,14 @@ Claude Code, on the branch the operator has checked out, unless the prompt says 
 
 ## 3. Loads
 
-| File                                 | Reason                                                               |
-| ------------------------------------ | -------------------------------------------------------------------- |
-| `contract.md`, or the printed prompt | The brief: what to build, the criteria, the level, the focus         |
-| The one surface file it cites        | What the surface must do in every state                              |
-| `technical.md`, for an epic ticket   | Only what every ticket in the epic shares                            |
-| Path rules, as files are touched     | `ui.md`, `ts.md`, `testing.md`, `next.md`, `specs.md` on their globs |
-| Never a `docs/research/` file        | Research is distilled before a build starts                          |
+| File                                                           | Reason                                                                                                                                                         |
+| -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `contract.md`, or the printed prompt                           | The brief: what to build, the criteria, the level, the focus                                                                                                   |
+| The one surface file it cites                                  | What the surface must do in every state                                                                                                                        |
+| Its `captures/` and `design:` block, when the Design stage ran | The picture to adapt into tokens and `@pem/ui`; exact values through the Paper MCP when the file is open, never read off the image; reference, never authority |
+| `technical.md`, for an epic ticket                             | Only what every ticket in the epic shares                                                                                                                      |
+| Path rules, as files are touched                               | `ui.md`, `ts.md`, `testing.md`, `next.md`, `specs.md` on their globs                                                                                           |
+| Never a `docs/research/` file                                  | Research is distilled before a build starts                                                                                                                    |
 
 How often the thread stops follows the involvement the operator chose. **Autonomous:** a question the brief cannot answer becomes an `[ASSUMPTION]` in the report or the as-built. **Check in at gates:** the thread stops with its plan and file list before building, and with what it built before closing. **Decide together:** each meaningful choice is put to the operator with a recommendation. In every mode, what only a person can do goes to the operator in one message.
 
