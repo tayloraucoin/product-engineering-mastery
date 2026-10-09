@@ -29,7 +29,17 @@ test("C3: each surface lists only the universal keys its States table has", () =
       "offline",
       "deleted",
     ],
-    "record-detail": UNIVERSAL,
+    "record-detail": [
+      "diff",
+      "no-history",
+      "empty",
+      "loading",
+      "error",
+      "not-found",
+      "partial",
+      "offline",
+      "saved",
+    ],
     "record-form": [
       "invalid",
       "submitting",
@@ -40,7 +50,7 @@ test("C3: each surface lists only the universal keys its States table has", () =
       "offline",
       "dirty",
     ],
-    settings: UNIVERSAL,
+    settings: ["saved", ...UNIVERSAL, "reset"],
     "delete-dialog": ["deleting", "error", "partial", "offline"],
   };
   assert.deepEqual(
