@@ -42,13 +42,19 @@ No lead role: the thread is the builder. Default Q1. The builder recommends Q2 o
 
 ## The moves
 
-| Move              | You                                         | The thread                                                                                                                                                                                      |
-| ----------------- | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **1. Brain dump** | Describe the work to the builder; answer it | Prints the prompt and what to expect                                                                                                                                                            |
-| **2. Build**      | Open a new thread, paste the prompt         | With a ticket: drafts the contract and starts it. Without: works from the prompt. Builds; runs its tests and its workspace's suite; updates the UX truth file; ends on five lines and the links |
-| **3. Seen**       | Walk what it built; say "fix", or "harden"  | Fixes what you ask for in the same thread                                                                                                                                                       |
-| **4. Harden**     | Say "harden <id>" when you are happy        | A new thread runs the criteria, the review your level calls for, and `yarn verify`, once; reports in six lines at most. Optional at Q1 with no ticket                                           |
-| **5. Ship**       | Push and merge when you are ready           | Nothing: agents never push                                                                                                                                                                      |
+| Move              | You                                         | The thread                                                                                                                                            |
+| ----------------- | ------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1. Brain dump** | Describe the work to the builder; answer it | Prints the prompt and what to expect                                                                                                                  |
+| **2. Build**      | Open a new thread, paste the prompt         | Builds it; see _The build move_, below                                                                                                                |
+| **3. Seen**       | Walk what it built; say "fix", or "harden"  | Fixes what you ask for in the same thread                                                                                                             |
+| **4. Harden**     | Say "harden <id>" when you are happy        | A new thread runs the criteria, the review your level calls for, and `yarn verify`, once; reports in six lines at most. Optional at Q1 with no ticket |
+| **5. Ship**       | Push and merge when you are ready           | Nothing: agents never push                                                                                                                            |
+
+### The build move
+
+- **With a ticket:** drafts the contract and starts it. **Without:** works from the prompt.
+- Builds; runs its tests and its workspace's suite; updates the UX truth file.
+- Ends on five lines and the links.
 
 ## What gets written
 
