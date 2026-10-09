@@ -1,0 +1,62 @@
+{
+  "id": "LAB-18",
+  "criteria_sha256": "9585cc4537f2444dd593a563505b8804f152a4ad307a1f43a21933da577293ef",
+  "criteria": {
+    "C1": {
+      "status": "FAIL",
+      "evidence": "capture",
+      "run": null
+    },
+    "C2": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C3": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C4": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C5": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C6": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C7": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C8": {
+      "status": "FAIL",
+      "evidence": "manual",
+      "run": null
+    },
+    "C9": {
+      "status": "FAIL",
+      "evidence": "capture",
+      "run": null
+    },
+    "C10": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C11": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    }
+  },
+  "updated_at": "2026-10-08T01:42:06Z"
+}
