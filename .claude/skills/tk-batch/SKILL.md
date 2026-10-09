@@ -1,6 +1,6 @@
 ---
 name: tk-batch
-description: "Build one or more tickets start to finish in this thread, and keep going until each is done at its QA level: start, build, prove, fix what fails, prove again, review, report. Use whenever the operator names tickets to build, run, continue, finish or close, as in 'build STK-5 and STK-7' or 'finish STK-6'. No slash command is needed."
+description: "Build or harden one named ticket to done at its QA level. Use whenever the operator names a ticket to build, harden or finish, as in 'build STK-5' or 'harden STK-6'."
 argument-hint: <id>
 ---
 
@@ -36,7 +36,7 @@ The branch that is checked out. Only when the operator or the prompt says "on it
 1. **Start.** `yarn contract:init <EPIC | app> <slug>`, unless it has started. Read the contract: its Build notes, its model, QA level, reviewers and `focus` lines, and the one file it cites.
 2. **Build**, updating the living UX file when behaviour changes.
 3. **Prove in scope.** The ticket's own tests, then the affected workspace's suite and `check-types` at the close. Never `yarn verify` or the whole `yarn test`.
-4. **On a UI ticket,** Assay in thread from your own screenshots, advisory. Warden only the first time a door path in `technical.md` is built.
+4. **No review** (`qa-levels.md`, the phase table). Warden only the first time a door path in `technical.md` is built.
 5. **No** ledger, captures, as-built or headless review.
 
 End on five lines: built, assumed, to look at, dev-server links per surface and `?state=`, left for hardening.

@@ -12,10 +12,7 @@ import {
   sandboxActions,
   type SandboxActionCounts,
 } from "../schema/sandbox/actions.ts";
-import {
-  SANDBOX_SLUG_MAX,
-  SANDBOX_SLUG_PATTERN,
-} from "../schema/sandbox/columns.ts";
+import { isSandboxSlug } from "./slug.ts";
 import {
   requireAdmin,
   requireTeam,
@@ -26,7 +23,6 @@ import {
 
 /** A kebab-case name, as `erase-email` or `role-change`: never free text. */
 const ACTION_NAME = /^[a-z]+(-[a-z]+)*$/;
-const SLUG = new RegExp(SANDBOX_SLUG_PATTERN);
 
 export const ACTION_INPUT_INVALID = "The action record is not valid.";
 
@@ -52,12 +48,7 @@ export async function recordAction(
   if (input.action === ROLE_CHANGE_ACTION) requireAdmin(viewer);
   if (typeof input.action !== "string" || !ACTION_NAME.test(input.action))
     throw new SandboxAccessError(ACTION_INPUT_INVALID);
-  if (
-    input.slug !== undefined &&
-    (typeof input.slug !== "string" ||
-      input.slug.length > SANDBOX_SLUG_MAX ||
-      !SLUG.test(input.slug))
-  )
+  if (input.slug !== undefined && !isSandboxSlug(input.slug))
     throw new SandboxAccessError(ACTION_INPUT_INVALID);
   if (input.targetEmail !== undefined) {
     // Only a role change names anyone, and only a team member: never free

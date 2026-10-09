@@ -9,12 +9,12 @@
  */
 import { revalidatePath } from "next/cache";
 
-import type { DeleteDataResult } from "../../../../../lib/sandbox/admin-data";
-import { deleteExperimentDataAs } from "../../../../../lib/sandbox/admin-data-data";
+import type { DeleteDataResult } from "../../../../../lib/sandbox/admin/admin-data";
+import { deleteExperimentDataAs } from "../../../../../lib/sandbox/admin/admin-data-data";
 import {
   isTeamActionRefusal,
   requireTeamAction,
-} from "../../../../../lib/sandbox/admin-guard";
+} from "../../../../../lib/sandbox/admin/admin-guard";
 
 export async function deleteExperimentData(
   slug: string,

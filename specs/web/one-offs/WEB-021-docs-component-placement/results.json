@@ -1,0 +1,22 @@
+{
+  "id": "WEB-21",
+  "criteria_sha256": "8a7524bf07a96217b494fa7834ede6119f9b4fc7c18443f5075dee41b2cc1d05",
+  "criteria": {
+    "C1": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    },
+    "C2": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    },
+    "C3": {
+      "status": "FAIL",
+      "evidence": "capture",
+      "run": null
+    }
+  },
+  "updated_at": "2026-10-08T21:02:59Z"
+}

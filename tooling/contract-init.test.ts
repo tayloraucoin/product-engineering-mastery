@@ -143,6 +143,44 @@ test("a dependency that has not started refuses the start", () => {
   assert.match(r.out, /depends on WEB-1, which has not started on this branch/);
 });
 
+test("WEB-23 C1: a predecessor with built_at and no recorded criteria lets the dependent start; one with neither built_at nor its criteria PASS still refuses", () => {
+  const repo = startOneOff();
+  write(repo, "src/filter.ts", "export const keep = (n: number) => n > 1;\n");
+  commit(repo, "WEB-1: filter");
+  tool(repo, "contract.ts", ["init", "web", "other"]);
+  write(
+    repo,
+    "specs/web/one-offs/WEB-002-other/contract.md",
+    oneOffContract("WEB-2", { depends: ["WEB-1"], planned: ["src/other.ts"] }),
+  );
+  // Started, criteria at FAIL, no built_at: refused, as before.
+  let r = tool(repo, "contract.ts", ["init", "web", "other"]);
+  assert.notEqual(r.status, 0, r.out);
+  assert.match(
+    r.out,
+    /depends on WEB-1, which is not built yet: no built_at, and C1, C2 not PASS/,
+  );
+  assert.ok(
+    !existsSync(
+      path.join(repo, "specs/web/one-offs/WEB-002-other/results.json"),
+    ),
+    "a refused start writes no results",
+  );
+  // The build pass records built_at and nothing else: the dependent starts.
+  r = tool(repo, "contract.ts", ["built", "WEB-1"]);
+  assert.equal(r.status, 0, r.out);
+  const before = JSON.parse(
+    read(repo, "specs/web/one-offs/WEB-001-filter/results.json"),
+  );
+  assert.ok(
+    Object.values(before.criteria).every((c: any) => c.status === "FAIL"),
+    "no criterion was recorded",
+  );
+  r = tool(repo, "contract.ts", ["init", "web", "other"]);
+  assert.equal(r.status, 0, r.out);
+  assert.match(r.out, /WEB-2 started/);
+});
+
 test("A6: a cited file not approved, or holding a BLOCKING marker, is refused; a plain open marker is listed", () => {
   const cases: [string, RegExp, number][] = [
     [

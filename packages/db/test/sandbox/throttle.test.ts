@@ -191,7 +191,7 @@ describe("C5: what a row holds, and how long", () => {
   });
 
   test("C5: after tries, no row holds the raw browser id or address or its plain SHA-256", async () => {
-    // The app's keys (apps/web/lib/sandbox/throttle.ts): HMAC-SHA256 under
+    // The app's keys (apps/web/lib/sandbox/gate/throttle.ts): HMAC-SHA256 under
     // SANDBOX_SECRET of "throttle", a newline, then b:<id> or n:<address>.
     const secret = randomBytes(48).toString("base64");
     const browserId = randomBytes(16).toString("base64url");

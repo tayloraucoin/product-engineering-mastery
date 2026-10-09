@@ -8,7 +8,7 @@ non_negotiables:
   - 'Wording versions are counted apart by the version''s core_version: no count, % or median spans two; "Can''t judge yet" sits apart and is left out of n, % and median.'
   - "Only each reviewer's latest version counts; team notes (team_user_id set) appear in no count; replies count nowhere in beat 1."
   - "One team-only read in packages/db/src/sandbox/results.ts takes (db, viewer, { slug }), refuses a reviewer viewer, returns only that slug's rows, and has its isolation case."
-  - "A pure module, apps/web/lib/sandbox/results.ts, produces every number and string, with the threshold as one constant (10); components render it and do no arithmetic."
+  - "A pure module, apps/web/lib/sandbox/admin/results.ts, produces every number and string, with the threshold as one constant (10); components render it and do no arithmetic."
   - 'Sections in results.md''s order with its Words verbatim; designs as glyph, name and config id; quotes exactly as written, attributed to the code''s label, trimmed only behind "Show all".'
   - "Tables carry a caption and th scope, sections are h2, quotes are blockquote, numbers right-aligned and tabular (C-P10); every results-* key registers in state.ts as team-only, on synthetic fixtures."
 devs_call: "The read's SQL and return shape, the view model's shape, how a % is rounded, the component split, and how a failed read becomes the error state."
@@ -35,10 +35,10 @@ operator_review: true
 planned_paths:
   - "apps/web/app/admin/experiments/[slug]/page.tsx"
   - "apps/web/app/admin/experiments/[slug]/_components/results-*.tsx"
-  - "apps/web/lib/sandbox/results.ts"
-  - "apps/web/lib/sandbox/results-data.ts"
-  - "apps/web/lib/sandbox/results.test.ts"
-  - "apps/web/lib/sandbox/state.ts"
+  - "apps/web/lib/sandbox/admin/results.ts"
+  - "apps/web/lib/sandbox/admin/results-data.ts"
+  - "apps/web/lib/sandbox/admin/results.test.ts"
+  - "apps/web/lib/sandbox/shared/state.ts"
   - "packages/db/src/sandbox/results.ts"
   - "packages/db/src/sandbox/index.ts"
   - "packages/db/test/sandbox/**"
@@ -103,7 +103,7 @@ criteria:
 
 - **Approach:**
   - `packages/db/src/sandbox/results.ts`: `readResults(db, viewer, { slug })`, team-only. It returns reviewers (id, label, first design), each one's latest version (`distinct on (reviewer_id) … order by number desc`), view events and reviewer comments (id, design, kind, created time). Register its isolation case in LAB-3's registry, or the coverage guard fails.
-  - `lib/sandbox/results.ts` (pure): `tallyResults(config, data)` returns the summary line, the under-10 line and the seven sections as strings and numbers. `results-data.ts` (`server-only`) binds the db and LAB-8's team member. Model the seam on LAB-10's `admin-experiments.ts` and `admin-experiments-data.ts`.
+  - `lib/sandbox/admin/results.ts` (pure): `tallyResults(config, data)` returns the summary line, the under-10 line and the seven sections as strings and numbers. `results-data.ts` (`server-only`) binds the db and LAB-8's team member. Model the seam on LAB-10's `admin-experiments.ts` and `admin-experiments-data.ts`.
   - `[slug]/page.tsx` replaces LAB-10's placeholder. `_components/results-*.tsx` render the model on `Table` and `Collapsible`. The offline line is the only client leaf.
 - **Decisions that apply:**
   - D-LAB-21: "A rating changed after choosing is allowed and marked", because "Choice-supportive memory, logged".

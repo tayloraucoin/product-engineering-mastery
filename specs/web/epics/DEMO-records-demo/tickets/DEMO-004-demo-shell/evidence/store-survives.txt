@@ -1,0 +1,5 @@
+DEMO-4 C4, browser run against yarn web:dev, 2026-10-08
+/demo/records            store: 40 records
+click "Delete Halvorsen Freight" -> 39 records
+client navigation to /demo/settings (nav link, no reload) -> 39 records, Settings aria-current
+reload on /demo/settings -> 40 records (reset, D-DEMO-7)

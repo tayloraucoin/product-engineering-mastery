@@ -6,7 +6,7 @@ status: draft
 thread: PR-19
 role: Usher
 date: 2026-10-05
-last_reviewed: 2026-10-07
+last_reviewed: 2026-10-08
 supersedes:
 load_when: on request
 ---
@@ -31,7 +31,16 @@ The idea behind the Physics: a rule written in markdown is a request, and a rule
 
 ## The front door
 
-[`prompt-builder.md`](prompt-builder.md) is where everything starts. It asks, in rounds with options: which track, which app, who is cast, the QA level and reviewers, any part that needs a deeper look, the pace, how involved you want to be, the branch, whether to make a formal ticket, what you will attach, and the track's own questions. It then prints the prompt, a forecast of effort, time, cost, risk and your attention (estimates), and a block for each research thread the work needs. Tiny work takes the fast lane and is done on the spot.
+[`prompt-builder.md`](prompt-builder.md) is where everything starts.
+
+- **It asks,** in rounds with options:
+  - which track, which app, who is cast;
+  - the QA level and reviewers, any part that needs a deeper look;
+  - the pace, how involved you want to be, the branch;
+  - whether to make a formal ticket, what you will attach;
+  - the track's own questions.
+- **It then prints** the prompt, a forecast of effort, time, cost, risk and your attention (estimates), and a block for each research thread the work needs.
+- **Tiny work** takes the fast lane and is done on the spot.
 
 ## The tracks
 
@@ -62,6 +71,7 @@ flowchart TD
   explore -.->|"direction chosen"| pb
   subgraph SHAPE["Shaping: one thread per level, you pass each gate"]
     frame["Frame"] --> research["Research<br/>optional"] --> ux["UX spec"]
+    ux -.->|"optional"| design["Design in Paper<br/>you say lock"] -.-> ux
     ux --> tech["Technical"] --> tix["Tickets<br/>QA level per ticket"]
   end
   ux -.->|"product spec stops here"| handoff["Handoff ticket<br/>for the developer"]
@@ -111,7 +121,13 @@ specs/
 
 Work that spans apps lives in `specs/_shared/` with the same shape. Nothing else is filed: no prompt files, no evidence logs, no review files below Q3. Ticket numbers in folder names are padded to three digits, so a folder lists in order; the id stays short (`OB2-3`).
 
-**The archive.** Finished work leaves the live tree so it stays readable as tickets pile up. `yarn specs:archive` moves every closed one-off, and every epic whose tickets are all closed, into `_archive/<year>/<month>/` by the month it closed; `yarn specs:archive --dry-run` shows what would move and what is held back and why. Anything draft, open, closing or waiting on a migration stays put, and so does a folder another thread has uncommitted changes in. Nothing is lost: `yarn status <id>` still finds an archived ticket, `_status.md` lists the archive by month, and a number or epic prefix in the archive is never handed out again. You decide when it runs.
+**The archive.** Finished work leaves the live tree so it stays readable as tickets pile up.
+
+- **What moves:** `yarn specs:archive` moves every closed one-off, and every epic whose tickets are all closed, into `_archive/<year>/<month>/` by the month it closed.
+- **A preview:** `yarn specs:archive --dry-run` shows what would move and what is held back and why.
+- **What stays put:** anything draft, open, closing or waiting on a migration, and any folder another thread has uncommitted changes in.
+- **Nothing is lost:** `yarn status <id>` still finds an archived ticket, `_status.md` lists the archive by month, and a number or epic prefix in the archive is never handed out again.
+- **When it runs:** you decide.
 
 ## Truth and records
 
@@ -151,6 +167,6 @@ HUD is "heads-up display", from games: what the system shows you without being a
 | [`prompt-builder.md`](prompt-builder.md) | Attach, or run as /tk-prompt, whenever work is about to start: it interviews the operator, settles the track, the cast, the QA level, the pace, the involvement and the branch, then prints the prompt, what to expect, and any research prompts. It saves nothing. |
 | [`prompt-standard.md`](prompt-standard.md) | Read before writing or checking any prompt that opens a thread, by the prompt builder, a stage file or a person: the checklist a prompt must pass, the forecast printed with it, and the kickoff block for build threads. |
 | [`qa-levels.md`](qa-levels.md) | Read when choosing or changing how carefully a ticket, a stage or one named part of the work is checked: the four levels, what each costs, who picks the reviewers, and how an operator asks for more on demand. |
-| [`stages/`](stages/README.md) | Open to see the six stage files an epic's levels run on, and the one a one-off runs on: each names its cast, venue, loads, interview rounds, writes, gate and handoff. |
+| [`stages/`](stages/README.md) | Open to see the seven stage files an epic's levels run on, and the one a one-off runs on: each names its cast, venue, loads, interview rounds, writes, gate and handoff. |
 | [`templates/`](templates/README.md) | Open when a Research thread needs the note template; the UX and technical templates live with their layers (docs/design/templates/, docs/engineering/templates/). |
 | [`tracks/`](tracks/README.md) | Open to see the kinds of work the prompt builder routes to and how to tell them apart: each track file names when it applies, its stages, cast, default QA level, what it writes, its interview questions and how it ends. |

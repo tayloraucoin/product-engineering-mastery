@@ -25,6 +25,7 @@ load_when:
 
 | File | What it is for |
 | --- | --- |
+| [`component-placement.md`](component-placement.md) | Read before placing, moving or promoting a React component in apps/web, apps/docs or @pem/ui, or before amending codebase-conventions.md §1 or §3. |
 | [`conventions-and-amendments.md`](conventions-and-amendments.md) | Read only to trace a convention Taylor locked for the engineering layer on 2026-10-02, or the text of amendments A4 to A12 that the PJ build prompt points to. |
 | [`engineering-layer-report.md`](engineering-layer-report.md) | Read only to trace an engineering-layer ruling (conflicts (a) to (i) and the records on adoption tiers, the work loop and agent permissions), the reason behind a row in docs/engineering/index.md, or a methodology verdict after Crucible's review. |
 | [`mason-role-revision.md`](mason-role-revision.md) | Read only to trace why Mason's role file changed on 2026-10-01: the dated research, the deltas against the previous file, the diff summary and the ship-checklist verification. |

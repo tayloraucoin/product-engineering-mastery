@@ -33,7 +33,9 @@ Run a research prompt the first time its trigger fires. Run it again when the an
 - **A changed landscape.** A tool, model or vendor the answer relied on has changed: a model upgrade, a new flag or analytics tool, a new agent harness.
 - **A revisit trigger.** The decision record the answer fed names a condition for looking again, and that condition has happened.
 
-Each run is a new thread. Its output is filed as a new file under `docs/research/<topic>/`, and the earlier output stays as it was, because a filed output is never edited in place ([record 0006](../decisions/records/0006-file-naming-and-filing.md)). Each prompt is a stub until its first run, and is filled out then; after that, edit it only to bring its trigger or attachments up to date.
+**Each run** is a new thread. Its output is filed as a new file under `docs/research/<topic>/`, and the earlier output stays as it was, because a filed output is never edited in place ([record 0006](../decisions/records/0006-file-naming-and-filing.md)).
+
+**Each prompt** is a stub until its first run, and is filled out then. After that, edit it only to bring its trigger or attachments up to date.
 
 | Prompt | The question it answers | Role | Run it when |
 | --- | --- | --- | --- |
@@ -48,7 +50,11 @@ All six are drafts and none has run yet; each file names its role, attachments a
 
 ## The archive, and a duplicated project
 
-[`archive/`](archive/README.md) is this repo's own history: the phase prompts (P-A to P-E, and P-J, the engineering layer) were written to build the toolkit once, in order, and are kept byte for byte so a ruling can be traced to the prompt that asked for it. A project made by duplicating this repo deletes `archive/` on day one; its prompts describe building this toolkit, not that product. It keeps `shared-context.md` and `research/`.
+[`archive/`](archive/README.md) is this repo's own history.
+
+- **What it holds:** the phase prompts (P-A to P-E, and P-J, the engineering layer), written to build the toolkit once, in order.
+- **Why it is kept byte for byte:** so a ruling can be traced to the prompt that asked for it.
+- **In a duplicated project:** it deletes `archive/` on day one; its prompts describe building this toolkit, not that product. It keeps `shared-context.md` and `research/`.
 
 ## The letters
 

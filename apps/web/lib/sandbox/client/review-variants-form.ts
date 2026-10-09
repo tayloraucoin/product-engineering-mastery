@@ -8,7 +8,7 @@
  *
  * - Nothing is pre-selected and nothing is marked recommended: the choice
  *   starts null, and the options are only the designs (in the server's
- *   order, `designOrder` in lib/sandbox/review-variants.ts) and the three
+ *   order, `designOrder` in lib/sandbox/review/review-variants.ts) and the three
  *   anchors, always last, never shuffled.
  * - "Can't judge yet" counts as a rating.
  * - A rating changed while a choice is set marks that design's flag. Flags

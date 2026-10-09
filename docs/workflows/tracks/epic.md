@@ -6,14 +6,17 @@ status: draft
 thread: PR-19
 role: Usher
 date: 2026-10-05
-last_reviewed: 2026-10-07
+last_reviewed: 2026-10-08
 supersedes:
 load_when: on request
 ---
 
 # The epic: a campaign
 
-> **In one line:** an epic is a folder of tickets sharing one problem, one UX proposal and one set of technical notes. It is played in levels, each in its own thread, each ending at a gate you pass. Then each ticket is built in its own thread, seen by you, and hardened on your word, and shipping updates the living UX truth.
+> **In one line:** an epic is a folder of tickets sharing one problem, one UX proposal and one set of technical notes.
+
+- **Shaping:** it is played in levels, each in its own thread, each ending at a gate you pass.
+- **Building:** then each ticket is built in its own thread, seen by you, and hardened on your word, and shipping updates the living UX truth.
 
 New to the terms? See [`../glossary.md`](../glossary.md). The big picture and the map are in [`../README.md`](../README.md).
 
@@ -27,15 +30,16 @@ Any one of these, for work we mean to ship:
 
 ## The levels at a glance
 
-| Level                  | Lead           | You do                     | It writes                             | Gate                                                            |
-| ---------------------- | -------------- | -------------------------- | ------------------------------------- | --------------------------------------------------------------- |
-| 0. Entry               | Prompt builder | Brain dump, answer it      | Prints the Frame prompt               | none                                                            |
-| 1. Frame               | Compass        | Answer questions           | `brief.md`                            | You say go                                                      |
-| 2. Research (optional) | Fits the gap   | Run the research threads   | `research/<topic>.md`                 | Each question answered, or marked not found                     |
-| 3. UX spec             | Vesper         | Answer rounds of questions | `ux/` proposals                       | You approve; files marked `approved`                            |
-| 4. Technical           | Mason          | Ratify routed calls        | `technical.md`                        | You ratify                                                      |
-| 5. Tickets             | Reeve + Mason  | Confirm the ticket table   | One contract per ticket               | You confirm levels and reviewers; `check-specs`                 |
-| 6. Build, Seen, Harden | No role        | Build, walk, say "harden"  | Code; at harden, proofs and as-builts | You walk it; then the level each ticket carries; then you merge |
+| Level                  | Lead           | You do                                           | It writes                              | Gate                                                            |
+| ---------------------- | -------------- | ------------------------------------------------ | -------------------------------------- | --------------------------------------------------------------- |
+| 0. Entry               | Prompt builder | Brain dump, answer it                            | Prints the Frame prompt                | none                                                            |
+| 1. Frame               | Compass        | Answer questions                                 | `brief.md`                             | You say go                                                      |
+| 2. Research (optional) | Fits the gap   | Run the research threads                         | `research/<topic>.md`                  | Each question answered, or marked not found                     |
+| 3. UX spec             | Vesper         | Answer rounds of questions                       | `ux/` proposals                        | You approve; files marked `approved`                            |
+| 3b. Design (optional)  | Vesper         | Name the Paper file, push the design, say "lock" | Artboards; `captures/` beside the spec | You say lock; the UX handoff pass then approves the files       |
+| 4. Technical           | Mason          | Ratify routed calls                              | `technical.md`                         | You ratify                                                      |
+| 5. Tickets             | Reeve + Mason  | Confirm the ticket table                         | One contract per ticket                | You confirm levels and reviewers; `check-specs`                 |
+| 6. Build, Seen, Harden | No role        | Build, walk, say "harden"                        | Code; at harden, proofs and as-builts  | You walk it; then the level each ticket carries; then you merge |
 
 ## Every level plays the same five beats
 
@@ -54,6 +58,7 @@ Any one of these, for work we mean to ship:
 3. The default QA level, and any parts you already know are critical (each ticket gets its own level later).
 4. Does a UX spec, a design or an exploration already exist to start from?
 5. Should the tickets build as you approve them, or all be cut first? (Either way, one ticket per thread.)
+6. Settle the design in Paper before tickets? **Yes** (recommended for a new surface, an unsettled look, or a version one with notes): the UX level runs in two passes around a canvas beat where you and the thread push the surface in Paper until you say "lock" ([stage file](../stages/design.md)). **No**: one UX pass, straight to code. On yes, the stage asks which Paper file and page when it opens; name it now if you know.
 
 ## The level cards
 
@@ -78,6 +83,15 @@ Run this only for a real knowledge gap. The builder's rule decides whether a gap
 - **Interview:** every empty slot in the surface template is a question. Every surface needs every state, an accessibility section and criteria with IDs.
 - **Writes:** `ux/` proposals that mirror the truth paths: an area overview with a decision log (`D-OB2-1`), and one file per surface with `target:` naming the truth file it will replace or add.
 - **Gate:** you approve, and each file is marked `status: approved`. The detail test: a fresh thread could build any one surface file without asking a question.
+- **With the Design level:** this level runs twice. The intent pass writes the overview and, per surface, the job, the states by key and the primary action, then hands to the canvas. The handoff pass, in a fresh thread after lock, fills the rest from the locked captures and reconciles the two by the stage's rules.
+
+### Level 3b: Design, optional ([stage file](../stages/design.md))
+
+- **Lead:** Vesper. Assay as the design critic, forked and advisory; Plumb when something drawn is not a house primitive.
+- **Venue:** Claude Code with Paper Desktop open, you present. The thread's first question is which Paper file and page; it never writes to one you have not named.
+- **Does:** mirrors the tokens and the house components into the file once per product; captures the current screens when a version one exists; diverges on one axis; converges to one artboard per state and breakpoint, light and dark, from the components page; reads your teammates' comments as decisions.
+- **Writes:** the artboards; at lock, a PNG per state in `ux/<area>/captures/` and a `design:` block in each surface file.
+- **Gate:** you say "lock", every state has an artboard or an `N/A` with the reason, and the design critic's last round holds no black or red finding.
 
 ### Level 4: Technical ([stage file](../stages/technical.md))
 
@@ -120,4 +134,4 @@ Three beats per ticket, in the execution table's order:
 
 ## Explain it back
 
-> "An epic is a campaign in levels. The builder opens it. Compass frames the problem, optional research fills real gaps, Vesper interviews me into a UX proposal, Mason works out the shared technical calls, and Reeve cuts it into tickets grouped into waves, each with its own QA level and model that I confirm in one table. Each level prints the next prompt. Then I build each ticket in its own thread, walk what it built, and say harden when I am happy; hardening checks it as carefully as its row says, I merge, and the UX proposal becomes the living truth."
+> "An epic is a campaign in levels. The builder opens it. Compass frames the problem, optional research fills real gaps, Vesper interviews me into a UX proposal (and, when I choose it, we settle the surface in Paper between the intent and the handoff), Mason works out the shared technical calls, and Reeve cuts it into tickets grouped into waves, each with its own QA level and model that I confirm in one table. Each level prints the next prompt. Then I build each ticket in its own thread, walk what it built, and say harden when I am happy; hardening checks it as carefully as its row says, I merge, and the UX proposal becomes the living truth."

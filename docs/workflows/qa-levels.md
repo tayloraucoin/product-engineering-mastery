@@ -28,12 +28,12 @@ load_when: on request
 
 A ticket is built, seen by the operator, then hardened on the operator's word ([`stages/harden.md`](stages/harden.md)). The level splits across the two passes:
 
-| Level | Build pass: proves and reviews                                                          | Hardening pass: proves and reviews                                                                                        |
-| ----- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| Q0    | The stop check                                                                          | None                                                                                                                      |
-| Q1    | The ticket's own tests, the affected workspace's suite, `check-types`; no review        | `contract:run` once; `yarn verify` when it closes the work                                                                |
-| Q2    | As Q1, plus Assay in thread on a UI ticket, from the thread's own screenshots, advisory | As Q1, plus captures once, a short as-built, and one subagent review                                                      |
-| Q3    | As Q2; Warden only the first time a door path in `technical.md` is built                | Recorded proofs and captures once, the as-built, one `review:run` per confirmed seat; Warden and Mason on door paths only |
+| Level | Build pass: proves and reviews                                                   | Hardening pass: proves and reviews                                                                                        |
+| ----- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Q0    | The stop check                                                                   | None                                                                                                                      |
+| Q1    | The ticket's own tests, the affected workspace's suite, `check-types`; no review | `contract:run` once; `yarn verify` when it closes the work                                                                |
+| Q2    | As Q1; no review (a UI ticket's checks are the critic round and hardening)       | As Q1, plus captures once, a short as-built, and one subagent review                                                      |
+| Q3    | As Q1; Warden only the first time a door path in `technical.md` is built         | Recorded proofs and captures once, the as-built, one `review:run` per confirmed seat; Warden and Mason on door paths only |
 
 **At Q2 the reviewer runs once per ticket,** a FAIL included: its findings are fixed and re-proven, and a second subagent run needs the operator's word, as a third run does at Q3.
 
@@ -82,7 +82,15 @@ Reviewers and audits use one scale, so a finding means the same thing everywhere
 
 The builder fixes black and red findings and any orange one that is cheap, then re-proves. The rest are listed in the closing report as drafted follow-ups.
 
-**A review PASS is final for its round.** After a PASS, black and red cannot exist by definition: a Blocking finding means FAIL. Orange findings are fixed when cheap and re-proven with `yarn contract:run`, never re-reviewed; yellow and grey become drafted follow-ups. At Q3 a FAIL earns one re-review. A third run of the same reviewer on one ticket needs the operator's word, `yarn review:run <role> <id> --operator "<reason>"`, and the reason is written into the review file. A Should-fix count that does not fall across rounds is the signal to stop, not to continue: a fresh reviewer finds different orange items each time. The operator's word for one ticket is recorded as a `focus` line in the contract and handed to the tooling as `--operator "<that line>"`; the tooling reads only the flag. The rule binds a Q2 subagent run as it binds a Q3 run; at Q3 the tooling holds it: a recorded PASS is reset only by a change to the contract's criteria, never by the as-built or a planned-path commit, and `review:run` refuses the run the rule forbids.
+**A review PASS is final for its round.**
+
+- **After a PASS,** black and red cannot exist by definition: a Blocking finding means FAIL.
+- **Orange** findings are fixed when cheap and re-proven with `yarn contract:run`, never re-reviewed; yellow and grey become drafted follow-ups.
+- **Re-reviews:** at Q3 a FAIL earns one re-review. A third run of the same reviewer on one ticket needs the operator's word, `yarn review:run <role> <id> --operator "<reason>"`, and the reason is written into the review file.
+- **The signal to stop:** a Should-fix count that does not fall across rounds is the signal to stop, not to continue: a fresh reviewer finds different orange items each time.
+- **The operator's word** for one ticket is recorded as a `focus` line in the contract and handed to the tooling as `--operator "<that line>"`; the tooling reads only the flag.
+- **Where it binds:** the rule binds a Q2 subagent run as it binds a Q3 run.
+- **At Q3 the tooling holds it:** a recorded PASS is reset only by a change to the contract's criteria, never by the as-built or a planned-path commit, and `review:run` refuses the run the rule forbids.
 
 ## What is never written down
 

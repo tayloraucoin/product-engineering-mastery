@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
 
-import { requireTeamPage } from "../../lib/sandbox/admin-guard";
-import { ADMIN_METADATA } from "../../lib/sandbox/admin-nav";
+import { requireTeamPage } from "../../lib/sandbox/admin/admin-guard";
+import { ADMIN_METADATA } from "../../lib/sandbox/admin/admin-nav";
 import { AdminShell } from "./_components/admin-shell";
 
 /** Noindex on the whole tree, beside LAB-5's header (D-LAB-42). */

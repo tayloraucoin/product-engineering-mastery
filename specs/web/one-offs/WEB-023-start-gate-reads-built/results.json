@@ -1,0 +1,28 @@
+{
+  "id": "WEB-23",
+  "criteria_sha256": "1915323dda154096a15e1e5a2a57bc7c7cfbf1477342e132ba71be12d9c639a4",
+  "criteria": {
+    "C1": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C2": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C3": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C4": {
+      "status": "FAIL",
+      "evidence": "manual",
+      "run": null
+    }
+  },
+  "built_at": "2026-10-09T05:13:18Z",
+  "updated_at": "2026-10-09T05:13:18Z"
+}

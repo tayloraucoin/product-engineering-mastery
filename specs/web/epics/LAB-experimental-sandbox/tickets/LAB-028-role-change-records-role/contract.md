@@ -22,9 +22,9 @@ planned_paths:
   - "packages/db/src/schema/sandbox/actions.ts"
   - "packages/db/migrations/**"
   - "packages/db/test/sandbox/**"
-  - "apps/web/lib/sandbox/people-data.ts"
-  - "apps/web/lib/sandbox/people.ts"
-  - "apps/web/lib/sandbox/people.test.ts"
+  - "apps/web/lib/sandbox/admin/people-data.ts"
+  - "apps/web/lib/sandbox/admin/people.ts"
+  - "apps/web/lib/sandbox/admin/people.test.ts"
 depends_on:
   - LAB-9
   - LAB-27

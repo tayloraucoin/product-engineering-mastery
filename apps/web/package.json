@@ -9,7 +9,9 @@
     "start": "next start --port 3000",
     "lint": "eslint --max-warnings 0",
     "check-types": "next typegen && tsc --noEmit",
-    "test": "node --test \"lib/**/*.test.ts\""
+    "test": "node --test \"lib/**/*.test.ts\" \"app/**/*.test.ts\" \"e2e/**/*.test.ts\"",
+    "e2e": "playwright test --project=e2e",
+    "capture": "node e2e/run-capture.ts"
   },
   "dependencies": {
     "@pem/ai": "workspace:*",
@@ -34,6 +36,7 @@
   },
   "devDependencies": {
     "@pem/config": "workspace:*",
+    "@playwright/test": "1.63.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^22",
     "@types/react": "^19",

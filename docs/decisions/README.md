@@ -13,9 +13,20 @@ load_when:
 
 # Decisions
 
-**What this is.** The memory of the practice. One line per ruling in the ledger, a record when the reason needs more than a line, the conflicts two threads disagreed on, and the changelog of every amendment.
+**What this is.** The memory of the practice.
 
-**Come here when.** You are about to change a rule, you wonder why a rule is the way it is, or you need to know what is held for Taylor's sign-off.
+| File | Holds |
+| --- | --- |
+| [`ledger.md`](ledger.md) | One line per ruling |
+| [`records/`](records/README.md) | A record when the reason needs more than a line |
+| [`conflicts.md`](conflicts.md) | The conflicts two threads disagreed on |
+| [`changelog.md`](changelog.md) | Every amendment |
+
+**Come here when.**
+
+- You are about to change a rule.
+- You wonder why a rule is the way it is.
+- You need to know what is held for Taylor's sign-off: [`only-you.md`](only-you.md).
 
 **Start with.** [`ledger.md`](ledger.md), then grep it for your topic. Reasons live in [`records/`](records/README.md); what changed lately is in [`changelog.md`](changelog.md).
 

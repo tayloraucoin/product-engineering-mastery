@@ -38,7 +38,7 @@ Tie-breaks: an overlay that informs or confirms is `feedback`, a panel that slid
 
 ## Adding a component
 
-1. **Look first** in `src/*/*/` and `package.json` `exports`; extend before adding. A component one app uses stays in its `_components/` until a second consumer (codebase-conventions §1).
+1. **Look first** in `src/*/*/` and `package.json` `exports`; extend before adding. A component one app uses stays in that app until both apps import it (codebase-conventions §1).
 2. **Choose the layer, then the kind** by the table; read that kind's `README.md`.
 3. **Create** `src/<layer>/<kind>/<name>/` with the files above. Import inside the package by relative path.
 4. **Export** `"./<name>"` in `package.json`, `types` and `default` both at its `index.ts`. The subpath never names the folder, so a move inside the package changes no import.

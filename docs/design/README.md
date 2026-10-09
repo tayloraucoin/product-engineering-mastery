@@ -6,12 +6,14 @@ status: ruling
 thread: P-B
 role: Plumb
 date: 2026-10-01
-last_reviewed: 2026-10-01
+last_reviewed: 2026-10-08
 supersedes:
 load_when: ui-build, spec, critique
 ---
 
 # The design layer
+
+Read before any UI work: which loop you are in, which step of Recipe A comes next, which file governs it, and where verification happens.
 
 | File                                         | Holds                                                                                                                 | Read when                                                           |
 | -------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
@@ -21,13 +23,13 @@ load_when: ui-build, spec, critique
 | [`skills.md`](skills.md)                     | Which design skills load, in what order, and how a third-party skill is reviewed                                      | Adding, updating or triggering a skill                              |
 | [`templates/`](templates/DESIGN.template.md) | The blank product design layer: `DESIGN`, `tokens`, `components`, `anti-patterns`, `states`, `coverage-gaps`, `refs/` | Starting a product's design layer                                   |
 
-A product's own design layer (its filled templates) inherits the canon by ID and holds only deltas. The demo app's filled layer lands at `apps/web/docs/design/` in Phase 3.
+A product's own design layer (its filled templates) inherits the canon by ID and holds only deltas. The demo app's filled layer lives at `apps/web/docs/design/`.
 
 ## The three loops
 
 The source of truth is code (tokens, components, stories). Every canvas is a view (`workflow.md`, ruling 01).
 
-1. **Divergent loop: many directions.** The default is three directions as Storybook stories or isolated routes in code, with fixture data at real density, differing on one named axis (`tk-ui-diverge`). Paper is the one sanctioned tactile canvas, used as a disposable view.
+1. **Divergent loop: many directions.** The default is three directions as Storybook stories or isolated routes in code, with fixture data at real density, differing on one named axis (`tk-ui-diverge`). Paper is the one sanctioned tactile canvas, used as a disposable view, and the canvas of the optional Design stage, where divergence and convergence both happen on artboards before any code (`docs/workflows/stages/design.md`).
 2. **Convergent loop: one direction made real.** In code, with Claude Code, against tokens and `@pem/ui` only. No new primitive without a justification in the package.
 3. **Polish loop: the last ten percent.** By hand in code, with values measured in browser DevTools and written back to tokens or component props. No sanctioned tool is both tactile and lands in code; that gap is named, not papered over.
 
@@ -41,11 +43,18 @@ Prompting is strong at the convergent loop, adequate at the divergent loop, and 
 | 2 Shape              | `specs/<feature>/package.md`: breadboard, expected action, states, job lines, instrumentation. Passes "Bet".                                     | [`package.template.md`](../product/package.template.md)                | the shaper, a builder (Tally, Plumb)                    |
 | 3 References         | 3 to 6 annotated screenshots in `refs/`, each with the one thing to take and the one to ignore                                                   | [`templates/refs/README.md`](templates/refs/README.md)                   | Plumb                                                   |
 | 4 Diverge            | Three directions on one axis, as stories or routes. Layout-level divergence belongs here, in shaping.                                            | `tk-ui-diverge`; `workflow.md`                                         | Vesper (Plumb if a direction needs a new primitive)     |
+| 4b Settle (optional) | The chosen direction settled on the canvas; see *Step 4b*, below the table | [`stages/design.md`](../workflows/stages/design.md); `workflow.md` | Vesper (Assay as design critic; Plumb for a new primitive) |
 | 5 Capture (optional) | Preview-deploy URLs of the stories; Figma Code to Canvas into drafts only if a named reviewer works in Figma                                     | `workflow.md`                                                          | —                                                       |
 | 6 Converge           | The chosen direction, built from tokens and components only. Detail-level divergence happens inside scopes.                                      | `canon.md`; the product layer; `shadcn` skill                          | Vesper's spec; the builder builds (Gloss for strings)   |
-| 7 Verify             | The critic, forked, screenshots 390/834/1440 in light and dark, reduced motion, every `?state=`, and scores `canon-rubric.md`. At most 3 rounds. | `tk-ui-critic`; `canon-rubric.md`                                      | Assay (Threshold for access depth)                      |
+| 7 Verify             | The critic, forked, screenshots 390/834/1440 in light and dark, reduced motion, every `?state=`, and scores `canon-rubric.md`. One round per epic, then a re-check (`tk-ui-critic`). | `tk-ui-critic`; `canon-rubric.md`                                      | Assay (Threshold for access depth)                      |
 | 8 Polish             | By hand, in code                                                                                                                                 | `workflow.md`                                                          | the builder                                             |
 | 9 Ship               | Behind a flag with the package's events; every exposed session watched within 48 hours                                                           | [`variant-testing.md`](../runbooks/variant-testing.md) | Tally (Tribune carries the replays into the next brief) |
+
+**Step 4b, in full.**
+
+- The chosen direction pushed on the canvas, operator present, to one artboard per state and breakpoint from the product's Paper kit.
+- Design critic advisory; teammates comment.
+- Lock exports the captures beside the surface file.
 
 After three failed prompts on the same problem: hand-edit, or log the design-system gap in the product's `coverage-gaps.md`.
 

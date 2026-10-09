@@ -32,7 +32,7 @@ import {
   type ExperimentRow,
   type ExperimentsView,
   type StaleMarker,
-} from "../../../../lib/sandbox/admin-experiments";
+} from "../../../../lib/sandbox/admin/admin-experiments";
 
 const W = EXPERIMENTS_WORDS;
 

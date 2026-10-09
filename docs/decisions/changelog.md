@@ -15,6 +15,129 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-08 — PEM: diagrams are Mermaid in the markdown
+
+- `engineering/codebase-conventions.md` §7: diagrams are Mermaid blocks in the markdown; folder trees stay text; image files only for what cannot be code (none yet).
+- The docs app draws them (DOC commit): a client leaf that imports `mermaid` 12.0.0 only on a page with a diagram, themed from the docs tokens in light and dark, a broken block showing its source and a one-line error; the row is in `engineering/tech-stack.md`.
+
+## 2026-10-08 — PEM: the newcomer pages scan
+
+A prose pass, with Scribe consulted on structure; no rule's meaning changed. One pattern throughout: a lead line, no paragraph past about three sentences, a table only where rows share a shape, steps a person takes numbered and what the system does bulleted, and every rule sentence kept word for word.
+
+- `README.md`: a lead line and bullets, the where-to-start and prerequisites tables, phone, contrast and deploy as short sections, and the duplicate-then-remove steps numbered.
+- Entry pages:
+  - `docs/README.md`: the start split by person and agent.
+  - `decisions/README.md`: its files as a table.
+  - `references/README.md`: the status first; the load and cite rules as bullets.
+  - `prompts/README.md` and `product/README.md`: the walls split.
+  - `runbooks/README.md`: the list that repeated its table cut.
+  - `roles/README.md`: points to the generated department list.
+  - `roles/product-design/README.md`: the "(new)" markers dropped.
+- `workflows/tracks/one-off.md`: the build move's detail out of the moves table.
+- `docs/decisions/README.md`: links `only-you.md` where it names Taylor's sign-off.
+- Workflow pages:
+  - `qa-levels.md`: the "review PASS is final" rule as labelled bullets.
+  - `workflows/README.md`: the front door and the archive split.
+  - `tracks/README.md`: the hand-offs as bullets.
+  - `stages/README.md`: the protocol as a list.
+  - `tracks/epic.md` and `prompt-builder.md`: the leads cut to one line.
+- `design/README.md`: a lead line, and step 4b's detail out of its cell. `runbooks/onboard-agent.md`: leads with who runs it, when and what done means.
+- Fact corrections, not rule changes:
+  - The glossary's Always-on row now matches `docs/index.md`, which ranks higher and is the CI contract `tooling/budget.ts` reads: `AGENTS.md`, `CLAUDE.md`, `docs/index.md`, the listings and the SessionStart hook output, 4,000 tokens or fewer. It had said `docs/README.md` and about 3,400.
+  - `design/README.md`: the demo's design layer lives at `apps/web/docs/design/`, no longer "lands in Phase 3".
+  - The product-design seat map's Recipe A table follows `design/README.md`: nine steps, with 2 Shape and 4b Settle, numbered as the source numbers them. A consulted role the source does not name is `[NEEDS DECISION]` (References, Polish), and the map's prose now cites Verify as step 7. Detail the source does not carry left the table: Plumb ruling on the capture loop, Gloss for copy depth at Verify, and "you, by hand" at Polish.
+
+## 2026-10-08 — PEM: the third audit's prose change set (recommendations 3 to 7)
+
+This applies `specs/_shared/reports/2026-10-08-third-token-and-speed-audit.md` (the third token and speed audit), led by Usher with Lorimer consulted. Ledger PR-24 amends PR-21.
+
+- **PR-22 in the source (O2).** `prompt-builder.md` §6 now names Opus 5.5 at medium as a ticket build's minimum and recommended model, and `tickets.md` §6 points to it. The model line is now set in the unbuilt contracts DEMO-18 to 23 (which had none), WEB-14 and 16 (effort added) and WEB-17 to 19 (from Sonnet 5.5).
+- **The Design stage's thread rule (O1).** `design.md` §3: one surface per thread, a thread closed past 200k, and a canvas screenshot only after a change, scaled down. The Design-stage thread cost 21.8M, 7.2M of it above 200k.
+- **One critic round per epic (O3).** `tk-ui-critic` runs one full round, then a re-check only where a Blocking finding was fixed, and refuses round 3. `tickets.md` §7 now commits the epic folder before any build, since untracked spec files voided about 2M of critic spend. `docs/design/README.md` row 7 follows. `canon-rubric.md`'s "at most 3 rounds" stays as the ceiling.
+- **Assay leaves the build pass (O4).** `build.md` §4, `tk-batch` and `qa-levels.md`'s phase table drop it, because it ran on 0 of 6 UI tickets. Warden on a first-built door path stays. The close stays at five lines.
+- **The always-on budget is back under its cap (R2).** It went from 4,079 to 3,998 against the 4,000 cap, with the `tk-motion` and `tk-batch` descriptions shortened. tk-motion alone could not close a 79-token gap: its whole description was about 82 tokens. On Opus 5.5 against the full listing, the trigger test fired on 5 of 5 must tasks and 0 of 5 must-not tasks (`.claude/skills/tk-motion/tests/triggers.md`). The REGISTRY rows are updated.
+
+## 2026-10-08 — PEM: the third token and speed audit, decided
+
+The DEMO epic (17 tickets built in one evening) and the WEB one-offs measured against the second audit's build-pass targets, in a decide-together thread led by Lorimer, with Tally on counting, Crucible on every removed or deferred check and Reeve on the order to Synapse. The operator delegated the open decisions to the thread ("your call"). Every number is in `specs/_shared/reports/2026-10-08-third-token-and-speed-audit.md`; ten recommendations stand, prompts printed in the thread and never saved.
+
+- **Targets met (G1, G2).** Median DEMO ticket 0.55M weighted, 36 calls, 6 active minutes, 135k context at close, against 1.5–2M, 45–60 calls and 20–30 minutes; calls over 200k fell from 52 to 24 percent of the window.
+- **R1, the start gate refuses the build pass: open, one tooling ticket.** `contract:init` needs a predecessor's criteria recorded PASS, which the build pass never records; 19 of 19 DEMO starts were refused, so status, "built" and `yarn cost --record` all failed with it. The gate is to accept `built_at`; `yarn cost` is to attribute from a thread's first prompt (Y2); the 17 built DEMO tickets are backfilled.
+- **R2, nothing proven or green: partly addressed.** Prettier on eight DEMO files and the uncommitted `states.test.ts` fix (HEAD failed C3) are in the working tree, not committed (the commit was refused by the auto-mode classifier). The epic's 20 text files are untracked; its 192 Design-stage captures (15 MB) are [NEEDS DECISION]. Nothing pushed since 12:50, so CI has gated nothing.
+- **O2, PR-22 not in the source: open, prose.** `prompt-builder.md` §6 still names Sonnet 5.5 as a build's minimum; 10 of 17 DEMO builds ran on it.
+- **O1, the Design stage's thread rule; O3, one critic round plus a re-check of fixed surfaces and the epic committed at the Tickets handoff; O4, Assay out of the build pass; the tk-motion listing under the always-on cap: open, one prose change set.** The Design-stage thread cost 21.8M of DEMO's 28.5M shaping; the two critic tickets 17.5M of 29.7M of builds; Assay ran on none of six UI tickets. Crucible's falsifiers are in the report.
+- **Harden DEMO before Synapse; WEB-14 and WEB-16 built and hardened before it, WEB-17 to 19 deferred: decided.** About 14–20M and 6–8 points [estimate]; the second half is measured once before Synapse inherits it.
+- **"Solidified":** [ASSUMPTION: DEMO hardened, verify green, the branch merged to main by the operator, then MIG's migration of Synapse.]
+
+## 2026-10-08 — The Design stage: a surface settled in Paper before tickets
+
+Operator instructed, 2026-10-08; Usher wrote it, Plumb's ruling 01 amended (ledger WT-04, PR-23). The reason: a designer does not know what they like until they see it, and building a direction in code to find out costs a route, its tests and the tokens that went into it. On the canvas a rejected direction costs an artboard. The code critic still governs what ships; the canvas gains a seat earlier, never authority.
+
+- **New:** `docs/workflows/stages/design.md`. Optional, chosen in the builder's interview; the operator present throughout; the thread's first question is which Paper file and page, and it never writes to one the operator has not named. It loads the whole picture first (the intent-pass `ux/` files, the living truth, the app's route tree and `_components/`, `@pem/ui` and the product's `components.md`, the tokens, the running app). A per-product Paper kit mirrors the tokens and the house components into the file once, so every artboard is composed from existing UI; a version one is captured from the running app before notes are applied. Diverge on one axis, converge to one artboard per state and breakpoint in light and dark, design critic advisory at most three rounds, teammates' comments read as decisions, and "lock" exports a PNG per state to `ux/<area>/captures/` and stamps a `design:` block on each surface file.
+- **`docs/workflows/stages/ux.md`:** one pass as before, or two around the canvas. The intent pass writes the overview and, per surface, the job, the states by key and the primary action. The handoff pass runs in a fresh thread after lock and reconciles by five rules (a state with no artboard; an element the intent never named; words changed on the canvas; an element not on the components page; a behaviour the canvas contradicts). Paper wins on look, intent wins on behaviour, the operator breaks ties, every change is a `D-<EPIC>-n`.
+- **`docs/design/workflow.md`:** the ruling paragraph, the source-of-truth rule and both loop tables gain the Settle beat. Was: "Nothing on a canvas is reviewed, approved, or referenced by a brief until it exists as a story or route in a PR." Now: a canvas is never authority over a spec, a story or the critic; the Design stage may approve artboards as a proposal, exported beside the surface file at lock; nothing on a canvas is shipped until a route or story exists that the code critic has scored.
+- **`docs/design/README.md`:** Recipe A gains step 4b Settle; the divergent-loop line names the Design stage.
+- **Templates:** `ux-surface.template.md` gains the `design:` frontmatter block and an Artboard column in the states table, and names the two passes; `ux-overview.template.md` gains a Design section for the file, page and lock date. `check-specs` is unchanged: it still requires only `target`, `status` and `promoted`.
+- **Tracks and stages:** `epic.md` gains level 3b, its card, and a sixth builder question; `product-spec.md` gains stage 4b and the question in its first; `tracks/README.md`, `stages/README.md` and the map in `workflows/README.md` name it; `build.md` loads the captures as reference, never authority; `tickets.md` has the Build notes link them; `prompt-builder.md` lists the named Paper file and the stage's venue; the glossary gains Design stage, Lock and Paper kit.
+- **`docs/runbooks/onboard-agent.md`:** the Paper MCP is a connector on each teammate's machine, not in the repo; the captures under `specs/` are what a clone gets.
+- **Not done, named:** no house skill wraps the stage yet (the design skills arrive later, `CLAUDE.md`); the design critic runs as Assay from the stage's instructions, not as a variant of `tk-ui-critic`; the Paper kit has no script, it is built by the thread from the preset and `packages/ui`; no product has run the stage, so the kit's fit for each primitive is unmeasured.
+
+## 2026-10-08 — `lib/` folders group by subject past 30 files; `apps/web/lib/sandbox/` split
+
+Operator ruling, 2026-10-08 (Mason's one-off): a `lib/` folder that passes 30 files groups by subject, and its one `shared/` holds only what two or more sibling folders, or the app's root config files, import. `apps/web/lib/sandbox/` held 64 files in one folder. They moved by `git mv` into `gate/`, `admin/`, `experiment/`, `review/` and `shared/`, beside the existing `client/`. Each module kept its test and its file name, and behaviour did not change. Mason's review moved `code.ts`, `cookie.ts` and `link.ts` from `gate/` to `shared/` (operator, same day): only `shared/access*` and `admin/` import them, and no subject folder imports a sibling one.
+
+- `docs/engineering/codebase-conventions.md` §3: the rule, beside the `_components/` sub-folder rule, and why its `shared/` is not the banned catch-all.
+- Imports and paths:
+  - Every import of a moved module, and every comment that named one, now uses the new path.
+  - The tests that read route files reach the app root one level further up.
+  - The "no server action in lib/sandbox" scan now reads the whole tree, not only its own folder.
+  - `admin-gate.test.ts`'s cookie guard matches an import of `cookie` from any folder, not only `./cookie`.
+- `tooling/boundaries.test.ts`: a probe in `lib/sandbox/gate/` proves the `web-sandbox` element (`apps/web/lib/sandbox/**`) covers the sub-folders.
+- `docs/runbooks/remove/experimental-sandbox.md` and `docs/runbooks/experimental-sandbox.md`: the folder's contents and the `state.ts` path. `toolkit.json`'s `stack.experimental-sandbox.files` names only the folder, so it is unchanged.
+- The LAB epic's `technical/` files.
+- Drafted contracts:
+  - Updated planned_paths and Build notes: LAB-19, 20, 22, 23, 26, 28 to 30, and WEB-16 to 18.
+  - New files go to their subject folder: `confirmation.ts` to `review/`, `results*.ts` and `admin-reviewers*.ts` to `admin/`, and `notice.ts` to `experiment/`.
+  - Started and closed tickets keep their old paths as records. Open tickets are therefore stale against the move: WEB-15, LAB-14 and LAB-18.
+
+## 2026-10-08 — Webhooks: each one is a folder under `app/api/webhooks/`
+
+Operator ruling, 2026-10-08: a webhook's logic lives beside its route, so every webhook is one obvious folder. The Stripe webhook's dispatcher, handler, handlers and ledger binding moved by `git mv` from `apps/web/lib/billing/webhook/` to `apps/web/app/api/webhooks/stripe/_lib/`, with no change in behaviour. The Stripe client stays in `apps/web/lib/billing/stripe.ts`, because code outside the webhook will import it.
+
+- `docs/engineering/codebase-conventions.md` §3: a route's own modules go in a private `_lib/` folder; each webhook is `app/api/webhooks/<vendor>/`.
+- `docs/runbooks/remove/billing.md`: the route folder now lists its `_lib/`, and `apps/web/lib/billing/` holds only the client. `toolkit.json`'s `stack.billing.files` already named both folders, so it is unchanged.
+- `toolkit.json` reviewers: `**/webhooks/stripe/**` rows for mason and chancery. Seven of the moved files do not import `stripe` and left the `**/billing/**` glob, and these rows keep billing review on them. Warden already reaches them through `**/webhooks/**`.
+- `apps/web/package.json`: `test` also runs `app/**/*.test.ts`. Its glob was `lib/**` only, so the two moved test files would have stopped running (429 tests before, 449 after).
+- `tooling/boundaries.test.ts`: a second `stripe` and ledger probe, from the webhook's `_lib/`. `docs/engineering/tech-stack.md`: the `stripe` row names the webhook folder.
+
+## 2026-10-08 — Component placement: the importer ladder, `components/<domain>/`, no `app/_components/`
+
+Four operator rulings, decided 2026-10-08 in Mason's placement thread, from the research note `docs/research/engineering/component-placement.md`. Ledger EN-19. The note's own recommendation (no `components/` folder; the app root's `_components/` as the top in-app tier) was weighed against the operator's rule (app-shared components in `components/`, under sub-folders); the ruling keeps the note's deepest-common-segment step for one section and the operator's folder above it.
+
+- **Placement is a ladder by importer set:** the route's `_components/`; several segments of one section (a first-level folder under `app/`), the deepest common segment's `_components/`; importers across sections or in the root segment, `apps/<app>/components/<domain>/`; both apps, `@pem/ui`, import-gated, with a domain-aware component split into a presentational part and per-app wrappers.
+- **`apps/<app>/app/_components/` is retired.** Route `_components/` stay.
+- **Sub-folders:** every file in `components/` sits in a domain-noun sub-folder; chrome goes in `shell/`; no type-named folders anywhere. A route `_components/` may take domain sub-folders.
+- **Promotion:** a file moves in the PR that changes its importers, down as well as up, and is deleted at zero. Kind never moves a file.
+- **Case study:** `apps/web/app/experimental/[slug]/review/_components/choice-group.tsx` stays: its three importers all sit in `review/_components/`.
+- **Not yet moved:** the files sit at their old paths until WEB-20 (`apps/web/app/_components/floating-theme-toggle.tsx` to `apps/web/components/shell/`, with the D-LAB-34 guard widened to the new folder, operator 2026-10-08, and assess V4) and WEB-21 (the docs app's `sidebar`, `docs-nav` and `search` to `apps/docs/components/shell/`; `markdown` and `frontmatter-panel` down to `apps/docs/app/[[...slug]]/_components/`) land. §1 and §6 name the target paths.
+- **Files changed, every sentence before and after:**
+  - `docs/engineering/codebase-conventions.md` §1. Added: the four-rung ladder, "Kind never moves a file", "Move in the PR that changes the importer set". Worked example was: "The markdown renderer is used only by `apps/docs`, so it lives in `apps/docs/app/_components/markdown.tsx`." Now: it "belongs in `apps/docs/app/[[...slug]]/_components/markdown.tsx`", plus the `ChoiceGroup` example.
+  - Same file, §3. The tree's `_components/` line was "components used by this app's routes"; now `<segment>/_components/` (only that subtree imports them) and `components/<domain>/` beside `lib/`. Was: "Route-level components that grow beyond one route move up to `app/_components/`; components needed by both apps move to `@pem/ui` (§1)." Now: the ladder, no `app/_components/`, and the three sub-folder rules.
+  - Same file, §6. Was: "Example: `apps/docs/app/_components/docs-nav.tsx`". Now: a leaf is "placed by its importers like any component (§1). Example: `apps/docs/components/shell/docs-nav.tsx`".
+  - `.claude/rules/next.md`: one placement line added, the rule an agent reads when it places a file under `apps/`: "Place a component by its importers (conventions §1); never `app/_components/`." Kept to a pointer: the path-rule share is at its cap, and WEB-19 adds a `ts.md` line inside it.
+  - `docs/runbooks/migrate/layer-3.md`. Was: "with a client leaf in the route's `_components/` folder". Now: "with a client leaf placed by its importers (codebase-conventions §1)".
+  - `tooling/refs-pending.json`: the two target paths §1 and §6 name, pending until WEB-21.
+  - §3 also says experiment designs in `app/experimental/_experiments/<slug>/` are placed by LAB's `technical/placement.md`, not the ladder.
+  - `toolkit.json` and `docs/engineering/templates/toolkit.template.json`: assay's rendered-UI row was `apps/*/app/**/*.tsx`; now `apps/*/{app,components}/**/*.tsx`, so a component in `components/` keeps its reviewer.
+  - Checked against the tree on 2026-10-08 by resolving every import in both apps: every route `_components/` file sits where the ladder puts it; the six files in the two `app/_components/` folders are the only misplaced ones (WEB-20, WEB-21). The token lint (`**/*.tsx`), the boundaries lint (`apps/**`), the `ui.md` and `next.md` path rules, `tsconfig` and Tailwind's source detection already reach `components/`.
+  - `AGENTS.md`. Was: a client leaf "in the route's `_components/`". Now: "on line 1, placed by its importers".
+  - `.claude/rules/ts.md`. Was: "a leaf in `_components/`". Now: "a leaf, placed by its importers".
+  - `apps/web/AGENTS.md`. Was: "a second consumer moves it to `@pem/ui`". Now: it "is placed by its importers (engineering conventions §1)".
+  - `packages/ui/AGENTS.md`. Was: "stays in its `_components/` until a second consumer". Now: "stays in that app until both apps import it".
+- **Left alone:** records 0004 and 0007 (immutable; they name `app/_components/markdown` as history).
+- **WEB-20 landed:** `floating-theme-toggle.tsx` is in `apps/web/components/shell/`, and `apps/web/app/_components/` is gone. The D-LAB-34 guard (`SANDBOX_UI_FILES` in `boundaries.js`, with a probe) covers `apps/web/components/**`. Assess V4 counts `components/` as placed.
+- **WEB-21 landed:** the docs app's `sidebar`, `docs-nav` and `search` are in `apps/docs/components/shell/`, and `markdown` and `frontmatter-panel` are in `apps/docs/app/[[...slug]]/_components/`. `apps/docs/app/_components/` is gone, and the two pending refs are resolved.
+
 ## 2026-10-08 — MIG: the overlay-local floor and the reviewer scanner, ruled
 
 Two operator rulings, decided 2026-10-08, that the Tickets-gate pre-flight (`specs/_shared/epics/MIG-codebase-migration/tickets/_preflight.md`, Blocking 1 and 2, Should-fix 5) was waiting on. Ruling 1 is ledger EN-18 and an amendment block on record 0012. Ruling 2 lives only in MIG-14's contract and here. Warden was consulted on ruling 1.

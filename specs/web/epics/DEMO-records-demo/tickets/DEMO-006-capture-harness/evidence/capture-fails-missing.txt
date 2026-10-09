@@ -1,0 +1,135 @@
+[WebServer] <claude-code-hint v="1" type="plugin" value="stripe@claude-plugins-official" />
+[WebServer] <claude-code-hint v="1" type="plugin" value="stripe@claude-plugins-official" />
+
+Running 6 tests using 5 workers
+
+  ✘  5 [capture] › e2e/capture.capture.ts:38:7 › probe ?state=empty 1440 light (693ms)
+  ✘  3 [capture] › e2e/capture.capture.ts:38:7 › probe ?state=empty 834 dark (641ms)
+  ✘  2 [capture] › e2e/capture.capture.ts:38:7 › probe ?state=empty 390 dark (486ms)
+  ✘  4 [capture] › e2e/capture.capture.ts:38:7 › probe ?state=empty 390 light (674ms)
+  ✘  1 [capture] › e2e/capture.capture.ts:38:7 › probe ?state=empty 834 light (608ms)
+  ✘  6 [capture] › e2e/capture.capture.ts:38:7 › probe ?state=empty 1440 dark (183ms)
+
+
+  1) [capture] › e2e/capture.capture.ts:38:7 › probe ?state=empty 390 light ────────────────────────
+
+    Error: probe ?state=empty: page answered 404, not 200
+
+    expect(received).toBeNull()
+
+    Received: "probe ?state=empty: page answered 404, not 200"
+
+      58 |           stateAttr,
+      59 |         });
+    > 60 |         expect(problem, problem ?? "").toBeNull();
+         |                                        ^
+      61 |         expect(
+      62 |           await page.evaluate(() =>
+      63 |             document.documentElement.classList.contains("dark"),
+        at /Users/taylor/lighthouse/product-engineering-mastery/apps/web/e2e/capture.capture.ts:60:40
+
+    Error Context: test-results/capture.capture.ts-probe-state-empty-390-light-capture/error-context.md
+
+  2) [capture] › e2e/capture.capture.ts:38:7 › probe ?state=empty 390 dark ─────────────────────────
+
+    Error: probe ?state=empty: page answered 404, not 200
+
+    expect(received).toBeNull()
+
+    Received: "probe ?state=empty: page answered 404, not 200"
+
+      58 |           stateAttr,
+      59 |         });
+    > 60 |         expect(problem, problem ?? "").toBeNull();
+         |                                        ^
+      61 |         expect(
+      62 |           await page.evaluate(() =>
+      63 |             document.documentElement.classList.contains("dark"),
+        at /Users/taylor/lighthouse/product-engineering-mastery/apps/web/e2e/capture.capture.ts:60:40
+
+    Error Context: test-results/capture.capture.ts-probe-state-empty-390-dark-capture/error-context.md
+
+  3) [capture] › e2e/capture.capture.ts:38:7 › probe ?state=empty 834 light ────────────────────────
+
+    Error: probe ?state=empty: page answered 404, not 200
+
+    expect(received).toBeNull()
+
+    Received: "probe ?state=empty: page answered 404, not 200"
+
+      58 |           stateAttr,
+      59 |         });
+    > 60 |         expect(problem, problem ?? "").toBeNull();
+         |                                        ^
+      61 |         expect(
+      62 |           await page.evaluate(() =>
+      63 |             document.documentElement.classList.contains("dark"),
+        at /Users/taylor/lighthouse/product-engineering-mastery/apps/web/e2e/capture.capture.ts:60:40
+
+    Error Context: test-results/capture.capture.ts-probe-state-empty-834-light-capture/error-context.md
+
+  4) [capture] › e2e/capture.capture.ts:38:7 › probe ?state=empty 834 dark ─────────────────────────
+
+    Error: probe ?state=empty: page answered 404, not 200
+
+    expect(received).toBeNull()
+
+    Received: "probe ?state=empty: page answered 404, not 200"
+
+      58 |           stateAttr,
+      59 |         });
+    > 60 |         expect(problem, problem ?? "").toBeNull();
+         |                                        ^
+      61 |         expect(
+      62 |           await page.evaluate(() =>
+      63 |             document.documentElement.classList.contains("dark"),
+        at /Users/taylor/lighthouse/product-engineering-mastery/apps/web/e2e/capture.capture.ts:60:40
+
+    Error Context: test-results/capture.capture.ts-probe-state-empty-834-dark-capture/error-context.md
+
+  5) [capture] › e2e/capture.capture.ts:38:7 › probe ?state=empty 1440 light ───────────────────────
+
+    Error: probe ?state=empty: page answered 404, not 200
+
+    expect(received).toBeNull()
+
+    Received: "probe ?state=empty: page answered 404, not 200"
+
+      58 |           stateAttr,
+      59 |         });
+    > 60 |         expect(problem, problem ?? "").toBeNull();
+         |                                        ^
+      61 |         expect(
+      62 |           await page.evaluate(() =>
+      63 |             document.documentElement.classList.contains("dark"),
+        at /Users/taylor/lighthouse/product-engineering-mastery/apps/web/e2e/capture.capture.ts:60:40
+
+    Error Context: test-results/capture.capture.ts-probe-state-empty-1440-light-capture/error-context.md
+
+  6) [capture] › e2e/capture.capture.ts:38:7 › probe ?state=empty 1440 dark ────────────────────────
+
+    Error: probe ?state=empty: page answered 404, not 200
+
+    expect(received).toBeNull()
+
+    Received: "probe ?state=empty: page answered 404, not 200"
+
+      58 |           stateAttr,
+      59 |         });
+    > 60 |         expect(problem, problem ?? "").toBeNull();
+         |                                        ^
+      61 |         expect(
+      62 |           await page.evaluate(() =>
+      63 |             document.documentElement.classList.contains("dark"),
+        at /Users/taylor/lighthouse/product-engineering-mastery/apps/web/e2e/capture.capture.ts:60:40
+
+    Error Context: test-results/capture.capture.ts-probe-state-empty-1440-dark-capture/error-context.md
+
+  6 failed
+    [capture] › e2e/capture.capture.ts:38:7 › probe ?state=empty 390 light ─────────────────────────
+    [capture] › e2e/capture.capture.ts:38:7 › probe ?state=empty 390 dark ──────────────────────────
+    [capture] › e2e/capture.capture.ts:38:7 › probe ?state=empty 834 light ─────────────────────────
+    [capture] › e2e/capture.capture.ts:38:7 › probe ?state=empty 834 dark ──────────────────────────
+    [capture] › e2e/capture.capture.ts:38:7 › probe ?state=empty 1440 light ────────────────────────
+    [capture] › e2e/capture.capture.ts:38:7 › probe ?state=empty 1440 dark ─────────────────────────
+exit 1

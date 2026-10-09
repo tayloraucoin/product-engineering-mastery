@@ -20,8 +20,8 @@ planned_paths:
   - "packages/db/src/sandbox/experiment.ts"
   - "packages/db/test/sandbox/isolation.test.ts"
   - "packages/db/test/sandbox/experiment.test.ts"
-  - "apps/web/lib/sandbox/experiment.ts"
-  - "apps/web/lib/sandbox/experiment.test.ts"
+  - "apps/web/lib/sandbox/experiment/experiment.ts"
+  - "apps/web/lib/sandbox/experiment/experiment.test.ts"
 depends_on:
   - LAB-11
 out_of_scope:

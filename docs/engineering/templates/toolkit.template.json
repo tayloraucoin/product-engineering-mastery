@@ -149,7 +149,7 @@
       "status": "draft"
     },
     {
-      "glob": "apps/*/app/**/*.tsx",
+      "glob": "apps/*/{app,components}/**/*.tsx",
       "role": "assay",
       "why": "Rendered UI is scored against the canon rubric.",
       "status": "draft"

@@ -8,15 +8,15 @@ non_negotiables:
   - "Synthetic files that drop the flag fail the same scan, as the scan's other rules do."
 devs_call: "Where the list of admin-only actions lives: a path list in admin-nav.ts, or a marker the scan finds in the action file."
 cites:
-  - "apps/web/lib/sandbox/admin-routes.test.ts"
+  - "apps/web/lib/sandbox/admin/admin-routes.test.ts"
 truth_files: "none: a test-only guard"
 qa: Q1
 reviewers: []
 focus: []
 operator_review: false
 planned_paths:
-  - "apps/web/lib/sandbox/admin-routes.test.ts"
-  - "apps/web/lib/sandbox/admin-nav.ts"
+  - "apps/web/lib/sandbox/admin/admin-routes.test.ts"
+  - "apps/web/lib/sandbox/admin/admin-nav.ts"
 depends_on:
   - LAB-16
 out_of_scope:

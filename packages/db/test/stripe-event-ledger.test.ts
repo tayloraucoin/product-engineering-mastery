@@ -3,7 +3,7 @@
  * never part of `yarn test`): a claim, a replay, a live claim another delivery
  * holds, a stale claim taken over, a release, and the table closed to users.
  * The route's own logic is unit-tested with signed synthetic events in
- * apps/web/lib/billing/webhook/handle.test.ts; this proves the SQL under it.
+ * apps/web/app/api/webhooks/stripe/_lib/handle.test.ts; this proves the SQL under it.
  */
 
 import assert from "node:assert/strict";

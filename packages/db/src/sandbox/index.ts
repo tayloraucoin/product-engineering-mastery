@@ -100,6 +100,7 @@ export {
   recordViewEvent,
   type ReviewerDesigns,
 } from "./experiment.ts";
+export { SANDBOX_SLUG, SANDBOX_SLUG_MAX } from "./slug.ts";
 export {
   SandboxAccessError,
   type ReviewerViewer,

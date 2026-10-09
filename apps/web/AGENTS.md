@@ -21,5 +21,5 @@ For UI work in this app, the design layer is `docs/design/canon.md` plus `apps/w
 
 - **Every state is reachable by URL:** `?state=empty|loading|error|partial|offline` on every route, light and dark, with reduced motion honored. A state the critic cannot reach is a state that was not built.
 - **Fixtures only.** Seeded, realistic, in-register copy; never lorem, never real customer data (`docs/design/workflow.md`, the data rule).
-- **Components come from `@pem/ui`.** A component only this app uses lives in the route's `_components/`; a second consumer moves it to `@pem/ui` (engineering conventions §1).
+- **Components come from `@pem/ui`.** A component only this app uses is placed by its importers (engineering conventions §1).
 - Dev server: `yarn web:dev` (port 3000).

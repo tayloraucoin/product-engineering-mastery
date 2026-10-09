@@ -23,7 +23,7 @@ import { Input } from "@pem/ui/input";
 import { Skeleton } from "@pem/ui/skeleton";
 import { createToastManager, Toaster } from "@pem/ui/toast";
 
-import type { DeleteDataResult } from "../../../../../../lib/sandbox/admin-data";
+import type { DeleteDataResult } from "../../../../../../lib/sandbox/admin/admin-data";
 import {
   confirmMatches,
   DATA_WORDS,
@@ -32,7 +32,7 @@ import {
   deletePanel,
   holdsLine,
   type DataTabView,
-} from "../../../../../../lib/sandbox/admin-data-view";
+} from "../../../../../../lib/sandbox/admin/admin-data-view";
 import { deleteExperimentData } from "../actions";
 
 const W = DATA_WORDS;

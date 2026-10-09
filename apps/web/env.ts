@@ -24,7 +24,7 @@ import {
   resolveSentryDsn,
   resolveSentryProject,
 } from "./lib/error-reporting/dsn";
-import { sandboxSecretProblem } from "./lib/sandbox/secret-check";
+import { sandboxSecretProblem } from "./lib/sandbox/shared/secret-check";
 
 /** This app's origin outside a deployment: the port `yarn web:dev` serves. */
 const LOCAL_ORIGIN = "http://localhost:3000";

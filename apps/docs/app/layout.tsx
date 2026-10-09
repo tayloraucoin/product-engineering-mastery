@@ -6,7 +6,7 @@ import { brandSans } from "@pem/brand/font";
 import { appIcon } from "@pem/brand/icon";
 import { ThemeProvider } from "@pem/ui/theme";
 
-import { Sidebar } from "./_components/sidebar";
+import { Sidebar } from "../components/shell/sidebar";
 
 import "./globals.css";
 
@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <ThemeProvider>
           <div className="md:flex">
-            <aside className="border-b border-border bg-muted md:sticky md:top-0 md:h-dvh md:w-80 md:shrink-0 md:overflow-y-auto md:border-r md:border-b-0">
+            <aside className="border-b border-sidebar-border bg-sidebar text-sidebar-foreground md:sticky md:top-0 md:h-dvh md:w-72 md:shrink-0 md:overflow-y-auto md:border-r md:border-b-0">
               <Sidebar />
             </aside>
             <main className="min-w-0 flex-1 px-4 py-8 md:px-12 md:py-10">

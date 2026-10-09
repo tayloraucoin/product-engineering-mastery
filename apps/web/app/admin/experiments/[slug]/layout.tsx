@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
 
-import { resolveExperimentHeader } from "../../../../lib/sandbox/admin-experiments";
+import { resolveExperimentHeader } from "../../../../lib/sandbox/admin/admin-experiments";
 import {
   findExperimentSummary,
   loadExperimentStats,
-} from "../../../../lib/sandbox/admin-experiments-data";
-import { requireTeamPage } from "../../../../lib/sandbox/admin-guard";
+} from "../../../../lib/sandbox/admin/admin-experiments-data";
+import { requireTeamPage } from "../../../../lib/sandbox/admin/admin-guard";
 import { ExperimentHeader } from "./_components/experiment-header";
 
 /**

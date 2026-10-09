@@ -1,9 +1,9 @@
 /**
  * The entitlement service (D-STK-11, STK-21): the only code that writes
  * `billing_entitlements`. Stripe's verified events reach it through one
- * handler file each (apps/web/lib/billing/webhook/handlers); each function
- * takes a SystemContext and raw input, validates the input, and writes in one
- * transaction.
+ * handler file each (apps/web/app/api/webhooks/stripe/_lib/handlers); each
+ * function takes a SystemContext and raw input, validates the input, and
+ * writes in one transaction.
  *
  * - A user is named only by the checkout the app created for them
  *   (`client_reference_id`) or by an existing link from their Stripe

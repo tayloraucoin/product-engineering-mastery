@@ -3,8 +3,8 @@ import { notFound } from "next/navigation";
 
 import { getAllDocs, getDocBySlug } from "@/lib/docs";
 
-import { FrontmatterPanel } from "../_components/frontmatter-panel";
-import { Markdown } from "../_components/markdown";
+import { FrontmatterPanel } from "./_components/frontmatter-panel";
+import { Markdown } from "./_components/markdown";
 
 // Every doc is known at build time; anything else is a 404.
 export const dynamicParams = false;
@@ -29,10 +29,10 @@ export default async function DocPage({ params }: PageProps<"/[[...slug]]">) {
   if (!doc) notFound();
 
   return (
-    <article className="prose max-w-none prose-neutral dark:prose-invert prose-code:before:content-none prose-code:after:content-none prose-table:text-sm">
+    <article className="prose">
       <FrontmatterPanel doc={doc} />
       {doc.hidden && (
-        <p className="not-prose mb-6 rounded-md bg-muted px-3 py-2 text-sm text-muted-foreground">
+        <p className="not-prose mb-6 rounded-md bg-muted px-3 py-2 text-sm text-docs-muted">
           Archived: read only to trace a ruling. Never loaded by agents
           (docs/index.md).
         </p>

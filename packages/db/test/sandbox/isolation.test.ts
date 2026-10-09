@@ -56,6 +56,10 @@ import {
   sandboxReviewVersions,
   sandboxViewEvents,
 } from "../../src/schema/index.ts";
+import {
+  SANDBOX_SLUG_MAX,
+  SANDBOX_SLUG_PATTERN,
+} from "../../src/schema/sandbox/columns.ts";
 import { codesCases } from "./codes-cases.ts";
 import { erasureCases } from "./erasure-cases.ts";
 import {
@@ -1600,6 +1604,40 @@ const REGISTRY: Registry<World> = {
       "reviewer on slug B": recordAsReviewer("reviewer on slug B"),
       developer: recordAsTeam("developer"),
       admin: recordAsTeam("admin"),
+    },
+  },
+
+  SANDBOX_SLUG: {
+    group: "support",
+    criteria: ["WEB-15"],
+    cases: {
+      "is the column's slug pattern, which every sandbox function checks":
+        async (w) => {
+          assert.equal(sandbox.SANDBOX_SLUG.source, SANDBOX_SLUG_PATTERN);
+          assert.equal(sandbox.SANDBOX_SLUG.flags, "");
+          await assert.rejects(
+            sandbox.listExperimentStats(db(), w.developer, {
+              slugs: ["Not-A-Slug"],
+            }),
+            { message: EXPERIMENT_STATS_INPUT_INVALID },
+          );
+        },
+    },
+  },
+
+  SANDBOX_SLUG_MAX: {
+    group: "support",
+    criteria: ["WEB-15"],
+    cases: {
+      "is the column's cap, which every sandbox function checks": async (w) => {
+        assert.equal(sandbox.SANDBOX_SLUG_MAX, SANDBOX_SLUG_MAX);
+        await assert.rejects(
+          sandbox.listExperimentStats(db(), w.developer, {
+            slugs: ["a".repeat(SANDBOX_SLUG_MAX + 1)],
+          }),
+          { message: EXPERIMENT_STATS_INPUT_INVALID },
+        );
+      },
     },
   },
 

@@ -65,6 +65,12 @@
       "status": "draft"
     },
     {
+      "glob": "**/webhooks/stripe/**",
+      "role": "mason",
+      "why": "One-way door: billing, in the Stripe webhook's own folder.",
+      "status": "draft"
+    },
+    {
       "glob": "**/auth/**",
       "role": "mason",
       "why": "One-way door: authorization topology.",
@@ -149,7 +155,7 @@
       "status": "draft"
     },
     {
-      "glob": "apps/*/app/**/*.tsx",
+      "glob": "apps/*/{app,components}/**/*.tsx",
       "role": "assay",
       "why": "Rendered UI is scored against the canon rubric.",
       "status": "draft"
@@ -188,6 +194,12 @@
       "glob": "**/billing/**",
       "role": "chancery",
       "why": "Billing copy and what it promises.",
+      "status": "draft"
+    },
+    {
+      "glob": "**/webhooks/stripe/**",
+      "role": "chancery",
+      "why": "Billing copy and what it promises, in the Stripe webhook's own folder.",
       "status": "draft"
     },
     {

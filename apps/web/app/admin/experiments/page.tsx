@@ -6,14 +6,14 @@ import {
   EXPERIMENTS_WORDS,
   experimentsStateView,
   type ExperimentsView,
-} from "../../../lib/sandbox/admin-experiments";
+} from "../../../lib/sandbox/admin/admin-experiments";
 import {
   loadExperimentStats,
   registeredExperiments,
-} from "../../../lib/sandbox/admin-experiments-data";
-import { requireTeamPage } from "../../../lib/sandbox/admin-guard";
-import { readSandboxState } from "../../../lib/sandbox/state";
-import type { TeamMember } from "../../../lib/sandbox/team-check";
+} from "../../../lib/sandbox/admin/admin-experiments-data";
+import { requireTeamPage } from "../../../lib/sandbox/admin/admin-guard";
+import { readSandboxState } from "../../../lib/sandbox/shared/state";
+import type { TeamMember } from "../../../lib/sandbox/shared/team-check";
 import {
   ExperimentsSkeleton,
   ExperimentsTable,

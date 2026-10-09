@@ -24,6 +24,8 @@ type DatePickerProps = {
   defaultValue?: Date;
   onValueChange?: (date: Date | undefined) => void;
   placeholder?: string;
+  /** How the chosen day reads on the trigger; date-fns "PPP" by default. */
+  formatValue?: (date: Date) => string;
   disabled?: boolean;
   /** Days that cannot be chosen, in react-day-picker's matcher form. */
   disabledDays?: React.ComponentProps<typeof Calendar>["disabled"];
@@ -31,6 +33,7 @@ type DatePickerProps = {
   className?: string;
   "aria-label"?: string;
   "aria-labelledby"?: string;
+  "aria-describedby"?: string;
 };
 
 function DatePicker({
@@ -38,17 +41,19 @@ function DatePicker({
   defaultValue,
   onValueChange,
   placeholder = DATE_PICKER_COPY.placeholder,
+  formatValue = (day) => format(day, "PPP"),
   disabled,
   disabledDays,
   id,
   className,
   "aria-label": ariaLabel,
   "aria-labelledby": ariaLabelledby,
+  "aria-describedby": ariaDescribedby,
 }: DatePickerProps) {
   const [open, setOpen] = React.useState(false);
   const [uncontrolled, setUncontrolled] = React.useState(defaultValue);
   const date = value ?? uncontrolled;
-  const shown = date ? format(date, "PPP") : placeholder;
+  const shown = date ? formatValue(date) : placeholder;
   const valueId = React.useId();
 
   return (
@@ -70,6 +75,7 @@ function DatePicker({
             aria-labelledby={
               ariaLabelledby ? `${ariaLabelledby} ${valueId}` : undefined
             }
+            aria-describedby={ariaDescribedby}
           />
         }
       >

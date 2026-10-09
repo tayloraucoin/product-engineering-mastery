@@ -2,14 +2,14 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import type { CodesExperiment } from "../../../../../lib/sandbox/admin-codes";
+import type { CodesExperiment } from "../../../../../lib/sandbox/admin/admin-codes";
 import {
   findCodesExperiment,
   loadCodesView,
-} from "../../../../../lib/sandbox/admin-codes-data";
-import { requireTeamPage } from "../../../../../lib/sandbox/admin-guard";
-import { readSandboxState } from "../../../../../lib/sandbox/state";
-import type { TeamMember } from "../../../../../lib/sandbox/team-check";
+} from "../../../../../lib/sandbox/admin/admin-codes-data";
+import { requireTeamPage } from "../../../../../lib/sandbox/admin/admin-guard";
+import { readSandboxState } from "../../../../../lib/sandbox/shared/state";
+import type { TeamMember } from "../../../../../lib/sandbox/shared/team-check";
 import { CodesSkeleton, CodesTable } from "./_components/codes-table";
 
 export const metadata: Metadata = { title: "Access codes" };

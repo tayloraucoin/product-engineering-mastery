@@ -6,7 +6,7 @@ status: adopted
 thread: scaffold
 role: Mason
 date: 2026-10-01
-last_reviewed: 2026-10-01
+last_reviewed: 2026-10-08
 supersedes:
 load_when: ui-build, spec
 ---
@@ -33,11 +33,17 @@ Distilled from the Synapse and Conscious Connections conventions and scaled down
 ## 1. Placement: who imports this?
 
 - **One consumer → co-locate** it next to that consumer. A component used by one route lives in that route's `_components/`; a helper used by one app lives in that app's `lib/`.
-- **Two or more consumers → extract** to a package. A component both apps render goes to `@pem/ui`.
+- **Several consumers → the lowest tier that holds them all.** A component is placed by its importer set, one rung at a time. A section is a first-level folder under `app/` (`admin/`, `experimental/`):
+  1. one route segment imports it: that segment's `_components/`;
+  2. several segments of one section import it (`admin/experiments/` and `admin/experiments/[slug]/`): the `_components/` of the deepest segment that contains every importer;
+  3. importers in more than one section, or any file of the app's root segment (`layout`, `page`, `not-found`, …): `apps/<app>/components/<domain>/` (§3);
+  4. both apps import it: `@pem/ui`, and only if it imports nothing but `@pem/config` and `@pem/ui`. A domain-aware component fails that test: its presentational part goes to `@pem/ui`, taking data as props, and each app keeps a thin wrapper.
+- **Kind never moves a file.** A generic-looking component with one importer stays beside it; a predicted second consumer is not a consumer.
+- **Move in the PR that changes the importer set**, up or down. A file whose importers drop back moves down; a file with none is deleted.
 - **Moving later is a one-time cost; packaging early is a cost paid on every change.** When unsure, co-locate.
 - **The default stack is the exception.** Its packages (§4) are placed by [record 0010](../decisions/records/0010-starter-ships-default-stack.md), not by this count. A product's own code is still placed by it.
 
-Worked example from this repo: `buttonVariants` is used by `apps/web` (the home page link) and `apps/docs` (the sidebar and the 404 page), so it lives in `@pem/ui`. The markdown renderer is used only by `apps/docs`, so it lives in `apps/docs/app/_components/markdown.tsx`.
+Worked examples from this repo: `buttonVariants` is used by `apps/web` (the home page link) and `apps/docs` (the sidebar and the 404 page), so it lives in `@pem/ui`. The markdown renderer is used only by the doc page, so it belongs in `apps/docs/app/[[...slug]]/_components/markdown.tsx`. `ChoiceGroup` looks generic, but its three importers all sit in `experimental/[slug]/review/_components/`, so it stays there; it becomes a `@pem/ui` candidate only when `apps/docs` imports it.
 
 ## 2. Top-level structure
 
@@ -58,8 +64,10 @@ Both apps use the App Router and share one internal layout:
 
 ```
 apps/<app>/
-  app/                 routes only — page.tsx, layout.tsx, not-found.tsx, …
-    _components/       components used by this app's routes (private folder, not a route)
+  app/                 routes — page.tsx, layout.tsx, route.ts, … — and their private _components/ and _lib/
+    <segment>/_components/   components only that segment's subtree imports (private folder, not a route)
+    <segment>/_lib/          non-component modules only that segment imports (private folder)
+  components/<domain>/ components imported across sections of this app; chrome in shell/
   lib/                 non-component modules used only by this app
   next.config.ts       agentRules: false · transpilePackages · turbopack root
 ```
@@ -68,7 +76,14 @@ apps/<app>/
 - **`apps/docs`** — a reader for `AGENTS.md`, `docs/**/*.md` and the demo's filled examples. Every page is statically generated from those files at build time; the sidebar groups by the `layer` frontmatter field, `docs/research/` is searchable but not in the sidebar, and frontmatter renders above each page (record 0007). Relative `.md` links are rewritten to routes; links to other repo files render inert with the path in their title. Its `turbo.json` lists the content roots as build inputs, so editing a doc invalidates the cached build.
 - **`tooling/`** — not a workspace. Scripts run directly on Node 22 (`node tooling/<script>.ts`), type-checked by `yarn check-types:tooling`. Its consumer is the root scripts, so its shared module stays in `tooling/lib/`. One exception: `apps/web/next.config.ts` imports `tooling/local-dev-origins.ts` (STK-19), a dev-server helper with no runtime reach. The boundaries lint does not cover `tooling/`, so no other app or package file imports from it.
 
-Route-level components that grow beyond one route move up to `app/_components/`; components needed by both apps move to `@pem/ui` (§1).
+A route's own modules sit beside it in a private `_lib/` folder when nothing else imports them, as its components sit in `_components/`. Every webhook is one folder, `app/api/webhooks/<vendor>/`: `route.ts` reads the request, and `_lib/` holds the verification, dispatch, handlers and ledger binding (`apps/web/app/api/webhooks/stripe/_lib/`), so removing a vendor deletes one folder. A new webhook adds its own reviewer rows in `toolkit.json` for the domain it touches; warden already reaches every one through `**/webhooks/**`. A module other code also imports, such as the Stripe client in `lib/billing/`, stays in `lib/`.
+
+Components climb the §1 ladder: the route's `_components/`, then the section's deepest common `_components/`, then `components/<domain>/`, then `@pem/ui`. There is no `app/_components/` at the app root; what the root segment or several sections import lives in `components/`. Experiment designs in `apps/web/app/experimental/_experiments/<slug>/` are placed by the sandbox's own rule (`specs/web/epics/LAB-experimental-sandbox/technical/placement.md`), not by this ladder.
+
+- **Every file in `components/` sits in a sub-folder** named for a domain noun (`experiments/`, `people/`). App chrome (the shell, providers, the theme toggle) goes in `shell/`.
+- **No type-named folders** (`ui/`, `common/`, `shared/`, `forms/`, `misc/`), in `components/` or under `_components/`: they are the catch-alls §8 bans.
+- **A route `_components/` may take domain sub-folders**, as `apps/web/app/experimental/[slug]/_components/` does (`gate/`, `pins/`, `pin-list/`).
+- **A `lib/` folder groups by subject once it passes 30 files**, tests included: the `lib/` form of the rule above. Each sub-folder is named for the subject that owns its modules, and each module keeps its test beside it. One `shared/` is allowed here, unlike the type-named folders above, because §1's question decides what goes in it: only what two or more sibling folders, or the app's root config files (`env.ts`, `next.config.ts`), import. A runtime split such as `client/` sits beside the subject folders. The split moves files with `git mv`, updates every import and changes no behaviour, and a sub-folder that passes 30 files splits again. Example: `apps/web/lib/sandbox/` (64 files) became `gate/`, `admin/`, `experiment/`, `review/`, `shared/` and `client/`.
 
 ## 4. Packages and the import graph
 
@@ -128,7 +143,7 @@ A package imports only packages below it, and only along the edges in `packages/
 
 ## 6. Components and styling
 
-- **Server Components are the default.** A client component is a leaf: `"use client"` on line 1, as small as the interactivity it owns. Example: `apps/docs/app/_components/docs-nav.tsx` is client-side only because it reads the current path; the sidebar that builds its tree stays a Server Component.
+- **Server Components are the default.** A client component is a leaf: `"use client"` on line 1, as small as the interactivity it owns, placed by its importers like any component (§1). Example: `apps/docs/components/shell/docs-nav.tsx` is client-side only because it reads the current path; the sidebar that builds its tree stays a Server Component.
 - **Tokens by name.** Colours, radii, and other design values are custom properties in `packages/config/tailwind/preset.css`, exposed as Tailwind utilities (`bg-background`, `text-muted-foreground`). Raw values anywhere else are a defect.
 - **Variants with `cva`, merging with `cn`.** A component that has visual variants exports its `cva` definition alongside it (`buttonVariants`) so a link can wear the style without becoming a button.
 - **Each app's `app/globals.css`** imports, in order: `tailwindcss`, `@pem/config/tailwind/preset.css`, `@pem/ui/styles/globals.css` (which registers `@pem/ui` as a Tailwind source).
@@ -138,6 +153,7 @@ A package imports only packages below it, and only along the edges in `packages/
 - **Markdown under `docs/` is the source of truth.** One folder per layer (`decisions/`, `design/`, `engineering/`, …), each file carrying the frontmatter `yarn lint:docs` enforces. The map agents read is [`docs/index.md`](../index.md); the front door for people is [`docs/README.md`](../README.md), and every folder has a `README.md` landing page (PR-12).
 - **Names** follow [record 0006](../decisions/records/0006-file-naming-and-filing.md): ASCII kebab-case; a folder's landing page is its `README.md`, and `docs/index.md` is the one `index.md`.
 - **Links are relative paths to `.md` files.** They must work raw; the docs app adapts to them, never the reverse.
+- **Diagrams are Mermaid, written in the markdown** as a fenced block tagged `mermaid`: GitHub and the docs app both draw it, and the source diffs like text. A diagram earns its place where it replaces prose that is hard to follow, never beside prose that already reads. Folder trees stay as text in a plain code block. Image files are only for what cannot be code, such as screenshots; none exist yet, and diagrams never get an image export or a `public/` folder.
 - **Decisions** (CF-06): one line in [`ledger.md`](../decisions/ledger.md); a [record](../decisions/records/) from [`decision.template.md`](../decisions/decision.template.md) when the reason needs more than a line, immutable once accepted, reversed only by a new record that names it in `supersedes`; amendments to files in [`changelog.md`](../decisions/changelog.md).
 
 ## 8. Naming

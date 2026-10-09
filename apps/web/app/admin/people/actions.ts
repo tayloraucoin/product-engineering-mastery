@@ -10,9 +10,9 @@ import { revalidatePath } from "next/cache";
 import {
   isTeamActionRefusal,
   requireTeamAction,
-} from "../../../lib/sandbox/admin-guard";
-import type { ChangeRoleResult } from "../../../lib/sandbox/people";
-import { changeRoleAs } from "../../../lib/sandbox/people-data";
+} from "../../../lib/sandbox/admin/admin-guard";
+import type { ChangeRoleResult } from "../../../lib/sandbox/admin/people";
+import { changeRoleAs } from "../../../lib/sandbox/admin/people-data";
 
 export async function changeRole(
   _previous: ChangeRoleResult | null,

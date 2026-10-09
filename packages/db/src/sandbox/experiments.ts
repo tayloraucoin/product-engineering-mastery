@@ -30,10 +30,7 @@ import {
   sandboxReviewVersions,
   sandboxViewEvents,
 } from "../schema/index.ts";
-import {
-  SANDBOX_SLUG_MAX,
-  SANDBOX_SLUG_PATTERN,
-} from "../schema/sandbox/columns.ts";
+import { isSandboxSlug } from "./slug.ts";
 import {
   requireTeam,
   SandboxAccessError,
@@ -55,17 +52,12 @@ export const EXPERIMENT_STATS_MAX_SLUGS = 200;
 export const EXPERIMENT_STATS_INPUT_INVALID =
   "The experiment list is not valid.";
 
-const SLUG = new RegExp(SANDBOX_SLUG_PATTERN);
-
 function validSlugs(input: { slugs: readonly string[] }): string[] {
   const slugs = input?.slugs;
   if (
     !Array.isArray(slugs) ||
     slugs.length > EXPERIMENT_STATS_MAX_SLUGS ||
-    !slugs.every(
-      (s) =>
-        typeof s === "string" && s.length <= SANDBOX_SLUG_MAX && SLUG.test(s),
-    )
+    !slugs.every(isSandboxSlug)
   )
     throw new SandboxAccessError(EXPERIMENT_STATS_INPUT_INVALID);
   return [...new Set(slugs)];

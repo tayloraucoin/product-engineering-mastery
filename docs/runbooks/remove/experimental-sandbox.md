@@ -51,7 +51,7 @@ From the module's `files` list in `toolkit.json`:
 
 - `apps/web/app/experimental/` (the one dynamic route, its review page, actions, components, and `_experiments/` with `pricing-2026` and the registry)
 - `apps/web/app/admin/` (the shell, People, experiments and their reviewers, codes, results and data pages)
-- `apps/web/lib/sandbox/` (`access.ts`, the cookie, codes, throttle, link token, team check, validators, `robots.ts`, `secret-check.ts`, and their tests)
+- `apps/web/lib/sandbox/` (grouped by subject, each module beside its test: `gate/` the gate and the wrong-code throttle; `admin/` the /admin guard and nav, People, experiments, codes, data and the emails-used check; `experiment/` the experiment page, pins and threads; `review/` the closing review and the ended page; `shared/` `access.ts`, the cookie, codes, link token, team check, `state.ts`, validators, `robots.ts` and `secret-check.ts`; `client/` the client-safe pure parts)
 - `packages/db/src/schema/sandbox/` (the seven tables)
 - `packages/db/src/sandbox/` (the viewer-scoped queries behind `@pem/db/sandbox`)
 - `packages/db/test/sandbox/` (the real-Postgres isolation tests)
@@ -69,7 +69,7 @@ Then stop the dev server and delete `apps/web/.next`. The baseline run left rout
 - `packages/db/package.json`: delete the `./sandbox` export.
 - `apps/web/env.ts`: delete the `sandboxSecretProblem` import, the three `SANDBOX_SECRET*` raw reads, the `SANDBOX_SECRET` schema entry with its comment, and its `pickTiered` line.
 - `apps/web/next.config.ts`: delete the `SANDBOX_NOINDEX_HEADERS` import and the `headers()` function with its comment. Keep `headers()` if the product has added its own headers there.
-- `apps/web/app/_components/floating-theme-toggle.tsx`: delete the two `[body:has([data-admin-shell])_&]:hidden` and `[body:has([data-sandbox-design])_&]:hidden` classes, and the comment's sentences on the `/admin` shell and an experiment's design. The component stays: the root layout uses it.
+- `apps/web/components/shell/floating-theme-toggle.tsx`: delete the two `[body:has([data-admin-shell])_&]:hidden` and `[body:has([data-sandbox-design])_&]:hidden` classes, and the comment's sentences on the `/admin` shell and an experiment's design. The component stays: the root layout uses it.
 - `tooling/boundaries.test.ts`: delete LAB-3's block, from the comment `// LAB-3 (its C5)` through the `SANDBOX_ALLOWED` loop.
 - `packages/db/scripts/grant-admin.ts`: in the header comment, drop every sentence that names People, its role-change lock, the last-admin race or this runbook. The script stays (below).
 - `docs/engineering/tech-stack.md`: in the `lucide-react` row, drop `apps/web` when the dependency goes (below).

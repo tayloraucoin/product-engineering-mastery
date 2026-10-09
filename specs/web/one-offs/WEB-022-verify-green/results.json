@@ -1,0 +1,56 @@
+{
+  "id": "WEB-22",
+  "criteria_sha256": "6a4a65903fa1e35e6eda42106aa11bc61dea6136db130926884595b916708c32",
+  "criteria": {
+    "C1": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn check-refs",
+        "exit": 0,
+        "at": "2026-10-09T05:13:33Z",
+        "head": "e8b98800980a4cce0bdd74c5eadfea72a3574a71",
+        "evidence_path": "specs/web/one-offs/WEB-022-verify-green/evidence/C1.log",
+        "evidence_sha256": "cf1272d27f4a4842a5c6c836e5bfb363be68d4053012ca66c3e3e2f2b03d387a"
+      }
+    },
+    "C2": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": {
+        "command": "yarn check-specs",
+        "exit": 1,
+        "at": "2026-10-09T05:13:39Z",
+        "head": "e8b98800980a4cce0bdd74c5eadfea72a3574a71",
+        "evidence_path": "specs/web/one-offs/WEB-022-verify-green/evidence/C2.log",
+        "evidence_sha256": "36f78956e0627d563ed194fc494406d7afec57294f967d42dea7232516aec567"
+      }
+    },
+    "C3": {
+      "status": "PASS",
+      "evidence": "test",
+      "run": {
+        "command": "yarn test:tooling",
+        "exit": 0,
+        "at": "2026-10-09T05:14:10Z",
+        "head": "e8b98800980a4cce0bdd74c5eadfea72a3574a71",
+        "evidence_path": "specs/web/one-offs/WEB-022-verify-green/evidence/C3.log",
+        "evidence_sha256": "2cc6f8c7236afddaceb1fa400a915bb254e731f5a5b7cf2120b4bae368653d17",
+        "tests": 334
+      }
+    },
+    "C4": {
+      "status": "PASS",
+      "evidence": "check",
+      "run": {
+        "command": "yarn lint:boundaries",
+        "exit": 0,
+        "at": "2026-10-09T05:15:47Z",
+        "head": "e8b98800980a4cce0bdd74c5eadfea72a3574a71",
+        "evidence_path": "specs/web/one-offs/WEB-022-verify-green/evidence/C4.log",
+        "evidence_sha256": "242cef8d3c90b875b8101cbb2b95313102fe68f8b6fd80bbaa97092dcd4b595f"
+      }
+    }
+  },
+  "updated_at": "2026-10-09T05:15:55Z"
+}

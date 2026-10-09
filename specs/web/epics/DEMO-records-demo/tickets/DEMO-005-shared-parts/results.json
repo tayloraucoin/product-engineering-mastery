@@ -1,0 +1,70 @@
+{
+  "id": "DEMO-5",
+  "criteria_sha256": "c4a3d17197233b998c8678cb53941bcb2a8ac028ec2ff2a5648fcd0b38f802f7",
+  "criteria": {
+    "C1": {
+      "status": "FAIL",
+      "evidence": "capture",
+      "run": null
+    },
+    "C2": {
+      "status": "FAIL",
+      "evidence": "capture",
+      "run": null
+    },
+    "C3": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    }
+  },
+  "built_at": "2026-10-09T05:15:23Z",
+  "cost": {
+    "at": "2026-10-09T05:21:10Z",
+    "calls": 36,
+    "weighted": 511405,
+    "tokens_input": 72,
+    "tokens_cache_read": 3476353,
+    "tokens_cache_write": 71426,
+    "tokens_output": 14883,
+    "by_category": {
+      "build": {
+        "calls": 15,
+        "weighted": 191604
+      },
+      "proofs": {
+        "calls": 7,
+        "weighted": 115753
+      },
+      "captures": {
+        "calls": 10,
+        "weighted": 124253
+      },
+      "reviews": {
+        "calls": 1,
+        "weighted": 13709
+      },
+      "status": {
+        "calls": 1,
+        "weighted": 10541
+      },
+      "git": {
+        "calls": 1,
+        "weighted": 14595
+      },
+      "re-reading": {
+        "calls": 0,
+        "weighted": 0
+      },
+      "other": {
+        "calls": 1,
+        "weighted": 40950
+      }
+    },
+    "context_last_call": 115480,
+    "threads": 1,
+    "headless_runs": 0,
+    "headless_weighted": 0
+  },
+  "updated_at": "2026-10-09T05:21:10Z"
+}

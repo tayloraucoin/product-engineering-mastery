@@ -243,6 +243,10 @@ const ALLOWED: [file: string, code: string][] = [
     'import Stripe from "stripe"; import "@pem/db/stripe-event-ledger";',
   ],
   [
+    "apps/web/app/api/webhooks/stripe/_lib/zz-probe.ts",
+    'import Stripe from "stripe"; import "@pem/db/stripe-event-ledger";',
+  ],
+  [
     "packages/api/src/zz-probe.ts",
     'import "@trpc/server"; import "@trpc/client"; import "@pem/services/notes"; import "@pem/auth/context"; import "@pem/validators/notes"; import "@pem/observability/logger";',
   ],
@@ -303,6 +307,12 @@ const SANDBOX_DISALLOWED: [file: string, code: string, message: RegExp][] = [
     'import { sandboxComments } from "@pem/db/schema";',
     /never @pem\/db\/client or @pem\/db\/schema/,
   ],
+  // EN-19: a component in apps/web/components/ is held to the same rule.
+  [
+    "apps/web/components/shell/zz-probe.ts",
+    'import { getDb } from "@pem/db/client";',
+    /never @pem\/db\/client or @pem\/db\/schema/,
+  ],
   [
     "apps/web/app/admin/zz-probe.ts",
     'import { streamText } from "ai";',
@@ -339,13 +349,15 @@ const SANDBOX_ALLOWED: [file: string, code: string][] = [
     "apps/web/lib/sandbox/zz-probe.ts",
     'import "@pem/db/sandbox"; import "@pem/db/client"; import "@/lib/supabase/context";',
   ],
+  // web-sandbox's glob covers the subject folders, not only the root.
+  ["apps/web/lib/sandbox/gate/zz-probe.ts", 'import "@pem/db/sandbox";'],
   [
     "apps/web/app/experimental/[slug]/zz-probe.ts",
-    'import "@/lib/sandbox/team";',
+    'import "@/lib/sandbox/shared/team";',
   ],
   [
     "apps/web/app/admin/zz-probe.ts",
-    'import "@/lib/sandbox/team"; import "@pem/ui/button";',
+    'import "@/lib/sandbox/shared/team"; import "@pem/ui/button";',
   ],
   [
     "packages/db/src/sandbox/zz-probe.ts",

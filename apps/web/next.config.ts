@@ -6,7 +6,7 @@ import { withSentryConfig } from "@sentry/nextjs/config";
 import { getLocalDevOrigins } from "../../tooling/local-dev-origins";
 import { errorReportingBuild, nextConfigEnv } from "./env";
 import { sentryBuildOptions } from "./lib/error-reporting/build";
-import { SANDBOX_NOINDEX_HEADERS } from "./lib/sandbox/robots";
+import { SANDBOX_NOINDEX_HEADERS } from "./lib/sandbox/shared/robots";
 
 const appRoot = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(appRoot, "../..");

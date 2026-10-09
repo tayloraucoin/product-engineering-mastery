@@ -30,10 +30,17 @@
  * - Attribution, the second audit's [estimate]: a call belongs to the ticket
  *   most recently named, in its thread, by a work command (contract:init, run,
  *   record, qa, built, add, review:run, a commit message) or a spec-file edit;
- *   the naming call is its ticket's. A subagent's calls are in its parent's
- *   thread, so two subagents working different tickets at once can take
- *   each other's calls. A resumed session's dropped copies still set its
- *   ticket. Calls before any naming belong to none; the epic line counts them.
+ *   the naming call is its ticket's. A thread whose first human prompt names
+ *   exactly one ticket (a range such as "DEMO-1 to 17" names several), or
+ *   failing that whose session title does, belongs to it from its first call
+ *   (the third audit's Y2); only the ids leave the
+ *   prompt and title, as from a tool input. A `contract:init … --draft` names
+ *   nothing, and a ticket first drafted in a thread is not taken by that
+ *   thread's later spec edits or commits; a work command still takes it. A
+ *   subagent's calls are in its parent's thread, so two subagents working
+ *   different tickets at once can take each other's calls. A resumed
+ *   session's dropped copies still set its ticket. Calls before any naming
+ *   belong to none; the epic line counts them.
  * - Category, by the call's first tool (COST_CATEGORIES): a reviewer
  *   subagent's calls are reviews.
  * - Headless runs: the review runs results.json holds with cost fields, the
@@ -81,9 +88,16 @@ type Call = {
   /** The first tool's category; build when the call used no tool. */
   category: CostCategory | null;
   /** Work-ids its tool inputs named, in order. */
-  named: string[];
+  named: Naming[];
   ticket: string | null;
 };
+
+/**
+ * A work-id a tool input named: by a work command, by a draft (contract:init
+ * --draft), or softly (a spec-file edit, a commit message), which does not
+ * take a ticket the thread itself drafted.
+ */
+type Naming = { id: string; kind: "work" | "draft" | "soft" };
 
 const WEIGHTS = { input: 1, cacheWrite: 1.25, cacheRead: 0.1, output: 5 };
 const weigh = (u: Usage) =>
@@ -107,11 +121,18 @@ const WORK_COMMANDS = [
   new RegExp(`\\breview(?::run|-run\\.ts)\\s+[a-z-]+\\s+${ID}\\b`, "g"),
 ];
 const INIT = /\bcontract(?::|\.ts\s+)init\s+([A-Za-z0-9]+)\s+([a-z0-9-]+)/g;
+/** The rest of one shell command after a match: up to the next && ; | or newline. */
+const SEGMENT_END = /&&|;|\||\n/;
 const COMMIT_ID = new RegExp(
   `\\bgit\\b(?:\\s+-C\\s+\\S+)?\\s+commit\\b[\\s\\S]*?${ID}:`,
 );
 const TICKET_FOLDER =
   /(?:^|\/)([A-Z][A-Z0-9]{1,4})-0*([1-9][0-9]*)-[a-z0-9-]+\//g;
+/** A work-id written in prose (a prompt, a title): upper case, as ids are written. */
+const PROSE_ID = /\b([A-Z][A-Z0-9]{1,4})-0*([1-9][0-9]*)\b/g;
+/** A range after a prose id: "DEMO-1 to 17", "DEMO-1–17", "DEMO-1 through DEMO-17". */
+const RANGE_END =
+  /^\s*(?:to|through|-|–|—)\s*(?:([A-Z][A-Z0-9]{1,4})-)?0*([1-9][0-9]*)\b/;
 const EDIT_TOOLS = /^(Edit|Write|MultiEdit|NotebookEdit)$/;
 const BROWSER_TOOL = /Browser__|claude-in-chrome__|^mcp__.*preview_/;
 
@@ -127,21 +148,33 @@ function namedIds(
   tool: string,
   input: Record<string, unknown>,
   tree: SpecsTree,
-): string[] {
-  const ids: string[] = [];
+): Naming[] {
+  const ids: Naming[] = [];
   if (tool === "Bash" && typeof input.command === "string") {
     const command = input.command;
-    const found: { at: number; id: string }[] = [];
+    const found: { at: number; naming: Naming }[] = [];
     for (const pattern of WORK_COMMANDS)
       for (const m of command.matchAll(pattern))
-        found.push({ at: m.index, id: normalizeId(m[1]!) });
+        found.push({
+          at: m.index,
+          naming: { id: normalizeId(m[1]!), kind: "work" },
+        });
     for (const m of command.matchAll(INIT)) {
       const id = initId(tree, m[1]!, m[2]!);
-      if (id) found.push({ at: m.index, id });
+      const rest = command.slice(m.index).split(SEGMENT_END)[0]!;
+      if (id)
+        found.push({
+          at: m.index,
+          naming: { id, kind: /\s--draft\b/.test(rest) ? "draft" : "work" },
+        });
     }
     const commit = COMMIT_ID.exec(command);
-    if (commit) found.push({ at: commit.index, id: normalizeId(commit[1]!) });
-    ids.push(...found.sort((a, b) => a.at - b.at).map((f) => f.id));
+    if (commit)
+      found.push({
+        at: commit.index,
+        naming: { id: normalizeId(commit[1]!), kind: "soft" },
+      });
+    ids.push(...found.sort((a, b) => a.at - b.at).map((f) => f.naming));
   }
   const file = input.file_path ?? input.notebook_path;
   if (
@@ -149,8 +182,44 @@ function namedIds(
     typeof file === "string" &&
     /(^|\/)specs\//.test(file)
   )
-    for (const m of file.matchAll(TICKET_FOLDER)) ids.push(`${m[1]}-${m[2]}`);
+    for (const m of file.matchAll(TICKET_FOLDER))
+      ids.push({ id: `${m[1]}-${m[2]}`, kind: "soft" });
   return ids;
+}
+
+/** The one ticket a prompt or title names, when it names exactly one; only the id leaves. */
+function oneTicketIn(text: string, tree: SpecsTree): string | null {
+  const ids = new Set<string>();
+  for (const m of text.matchAll(PROSE_ID)) {
+    const id = `${m[1]}-${m[2]}`;
+    if (findItem(tree, id)) ids.add(id);
+    // A range names every ticket in it, so it never seeds one.
+    const range = RANGE_END.exec(text.slice(m.index + m[0].length));
+    if (range && (range[1] ?? m[1]) === m[1] && Number(range[2]) > Number(m[2]))
+      ids.add(`${m[1]}-${range[2]}`);
+  }
+  return ids.size === 1 ? [...ids][0]! : null;
+}
+
+/** A user record's typed text, or null when it is a tool result, a meta record or a summary. */
+function humanText(record: {
+  isSidechain?: boolean;
+  isMeta?: boolean;
+  isCompactSummary?: boolean;
+  message?: { content?: unknown };
+}): string | null {
+  if (record.isSidechain || record.isMeta || record.isCompactSummary)
+    return null;
+  const content = record.message?.content;
+  if (typeof content === "string") return content;
+  if (!Array.isArray(content)) return null;
+  const blocks = content as { type?: string; text?: unknown }[];
+  if (blocks.some((b) => b.type === "tool_result")) return null;
+  const text = blocks
+    .filter((b) => b.type === "text" && typeof b.text === "string")
+    .map((b) => b.text as string)
+    .join("\n");
+  return text || null;
 }
 
 /** contract:init names an app or epic and a slug, not an id: the tree has the id. */
@@ -258,7 +327,13 @@ function agentTypeOf(file: string): string | null {
   }
 }
 
-type FileCalls = { file: string; lastAt: string; calls: Call[] };
+type FileCalls = {
+  file: string;
+  lastAt: string;
+  calls: Call[];
+  /** A main thread's file: the ticket its first human prompt, else its last title, names alone. */
+  seed: { session: string; ticket: string } | null;
+};
 
 /** One file's calls, in file order, merged by message id within the file. */
 function readFile(
@@ -271,12 +346,24 @@ function readFile(
   const reviewerFile = agentType !== null && reviewers.has(agentType);
   const byId = new Map<string, Call>();
   let lastAt = "";
+  // Only a main thread's file can seed its ticket; a subagent's prompt is its parent's.
+  const main = agentType === null && !/\/subagents\//.test(file);
+  let promptTicket: string | null = null;
+  let promptSeen = false;
+  let titleTicket: string | null = null;
+  let seedSession: string | null = null;
   for (const line of readFileSync(file, "utf8").split("\n")) {
-    if (!line.includes('"assistant"')) continue;
+    const isAssistant = line.includes('"assistant"');
+    const isPrompt = main && !promptSeen && line.includes('"user"');
+    const isTitle = main && line.includes('"custom-title"');
+    if (!isAssistant && !isPrompt && !isTitle) continue;
     let record: {
       type?: string;
       sessionId?: string;
       isSidechain?: boolean;
+      isMeta?: boolean;
+      isCompactSummary?: boolean;
+      customTitle?: unknown;
       timestamp?: string;
       cwd?: string;
       uuid?: string;
@@ -291,6 +378,23 @@ function readFile(
       record = JSON.parse(line);
     } catch {
       continue; // A partial line.
+    }
+    // The text is matched for ids here and dropped; only an id is kept.
+    if (
+      record.type === "custom-title" &&
+      typeof record.customTitle === "string"
+    ) {
+      titleTicket = oneTicketIn(record.customTitle, tree);
+      seedSession ??= record.sessionId ?? null;
+      continue;
+    }
+    if (record.type === "user" && !promptSeen) {
+      const text = humanText(record);
+      if (text === null) continue;
+      promptSeen = true;
+      promptTicket = oneTicketIn(text, tree);
+      seedSession ??= record.sessionId ?? null;
+      continue;
     }
     // A record with no usage, or Claude Code's synthetic one for an API
     // error, is not an API call (as stop-gate's contextTokens reads it).
@@ -352,7 +456,13 @@ function readFile(
     }
   }
   for (const call of byId.values()) if (reviewerFile) call.category = "reviews";
-  return { file, lastAt, calls: [...byId.values()] };
+  const ticket = promptTicket ?? titleTicket;
+  return {
+    file,
+    lastAt,
+    calls: [...byId.values()],
+    seed: ticket ? { session: seedSession ?? fallbackSession, ticket } : null,
+  };
 }
 
 /** Every call once per message id, each attributed to a ticket or none. */
@@ -367,6 +477,10 @@ function readCalls(tree: SpecsTree): Call[] {
         a.lastAt.localeCompare(b.lastAt) || a.file.localeCompare(b.file),
     );
   const calls = new Map<string, Call>();
+  // A thread's seed: the first main file of the session that has one.
+  const seeds = new Map<string, string>();
+  for (const { seed } of files)
+    if (seed && !seeds.has(seed.session)) seeds.set(seed.session, seed.ticket);
   // A dropped copy still tells its own thread which ticket the copied
   // history named: it sets the walk's ticket but is never counted.
   const markers: Pick<Call, "session" | "at" | "named">[] = [];
@@ -395,7 +509,7 @@ function readCalls(tree: SpecsTree): Call[] {
       );
       seen.usage.output = Math.max(seen.usage.output, call.usage.output);
     }
-  type Step = { call: Call | null; at: string; named: string[] };
+  type Step = { call: Call | null; at: string; named: Naming[] };
   const threads = new Map<string, Step[]>();
   const add = (session: string, step: Step) => {
     const list = threads.get(session) ?? [];
@@ -406,11 +520,20 @@ function readCalls(tree: SpecsTree): Call[] {
     add(call.session, { call, at: call.at, named: call.named });
   for (const m of markers)
     add(m.session, { call: null, at: m.at, named: m.named });
-  for (const list of threads.values()) {
+  for (const [session, list] of threads) {
     list.sort((a, b) => a.at.localeCompare(b.at));
-    let current: string | null = null;
+    let current: string | null = seeds.get(session) ?? null;
+    // Tickets this thread drafted: a spec edit or commit does not take them.
+    const drafts = new Set<string>();
     for (const step of list) {
-      if (step.named.length) current = step.named[step.named.length - 1]!;
+      for (const { id, kind } of step.named) {
+        if (kind === "draft") drafts.add(id);
+        else if (kind === "soft" && drafts.has(id)) continue;
+        else {
+          if (kind === "work") drafts.delete(id);
+          current = id;
+        }
+      }
       if (step.call) step.call.ticket = current;
     }
   }

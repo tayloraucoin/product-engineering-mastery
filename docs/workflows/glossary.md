@@ -6,7 +6,7 @@ status: draft
 thread: P-J
 role: Usher
 date: 2026-10-02
-last_reviewed: 2026-10-02
+last_reviewed: 2026-10-08
 supersedes:
 load_when: on request
 ---
@@ -27,7 +27,10 @@ One line per term, grouped by system. If a term needs more than a line, it links
 | **Ticket** | One unit of buildable work, sized to fit one build thread. Its folder holds a contract, results and an as-built record. |
 | **Work-id** | A ticket's name. `WEB-41` for a one-off (app prefix), `OB2-3` for an epic ticket (epic prefix). Scripts allocate the numbers. |
 | **Epic prefix** | Two to five capitals or digits naming one epic (`OB2`). Unique in the repo. |
-| **Level** | One stage of an epic: Frame, Research, UX, Technical, Tickets, Build. Each runs in its own thread. |
+| **Level** | One stage of an epic: Frame, Research, UX, Design (optional), Technical, Tickets, Build. Each runs in its own thread. |
+| **Design stage** | The optional canvas beat between the UX intent pass and the UX handoff pass: the surface is settled in Paper, with the operator present, until they say "lock". See [`stages/design.md`](stages/design.md). |
+| **Lock** | The operator's word that ends the Design stage: every state artboard is exported as a capture beside the spec, and the canvas stops being where decisions are made. |
+| **Paper kit** | A product's tokens and house components mirrored into its Paper file once, so artboards are on-system; a snapshot of code, never authority. |
 | **Gate** | The test a level must pass before the next one starts. A check where possible; otherwise you. |
 | **Brief** | The epic's problem statement: who has the problem, why now, the appetite, what is out, and the knowledge gaps. |
 | **Appetite** | How much time the problem is worth. Set before the solution, it shapes how big the solution may be. |
@@ -72,7 +75,7 @@ One line per term, grouped by system. If a term needs more than a line, it links
 | **Subagent** | A role run in its own fresh context with limited tools (Vigil, Assay). |
 | **Settings and sandbox** | `.claude/settings.json`: what the agent may never do, must ask about, or may do freely. |
 | **`toolkit.json`** | The one file that says where things live in this repo: apps, prefixes, specs root, reviewer map. |
-| **Always-on** | What loads in every session (`AGENTS.md`, `CLAUDE.md`, `docs/README.md`, listings, the status line), kept under about 3,400 tokens. |
+| **Always-on** | What loads in every session (`AGENTS.md`, `CLAUDE.md`, `docs/index.md`, the skill and subagent listings, the SessionStart hook output), kept to 4,000 tokens or fewer; the cap lives in [`docs/index.md`](../index.md). |
 | **Budget** | The token caps for each kind of thread, held by `yarn budget`. |
 | **Status** | Generated views of every item's state: `yarn status`, `specs/_status.md`. |
 | **Left to go** | The generated list of what remains on the active ticket, printed when a session stops. |

@@ -1,4 +1,4 @@
-import { GATE_WORDS } from "../../../../../lib/sandbox/gate";
+import { GATE_WORDS } from "../../../../../lib/sandbox/gate/gate";
 
 /**
  * "What we keep" (door 8): the notice's four points as plain text, before the

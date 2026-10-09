@@ -46,15 +46,12 @@ import {
 import { users } from "../schema/account/users.ts";
 import { sandboxComments, sandboxReviewers } from "../schema/index.ts";
 import {
-  SANDBOX_SLUG_MAX,
-  SANDBOX_SLUG_PATTERN,
-} from "../schema/sandbox/columns.ts";
-import {
   SANDBOX_COMMENT_BODY_MAX,
   type SandboxCommentKind,
 } from "../schema/sandbox/comments.ts";
 import { COMMENTS_PER_REVIEWER_MAX, type CommentAnchor } from "./comments.ts";
 import { REVIEWER_NOT_FOUND } from "./experiment.ts";
+import { isSandboxSlug } from "./slug.ts";
 import {
   isUuid,
   requireReviewer,
@@ -74,7 +71,6 @@ export const REPLY_BODY_INVALID = "The reply must be 1 to 2,000 characters.";
 
 /** Replies are never numbered (threads.md); the column is not null, so they hold 0. */
 const REPLY_NUMBER = 0;
-const SLUG = new RegExp(SANDBOX_SLUG_PATTERN);
 
 /** Who wrote a row, as a reviewer reads it: themself, another reviewer by display name, or the team. */
 export type ReviewerAuthor = "self" | { reviewer: string | null } | "team";
@@ -173,12 +169,7 @@ function whoAndWhere(
   }
   const team = requireTeam(viewer);
   const slug = raw.slug;
-  if (
-    typeof slug !== "string" ||
-    slug.length > SANDBOX_SLUG_MAX ||
-    !SLUG.test(slug)
-  )
-    invalid();
+  if (!isSandboxSlug(slug)) invalid();
   return { kind: "team", team, slug };
 }
 

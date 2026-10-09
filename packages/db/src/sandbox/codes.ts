@@ -18,12 +18,9 @@
 import { and, desc, eq, inArray, isNotNull, max, sql } from "drizzle-orm";
 
 import { sandboxAccesses } from "../schema/sandbox/accesses.ts";
-import {
-  SANDBOX_SLUG_MAX,
-  SANDBOX_SLUG_PATTERN,
-} from "../schema/sandbox/columns.ts";
 import { sandboxReviewers } from "../schema/sandbox/reviewers.ts";
 import { recordAction } from "./actions.ts";
+import { isSandboxSlug } from "./slug.ts";
 import {
   isUuid,
   requireTeam,
@@ -47,7 +44,6 @@ export const CODES_INPUT_INVALID = "The code input is not valid.";
  */
 const TEXT_MAX = 500;
 const CODE_HASH_BYTES = 32;
-const SLUG = new RegExp(SANDBOX_SLUG_PATTERN);
 
 export type CodeRow = {
   reviewerId: string;
@@ -62,12 +58,7 @@ export type CodeRow = {
 };
 
 function validSlug(slug: unknown): string {
-  if (
-    typeof slug !== "string" ||
-    slug.length > SANDBOX_SLUG_MAX ||
-    !SLUG.test(slug)
-  )
-    throw new SandboxAccessError(CODES_INPUT_INVALID);
+  if (!isSandboxSlug(slug)) throw new SandboxAccessError(CODES_INPUT_INVALID);
   return slug;
 }
 

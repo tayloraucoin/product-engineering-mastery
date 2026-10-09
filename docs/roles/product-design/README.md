@@ -23,12 +23,12 @@ load_when:
 | **Envoy** | User Research Specialist | fill §7 | designs and fields studies; owns the ledger's truth | cites fictional research |
 | **Vesper** | Lead UX/UI Designer | universal | designs screens and specs within the system | manufactures urgency |
 | **Vitrine** | Lead Web Designer | universal | designs marketing and portfolio sites | applies a house style |
-| **Plumb** *(new)* | Design Director | universal | owns `DESIGN.md`, the design layer, the canon, the workflow; rejects off-system work | designs screens, scores builds |
-| **Assay** *(new)* | UI Critic | universal | screenshots at real breakpoints and states, scores against the rubric, ranks five | writes or edits code |
-| **Gloss** *(new)* | Content Designer | universal | owns in-product register, the glossary, and every string that carries trust | marketing voice in-task |
-| **Threshold** *(new)* | Accessibility Auditor | universal | specifies access before build, audits after, ranks by cost to the person | ARIA on divs, overlays |
-| **Alembic** *(new)* | Research Synthesizer | universal | distills raw corpora into traceable atoms, clusters, and source digests | adds anything not in the source |
-| **Tally** *(new)* | Metrics Analyst | universal | defines, instruments, and reads the numbers with denominators and a paired why | significance theater |
+| **Plumb** | Design Director | universal | owns `DESIGN.md`, the design layer, the canon, the workflow; rejects off-system work | designs screens, scores builds |
+| **Assay** | UI Critic | universal | screenshots at real breakpoints and states, scores against the rubric, ranks five | writes or edits code |
+| **Gloss** | Content Designer | universal | owns in-product register, the glossary, and every string that carries trust | marketing voice in-task |
+| **Threshold** | Accessibility Auditor | universal | specifies access before build, audits after, ranks by cost to the person | ARIA on divs, overlays |
+| **Alembic** | Research Synthesizer | universal | distills raw corpora into traceable atoms, clusters, and source digests | adds anything not in the source |
+| **Tally** | Metrics Analyst | universal | defines, instruments, and reads the numbers with denominators and a paired why | significance theater |
 
 All six new roles are **universal** with an intake contract (§7), following the Vesper pattern rather than the Compass/Tribune/Envoy "fill §7 socket" pattern — because you will run them across DealReady, Fybr, and your own products, and the guide's rule is: write universal when the craft is context-independent, then add a thin `Name_ext—<project>.md` extension if a product needs standing context baked in. Filenames use the em dash per the guide.
 
@@ -55,7 +55,7 @@ The Shift Nudge `sn-ui-checklist` skill and the accessibility checklist you atta
 
 **Anything that would change `DESIGN.md`, tokens, components, anti-patterns, references, design skills, or the sanctioned tool for a loop** → Plumb. This includes tool investigations whose purpose is to set the official workflow.
 
-**Verifying a build (Recipe A step 6)** → Assay, as the evaluator subagent, capped at two or three rounds. Assay never fixes; the builder fixes. A third-round failure goes to Plumb (system gap) or the brief's owner (brief gap).
+**Verifying a build (Recipe A step 7)** → Assay, as the evaluator subagent, capped at two or three rounds. Assay never fixes; the builder fixes. A third-round failure goes to Plumb (system gap) or the brief's owner (brief gap).
 
 **Words inside the product** → Gloss. A string set for a state matrix, a register ruling on a screen that reads wrong, a glossary amendment, an onboarding sequence.
 
@@ -71,14 +71,18 @@ The Shift Nudge `sn-ui-checklist` skill and the accessibility checklist you atta
 
 | Step | Primary | Consulted |
 |---|---|---|
-| 1 Frame (brief) | you, with Compass for the outcome | Tally writes the event plan; Threshold adds the access criteria |
-| 2 References | Plumb (annotated, capped at six) | — |
-| 3 Diverge (three directions) | Vesper | Plumb, if a direction needs a new primitive |
-| 4 Capture to canvas | — | Plumb decides whether the loop is sanctioned |
-| 5 Converge | Vesper's spec, the builder builds | Gloss for the string set |
-| 6 Verify | Assay (evaluator, capped) | Threshold for access depth; Gloss for copy depth |
-| 7 Polish | you, by hand | — |
-| 8 Ship behind a flag, read replays | Tally | Tribune carries what the replays show into the next brief |
+| 1 Frame | the shaper, with Compass | Tally, Threshold |
+| 2 Shape | the shaper, a builder | Tally, Plumb |
+| 3 References | Plumb | [NEEDS DECISION] |
+| 4 Diverge | Vesper | Plumb, if a direction needs a new primitive |
+| 4b Settle (optional) | Vesper | Assay as design critic; Plumb for a new primitive |
+| 5 Capture (optional) | — | — |
+| 6 Converge | Vesper's spec; the builder builds | Gloss for strings |
+| 7 Verify | Assay | Threshold for access depth |
+| 8 Polish | the builder | [NEEDS DECISION] |
+| 9 Ship | Tally | Tribune carries the replays into the next brief |
+
+The steps and roles follow [`docs/design/README.md`](../../design/README.md), Recipe A; that table is the source.
 
 ## Housekeeping the guide requires after adding roles
 

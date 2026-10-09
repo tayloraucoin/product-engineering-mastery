@@ -168,6 +168,7 @@ const BUILTIN_SCRIPTS = new Set([
   "eslint",
   "why",
   "npm",
+  "workspace",
 ]);
 
 const missing = new Map<string, Set<string>>();

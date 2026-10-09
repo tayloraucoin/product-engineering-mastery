@@ -6,7 +6,7 @@ status: draft
 thread: PR-19
 role: Usher
 date: 2026-10-05
-last_reviewed: 2026-10-07
+last_reviewed: 2026-10-08
 supersedes:
 load_when: on request
 ---
@@ -34,7 +34,7 @@ Claude Code, on the operator's branch.
 ## 4. Authoring rules
 
 - **The ticket is the whole brief.** Its Build notes hold the approach, the text of each decision it builds on, the interfaces, a line per planned path, the gotchas and the model. A builder needs the ticket and `technical.md`, nothing else. Detail that only this ticket needs lives here, never in `technical.md`.
-- One ticket cites one surface file and the criterion IDs it builds; citing more needs a `waiver:` with the reason.
+- One ticket cites one surface file and the criterion IDs it builds; citing more needs a `waiver:` with the reason. When the surface file carries a `design:` block, the Build notes link its captures and name the Paper file and page.
 - State the slice type (what kind of work, what class of failure it risks), the non-negotiables, what is the builder's call, and what is out of scope with where it lives instead.
 - Every criterion is observable and names its evidence type (`test`, `check`, `capture`, `manual`); UI criteria default to `capture`. The edge case that makes the ticket risky has its own criterion. `yarn verify` is never a criterion.
 - A ticket is under half a day by default; a bigger one is split, never padded.
@@ -50,9 +50,9 @@ One `tickets/<EPIC>-<n>-<slug>/contract.md` per ticket through `yarn contract:in
 ## 6. Gate
 
 1. `yarn check-specs` green on every contract.
-2. **The ticket table,** put to the operator once as a question: a row per ticket with its QA level, reviewers, focus, wave, model ("minimum / recommended, failure mode of choosing down", from `prompt-builder.md` §6) and hardens later (what its hardening pass will run), and a rough cost for the whole (an estimate). The reviewers cell shows the `toolkit.json` map's suggestion beside the proposed reviewers, so a seat added by hand reads as one; a second seat at Q2 needs a focus line that names what it examines, or `contract:init` refuses the start (`qa-levels.md`). The operator confirms all, or changes rows.
+2. **The ticket table,** put to the operator once as a question: a row per ticket with its QA level, reviewers, focus, wave, model ("minimum / recommended, failure mode of choosing down"; for a build, Opus 5.5 at medium for both, by `prompt-builder.md` §6) and hardens later (what its hardening pass will run), and a rough cost for the whole (an estimate). The reviewers cell shows the `toolkit.json` map's suggestion beside the proposed reviewers, so a seat added by hand reads as one; a second seat at Q2 needs a focus line that names what it examines, or `contract:init` refuses the start (`qa-levels.md`). The operator confirms all, or changes rows.
 3. For Q3 tickets, Vigil's pre-flight from the spec before any code: seats, unhappy paths, the promises the ticket touches. Its findings are fixed in the contracts before the build.
 
 ## 7. Handoff
 
-Print the execution table, a row per ticket: order, wave, depends on, model. Then say: open one thread per ticket and tell it "build <id>"; tickets in the same wave can run in parallel threads; once you have walked a built ticket, tell a new thread "harden <id>" ([`harden.md`](harden.md)). One ticket per thread, never a batch.
+Commit the epic folder first, one commit labelled with the epic id: `brief.md`, `technical.md`, `ux/` with its captures, and every contract. A build or critic thread reads a fresh checkout, and an uncommitted spec file voids its pass. Then print the execution table, a row per ticket: order, wave, depends on, model. Then say: open one thread per ticket and tell it "build <id>"; tickets in the same wave can run in parallel threads; once you have walked a built ticket, tell a new thread "harden <id>" ([`harden.md`](harden.md)). One ticket per thread, never a batch.
