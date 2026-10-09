@@ -422,9 +422,10 @@ function start(item: Item, tree: SpecsTree) {
       notes.push(`the contract was edited after its pre-flight PASS`);
   }
 
-  // A dependent ticket starts once its predecessor is built here: every
-  // criterion of its own recorded PASS. Its reviews and its as-built never
-  // hold the next ticket (PR-15).
+  // A dependent ticket starts once its predecessor is built here: its build
+  // pass recorded built_at (PR-21; the third audit's R1), or every criterion
+  // of its own is recorded PASS. Its reviews and its as-built never hold the
+  // next ticket (PR-15).
   for (const dep of contract.depends_on) {
     const other = findItem(tree, dep);
     const recorded = other ? readResults(other).results : null;
@@ -437,9 +438,9 @@ function start(item: Item, tree: SpecsTree) {
       refusals.push(
         `depends on ${dep}, which has not started on this branch; build it first`,
       );
-    else if (unproven.length)
+    else if (!recorded.built_at && unproven.length)
       refusals.push(
-        `depends on ${dep}, which is not built yet: ${unproven.join(", ")} not PASS. Run: yarn contract:run ${dep}`,
+        `depends on ${dep}, which is not built yet: no built_at, and ${unproven.join(", ")} not PASS. Build it and run yarn contract:built ${dep}`,
       );
   }
 
