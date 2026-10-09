@@ -1,0 +1,126 @@
+name: Critic
+
+# DEMO-16 (R4): every pull request that touches the demo, the kit, the tokens
+# or the critic is captured and scored by tk-ui-critic. The API key lives only
+# here; ci.yml and `yarn verify` never need it. `pull_request` only, never
+# `pull_request_target`: a fork's pull request gets no secret and so fails at
+# the first step, by design.
+on:
+  pull_request:
+    paths:
+      - "apps/web/**"
+      - "packages/ui/**"
+      - "packages/config/tailwind/**"
+      - ".claude/skills/tk-ui-critic/**"
+
+permissions:
+  contents: read
+
+# Every critic run spends; a newer push makes the older run worthless.
+concurrency:
+  group: critic-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  critic:
+    name: tk-ui-critic
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      # The capture harness and the critic's own recaptures use the one server
+      # started below instead of building again.
+      CAPTURE_BASE_URL: http://127.0.0.1:3000
+      CLAUDE_CODE_VERSION: 2.1.295
+    steps:
+      # First, before any spend: an absent key fails the job. It never skips.
+      - name: Require ANTHROPIC_API_KEY
+        run: |
+          if [ -z "${ANTHROPIC_API_KEY}" ]; then
+            echo "::error title=critic::The ANTHROPIC_API_KEY repository secret is not set (or this pull request comes from a fork, which never receives it). Add it under Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --immutable
+
+      - name: Install Claude Code
+        run: npm install --global "@anthropic-ai/claude-code@${CLAUDE_CODE_VERSION}"
+
+      - name: Install Chromium
+        run: yarn workspace web playwright install --with-deps chromium
+
+      # The model and effort come from the skill, never from this file.
+      - name: Read the critic's pin and the surfaces
+        id: plan
+        run: |
+          read -r model effort < <(node tooling/critic-verdict.ts --pin .claude/skills/tk-ui-critic/SKILL.md)
+          surfaces=$(node --input-type=module -e 'const { DEMO_SURFACES } = await import("./apps/web/lib/demo/states.ts"); console.log(Object.keys(DEMO_SURFACES).join(" "))')
+          test -n "$model" && test -n "$surfaces"
+          echo "model=$model" >> "$GITHUB_OUTPUT"
+          echo "effort=$effort" >> "$GITHUB_OUTPUT"
+          echo "surfaces=$surfaces" >> "$GITHUB_OUTPUT"
+          echo "Critic on $model at $effort over: $surfaces"
+
+      - name: Build the demo
+        run: yarn turbo run build --filter=web
+
+      - name: Start the demo
+        run: |
+          yarn workspace web start > "$RUNNER_TEMP/web.log" 2>&1 &
+          for _ in $(seq 1 60); do
+            curl -sf -o /dev/null "$CAPTURE_BASE_URL" && exit 0
+            sleep 2
+          done
+          cat "$RUNNER_TEMP/web.log"
+          echo "::error title=critic::the demo did not answer on $CAPTURE_BASE_URL"
+          exit 1
+
+      # A key that does not render fails here, naming surface and key.
+      - name: Capture
+        run: yarn web:capture
+
+      # The skill writes no file: its reply is the review, saved by the caller.
+      - name: Review every surface
+        env:
+          MODEL: ${{ steps.plan.outputs.model }}
+          EFFORT: ${{ steps.plan.outputs.effort }}
+          SURFACES: ${{ steps.plan.outputs.surfaces }}
+        run: |
+          for surface in $SURFACES; do
+            mkdir -p "apps/web/.captures/$surface"
+            echo "::group::tk-ui-critic $surface"
+            claude -p "/tk-ui-critic $surface" \
+              --model "$MODEL" --effort "$EFFORT" \
+              --allowedTools "Read" "Grep" "Glob" "Bash(yarn web:capture *)" \
+              --append-system-prompt "Reply with the critic's review exactly as it returns it, nothing before or after." \
+              > "apps/web/.captures/$surface/review-round-1.md"
+            cat "apps/web/.captures/$surface/review-round-1.md"
+            echo "::endgroup::"
+          done
+
+      - name: Verdict
+        env:
+          SURFACES: ${{ steps.plan.outputs.surfaces }}
+        run: node tooling/critic-verdict.ts apps/web/.captures --surfaces "${SURFACES// /,}"
+
+      - name: Upload captures and reviews
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: critic-${{ github.event.pull_request.number }}-${{ github.run_attempt }}
+          path: apps/web/.captures/
+          if-no-files-found: warn
+          retention-days: 14
