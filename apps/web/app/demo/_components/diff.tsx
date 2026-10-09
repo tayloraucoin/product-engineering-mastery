@@ -13,7 +13,7 @@ export function Diff({
   label?: string;
 }) {
   return (
-    <ul aria-label={label} className="grid gap-1 text-sm">
+    <ul aria-label={label} className="grid gap-1 text-base">
       {rows.map((row, i) => (
         <li
           key={`${i}-${row.kind}`}

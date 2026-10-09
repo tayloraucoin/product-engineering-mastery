@@ -22,7 +22,7 @@ import {
   EmptyTitle,
 } from "@pem/ui/empty";
 import { Skeleton } from "@pem/ui/skeleton";
-import { toast } from "@pem/ui/toast";
+import { useToastManager } from "@pem/ui/toast";
 
 import {
   useDemoRecord,
@@ -120,7 +120,7 @@ function ErrorNotice({ retry }: { retry: () => void }) {
       <AlertDescription>
         <p>The demo data request failed. Retry, or go back to records.</p>
         <div className="mt-3 flex gap-2">
-          <Button variant="outline" size="sm" onClick={retry}>
+          <Button size="sm" onClick={retry}>
             Retry
           </Button>
           <Link
@@ -283,6 +283,9 @@ export function RecordDetail({
   const { summary: stored, body: storedBody } = useDemoRecord(id as RecordId);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const toasted = useRef(false);
+  // The provider's own manager: the module `toast` subscribes in an effect
+  // that runs after this view's, so `saved`'s toast on mount would be lost.
+  const toasts = useToastManager();
 
   const known = state !== "not-found" && stored !== undefined;
   const name = stored?.vendor;
@@ -290,9 +293,9 @@ export function RecordDetail({
   useEffect(() => {
     if (state !== "saved" || !known || !name || toasted.current) return;
     toasted.current = true;
-    toast.add({ type: "success", ...savedToast(name, store.lastEvent) });
+    toasts.add({ type: "success", ...savedToast(name, store.lastEvent) });
     headingRef.current?.focus();
-  }, [state, known, name, store.lastEvent]);
+  }, [state, known, name, store.lastEvent, toasts]);
 
   if (!known || !stored) return <NotFound id={id} />;
   const { summary, body } = applyState(state, stored, storedBody);

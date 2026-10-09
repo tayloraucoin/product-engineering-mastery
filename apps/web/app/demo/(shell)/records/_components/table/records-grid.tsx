@@ -26,14 +26,20 @@ import { formatValue, recordHref, renewsWords } from "./cells";
 const COLUMNS: {
   id: SortColumn;
   title: string;
-  /** 3 : 2 : 1.33 : 1.67 : 2 as fractions of the table. */
+  /** 3 : 2 : 1.33 : 1.67 : 2 as fractions of the table from lg (the canvas);
+   * below lg the value column takes room from vendor so its header fits. */
   width: string;
   numeric?: boolean;
 }[] = [
-  { id: "vendor", title: "Vendor", width: "w-3/10" },
+  { id: "vendor", title: "Vendor", width: "w-1/4 lg:w-3/10" },
   { id: "owner", title: "Owner", width: "w-1/5" },
   { id: "status", title: "Status", width: "w-2/15" },
-  { id: "value", title: "Annual value (USD)", width: "w-1/6", numeric: true },
+  {
+    id: "value",
+    title: "Annual value (USD)",
+    width: "w-1/5 lg:w-1/6",
+    numeric: true,
+  },
   { id: "renews", title: "Renews", width: "w-1/5" },
 ];
 

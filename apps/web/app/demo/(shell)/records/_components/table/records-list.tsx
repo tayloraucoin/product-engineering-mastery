@@ -9,7 +9,8 @@ import type { RecordSummary } from "../../../../_lib/record";
 import { metaWords, recordHref } from "./cells";
 
 const ROW = "rounded-none border-0 border-b border-border px-0";
-const SKELETON_ROWS = 6;
+/** The table skeleton's count: one key keeps its rows at every width (P-A01). */
+const SKELETON_ROWS = 14;
 const SKELETON_TITLE = ["w-37", "w-32", "w-42", "w-35", "w-40", "w-34"];
 const SKELETON_META = ["w-65", "w-60", "w-70", "w-62", "w-57", "w-67"];
 
@@ -77,12 +78,18 @@ export function RecordsListSkeleton({ compact }: { compact: boolean }) {
         >
           <div className="flex items-center justify-between gap-3">
             <Skeleton
-              className={cn("h-4 animate-none rounded-full", SKELETON_TITLE[i])}
+              className={cn(
+                "h-4 animate-none rounded-full",
+                SKELETON_TITLE[i % SKELETON_TITLE.length],
+              )}
             />
             <Skeleton className="h-5 w-16 animate-none rounded-full" />
           </div>
           <Skeleton
-            className={cn("h-4 animate-none rounded-full", SKELETON_META[i])}
+            className={cn(
+              "h-4 animate-none rounded-full",
+              SKELETON_META[i % SKELETON_META.length],
+            )}
           />
         </li>
       ))}

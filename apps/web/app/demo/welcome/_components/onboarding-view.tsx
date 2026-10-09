@@ -104,9 +104,12 @@ export function OnboardingView({
             <p className="mt-2 text-base text-muted-foreground">{beat.body}</p>
           </>
         ) : (
+          // Below md the title wraps to two lines and the body to three (states.md).
           <div aria-hidden="true" className="flex flex-col gap-3">
             <Skeleton className="h-6 w-3/5 animate-none" />
+            <Skeleton className="h-6 w-2/5 animate-none md:hidden" />
             <Skeleton className="mt-1 h-4 w-11/12 animate-none" />
+            <Skeleton className="h-4 w-10/12 animate-none md:hidden" />
             <Skeleton className="h-4 w-1/2 animate-none" />
           </div>
         )}

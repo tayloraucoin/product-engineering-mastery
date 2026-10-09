@@ -16,8 +16,6 @@ export type DeleteDialogState =
 type Phase = "idle" | "deleting" | "error";
 
 const NOTICE_ID = "delete-dialog-notice";
-/** How long the demo's delete takes, so the pending state is seen. */
-const DELETE_MS = 900;
 
 const WORDS = {
   cancel: "Cancel",
@@ -57,8 +55,9 @@ export function DeleteDialog({
   const { dispatch } = useDemoStore();
   const { summary } = useDemoRecord(id as RecordId);
   const [phase, setPhase] = useState<Phase>(() => initialPhase(state));
-  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const trigger = useRef<HTMLElement | null>(null);
+  // Two presses in one tick both see `idle`; the ref lets only the first run.
+  const started = useRef(false);
   const open = params.get("dialog") === "delete";
   const offline = state === "offline";
   const partial = state === "partial";
@@ -66,7 +65,6 @@ export function DeleteDialog({
   useEffect(() => {
     trigger.current = document.getElementById("record-delete");
   }, [open]);
-  useEffect(() => () => clearTimeout(timer.current), []);
 
   if (!summary) return null;
 
@@ -80,18 +78,19 @@ export function DeleteDialog({
   };
 
   const run = () => {
-    if (phase === "deleting" || offline) return;
+    if (phase === "deleting" || offline || started.current) return;
+    started.current = true;
     if (phase === "error") {
       // The forced key was the first render only; drop it from the URL.
       const next = new URLSearchParams(params.toString());
       next.delete("state");
       router.replace(`${pathname}?${next.toString()}`);
     }
+    // No invented wait (A-20): the delete is in memory, so it runs now and
+    // `deleting` holds only until the table route takes over.
     setPhase("deleting");
-    timer.current = setTimeout(() => {
-      dispatch({ type: "delete", id: summary.id });
-      router.push("/demo/records?state=deleted");
-    }, DELETE_MS);
+    dispatch({ type: "delete", id: summary.id });
+    router.push("/demo/records?state=deleted");
   };
 
   const notice = offline

@@ -13,6 +13,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@pem/ui/alert-dialog";
+import { Spinner } from "@pem/ui/spinner";
 
 export interface ConfirmDialogProps {
   open: boolean;
@@ -124,7 +125,18 @@ export function ConfirmDialog({
             aria-busy={pending}
             className="min-w-32 aria-disabled:opacity-50"
           >
-            {pending ? pendingLabel : confirmLabel}
+            {pending ? (
+              <>
+                <Spinner
+                  aria-hidden="true"
+                  role={undefined}
+                  aria-label={undefined}
+                />
+                {pendingLabel}
+              </>
+            ) : (
+              confirmLabel
+            )}
           </AlertDialogAction>
           <AlertDialogCancel
             ref={cancelRef}

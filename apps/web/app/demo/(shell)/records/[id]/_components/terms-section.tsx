@@ -122,7 +122,13 @@ export function TermsSection({
               The record&apos;s fields are complete and you can still edit them.
             </p>
             <div className="mt-3">
-              <Button variant="outline" size="sm" onClick={retry}>
+              {/* Edit is this view's one primary; foreground text keeps Retry from reading as disabled. */}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={retry}
+                className="text-foreground"
+              >
                 Retry
               </Button>
             </div>

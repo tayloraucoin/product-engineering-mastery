@@ -9,7 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import Link from "next/link";
-import { Info, TriangleAlert, WifiOff } from "lucide-react";
+import { TriangleAlert, WifiOff } from "lucide-react";
 
 import {
   Alert,
@@ -26,7 +26,7 @@ import { Separator } from "@pem/ui/separator";
 import { Skeleton } from "@pem/ui/skeleton";
 import { Switch } from "@pem/ui/switch";
 import { useTheme } from "@pem/ui/theme";
-import { toast } from "@pem/ui/toast";
+import { useToastManager } from "@pem/ui/toast";
 import { ToggleGroup, ToggleGroupItem } from "@pem/ui/toggle-group";
 
 import { ConfirmDialog } from "../../_components/confirm-dialog";
@@ -65,10 +65,6 @@ function persist(
     .find((entry) => entry.startsWith(`${DEMO_PREFS_COOKIE}=`))
     ?.slice(DEMO_PREFS_COOKIE.length + 1);
   writeDemoPrefs({ ...parseDemoPrefs(raw), ...patch });
-}
-
-function announce(title: string, description: string) {
-  toast.add({ title, description });
 }
 
 interface RowProps {
@@ -211,6 +207,11 @@ export function SettingsView({
   const { dispatch } = useDemoStore();
   const { theme, setTheme } = useTheme();
   const isClient = useIsClient();
+  // The provider's own manager: the module `toast` subscribes in an effect
+  // that runs after this view's, so `saved`'s toast on mount would be lost.
+  const toasts = useToastManager();
+  const announce = (title: string, description: string) =>
+    toasts.add({ title, description });
 
   // `empty` draws the defaults; `saved` stages the sort change it confirms.
   const initial: DemoPrefs =
@@ -234,8 +235,11 @@ export function SettingsView({
   useEffect(() => {
     if (state !== "saved" || staged.current) return;
     staged.current = true;
-    announce(COPY.toasts.sort.title, COPY.toasts.sort.body["renews-asc"]);
-  }, [state]);
+    toasts.add({
+      title: COPY.toasts.sort.title,
+      description: COPY.toasts.sort.body["renews-asc"],
+    });
+  }, [state, toasts]);
 
   if (state === "loading") return <SettingsSkeleton />;
 
@@ -336,15 +340,12 @@ export function SettingsView({
       <Group title={COPY.records} titleId={`${ids}-records`}>
         {recordsFailed ? (
           <Notice
-            icon={<Info aria-hidden="true" />}
+            variant="destructive"
+            icon={<TriangleAlert aria-hidden="true" />}
             title={COPY.partial.title}
             body={COPY.partial.body}
             action={
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setRecordsFailed(false)}
-              >
+              <Button size="sm" onClick={() => setRecordsFailed(false)}>
                 {COPY.retry}
               </Button>
             }

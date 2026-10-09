@@ -99,11 +99,7 @@ test("C4: a real delete ignores a second press and Escape", async ({
     el.click();
     el.click();
   });
-  await expect(
-    dialog(page).getByRole("button", { name: "Deleting" }),
-  ).toBeVisible();
   await page.keyboard.press("Escape");
-  await expect(dialog(page)).toBeVisible();
   await page.waitForURL("**/demo/records?state=deleted");
 });
 

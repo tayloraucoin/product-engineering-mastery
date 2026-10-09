@@ -32,6 +32,9 @@ export interface ToolbarProps {
   onSort: (value: string) => void;
 }
 
+/** A visible label over each filter (C-R05): the field's name stays when it holds a value. */
+const FIELD = "flex flex-col gap-1.5 text-sm font-medium";
+
 /**
  * 1440: search, status, owner, then the count right-aligned on one row.
  * 390: search full width, the selects 50/50, then the count and Sort.
@@ -50,56 +53,61 @@ export function RecordsToolbar({
   onSort,
 }: ToolbarProps) {
   return (
-    <div className="flex flex-wrap items-center gap-2 md:flex-nowrap">
-      <div className="relative w-full md:w-70">
-        <Search
-          aria-hidden="true"
-          className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground"
-        />
-        <Input
-          ref={searchRef}
-          type="search"
-          aria-label="Filter by vendor"
-          placeholder="Filter by vendor"
-          value={draft}
-          disabled={disabled}
-          onChange={(event) => onSearch(event.target.value)}
-          className="pl-8"
-        />
-      </div>
+    <div className="flex flex-wrap items-end gap-2 md:flex-nowrap">
+      <label className={FIELD + " w-full md:w-70"}>
+        Filter by vendor
+        <span className="relative">
+          <Search
+            aria-hidden="true"
+            className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground"
+          />
+          <Input
+            ref={searchRef}
+            type="search"
+            value={draft}
+            disabled={disabled}
+            onChange={(event) => onSearch(event.target.value)}
+            className="pl-8"
+          />
+        </span>
+      </label>
       <div className="grid w-full grid-cols-2 gap-2 md:flex md:w-auto">
-        <NativeSelect
-          aria-label="Status"
-          value={status ?? ""}
-          disabled={disabled}
-          onChange={(event) =>
-            onStatus((event.target.value || null) as Status | null)
-          }
-          className="w-full md:w-37"
-        >
-          <NativeSelectOption value="">All statuses</NativeSelectOption>
-          {STATUSES.map((value) => (
-            <NativeSelectOption key={value} value={value}>
-              {STATUS_LABELS[value]}
-            </NativeSelectOption>
-          ))}
-        </NativeSelect>
-        <NativeSelect
-          aria-label="Owner"
-          value={owner ?? ""}
-          disabled={disabled}
-          onChange={(event) => onOwner(event.target.value || null)}
-          className="w-full md:w-37"
-        >
-          <NativeSelectOption value="">All owners</NativeSelectOption>
-          {OWNERS.map(({ id, name }) => (
-            <NativeSelectOption key={id} value={id}>
-              {name}
-            </NativeSelectOption>
-          ))}
-        </NativeSelect>
+        <label className={FIELD}>
+          Status
+          <NativeSelect
+            value={status ?? ""}
+            disabled={disabled}
+            onChange={(event) =>
+              onStatus((event.target.value || null) as Status | null)
+            }
+            className="w-full md:w-37"
+          >
+            <NativeSelectOption value="">All statuses</NativeSelectOption>
+            {STATUSES.map((value) => (
+              <NativeSelectOption key={value} value={value}>
+                {STATUS_LABELS[value]}
+              </NativeSelectOption>
+            ))}
+          </NativeSelect>
+        </label>
+        <label className={FIELD}>
+          Owner
+          <NativeSelect
+            value={owner ?? ""}
+            disabled={disabled}
+            onChange={(event) => onOwner(event.target.value || null)}
+            className="w-full md:w-37"
+          >
+            <NativeSelectOption value="">All owners</NativeSelectOption>
+            {OWNERS.map(({ id, name }) => (
+              <NativeSelectOption key={id} value={id}>
+                {name}
+              </NativeSelectOption>
+            ))}
+          </NativeSelect>
+        </label>
       </div>
-      <div className="flex w-full items-center justify-between gap-3 pt-1 md:ml-auto md:w-auto md:pt-0">
+      <div className="flex w-full items-center justify-between gap-3 pt-1 md:ml-auto md:h-9 md:w-auto md:pt-0">
         <div
           aria-live="polite"
           className="text-sm text-muted-foreground tabular-nums"

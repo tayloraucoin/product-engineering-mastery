@@ -8,6 +8,10 @@ function Label({ children }: { children: string }) {
   return <p className="text-sm font-medium">{children}</p>;
 }
 
+function Helper({ children }: { children: string }) {
+  return <p className="text-sm text-muted-foreground">{children}</p>;
+}
+
 function Control({ tall = false }: { tall?: boolean }) {
   return <Skeleton className={tall ? "h-40" : "h-9"} />;
 }
@@ -41,11 +45,13 @@ export function FormSkeleton({ onCancel }: { onCancel: () => void }) {
         <div className="flex flex-col gap-3">
           <Label>Renewal date</Label>
           <Control />
+          <Helper>Optional.</Helper>
         </div>
       </div>
       <div className="flex flex-col gap-3">
         <Label>Terms</Label>
         <Control tall />
+        <Helper>Optional. Each save keeps a version you can compare.</Helper>
       </div>
       <FormActions saveLabel="Save" pending={false} held onCancel={onCancel} />
     </div>
