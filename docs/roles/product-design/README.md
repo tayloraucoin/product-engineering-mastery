@@ -55,7 +55,7 @@ The Shift Nudge `sn-ui-checklist` skill and the accessibility checklist you atta
 
 **Anything that would change `DESIGN.md`, tokens, components, anti-patterns, references, design skills, or the sanctioned tool for a loop** → Plumb. This includes tool investigations whose purpose is to set the official workflow.
 
-**Verifying a build (Recipe A step 6)** → Assay, as the evaluator subagent, capped at two or three rounds. Assay never fixes; the builder fixes. A third-round failure goes to Plumb (system gap) or the brief's owner (brief gap).
+**Verifying a build (Recipe A step 7)** → Assay, as the evaluator subagent, capped at two or three rounds. Assay never fixes; the builder fixes. A third-round failure goes to Plumb (system gap) or the brief's owner (brief gap).
 
 **Words inside the product** → Gloss. A string set for a state matrix, a register ruling on a screen that reads wrong, a glossary amendment, an onboarding sequence.
 
@@ -71,14 +71,18 @@ The Shift Nudge `sn-ui-checklist` skill and the accessibility checklist you atta
 
 | Step | Primary | Consulted |
 |---|---|---|
-| 1 Frame (brief) | you, with Compass for the outcome | Tally writes the event plan; Threshold adds the access criteria |
-| 2 References | Plumb (annotated, capped at six) | — |
-| 3 Diverge (three directions) | Vesper | Plumb, if a direction needs a new primitive |
-| 4 Capture to canvas | — | Plumb decides whether the loop is sanctioned |
-| 5 Converge | Vesper's spec, the builder builds | Gloss for the string set |
-| 6 Verify | Assay (evaluator, capped) | Threshold for access depth; Gloss for copy depth |
-| 7 Polish | you, by hand | — |
-| 8 Ship behind a flag, read replays | Tally | Tribune carries what the replays show into the next brief |
+| 1 Frame | the shaper, with Compass | Tally, Threshold |
+| 2 Shape | the shaper, a builder | Tally, Plumb |
+| 3 References | Plumb | [NEEDS DECISION] |
+| 4 Diverge | Vesper | Plumb, if a direction needs a new primitive |
+| 4b Settle (optional) | Vesper | Assay as design critic; Plumb for a new primitive |
+| 5 Capture (optional) | — | — |
+| 6 Converge | Vesper's spec; the builder builds | Gloss for strings |
+| 7 Verify | Assay | Threshold for access depth |
+| 8 Polish | the builder | [NEEDS DECISION] |
+| 9 Ship | Tally | Tribune carries the replays into the next brief |
+
+The steps and roles follow [`docs/design/README.md`](../../design/README.md), Recipe A; that table is the source.
 
 ## Housekeeping the guide requires after adding roles
 
