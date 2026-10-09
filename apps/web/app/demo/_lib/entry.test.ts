@@ -16,7 +16,9 @@ test("C1: a missing, invalid or not-onboarded cookie goes to onboarding", () => 
   assert.equal(demoEntryPath(parseDemoPrefs("")), "/demo/welcome");
   assert.equal(demoEntryPath(parseDemoPrefs("%7Bnot-json")), "/demo/welcome");
   assert.equal(
-    demoEntryPath(parseDemoPrefs(encodeURIComponent('{"v":2,"onboarded":true}'))),
+    demoEntryPath(
+      parseDemoPrefs(encodeURIComponent('{"v":2,"onboarded":true}')),
+    ),
     "/demo/welcome",
   );
   assert.equal(

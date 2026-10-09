@@ -37,7 +37,9 @@ export function clausesEqual(
 export function diffSummary(counts: DiffCounts): string {
   const parts: string[] = [];
   if (counts.changed > 0)
-    parts.push(`${counts.changed} clause${counts.changed === 1 ? "" : "s"} changed`);
+    parts.push(
+      `${counts.changed} clause${counts.changed === 1 ? "" : "s"} changed`,
+    );
   if (counts.added > 0) parts.push(`${counts.added} added`);
   if (counts.removed > 0) parts.push(`${counts.removed} removed`);
   return parts.length > 0 ? parts.join(", ") : "No clause changes";

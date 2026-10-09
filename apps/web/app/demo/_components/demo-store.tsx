@@ -26,7 +26,11 @@ const DemoStoreContext = createContext<DemoStore | null>(null);
 
 /** Holds the fixtures' writes for the visit; a reload starts over (D-DEMO-7). */
 export function DemoStoreProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(demoReducer, undefined, initialDemoState);
+  const [state, dispatch] = useReducer(
+    demoReducer,
+    undefined,
+    initialDemoState,
+  );
   const value = useMemo(() => ({ state, dispatch }), [state]);
   return (
     <DemoStoreContext.Provider value={value}>

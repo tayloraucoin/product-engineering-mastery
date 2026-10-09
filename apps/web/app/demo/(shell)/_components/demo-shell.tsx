@@ -23,7 +23,9 @@ export function DemoShell({ children }: { children: ReactNode }) {
         Skip to content
       </a>
       <header className="flex min-h-14 flex-wrap items-center gap-x-4 gap-y-2 border-b px-4 py-2 md:h-14 md:flex-nowrap md:gap-x-6 md:px-8 md:py-0">
-        <span className="text-sm font-semibold whitespace-nowrap">Records demo</span>
+        <span className="text-sm font-semibold whitespace-nowrap">
+          Records demo
+        </span>
         <DemoNav />
         <div className="flex items-center gap-4 md:ml-auto md:gap-6">
           <Link
