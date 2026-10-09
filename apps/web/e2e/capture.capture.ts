@@ -1,4 +1,3 @@
-/* eslint-disable turbo/no-undeclared-env-vars -- test-run switches read here, never by a turbo task */
 /**
  * The capture harness: every registered `?state=` key of DEMO_SURFACES at
  * 390, 834 and 1440, light and dark, reduced motion. A key that does not

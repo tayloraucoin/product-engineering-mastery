@@ -1,4 +1,3 @@
-/* eslint-disable turbo/no-undeclared-env-vars -- test-run switches read here, never by a turbo task */
 import { defineConfig } from "@playwright/test";
 
 // Journeys and the capture harness run against a production build, never

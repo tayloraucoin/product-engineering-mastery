@@ -1,0 +1,27 @@
+{
+  "id": "WEB-22",
+  "criteria_sha256": "6a4a65903fa1e35e6eda42106aa11bc61dea6136db130926884595b916708c32",
+  "criteria": {
+    "C1": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    },
+    "C2": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    },
+    "C3": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C4": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    }
+  },
+  "updated_at": "2026-10-09T05:09:10Z"
+}
