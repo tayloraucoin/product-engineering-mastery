@@ -97,11 +97,115 @@ function rehypeTableColumns() {
 }
 
 /**
+ * Whether a blockquote is a field block: some paragraph opens two or more of
+ * its lines with a bold label ("**Who fills:** …" then "**When:** …"). A
+ * preface whose paragraphs each open with one label is not.
+ */
+function isFieldBlock(quote: HtmlNode): boolean {
+  return (quote.children ?? []).some((p) => {
+    if (p.tagName !== "p") return false;
+    const labels = (p.children ?? []).filter((child, i, siblings) => {
+      const before = siblings[i - 1];
+      const opensLine =
+        !before ||
+        (before.type === "text" && /\n\s*$/.test(before.value ?? ""));
+      return child.tagName === "strong" && opensLine;
+    });
+    return labels.length >= 2;
+  });
+}
+
+function addClass(node: HtmlNode, name: string) {
+  const current = node.properties?.className;
+  node.properties = {
+    ...node.properties,
+    className: [...(Array.isArray(current) ? current : []), name],
+  };
+}
+
+/** A title longer than this is set a step smaller. */
+const LONG_TITLE = 90;
+
+/**
+ * Classes the idioms CSS cannot tell apart. A blockquote whose lines open
+ * with labels is a field block ("Who fills / When / Lives at"); the
+ * page's opening blockquote otherwise is its lead ("In one line", "How to
+ * use this file"); any other blockquote stays a quote. A very long title is
+ * marked so it can be set a step smaller.
+ */
+function rehypeDocIdioms() {
+  return (root: HtmlNode) => {
+    const opening = (root.children ?? []).find(
+      (node) => node.type === "element" && node.tagName !== "h1",
+    );
+    const walk = (node: HtmlNode) => {
+      if (node.tagName === "blockquote") {
+        if (isFieldBlock(node)) addClass(node, "docs-fields");
+        else if (node === opening) addClass(node, "docs-lead");
+      }
+      if (node.tagName === "h1" && textOf(node).length > LONG_TITLE) {
+        addClass(node, "docs-title-long");
+      }
+      (node.children ?? []).forEach(walk);
+    };
+    walk(root);
+  };
+}
+
+const DETAILS_OPEN = /^<details>\s*(?:<summary>([\s\S]*?)<\/summary>)?\s*$/;
+const DETAILS_CLOSE = /^\s*<\/details>\s*$/;
+
+/**
+ * Raw HTML prints as text, except <details> and <summary>: the one raw-HTML
+ * idiom the practice's files use, rebuilt here as real elements with the
+ * markdown between the tags as their body. Anything else raw stays text.
+ */
+function rehypeDetails() {
+  const rebuild = (node: HtmlNode) => {
+    if (!node.children) return;
+    const out: HtmlNode[] = [];
+    let open: HtmlNode | null = null;
+    for (const child of node.children) {
+      const raw = child.type === "raw" ? (child.value ?? "") : null;
+      const start = raw !== null ? DETAILS_OPEN.exec(raw.trim()) : null;
+      if (start && !open) {
+        open = {
+          type: "element",
+          tagName: "details",
+          properties: { className: ["docs-details"] },
+          children: start[1]
+            ? [
+                {
+                  type: "element",
+                  tagName: "summary",
+                  properties: {},
+                  children: [{ type: "text", value: start[1].trim() }],
+                },
+              ]
+            : [],
+        };
+        out.push(open);
+      } else if (open && raw !== null && DETAILS_CLOSE.test(raw)) {
+        open = null;
+      } else if (open) {
+        open.children?.push(child);
+      } else {
+        out.push(child);
+      }
+    }
+    node.children = out;
+    out.forEach(rebuild);
+  };
+  return rebuild;
+}
+
+/**
  * Renders a repo markdown file. Links are rewritten so the browser reading
  * matches the raw reading: a link to another rendered doc becomes a route, a
  * link to any other repo file is shown but inert (its title names the path).
  * HTML comments are dropped; every table gets its own scrolling frame; a
- * fenced block tagged mermaid is drawn as a diagram.
+ * fenced block tagged mermaid is drawn as a diagram; <details> blocks open
+ * and close; leads, field blocks and long titles are classed for styling.
  */
 export function Markdown({ body, fromPath }: MarkdownProps) {
   const components: Components = {
@@ -148,7 +252,12 @@ export function Markdown({ body, fromPath }: MarkdownProps) {
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm, remarkDropComments]}
-      rehypePlugins={[rehypeSlug, rehypeTableColumns]}
+      rehypePlugins={[
+        rehypeDetails,
+        rehypeSlug,
+        rehypeTableColumns,
+        rehypeDocIdioms,
+      ]}
       components={components}
     >
       {body}

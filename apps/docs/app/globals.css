@@ -43,6 +43,10 @@
   --docs-cell-min: 12ch;
   /* The narrowest a column of prose gets (a ledger's Decision column). */
   --docs-col-prose: 28ch;
+  /* A section heading's space above and below (the Docs spec's h2 margins). */
+  --docs-section-above: 2em;
+  --docs-section-below: 1em;
+  --docs-subsection-above: 1.6em;
 }
 
 /* The article reads in token colours in both themes, so no prose-invert. */
@@ -86,6 +90,31 @@
 }
 .prose h4 {
   @apply text-base font-semibold;
+}
+.prose :where(h1, h2, h3, h4) {
+  @apply text-balance;
+}
+/* A very long title (marked by the renderer) is set a step smaller. */
+.prose h1.docs-title-long {
+  @apply text-2xl leading-docs-h2 tracking-docs-h2;
+}
+/* A file that stacks several documents keeps one title; each later H1 reads
+   as a section heading. */
+.prose h1 ~ h1 {
+  @apply mt-(--docs-section-above) mb-(--docs-section-below) text-2xl leading-docs-h2 font-semibold tracking-docs-h2;
+}
+
+/* A rule right before a heading repeats the break the heading already makes,
+   so only the heading's own space remains. */
+.prose hr:has(+ :is(h1, h2, h3)) {
+  @apply hidden;
+}
+/* Typography zeroes the margin after any rule; the heading keeps its own. */
+.prose hr + h2 {
+  @apply mt-(--docs-section-above);
+}
+.prose hr + h3 {
+  @apply mt-(--docs-subsection-above);
 }
 
 .prose a {
@@ -168,6 +197,47 @@
 .prose blockquote p::after {
   content: none;
 }
+/* The page's lead ("In one line", "How to use this file") reads as its
+   opening paragraphs, as on the entry pages: no bar, no indent. */
+.prose blockquote.docs-lead {
+  @apply border-0 ps-0;
+}
+.prose blockquote.docs-lead p {
+  @apply whitespace-normal;
+}
+/* A field block ("Who fills / When / Lives at") is a filled panel, one label
+   per line; a surface instead of a stripe (canon A-05). Its text is the
+   foreground, since the panel's surface sits closer to the body text colour
+   than the page does. */
+.prose blockquote.docs-fields {
+  @apply rounded-md border-0 bg-docs-code-surface p-4 text-foreground;
+}
+/* Small text on the paragraphs, not the panel, so the panel keeps the body
+   measure (it is set in ch). */
+.prose blockquote.docs-fields p {
+  @apply text-sm;
+}
+.prose blockquote.docs-fields > :first-child {
+  @apply mt-0;
+}
+.prose blockquote.docs-fields > :last-child {
+  @apply mb-0;
+}
+
+/* <details> from the practice's files: a disclosure with the summary as its
+   handle. */
+.prose .docs-details {
+  @apply my-6 rounded-md border border-border;
+}
+.prose .docs-details > summary {
+  @apply cursor-pointer rounded-md px-4 py-2 font-medium text-foreground hover:bg-hover focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none;
+}
+.prose .docs-details[open] > summary {
+  @apply rounded-b-none border-b border-border;
+}
+.prose .docs-details > :not(summary) {
+  @apply mx-4;
+}
 
 ::selection {
   background-color: var(--selected);
@@ -175,6 +245,6 @@
 }
 
 /* Safari still draws the disclosure triangle on <summary>; the nav draws its own. */
-summary::-webkit-details-marker {
+nav summary::-webkit-details-marker {
   display: none;
 }
