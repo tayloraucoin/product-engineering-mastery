@@ -31,7 +31,16 @@ The idea behind the Physics: a rule written in markdown is a request, and a rule
 
 ## The front door
 
-[`prompt-builder.md`](prompt-builder.md) is where everything starts. It asks, in rounds with options: which track, which app, who is cast, the QA level and reviewers, any part that needs a deeper look, the pace, how involved you want to be, the branch, whether to make a formal ticket, what you will attach, and the track's own questions. It then prints the prompt, a forecast of effort, time, cost, risk and your attention (estimates), and a block for each research thread the work needs. Tiny work takes the fast lane and is done on the spot.
+[`prompt-builder.md`](prompt-builder.md) is where everything starts.
+
+- **It asks,** in rounds with options:
+  - which track, which app, who is cast;
+  - the QA level and reviewers, any part that needs a deeper look;
+  - the pace, how involved you want to be, the branch;
+  - whether to make a formal ticket, what you will attach;
+  - the track's own questions.
+- **It then prints** the prompt, a forecast of effort, time, cost, risk and your attention (estimates), and a block for each research thread the work needs.
+- **Tiny work** takes the fast lane and is done on the spot.
 
 ## The tracks
 
@@ -112,7 +121,13 @@ specs/
 
 Work that spans apps lives in `specs/_shared/` with the same shape. Nothing else is filed: no prompt files, no evidence logs, no review files below Q3. Ticket numbers in folder names are padded to three digits, so a folder lists in order; the id stays short (`OB2-3`).
 
-**The archive.** Finished work leaves the live tree so it stays readable as tickets pile up. `yarn specs:archive` moves every closed one-off, and every epic whose tickets are all closed, into `_archive/<year>/<month>/` by the month it closed; `yarn specs:archive --dry-run` shows what would move and what is held back and why. Anything draft, open, closing or waiting on a migration stays put, and so does a folder another thread has uncommitted changes in. Nothing is lost: `yarn status <id>` still finds an archived ticket, `_status.md` lists the archive by month, and a number or epic prefix in the archive is never handed out again. You decide when it runs.
+**The archive.** Finished work leaves the live tree so it stays readable as tickets pile up.
+
+- **What moves:** `yarn specs:archive` moves every closed one-off, and every epic whose tickets are all closed, into `_archive/<year>/<month>/` by the month it closed.
+- **A preview:** `yarn specs:archive --dry-run` shows what would move and what is held back and why.
+- **What stays put:** anything draft, open, closing or waiting on a migration, and any folder another thread has uncommitted changes in.
+- **Nothing is lost:** `yarn status <id>` still finds an archived ticket, `_status.md` lists the archive by month, and a number or epic prefix in the archive is never handed out again.
+- **When it runs:** you decide.
 
 ## Truth and records
 

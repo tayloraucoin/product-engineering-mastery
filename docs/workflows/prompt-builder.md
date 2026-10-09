@@ -13,7 +13,15 @@ load_when: on request
 
 # The prompt builder
 
-> **In one line:** every task starts here. You describe the work in your own words; the builder asks what it needs to know, up front and all at once, then prints one prompt ready to paste into a new thread, a short forecast of what that thread will cost you, and a prompt for each research thread the work needs. The questions are asked now so that nobody is asked small questions later.
+> **In one line:** every task starts here.
+
+You describe the work in your own words; the builder asks what it needs to know, up front and all at once, then prints:
+
+- one prompt ready to paste into a new thread;
+- a short forecast of what that thread will cost you;
+- a prompt for each research thread the work needs.
+
+The questions are asked now so that nobody is asked small questions later.
 
 **How it runs.** Type `/tk-prompt`, or attach this file and say "build the prompt for: …", or simply describe work in a thread that has no ticket yet. The agent reading this file is the builder for that conversation. It writes no file: everything it produces is printed in the thread for the operator to copy.
 

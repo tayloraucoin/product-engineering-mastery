@@ -13,7 +13,14 @@ load_when:
 
 # Stages
 
-**What this is.** The stages that tracks share: frame, research, ux, design (optional, between the UX passes), technical, tickets, build and harden. A track ([`../tracks/`](../tracks/README.md)) names which of these it runs and states only its differences; a stage that belongs to one track alone is written in that track's file. Each file here is the protocol the thread follows: who leads, where it runs, what it loads and why, the interview rounds where it interviews, what it writes and from which template, what passes it, and the prompt it hands to the next level.
+**What this is.** The stages that tracks share: frame, research, ux, design (optional, between the UX passes), technical, tickets, build and harden.
+
+- **Tracks and stages:** a track ([`../tracks/`](../tracks/README.md)) names which of these it runs and states only its differences; a stage that belongs to one track alone is written in that track's file.
+- **Each file here** is the protocol the thread follows:
+  - who leads, where it runs, what it loads and why;
+  - the interview rounds where it interviews;
+  - what it writes and from which template;
+  - what passes it, and the prompt it hands to the next level.
 
 **Come here when.** The prompt builder has routed work to a stage, or you are writing the next level's prompt by hand and need its loads and gate.
 

@@ -13,7 +13,10 @@ load_when: on request
 
 # The epic: a campaign
 
-> **In one line:** an epic is a folder of tickets sharing one problem, one UX proposal and one set of technical notes. It is played in levels, each in its own thread, each ending at a gate you pass. Then each ticket is built in its own thread, seen by you, and hardened on your word, and shipping updates the living UX truth.
+> **In one line:** an epic is a folder of tickets sharing one problem, one UX proposal and one set of technical notes.
+
+- **Shaping:** it is played in levels, each in its own thread, each ending at a gate you pass.
+- **Building:** then each ticket is built in its own thread, seen by you, and hardened on your word, and shipping updates the living UX truth.
 
 New to the terms? See [`../glossary.md`](../glossary.md). The big picture and the map are in [`../README.md`](../README.md).
 
