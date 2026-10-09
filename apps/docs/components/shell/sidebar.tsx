@@ -31,11 +31,11 @@ export function Sidebar() {
 
   return (
     <div className="flex flex-col">
-      <div className="sticky top-0 z-10 border-b border-border bg-muted px-4 py-4">
+      <div className="sticky top-0 z-10 border-b border-sidebar-border bg-sidebar px-4 py-4">
         <Search />
       </div>
       <details className="px-4 py-4 md:hidden">
-        <summary className="cursor-pointer text-sm font-medium">
+        <summary className="cursor-pointer rounded-md text-sm font-medium focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none">
           Browse documents
         </summary>
         <div className="mt-4">

@@ -17,9 +17,9 @@ const PRIMARY = [
 const STATUS_STYLE: Record<string, string> = {
   ruling: "bg-primary text-primary-foreground",
   adopted: "bg-accent text-accent-foreground",
-  draft: "border border-dashed border-border text-muted-foreground",
-  superseded: "text-muted-foreground line-through",
-  archived: "bg-muted text-muted-foreground",
+  draft: "border border-dashed border-border text-docs-muted",
+  superseded: "text-docs-muted line-through",
+  archived: "bg-muted text-docs-muted",
 };
 
 function format(value: unknown): string {
@@ -39,17 +39,19 @@ export function FrontmatterPanel({ doc }: { doc: Doc }) {
 
   return (
     <header className="not-prose mb-8 flex flex-col gap-3 border-b border-border pb-6">
-      <p className="font-mono text-xs text-muted-foreground">
+      <p className="font-mono text-sm wrap-anywhere text-docs-muted">
         {doc.relativePath}
       </p>
       {doc.description && (
-        <p className="text-sm text-muted-foreground">{doc.description}</p>
+        <p className="max-w-docs-measure text-sm text-docs-text">
+          {doc.description}
+        </p>
       )}
       {shown.length > 0 && (
-        <dl className="flex flex-wrap gap-x-5 gap-y-2 text-xs">
+        <dl className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
           {shown.map((key) => (
             <div key={key} className="flex items-center gap-1.5">
-              <dt className="text-muted-foreground">{key.replace("_", " ")}</dt>
+              <dt className="text-docs-muted">{key.replace("_", " ")}</dt>
               <dd
                 className={cn(
                   key === "status" && "rounded-sm px-1.5 py-0.5",
@@ -63,14 +65,14 @@ export function FrontmatterPanel({ doc }: { doc: Doc }) {
         </dl>
       )}
       {rest.length > 0 && (
-        <details className="text-xs">
-          <summary className="cursor-pointer text-muted-foreground">
+        <details className="text-sm">
+          <summary className="cursor-pointer text-docs-muted hover:text-foreground">
             All fields ({rest.length} more)
           </summary>
           <dl className="mt-2 grid grid-cols-1 gap-x-4 gap-y-1 sm:grid-cols-[max-content_1fr]">
             {rest.map((key) => (
               <div key={key} className="contents">
-                <dt className="text-muted-foreground">{key}</dt>
+                <dt className="text-docs-muted">{key}</dt>
                 <dd className="break-words">{format(fm[key])}</dd>
               </div>
             ))}

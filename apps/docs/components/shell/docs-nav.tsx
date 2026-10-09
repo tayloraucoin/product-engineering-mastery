@@ -31,7 +31,7 @@ export function DocsNav({ groups, hidden }: DocsNavProps) {
     <nav aria-label="Documents" className="flex flex-col gap-1">
       {groups.map((group) =>
         group.key === "start" ? (
-          <div key={group.key} className="mb-2 flex flex-col gap-0.5">
+          <div key={group.key} className="mb-3 flex flex-col gap-1">
             {group.items.map((item) => (
               <Item key={key(item)} item={item} pathname={pathname} />
             ))}
@@ -42,16 +42,16 @@ export function DocsNav({ groups, hidden }: DocsNavProps) {
             open={contains(group.items, pathname)}
             className="group/section"
           >
-            <summary className="flex cursor-pointer list-none items-center justify-between rounded-md px-3 py-2 text-xs font-medium tracking-wide text-muted-foreground uppercase select-none hover:bg-background hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none">
+            <summary className="group/summary flex cursor-pointer list-none items-center justify-between rounded-md px-3 py-2 text-sm font-semibold text-sidebar-foreground select-none hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none">
               <span>{group.label}</span>
               <span className="flex items-center gap-2">
-                <span className="font-normal tabular-nums">
+                <span className="font-normal text-docs-muted tabular-nums group-hover/summary:text-sidebar-accent-foreground">
                   {count(group.items)}
                 </span>
                 <Chevron className="group-open/section:rotate-90" />
               </span>
             </summary>
-            <div className="mt-0.5 mb-2 flex flex-col gap-0.5">
+            <div className="mt-1 mb-2 flex flex-col gap-1">
               {group.items.map((item) => (
                 <Item key={key(item)} item={item} pathname={pathname} />
               ))}
@@ -59,7 +59,7 @@ export function DocsNav({ groups, hidden }: DocsNavProps) {
           </details>
         ),
       )}
-      <p className="mt-4 px-3 text-xs text-muted-foreground">
+      <p className="mt-4 px-3 text-sm text-docs-muted">
         {hidden} generated files are searchable but not listed.
       </p>
     </nav>
@@ -75,11 +75,10 @@ function Item({ item, pathname }: { item: NavItem; pathname: string }) {
         aria-current={isActive ? "page" : undefined}
         className={cn(
           buttonVariants({ variant: "ghost", size: "sm" }),
-          "h-auto w-full justify-start py-1 text-left text-[13px] leading-5 font-normal whitespace-normal",
-          // The panel sits on the muted surface, where accent is invisible; links lift to the page surface instead.
-          "hover:bg-background hover:text-foreground",
+          "h-auto w-full justify-start px-3 py-2 text-left text-sm leading-normal font-normal whitespace-normal text-docs-muted",
+          "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
           isActive &&
-            "bg-background font-medium text-foreground ring-1 ring-border",
+            "bg-sidebar-accent font-medium text-sidebar-accent-foreground",
         )}
       >
         {item.title}
@@ -88,14 +87,14 @@ function Item({ item, pathname }: { item: NavItem; pathname: string }) {
   }
   return (
     <details open={contains(item.items, pathname)} className="group/folder">
-      <summary className="flex cursor-pointer list-none items-center gap-1.5 rounded-md px-3 py-1.5 font-mono text-xs text-muted-foreground select-none hover:bg-background hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none">
+      <summary className="flex cursor-pointer list-none items-center gap-1.5 rounded-md px-3 py-2 font-mono text-sm text-docs-muted select-none hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none">
         <Chevron className="group-open/folder:rotate-90" />
         <span>{item.name}/</span>
         <span className="ml-auto font-sans tabular-nums">
           {count(item.items)}
         </span>
       </summary>
-      <div className="ml-4 flex flex-col gap-0.5 border-l border-border pl-1">
+      <div className="mt-1 ml-3 flex flex-col gap-1 border-l border-sidebar-border pl-3">
         {item.items.map((child) => (
           <Item key={key(child)} item={child} pathname={pathname} />
         ))}

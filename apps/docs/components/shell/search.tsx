@@ -5,8 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import MiniSearch from "minisearch";
 
-import { cn } from "@pem/ui/cn";
-
 import type { SearchEntry } from "@/lib/search-entry";
 
 type Result = Pick<
@@ -98,7 +96,7 @@ export function Search() {
             setQuery("");
           }
         }}
-        className="h-9 w-full rounded-md border border-border bg-background px-3 text-sm placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+        className="h-9 w-full rounded-md border border-sidebar-border bg-background px-3 text-sm text-foreground placeholder:text-docs-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
       />
       {searching && (
         <div
@@ -108,17 +106,15 @@ export function Search() {
           className="flex flex-col gap-1"
         >
           {failed && (
-            <p className="px-1 text-sm text-muted-foreground">
+            <p className="px-1 text-sm text-docs-muted">
               The search index did not load.
             </p>
           )}
           {!failed && !index && (
-            <p className="px-1 text-sm text-muted-foreground">
-              Loading the index…
-            </p>
+            <p className="px-1 text-sm text-docs-muted">Loading the index…</p>
           )}
           {index && results.length === 0 && (
-            <p className="px-1 text-sm text-muted-foreground">
+            <p className="px-1 text-sm text-docs-muted">
               No document matches “{query.trim()}”.
             </p>
           )}
@@ -127,13 +123,10 @@ export function Search() {
               key={result.id}
               href={result.id}
               onClick={() => setQuery("")}
-              className={cn(
-                "flex flex-col gap-0.5 rounded-md px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground",
-                result.hidden && "opacity-80",
-              )}
+              className="group/result flex flex-col gap-0.5 rounded-md px-3 py-2 text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
               <span className="font-medium">{result.title}</span>
-              <span className="text-xs text-muted-foreground">
+              <span className="text-sm text-docs-muted group-hover/result:text-sidebar-accent-foreground">
                 {result.group}
                 {result.hidden ? " · not in the sidebar" : ""}
               </span>
