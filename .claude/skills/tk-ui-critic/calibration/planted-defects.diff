@@ -1,0 +1,39 @@
+diff --git a/apps/web/app/demo/(shell)/records/_components/form/form-body.tsx b/apps/web/app/demo/(shell)/records/_components/form/form-body.tsx
+index 1ed4bc2..a90e0c3 100644
+--- a/apps/web/app/demo/(shell)/records/_components/form/form-body.tsx
++++ b/apps/web/app/demo/(shell)/records/_components/form/form-body.tsx
+@@ -238,7 +238,7 @@ export function FormBody({
+         ) : null}
+ 
+         <Field>
+-          <FieldLabel htmlFor={FIELD_IDS.vendor} className={inputDim}>
++          <FieldLabel htmlFor={FIELD_IDS.vendor} className={`${inputDim} sr-only`}>
+             Vendor name
+           </FieldLabel>
+           <Input
+diff --git a/apps/web/app/demo/(shell)/records/_components/table/records-view.tsx b/apps/web/app/demo/(shell)/records/_components/table/records-view.tsx
+index 9c0754c..4bb8f84 100644
+--- a/apps/web/app/demo/(shell)/records/_components/table/records-view.tsx
++++ b/apps/web/app/demo/(shell)/records/_components/table/records-view.tsx
+@@ -307,7 +307,7 @@ export function RecordsView({
+                 <EmptyDescription>{buildFilterWords(query)}</EmptyDescription>
+               </EmptyHeader>
+               <EmptyContent>
+-                <Button variant="secondary" onClick={clearFilters}>
++                <Button onClick={clearFilters}>
+                   Clear filters
+                 </Button>
+               </EmptyContent>
+diff --git a/apps/web/app/demo/(shell)/settings/_components/settings-view.tsx b/apps/web/app/demo/(shell)/settings/_components/settings-view.tsx
+index 4a890f8..505569b 100644
+--- a/apps/web/app/demo/(shell)/settings/_components/settings-view.tsx
++++ b/apps/web/app/demo/(shell)/settings/_components/settings-view.tsx
+@@ -95,7 +95,7 @@ function Row({ labelId, label, helper, control, inline, dimmed }: RowProps) {
+         <p id={labelId} className="text-sm font-medium">
+           {label}
+         </p>
+-        <p id={`${labelId}-helper`} className="text-sm text-muted-foreground">
++        <p id={`${labelId}-helper`} className="text-sm text-muted-foreground/40">
+           {helper}
+         </p>
+       </div>
