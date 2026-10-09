@@ -25,4 +25,5 @@ load_when:
 
 | File | What it is for |
 | --- | --- |
+| [`docs-readability.md`](docs-readability.md) |  |
 | [`working-dashboards.md`](working-dashboards.md) | Read only to trace a dashboard or working-tool home ruling, or to re-score shadcn's dashboard-01 against the DASH rules. |
