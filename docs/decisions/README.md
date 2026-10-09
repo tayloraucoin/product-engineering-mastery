@@ -26,7 +26,7 @@ load_when:
 
 - You are about to change a rule.
 - You wonder why a rule is the way it is.
-- You need to know what is held for Taylor's sign-off.
+- You need to know what is held for Taylor's sign-off: [`only-you.md`](only-you.md).
 
 **Start with.** [`ledger.md`](ledger.md), then grep it for your topic. Reasons live in [`records/`](records/README.md); what changed lately is in [`changelog.md`](changelog.md).
 
