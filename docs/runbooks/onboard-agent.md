@@ -13,15 +13,15 @@ load_when:
 
 # Onboard an agent
 
+> **Who runs it:** whoever introduces the tool or model; Plumb reviews the result.
+> **When:** a new agent tool, a model upgrade, a fresh clone or port of the toolkit, or any change to `AGENTS.md`, `CLAUDE.md`, `docs/index.md` or `.claude/rules/`.
+> **Done means:** every check below passes, and the result is one line in `docs/decisions/changelog.md` (tool or model, date, pass or the failing step).
+
 ## When to use this
 
 - **Run it** when the team adopts a new model or a new agent tool, or after a harness change: `AGENTS.md`, `CLAUDE.md`, `docs/index.md`, `.claude/rules/`, the hooks or settings in `.claude/settings.json`, the skills or the generated subagents. A port of the toolkit into a new product repo counts; a developer's own clone does not.
 - **Not when a new developer joins.** The rules this runbook verifies are shared by everyone on the repo, tracked in git and loaded the same way for every person and every agent. A new developer reads `AGENTS.md` and `docs/index.md`; nothing here changes for them.
 - **A developer's own preferences** (a model choice, an output style, extra permissions, personal hooks) belong in their untracked local settings (`settings.local.json` beside the shared `.claude/settings.json`, or `~/.claude/`), never in the shared files this runbook checks.
-
-> **Who runs it:** whoever introduces the tool or model; Plumb reviews the result.
-> **When:** a new agent tool, a model upgrade, a fresh clone or port of the toolkit, or any change to `AGENTS.md`, `CLAUDE.md`, `docs/index.md` or `.claude/rules/`.
-> **Done means:** every check below passes, and the result is one line in `docs/decisions/changelog.md` (tool or model, date, pass or the failing step).
 
 ## What a checkout gives you
 
