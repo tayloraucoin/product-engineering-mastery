@@ -31,8 +31,9 @@
  *   most recently named, in its thread, by a work command (contract:init, run,
  *   record, qa, built, add, review:run, a commit message) or a spec-file edit;
  *   the naming call is its ticket's. A thread whose first human prompt names
- *   exactly one ticket, or failing that whose session title does, belongs to
- *   it from its first call (the third audit's Y2); only the ids leave the
+ *   exactly one ticket (a range such as "DEMO-1 to 17" names several), or
+ *   failing that whose session title does, belongs to it from its first call
+ *   (the third audit's Y2); only the ids leave the
  *   prompt and title, as from a tool input. A `contract:init … --draft` names
  *   nothing, and a ticket first drafted in a thread is not taken by that
  *   thread's later spec edits or commits; a work command still takes it. A
@@ -129,6 +130,9 @@ const TICKET_FOLDER =
   /(?:^|\/)([A-Z][A-Z0-9]{1,4})-0*([1-9][0-9]*)-[a-z0-9-]+\//g;
 /** A work-id written in prose (a prompt, a title): upper case, as ids are written. */
 const PROSE_ID = /\b([A-Z][A-Z0-9]{1,4})-0*([1-9][0-9]*)\b/g;
+/** A range after a prose id: "DEMO-1 to 17", "DEMO-1–17", "DEMO-1 through DEMO-17". */
+const RANGE_END =
+  /^\s*(?:to|through|-|–|—)\s*(?:([A-Z][A-Z0-9]{1,4})-)?0*([1-9][0-9]*)\b/;
 const EDIT_TOOLS = /^(Edit|Write|MultiEdit|NotebookEdit)$/;
 const BROWSER_TOOL = /Browser__|claude-in-chrome__|^mcp__.*preview_/;
 
@@ -189,6 +193,10 @@ function oneTicketIn(text: string, tree: SpecsTree): string | null {
   for (const m of text.matchAll(PROSE_ID)) {
     const id = `${m[1]}-${m[2]}`;
     if (findItem(tree, id)) ids.add(id);
+    // A range names every ticket in it, so it never seeds one.
+    const range = RANGE_END.exec(text.slice(m.index + m[0].length));
+    if (range && (range[1] ?? m[1]) === m[1] && Number(range[2]) > Number(m[2]))
+      ids.add(`${m[1]}-${range[2]}`);
   }
   return ids.size === 1 ? [...ids][0]! : null;
 }

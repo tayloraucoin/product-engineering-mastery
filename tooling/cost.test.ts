@@ -343,6 +343,11 @@ test("WEB-23 C2 yarn cost attributes a thread to the one ticket its first human 
       record.prompt("p3", at(20), `${SECRET} WEB-1 then WEB-2`),
       record.call("p3", "c1", at(21)),
     ],
+    // A range names several tickets: no seed.
+    "p4.jsonl": [
+      record.prompt("p4", at(30), `${SECRET} WEB-1 to 2`),
+      record.call("p4", "e1", at(31)),
+    ],
     "p3/subagents/agent-x.jsonl": [
       record.prompt("p3", at(22), `${SECRET} WEB-2`, true),
       record.call("p3", "x1", at(23), undefined, true),
@@ -350,7 +355,7 @@ test("WEB-23 C2 yarn cost attributes a thread to the one ticket its first human 
   });
   const one = cost(repo, config, ["WEB-1"]);
   assert.equal(one.status, 0, one.out);
-  // a1 to a3 and b1, b2; c1 and x1 belong to no ticket.
+  // a1 to a3 and b1, b2; c1, e1 and x1 belong to no ticket.
   assert.equal(callsOf(one.out, "WEB-1"), 5, one.out);
   assert.match(one.out, /2 thread\(s\) naming it/);
   const two = cost(repo, config, ["WEB-2"]);
