@@ -15,9 +15,9 @@ load_when:
 
 **What this is.** Step-by-step procedures a person runs, each ending in something checkable, grouped by use case. Templates among them are filled per run.
 
-**Come here when.** A product repo starts from this one, a module of the default stack is removed or added, a new agent tool or model arrives, a release is going out, a variant needs real users, a gated design review is run, or something went wrong.
+**Come here when.** You have one of the use cases below.
 
-**Start with.**
+**Start with.** The row that matches.
 
 | Use case | Go to |
 | --- | --- |

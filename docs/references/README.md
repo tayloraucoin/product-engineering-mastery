@@ -13,9 +13,16 @@ load_when: ui-build, critique, spec, discovery, metrics
 
 # References
 
-Load order: the design layer, then the package, then this router, then **at most three** files from the row that matches the task. The cap counts laws, heuristics and canons together. The design layer wins every conflict: a reference can justify a finding but never overrides a token, a component rule or an anti-pattern. Findings cite rule IDs (`Fails <Law> [<RULE-ID>] at <element>: <evidence>. Fix: <fix>.`); a finding with no rule ID of any kind is Consider at most (canon C-R15).
+The router: it maps the task type to at most three reference files, so nothing else in `docs/references/` loads.
 
-**Nothing below is written yet.** Every file arrives in Phase 4 through prompt [P-D](../prompts/archive/phases/library-batches.md): Laws of UX first (batch 1), then batches 2 and 3, then canons, practitioners and books. Until a file lands, skip it. **Do not improvise its content.**
+> **Nothing below is written yet.** Every file arrives in Phase 4 through prompt [P-D](../prompts/archive/phases/library-batches.md): Laws of UX first (batch 1), then batches 2 and 3, then canons, practitioners and books. Until a file lands, skip it. **Do not improvise its content.**
+
+## Loading and citing
+
+- **Load order:** the design layer, then the package, then this router, then **at most three** files from the row that matches the task.
+- **The cap** counts laws, heuristics and canons together.
+- **Conflicts:** the design layer wins every conflict. A reference can justify a finding but never overrides a token, a component rule or an anti-pattern.
+- **Findings** cite rule IDs (`Fails <Law> [<RULE-ID>] at <element>: <evidence>. Fix: <fix>.`). A finding with no rule ID of any kind is Consider at most (canon C-R15).
 
 ## Laws of UX, by task type
 

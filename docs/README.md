@@ -17,7 +17,10 @@ load_when:
 
 **Come here when.** You are new, you are back after a while, or you cannot remember which folder holds the thing you need.
 
-**Start with.** [`workflows/README.md`](workflows/README.md), *How work moves*: ten minutes, and the whole system fits in your head. Agents start elsewhere: [`index.md`](index.md) is their map, loaded in every session, and it decides what wins when two files disagree.
+**Start with.**
+
+- **As a person:** [`workflows/README.md`](workflows/README.md), *How work moves*: ten minutes, and the whole system fits in your head.
+- **As an agent:** [`index.md`](index.md), the agents' map, loaded in every session. It decides what wins when two files disagree.
 
 ## By the question you arrive with
 

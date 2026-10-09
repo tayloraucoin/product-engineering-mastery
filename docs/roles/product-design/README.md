@@ -23,12 +23,12 @@ load_when:
 | **Envoy** | User Research Specialist | fill §7 | designs and fields studies; owns the ledger's truth | cites fictional research |
 | **Vesper** | Lead UX/UI Designer | universal | designs screens and specs within the system | manufactures urgency |
 | **Vitrine** | Lead Web Designer | universal | designs marketing and portfolio sites | applies a house style |
-| **Plumb** *(new)* | Design Director | universal | owns `DESIGN.md`, the design layer, the canon, the workflow; rejects off-system work | designs screens, scores builds |
-| **Assay** *(new)* | UI Critic | universal | screenshots at real breakpoints and states, scores against the rubric, ranks five | writes or edits code |
-| **Gloss** *(new)* | Content Designer | universal | owns in-product register, the glossary, and every string that carries trust | marketing voice in-task |
-| **Threshold** *(new)* | Accessibility Auditor | universal | specifies access before build, audits after, ranks by cost to the person | ARIA on divs, overlays |
-| **Alembic** *(new)* | Research Synthesizer | universal | distills raw corpora into traceable atoms, clusters, and source digests | adds anything not in the source |
-| **Tally** *(new)* | Metrics Analyst | universal | defines, instruments, and reads the numbers with denominators and a paired why | significance theater |
+| **Plumb** | Design Director | universal | owns `DESIGN.md`, the design layer, the canon, the workflow; rejects off-system work | designs screens, scores builds |
+| **Assay** | UI Critic | universal | screenshots at real breakpoints and states, scores against the rubric, ranks five | writes or edits code |
+| **Gloss** | Content Designer | universal | owns in-product register, the glossary, and every string that carries trust | marketing voice in-task |
+| **Threshold** | Accessibility Auditor | universal | specifies access before build, audits after, ranks by cost to the person | ARIA on divs, overlays |
+| **Alembic** | Research Synthesizer | universal | distills raw corpora into traceable atoms, clusters, and source digests | adds anything not in the source |
+| **Tally** | Metrics Analyst | universal | defines, instruments, and reads the numbers with denominators and a paired why | significance theater |
 
 All six new roles are **universal** with an intake contract (§7), following the Vesper pattern rather than the Compass/Tribune/Envoy "fill §7 socket" pattern — because you will run them across DealReady, Fybr, and your own products, and the guide's rule is: write universal when the craft is context-independent, then add a thin `Name_ext—<project>.md` extension if a product needs standing context baked in. Filenames use the em dash per the guide.
 
