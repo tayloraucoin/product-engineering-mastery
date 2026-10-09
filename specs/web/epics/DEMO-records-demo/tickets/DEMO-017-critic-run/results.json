@@ -1,0 +1,80 @@
+{
+  "id": "DEMO-17",
+  "criteria_sha256": "fabbf3ed6973f5b0558368c2f7d953fabb38cbd79b3578d1a0e46b9dafede3d0",
+  "criteria": {
+    "C1": {
+      "status": "FAIL",
+      "evidence": "capture",
+      "run": null
+    },
+    "C2": {
+      "status": "FAIL",
+      "evidence": "capture",
+      "run": null
+    },
+    "C3": {
+      "status": "FAIL",
+      "evidence": "capture",
+      "run": null
+    },
+    "C4": {
+      "status": "FAIL",
+      "evidence": "test",
+      "run": null
+    },
+    "C5": {
+      "status": "FAIL",
+      "evidence": "check",
+      "run": null
+    }
+  },
+  "built_at": "2026-10-09T05:17:07Z",
+  "cost": {
+    "at": "2026-10-09T05:22:51Z",
+    "calls": 413,
+    "weighted": 9219374,
+    "tokens_input": 844,
+    "tokens_cache_read": 49326001,
+    "tokens_cache_write": 2465700,
+    "tokens_output": 240761,
+    "by_category": {
+      "build": {
+        "calls": 336,
+        "weighted": 7722775
+      },
+      "proofs": {
+        "calls": 40,
+        "weighted": 757970
+      },
+      "captures": {
+        "calls": 1,
+        "weighted": 22383
+      },
+      "reviews": {
+        "calls": 0,
+        "weighted": 0
+      },
+      "status": {
+        "calls": 3,
+        "weighted": 52874
+      },
+      "git": {
+        "calls": 8,
+        "weighted": 157571
+      },
+      "re-reading": {
+        "calls": 0,
+        "weighted": 0
+      },
+      "other": {
+        "calls": 25,
+        "weighted": 505801
+      }
+    },
+    "context_last_call": 309649,
+    "threads": 1,
+    "headless_runs": 0,
+    "headless_weighted": 0
+  },
+  "updated_at": "2026-10-09T05:22:51Z"
+}
