@@ -4,5 +4,5 @@ export const settings: DemoSurface = {
   id: "settings",
   route: "/demo/settings",
   samplePath: "/demo/settings",
-  keys: ["empty", "loading", "error", "partial", "offline"],
+  keys: ["saved", "empty", "loading", "error", "partial", "offline", "reset"],
 };
