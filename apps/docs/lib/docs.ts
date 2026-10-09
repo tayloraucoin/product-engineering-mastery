@@ -7,7 +7,7 @@ import YAML from "yaml";
 
 /**
  * The docs app renders markdown that lives OUTSIDE it: the root `AGENTS.md`,
- * everything under the root `docs/`, and the demo app's filled examples. Those
+ * and everything under the root `docs/`. Those
  * files are the source of truth (agents and GitHub read them raw); this app is
  * only a reader (records 0004, 0007).
  *
@@ -27,11 +27,7 @@ function fromRepoRoot(relativePath: string) {
 }
 
 /** Directories rendered, and the route prefix each one mounts at. */
-const CONTENT_ROOTS = [
-  { dir: "docs", prefix: [] as string[] },
-  { dir: "apps/web/docs", prefix: ["demo"] },
-  { dir: "apps/web/specs", prefix: ["demo", "specs"] },
-];
+const CONTENT_ROOTS = [{ dir: "docs", prefix: [] as string[] }];
 const SPINE_PATH = "AGENTS.md";
 const INDEX_PATH = "docs/index.md";
 const START_PATH = "docs/README.md";
@@ -58,7 +54,6 @@ const GROUPS: { key: string; label: string }[] = [
   { key: "references", label: "References" },
   { key: "engineering", label: "Engineering" },
   { key: "workflows", label: "Workflows" },
-  { key: "demo", label: "Demo app (filled examples)" },
   { key: "research", label: "Research" },
 ];
 
@@ -77,7 +72,7 @@ export type Doc = {
   description: string | null;
   /** Repo-root-relative POSIX path, e.g. `docs/design/canon.md`. */
   relativePath: string;
-  /** Sidebar group key (a `layer` value, or start / demo / generated). */
+  /** Sidebar group key (a `layer` value, or start / generated). */
   group: string;
   /** Subfolder below the group's folder, for sub-headings (e.g. `templates`). */
   folder: string;
@@ -245,7 +240,6 @@ function toGroup(
   frontmatter: Frontmatter | null,
 ): string {
   if (START_PATHS.includes(relativePath)) return "start";
-  if (relativePath.startsWith("apps/web/")) return "demo";
   if (relativePath.startsWith("docs/_generated/")) return "generated";
   const layer = frontmatter?.layer;
   return typeof layer === "string" && GROUPS.some((g) => g.key === layer)
