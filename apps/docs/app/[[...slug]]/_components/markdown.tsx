@@ -5,6 +5,8 @@ import remarkGfm from "remark-gfm";
 
 import { resolveDocLink } from "@/lib/docs";
 
+import { MermaidDiagram } from "./mermaid-diagram";
+
 type MarkdownProps = {
   body: string;
   /** The rendered file's repo-relative path; relative links resolve from it. */
@@ -43,6 +45,14 @@ function remarkDropComments() {
 
 function textOf(node: HtmlNode): string {
   return node.value ?? (node.children ?? []).map(textOf).join("");
+}
+
+/** The source of a fenced block tagged mermaid, or null for any other block. */
+function mermaidSource(pre: HtmlNode | undefined): string | null {
+  const code = pre?.children?.find((child) => child.tagName === "code");
+  const className = code?.properties?.className;
+  if (!code || !Array.isArray(className)) return null;
+  return className.includes("language-mermaid") ? textOf(code).trimEnd() : null;
 }
 
 /**
@@ -90,7 +100,8 @@ function rehypeTableColumns() {
  * Renders a repo markdown file. Links are rewritten so the browser reading
  * matches the raw reading: a link to another rendered doc becomes a route, a
  * link to any other repo file is shown but inert (its title names the path).
- * HTML comments are dropped; every table gets its own scrolling frame.
+ * HTML comments are dropped; every table gets its own scrolling frame; a
+ * fenced block tagged mermaid is drawn as a diagram.
  */
 export function Markdown({ body, fromPath }: MarkdownProps) {
   const components: Components = {
@@ -113,6 +124,11 @@ export function Markdown({ body, fromPath }: MarkdownProps) {
           {children}
         </span>
       );
+    },
+    pre({ node, children }) {
+      const source = mermaidSource(node as HtmlNode | undefined);
+      if (source !== null) return <MermaidDiagram source={source} />;
+      return <pre>{children}</pre>;
     },
     // A wide table scrolls inside its own frame, never the page.
     table({ children }) {

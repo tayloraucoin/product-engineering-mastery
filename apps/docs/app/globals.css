@@ -71,7 +71,7 @@
 .prose > * {
   @apply max-w-docs-measure;
 }
-.prose > :where(header, pre, .docs-table) {
+.prose > :where(header, pre, .docs-table, .docs-diagram, .docs-diagram-source) {
   @apply max-w-none;
 }
 
@@ -131,6 +131,29 @@
 }
 .prose .docs-table thead th {
   @apply bg-muted text-foreground;
+}
+
+/* A Mermaid diagram, drawn at its natural width: wider than the column, it
+   scrolls inside its own frame, as a table does. Until it draws, or when it
+   cannot, its source shows as a code block under a short error. Its text is
+   the tables' size, read by the diagram when it draws. */
+.prose :where(.docs-diagram, .docs-diagram-source) {
+  @apply text-sm;
+}
+.prose .docs-diagram {
+  @apply my-8 overflow-x-auto rounded-md border border-border p-4 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none;
+}
+.prose .docs-diagram svg {
+  @apply mx-auto block;
+}
+.prose .docs-diagram-source {
+  @apply my-8;
+}
+.prose .docs-diagram-source pre {
+  @apply my-0;
+}
+.prose .docs-diagram-error {
+  @apply my-0 mb-2 text-sm text-foreground;
 }
 
 /* Blockquotes carry instruction blocks ("Who fills / When / …"), one label per
