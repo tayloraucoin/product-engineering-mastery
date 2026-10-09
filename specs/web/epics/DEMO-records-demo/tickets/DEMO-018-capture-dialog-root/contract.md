@@ -40,3 +40,4 @@ id: DEMO-18
 
 - **Found by:** DEMO-13, 2026-10-08. On a production build at `69332ec`, `yarn web:capture --surface delete-dialog` failed 18 of 24: `delete-dialog ?state=deleting: root data-demo-state is "default", not "deleting"` (and `error`, `offline`). `capture.capture.ts` reads `page.locator("[data-demo-state]").first()`, which is record detail's page root (`default`); the dialog's own root (`confirm-dialog.tsx`, `data-demo-state={demoState}`) comes second. `partial` passed only because detail also has a `partial` key.
 - **Blocks:** DEMO-16 (the CI job) and DEMO-17 (the full critic run) on this surface.
+- **Model:** minimum and recommended Opus 5.5 at medium (ledger PR-22). Choosing down tends to special-case the delete dialog in the capture script instead of reading the dialog's own root, so the next dialog surface fails the same way.

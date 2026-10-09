@@ -33,3 +33,4 @@ id: DEMO-20
 
 - **Found by:** DEMO-17, rounds 1 and 2: delete-dialog body and notice (`confirm-dialog.tsx:101`, kit `AlertDialogDescription`), records-table subtitle, alert and empty copy, record-form Terms at 834 and 1440, record-detail empty and not-found copy, all about 14px by eye against the rubric's 16px.
 - record-detail `empty` uses five type sizes (about 24, 18, 16, 14 and 12px) against the cap of four (C-R04, round 2).
+- **Model:** minimum and recommended Opus 5.5 at medium (ledger PR-22). Choosing down tends to raise each size in place instead of through the type tokens, which breaks the four-size cap on another surface.

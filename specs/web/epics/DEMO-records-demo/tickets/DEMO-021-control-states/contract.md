@@ -38,3 +38,4 @@ id: DEMO-21
   - Outline button edge nearly invisible in light: record-detail not-found "Back to records", records-table `error` New record (C-R05).
   - record-form `submitting`: Annual value keeps a rest-strength border while its siblings dim; it carries the same `inputDim` class, so the cause is not yet traced (C-R10).
   - record-form `submitting` light: dimmed helpers and values may fall below 4.5:1; measure, or rule the inactive form exempt (C-R09, round 2).
+- **Model:** minimum and recommended Opus 5.5 at medium (ledger PR-22). Choosing down tends to fix the visible states and leave the untraced `submitting` border, or to settle by eye a contrast the ticket asks to measure.

@@ -15,6 +15,44 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-08 — PEM: the newcomer pages scan
+
+A prose pass, with Scribe consulted on structure; no rule's meaning changed. One pattern throughout: a lead line, no paragraph past about three sentences, a table only where rows share a shape, steps a person takes numbered and what the system does bulleted, and every rule sentence kept word for word.
+
+- `README.md`: a lead line and bullets, the where-to-start and prerequisites tables, phone, contrast and deploy as short sections, and the duplicate-then-remove steps numbered.
+- Entry pages:
+  - `docs/README.md`: the start split by person and agent.
+  - `decisions/README.md`: its files as a table.
+  - `references/README.md`: the status first; the load and cite rules as bullets.
+  - `prompts/README.md` and `product/README.md`: the walls split.
+  - `runbooks/README.md`: the list that repeated its table cut.
+  - `roles/README.md`: points to the generated department list.
+  - `roles/product-design/README.md`: the "(new)" markers dropped.
+- `workflows/tracks/one-off.md`: the build move's detail out of the moves table.
+- Waiting for the operator's commit of other work in them, then the same pass: `qa-levels.md`, `workflows/README.md`, `tracks/README.md`, `stages/README.md`, `prompt-builder.md`, `tracks/epic.md`, `design/README.md`, `onboard-agent.md` and `glossary.md`. Two fact corrections, not rule changes, wait with them: the glossary's Always-on row is matched to `docs/index.md` (`AGENTS.md`, `CLAUDE.md`, `docs/index.md`, the listings and hook output; at most 4,000 tokens), and `design/README.md` names where the demo's design layer lives, `apps/web/docs/design/`.
+
+## 2026-10-08 — PEM: the third audit's prose change set (recommendations 3 to 7)
+
+This applies `specs/_shared/reports/2026-10-08-third-token-and-speed-audit.md` (the third token and speed audit), led by Usher with Lorimer consulted. Ledger PR-24 amends PR-21.
+
+- **PR-22 in the source (O2).** `prompt-builder.md` §6 now names Opus 5.5 at medium as a ticket build's minimum and recommended model, and `tickets.md` §6 points to it. The model line is now set in the unbuilt contracts DEMO-18 to 23 (which had none), WEB-14 and 16 (effort added) and WEB-17 to 19 (from Sonnet 5.5).
+- **The Design stage's thread rule (O1).** `design.md` §3: one surface per thread, a thread closed past 200k, and a canvas screenshot only after a change, scaled down. The Design-stage thread cost 21.8M, 7.2M of it above 200k.
+- **One critic round per epic (O3).** `tk-ui-critic` runs one full round, then a re-check only where a Blocking finding was fixed, and refuses round 3. `tickets.md` §7 now commits the epic folder before any build, since untracked spec files voided about 2M of critic spend. `docs/design/README.md` row 7 follows. `canon-rubric.md`'s "at most 3 rounds" stays as the ceiling.
+- **Assay leaves the build pass (O4).** `build.md` §4, `tk-batch` and `qa-levels.md`'s phase table drop it, because it ran on 0 of 6 UI tickets. Warden on a first-built door path stays. The close stays at five lines.
+- **The always-on budget is back under its cap (R2).** It went from 4,079 to 3,998 against the 4,000 cap, with the `tk-motion` and `tk-batch` descriptions shortened. tk-motion alone could not close a 79-token gap: its whole description was about 82 tokens. On Opus 5.5 against the full listing, the trigger test fired on 5 of 5 must tasks and 0 of 5 must-not tasks (`.claude/skills/tk-motion/tests/triggers.md`). The REGISTRY rows are updated.
+
+## 2026-10-08 — PEM: the third token and speed audit, decided
+
+The DEMO epic (17 tickets built in one evening) and the WEB one-offs measured against the second audit's build-pass targets, in a decide-together thread led by Lorimer, with Tally on counting, Crucible on every removed or deferred check and Reeve on the order to Synapse. The operator delegated the open decisions to the thread ("your call"). Every number is in `specs/_shared/reports/2026-10-08-third-token-and-speed-audit.md`; ten recommendations stand, prompts printed in the thread and never saved.
+
+- **Targets met (G1, G2).** Median DEMO ticket 0.55M weighted, 36 calls, 6 active minutes, 135k context at close, against 1.5–2M, 45–60 calls and 20–30 minutes; calls over 200k fell from 52 to 24 percent of the window.
+- **R1, the start gate refuses the build pass: open, one tooling ticket.** `contract:init` needs a predecessor's criteria recorded PASS, which the build pass never records; 19 of 19 DEMO starts were refused, so status, "built" and `yarn cost --record` all failed with it. The gate is to accept `built_at`; `yarn cost` is to attribute from a thread's first prompt (Y2); the 17 built DEMO tickets are backfilled.
+- **R2, nothing proven or green: partly addressed.** Prettier on eight DEMO files and the uncommitted `states.test.ts` fix (HEAD failed C3) are in the working tree, not committed (the commit was refused by the auto-mode classifier). The epic's 20 text files are untracked; its 192 Design-stage captures (15 MB) are [NEEDS DECISION]. Nothing pushed since 12:50, so CI has gated nothing.
+- **O2, PR-22 not in the source: open, prose.** `prompt-builder.md` §6 still names Sonnet 5.5 as a build's minimum; 10 of 17 DEMO builds ran on it.
+- **O1, the Design stage's thread rule; O3, one critic round plus a re-check of fixed surfaces and the epic committed at the Tickets handoff; O4, Assay out of the build pass; the tk-motion listing under the always-on cap: open, one prose change set.** The Design-stage thread cost 21.8M of DEMO's 28.5M shaping; the two critic tickets 17.5M of 29.7M of builds; Assay ran on none of six UI tickets. Crucible's falsifiers are in the report.
+- **Harden DEMO before Synapse; WEB-14 and WEB-16 built and hardened before it, WEB-17 to 19 deferred: decided.** About 14–20M and 6–8 points [estimate]; the second half is measured once before Synapse inherits it.
+- **"Solidified":** [ASSUMPTION: DEMO hardened, verify green, the branch merged to main by the operator, then MIG's migration of Synapse.]
+
 ## 2026-10-08 — The Design stage: a surface settled in Paper before tickets
 
 Operator instructed, 2026-10-08; Usher wrote it, Plumb's ruling 01 amended (ledger WT-04, PR-23). The reason: a designer does not know what they like until they see it, and building a direction in code to find out costs a route, its tests and the tokens that went into it. On the canvas a rejected direction costs an artboard. The code critic still governs what ships; the canvas gains a seat earlier, never authority.

@@ -48,4 +48,4 @@ criteria:
 - **Interfaces:** `yarn exists <word>`.
 - **Per path:** exists.ts and its test; package.json script; ts.md line; tooling.md entry; changelog line.
 - **Gotchas:** `packages/ui` has 151 modules; rank exact name matches first so the cap does not hide them.
-- **Model:** Sonnet 5.5 is enough: small script with a fixture test.
+- **Model:** minimum and recommended Opus 5.5 at medium (ledger PR-22). Choosing down tends to rank by fuzzy match first, so the cap hides an exact name match.

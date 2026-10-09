@@ -39,3 +39,4 @@ id: DEMO-19
 
 - **Found by:** DEMO-17 round 1, 2026-10-08. `capture.capture.ts` takes every key `fullPage: true`. At 390 a page under a modal is 1248px tall; the fixed scrim covers only the first 900px, so the strip below renders undimmed. The critic scored that as C-R03 Blocking on record-form `dirty` (a solid Save beside the solid destructive confirm) and C-R02 on delete-dialog `partial`. In a browser the fixed scrim covers the viewport at every scroll position (checked: the page scrolls 348px under the dialog, scrim still over it), so the capture shows something no person sees. Locking `html` overflow does not change the fullPage height (still 1248), so the fix is the harness, not the app.
 - **Blocks:** DEMO-17's round 2 on record-form (C-R03) and delete-dialog's 390 captures.
+- **Model:** minimum and recommended Opus 5.5 at medium (ledger PR-22). Choosing down tends to crop the capture to the viewport, which hides the undimmed strip instead of covering it.

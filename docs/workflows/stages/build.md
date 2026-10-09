@@ -55,7 +55,7 @@ The build pass, for the one ticket:
 1. **Start.** `yarn status` once. With a ticket: `yarn contract:init <APP | EPIC> <slug>`. Without one: restate the criteria from the prompt in the thread.
 2. **Build,** one commit per outcome, labelled with the work id. Work that changes behaviour updates the living UX file in the same change, or writes it when none exists.
 3. **Prove in scope.** The ticket's own tests, the affected workspace's suite and `check-types`. Never `yarn verify`, the whole `yarn test`, or `check-specs` mid-ticket; the stop check covers the rest. Give up on one failure only after three different fixes, and say what was tried.
-4. **Look, on a UI ticket.** Assay in thread, from the thread's own screenshots, advisory. Warden only the first time a door path in `technical.md` is built.
+4. **No review** (the phase table in `qa-levels.md`). Warden only the first time a door path in `technical.md` is built.
 5. **Close.** `yarn status` once, then five lines: what was built, what was assumed, what to look at, the dev-server links for each surface and `?state=`, what is left for hardening.
 
 No ledger, no captures, no as-built, no headless review: those run once, in the hardening pass, when the operator says "harden" ([`harden.md`](harden.md)). A one-off at Q1 with no contract ends here; at Q2 or Q3 it hardens like a ticket.

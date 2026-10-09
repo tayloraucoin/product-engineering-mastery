@@ -28,12 +28,12 @@ load_when: on request
 
 A ticket is built, seen by the operator, then hardened on the operator's word ([`stages/harden.md`](stages/harden.md)). The level splits across the two passes:
 
-| Level | Build pass: proves and reviews                                                          | Hardening pass: proves and reviews                                                                                        |
-| ----- | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| Q0    | The stop check                                                                          | None                                                                                                                      |
-| Q1    | The ticket's own tests, the affected workspace's suite, `check-types`; no review        | `contract:run` once; `yarn verify` when it closes the work                                                                |
-| Q2    | As Q1, plus Assay in thread on a UI ticket, from the thread's own screenshots, advisory | As Q1, plus captures once, a short as-built, and one subagent review                                                      |
-| Q3    | As Q2; Warden only the first time a door path in `technical.md` is built                | Recorded proofs and captures once, the as-built, one `review:run` per confirmed seat; Warden and Mason on door paths only |
+| Level | Build pass: proves and reviews                                                   | Hardening pass: proves and reviews                                                                                        |
+| ----- | -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Q0    | The stop check                                                                   | None                                                                                                                      |
+| Q1    | The ticket's own tests, the affected workspace's suite, `check-types`; no review | `contract:run` once; `yarn verify` when it closes the work                                                                |
+| Q2    | As Q1; no review (a UI ticket's checks are the critic round and hardening)       | As Q1, plus captures once, a short as-built, and one subagent review                                                      |
+| Q3    | As Q1; Warden only the first time a door path in `technical.md` is built         | Recorded proofs and captures once, the as-built, one `review:run` per confirmed seat; Warden and Mason on door paths only |
 
 **At Q2 the reviewer runs once per ticket,** a FAIL included: its findings are fixed and re-proven, and a second subagent run needs the operator's word, as a third run does at Q3.
 

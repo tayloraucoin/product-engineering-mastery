@@ -33,3 +33,4 @@ id: DEMO-22
   - record-detail `loading`: no subtitle or toggle block, separator above Terms instead of below the subtitle, history as full-width bars at about half the row pitch, action widths swapped (1440 and 390).
   - settings `loading`: Demo buttons 160px blocks at 390 against full-width buttons; Theme skeleton wider than the toggle group; the Records group's first radio sits about 12px low at 1440.
   - records-table `loading` 834: the longest Vendor bars run into the Owner bars with no gutter.
+- **Model:** minimum and recommended Opus 5.5 at medium (ledger PR-22). Choosing down tends to match the skeletons at one width, so 390 or 834 drifts again.

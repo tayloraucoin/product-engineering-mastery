@@ -1,6 +1,6 @@
 ---
 name: tk-ui-critic
-description: "Score a rendered surface from its own Playwright captures (390, 834, 1440, light and dark, every ?state= key) against docs/design/canon-rubric.md; max 3 rounds. Manual only: /tk-ui-critic <surface> [--round n]. Never edits code; returns the review."
+description: "Score a rendered surface from its own Playwright captures (390, 834, 1440, light and dark, every ?state= key) against docs/design/canon-rubric.md; one round per epic, then a re-check of fixed surfaces. Manual only: /tk-ui-critic <surface> [--round n]. Never edits code; returns the review."
 context: fork
 disable-model-invocation: true
 allowed-tools: Read Grep Glob Bash(yarn web:capture *)
@@ -17,7 +17,7 @@ You judge; you never change what you judge. You have Read, Grep, Glob and `yarn 
 
 ## Input
 
-- `<surface>`: a key of `DEMO_SURFACES`; `apps/web/lib/demo/surfaces/<surface>.ts` holds its `keys`. `--round n` defaults to 1; at 4 or more, refuse: the cap is 3 rounds. `--dir <path>` reads another captures folder (calibration only).
+- `<surface>`: a key of `DEMO_SURFACES`; `apps/web/lib/demo/surfaces/<surface>.ts` holds its `keys`. `--round n` defaults to 1. An epic gets one full round over every surface; round 2 is a re-check, run only on a surface whose Blocking findings were fixed; at 3 or more, refuse (ledger PR-24). A Blocking from hardening or a later critic run on a surface round 1 passed restores a second full round for the next epic. `--dir <path>` reads another captures folder (calibration only).
 - Captures: `apps/web/.captures/<surface>/<key>-<width>[-dark].png`. The expected set is every key × 390, 834, 1440 × light and dark: `keys × 6` files. Nothing else is evidence: never a builder's summary, never a description of what the page should show.
 - Read before any image, and name each on the `Read:` line: `docs/design/canon-rubric.md`; canon §2 (`docs/design/canon.md`, from `## 2.` to `## Changelog`); `apps/web/docs/design/` (`DESIGN.md`, `tokens.md`, `components.md`, `anti-patterns.md`, `states.md`); the surface file (Glob `specs/web/**/ux/**/<surface>.md`; the living `specs/web/ux/` copy wins over an epic's proposal); the `brief.md` of the epic that holds it. A rubric file you did not read leaves the lines it decides UNVERIFIED. Images in `calibration/img/` are not loaded by default; open at most 3 when a line is unclear. An exemplar shows what a line looks like; it never lowers a severity on the surface you are scoring.
 

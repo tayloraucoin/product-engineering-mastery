@@ -74,4 +74,4 @@ criteria:
 - **Interfaces:** `@pem/utils/email`: `normaliseEmail(value: string): string`, `isNormalisedEmail(value: string): boolean`.
 - **Per path:** the utils files make the package; boundaries.js, toolkit.json and §4's row register it; next.config.ts adds it to transpilePackages; the rest call it.
 - **Gotchas:** `packages/db/scripts/` runs on Node type stripping; the import must resolve there too. Run `yarn install` after adding the workspace.
-- **Model:** Opus 5.5; the package scaffold has six registration points and a smaller model misses one.
+- **Model:** minimum and recommended Opus 5.5 at medium (ledger PR-22); the package scaffold has six registration points and a smaller model misses one.

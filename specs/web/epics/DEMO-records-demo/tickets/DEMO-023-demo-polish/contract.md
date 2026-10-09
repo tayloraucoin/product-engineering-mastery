@@ -38,3 +38,4 @@ id: DEMO-23
   - settings: offline alert text wraps at about 250px in a 358px alert at 390 (C-R06); the 390 `saved` toast covers Reset demo data (C-R13).
   - Three radii on one screen (pill, about 6px, about 10px, toast and dialog about 14px), settings and record-detail (C-R07): a DESIGN.md ruling may settle it.
   - Retry outline on settings `error` (failed save) against solid on `partial` (failed load): rule whether D-DEMO-22 covers saves; record-form `partial` Retry is outline in a neutral notice (C-R02).
+- **Model:** minimum and recommended Opus 5.5 at medium (ledger PR-22). Choosing down tends to restyle each finding locally, which adds a radius instead of the one ruling the ticket asks for.

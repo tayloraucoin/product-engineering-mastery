@@ -1,6 +1,6 @@
 ---
 name: tk-motion
-description: Decide whether UI should move and exactly how (token duration, easing, reduced-motion equivalent), or review motion M1 to M12. Use when a task adds, changes or removes an animation, transition, enter or exit, hover or press feedback, toast, dialog, drawer, sheet, popover or loading motion. Not for static layout, color or copy.
+description: Whether and how UI moves (token duration, easing, reduced motion), or a motion review. Use when a task adds, changes or removes an animation, transition or enter and exit.
 source_description: Decide whether a UI element should move, and if so exactly how (duration, easing, spring, reduced-motion equivalent). Use when a task adds, changes, reviews, or removes an animation, transition, micro-interaction, hover/press/focus feedback, toast, drawer, sheet, popover, list reorder, loading state, or map camera move. Not for static layout, color, or copy work.
 paths: apps/*/app/**, apps/*/components/**, packages/ui/**, **/*.css
 allowed-tools: Read Grep Glob

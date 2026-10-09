@@ -52,4 +52,4 @@ criteria:
 - **Interfaces:** named formatter functions exported from `lib/sandbox/shared/time.ts`.
 - **Per path:** time.ts gains them, its test pins the strings; every other path drops its inline formatter.
 - **Gotchas:** module-level `Intl` instances are deliberate (built once); keep them module-level in time.ts.
-- **Model:** Sonnet 5.5 is enough: a mechanical move pinned by string tests.
+- **Model:** minimum and recommended Opus 5.5 at medium (ledger PR-22). Choosing down tends to move the formatters and miss a caller, which leaves another copy behind.

@@ -48,4 +48,4 @@ criteria:
 - **Interfaces:** `nextCookieStore(): Promise<SessionCookieStore>` (or over a passed store; dev's call).
 - **Per path:** cookie-store.ts holds the adapter; its test covers both jars; server.ts and actions.ts call it; eslint.config.mjs carries the guard.
 - **Gotchas:** the jar adapter drops Supabase's cache headers; a Server Action cannot set response headers through `cookies()`, so that is unchanged, not a regression. `server-only` stays on the module.
-- **Model:** Opus 5.5; a smaller model tends to fold the proxy's adapter in too, which breaks the refresh.
+- **Model:** minimum and recommended Opus 5.5 at medium (ledger PR-22); a smaller model tends to fold the proxy's adapter in too, which breaks the refresh.

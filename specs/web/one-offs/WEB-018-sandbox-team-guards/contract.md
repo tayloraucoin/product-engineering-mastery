@@ -48,4 +48,4 @@ criteria:
 - **Interfaces:** `isTeamRole(role: unknown): boolean` from `@pem/db/sandbox`.
 - **Per path:** viewer.ts and index.ts add and export it; the web files call it.
 - **Gotchas:** `admin-gate.ts` is web-side; check `people.ts` may import it without a cycle.
-- **Model:** Sonnet 5.5 is enough; the vigil review covers the predicate.
+- **Model:** minimum and recommended Opus 5.5 at medium (ledger PR-22). Choosing down tends to copy the predicate instead of moving it, which leaves two guards to drift.
