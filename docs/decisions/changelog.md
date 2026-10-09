@@ -15,6 +15,11 @@ load_when:
 
 Amendments to files in the practice, newest first (CF-06). A ruling's one-line form is in [`ledger.md`](ledger.md); a reason that needs more than a line is a [record](records/). Each layer file also keeps its own changelog section (`canon.md`, `workflow.md`, `skills.md`).
 
+## 2026-10-08 — PEM: diagrams are Mermaid in the markdown
+
+- `engineering/codebase-conventions.md` §7: diagrams are Mermaid blocks in the markdown; folder trees stay text; image files only for what cannot be code (none yet).
+- The docs app draws them (DOC commit): a client leaf that imports `mermaid` 12.0.0 only on a page with a diagram, themed from the docs tokens in light and dark, a broken block showing its source and a one-line error; the row is in `engineering/tech-stack.md`.
+
 ## 2026-10-08 — PEM: the newcomer pages scan
 
 A prose pass, with Scribe consulted on structure; no rule's meaning changed. One pattern throughout: a lead line, no paragraph past about three sentences, a table only where rows share a shape, steps a person takes numbered and what the system does bulleted, and every rule sentence kept word for word.
