@@ -20,7 +20,15 @@ test("C3: a registered key reads back; unknown, repeated and unregistered read n
 test("C3: each surface lists only the universal keys its States table has", () => {
   const expected: Record<string, string[]> = {
     onboarding: ["beat-1", "beat-2", "beat-3", ...UNIVERSAL],
-    "records-table": UNIVERSAL,
+    "records-table": [
+      "empty",
+      "no-results",
+      "loading",
+      "error",
+      "partial",
+      "offline",
+      "deleted",
+    ],
     "record-detail": UNIVERSAL,
     "record-form": [
       "invalid",
