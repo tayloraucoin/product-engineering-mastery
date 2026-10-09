@@ -151,7 +151,11 @@ export function RecordsView({
 
   const announced = useRef(false);
   useEffect(() => {
-    if (state !== "deleted" || announced.current) return;
+    if (state !== "deleted") {
+      announced.current = false;
+      return;
+    }
+    if (announced.current) return;
     announced.current = true;
     let vendor = deletedEvent?.vendor;
     if (!vendor) {
@@ -166,9 +170,8 @@ export function RecordsView({
       type: "success",
     });
     headingRef.current?.focus();
-    // Once per visit to the key; the store's later changes do not re-announce.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
+    // Once per visit to the key: the ref keeps the store's later changes from re-announcing.
+  }, [state, deletedEvent?.vendor, dispatch, store.records, toasts]);
 
   function replace(next: RecordsQuery) {
     router.replace(`${pathname}${buildRecordsSearch(next)}`, { scroll: false });
