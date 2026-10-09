@@ -1,0 +1,15 @@
+- main:
+  - text: Active Expiring Draft Terminated
+  - list "Version 3 to 4":
+    - listitem: Services are limited to the two depots named in Schedule A.
+    - listitem:
+      - deletion: "Removed: Payment is due within 30 days of invoice."
+    - listitem:
+      - deletion: "Removed: Either party may end the agreement with 30 days written notice."
+    - listitem:
+      - insertion: "Added: Payment is due within 45 days of invoice."
+    - listitem:
+      - insertion: "Added: Either party may end the agreement with 60 days written notice."
+    - listitem: Liability is capped at the annual value of the agreement.
+    - listitem:
+      - insertion: "Added: A fuel surcharge applies when diesel exceeds the index price in Schedule B."
