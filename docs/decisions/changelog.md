@@ -34,7 +34,18 @@ A prose pass, with Scribe consulted on structure; no rule's meaning changed. One
   - `roles/README.md`: points to the generated department list.
   - `roles/product-design/README.md`: the "(new)" markers dropped.
 - `workflows/tracks/one-off.md`: the build move's detail out of the moves table.
-- Waiting for the operator's commit of other work in them, then the same pass: `qa-levels.md`, `workflows/README.md`, `tracks/README.md`, `stages/README.md`, `prompt-builder.md`, `tracks/epic.md`, `design/README.md`, `onboard-agent.md` and `glossary.md`. Two fact corrections, not rule changes, wait with them: the glossary's Always-on row is matched to `docs/index.md` (`AGENTS.md`, `CLAUDE.md`, `docs/index.md`, the listings and hook output; at most 4,000 tokens), and `design/README.md` names where the demo's design layer lives, `apps/web/docs/design/`.
+- `docs/decisions/README.md`: links `only-you.md` where it names Taylor's sign-off.
+- Workflow pages:
+  - `qa-levels.md`: the "review PASS is final" rule as labelled bullets.
+  - `workflows/README.md`: the front door and the archive split.
+  - `tracks/README.md`: the hand-offs as bullets.
+  - `stages/README.md`: the protocol as a list.
+  - `tracks/epic.md` and `prompt-builder.md`: the leads cut to one line.
+- `design/README.md`: a lead line, and step 4b's detail out of its cell. `runbooks/onboard-agent.md`: leads with who runs it, when and what done means.
+- Fact corrections, not rule changes:
+  - The glossary's Always-on row now matches `docs/index.md`, which ranks higher and is the CI contract `tooling/budget.ts` reads: `AGENTS.md`, `CLAUDE.md`, `docs/index.md`, the listings and the SessionStart hook output, 4,000 tokens or fewer. It had said `docs/README.md` and about 3,400.
+  - `design/README.md`: the demo's design layer lives at `apps/web/docs/design/`, no longer "lands in Phase 3".
+  - The product-design seat map's Recipe A table follows `design/README.md`: nine steps, with 2 Shape and 4b Settle, numbered as the source numbers them. A consulted role the source does not name is `[NEEDS DECISION]` (References, Polish), and the map's prose now cites Verify as step 7. Detail the source does not carry left the table: Plumb ruling on the capture loop, Gloss for copy depth at Verify, and "you, by hand" at Polish.
 
 ## 2026-10-08 — PEM: the third audit's prose change set (recommendations 3 to 7)
 
