@@ -21,6 +21,8 @@ export interface ConfirmDialogProps {
   /** One icon and a text line, never a bordered alert (D-DEMO-17). */
   notice?: string;
   confirmLabel: string;
+  /** "Cancel" unless a surface names the way back ("Keep editing"). */
+  cancelLabel?: string;
   pendingLabel: string;
   pending?: boolean;
   confirmDisabled?: boolean;
@@ -30,13 +32,14 @@ export interface ConfirmDialogProps {
   triggerRef?: RefObject<HTMLElement | null>;
 }
 
-/** The delete and reset confirm layout. No close button; Cancel takes focus first. */
+/** The delete, reset and leave-without-saving confirm layout. No close button; Cancel takes focus first. */
 export function ConfirmDialog({
   open,
   title,
   body,
   notice,
   confirmLabel,
+  cancelLabel = "Cancel",
   pendingLabel,
   pending = false,
   confirmDisabled = false,
@@ -80,7 +83,7 @@ export function ConfirmDialog({
             {pending ? pendingLabel : confirmLabel}
           </AlertDialogAction>
           <AlertDialogCancel ref={cancelRef} disabled={pending}>
-            Cancel
+            {cancelLabel}
           </AlertDialogCancel>
         </AlertDialogFooter>
       </AlertDialogContent>

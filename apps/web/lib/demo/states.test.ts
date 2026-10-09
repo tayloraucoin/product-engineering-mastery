@@ -22,7 +22,16 @@ test("C3: each surface lists only the universal keys its States table has", () =
     onboarding: ["beat-1", "beat-2", "beat-3", ...UNIVERSAL],
     "records-table": UNIVERSAL,
     "record-detail": UNIVERSAL,
-    "record-form": UNIVERSAL,
+    "record-form": [
+      "invalid",
+      "submitting",
+      "empty",
+      "loading",
+      "error",
+      "partial",
+      "offline",
+      "dirty",
+    ],
     settings: UNIVERSAL,
     "delete-dialog": ["error", "partial", "offline"],
   };

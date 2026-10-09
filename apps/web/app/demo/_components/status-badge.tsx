@@ -2,7 +2,7 @@ import { Badge } from "@pem/ui/badge";
 
 import type { Status } from "../_lib/record";
 
-const LABELS: Record<Status, string> = {
+export const STATUS_LABELS: Record<Status, string> = {
   active: "Active",
   expiring: "Expiring",
   draft: "Draft",
@@ -58,7 +58,7 @@ export function StatusBadge({ status }: { status: Status }) {
   return (
     <Badge variant={VARIANTS[status]} data-status={status}>
       <Shape status={status} />
-      {LABELS[status]}
+      {STATUS_LABELS[status]}
     </Badge>
   );
 }
